@@ -7,7 +7,7 @@
 
     <uses-sdk
         android:minSdkVersion="15"
-        android:targetSdkVersion="23"
+        android:targetSdkVersion="26"
         tools:overrideLibrary="life.knowledge4.videotrimmer, im.ene.toro.exoplayer, im.ene.toro" />
     <!-- So that we can get the account name -->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -435,6 +435,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.GroupsReportedContentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.GroupMembershipRequestActivity"
             android:screenOrientation="portrait" />
 
         <receiver

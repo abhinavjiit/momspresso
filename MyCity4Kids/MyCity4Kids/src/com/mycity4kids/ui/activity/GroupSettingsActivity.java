@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -23,6 +24,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     private RelativeLayout leaveGroupContainer, reportedContentContainer;
     private Switch disableNotificationSwitch;
     private ImageView editGroupImageView;
+    private TextView memberCountTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         leaveGroupContainer = (RelativeLayout) findViewById(R.id.leaveGroupContainer);
         editGroupImageView = (ImageView) findViewById(R.id.editGroupImageView);
         reportedContentContainer = (RelativeLayout) findViewById(R.id.reportedContentContainer);
+        memberCountTextView = (TextView) findViewById(R.id.memberCountTextView);
 
         groupItem = (GroupResult) getIntent().getParcelableExtra("groupItem");
 
@@ -39,6 +42,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         leaveGroupContainer.setOnClickListener(this);
         editGroupImageView.setOnClickListener(this);
         reportedContentContainer.setOnClickListener(this);
+        memberCountTextView.setOnClickListener(this);
     }
 
     @Override
@@ -49,6 +53,12 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.memberCountTextView: {
+                Intent intent = new Intent(GroupSettingsActivity.this, GroupMembershipRequestActivity.class);
+                intent.putExtra("groupId", groupItem.getId());
+                startActivity(intent);
+            }
+            break;
             case R.id.editGroupImageView: {
                 Intent intent = new Intent(GroupSettingsActivity.this, EditGroupActivity.class);
                 intent.putExtra("groupId", groupItem.getId());

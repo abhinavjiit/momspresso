@@ -351,7 +351,7 @@
                 android:drawableLeft="@drawable/ic_bookmark"
                 android:drawablePadding="20dp"
                 android:padding="20dp"
-                android:text="SAVE POST"
+                android:text="ENABLE NOTIFICATION"
                 android:textColor="@color/groups.light_black_color"
                 android:textSize="16sp"
                 app:fontName="open_sans.ttf" />
@@ -382,6 +382,49 @@
                 android:textColor="@color/groups.light_black_color"
                 android:textSize="16sp"
                 app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/deletePostTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_bookmark"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:text="DELETE POST"
+                android:textColor="@color/groups.light_black_color"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/blockUserTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_bookmark"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:text="BLOCK THE USER"
+                android:textColor="@color/groups.light_black_color"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/pinPostTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_bookmark"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:text="PIN THIS POST TO TOP"
+                android:textColor="@color/groups.light_black_color"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:fontName="open_sans.ttf" />
+
         </LinearLayout>
     </RelativeLayout>
 

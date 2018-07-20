@@ -15,11 +15,11 @@ public class AddGroupPostResult implements Parcelable {
     private String url;
     private String type;
     private String lang;
-    private boolean isActive;
+    private int isActive;
     private Object mediaUrls;
-    private boolean disableComments;
-    private boolean isAnnon;
-    private boolean isPinned;
+    private int disableComments;
+    private int isAnnon;
+    private int isPinned;
     private String moderatedBy;
     private String moderationStatus;
     private String moderationOn;
@@ -38,10 +38,10 @@ public class AddGroupPostResult implements Parcelable {
         url = in.readString();
         type = in.readString();
         lang = in.readString();
-        isActive = in.readByte() != 0;
-        disableComments = in.readByte() != 0;
-        isAnnon = in.readByte() != 0;
-        isPinned = in.readByte() != 0;
+        isActive = in.readInt();
+        disableComments = in.readInt();
+        isAnnon = in.readInt();
+        isPinned = in.readInt();
         moderatedBy = in.readString();
         moderationStatus = in.readString();
         moderationOn = in.readString();
@@ -60,10 +60,10 @@ public class AddGroupPostResult implements Parcelable {
         dest.writeString(url);
         dest.writeString(type);
         dest.writeString(lang);
-        dest.writeByte((byte) (isActive ? 1 : 0));
-        dest.writeByte((byte) (disableComments ? 1 : 0));
-        dest.writeByte((byte) (isAnnon ? 1 : 0));
-        dest.writeByte((byte) (isPinned ? 1 : 0));
+        dest.writeInt(isActive);
+        dest.writeInt(disableComments);
+        dest.writeInt(isAnnon);
+        dest.writeInt(isPinned);
         dest.writeString(moderatedBy);
         dest.writeString(moderationStatus);
         dest.writeString(moderationOn);
@@ -140,35 +140,35 @@ public class AddGroupPostResult implements Parcelable {
         this.mediaUrls = mediaUrls;
     }
 
-    public boolean isActive() {
+    public int isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(int active) {
         isActive = active;
     }
 
-    public boolean isDisableComments() {
+    public int isDisableComments() {
         return disableComments;
     }
 
-    public void setDisableComments(boolean disableComments) {
+    public void setDisableComments(int disableComments) {
         this.disableComments = disableComments;
     }
 
-    public boolean isAnnon() {
+    public int isAnnon() {
         return isAnnon;
     }
 
-    public void setAnnon(boolean annon) {
+    public void setAnnon(int annon) {
         isAnnon = annon;
     }
 
-    public boolean isPinned() {
+    public int isPinned() {
         return isPinned;
     }
 
-    public void setPinned(boolean pinned) {
+    public void setPinned(int pinned) {
         isPinned = pinned;
     }
 

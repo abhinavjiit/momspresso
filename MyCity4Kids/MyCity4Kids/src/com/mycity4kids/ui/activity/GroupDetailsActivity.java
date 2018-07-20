@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -31,7 +32,9 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
+import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
+import com.mycity4kids.models.request.UpdatePostSettingsRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -40,6 +43,7 @@ import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsActionResponse;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -84,6 +88,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private UserPostSettingResult currentPostPrefsForUser;
     private GroupResult selectedGroup;
     private GroupPostResult selectedPost;
+    private String memberType;
     private int groupId;
 
     private Animation slideAnim, fadeAnim;
@@ -105,7 +110,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
     private View overlayView;
-    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView;
+    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, deletePostTextView, blockUserTextView, pinPostTextView;
     private ProgressBar progressBar;
     private ImageView groupSettingsImageView;
     private TextView memberCountTextView;
@@ -132,6 +137,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         postSettingsContainerMain = (RelativeLayout) findViewById(R.id.postSettingsContainerMain);
         overlayView = findViewById(R.id.overlayView);
         savePostTextView = (TextView) findViewById(R.id.savePostTextView);
+        deletePostTextView = (TextView) findViewById(R.id.deletePostTextView);
+        blockUserTextView = (TextView) findViewById(R.id.blockUserTextView);
+        pinPostTextView = (TextView) findViewById(R.id.pinPostTextView);
         memberCountTextView = (TextView) findViewById(R.id.memberCountTextView);
         notificationToggleTextView = (TextView) findViewById(R.id.notificationToggleTextView);
         commentToggleTextView = (TextView) findViewById(R.id.commentToggleTextView);
@@ -158,6 +166,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         reportPostTextView.setOnClickListener(this);
         overlayView.setOnClickListener(this);
         groupSettingsImageView.setOnClickListener(this);
+        deletePostTextView.setOnClickListener(this);
+        blockUserTextView.setOnClickListener(this);
+        pinPostTextView.setOnClickListener(this);
 
         String[] sections = {
                 getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions), getString(R.string.groups_sections_blogs),
@@ -199,8 +210,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 }
             }
         });
+
         if (selectedGroup == null) {
             getGroupDetails();
+            checkMembership(groupId);
         } else {
             toolbarTitle.setHint(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
             groupNameTextView.setText(selectedGroup.getTitle());
@@ -208,10 +221,59 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(this, this);
             groupAboutRecyclerAdapter.setData(selectedGroup);
             recyclerView.setAdapter(groupAboutRecyclerAdapter);
-
+            checkMembership(selectedGroup.getId());
             getGroupPosts();
         }
     }
+
+    private void checkMembership(int id) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        Call<GroupsMembershipResponse> call = groupsAPI.getUsersMembershipDetailsForGroup(id, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(groupMembershipResponseCallback);
+    }
+
+    private Callback<GroupsMembershipResponse> groupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
+        @Override
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsMembershipResponse groupsMembershipResponse = response.body();
+                    if (!groupsMembershipResponse.getData().getResult().isEmpty() && groupsMembershipResponse.getData().getResult().get(0).getIsAdmin() == 1) {
+                        memberType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+                        pinPostTextView.setVisibility(View.VISIBLE);
+                        blockUserTextView.setVisibility(View.VISIBLE);
+                        deletePostTextView.setVisibility(View.VISIBLE);
+                        reportPostTextView.setVisibility(View.GONE);
+                    } else {
+                        pinPostTextView.setVisibility(View.GONE);
+                        blockUserTextView.setVisibility(View.GONE);
+                        deletePostTextView.setVisibility(View.GONE);
+                        reportPostTextView.setVisibility(View.VISIBLE);
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void getGroupDetails() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
@@ -362,6 +424,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             case R.id.groupSettingsImageView: {
                 Intent intent = new Intent(GroupDetailsActivity.this, GroupSettingsActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
+                intent.putExtra("memberType", memberType);
                 startActivity(intent);
             }
             break;
@@ -408,6 +471,33 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     updateUserPostPreferences("disableNotif");
                 }
                 break;
+            case R.id.deletePostTextView:
+                Log.d("deletePostTextView", "" + selectedPost.getId());
+                updateAdminLevelPostPrefs("markInactive");
+//                if (deletePostTextView.getText().toString().equals("DISABLE NOTIFICATION")) {
+//                    updateUserPostPreferences("enableNotif");
+//                } else {
+//                    updateUserPostPreferences("disableNotif");
+//                }
+                break;
+            case R.id.blockUserTextView:
+                Log.d("blockUserTextView", "" + selectedPost.getId());
+                updateAdminLevelPostPrefs("blockUser");
+//                if (blockUserTextView.getText().toString().equals("DISABLE NOTIFICATION")) {
+//                    updateUserPostPreferences("enableNotif");
+//                } else {
+//                    updateUserPostPreferences("disableNotif");
+//                }
+                break;
+            case R.id.pinPostTextView:
+                Log.d("pinPostTextView", "" + selectedPost.getId());
+//                updateAdminLevelPostPrefs("pinPost");
+                if (pinPostTextView.getText().toString().equals("PIN THIS POST TO TOP")) {
+                    updateAdminLevelPostPrefs("pinPost");
+                } else {
+                    updateAdminLevelPostPrefs("unpinPost");
+                }
+                break;
             case R.id.reportPostTextView:
                 Log.d("reportPostTextView", "" + selectedPost.getId());
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
@@ -428,6 +518,135 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 break;
         }
     }
+
+    private void updateAdminLevelPostPrefs(String actionType) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        UpdatePostSettingsRequest request = new UpdatePostSettingsRequest();
+        if ("pinPost".equals(actionType)) {
+            request.setIsPinned(1);
+        } else if ("unpinPost".equals(actionType)) {
+            request.setIsPinned(0);
+        } else if ("blockUser".equals(actionType)) {
+            getPostingUsersMembershipDetails(selectedPost.getGroupId(), selectedPost.getUserId());
+            return;
+        } else if ("markInactive".equals(actionType)) {
+            request.setIsActive(0);
+        }
+
+        Call<GroupPostResponse> call = groupsAPI.updatePost(selectedPost.getId(), request);
+        call.enqueue(updateAdminLvlPostSettingResponseCallback);
+    }
+
+    private void getPostingUsersMembershipDetails(int groupId, String postsUserId) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        Call<GroupsMembershipResponse> call = groupsAPI.getUsersMembershipDetailsForGroup(groupId, postsUserId);
+        call.enqueue(getMembershipDetailsReponseCallback);
+    }
+
+    private Callback<GroupsMembershipResponse> getMembershipDetailsReponseCallback = new Callback<GroupsMembershipResponse>() {
+        @Override
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+                    GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+                    UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
+                    updateGroupMembershipRequest.setUserId(selectedPost.getUserId());
+                    updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
+                    Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(selectedPost.getId(), updateGroupMembershipRequest);
+                    call1.enqueue(updateGroupMembershipResponseCallback);
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private Callback<GroupsMembershipResponse> updateGroupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
+        @Override
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsMembershipResponse groupsMembershipResponse = response.body();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private Callback<GroupPostResponse> updateAdminLvlPostSettingResponseCallback = new Callback<GroupPostResponse>() {
+        @Override
+        public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupPostResponse updatePostResponse = response.body();
+                    if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
+                        pinPostTextView.setText("UNPIN THIS POST TO TOP");
+                    } else {
+                        pinPostTextView.setText("PIN THIS POST TO TOP");
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupPostResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void updatePostCommentSettings(int status) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
@@ -728,7 +947,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             case R.id.postSettingImageView:
                 selectedPost = postList.get(position);
-                getCurrentPostSettingsStatus(selectedPost);
+                getCurrentUserPostSettingsStatus(selectedPost);
+                if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
+                    getAdminPostSettingsStatus(selectedPost);
+                }
                 if (selectedPost.getDisableComments() == 1) {
                     commentToggleTextView.setText("ENABLE COMMENTS");
                 } else {
@@ -894,7 +1116,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
     };
 
-    private void getCurrentPostSettingsStatus(GroupPostResult selectedPost) {
+    private void getCurrentUserPostSettingsStatus(GroupPostResult selectedPost) {
         progressBar.setVisibility(View.VISIBLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -940,9 +1162,51 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
     };
 
+    private void getAdminPostSettingsStatus(GroupPostResult selectedPost) {
+//        progressBar.setVisibility(View.VISIBLE);
+        pinPostTextView.setVisibility(View.GONE);
+        blockUserTextView.setVisibility(View.GONE);
+        deletePostTextView.setVisibility(View.GONE);
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        Call<GroupPostResponse> call = groupsAPI.getSinglePost(selectedPost.getId());
+        call.enqueue(postDetailsResponseCallback);
+    }
+
+    private Callback<GroupPostResponse> postDetailsResponseCallback = new Callback<GroupPostResponse>() {
+        @Override
+        public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupPostResponse groupPostResponse = response.body();
+                    setAdminPostPreferences(groupPostResponse);
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupPostResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
     private void setPostCurrentPreferences(UserPostSettingResponse userPostSettingResponse) {
 
-        if (selectedPost.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupDetailsActivity.this).getDynamoId())) {
+        if (selectedPost.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupDetailsActivity.this).getDynamoId())
+                || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
             commentToggleTextView.setVisibility(View.VISIBLE);
         } else {
             commentToggleTextView.setVisibility(View.GONE);
@@ -969,6 +1233,17 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    private void setAdminPostPreferences(GroupPostResponse groupPostResponse) {
+        pinPostTextView.setVisibility(View.VISIBLE);
+        blockUserTextView.setVisibility(View.VISIBLE);
+        deletePostTextView.setVisibility(View.VISIBLE);
+        if (groupPostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
+            pinPostTextView.setText("UNPIN THIS POST TO TOP");
+        } else {
+            pinPostTextView.setText("PIN THIS POST TO TOP");
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -981,6 +1256,16 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             limit = 10;
             postList.clear();
             getGroupPosts();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

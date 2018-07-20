@@ -24,6 +24,7 @@ import com.mycity4kids.ui.adapter.GroupsRecyclerGridAdapter;
 import com.mycity4kids.widget.SpacesItemDecoration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -155,7 +156,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
 
     private void processGroupListingResponse(GroupsListingResponse responseModel) {
         totalGroupCount = responseModel.getTotal();
-        ArrayList<GroupResult> dataList = responseModel.getData().get(0).getResult();
+        List<GroupResult> dataList = responseModel.getData().get(0).getResult();
         if (dataList.size() == 0) {
             isLastPageReached = false;
             if (null != groupList && !groupList.isEmpty()) {
@@ -164,7 +165,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             } else {
                 // No results for search
                 noGroupsTextView.setVisibility(View.VISIBLE);
-                groupList = dataList;
+                groupList = (ArrayList<GroupResult>) dataList;
                 adapter.setNewListData(groupList);
                 adapter.notifyDataSetChanged();
                 recyclerGridView.setVisibility(View.GONE);
@@ -172,7 +173,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         } else {
             noGroupsTextView.setVisibility(View.GONE);
             if (skip == 0) {
-                groupList = dataList;
+                groupList = (ArrayList<GroupResult>) dataList;
             } else {
                 groupList.addAll(dataList);
             }

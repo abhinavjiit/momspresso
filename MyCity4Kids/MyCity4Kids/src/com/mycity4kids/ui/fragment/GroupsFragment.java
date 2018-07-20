@@ -31,6 +31,7 @@ import com.mycity4kids.widget.SpacesItemDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -139,13 +140,13 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             try {
                 if (response.isSuccessful()) {
                     GroupsListingResponse responseModel = response.body();
-                    ArrayList<GroupResult> dataList = responseModel.getData().get(0).getResult();
+                    List<GroupResult> dataList = responseModel.getData().get(0).getResult();
                     if (dataList == null || dataList.isEmpty()) {
                         joinedGroupRecyclerGridView.setVisibility(View.GONE);
                         seeAllJoinedGpTextView.setVisibility(View.GONE);
                     } else {
                         joinedGroupRecyclerGridView.setVisibility(View.VISIBLE);
-                        joinedGroupList = dataList;
+                        joinedGroupList = (ArrayList<GroupResult>) dataList;
                         getJoinedGroupAdapter.setNewListData(joinedGroupList);
                         getJoinedGroupAdapter.notifyDataSetChanged();
                         if (joinedGroupList.size() > 4) {
@@ -193,13 +194,13 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             try {
                 if (response.isSuccessful()) {
                     GroupsListingResponse responseModel = response.body();
-                    ArrayList<GroupResult> dataList = responseModel.getData().get(0).getResult();
+                    List<GroupResult> dataList = responseModel.getData().get(0).getResult();
                     if (dataList == null || dataList.isEmpty()) {
                         allGroupRecyclerGridView.setVisibility(View.GONE);
                         seeAllGpTextView.setVisibility(View.GONE);
                         allGroupLabelTextView.setVisibility(View.GONE);
                     } else {
-                        allGroupList = dataList;
+                        allGroupList = (ArrayList<GroupResult>) dataList;
                         allGroupRecyclerGridView.setAdapter(getAllGroupAdapter);
                         getAllGroupAdapter.setNewListData(allGroupList);
                         getAllGroupAdapter.notifyDataSetChanged();

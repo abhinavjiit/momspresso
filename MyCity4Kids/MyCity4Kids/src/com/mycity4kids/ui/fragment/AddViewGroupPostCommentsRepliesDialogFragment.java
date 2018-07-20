@@ -317,8 +317,8 @@ public class AddViewGroupPostCommentsRepliesDialogFragment extends DialogFragmen
                     groupPostCommentResult.setGroupId(groupPostResponse.getData().getResult().getGroupId());
                     groupPostCommentResult.setPostId(groupPostResponse.getData().getResult().getPostId());
                     groupPostCommentResult.setUserId(groupPostResponse.getData().getResult().getUserId());
-                    groupPostCommentResult.setIsActive(groupPostResponse.getData().getResult().isActive() ? 1 : 0);
-                    groupPostCommentResult.setIsAnnon(groupPostResponse.getData().getResult().isAnnon() ? 1 : 0);
+                    groupPostCommentResult.setIsActive(groupPostResponse.getData().getResult().isActive());
+                    groupPostCommentResult.setIsAnnon(groupPostResponse.getData().getResult().isAnnon());
                     groupPostCommentResult.setModerationStatus(groupPostResponse.getData().getResult().getModerationStatus());
                     groupPostCommentResult.setModeratedBy(groupPostResponse.getData().getResult().getModeratedBy());
                     groupPostCommentResult.setModeratedOn(groupPostResponse.getData().getResult().getModeratedon());

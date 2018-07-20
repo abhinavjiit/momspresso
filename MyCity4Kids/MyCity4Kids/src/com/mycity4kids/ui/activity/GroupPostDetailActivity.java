@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -146,7 +147,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        postData = null;
+//        postData = null;
         if (postData == null) {
             getPostDetails();
         } else {
@@ -818,8 +819,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostCommentResult.setGroupId(groupPostResponse.getData().getResult().getGroupId());
                     groupPostCommentResult.setPostId(groupPostResponse.getData().getResult().getPostId());
                     groupPostCommentResult.setUserId(groupPostResponse.getData().getResult().getUserId());
-                    groupPostCommentResult.setIsActive(groupPostResponse.getData().getResult().isActive() ? 1 : 0);
-                    groupPostCommentResult.setIsAnnon(groupPostResponse.getData().getResult().isAnnon() ? 1 : 0);
+                    groupPostCommentResult.setIsActive(groupPostResponse.getData().getResult().isActive());
+                    groupPostCommentResult.setIsAnnon(groupPostResponse.getData().getResult().isAnnon());
                     groupPostCommentResult.setModerationStatus(groupPostResponse.getData().getResult().getModerationStatus());
                     groupPostCommentResult.setModeratedBy(groupPostResponse.getData().getResult().getModeratedBy());
                     groupPostCommentResult.setModeratedOn(groupPostResponse.getData().getResult().getModeratedon());
@@ -865,5 +866,15 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 //            return false;
 //        }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

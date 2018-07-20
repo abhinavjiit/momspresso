@@ -37,8 +37,8 @@ public class AddGpPostCommentReplyResponse extends BaseResponse {
             private int groupId;
             private int postId;
             private String userId;
-            private boolean isActive;
-            private boolean isAnnon;
+            private int isActive;
+            private int isAnnon;
             private String moderationStatus;
             private String moderatedBy;
             private String moderatedon;
@@ -109,19 +109,19 @@ public class AddGpPostCommentReplyResponse extends BaseResponse {
                 this.userId = userId;
             }
 
-            public boolean isActive() {
+            public int isActive() {
                 return isActive;
             }
 
-            public void setActive(boolean active) {
+            public void setActive(int active) {
                 isActive = active;
             }
 
-            public boolean isAnnon() {
+            public int isAnnon() {
                 return isAnnon;
             }
 
-            public void setAnnon(boolean annon) {
+            public void setAnnon(int annon) {
                 isAnnon = annon;
             }
 

@@ -7,16 +7,23 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.share.Share;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.models.request.ReportedContentModerationRequest;
 import com.mycity4kids.models.response.GroupReportedContentResult;
 import com.mycity4kids.models.response.GroupsReportedContentResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.adapter.GroupsReportedContentRecyclerAdapter;
 
@@ -39,6 +46,8 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
 
+    private Animation slideAnim, fadeAnim;
+
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private LinearLayout postSettingsContainer;
@@ -46,6 +55,8 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
     private View overlayView;
     private ArrayList<GroupReportedContentResult> postList;
     private GroupsReportedContentRecyclerAdapter groupsReportedContentRecyclerAdapter;
+    private GroupReportedContentResult selectedPost;
+    private TextView noActionTextView, hideContentTextView, blockUserTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +67,9 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         postSettingsContainer = (LinearLayout) findViewById(R.id.postSettingsContainer);
         postSettingsContainerMain = (RelativeLayout) findViewById(R.id.postSettingsContainerMain);
+        noActionTextView = (TextView) findViewById(R.id.noActionTextView);
+        hideContentTextView = (TextView) findViewById(R.id.hideContentTextView);
+        blockUserTextView = (TextView) findViewById(R.id.blockUserTextView);
         overlayView = findViewById(R.id.overlayView);
 
         setSupportActionBar(toolbar);
@@ -63,6 +77,12 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         overlayView.setOnClickListener(this);
+        noActionTextView.setOnClickListener(this);
+        hideContentTextView.setOnClickListener(this);
+        blockUserTextView.setOnClickListener(this);
+
+        slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
+        fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
 
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -197,11 +217,69 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
                 overlayView.setVisibility(View.GONE);
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
+            case R.id.noActionTextView:
+                updateReportedContent(selectedPost.getId(), AppConstants.CONTENT_REPORT_ACTION_NONE);
+                break;
+            case R.id.hideContentTextView:
+                updateReportedContent(selectedPost.getId(), AppConstants.CONTENT_REPORT_ACTION_HIDE_CONTENT);
+                break;
+            case R.id.blockUserTextView:
+                updateReportedContent(selectedPost.getId(), AppConstants.CONTENT_REPORT_ACTION_BLOCK_USER);
+                break;
         }
     }
 
+    private void updateReportedContent(int contentId, String contentReportAction) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        ReportedContentModerationRequest reportedContentModerationRequest = new ReportedContentModerationRequest();
+        reportedContentModerationRequest.setActionBy(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        reportedContentModerationRequest.setActionResponse(contentReportAction);
+        reportedContentModerationRequest.setIsModerated(1);
+        Call<GroupsReportedContentResponse> call = groupsAPI.moderateReportedContent(contentId, reportedContentModerationRequest);
+        call.enqueue(reportedContentModerationReponseCallback);
+    }
+
+    Callback<GroupsReportedContentResponse> reportedContentModerationReponseCallback = new Callback<GroupsReportedContentResponse>() {
+        @Override
+        public void onResponse(Call<GroupsReportedContentResponse> call, retrofit2.Response<GroupsReportedContentResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsReportedContentResponse reportedContentResponse = response.body();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsReportedContentResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
     @Override
     public void onRecyclerItemClick(View view, int position) {
-
+        switch (view.getId()) {
+            case R.id.postSettingImageView:
+                selectedPost = postList.get(position);
+                postSettingsContainer.startAnimation(slideAnim);
+                overlayView.startAnimation(fadeAnim);
+                postSettingsContainerMain.setVisibility(View.VISIBLE);
+                postSettingsContainer.setVisibility(View.VISIBLE);
+                overlayView.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 }

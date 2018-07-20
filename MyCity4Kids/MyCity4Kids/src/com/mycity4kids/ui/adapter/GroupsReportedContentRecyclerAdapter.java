@@ -1,11 +1,9 @@
 package com.mycity4kids.ui.adapter;
 
-import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +13,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.models.request.GroupActionsRequest;
-import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupReportedContentResult;
-import com.mycity4kids.models.response.GroupsActionResponse;
-import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
@@ -33,11 +24,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by hemant on 4/12/17.
@@ -51,25 +37,18 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
     public static final int POST_TYPE_IMAGE_POLL = 3;
 
     //    public static final int HEADER = -1;
-    public static final int COMMENT_LEVEL_ROOT = 0;
-    private final String localizedNotHelpful, localizedHelpful, localizedComment;
+    public static final int COMMENT_LEVEL_ROOT = 4;
 
-    public static final int COMMENT_LEVEL_REPLY_REPLY = 2;
     private final Context mContext;
     private final LayoutInflater mInflator;
     private ArrayList<GroupReportedContentResult> postCommentsList;
     private RecyclerViewClickListener mListener;
-    private int selectedPosition;
     private int currentPagerPos = 0;
-    private GroupPostResult groupPostResult;
 
     public GroupsReportedContentRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
         mContext = pContext;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mListener = listener;
-        localizedComment = mContext.getString(R.string.groups_post_comment);
-        localizedHelpful = mContext.getString(R.string.groups_post_helpful);
-        localizedNotHelpful = mContext.getString(R.string.groups_post_nothelpful);
     }
 
     public void setData(ArrayList<GroupReportedContentResult> postCommentsList) {
@@ -83,7 +62,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
 
     @Override
     public int getItemViewType(int position) {
-        if (postCommentsList.get(position).getResponseId() != 0) {
+        if (postCommentsList.get(position).getResponseId() == 0) {
             if (postCommentsList.get(position).getContent().getType().equals("0")) {
                 return POST_TYPE_TEXT;
             } else if (postCommentsList.get(position).getContent().getType().equals("1")) {
@@ -102,20 +81,20 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (AppConstants.POST_TYPE_TEXT.equals(viewType)) {
-            View v0 = mInflator.inflate(R.layout.groups_text_post_item, parent, false);
+        if (POST_TYPE_TEXT == viewType) {
+            View v0 = mInflator.inflate(R.layout.report_text_post_item, parent, false);
             return new TextPostViewHolder(v0);
-        } else if (AppConstants.POST_TYPE_MEDIA.equals(viewType)) {
-            View v0 = mInflator.inflate(R.layout.groups_media_post_item, parent, false);
+        } else if (POST_TYPE_MEDIA == viewType) {
+            View v0 = mInflator.inflate(R.layout.report_media_post_item, parent, false);
             return new MediaPostViewHolder(v0);
-        } else if (AppConstants.POST_TYPE_TEXT_POLL.equals(viewType)) {
-            View v0 = mInflator.inflate(R.layout.groups_text_poll_post_item, parent, false);
+        } else if (POST_TYPE_TEXT_POLL == viewType) {
+            View v0 = mInflator.inflate(R.layout.report_text_poll_post_item, parent, false);
             return new TextPollPostViewHolder(v0);
-        } else if (AppConstants.POST_TYPE_IMAGE_POLL.equals(viewType)) {
-            View v0 = mInflator.inflate(R.layout.groups_image_poll_post_item, parent, false);
+        } else if (POST_TYPE_IMAGE_POLL == viewType) {
+            View v0 = mInflator.inflate(R.layout.report_image_poll_post_item, parent, false);
             return new ImagePollPostViewHolder(v0);
         } else {
-            View v0 = mInflator.inflate(R.layout.group_post_comment_cell_test, parent, false);
+            View v0 = mInflator.inflate(R.layout.report_post_comment_cell, parent, false);
             return new RootCommentViewHolder(v0);
         }
     }
@@ -124,18 +103,39 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
-            textPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
-            textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            textPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
-            textPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
-            textPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
-            if (groupPostResult.getIsAnnon() == 1) {
+            textPostViewHolder.postDataTextView.setText(postCommentsList.get(position).getContent().getContent());
+            textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getContent().getCreatedAt()));
+            if (postCommentsList.get(position).getItsASpamCount() > 0) {
+                textPostViewHolder.reportedSpamTextView.setVisibility(View.VISIBLE);
+                textPostViewHolder.reportedSpamTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_spam) + " - " + postCommentsList.get(position).getItsASpamCount());
+            } else {
+                textPostViewHolder.reportedSpamTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getAbusiveContentCount() > 0) {
+                textPostViewHolder.reportedAbuseTextView.setVisibility(View.VISIBLE);
+                textPostViewHolder.reportedAbuseTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_abuse) + " - " + postCommentsList.get(position).getAbusiveContentCount());
+            } else {
+                textPostViewHolder.reportedAbuseTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getNotInterestingCount() > 0) {
+                textPostViewHolder.reportedUninterestingTextView.setVisibility(View.VISIBLE);
+                textPostViewHolder.reportedUninterestingTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_uninteresting) + " - " + postCommentsList.get(position).getNotInterestingCount());
+            } else {
+                textPostViewHolder.reportedUninterestingTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getOtherCount() > 0) {
+                textPostViewHolder.reportedOtherTextView.setVisibility(View.VISIBLE);
+                textPostViewHolder.reportedOtherTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_other) + " - " + postCommentsList.get(position).getOtherCount());
+            } else {
+                textPostViewHolder.reportedOtherTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getContent().getIsAnnon() == 1) {
                 textPostViewHolder.usernameTextView.setText("Anonymous");
                 textPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
             } else {
-                textPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                textPostViewHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.with(mContext).load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPostViewHolder.userImageView);
                 } catch (Exception e) {
                     textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -143,18 +143,39 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             }
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
-            mediaPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
-            mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            mediaPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
-            mediaPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
-            mediaPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
-            if (groupPostResult.getIsAnnon() == 1) {
+            mediaPostViewHolder.postDataTextView.setText(postCommentsList.get(position).getContent().getContent());
+            mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getContent().getCreatedAt()));
+            if (postCommentsList.get(position).getItsASpamCount() > 0) {
+                mediaPostViewHolder.reportedSpamTextView.setVisibility(View.VISIBLE);
+                mediaPostViewHolder.reportedSpamTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_spam) + " - " + postCommentsList.get(position).getItsASpamCount());
+            } else {
+                mediaPostViewHolder.reportedSpamTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getAbusiveContentCount() > 0) {
+                mediaPostViewHolder.reportedAbuseTextView.setVisibility(View.VISIBLE);
+                mediaPostViewHolder.reportedAbuseTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_abuse) + " - " + +postCommentsList.get(position).getAbusiveContentCount());
+            } else {
+                mediaPostViewHolder.reportedAbuseTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getNotInterestingCount() > 0) {
+                mediaPostViewHolder.reportedUninterestingTextView.setVisibility(View.VISIBLE);
+                mediaPostViewHolder.reportedUninterestingTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_uninteresting) + " - " + +postCommentsList.get(position).getNotInterestingCount());
+            } else {
+                mediaPostViewHolder.reportedUninterestingTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getOtherCount() > 0) {
+                mediaPostViewHolder.reportedOtherTextView.setVisibility(View.VISIBLE);
+                mediaPostViewHolder.reportedOtherTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_other) + " - " + postCommentsList.get(position).getOtherCount());
+            } else {
+                mediaPostViewHolder.reportedOtherTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getContent().getIsAnnon() == 1) {
                 mediaPostViewHolder.usernameTextView.setText("Anonymous");
                 mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
             } else {
-                mediaPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                mediaPostViewHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.with(mContext).load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(mediaPostViewHolder.userImageView);
                 } catch (Exception e) {
                     mediaPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -163,18 +184,39 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             initializeViews((MediaPostViewHolder) holder, position);
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
-            textPollPostViewHolder.pollQuestionTextView.setText(groupPostResult.getContent());
-            textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            textPollPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
-            textPollPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
-            textPollPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
-            if (groupPostResult.getIsAnnon() == 1) {
+            textPollPostViewHolder.pollQuestionTextView.setText(postCommentsList.get(position).getContent().getContent());
+            textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getContent().getCreatedAt()));
+            if (postCommentsList.get(position).getItsASpamCount() > 0) {
+                textPollPostViewHolder.reportedSpamTextView.setVisibility(View.VISIBLE);
+                textPollPostViewHolder.reportedSpamTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_spam) + " - " + postCommentsList.get(position).getItsASpamCount());
+            } else {
+                textPollPostViewHolder.reportedSpamTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getAbusiveContentCount() > 0) {
+                textPollPostViewHolder.reportedAbuseTextView.setVisibility(View.VISIBLE);
+                textPollPostViewHolder.reportedAbuseTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_abuse) + " - " + postCommentsList.get(position).getAbusiveContentCount());
+            } else {
+                textPollPostViewHolder.reportedAbuseTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getNotInterestingCount() > 0) {
+                textPollPostViewHolder.reportedUninterestingTextView.setVisibility(View.VISIBLE);
+                textPollPostViewHolder.reportedUninterestingTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_uninteresting) + " - " + postCommentsList.get(position).getNotInterestingCount());
+            } else {
+                textPollPostViewHolder.reportedUninterestingTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getOtherCount() > 0) {
+                textPollPostViewHolder.reportedOtherTextView.setVisibility(View.VISIBLE);
+                textPollPostViewHolder.reportedOtherTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_other) + " - " + postCommentsList.get(position).getOtherCount());
+            } else {
+                textPollPostViewHolder.reportedOtherTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getContent().getIsAnnon() == 1) {
                 textPollPostViewHolder.usernameTextView.setText("Anonymous");
                 textPollPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
             } else {
-                textPollPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                textPollPostViewHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.with(mContext).load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPollPostViewHolder.userImageView);
                 } catch (Exception e) {
                     textPollPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -182,7 +224,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             }
             textPollPostViewHolder.option3Container.setVisibility(View.GONE);
             textPollPostViewHolder.option4Container.setVisibility(View.GONE);
-            Map<String, String> optionsMap = (Map<String, String>) groupPostResult.getPollOptions();
+            Map<String, String> optionsMap = (Map<String, String>) postCommentsList.get(position).getContent().getPollOptions();
             for (Map.Entry<String, String> entry : optionsMap.entrySet()) {
                 switch (entry.getKey()) {
                     case "option1":
@@ -207,19 +249,40 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             }
         } else if (holder instanceof ImagePollPostViewHolder) {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
-            imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            imageHolder.usernameTextView.setText(groupPostResult.getUserId());
-            imageHolder.pollQuestionTextView.setText(groupPostResult.getContent());
-            imageHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
-            imageHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
-            imageHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
-            if (groupPostResult.getIsAnnon() == 1) {
+            imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getContent().getCreatedAt()));
+            imageHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserId());
+            imageHolder.pollQuestionTextView.setText(postCommentsList.get(position).getContent().getContent());
+            if (postCommentsList.get(position).getItsASpamCount() > 0) {
+                imageHolder.reportedSpamTextView.setVisibility(View.VISIBLE);
+                imageHolder.reportedSpamTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_spam) + " - " + postCommentsList.get(position).getItsASpamCount());
+            } else {
+                imageHolder.reportedSpamTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getAbusiveContentCount() > 0) {
+                imageHolder.reportedAbuseTextView.setVisibility(View.VISIBLE);
+                imageHolder.reportedAbuseTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_abuse) + " - " + postCommentsList.get(position).getAbusiveContentCount());
+            } else {
+                imageHolder.reportedAbuseTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getNotInterestingCount() > 0) {
+                imageHolder.reportedUninterestingTextView.setVisibility(View.VISIBLE);
+                imageHolder.reportedUninterestingTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_uninteresting) + " - " + postCommentsList.get(position).getNotInterestingCount());
+            } else {
+                imageHolder.reportedUninterestingTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getOtherCount() > 0) {
+                imageHolder.reportedOtherTextView.setVisibility(View.VISIBLE);
+                imageHolder.reportedOtherTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_other) + " - " + postCommentsList.get(position).getOtherCount());
+            } else {
+                imageHolder.reportedOtherTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getContent().getIsAnnon() == 1) {
                 imageHolder.usernameTextView.setText("Anonymous");
                 imageHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
             } else {
-                imageHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                imageHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
-                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                    Picasso.with(mContext).load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.userImageView);
                 } catch (Exception e) {
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
@@ -228,7 +291,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             imageHolder.lastOptionsContainer.setVisibility(View.GONE);
             imageHolder.option3Container.setVisibility(View.GONE);
             imageHolder.option4Container.setVisibility(View.GONE);
-            Map<String, String> imageMap = (Map<String, String>) groupPostResult.getPollOptions();
+            Map<String, String> imageMap = (Map<String, String>) postCommentsList.get(position).getContent().getPollOptions();
             for (Map.Entry<String, String> entry : imageMap.entrySet()) {
                 switch (entry.getKey()) {
                     case "option1":
@@ -259,12 +322,30 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
                     + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
             rootCommentViewHolder.commentDataTextView.setText(postCommentsList.get(position).getContent().getContent());
             rootCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getCreatedAt()));
-//            if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
-//                rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
-//            } else {
-//                rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-//                rootCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
-//            }
+            if (postCommentsList.get(position).getItsASpamCount() > 0) {
+                rootCommentViewHolder.reportedSpamTextView.setVisibility(View.VISIBLE);
+                rootCommentViewHolder.reportedSpamTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_spam) + " - " + postCommentsList.get(position).getItsASpamCount());
+            } else {
+                rootCommentViewHolder.reportedSpamTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getAbusiveContentCount() > 0) {
+                rootCommentViewHolder.reportedAbuseTextView.setVisibility(View.VISIBLE);
+                rootCommentViewHolder.reportedAbuseTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_abuse) + " - " + postCommentsList.get(position).getAbusiveContentCount());
+            } else {
+                rootCommentViewHolder.reportedAbuseTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getNotInterestingCount() > 0) {
+                rootCommentViewHolder.reportedUninterestingTextView.setVisibility(View.VISIBLE);
+                rootCommentViewHolder.reportedUninterestingTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_uninteresting) + " - " + postCommentsList.get(position).getNotInterestingCount());
+            } else {
+                rootCommentViewHolder.reportedUninterestingTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getOtherCount() > 0) {
+                rootCommentViewHolder.reportedOtherTextView.setVisibility(View.VISIBLE);
+                rootCommentViewHolder.reportedOtherTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_other) + " - " + postCommentsList.get(position).getOtherCount());
+            } else {
+                rootCommentViewHolder.reportedOtherTextView.setVisibility(View.GONE);
+            }
             try {
                 Picasso.with(mContext).load(postCommentsList.get(position).getContent().getUserInfo().getProfilePicUrl().getClientApp())
                         .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(rootCommentViewHolder.commentorImageView);
@@ -282,7 +363,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
 
     private void initializeViews(MediaPostViewHolder holder, int position) {
         ArrayList<String> mediaList = new ArrayList<>();
-        Map<String, String> map = (Map<String, String>) groupPostResult.getMediaUrls();
+        Map<String, String> map = (Map<String, String>) postCommentsList.get(position).getContent().getMediaUrls();
         for (String entry : map.values()) {
             mediaList.add(entry);
         }
@@ -306,9 +387,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
-        TextView upvoteCountTextView, downvoteCountTextView;
-        LinearLayout upvoteContainer, downvoteContainer;
-        TextView postCommentsTextView;
+        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedOtherTextView;
         ImageView postSettingImageView;
 
         TextPostViewHolder(View view) {
@@ -317,18 +396,15 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
             postDataTextView = (TextView) view.findViewById(R.id.postDataTextView);
-            upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
-            downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
-            upvoteContainer = (LinearLayout) view.findViewById(R.id.upvoteContainer);
-            downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
-            postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
+            reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);
+            reportedAbuseTextView = (TextView) view.findViewById(R.id.reportedAbuseTextView);
+            reportedUninterestingTextView = (TextView) view.findViewById(R.id.reportedUninterestingTextView);
+            reportedOtherTextView = (TextView) view.findViewById(R.id.reportedOtherTextView);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
-            upvoteContainer.setOnClickListener(this);
-            downvoteContainer.setOnClickListener(this);
         }
 
         @Override
@@ -342,9 +418,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
-        TextView upvoteCountTextView, downvoteCountTextView;
-        LinearLayout upvoteContainer, downvoteContainer;
-        TextView postCommentsTextView;
+        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedOtherTextView;
         ImageView postSettingImageView;
         private BubblePageIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
@@ -357,21 +431,18 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
             postDataTextView = (TextView) view.findViewById(R.id.postDataTextView);
-            upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
-            downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
-            upvoteContainer = (LinearLayout) view.findViewById(R.id.upvoteContainer);
-            downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
-            postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             dotIndicatorView = (BubblePageIndicator) view.findViewById(R.id.dotIndicatorView);
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
+            reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);
+            reportedAbuseTextView = (TextView) view.findViewById(R.id.reportedAbuseTextView);
+            reportedUninterestingTextView = (TextView) view.findViewById(R.id.reportedUninterestingTextView);
+            reportedOtherTextView = (TextView) view.findViewById(R.id.reportedOtherTextView);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
-            upvoteContainer.setOnClickListener(this);
-            downvoteContainer.setOnClickListener(this);
 
             mViewPagerAdapter = new GroupMediaPostViewPagerAdapter(mContext);
             postDataViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -404,9 +475,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         ImageView userImageView;
         TextView usernameTextView;
         TextView postDateTextView;
-        TextView upvoteCountTextView, downvoteCountTextView;
-        LinearLayout upvoteContainer, downvoteContainer;
-        TextView postCommentsTextView;
+        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedOtherTextView;
         ImageView postSettingImageView;
         TextView pollQuestionTextView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
@@ -420,11 +489,6 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
-            upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
-            downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
-            upvoteContainer = (LinearLayout) view.findViewById(R.id.upvoteContainer);
-            downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
-            postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             pollQuestionTextView = (TextView) view.findViewById(R.id.pollQuestionTextView);
             pollOption1ProgressBar = (RoundCornerProgressBar) view.findViewById(R.id.pollOption1ProgressBar);
@@ -445,81 +509,15 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             pollOption4ProgressTextView = (TextView) view.findViewById(R.id.pollOption4ProgressTextView);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+            reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);
+            reportedAbuseTextView = (TextView) view.findViewById(R.id.reportedAbuseTextView);
+            reportedUninterestingTextView = (TextView) view.findViewById(R.id.reportedUninterestingTextView);
+            reportedOtherTextView = (TextView) view.findViewById(R.id.reportedOtherTextView);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
-            upvoteContainer.setOnClickListener(this);
-            downvoteContainer.setOnClickListener(this);
 
-            pollOption1ProgressBar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option1");
-
-//                    pollOption1ProgressBar.setProgress(80.0f);
-//                    pollOption2ProgressBar.setProgress(20.0f);
-//                    pollOption1ProgressTextView.setText("80%");
-//                    pollOption2ProgressTextView.setText("20%");
-//                    pollOption1ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollResult1TextView.setVisibility(View.VISIBLE);
-//                    pollResult2TextView.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.GONE);
-//                    pollOption2TextView.setVisibility(View.GONE);
-                }
-            });
-
-            pollOption2ProgressBar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option2");
-//                    pollOption1ProgressBar.setProgress(40.0f);
-//                    pollOption2ProgressBar.setProgress(60.0f);
-//                    pollOption1ProgressTextView.setText("40%");
-//                    pollOption2ProgressTextView.setText("60%");
-//                    pollOption1ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollResult1TextView.setVisibility(View.VISIBLE);
-//                    pollResult2TextView.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.GONE);
-//                    pollOption2TextView.setVisibility(View.GONE);
-                }
-            });
-
-            pollOption3ProgressBar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option3");
-//                    pollOption1ProgressBar.setProgress(40.0f);
-//                    pollOption2ProgressBar.setProgress(60.0f);
-//                    pollOption1ProgressTextView.setText("40%");
-//                    pollOption2ProgressTextView.setText("60%");
-//                    pollOption1ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollResult1TextView.setVisibility(View.VISIBLE);
-//                    pollResult2TextView.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.GONE);
-//                    pollOption2TextView.setVisibility(View.GONE);
-                }
-            });
-
-            pollOption4ProgressBar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option4");
-//                    pollOption1ProgressBar.setProgress(40.0f);
-//                    pollOption2ProgressBar.setProgress(60.0f);
-//                    pollOption1ProgressTextView.setText("40%");
-//                    pollOption2ProgressTextView.setText("60%");
-//                    pollOption1ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollResult1TextView.setVisibility(View.VISIBLE);
-//                    pollResult2TextView.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.GONE);
-//                    pollOption2TextView.setVisibility(View.GONE);
-                }
-            });
         }
 
         @Override
@@ -532,9 +530,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         ImageView userImageView;
         TextView usernameTextView;
         TextView postDateTextView;
-        TextView upvoteCountTextView, downvoteCountTextView;
-        LinearLayout upvoteContainer, downvoteContainer;
-        TextView postCommentsTextView;
+        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedOtherTextView;
         ImageView postSettingImageView;
         TextView pollQuestionTextView;
         ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
@@ -548,11 +544,6 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
-            upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
-            downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
-            upvoteContainer = (LinearLayout) view.findViewById(R.id.upvoteContainer);
-            downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
-            postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             option1ImageView = (ImageView) view.findViewById(R.id.option1ImageView);
             option2ImageView = (ImageView) view.findViewById(R.id.option2ImageView);
@@ -572,116 +563,14 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             option2Container = (RelativeLayout) view.findViewById(R.id.option2Container);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+            reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);
+            reportedAbuseTextView = (TextView) view.findViewById(R.id.reportedAbuseTextView);
+            reportedUninterestingTextView = (TextView) view.findViewById(R.id.reportedUninterestingTextView);
+            reportedOtherTextView = (TextView) view.findViewById(R.id.reportedOtherTextView);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
-            upvoteContainer.setOnClickListener(this);
-            downvoteContainer.setOnClickListener(this);
-
-            upvoteCountTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    markAsHelpfulOrUnhelpful(getAdapterPosition(), AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
-                }
-            });
-            downvoteCountTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    markAsHelpfulOrUnhelpful(getAdapterPosition(), AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
-                }
-            });
-            option1Container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option1");
-//                    pollOption1ProgressBar.setProgress(60.0f);
-//                    pollOption2ProgressBar.setProgress(17.0f);
-//                    pollOption3ProgressBar.setProgress(13.0f);
-//                    pollOption4ProgressBar.setProgress(10.0f);
-//                    pollOption1TextView.setText("60%");
-//                    pollOption2TextView.setText("17%");
-//                    pollOption3TextView.setText("13%");
-//                    pollOption4TextView.setText("10%");
-//                    pollOption1ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption3ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption4ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.VISIBLE);
-//                    pollOption2TextView.setVisibility(View.VISIBLE);
-//                    pollOption3TextView.setVisibility(View.VISIBLE);
-//                    pollOption4TextView.setVisibility(View.VISIBLE);
-                }
-            });
-
-            option2Container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option2");
-//                    pollOption1ProgressBar.setProgress(60.0f);
-//                    pollOption2ProgressBar.setProgress(17.0f);
-//                    pollOption3ProgressBar.setProgress(13.0f);
-//                    pollOption4ProgressBar.setProgress(10.0f);
-//                    pollOption1TextView.setText("60%");
-//                    pollOption2TextView.setText("17%");
-//                    pollOption3TextView.setText("13%");
-//                    pollOption4TextView.setText("10%");
-//                    pollOption1ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption3ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption4ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.VISIBLE);
-//                    pollOption2TextView.setVisibility(View.VISIBLE);
-//                    pollOption3TextView.setVisibility(View.VISIBLE);
-//                    pollOption4TextView.setVisibility(View.VISIBLE);
-                }
-            });
-
-            option3Container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option3");
-//                    pollOption1ProgressBar.setProgress(60.0f);
-//                    pollOption2ProgressBar.setProgress(17.0f);
-//                    pollOption3ProgressBar.setProgress(13.0f);
-//                    pollOption4ProgressBar.setProgress(10.0f);
-//                    pollOption1TextView.setText("60%");
-//                    pollOption2TextView.setText("17%");
-//                    pollOption3TextView.setText("13%");
-//                    pollOption4TextView.setText("10%");
-//                    pollOption1ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption3ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption4ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.VISIBLE);
-//                    pollOption2TextView.setVisibility(View.VISIBLE);
-//                    pollOption3TextView.setVisibility(View.VISIBLE);
-//                    pollOption4TextView.setVisibility(View.VISIBLE);
-                }
-            });
-
-            option4Container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addVote(getAdapterPosition(), "option4");
-//                    pollOption1ProgressBar.setProgress(60.0f);
-//                    pollOption2ProgressBar.setProgress(17.0f);
-//                    pollOption3ProgressBar.setProgress(13.0f);
-//                    pollOption4ProgressBar.setProgress(10.0f);
-//                    pollOption1TextView.setText("60%");
-//                    pollOption2TextView.setText("17%");
-//                    pollOption3TextView.setText("13%");
-//                    pollOption4TextView.setText("10%");
-//                    pollOption1ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption3ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption4ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.VISIBLE);
-//                    pollOption2TextView.setVisibility(View.VISIBLE);
-//                    pollOption3TextView.setVisibility(View.VISIBLE);
-//                    pollOption4TextView.setVisibility(View.VISIBLE);
-                }
-            });
         }
 
         @Override
@@ -695,9 +584,8 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         ImageView commentorImageView;
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
-        TextView replyCommentTextView;
         TextView commentDateTextView;
-        TextView replyCountTextView;
+        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedOtherTextView;
         View underlineView;
 
         RootCommentViewHolder(View view) {
@@ -705,12 +593,11 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
-            replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
-            replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
-
-            replyCommentTextView.setOnClickListener(this);
-            replyCountTextView.setOnClickListener(this);
+            reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);
+            reportedAbuseTextView = (TextView) view.findViewById(R.id.reportedAbuseTextView);
+            reportedUninterestingTextView = (TextView) view.findViewById(R.id.reportedUninterestingTextView);
+            reportedOtherTextView = (TextView) view.findViewById(R.id.reportedOtherTextView);
 
             underlineView = view.findViewById(R.id.underlineView);
         }
@@ -734,82 +621,6 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         public void onClick(View v) {
             mListener.onRecyclerItemClick(v, getAdapterPosition());
         }
-    }
-
-    public class ReplyReplyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        View underlineView;
-
-        ReplyReplyViewHolder(View view) {
-            super(view);
-            underlineView = view.findViewById(R.id.underlineView);
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
-        }
-    }
-
-    private void addVote(int position, String option) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
-        groupActionsRequest.setGroupId(groupPostResult.getGroupId());
-        groupActionsRequest.setPostId(groupPostResult.getId());
-        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
-        groupActionsRequest.setType(AppConstants.GROUP_ACTION_TYPE_VOTE_KEY);
-        groupActionsRequest.setVoteOption(option);
-        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
-        call.enqueue(groupActionResponseCallback);
-    }
-
-    private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
-        @Override
-        public void onResponse(Call<GroupsActionResponse> call, Response<GroupsActionResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    GroupsActionResponse groupsActionResponse = response.body();
-//                    for (int i = 0; i < postList.size(); i++) {
-//                        if (postList.get(i).getId() == groupsActionResponse.getData().getResult().getPostId()) {
-                    groupPostResult.setVoted(true);
-                    notifyDataSetChanged();
-//                            break;
-//                        }
-//                    }
-                } else {
-
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private void markAsHelpfulOrUnhelpful(int position, String markType) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
-        groupActionsRequest.setGroupId(groupPostResult.getGroupId());
-        groupActionsRequest.setPostId(groupPostResult.getId());
-        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
-        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
-        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
-        call.enqueue(groupActionResponseCallback);
     }
 
     public interface RecyclerViewClickListener {

@@ -711,4 +711,9 @@
     <string name="report.spam">It hurts religious sentiments</string>
     <string name="report.not_relevant">Any other</string>
     <string name="reply">Reply</string>
+
+    <string name="reported.spam">Reported as Spam</string>
+    <string name="reported.abuse">Reported as Abusive</string>
+    <string name="reported.uninteresting">Reported as Not Interesting</string>
+    <string name="reported.other">Reported as Other</string>
 </resources>

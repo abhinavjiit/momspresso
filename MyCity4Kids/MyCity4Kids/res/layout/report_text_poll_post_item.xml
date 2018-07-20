@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:background="@color/white_color"
+    android:paddingBottom="4dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="8dp">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/userImageView"
+        android:layout_width="@dimen/ad_comments_profile_pic_width"
+        android:layout_height="@dimen/ad_comments_profile_pic_width"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/author_img"
+        android:src="@drawable/default_commentor_img"
+        app:civ_border="true"
+        app:civ_border_color="@color/line_separator_color"
+        app:civ_border_width="1px"
+        app:civ_shadow="false" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/userImageView"
+        android:layout_toRightOf="@+id/userImageView"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="Priya Sachdeva"
+        android:textColor="@color/ad.comment.username"
+        android:textSize="14sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/postDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/usernameTextView"
+        android:layout_alignStart="@+id/usernameTextView"
+        android:layout_below="@id/usernameTextView"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="16 March 2018"
+        android:textColor="@color/ad.comment.body"
+        android:textSize="12sp"
+        app:fontName="open_sans.ttf" />
+
+    <ImageView
+        android:id="@+id/postSettingImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:src="@drawable/ic_more"
+        android:tint="#507cbe" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/pollQuestionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userImageView"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="15dp"
+        android:gravity="left"
+        android:text="What is your favorite color?"
+        android:textColor="@color/groups.light_black_color"
+        android:textSize="14sp"
+        android:visibility="visible"
+        app:fontName="open_sans.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/pollResult1TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pollQuestionTextView"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:text="BLUE"
+        android:visibility="gone"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/pollOption1ProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/pollResult1TextView"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/pollOption1ProgressTextView"
+        android:background="@drawable/polls_border_bg"
+        app:rcBackgroundColor="@color/white"
+        app:rcBackgroundPadding="0dp"
+        app:rcMax="100"
+        app:rcProgress="0"
+        app:rcProgressColor="#507cbe"
+        app:rcRadius="0dp"
+        app:rcReverse="false" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/pollOption1TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/pollOption1ProgressBar"
+        android:layout_alignTop="@+id/pollOption1ProgressBar"
+        android:layout_marginLeft="5dp"
+        android:background="@color/transparent"
+        android:clickable="false"
+        android:gravity="center_vertical"
+        android:text="BLUE"
+        android:textColor="@color/groups.light_black_color"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/pollOption1ProgressTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/pollResult1TextView"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:text="40%"
+        android:visibility="invisible" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/pollResult2TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pollOption1ProgressBar"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:text="GREEN"
+        android:visibility="gone"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/pollOption2ProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/pollResult2TextView"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/pollOption2ProgressTextView"
+        android:background="@drawable/polls_border_bg"
+        app:rcBackgroundColor="@color/white"
+        app:rcBackgroundPadding="0dp"
+        app:rcMax="100"
+        app:rcProgress="0"
+        app:rcProgressColor="#507cbe"
+        app:rcRadius="0dp"
+        app:rcReverse="false" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/pollOption2TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/pollOption2ProgressBar"
+        android:layout_alignTop="@+id/pollOption2ProgressBar"
+        android:layout_marginLeft="5dp"
+        android:background="@color/transparent"
+        android:clickable="false"
+        android:gravity="center_vertical"
+        android:text="GREEN"
+        android:textColor="@color/groups.light_black_color"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/pollOption2ProgressTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/pollResult2TextView"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:text="40%"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:id="@+id/option3Container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pollOption2ProgressBar"
+        android:visibility="gone">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/pollResult3TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:text="YELLOW"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+            android:id="@+id/pollOption3ProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/pollResult3TextView"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/pollOption3ProgressTextView"
+            android:background="@drawable/polls_border_bg"
+            app:rcBackgroundColor="@color/white"
+            app:rcBackgroundPadding="0dp"
+            app:rcMax="100"
+            app:rcProgress="0"
+            app:rcProgressColor="#507cbe"
+            app:rcRadius="0dp"
+            app:rcReverse="false" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/pollOption3TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/pollOption3ProgressBar"
+            android:layout_alignTop="@+id/pollOption3ProgressBar"
+            android:layout_marginLeft="5dp"
+            android:background="@color/transparent"
+            android:clickable="false"
+            android:gravity="center_vertical"
+            android:text="YELLOW"
+            android:textColor="@color/groups.light_black_color"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/pollOption3ProgressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/pollResult3TextView"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:text="40%"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/option4Container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/option3Container"
+        android:visibility="gone">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/pollResult4TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:text="RED"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+            android:id="@+id/pollOption4ProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/pollResult4TextView"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/pollOption4ProgressTextView"
+            android:background="@drawable/polls_border_bg"
+            app:rcBackgroundColor="@color/white"
+            app:rcBackgroundPadding="0dp"
+            app:rcMax="100"
+            app:rcProgress="0"
+            app:rcProgressColor="#507cbe"
+            app:rcRadius="0dp"
+            app:rcReverse="false" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/pollOption4TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/pollOption4ProgressBar"
+            android:layout_alignTop="@+id/pollOption4ProgressBar"
+            android:layout_marginLeft="5dp"
+            android:background="@color/transparent"
+            android:clickable="false"
+            android:gravity="center_vertical"
+            android:text="RED"
+            android:textColor="@color/groups.light_black_color"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/pollOption4ProgressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/pollResult4TextView"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:text="40%"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedSpamTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/option4Container"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Spam - 100"
+        android:visibility="gone" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedAbuseTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reportedSpamTextView"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Abuse - 2000"
+        android:visibility="gone" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedUninterestingTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reportedAbuseTextView"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Not Interesting - 2"
+        android:visibility="gone" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedOtherTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reportedUninterestingTextView"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Other - 0"
+        android:visibility="gone" />
+</RelativeLayout>
+

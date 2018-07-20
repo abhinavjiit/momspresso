@@ -39,7 +39,7 @@
         android:paddingRight="5dp"
         android:text="Priya Sachdeva"
         android:textColor="@color/ad.comment.username"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:fontName="oswald_regular.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -55,7 +55,7 @@
         android:paddingRight="5dp"
         android:text="16 March 2018"
         android:textColor="@color/ad.comment.body"
-        android:textSize="12sp"
+        android:textSize="10sp"
         app:fontName="open_sans.ttf" />
 
     <ImageView
@@ -69,116 +69,107 @@
         android:src="@drawable/ic_more"
         android:tint="#507cbe" />
 
+    <!--<com.daimajia.slider.library.SliderLayout-->
+    <!--android:id="@+id/postDataViewPager"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="400dp"-->
+    <!--android:layout_below="@+id/userImageView"-->
+    <!--android:layout_marginEnd="2dp"-->
+    <!--android:layout_marginRight="2dp"-->
+    <!--android:layout_marginTop="15dp" />-->
+
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/postDataTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/userImageView"
-        android:layout_marginEnd="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:gravity="left"
         android:maxLines="3"
         android:text="lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ddwdctgbhtg dawdw vfbgb ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum"
         android:textColor="#9c9dac"
-        android:textSize="12sp"
-        android:visibility="visible"
+        android:textSize="10sp"
         app:fontName="open_sans.ttf" />
 
-    <LinearLayout
-        android:id="@+id/upvoteContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.mycity4kids.widget.GroupPostMediaViewPager
+        android:id="@+id/postDataViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:layout_below="@+id/postDataTextView"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/upvoteImageVIew"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_upvote" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/upvoteTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:gravity="center"
-            android:text="20 Helpful"
-            android:textColor="@color/groups.grey"
-            android:textSize="12sp"
-            app:fontName="oswald.ttf" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/downvoteContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/postDataTextView"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="16dp"
-        android:layout_toRightOf="@+id/upvoteContainer"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/downvoteImageVIew"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_downvote" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/downvoteTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:gravity="center"
-            android:text="20 Helpful"
-            android:textColor="@color/groups.grey"
-            android:textSize="12sp"
-            app:fontName="oswald.ttf" />
-    </LinearLayout>
+        android:layout_marginTop="15dp" />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/postCommentsTextView"
+        android:id="@+id/indexTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/postDataTextView"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_toLeftOf="@+id/addCommentImageView"
-        android:gravity="bottom"
-        android:padding="5dp"
-        android:text="20 Comments"
-        android:textColor="@color/groups.blue_color"
-        android:textSize="12sp"
-        app:fontName="oswald.ttf" />
-
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/addCommentImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/postDataTextView"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="10dp"
-        android:layout_toLeftOf="@+id/shareTextView"
-        android:padding="5dp"
-        android:src="@drawable/ic_comments"
-        android:tint="@color/groups.blue_color" />
-
-    <ImageView
-        android:id="@+id/shareTextView"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/postDataTextView"
-        android:layout_marginTop="10dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="5dp"
-        android:src="@drawable/ic_share_white"
-        android:tint="@color/ad.follow_following_text" />
+        android:layout_alignTop="@+id/postDataViewPager"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/gp_media_post_index"
+        android:paddingBottom="3dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingTop="3dp"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <com.shuhart.bubblepagerindicator.BubblePageIndicator
+        android:id="@+id/dotIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/reportedSpamTextView"
+        android:layout_below="@id/pager"
+        android:layout_centerHorizontal="true"
+        app:bpi_fillColor="@color/groups.blue_color"
+        app:bpi_marginBetweenCircles="4dp"
+        app:bpi_onSurfaceCount="5"
+        app:bpi_pageColor="@color/line_separator_color"
+        app:bpi_radius="3dp"
+        app:bpi_risingCount="3" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedSpamTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postDataViewPager"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Spam - 100"
+        android:visibility="visible" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedAbuseTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reportedSpamTextView"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Abuse - 2000"
+        android:visibility="visible" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedUninterestingTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reportedAbuseTextView"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Not Interesting - 2"
+        android:visibility="visible" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/reportedOtherTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reportedUninterestingTextView"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Reported as Other - 0"
+        android:visibility="visible" />
 </RelativeLayout>
 

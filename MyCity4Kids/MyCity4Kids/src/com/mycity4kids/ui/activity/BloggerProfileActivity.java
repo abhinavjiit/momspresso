@@ -2,6 +2,7 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -278,9 +279,11 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         break;
                 }
 
-                if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())) {
+                try {
                     Picasso.with(BloggerProfileActivity.this).load(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
+                } catch (Exception e) {
+                    imgProfile.setImageDrawable(ContextCompat.getDrawable(BloggerProfileActivity.this, R.drawable.family_xxhdpi));
                 }
 
                 if (responseData.getData().get(0).getResult().getUserBio() == null || responseData.getData().get(0).getResult().getUserBio().isEmpty()) {

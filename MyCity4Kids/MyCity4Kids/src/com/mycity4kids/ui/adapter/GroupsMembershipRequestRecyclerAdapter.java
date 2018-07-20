@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.GroupResult;
+import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class GroupsMembershipRequestRecyclerAdapter extends RecyclerView.Adapter
 
     private final Context mContext;
     private final LayoutInflater mInflator;
-    private ArrayList<GroupResult> groupsDataList;
+    private ArrayList<GroupsMembershipResult> membersDataList;
     private GroupsMembershipRequestRecyclerAdapter.RecyclerViewClickListener mListener;
     private int selectedPosition;
     private boolean isMember, isFullList;
@@ -36,8 +37,8 @@ public class GroupsMembershipRequestRecyclerAdapter extends RecyclerView.Adapter
         this.isFullList = isFullList;
     }
 
-    public void setNewListData(ArrayList<GroupResult> groupsDataList) {
-        this.groupsDataList = groupsDataList;
+    public void setData(ArrayList<GroupsMembershipResult> membersDataList) {
+        this.membersDataList = membersDataList;
     }
 
 
@@ -56,12 +57,12 @@ public class GroupsMembershipRequestRecyclerAdapter extends RecyclerView.Adapter
 //        } else {
 //            holder.articleImageView.setBackgroundResource(R.drawable.default_article);
 //        }
-        holder.memberNameTextView.setText(groupsDataList.get(position).getTitle());
+        holder.memberNameTextView.setText(membersDataList.get(position).getUserInfo().getFirstName());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return membersDataList.size();
     }
 
     public class MembersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

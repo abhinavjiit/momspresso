@@ -8,7 +8,10 @@ import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.GroupReportContentRequest;
 import com.mycity4kids.models.request.GroupsCategoryUpdateRequest;
 import com.mycity4kids.models.request.JoinGroupRequest;
+import com.mycity4kids.models.request.ReportedContentModerationRequest;
+import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
+import com.mycity4kids.models.request.UpdatePostSettingsRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.AddGroupPostResponse;
@@ -19,6 +22,7 @@ import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.GroupsCategoryMappingResponse;
 import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsListingResponse;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsReportContentResponse;
 import com.mycity4kids.models.response.GroupsReportedContentResponse;
 import com.mycity4kids.models.response.GroupsSettingResponse;
@@ -95,8 +99,9 @@ public interface GroupsAPI {
     @POST("/api/v1/groups/post")
     Call<AddGroupPostResponse> createPost(@Body AddGroupPostRequest addGroupPostRequest);
 
-    @PUT("/api/v1/groups/post")
-    Call<GroupsListingResponse> updatePost();
+    @PATCH("/api/v1/groups/post/{postId}")
+    Call<GroupPostResponse> updatePost(@Path("postId") int postId,
+                                       @Body UpdatePostSettingsRequest updatePostSettingsRequest);
 
     @PATCH("/api/v1/groups/post/{postId}")
     Call<GroupPostResponse> disablePostComment(@Path("postId") int postId,
@@ -106,14 +111,26 @@ public interface GroupsAPI {
     @GET("/api/v1/groups/members")
     Call<GroupsListingResponse> getAllMembers();
 
+
+    @GET("/api/v1/groups/members")
+    Call<GroupsMembershipResponse> getGroupMembersByStatus(@Query("groupId") int groupId,
+                                                           @Query("status") String status,
+                                                           @Query("$skip") int skip,
+                                                           @Query("$limit") int limit);
+
+    @GET("/api/v1/groups/members")
+    Call<GroupsMembershipResponse> getUsersMembershipDetailsForGroup(@Query("groupId") int groupId,
+                                                                     @Query("userId") String userId);
+
     @GET("/api/v1/groups/members/{membershipId}")
     Call<GroupsListingResponse> getSingleMember(@Path("membershipId") String membershipId);
 
     @POST("/api/v1/groups/members")
     Call<GroupsJoinResponse> createMember(@Body JoinGroupRequest joinGroupRequest);
 
-    @PUT("/api/v1/groups/members")
-    Call<GroupsListingResponse> updateMember();
+    @PATCH("/api/v1/groups/members/{memberId}")
+    Call<GroupsMembershipResponse> updateMember(@Path("memberId") int memberId,
+                                                @Body UpdateGroupMembershipRequest updateGroupMembershipRequest);
 
 
     //User Settings
@@ -123,7 +140,7 @@ public interface GroupsAPI {
     @POST("/api/v1/groups/usersettings")
     Call<UserPostSettingResponse> createNewPostSettingsForUser(@Body UpdateUserPostSettingsRequest joinGroupRequest);
 
-    @PUT("/api/v1/groups/usersettings/{userSettingId}")
+    @PATCH("/api/v1/groups/usersettings/{userSettingId}")
     Call<UserPostSettingResponse> updatePostSettingsForUser(@Path("userSettingId") int userSettingId,
                                                             @Body UpdateUserPostSettingsRequest joinGroupRequest);
 
@@ -170,4 +187,8 @@ public interface GroupsAPI {
 
     @POST("/api/v1/groups/categorygroupmap")
     Call<GroupsReportContentResponse> reportContent(@Body GroupReportContentRequest groupReportContentRequest);
+
+    @POST("/api/v1/groups/moderation-view/{contentId}")
+    Call<GroupsReportedContentResponse> moderateReportedContent(@Path("contentId") int contentId,
+                                                                @Body ReportedContentModerationRequest reportedContentModerationRequest);
 }
