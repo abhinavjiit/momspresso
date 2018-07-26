@@ -3,17 +3,23 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -25,6 +31,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -54,6 +61,7 @@ import com.mycity4kids.ui.adapter.GroupBlogsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +69,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,23 +82,26 @@ import retrofit2.Retrofit;
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
         GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener {
 
-    private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "VIDEOS", "TOP POSTS", "POLLS"};
+    private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "TOP POSTS", "POLLS"};
 
     private int nextPageNumber = 1;
     private int totalPostCount;
     private int skip = 0;
     private int limit = 10;
     private String postType;
-    private boolean isReuqestRunning = false;
+    private boolean isRequestRunning = false;
     private boolean isLastPageReached = false;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private ArrayList<GroupPostResult> postList;
+    private ArrayList<GroupPostResult> postSearchResult;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private UserPostSettingResult currentPostPrefsForUser;
     private GroupResult selectedGroup;
     private GroupPostResult selectedPost;
     private String memberType;
     private int groupId;
+
+    private Handler handler = new Handler();
 
     private Animation slideAnim, fadeAnim;
 
@@ -114,6 +126,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private ProgressBar progressBar;
     private ImageView groupSettingsImageView;
     private TextView memberCountTextView;
+    private ImageView groupImageView;
+    private ImageView clearSearchImageView;
+    private ImageView shareGroupImageView;
+//    private RelativeLayout blockedViewContainer;
+//    private ImageView blockedCloseImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +148,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         noPostsTextView = (TextView) findViewById(R.id.noPostsTextView);
         groupNameTextView = (TextView) findViewById(R.id.groupNameTextView);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
+        clearSearchImageView = (ImageView) findViewById(R.id.clearSearchImageView);
         groupSettingsImageView = (ImageView) findViewById(R.id.groupSettingsImageView);
+        groupImageView = (ImageView) findViewById(R.id.groupImageView);
+        shareGroupImageView = (ImageView) findViewById(R.id.shareGroupImageView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         postSettingsContainer = (LinearLayout) findViewById(R.id.postSettingsContainer);
         postSettingsContainerMain = (RelativeLayout) findViewById(R.id.postSettingsContainerMain);
@@ -144,10 +164,12 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         notificationToggleTextView = (TextView) findViewById(R.id.notificationToggleTextView);
         commentToggleTextView = (TextView) findViewById(R.id.commentToggleTextView);
         reportPostTextView = (TextView) findViewById(R.id.reportPostTextView);
+//        blockedViewContainer = (RelativeLayout) findViewById(R.id.blockedViewContainer);
+//        blockedCloseImageView = (ImageView) findViewById(R.id.blockedCloseImageView);
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
         groupId = getIntent().getIntExtra("groupId", 0);
-
+        memberType = getIntent().getStringExtra(AppConstants.GROUP_MEMBER_TYPE);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -169,10 +191,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         deletePostTextView.setOnClickListener(this);
         blockUserTextView.setOnClickListener(this);
         pinPostTextView.setOnClickListener(this);
+        clearSearchImageView.setOnClickListener(this);
+        shareGroupImageView.setOnClickListener(this);
+//        blockedCloseImageView.setOnClickListener(this);
 
         String[] sections = {
                 getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions), getString(R.string.groups_sections_blogs),
-                getString(R.string.groups_sections_photos), getString(R.string.groups_sections_videos), getString(R.string.groups_sections_top_posts), getString(R.string.groups_sections_polls)
+                getString(R.string.groups_sections_photos), getString(R.string.groups_sections_top_posts), getString(R.string.groups_sections_polls)
         };
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -189,7 +214,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         groupBlogsRecyclerAdapter.setData(articleDataModelsNew);
 
         postList = new ArrayList<>();
-        groupsGenericPostRecyclerAdapter = new GroupsGenericPostRecyclerAdapter(this, this, selectedGroup);
+        postSearchResult = new ArrayList<>();
+        groupsGenericPostRecyclerAdapter = new GroupsGenericPostRecyclerAdapter(this, this, selectedGroup, memberType);
         groupsGenericPostRecyclerAdapter.setData(postList);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -201,9 +227,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     totalItemCount = llm.getItemCount();
                     pastVisiblesItems = llm.findFirstVisibleItemPosition();
 
-                    if (!isReuqestRunning && !isLastPageReached) {
+                    if (!isRequestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                            isReuqestRunning = true;
+                            isRequestRunning = true;
                             getGroupPosts();
                         }
                     }
@@ -211,20 +237,115 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
         });
 
+//        if (selectedGroup == null) {
+//            checkMembership(groupId);
+//        } else {
+//            groupId = selectedGroup.getId();
+//            checkMembership(selectedGroup.getId());
+//        }
+
+        toolbarTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (TextUtils.isEmpty(editable)) {
+                    clearSearchImageView.setVisibility(View.GONE);
+                    nextPageNumber = 1;
+                    skip = 0;
+                    limit = 10;
+                    isRequestRunning = false;
+                    isLastPageReached = false;
+                    postList.clear();
+                    groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                    getGroupPosts();
+                } else {
+                    clearSearchImageView.setVisibility(View.VISIBLE);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    nextPageNumber = 1;
+                                    skip = 0;
+                                    limit = 10;
+                                    isRequestRunning = false;
+                                    isLastPageReached = false;
+                                    postList.clear();
+                                    groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                                    requestSearch();
+                                }
+                            });
+                        }
+                    }, 1000);
+                }
+            }
+        });
         if (selectedGroup == null) {
             getGroupDetails();
-            checkMembership(groupId);
+//            checkMembership(groupId);
         } else {
+            groupId = selectedGroup.getId();
             toolbarTitle.setHint(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
             groupNameTextView.setText(selectedGroup.getTitle());
             memberCountTextView.setText(selectedGroup.getMemberCount() + " " + getString(R.string.groups_member_label));
             groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(this, this);
             groupAboutRecyclerAdapter.setData(selectedGroup);
             recyclerView.setAdapter(groupAboutRecyclerAdapter);
-            checkMembership(selectedGroup.getId());
+//            checkMembership(selectedGroup.getId());
             getGroupPosts();
         }
     }
+
+    private void requestSearch() {
+        if (StringUtils.isNullOrEmpty(toolbarTitle.getText().toString())) {
+//            showToast("Please enter a valid search parameter");
+        } else {
+            Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+            GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+            Call<GroupPostResponse> call = groupsAPI.searchWithinGroup(toolbarTitle.getText().toString(), "post", 1, groupId);
+            call.enqueue(searchResultResponseCallback);
+        }
+    }
+
+    private Callback<GroupPostResponse> searchResultResponseCallback = new Callback<GroupPostResponse>() {
+        @Override
+        public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupPostResponse groupPostResponse = response.body();
+                    processSearchResultListing(groupPostResponse);
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupPostResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void checkMembership(int id) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
@@ -247,6 +368,32 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             try {
                 if (response.isSuccessful()) {
                     GroupsMembershipResponse groupsMembershipResponse = response.body();
+                    if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(groupsMembershipResponse.getData().getResult().get(0).getStatus())) {
+                        showToast("You have been blocked from this group");
+                        addPostFAB.setVisibility(View.GONE);
+//                        blockedViewContainer.setVisibility(View.VISIBLE);
+                        return;
+                    }
+                    if (selectedGroup == null) {
+                        getGroupDetails();
+//                        checkMembership(groupId);
+                    } else {
+                        toolbarTitle.setHint(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
+                        groupNameTextView.setText(selectedGroup.getTitle());
+                        memberCountTextView.setText(selectedGroup.getMemberCount() + " " + getString(R.string.groups_member_label));
+                        try {
+                            Picasso.with(GroupDetailsActivity.this).load(selectedGroup.getHeaderImage())
+                                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(groupImageView);
+                        } catch (Exception e) {
+                            groupImageView.setImageDrawable(ContextCompat.getDrawable(GroupDetailsActivity.this, R.drawable.default_article));
+                        }
+                        groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(GroupDetailsActivity.this, GroupDetailsActivity.this);
+                        groupAboutRecyclerAdapter.setData(selectedGroup);
+                        recyclerView.setAdapter(groupAboutRecyclerAdapter);
+//                        checkMembership(selectedGroup.getId());
+                        getGroupPosts();
+                    }
+
                     if (!groupsMembershipResponse.getData().getResult().isEmpty() && groupsMembershipResponse.getData().getResult().get(0).getIsAdmin() == 1) {
                         memberType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
                         pinPostTextView.setVisibility(View.VISIBLE);
@@ -341,7 +488,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private Callback<GroupPostResponse> groupPostResponseCallback = new Callback<GroupPostResponse>() {
         @Override
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
-            isReuqestRunning = false;
+            isRequestRunning = false;
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -364,7 +511,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            isReuqestRunning = false;
+            isRequestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -380,17 +527,35 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 isLastPageReached = true;
             } else {
                 // No results
-//                noPostsTextView.setVisibility(View.VISIBLE);
-//                postList = dataList;
-//                groupSummaryPostRecyclerAdapter.setHeaderData(selectedGroup);
-//                groupSummaryPostRecyclerAdapter.setData(postList);
-//                groupSummaryPostRecyclerAdapter.notifyDataSetChanged();
             }
         } else {
             formatPostData(dataList);
             noPostsTextView.setVisibility(View.GONE);
             postList.addAll(dataList);
-//            groupsGenericPostRecyclerAdapter.setHeaderData(selectedGroup);
+            groupsGenericPostRecyclerAdapter.setData(postList);
+            skip = skip + limit;
+            if (skip >= totalPostCount) {
+                isLastPageReached = true;
+            }
+            groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void processSearchResultListing(GroupPostResponse postSearchResponse) {
+        totalPostCount = postSearchResponse.getTotal();
+        ArrayList<GroupPostResult> dataList = (ArrayList<GroupPostResult>) postSearchResponse.getData().get(0).getResult();
+        if (dataList.size() == 0) {
+            isLastPageReached = false;
+            if (null != postList && !postList.isEmpty()) {
+                //No more next results for search from pagination
+                isLastPageReached = true;
+            } else {
+                // No results
+            }
+        } else {
+            formatPostData(dataList);
+            noPostsTextView.setVisibility(View.GONE);
+            postList.addAll(dataList);
             groupsGenericPostRecyclerAdapter.setData(postList);
             skip = skip + limit;
             if (skip >= totalPostCount) {
@@ -402,17 +567,39 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     private void formatPostData(ArrayList<GroupPostResult> dataList) {
         for (int j = 0; j < dataList.size(); j++) {
-            for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
-                switch (dataList.get(j).getCounts().get(i).getName()) {
-                    case "helpfullCount":
-                        dataList.get(j).setHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+            if (dataList.get(j).getCounts() != null) {
+                for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
+                    switch (dataList.get(j).getCounts().get(i).getName()) {
+                        case "helpfullCount":
+                            dataList.get(j).setHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                        case "notHelpfullCount":
+                            dataList.get(j).setNotHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                        case "responseCount":
+                            dataList.get(j).setResponseCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                        case "votesCount": {
+                            for (int k = 0; k < dataList.get(j).getCounts().get(i).getCounts().size(); k++) {
+                                dataList.get(j).setTotalVotesCount(dataList.get(j).getTotalVotesCount() + dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                switch (dataList.get(j).getCounts().get(i).getCounts().get(k).getName()) {
+                                    case "option1":
+                                        dataList.get(j).setOption1VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        break;
+                                    case "option2":
+                                        dataList.get(j).setOption2VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        break;
+                                    case "option3":
+                                        dataList.get(j).setOption3VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        break;
+                                    case "option4":
+                                        dataList.get(j).setOption4VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        break;
+                                }
+                            }
+                        }
                         break;
-                    case "notHelpfullCount":
-                        dataList.get(j).setNotHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
-                        break;
-                    case "responseCount":
-                        dataList.get(j).setResponseCount(dataList.get(j).getCounts().get(i).getCount());
-                        break;
+                    }
                 }
             }
         }
@@ -421,6 +608,23 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+//            case R.id.blockedCloseImageView: {
+//                onBackPressed();
+//            }
+//            break;
+            case R.id.shareGroupImageView: {
+                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+
+                String shareUrl = selectedGroup.getUrl();
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+            }
+            break;
+            case R.id.clearSearchImageView: {
+                toolbarTitle.setText("");
+            }
+            break;
             case R.id.groupSettingsImageView: {
                 Intent intent = new Intent(GroupDetailsActivity.this, GroupSettingsActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
@@ -474,24 +678,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             case R.id.deletePostTextView:
                 Log.d("deletePostTextView", "" + selectedPost.getId());
                 updateAdminLevelPostPrefs("markInactive");
-//                if (deletePostTextView.getText().toString().equals("DISABLE NOTIFICATION")) {
-//                    updateUserPostPreferences("enableNotif");
-//                } else {
-//                    updateUserPostPreferences("disableNotif");
-//                }
                 break;
             case R.id.blockUserTextView:
                 Log.d("blockUserTextView", "" + selectedPost.getId());
                 updateAdminLevelPostPrefs("blockUser");
-//                if (blockUserTextView.getText().toString().equals("DISABLE NOTIFICATION")) {
-//                    updateUserPostPreferences("enableNotif");
-//                } else {
-//                    updateUserPostPreferences("disableNotif");
-//                }
                 break;
             case R.id.pinPostTextView:
                 Log.d("pinPostTextView", "" + selectedPost.getId());
-//                updateAdminLevelPostPrefs("pinPost");
                 if (pinPostTextView.getText().toString().equals("PIN THIS POST TO TOP")) {
                     updateAdminLevelPostPrefs("pinPost");
                 } else {
@@ -876,7 +1069,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
-            isReuqestRunning = false;
+            isRequestRunning = false;
 //            swipe_refresh_layout.setRefreshing(false);
             if (response == null || response.body() == null) {
                 return;
@@ -896,7 +1089,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
 //            swipe_refresh_layout.setRefreshing(false);
-            isReuqestRunning = false;
+            isRequestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }

@@ -56,6 +56,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.fragment.CityListingDialogFragment;
+import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.RoundedTransformation;
@@ -431,7 +432,11 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                         }
                         // Continue only if the File was successfully created
                         if (photoFile != null) {
-                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                            try {
+                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(BlogSetupActivity.this, getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile()));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             startActivityForResult(cameraIntent, ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE);
                         }
                     }

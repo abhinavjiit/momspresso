@@ -223,6 +223,17 @@ public class DateTimeUtils {
         }
     }
 
+    public static String getDateTimeFromTimestamp(long timeStampStr) {
+
+        try {
+            java.text.DateFormat sdf = new SimpleDateFormat("hh:mm a | MMM dd, yyyy");
+            Date netDate = new Date(timeStampStr);
+            return sdf.format(netDate);
+        } catch (Exception ex) {
+            return "xx";
+        }
+    }
+
     public static String getDateFromNanoMilliTimestamp(long timeStampStr) {
 
         try {

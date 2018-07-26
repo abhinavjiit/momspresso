@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.GroupResult;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -59,6 +61,12 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
     @Override
     public void onBindViewHolder(GroupsViewHolder holder, int position) {
 //        holder.groupImageView.setText(groupsDataList.get(position));
+        try {
+            Picasso.with(mContext).load(groupsDataList.get(position).getHeaderImage())
+                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.groupImageView);
+        } catch (Exception e) {
+            holder.groupImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
+        }
         holder.groupsNameTextView.setText(groupsDataList.get(position).getTitle());
 //        holder.groupsNameTextView.setSelected(position == selectedPosition);
     }

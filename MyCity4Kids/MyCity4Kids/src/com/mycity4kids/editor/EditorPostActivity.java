@@ -50,6 +50,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.AddArticleTopicsActivityNew;
 import com.mycity4kids.ui.fragment.SpellCheckDialogFragment;
+import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
 
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -295,7 +296,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                try {
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 startActivityForResult(cameraIntent, ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE);
             }
         }

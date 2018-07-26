@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -569,5 +570,15 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         groupJoinConfirmationFragment.setArguments(_args);
         groupJoinConfirmationFragment.setCancelable(true);
         groupJoinConfirmationFragment.show(fm, "Choose video option");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

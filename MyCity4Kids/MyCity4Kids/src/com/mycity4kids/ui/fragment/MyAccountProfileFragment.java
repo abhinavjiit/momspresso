@@ -83,6 +83,7 @@ import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.ui.activity.UserActivitiesActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -651,7 +652,11 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                         }
                         // Continue only if the File was successfully created
                         if (photoFile != null) {
-                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                            try {
+                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(getActivity(), BaseApplication.getAppContext().getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile()));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             startActivityForResult(cameraIntent, ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE);
                         }
                     }

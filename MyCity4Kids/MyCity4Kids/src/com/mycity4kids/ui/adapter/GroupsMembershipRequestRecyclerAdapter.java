@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.api.client.util.DateTime;
+import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.GroupResult;
@@ -58,6 +61,13 @@ public class GroupsMembershipRequestRecyclerAdapter extends RecyclerView.Adapter
 //            holder.articleImageView.setBackgroundResource(R.drawable.default_article);
 //        }
         holder.memberNameTextView.setText(membersDataList.get(position).getUserInfo().getFirstName());
+        holder.dateTextView.setText(DateTimeUtils.getDateTimeFromTimestamp(membersDataList.get(position).getCreatedAt()));
+        try {
+            Picasso.with(mContext).load(membersDataList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.memberImageView);
+        } catch (Exception e) {
+            holder.memberImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_commentor_img));
+        }
     }
 
     @Override
@@ -87,6 +97,9 @@ public class GroupsMembershipRequestRecyclerAdapter extends RecyclerView.Adapter
                     notifyDataSetChanged();
                 }
             });
+
+            acceptTextView.setOnClickListener(this);
+            rejectTextView.setOnClickListener(this);
         }
 
         @Override

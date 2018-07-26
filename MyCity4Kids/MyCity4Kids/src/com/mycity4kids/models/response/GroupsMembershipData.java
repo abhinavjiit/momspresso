@@ -1,19 +1,20 @@
 package com.mycity4kids.models.response;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hemant on 19/7/18.
  */
 
 public class GroupsMembershipData {
-    private ArrayList<GroupsMembershipResult> result;
+    private List<GroupsMembershipResult> result;
 
-    public ArrayList<GroupsMembershipResult> getResult() {
+    public List<GroupsMembershipResult> getResult() {
         return result;
     }
 
-    public void setResult(ArrayList<GroupsMembershipResult> result) {
+    public void setResult(List<GroupsMembershipResult> result) {
         this.result = result;
     }
 }

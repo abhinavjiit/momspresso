@@ -42,7 +42,11 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
     private int helpfullCount;
     private int shareCount;
     private int responseCount;
-    private int votesCount;
+    private int totalVotesCount;
+    private int option1VoteCount;
+    private int option2VoteCount;
+    private int option3VoteCount;
+    private int option4VoteCount;
 
     public GroupPostResult() {
     }
@@ -69,6 +73,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         pollType = in.readString();
         counts = new ArrayList<>();
         in.readTypedList(counts, GroupPostCounts.CREATOR);
+        userInfo = in.readParcelable(UserInfo.class.getClassLoader());
     }
 
     public static final Creator<GroupPostResult> CREATOR = new Creator<GroupPostResult>() {
@@ -307,12 +312,44 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         this.responseCount = responseCount;
     }
 
-    public int getVotesCount() {
-        return votesCount;
+    public int getTotalVotesCount() {
+        return totalVotesCount;
     }
 
-    public void setVotesCount(int votesCount) {
-        this.votesCount = votesCount;
+    public void setTotalVotesCount(int totalVotesCount) {
+        this.totalVotesCount = totalVotesCount;
+    }
+
+    public int getOption1VoteCount() {
+        return option1VoteCount;
+    }
+
+    public void setOption1VoteCount(int option1VoteCount) {
+        this.option1VoteCount = option1VoteCount;
+    }
+
+    public int getOption2VoteCount() {
+        return option2VoteCount;
+    }
+
+    public void setOption2VoteCount(int option2VoteCount) {
+        this.option2VoteCount = option2VoteCount;
+    }
+
+    public int getOption3VoteCount() {
+        return option3VoteCount;
+    }
+
+    public void setOption3VoteCount(int option3VoteCount) {
+        this.option3VoteCount = option3VoteCount;
+    }
+
+    public int getOption4VoteCount() {
+        return option4VoteCount;
+    }
+
+    public void setOption4VoteCount(int option4VoteCount) {
+        this.option4VoteCount = option4VoteCount;
     }
 
     @Override
@@ -342,6 +379,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         dest.writeLong(updatedAt);
         dest.writeString(pollType);
         dest.writeTypedList(counts);
+        dest.writeParcelable(userInfo, flags);
     }
 }
 

@@ -1,7 +1,5 @@
 package com.mycity4kids.ui.fragment;
 
-import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -10,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -18,7 +15,6 @@ import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.TrendingListingResponse;
 import com.mycity4kids.models.response.TrendingListingResult;

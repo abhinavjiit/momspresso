@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,19 +21,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.utils.StringUtils;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
-import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostCommentResult;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.adapter.GroupPostCommentRepliesRecyclerAdapter;
@@ -47,7 +44,7 @@ import retrofit2.Retrofit;
 /**
  * Created by user on 08-06-2015.
  */
-public class AddViewGroupPostCommentsRepliesDialogFragment extends DialogFragment implements OnClickListener, GroupPostCommentRepliesRecyclerAdapter.RecyclerViewClickListener {
+public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment implements OnClickListener, GroupPostCommentRepliesRecyclerAdapter.RecyclerViewClickListener {
 
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private boolean isReuqestRunning = false;
@@ -57,6 +54,7 @@ public class AddViewGroupPostCommentsRepliesDialogFragment extends DialogFragmen
     private int limit = 10;
     private GroupPostCommentResult data;
     private ArrayList<GroupPostCommentResult> repliesList;
+    private int totalRepliesCount;
 
     private Toolbar mToolbar;
     private RecyclerView repliesRecyclerView;
@@ -65,8 +63,9 @@ public class AddViewGroupPostCommentsRepliesDialogFragment extends DialogFragmen
 
     private GroupPostCommentRepliesRecyclerAdapter groupPostCommentRepliesRecyclerAdapter;
     private int childCount;
-    private ImageView addCommentImageView;
-    private EditText writeCommentEditText;
+    private FloatingActionButton openAddReplyDialog;
+    private int commentPosition;
+    private String memberType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,8 +76,7 @@ public class AddViewGroupPostCommentsRepliesDialogFragment extends DialogFragmen
         mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         repliesRecyclerView = (RecyclerView) rootView.findViewById(R.id.repliesRecyclerView);
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
-        addCommentImageView = (ImageView) rootView.findViewById(R.id.addCommentImageView);
-        writeCommentEditText = (EditText) rootView.findViewById(R.id.writeCommentEditText);
+        openAddReplyDialog = (FloatingActionButton) rootView.findViewById(R.id.openAddReplyDialog);
 
         Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.back_arroow);
         upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal), PorterDuff.Mode.SRC_ATOP);
@@ -91,7 +89,7 @@ public class AddViewGroupPostCommentsRepliesDialogFragment extends DialogFragmen
             }
         });
 
-        addCommentImageView.setOnClickListener(this);
+        openAddReplyDialog.setOnClickListener(this);
 
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -103,8 +101,9 @@ public class AddViewGroupPostCommentsRepliesDialogFragment extends DialogFragmen
         if (extras != null) {
             data = extras.getParcelable("commentReplies");
             childCount = extras.getInt("childCount");
+            commentPosition = extras.getInt("position");
+            memberType = extras.getString(AppConstants.GROUP_MEMBER_TYPE);
         }
-
 
         repliesList.add(data);
         if (data.getChildData() != null) {
@@ -264,97 +263,63 @@ public class AddViewGroupPostCommentsRepliesDialogFragment extends DialogFragmen
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-
+        switch (view.getId()) {
+            case R.id.commentRootView: {
+                GpPostCommentOptionsDialogFragment commentOptionsDialogFragment = new GpPostCommentOptionsDialogFragment();
+                FragmentManager fm = getChildFragmentManager();
+                commentOptionsDialogFragment.setTargetFragment(this, 0);
+                Bundle _args = new Bundle();
+                _args.putInt("position", commentPosition);
+                _args.putString("responseType", "COMMENT");
+                _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                _args.putString("authorId", repliesList.get(position).getUserId());
+                commentOptionsDialogFragment.setArguments(_args);
+                commentOptionsDialogFragment.setCancelable(true);
+                commentOptionsDialogFragment.show(fm, "Comment Options");
+            }
+            break;
+            case R.id.replyRootView: {
+                GpPostCommentOptionsDialogFragment commentOptionsDialogFragment = new GpPostCommentOptionsDialogFragment();
+                FragmentManager fm = getChildFragmentManager();
+                commentOptionsDialogFragment.setTargetFragment(this, 0);
+                Bundle _args = new Bundle();
+                _args.putInt("position", position);
+                _args.putString("responseType", "REPLY");
+                _args.putInt("commentPosition", commentPosition);
+                _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                _args.putString("authorId", repliesList.get(position).getUserId());
+                commentOptionsDialogFragment.setArguments(_args);
+                commentOptionsDialogFragment.setCancelable(true);
+                commentOptionsDialogFragment.show(fm, "Comment Options");
+            }
+            break;
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.addCommentImageView:
-                if (validateReplyText()) {
-                    addCommentReply();
-                }
+            case R.id.openAddReplyDialog:
+                ((GroupPostDetailActivity) getActivity()).openAddCommentReplyDialog(data);
                 break;
         }
     }
 
-
-    private void addCommentReply() {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();
-        addGpPostCommentOrReplyRequest.setGroupId(data.getGroupId());
-        addGpPostCommentOrReplyRequest.setPostId(data.getPostId());
-        addGpPostCommentOrReplyRequest.setParentId(data.getId());
-        addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
-        addGpPostCommentOrReplyRequest.setContent(writeCommentEditText.getText().toString());
-        Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
-        call.enqueue(addCommentReplyResponseListener);
-//        Call ca
-    }
-
-    private Callback<AddGpPostCommentReplyResponse> addCommentReplyResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
-        @Override
-        public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
-            isReuqestRunning = false;
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+    public void updateRepliesList(GroupPostCommentResult ssComment) {
+        if (repliesList != null) {
+            repliesList.clear();
+            repliesList.add(ssComment);
+            if (data.getChildData() != null) {
+                for (int i = 0; i < ssComment.getChildData().size(); i++) {
+                    repliesList.add(ssComment.getChildData().get(i));
                 }
-                if (isAdded())
-                    ((GroupPostDetailActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    AddGpPostCommentReplyResponse groupPostResponse = response.body();
-                    GroupPostCommentResult groupPostCommentResult = new GroupPostCommentResult();
-                    groupPostCommentResult.setId(groupPostResponse.getData().getResult().getId());
-                    groupPostCommentResult.setContent(groupPostResponse.getData().getResult().getContent());
-                    groupPostCommentResult.setSentiment(groupPostResponse.getData().getResult().getSentiment());
-                    groupPostCommentResult.setParentId(groupPostResponse.getData().getResult().getParentId());
-                    groupPostCommentResult.setGroupId(groupPostResponse.getData().getResult().getGroupId());
-                    groupPostCommentResult.setPostId(groupPostResponse.getData().getResult().getPostId());
-                    groupPostCommentResult.setUserId(groupPostResponse.getData().getResult().getUserId());
-                    groupPostCommentResult.setIsActive(groupPostResponse.getData().getResult().isActive());
-                    groupPostCommentResult.setIsAnnon(groupPostResponse.getData().getResult().isAnnon());
-                    groupPostCommentResult.setModerationStatus(groupPostResponse.getData().getResult().getModerationStatus());
-                    groupPostCommentResult.setModeratedBy(groupPostResponse.getData().getResult().getModeratedBy());
-                    groupPostCommentResult.setModeratedOn(groupPostResponse.getData().getResult().getModeratedon());
-                    groupPostCommentResult.setLang(groupPostResponse.getData().getResult().getLang());
-                    groupPostCommentResult.setCreatedAt(groupPostResponse.getData().getResult().getCreatedAt());
-                    groupPostCommentResult.setUpdatedAt(groupPostResponse.getData().getResult().getUpdatedAt());
-
-                    repliesList.add(groupPostCommentResult);
-                    groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
-                } else {
-                    if (isAdded())
-                        ((GroupPostDetailActivity) getActivity()).showToast("Failed to add comment. Please try again");
+                if (totalRepliesCount <= ssComment.getChildData().size()) {
+                    isLastPageReached = true;
                 }
-            } catch (Exception e) {
-                if (isAdded())
-                    ((GroupPostDetailActivity) getActivity()).showToast("Failed to add comment. Please try again");
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
+            } else {
+                isLastPageReached = true;
             }
         }
-
-        @Override
-        public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
-            if (isAdded())
-                ((GroupPostDetailActivity) getActivity()).showToast("Failed to add comment. Please try again");
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private boolean validateReplyText() {
-        if (StringUtils.isNullOrEmpty(writeCommentEditText.getText().toString())) {
-            if (isAdded())
-                ((GroupPostDetailActivity) getActivity()).showToast("Invalid reply text");
-            return false;
-        }
-        return true;
+        groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
     }
 }

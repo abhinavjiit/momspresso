@@ -39,35 +39,19 @@
         android:id="@+id/repliesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/topLineView"
         android:layout_below="@+id/toolbar" />
 
-    <com.mycity4kids.widget.CustomFontEditText
-        android:id="@+id/writeCommentEditText"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/addCommentImageView"
-        android:background="@null"
-        android:hint="Add a"
-        android:textColor="@color/groups.light_black_color" />
-
-    <ImageView
-        android:id="@+id/addCommentImageView"
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/openAddReplyDialog"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="@color/groups.blue_color"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:src="@drawable/ic_gp_add_response" />
-
-    <View
-        android:id="@+id/topLineView"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/writeCommentEditText"
-        android:background="@color/light_underline" />
-
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        app:fab_colorNormal="@color/short_story.blue"
+        app:fab_colorPressed="@color/short_story.blue"
+        app:fab_icon="@drawable/ic_add_comments" />
 </RelativeLayout>

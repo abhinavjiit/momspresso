@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.adapter;
 
-import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -17,21 +16,25 @@ import android.widget.TextView;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.DateTimeUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResult;
-import com.mycity4kids.models.response.GroupsActionResponse;
+import com.mycity4kids.models.response.GroupsActionVoteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
-import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -107,15 +110,9 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 View v0 = mInflator.inflate(R.layout.groups_image_poll_post_item, parent, false);
                 return new ImagePollPostViewHolder(v0);
             }
-        } else if (viewType == COMMENT_LEVEL_ROOT) {
+        } else {
             View v0 = mInflator.inflate(R.layout.group_post_comment_cell_test, parent, false);
             return new RootCommentViewHolder(v0);
-        } else if (viewType == COMMENT_LEVEL_REPLY) {
-            View v0 = mInflator.inflate(R.layout.group_post_comment_reply_cell, parent, false);
-            return new CommentReplyViewHolder(v0);
-        } else {
-            View v0 = mInflator.inflate(R.layout.group_post_reply_reply_cell, parent, false);
-            return new ReplyReplyViewHolder(v0);
         }
     }
 
@@ -204,6 +201,15 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                         break;
                 }
             }
+            textPollPostViewHolder.pollOption1ProgressBar.setProgress(0f);
+            textPollPostViewHolder.pollOption2ProgressBar.setProgress(0f);
+            textPollPostViewHolder.pollOption3ProgressBar.setProgress(0f);
+            textPollPostViewHolder.pollOption4ProgressBar.setProgress(0f);
+            if (groupPostResult.isVoted()) {
+                showVotingData(textPollPostViewHolder, groupPostResult);
+            } else {
+                hideVotingData(textPollPostViewHolder);
+            }
         } else if (holder instanceof ImagePollPostViewHolder) {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
             imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
@@ -252,7 +258,16 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                         break;
                 }
             }
-        } else if (holder instanceof RootCommentViewHolder) {
+            imageHolder.pollOption1ProgressBar.setProgress(0f);
+            imageHolder.pollOption2ProgressBar.setProgress(0f);
+            imageHolder.pollOption3ProgressBar.setProgress(0f);
+            imageHolder.pollOption4ProgressBar.setProgress(0f);
+            if (groupPostResult.isVoted()) {
+                showImagePollVotingData(imageHolder);
+            } else {
+                hideImagePollVotingData(imageHolder);
+            }
+        } else {
             RootCommentViewHolder rootCommentViewHolder = (RootCommentViewHolder) holder;
             rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
                     + " " + postCommentsList.get(position).getUserInfo().getLastName());
@@ -271,12 +286,75 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 rootCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
             }
 
-        } else if (holder instanceof CommentReplyViewHolder) {
-
-        } else {
-
-
         }
+    }
+
+    private void showVotingData(TextPollPostViewHolder textPollPostViewHolder, GroupPostResult postResult) {
+        textPollPostViewHolder.pollOption1ProgressBar.setProgress((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount());
+        textPollPostViewHolder.pollOption2ProgressBar.setProgress((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount());
+        textPollPostViewHolder.pollOption3ProgressBar.setProgress((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount());
+        textPollPostViewHolder.pollOption4ProgressBar.setProgress((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount());
+        textPollPostViewHolder.pollOption1ProgressTextView.setText((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount() + "%");
+        textPollPostViewHolder.pollOption2ProgressTextView.setText((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount() + "%");
+        textPollPostViewHolder.pollOption3ProgressTextView.setText((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount() + "%");
+        textPollPostViewHolder.pollOption4ProgressTextView.setText((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount() + "%");
+        textPollPostViewHolder.pollOption1ProgressTextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollOption2ProgressTextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollOption3ProgressTextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollOption4ProgressTextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollResult1TextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollResult2TextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollResult3TextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollResult4TextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollOption1TextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollOption2TextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollOption3TextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollOption4TextView.setVisibility(View.GONE);
+    }
+
+    private void hideVotingData(TextPollPostViewHolder textPollPostViewHolder) {
+        textPollPostViewHolder.pollOption1ProgressTextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollOption2ProgressTextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollOption3ProgressTextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollOption4ProgressTextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollResult1TextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollResult2TextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollResult3TextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollResult4TextView.setVisibility(View.GONE);
+        textPollPostViewHolder.pollOption1TextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollOption2TextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollOption3TextView.setVisibility(View.VISIBLE);
+        textPollPostViewHolder.pollOption4TextView.setVisibility(View.VISIBLE);
+    }
+
+    private void showImagePollVotingData(ImagePollPostViewHolder imageHolder) {
+        imageHolder.pollOption1ProgressBar.setProgress((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount());
+        imageHolder.pollOption2ProgressBar.setProgress((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount());
+        imageHolder.pollOption3ProgressBar.setProgress((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount());
+        imageHolder.pollOption4ProgressBar.setProgress((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount());
+        imageHolder.pollOption1TextView.setText((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount() + "%");
+        imageHolder.pollOption2TextView.setText((100f * groupPostResult.getOption2VoteCount()) / groupPostResult.getTotalVotesCount() + "%");
+        imageHolder.pollOption3TextView.setText((100f * groupPostResult.getOption3VoteCount()) / groupPostResult.getTotalVotesCount() + "%");
+        imageHolder.pollOption4TextView.setText((100f * groupPostResult.getOption4VoteCount()) / groupPostResult.getTotalVotesCount() + "%");
+        imageHolder.pollOption1ProgressBar.setVisibility(View.VISIBLE);
+        imageHolder.pollOption2ProgressBar.setVisibility(View.VISIBLE);
+        imageHolder.pollOption3ProgressBar.setVisibility(View.VISIBLE);
+        imageHolder.pollOption4ProgressBar.setVisibility(View.VISIBLE);
+        imageHolder.pollOption1TextView.setVisibility(View.VISIBLE);
+        imageHolder.pollOption2TextView.setVisibility(View.VISIBLE);
+        imageHolder.pollOption3TextView.setVisibility(View.VISIBLE);
+        imageHolder.pollOption4TextView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideImagePollVotingData(ImagePollPostViewHolder imageHolder) {
+        imageHolder.pollOption1ProgressBar.setVisibility(View.GONE);
+        imageHolder.pollOption2ProgressBar.setVisibility(View.GONE);
+        imageHolder.pollOption3ProgressBar.setVisibility(View.GONE);
+        imageHolder.pollOption4ProgressBar.setVisibility(View.GONE);
+        imageHolder.pollOption1TextView.setVisibility(View.GONE);
+        imageHolder.pollOption2TextView.setVisibility(View.GONE);
+        imageHolder.pollOption3TextView.setVisibility(View.GONE);
+        imageHolder.pollOption4TextView.setVisibility(View.GONE);
     }
 
     private void initializeViews(MediaPostViewHolder holder, int position) {
@@ -455,17 +533,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 @Override
                 public void onClick(View v) {
                     addVote(getAdapterPosition(), "option1");
-
-//                    pollOption1ProgressBar.setProgress(80.0f);
-//                    pollOption2ProgressBar.setProgress(20.0f);
-//                    pollOption1ProgressTextView.setText("80%");
-//                    pollOption2ProgressTextView.setText("20%");
-//                    pollOption1ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollResult1TextView.setVisibility(View.VISIBLE);
-//                    pollResult2TextView.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.GONE);
-//                    pollOption2TextView.setVisibility(View.GONE);
                 }
             });
 
@@ -473,16 +540,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 @Override
                 public void onClick(View v) {
                     addVote(getAdapterPosition(), "option2");
-//                    pollOption1ProgressBar.setProgress(40.0f);
-//                    pollOption2ProgressBar.setProgress(60.0f);
-//                    pollOption1ProgressTextView.setText("40%");
-//                    pollOption2ProgressTextView.setText("60%");
-//                    pollOption1ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollResult1TextView.setVisibility(View.VISIBLE);
-//                    pollResult2TextView.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.GONE);
-//                    pollOption2TextView.setVisibility(View.GONE);
                 }
             });
 
@@ -490,16 +547,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 @Override
                 public void onClick(View v) {
                     addVote(getAdapterPosition(), "option3");
-//                    pollOption1ProgressBar.setProgress(40.0f);
-//                    pollOption2ProgressBar.setProgress(60.0f);
-//                    pollOption1ProgressTextView.setText("40%");
-//                    pollOption2ProgressTextView.setText("60%");
-//                    pollOption1ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollResult1TextView.setVisibility(View.VISIBLE);
-//                    pollResult2TextView.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.GONE);
-//                    pollOption2TextView.setVisibility(View.GONE);
                 }
             });
 
@@ -507,16 +554,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 @Override
                 public void onClick(View v) {
                     addVote(getAdapterPosition(), "option4");
-//                    pollOption1ProgressBar.setProgress(40.0f);
-//                    pollOption2ProgressBar.setProgress(60.0f);
-//                    pollOption1ProgressTextView.setText("40%");
-//                    pollOption2ProgressTextView.setText("60%");
-//                    pollOption1ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressTextView.setVisibility(View.VISIBLE);
-//                    pollResult1TextView.setVisibility(View.VISIBLE);
-//                    pollResult2TextView.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.GONE);
-//                    pollOption2TextView.setVisibility(View.GONE);
                 }
             });
         }
@@ -578,38 +615,22 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
 
-            upvoteCountTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    markAsHelpfulOrUnhelpful(getAdapterPosition(), AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
-                }
-            });
-            downvoteCountTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    markAsHelpfulOrUnhelpful(getAdapterPosition(), AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
-                }
-            });
+//            upvoteCountTextView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    markAsHelpfulOrUnhelpful(getAdapterPosition(), AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
+//                }
+//            });
+//            downvoteCountTextView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    markAsHelpfulOrUnhelpful(getAdapterPosition(), AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
+//                }
+//            });
             option1Container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     addVote(getAdapterPosition(), "option1");
-//                    pollOption1ProgressBar.setProgress(60.0f);
-//                    pollOption2ProgressBar.setProgress(17.0f);
-//                    pollOption3ProgressBar.setProgress(13.0f);
-//                    pollOption4ProgressBar.setProgress(10.0f);
-//                    pollOption1TextView.setText("60%");
-//                    pollOption2TextView.setText("17%");
-//                    pollOption3TextView.setText("13%");
-//                    pollOption4TextView.setText("10%");
-//                    pollOption1ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption3ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption4ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.VISIBLE);
-//                    pollOption2TextView.setVisibility(View.VISIBLE);
-//                    pollOption3TextView.setVisibility(View.VISIBLE);
-//                    pollOption4TextView.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -617,22 +638,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 @Override
                 public void onClick(View v) {
                     addVote(getAdapterPosition(), "option2");
-//                    pollOption1ProgressBar.setProgress(60.0f);
-//                    pollOption2ProgressBar.setProgress(17.0f);
-//                    pollOption3ProgressBar.setProgress(13.0f);
-//                    pollOption4ProgressBar.setProgress(10.0f);
-//                    pollOption1TextView.setText("60%");
-//                    pollOption2TextView.setText("17%");
-//                    pollOption3TextView.setText("13%");
-//                    pollOption4TextView.setText("10%");
-//                    pollOption1ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption3ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption4ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.VISIBLE);
-//                    pollOption2TextView.setVisibility(View.VISIBLE);
-//                    pollOption3TextView.setVisibility(View.VISIBLE);
-//                    pollOption4TextView.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -640,22 +645,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 @Override
                 public void onClick(View v) {
                     addVote(getAdapterPosition(), "option3");
-//                    pollOption1ProgressBar.setProgress(60.0f);
-//                    pollOption2ProgressBar.setProgress(17.0f);
-//                    pollOption3ProgressBar.setProgress(13.0f);
-//                    pollOption4ProgressBar.setProgress(10.0f);
-//                    pollOption1TextView.setText("60%");
-//                    pollOption2TextView.setText("17%");
-//                    pollOption3TextView.setText("13%");
-//                    pollOption4TextView.setText("10%");
-//                    pollOption1ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption3ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption4ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.VISIBLE);
-//                    pollOption2TextView.setVisibility(View.VISIBLE);
-//                    pollOption3TextView.setVisibility(View.VISIBLE);
-//                    pollOption4TextView.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -663,22 +652,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 @Override
                 public void onClick(View v) {
                     addVote(getAdapterPosition(), "option4");
-//                    pollOption1ProgressBar.setProgress(60.0f);
-//                    pollOption2ProgressBar.setProgress(17.0f);
-//                    pollOption3ProgressBar.setProgress(13.0f);
-//                    pollOption4ProgressBar.setProgress(10.0f);
-//                    pollOption1TextView.setText("60%");
-//                    pollOption2TextView.setText("17%");
-//                    pollOption3TextView.setText("13%");
-//                    pollOption4TextView.setText("10%");
-//                    pollOption1ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption2ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption3ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption4ProgressBar.setVisibility(View.VISIBLE);
-//                    pollOption1TextView.setVisibility(View.VISIBLE);
-//                    pollOption2TextView.setVisibility(View.VISIBLE);
-//                    pollOption3TextView.setVisibility(View.VISIBLE);
-//                    pollOption4TextView.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -689,7 +662,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         }
     }
 
-    public class RootCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class RootCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         ImageView commentorImageView;
         TextView commentorUsernameTextView;
@@ -708,6 +681,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
 
+            view.setOnLongClickListener(this);
             replyCommentTextView.setOnClickListener(this);
             replyCountTextView.setOnClickListener(this);
 
@@ -718,35 +692,11 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         public void onClick(View v) {
             mListener.onRecyclerItemClick(v, getAdapterPosition());
         }
-    }
-
-    public class CommentReplyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        View underlineView;
-
-        CommentReplyViewHolder(View view) {
-            super(view);
-            underlineView = view.findViewById(R.id.underlineView);
-        }
 
         @Override
-        public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
-        }
-    }
-
-    public class ReplyReplyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        View underlineView;
-
-        ReplyReplyViewHolder(View view) {
-            super(view);
-            underlineView = view.findViewById(R.id.underlineView);
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+        public boolean onLongClick(View view) {
+            mListener.onRecyclerItemClick(view, getAdapterPosition());
+            return true;
         }
     }
 
@@ -757,32 +707,72 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         groupActionsRequest.setGroupId(groupPostResult.getGroupId());
         groupActionsRequest.setPostId(groupPostResult.getId());
         groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
-        groupActionsRequest.setType(AppConstants.GROUP_ACTION_TYPE_VOTE_KEY);
         groupActionsRequest.setVoteOption(option);
-        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
-        call.enqueue(groupActionResponseCallback);
+        Call<GroupsActionVoteResponse> call = groupsAPI.addActionVote(groupActionsRequest);
+        call.enqueue(groupActionVoteResponseCallback);
     }
 
-    private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
+    private Callback<GroupsActionVoteResponse> groupActionVoteResponseCallback = new Callback<GroupsActionVoteResponse>() {
         @Override
-        public void onResponse(Call<GroupsActionResponse> call, Response<GroupsActionResponse> response) {
+        public void onResponse(Call<GroupsActionVoteResponse> call, Response<GroupsActionVoteResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    if (response.code() == 400) {
+                        try {
+                            String errorBody = new String(response.errorBody().bytes());
+                            JSONObject jObject = new JSONObject(errorBody);
+                            String reason = jObject.getString("reason");
+                            if (!StringUtils.isNullOrEmpty(reason) && "already voted".equals(reason)) {
+                                groupPostResult.setVoted(true);
+                                groupPostResult.setTotalVotesCount(0);
+                                for (int i = 0; i < jObject.getJSONArray("data").length(); i++) {
+                                    groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount()
+                                            + Integer.parseInt(jObject.getJSONArray("data").getJSONObject(i).getString("count")));
+                                    switch (jObject.getJSONArray("data").getJSONObject(i).getString("name")) {
+                                        case "option1":
+                                            groupPostResult.setOption1VoteCount(Integer.parseInt(jObject.getJSONArray("data").getJSONObject(i).getString("count")));
+                                            break;
+                                        case "option2":
+                                            groupPostResult.setOption2VoteCount(Integer.parseInt(jObject.getJSONArray("data").getJSONObject(i).getString("count")));
+                                            break;
+                                        case "option3":
+                                            groupPostResult.setOption3VoteCount(Integer.parseInt(jObject.getJSONArray("data").getJSONObject(i).getString("count")));
+                                            break;
+                                        case "option4":
+                                            groupPostResult.setOption4VoteCount(Integer.parseInt(jObject.getJSONArray("data").getJSONObject(i).getString("count")));
+                                            break;
+                                    }
+                                }
+                                notifyDataSetChanged();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 return;
             }
             try {
                 if (response.isSuccessful()) {
-                    GroupsActionResponse groupsActionResponse = response.body();
-//                    for (int i = 0; i < postList.size(); i++) {
-//                        if (postList.get(i).getId() == groupsActionResponse.getData().getResult().getPostId()) {
+                    GroupsActionVoteResponse groupsActionResponse = response.body();
                     groupPostResult.setVoted(true);
+                    switch (groupsActionResponse.getData().getResult().get(0).getVoteOption()) {
+                        case "option1":
+                            groupPostResult.setOption1VoteCount(groupPostResult.getOption1VoteCount() + 1);
+                            break;
+                        case "option2":
+                            groupPostResult.setOption2VoteCount(groupPostResult.getOption2VoteCount() + 1);
+                            break;
+                        case "option3":
+                            groupPostResult.setOption3VoteCount(groupPostResult.getOption3VoteCount() + 1);
+                            break;
+                        case "option4":
+                            groupPostResult.setOption4VoteCount(groupPostResult.getOption4VoteCount() + 1);
+                            break;
+                    }
                     notifyDataSetChanged();
-//                            break;
-//                        }
-//                    }
                 } else {
 
                 }
@@ -793,23 +783,54 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         }
 
         @Override
-        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
+        public void onFailure(Call<GroupsActionVoteResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
-    private void markAsHelpfulOrUnhelpful(int position, String markType) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
-        groupActionsRequest.setGroupId(groupPostResult.getGroupId());
-        groupActionsRequest.setPostId(groupPostResult.getId());
-        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
-        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
-        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
-        call.enqueue(groupActionResponseCallback);
-    }
+//    private void markAsHelpfulOrUnhelpful(int position, String markType) {
+//        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+//        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+//        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
+//        groupActionsRequest.setGroupId(groupPostResult.getGroupId());
+//        groupActionsRequest.setPostId(groupPostResult.getId());
+//        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
+//        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
+//        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+//        call.enqueue(groupActionResponseCallback);
+//    }
+//
+//    private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
+//        @Override
+//        public void onResponse(Call<GroupsActionResponse> call, Response<GroupsActionResponse> response) {
+//            if (response == null || response.body() == null) {
+//                if (response != null && response.raw() != null) {
+//                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+//                    Crashlytics.logException(nee);
+//                }
+//                return;
+//            }
+//            try {
+//                if (response.isSuccessful()) {
+//                    GroupsActionResponse groupsActionResponse = response.body();
+//                    groupPostResult.setVoted(true);
+//                    notifyDataSetChanged();
+//                } else {
+//
+//                }
+//            } catch (Exception e) {
+//                Crashlytics.logException(e);
+//                Log.d("MC4kException", Log.getStackTraceString(e));
+//            }
+//        }
+//
+//        @Override
+//        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
+//            Crashlytics.logException(t);
+//            Log.d("MC4kException", Log.getStackTraceString(t));
+//        }
+//    };
 
     public interface RecyclerViewClickListener {
         void onRecyclerItemClick(View view, int position);

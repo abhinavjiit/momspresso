@@ -2,6 +2,8 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupResult;
 
 /**
@@ -25,24 +28,40 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     private Switch disableNotificationSwitch;
     private ImageView editGroupImageView;
     private TextView memberCountTextView;
+    private Toolbar toolbar;
+    private String memberType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_settings_activity);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         disableNotificationSwitch = (Switch) findViewById(R.id.disableNotificationSwitch);
         leaveGroupContainer = (RelativeLayout) findViewById(R.id.leaveGroupContainer);
         editGroupImageView = (ImageView) findViewById(R.id.editGroupImageView);
         reportedContentContainer = (RelativeLayout) findViewById(R.id.reportedContentContainer);
         memberCountTextView = (TextView) findViewById(R.id.memberCountTextView);
 
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         groupItem = (GroupResult) getIntent().getParcelableExtra("groupItem");
+        memberType = getIntent().getStringExtra(AppConstants.GROUP_MEMBER_TYPE);
 
         disableNotificationSwitch.setOnClickListener(this);
         leaveGroupContainer.setOnClickListener(this);
         editGroupImageView.setOnClickListener(this);
         reportedContentContainer.setOnClickListener(this);
         memberCountTextView.setOnClickListener(this);
+
+        if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
+            reportedContentContainer.setVisibility(View.VISIBLE);
+            editGroupImageView.setVisibility(View.VISIBLE);
+        }
+
+        memberCountTextView.setText("" + groupItem.getMemberCount());
     }
 
     @Override
@@ -80,6 +99,16 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
                 startActivity(intent);
             }
             break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

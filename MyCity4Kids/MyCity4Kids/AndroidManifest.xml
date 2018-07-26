@@ -474,27 +474,20 @@
             android:enabled="true"
             android:exported="false" />
 
-        <!--<receiver
-            android:name="com.mycity4kids.gcm.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+        <provider
+            android:name=".utils.GenericFileProvider"
+            android:authorities="${applicationId}.my.package.name.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
-                <category android:name="com.chapp.android" />
-            </intent-filter>
-        </receiver>-->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0955a2855f4c5641b7994b98f58aef7eadbf4cd5" />
 
-        <!--  FirebaseInstanceIdService performs security checks at runtime,
-               no need for explicit permissions despite exported="true"
-         <service android:name=".MyFirebaseInstanceIdService" android:exported="true">
-             <intent-filter>
-                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-             </intent-filter>
-         </service>-->
-        <!-- [START firebase_service] -->
         <service android:name=".fcm.MyFcmListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

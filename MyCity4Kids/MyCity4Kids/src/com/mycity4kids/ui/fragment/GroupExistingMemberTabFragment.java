@@ -1,18 +1,18 @@
-package com.mycity4kids.ui.activity;
+package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
-import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -20,7 +20,6 @@ import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
-import com.mycity4kids.ui.adapter.GroupMembersPagerAdapter;
 import com.mycity4kids.ui.adapter.GroupsMembershipRequestRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -30,10 +29,10 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 /**
- * Created by hemant on 9/7/18.
+ * Created by hemant on 26/7/18.
  */
 
-public class GroupMembershipRequestActivity extends BaseActivity implements GroupsMembershipRequestRecyclerAdapter.RecyclerViewClickListener {
+public class GroupExistingMemberTabFragment extends BaseFragment implements GroupsMembershipRequestRecyclerAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 1;
     private int totalPostCount;
@@ -44,87 +43,56 @@ public class GroupMembershipRequestActivity extends BaseActivity implements Grou
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private ArrayList<GroupsMembershipResult> membersList;
 
+    private RecyclerView recyclerView;
     private GroupsMembershipRequestRecyclerAdapter adapter;
-    //    private RecyclerView recyclerView;
-    private Toolbar toolbar;
     private int groupId;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.group_membership_request_activity);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        viewPager = (ViewPager) findViewById(R.id.pager);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.groups_existing_member_tab_fragment, null);
 
-        groupId = getIntent().getIntExtra("groupId", 0);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        groupId = getArguments().getInt("groupId");
 
-        tabLayout.addTab(tabLayout.newTab().setText("Requests"));
-        tabLayout.addTab(tabLayout.newTab().setText("Existing Members"));
+        final LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+
         membersList = new ArrayList<>();
 
-        GroupMembersPagerAdapter groupMembersPagerAdapter = new GroupMembersPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), groupId);
-        viewPager.setAdapter(groupMembersPagerAdapter);
+        adapter = new GroupsMembershipRequestRecyclerAdapter(getActivity(), this);
+        adapter.setData(membersList);
+        recyclerView.setAdapter(adapter);
 
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        getAllPendingMembersForGroup();
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) //check for scroll down
+                {
+                    visibleItemCount = llm.getChildCount();
+                    totalItemCount = llm.getItemCount();
+                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
+                    if (!isReuqestRunning && !isLastPageReached) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            isReuqestRunning = true;
+                            getAllPendingMembersForGroup();
+                        }
+                    }
+                }
             }
         });
-
-//
-//        final LinearLayoutManager llm = new LinearLayoutManager(this);
-//        llm.setOrientation(LinearLayoutManager.VERTICAL);
-//        recyclerView.setLayoutManager(llm);
-//
-//        adapter = new GroupsMembershipRequestRecyclerAdapter(this, this);
-//        adapter.setData(membersList);
-//        recyclerView.setAdapter(adapter);
-//
-//        getAllPendingMembersForGroup();
-//
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                if (dy > 0) //check for scroll down
-//                {
-//                    visibleItemCount = llm.getChildCount();
-//                    totalItemCount = llm.getItemCount();
-//                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
-//
-//                    if (!isReuqestRunning && !isLastPageReached) {
-//                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-//                            isReuqestRunning = true;
-//                            getAllPendingMembersForGroup();
-//                        }
-//                    }
-//                }
-//            }
-//        });
+        return view;
     }
 
     private void getAllPendingMembersForGroup() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        Call<GroupsMembershipResponse> call = groupsAPI.getGroupMembersByStatus(groupId, AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION, skip, limit);
+        Call<GroupsMembershipResponse> call = groupsAPI.getGroupMembersByStatus(groupId, AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER, skip, limit);
         call.enqueue(memberShipReponseCallback);
     }
 

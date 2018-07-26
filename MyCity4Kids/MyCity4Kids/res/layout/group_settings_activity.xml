@@ -7,12 +7,42 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:elevation="5dp"
-        app:layout_collapseMode="pin"
+        android:minHeight="?attr/actionBarSize"
         app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title" />
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/user_activities.toolbar.title"
+                android:textColor="@color/user_activities.toolbar.title"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/saveGroupDetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="12dp"
+                android:text="@string/complete_blogger_profile.save"
+                android:textColor="@color/editor.publish"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
         android:id="@+id/groupHeaderContainer"
@@ -73,7 +103,8 @@
             android:layout_alignRight="@+id/groupImageView"
             android:layout_alignTop="@+id/groupImageView"
             android:padding="12dp"
-            android:src="@drawable/ic_edit" />
+            android:src="@drawable/ic_edit"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -189,15 +220,23 @@
 
     </RelativeLayout>
 
+    <View
+        android:id="@+id/underlineView1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/leaveGroupContainer"
+        android:background="@color/light_underline" />
+
     <RelativeLayout
         android:id="@+id/reportedContentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/leaveGroupContainer"
+        android:layout_below="@+id/underlineView1"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:paddingBottom="15dp"
-        android:paddingTop="15dp">
+        android:paddingTop="15dp"
+        android:visibility="gone">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/reportedContentTitleLabel"

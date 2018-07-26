@@ -591,11 +591,14 @@ public class AppConstants {
     public static final String CONTENT_REPORT_ACTION_HIDE_CONTENT = "1";
     public static final String CONTENT_REPORT_ACTION_BLOCK_USER = "2";
 
+    public static final String GROUP_MEMBER_TYPE = "memberType";
     public static final String GROUP_MEMBER_TYPE_ADMIN = "2";
     public static final String GROUP_MEMBER_TYPE_MODERATOR = "1";
     public static final String GROUP_MEMBER_TYPE_USER = "0";
 
+    public static final String GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION = "0";
+    public static final String GROUP_MEMBERSHIP_STATUS_MEMBER = "1";
+    public static final String GROUP_MEMBERSHIP_STATUS_LEFT = "2";
     public static final String GROUP_MEMBERSHIP_STATUS_BLOCKED = "3";
-    public static final String GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION = "1";
-    public static final String GROUP_MEMBERSHIP_STATUS_MEMBER = "2";
+    public static final String GROUP_MEMBERSHIP_STATUS_REJECTED = "4";
 }

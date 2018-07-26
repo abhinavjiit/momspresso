@@ -1,12 +1,15 @@
 package com.mycity4kids.models.response;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Map;
 
 /**
  * Created by hemant on 22/6/16.
  */
-public class UserDetailResult {
+public class UserDetailResult implements Parcelable {
     private String id;
     private String sqlId;
     private String mc4kToken;
@@ -33,6 +36,46 @@ public class UserDetailResult {
     private Map<String, String> langSubscription;
     private String totalArticles;
     private String totalArticlesViews;
+
+    public UserDetailResult() {
+
+    }
+
+    protected UserDetailResult(Parcel in) {
+        id = in.readString();
+        sqlId = in.readString();
+        mc4kToken = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
+        email = in.readString();
+        cityId = in.readString();
+        userType = in.readString();
+        isValidated = in.readString();
+        profilePicUrl = in.readParcelable(ProfilePic.class.getClassLoader());
+        blogTitle = in.readString();
+        followersCount = in.readString();
+        followingCount = in.readString();
+        rank = in.readString();
+        userBio = in.readString();
+        sessionId = in.readString();
+        phoneNumber = in.readString();
+        isLangSelection = in.readString();
+        subscriptionEmail = in.readString();
+        totalArticles = in.readString();
+        totalArticlesViews = in.readString();
+    }
+
+    public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
+        @Override
+        public UserDetailResult createFromParcel(Parcel in) {
+            return new UserDetailResult(in);
+        }
+
+        @Override
+        public UserDetailResult[] newArray(int size) {
+            return new UserDetailResult[size];
+        }
+    };
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -240,6 +283,36 @@ public class UserDetailResult {
 
     public void setTotalArticlesViews(String totalArticlesViews) {
         this.totalArticlesViews = totalArticlesViews;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(sqlId);
+        parcel.writeString(mc4kToken);
+        parcel.writeString(firstName);
+        parcel.writeString(lastName);
+        parcel.writeString(email);
+        parcel.writeString(cityId);
+        parcel.writeString(userType);
+        parcel.writeString(isValidated);
+        parcel.writeParcelable(profilePicUrl, i);
+        parcel.writeString(blogTitle);
+        parcel.writeString(followersCount);
+        parcel.writeString(followingCount);
+        parcel.writeString(rank);
+        parcel.writeString(userBio);
+        parcel.writeString(sessionId);
+        parcel.writeString(phoneNumber);
+        parcel.writeString(isLangSelection);
+        parcel.writeString(subscriptionEmail);
+        parcel.writeString(totalArticles);
+        parcel.writeString(totalArticlesViews);
     }
 
     public class SocialTokens {

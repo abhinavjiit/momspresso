@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.GroupPostCommentResult;
+import com.mycity4kids.utils.RoundedTransformation;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -66,18 +68,39 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof CommentsViewHolder) {
             CommentsViewHolder commentsViewHolder = (CommentsViewHolder) holder;
-            commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserId());
+//            commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserId());
+//            commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
+//            commentsViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
+
+            commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
+                    + " " + repliesList.get(position).getUserInfo().getLastName());
             commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             commentsViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
+            try {
+                Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp()).placeholder(R.drawable.default_commentor_img)
+                        .error(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(commentsViewHolder.commentorImageView);
+            } catch (Exception e) {
+                commentsViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
+            }
         } else {
             RepliesViewHolder repliesViewHolder = (RepliesViewHolder) holder;
-            repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserId());
+//            repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserId());
+//            repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
+//            repliesViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
+            repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
+                    + " " + repliesList.get(position).getUserInfo().getLastName());
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             repliesViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
+            try {
+                Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp()).placeholder(R.drawable.default_commentor_img)
+                        .error(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(repliesViewHolder.commentorImageView);
+            } catch (Exception e) {
+                repliesViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
+            }
         }
     }
 
-    public class CommentsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CommentsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         ImageView commentorImageView;
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
@@ -94,15 +117,23 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             replyCommentTextView.setVisibility(View.GONE);
+
+            view.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             mListener.onRecyclerItemClick(v, getAdapterPosition());
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            mListener.onRecyclerItemClick(view, getAdapterPosition());
+            return true;
+        }
     }
 
-    public class RepliesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class RepliesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         ImageView commentorImageView;
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
@@ -114,11 +145,19 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
+
+            view.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             mListener.onRecyclerItemClick(v, getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            mListener.onRecyclerItemClick(view, getAdapterPosition());
+            return true;
         }
     }
 

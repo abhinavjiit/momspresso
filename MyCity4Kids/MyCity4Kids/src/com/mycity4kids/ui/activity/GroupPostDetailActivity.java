@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,9 +25,13 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
+import com.mycity4kids.models.request.DeleteGpPostCommentOrReplyRequest;
+import com.mycity4kids.models.request.EditGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
+import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
+import com.mycity4kids.models.request.UpdatePostSettingsRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
@@ -38,6 +40,7 @@ import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsActionResponse;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.ProfilePic;
 import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.models.response.UserPostSettingResponse;
@@ -47,8 +50,9 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
 import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
-import com.mycity4kids.ui.fragment.AddViewGroupPostCommentsRepliesDialogFragment;
+import com.mycity4kids.ui.fragment.GpPostCommentOptionsDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
+import com.mycity4kids.ui.fragment.ViewGroupPostCommentsRepliesDialogFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,16 +95,20 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private HashMap<String, String> mediaUrls, pollOptions;
     private GroupPostResult postData;
     private Toolbar toolbar;
-    private AddViewGroupPostCommentsRepliesDialogFragment addViewGroupPostCommentsRepliesDialogFragment;
-    //    private ImageView addCommentImageView;
-//    private EditText writeCommentEditText;
+    private ViewGroupPostCommentsRepliesDialogFragment viewGroupPostCommentsRepliesDialogFragment;
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
     private View overlayView;
-    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView;
+    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, deletePostTextView, blockUserTextView, pinPostTextView;
     private ProgressBar progressBar;
-    private ImageView groupSettingsImageView;
     private FloatingActionButton openAddCommentDialog;
+    private int actionItemPosition;
+    private String editContent;
+    private int editReplyId;
+    private int editReplyParentCommentId;
+    private int deleteCommentPos;
+    private int deleteReplyPos;
+    private String memberType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,9 +116,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         setContentView(R.layout.group_post_detail_activity);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        addCommentImageView = (ImageView) findViewById(R.id.addCommentImageView);
-//        writeCommentEditText = (EditText) findViewById(R.id.writeCommentEditText);
-        groupSettingsImageView = (ImageView) findViewById(R.id.groupSettingsImageView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         postSettingsContainer = (LinearLayout) findViewById(R.id.postSettingsContainer);
         postSettingsContainerMain = (RelativeLayout) findViewById(R.id.postSettingsContainerMain);
@@ -118,6 +123,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         savePostTextView = (TextView) findViewById(R.id.savePostTextView);
         notificationToggleTextView = (TextView) findViewById(R.id.notificationToggleTextView);
         commentToggleTextView = (TextView) findViewById(R.id.commentToggleTextView);
+        deletePostTextView = (TextView) findViewById(R.id.deletePostTextView);
+        blockUserTextView = (TextView) findViewById(R.id.blockUserTextView);
+        pinPostTextView = (TextView) findViewById(R.id.pinPostTextView);
+
         reportPostTextView = (TextView) findViewById(R.id.reportPostTextView);
         openAddCommentDialog = (FloatingActionButton) findViewById(R.id.openAddCommentDialog);
 
@@ -126,6 +135,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         postData = (GroupPostResult) getIntent().getParcelableExtra("postData");
         groupId = getIntent().getIntExtra("groupId", 0);
         postId = getIntent().getIntExtra("postId", 0);
+        memberType = getIntent().getStringExtra("memberType");
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -140,6 +150,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         reportPostTextView.setOnClickListener(this);
         overlayView.setOnClickListener(this);
         openAddCommentDialog.setOnClickListener(this);
+        deletePostTextView.setOnClickListener(this);
+        blockUserTextView.setOnClickListener(this);
+        pinPostTextView.setOnClickListener(this);
 
         completeResponseList = new ArrayList<>();
         completeResponseList.add(new GroupPostCommentResult()); // Empty element for Header position
@@ -147,29 +160,34 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-//        postData = null;
-        if (postData == null) {
-            getPostDetails();
+
+        if (memberType == null) {
+            checkMembership(groupId);
         } else {
-            formatPostData();
-            if (postData.getDisableComments() == 1) {
-                openAddCommentDialog.setVisibility(View.GONE);
+            if (postData == null) {
+                getPostDetails();
+            } else {
+                formatPostData();
+                if (postData.getDisableComments() == 1) {
+                    openAddCommentDialog.setVisibility(View.GONE);
+                }
+
+                if (AppConstants.POST_TYPE_MEDIA.equals(postType)) {
+                    mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
+                    postData.setMediaUrls(mediaUrls);
+                } else if (AppConstants.POST_TYPE_IMAGE_POLL.equals(postType) || AppConstants.POST_TYPE_TEXT_POLL.equals(postType)) {
+                    pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
+                    postData.setPollOptions(pollOptions);
+                }
+
+                groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(this, this, postType);
+                groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
+                recyclerView.setAdapter(groupPostDetailsAndCommentsRecyclerAdapter);
+
+                getPostComments();
             }
-
-            if (AppConstants.POST_TYPE_MEDIA.equals(postType)) {
-                mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
-                postData.setMediaUrls(mediaUrls);
-            } else if (AppConstants.POST_TYPE_IMAGE_POLL.equals(postType) || AppConstants.POST_TYPE_TEXT_POLL.equals(postType)) {
-                pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
-                postData.setPollOptions(pollOptions);
-            }
-
-            groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(this, this, postType);
-            groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
-            recyclerView.setAdapter(groupPostDetailsAndCommentsRecyclerAdapter);
-
-            getPostComments();
         }
+
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -190,6 +208,71 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
         });
     }
+
+    private void checkMembership(int id) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        Call<GroupsMembershipResponse> call = groupsAPI.getUsersMembershipDetailsForGroup(id, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(groupMembershipResponseCallback);
+    }
+
+    private Callback<GroupsMembershipResponse> groupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
+        @Override
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsMembershipResponse groupsMembershipResponse = response.body();
+                    if (groupsMembershipResponse.getData().getResult().get(0).getIsAdmin() == 1) {
+                        memberType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+                    } else if (groupsMembershipResponse.getData().getResult().get(0).getIsModerator() == 1) {
+                        memberType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+                    }
+
+                    if (postData == null) {
+                        getPostDetails();
+                    } else {
+                        formatPostData();
+                        if (postData.getDisableComments() == 1) {
+                            openAddCommentDialog.setVisibility(View.GONE);
+                        }
+
+                        if (AppConstants.POST_TYPE_MEDIA.equals(postType)) {
+                            mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
+                            postData.setMediaUrls(mediaUrls);
+                        } else if (AppConstants.POST_TYPE_IMAGE_POLL.equals(postType) || AppConstants.POST_TYPE_TEXT_POLL.equals(postType)) {
+                            pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
+                            postData.setPollOptions(pollOptions);
+                        }
+
+                        groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(GroupPostDetailActivity.this, GroupPostDetailActivity.this, postType);
+                        groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
+                        recyclerView.setAdapter(groupPostDetailsAndCommentsRecyclerAdapter);
+
+                        getPostComments();
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void getPostDetails() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
@@ -272,6 +355,26 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 case "responseCount":
                     postData.setResponseCount(postData.getCounts().get(i).getCount());
                     break;
+                case "votesCount": {
+                    for (int j = 0; j < postData.getCounts().get(i).getCounts().size(); j++) {
+                        postData.setTotalVotesCount(postData.getTotalVotesCount() + postData.getCounts().get(i).getCounts().get(j).getCount());
+                        switch (postData.getCounts().get(i).getCounts().get(j).getName()) {
+                            case "option1":
+                                postData.setOption1VoteCount(postData.getCounts().get(i).getCounts().get(j).getCount());
+                                break;
+                            case "option2":
+                                postData.setOption2VoteCount(postData.getCounts().get(i).getCounts().get(j).getCount());
+                                break;
+                            case "option3":
+                                postData.setOption3VoteCount(postData.getCounts().get(i).getCounts().get(j).getCount());
+                                break;
+                            case "option4":
+                                postData.setOption4VoteCount(postData.getCounts().get(i).getCounts().get(j).getCount());
+                                break;
+                        }
+                    }
+                }
+                break;
             }
         }
     }
@@ -350,19 +453,39 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
-            case R.id.replyCommentTextView:
+            case R.id.commentRootView: {
+                GpPostCommentOptionsDialogFragment commentOptionsDialogFragment = new GpPostCommentOptionsDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putInt("position", position);
+                _args.putString("authorId", completeResponseList.get(position).getUserId());
+                _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                _args.putString("responseType", "COMMENT");
+                commentOptionsDialogFragment.setArguments(_args);
+                commentOptionsDialogFragment.setCancelable(true);
+                commentOptionsDialogFragment.show(fm, "Comment Options");
+            }
+            break;
+            case R.id.replyCommentTextView: {
+                openAddCommentReplyDialog(completeResponseList.get(position));
+            }
+            break;
             case R.id.replyCountTextView:
-//                GroupPostCommentReplyFragment
-                addViewGroupPostCommentsRepliesDialogFragment = new AddViewGroupPostCommentsRepliesDialogFragment();
+                viewGroupPostCommentsRepliesDialogFragment = new ViewGroupPostCommentsRepliesDialogFragment();
                 Bundle _args = new Bundle();
                 _args.putParcelable("commentReplies", completeResponseList.get(position));
                 _args.putInt("childCount", completeResponseList.get(position).getChildCount());
-                addViewGroupPostCommentsRepliesDialogFragment.setArguments(_args);
+                _args.putInt("position", position);
+                _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                viewGroupPostCommentsRepliesDialogFragment.setArguments(_args);
                 FragmentManager fm = getSupportFragmentManager();
-                addViewGroupPostCommentsRepliesDialogFragment.show(fm, "Replies");
+                viewGroupPostCommentsRepliesDialogFragment.show(fm, "Replies");
                 break;
             case R.id.postSettingImageView:
                 getCurrentPostSettingsStatus(postData);
+                if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
+                    getAdminPostSettingsStatus(postData);
+                }
                 if (postData.getDisableComments() == 1) {
                     commentToggleTextView.setText("ENABLE COMMENTS");
                 } else {
@@ -380,6 +503,58 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             case R.id.downvoteContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY);
                 break;
+        }
+    }
+
+    private void getAdminPostSettingsStatus(GroupPostResult selectedPost) {
+//        progressBar.setVisibility(View.VISIBLE);
+        pinPostTextView.setVisibility(View.GONE);
+        blockUserTextView.setVisibility(View.GONE);
+        deletePostTextView.setVisibility(View.GONE);
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        Call<GroupPostResponse> call = groupsAPI.getSinglePost(selectedPost.getId());
+        call.enqueue(postAdminDetailsResponseCallback);
+    }
+
+    private Callback<GroupPostResponse> postAdminDetailsResponseCallback = new Callback<GroupPostResponse>() {
+        @Override
+        public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupPostResponse groupPostResponse = response.body();
+                    setAdminPostPreferences(groupPostResponse);
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupPostResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void setAdminPostPreferences(GroupPostResponse groupPostResponse) {
+        pinPostTextView.setVisibility(View.VISIBLE);
+        blockUserTextView.setVisibility(View.VISIBLE);
+        deletePostTextView.setVisibility(View.VISIBLE);
+        if (groupPostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
+            pinPostTextView.setText("UNPIN THIS POST TO TOP");
+        } else {
+            pinPostTextView.setText("PIN THIS POST TO TOP");
         }
     }
 
@@ -567,7 +742,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     private void setPostCurrentPreferences(UserPostSettingResponse userPostSettingResponse) {
 
-        if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this).getDynamoId())) {
+        if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this).getDynamoId())
+                || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
             commentToggleTextView.setVisibility(View.VISIBLE);
         } else {
             commentToggleTextView.setVisibility(View.GONE);
@@ -597,14 +773,24 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.groupSettingsImageView: {
-                Intent intent = new Intent(GroupPostDetailActivity.this, GroupSettingsActivity.class);
-                intent.putExtra("groupItem", postData);
-                startActivity(intent);
-            }
-            break;
+            case R.id.deletePostTextView:
+                Log.d("deletePostTextView", "" + postData.getId());
+                updateAdminLevelPostPrefs("markInactive");
+                break;
+            case R.id.blockUserTextView:
+                Log.d("blockUserTextView", "" + postData.getId());
+                updateAdminLevelPostPrefs("blockUser");
+                break;
+            case R.id.pinPostTextView:
+                Log.d("pinPostTextView", "" + postData.getId());
+                if (pinPostTextView.getText().toString().equals("PIN THIS POST TO TOP")) {
+                    updateAdminLevelPostPrefs("pinPost");
+                } else {
+                    updateAdminLevelPostPrefs("unpinPost");
+                }
+                break;
             case R.id.savePostTextView:
-                Log.d("savePostTextView", "" + selectedPost.getId());
+                Log.d("savePostTextView", "" + postData.getId());
                 if (savePostTextView.getText().toString().equals("SAVE POST")) {
                     updateUserPostPreferences("savePost");
                 } else {
@@ -619,7 +805,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 }
                 break;
             case R.id.notificationToggleTextView:
-                Log.d("notifToggleTextView", "" + selectedPost.getId());
+                Log.d("notifToggleTextView", "" + postData.getId());
                 if (notificationToggleTextView.getText().toString().equals("DISABLE NOTIFICATION")) {
                     updateUserPostPreferences("enableNotif");
                 } else {
@@ -636,7 +822,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
             break;
             case R.id.reportPostTextView:
-                Log.d("reportPostTextView", "" + selectedPost.getId());
+                Log.d("reportPostTextView", "" + postData.getId());
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
@@ -653,12 +839,141 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
     }
 
+    private void updateAdminLevelPostPrefs(String actionType) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        UpdatePostSettingsRequest request = new UpdatePostSettingsRequest();
+        if ("pinPost".equals(actionType)) {
+            request.setIsPinned(1);
+        } else if ("unpinPost".equals(actionType)) {
+            request.setIsPinned(0);
+        } else if ("blockUser".equals(actionType)) {
+            getPostingUsersMembershipDetails(postData.getGroupId(), postData.getUserId());
+            return;
+        } else if ("markInactive".equals(actionType)) {
+            request.setIsActive(0);
+        }
+
+        Call<GroupPostResponse> call = groupsAPI.updatePost(postData.getId(), request);
+        call.enqueue(updateAdminLvlPostSettingResponseCallback);
+    }
+
+    private Callback<GroupPostResponse> updateAdminLvlPostSettingResponseCallback = new Callback<GroupPostResponse>() {
+        @Override
+        public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupPostResponse updatePostResponse = response.body();
+                    if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
+                        pinPostTextView.setText("UNPIN THIS POST TO TOP");
+                    } else {
+                        pinPostTextView.setText("PIN THIS POST TO TOP");
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupPostResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void getPostingUsersMembershipDetails(int groupId, String postsUserId) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        Call<GroupsMembershipResponse> call = groupsAPI.getUsersMembershipDetailsForGroup(groupId, postsUserId);
+        call.enqueue(getMembershipDetailsReponseCallback);
+    }
+
+    private Callback<GroupsMembershipResponse> getMembershipDetailsReponseCallback = new Callback<GroupsMembershipResponse>() {
+        @Override
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+                    GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+                    UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
+                    updateGroupMembershipRequest.setUserId(postData.getUserId());
+                    updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
+                    Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(postData.getId(), updateGroupMembershipRequest);
+                    call1.enqueue(updateGroupMembershipResponseCallback);
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private Callback<GroupsMembershipResponse> updateGroupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
+        @Override
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsMembershipResponse groupsMembershipResponse = response.body();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
     private void updatePostCommentSettings(int status) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
         UpdateGroupPostRequest updateGroupPostRequest = new UpdateGroupPostRequest();
-        updateGroupPostRequest.setGroupId(selectedGroup.getId());
+        updateGroupPostRequest.setGroupId(postData.getGroupId());
         updateGroupPostRequest.setDisableComments(status);
 
         Call<GroupPostResponse> call = groupsAPI.disablePostComment(postData.getId(), updateGroupPostRequest);
@@ -705,9 +1020,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
         UpdateUserPostSettingsRequest request = new UpdateUserPostSettingsRequest();
-        request.setPostId(selectedPost.getId());
-        request.setIsAnno(selectedPost.getIsAnnon());
-        request.setUserId(selectedPost.getUserId());
+        request.setPostId(postData.getId());
+        request.setIsAnno(postData.getIsAnnon());
+        request.setUserId(postData.getUserId());
         Call<UserPostSettingResponse> call;
         if (currentPostPrefsForUser == null) {
             if ("savePost".equals(action)) {
@@ -792,14 +1107,12 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         addGpPostCommentOrReplyRequest.setContent(content);
         Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
-        call.enqueue(addCommentReplyResponseListener);
-//        Call ca
+        call.enqueue(addCommentResponseListener);
     }
 
-    private Callback<AddGpPostCommentReplyResponse> addCommentReplyResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
+    private Callback<AddGpPostCommentReplyResponse> addCommentResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
         @Override
         public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
-            isReuqestRunning = false;
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -855,7 +1168,201 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
             showToast("Failed to add comment. Please try again");
             Crashlytics.logException(t);
-            ;
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    public void editComment(int id, String updateContent, int position) {
+        actionItemPosition = position;
+        editContent = updateContent;
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        EditGpPostCommentOrReplyRequest editGpPostCommentOrReplyRequest = new EditGpPostCommentOrReplyRequest();
+        editGpPostCommentOrReplyRequest.setContent(updateContent);
+        Call<AddGpPostCommentReplyResponse> call = groupsAPI.editPostCommentOrReply(id, editGpPostCommentOrReplyRequest);
+        call.enqueue(editCommentResponseListener);
+    }
+
+    private Callback<AddGpPostCommentReplyResponse> editCommentResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
+        @Override
+        public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                showToast("Failed to edit comment. Please try again");
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    AddGpPostCommentReplyResponse groupPostResponse = response.body();
+                    completeResponseList.get(actionItemPosition).setContent(editContent);
+                    if (viewGroupPostCommentsRepliesDialogFragment != null) {
+                        viewGroupPostCommentsRepliesDialogFragment.updateRepliesList(completeResponseList.get(actionItemPosition));
+                    }
+                    groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
+                } else {
+                    showToast("Failed to edit comment. Please try again");
+                }
+            } catch (Exception e) {
+                showToast("Failed to edit comment. Please try again");
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
+            showToast("Failed to edit comment. Please try again");
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    public void addReply(int parentId, String content) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();
+        addGpPostCommentOrReplyRequest.setGroupId(postData.getGroupId());
+        addGpPostCommentOrReplyRequest.setPostId(postData.getId());
+        addGpPostCommentOrReplyRequest.setParentId(parentId);
+        addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        addGpPostCommentOrReplyRequest.setContent(content);
+        Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
+        call.enqueue(addReplyResponseListener);
+    }
+
+    private Callback<AddGpPostCommentReplyResponse> addReplyResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
+        @Override
+        public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                showToast("Failed to add reply. Please try again");
+
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    AddGpPostCommentReplyResponse responseData = response.body();
+
+                    GroupPostCommentResult commentListData = new GroupPostCommentResult();
+                    commentListData.setId(responseData.getData().getResult().getId());
+                    commentListData.setContent(responseData.getData().getResult().getContent());
+                    commentListData.setCreatedAt(responseData.getData().getResult().getCreatedAt());
+                    commentListData.setPostId(responseData.getData().getResult().getPostId());
+                    commentListData.setParentId(responseData.getData().getResult().getParentId());
+                    commentListData.setUserId(responseData.getData().getResult().getUserId());
+
+                    UserDetailResult userDetailResult = new UserDetailResult();
+                    UserInfo sharedPrefUser = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);
+                    userDetailResult.setDynamoId(sharedPrefUser.getDynamoId());
+                    userDetailResult.setUserType(sharedPrefUser.getUserType());
+                    userDetailResult.setFirstName(sharedPrefUser.getFirst_name());
+                    userDetailResult.setLastName(sharedPrefUser.getLast_name());
+
+                    ProfilePic profilePic = new ProfilePic();
+                    profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(GroupPostDetailActivity.this));
+                    userDetailResult.setProfilePicUrl(profilePic);
+
+                    commentListData.setUserInfo(userDetailResult);
+
+                    for (int i = 0; i < completeResponseList.size(); i++) {
+                        if (completeResponseList.get(i).getId() == responseData.getData().getResult().getParentId()) {
+                            completeResponseList.get(i).getChildData().add(0, commentListData);
+                            completeResponseList.get(i).setChildCount(completeResponseList.get(i).getChildCount() + 1);
+                            if (viewGroupPostCommentsRepliesDialogFragment != null) {
+                                viewGroupPostCommentsRepliesDialogFragment.updateRepliesList(completeResponseList.get(i));
+                            }
+                            break;
+                        }
+                    }
+                    groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
+//                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "add", "reply");
+                } else {
+                    showToast("Failed to add reply. Please try again");
+                }
+            } catch (Exception e) {
+                showToast("Failed to add reply. Please try again");
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
+            showToast("Failed to add reply. Please try again");
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    public void editReply(String updatedReply, int parentCommentId, int replyId) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        EditGpPostCommentOrReplyRequest editGpPostCommentOrReplyRequest = new EditGpPostCommentOrReplyRequest();
+        editGpPostCommentOrReplyRequest.setContent(updatedReply);
+        Call<AddGpPostCommentReplyResponse> call = groupsAPI.editPostCommentOrReply(replyId, editGpPostCommentOrReplyRequest);
+        call.enqueue(editReplyResponseListener);
+        editReplyId = replyId;
+        editReplyParentCommentId = parentCommentId;
+        editContent = updatedReply;
+    }
+
+
+    private Callback<AddGpPostCommentReplyResponse> editReplyResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
+        @Override
+        public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                showToast("Failed to edit reply. Please try again");
+
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    AddGpPostCommentReplyResponse responseData = response.body();
+                    boolean isReplyUpdated = false;
+                    for (int i = 0; i < completeResponseList.size(); i++) {
+                        if (completeResponseList.get(i).getId() == editReplyParentCommentId) {
+                            for (int j = 0; j < completeResponseList.get(i).getChildData().size(); j++) {
+                                if (completeResponseList.get(i).getChildData().get(j).getId() == editReplyId) {
+                                    completeResponseList.get(i).getChildData().get(j).setContent(editContent);
+                                    if (viewGroupPostCommentsRepliesDialogFragment != null) {
+                                        viewGroupPostCommentsRepliesDialogFragment.updateRepliesList(completeResponseList.get(i));
+                                    }
+                                    isReplyUpdated = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (isReplyUpdated) {
+                            break;
+                        }
+                    }
+                    groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
+//                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "reply");
+                } else {
+                    showToast("Failed to edit reply. Please try again");
+                }
+            } catch (Exception e) {
+                showToast("Failed to edit reply. Please try again");
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
+            showToast("Failed to edit reply. Please try again");
+            Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
@@ -876,5 +1383,150 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void onResponseDelete(int commentPos, int replyPos, String responseType) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        DeleteGpPostCommentOrReplyRequest deleteGpPostCommentOrReplyRequest = new DeleteGpPostCommentOrReplyRequest();
+        deleteGpPostCommentOrReplyRequest.setIsActive(0);
+        // position-1 to adjust for the comment added on the top of reply list
+        if ("REPLY".equals(responseType)) {
+            deleteCommentPos = commentPos;
+            deleteReplyPos = replyPos - 1;
+            Call<AddGpPostCommentReplyResponse> call = groupsAPI.deleteCommentOrReply(completeResponseList.get(commentPos).getChildData().get(deleteReplyPos).getId(),
+                    deleteGpPostCommentOrReplyRequest);
+            call.enqueue(deleteReplyResponseListener);
+        } else {
+            actionItemPosition = replyPos;
+            Call<AddGpPostCommentReplyResponse> call = groupsAPI.deleteCommentOrReply(completeResponseList.get(actionItemPosition).getId(), deleteGpPostCommentOrReplyRequest);
+            call.enqueue(deleteCommentResponseListener);
+        }
+    }
+
+    private Callback<AddGpPostCommentReplyResponse> deleteCommentResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
+        @Override
+        public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                showToast("Failed to edit reply. Please try again");
+
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    AddGpPostCommentReplyResponse responseData = response.body();
+                    completeResponseList.remove(actionItemPosition);
+                    if (viewGroupPostCommentsRepliesDialogFragment != null) {
+                        viewGroupPostCommentsRepliesDialogFragment.dismiss();
+                    }
+                    groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
+//                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "reply");
+                } else {
+                    showToast("Failed to edit reply. Please try again");
+                }
+            } catch (Exception e) {
+                showToast("Failed to edit reply. Please try again");
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
+            showToast("Failed to edit reply. Please try again");
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+    private Callback<AddGpPostCommentReplyResponse> deleteReplyResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
+        @Override
+        public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                showToast("Failed to edit reply. Please try again");
+
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    AddGpPostCommentReplyResponse responseData = response.body();
+                    completeResponseList.get(deleteCommentPos).getChildData().remove(deleteReplyPos);
+                    completeResponseList.get(deleteCommentPos).setChildCount(completeResponseList.get(deleteCommentPos).getChildCount() - 1);
+                    if (viewGroupPostCommentsRepliesDialogFragment != null) {
+                        viewGroupPostCommentsRepliesDialogFragment.updateRepliesList(completeResponseList.get(deleteCommentPos));
+                        if (completeResponseList.get(deleteCommentPos).getChildCount() == 0) {
+                            viewGroupPostCommentsRepliesDialogFragment.dismiss();
+                        }
+                    }
+                    groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
+//                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "reply");
+                } else {
+                    showToast("Failed to edit reply. Please try again");
+                }
+            } catch (Exception e) {
+                showToast("Failed to edit reply. Please try again");
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
+            showToast("Failed to edit reply. Please try again");
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    public void onResponseEdit(int commentPosition, int position, String responseType) {
+        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        Bundle _args = new Bundle();
+        if ("REPLY".equals(responseType)) {
+            _args.putString("action", "EDIT_REPLY");
+            //position-1 to accommodate the parent comment above.
+            _args.putParcelable("parentCommentData", completeResponseList.get(commentPosition).getChildData().get(position - 1));
+        } else {
+            _args.putString("action", "EDIT_COMMENT");
+            _args.putParcelable("parentCommentData", completeResponseList.get(position));
+        }
+        _args.putInt("position", position);
+
+        addGpPostCommentReplyDialogFragment.setArguments(_args);
+        addGpPostCommentReplyDialogFragment.setCancelable(true);
+        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+    }
+
+    public void onResponseReport(int position, String responseType) {
+        GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        Bundle _args = new Bundle();
+        _args.putInt("groupId", groupId);
+        _args.putInt("postId", postData.getId());
+        _args.putString("type", AppConstants.GROUP_REPORT_TYPE_COMMENT);
+        groupPostReportDialogFragment.setArguments(_args);
+        groupPostReportDialogFragment.setCancelable(true);
+        groupPostReportDialogFragment.show(fm, "Choose report option");
+        reportPostTextView.setText("UNREPORT");
+    }
+
+
+    public void openAddCommentReplyDialog(GroupPostCommentResult data) {
+        AddGpPostCommentReplyDialogFragment addGroupCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        Bundle _args = new Bundle();
+        _args.putParcelable("parentCommentData", data);
+        addGroupCommentReplyDialogFragment.setArguments(_args);
+        addGroupCommentReplyDialogFragment.setCancelable(true);
+        addGroupCommentReplyDialogFragment.show(fm, "Add Replies");
     }
 }

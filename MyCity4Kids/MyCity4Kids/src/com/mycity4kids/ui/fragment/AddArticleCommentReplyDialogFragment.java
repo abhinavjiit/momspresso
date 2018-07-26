@@ -139,10 +139,8 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                             ((ArticleCommentsFragment) getTargetFragment()).addReply(commentReplyEditText.getText().toString(), commentOrReplyData.get_id());
                         }
                     }
-
                     dismiss();
                 }
-
                 break;
             case R.id.closeImageView:
                 dismiss();

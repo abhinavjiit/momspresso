@@ -3,6 +3,8 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.AddGroupPostRequest;
 import com.mycity4kids.models.request.CreateUpdateGroupRequest;
+import com.mycity4kids.models.request.DeleteGpPostCommentOrReplyRequest;
+import com.mycity4kids.models.request.EditGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.GroupReportContentRequest;
@@ -18,7 +20,10 @@ import com.mycity4kids.models.response.AddGroupPostResponse;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
+import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupsActionResponse;
+import com.mycity4kids.models.response.GroupsActionVoteResponse;
+import com.mycity4kids.models.response.GroupsAllSearchResponse;
 import com.mycity4kids.models.response.GroupsCategoryMappingResponse;
 import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsListingResponse;
@@ -161,6 +166,13 @@ public interface GroupsAPI {
     @POST("/api/v1/groups/response")
     Call<AddGpPostCommentReplyResponse> addPostCommentOrReply(@Body AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest);
 
+    @PATCH("/api/v1/groups/response/{responseId}")
+    Call<AddGpPostCommentReplyResponse> editPostCommentOrReply(@Path("responseId") int responseId,
+                                                               @Body EditGpPostCommentOrReplyRequest editGpPostCommentOrReplyRequest);
+
+    @PATCH("/api/v1/groups/response/{responseId}")
+    Call<AddGpPostCommentReplyResponse> deleteCommentOrReply(@Path("responseId") int responseId,
+                                                             @Body DeleteGpPostCommentOrReplyRequest deleteGpPostCommentOrReplyRequest);
 //    @PUT("/api/v1/groups/usersettings/{userSettingId}")
 //    Call<UserPostSettingResponse> updatePostSettingsForUser(@Path("userSettingId") int userSettingId,
 //                                                            @Body UpdateUserPostSettingsRequest joinGroupRequest);
@@ -169,6 +181,9 @@ public interface GroupsAPI {
     //Group Action Items
     @POST("/api/v1/groups/action")
     Call<GroupsActionResponse> addAction(@Body GroupActionsRequest groupActionsRequest);
+
+    @POST("/api/v1/groups/action-vote")
+    Call<GroupsActionVoteResponse> addActionVote(@Body GroupActionsRequest groupActionsRequest);
 
     @PATCH("/api/v1/groups/action/{actionId}")
     Call<GroupsActionResponse> patchAction(@Path("actionId") int actionId,
@@ -183,12 +198,24 @@ public interface GroupsAPI {
 
     //Report Content
     @GET("/api/v1/groups/moderation-view/")
-    Call<GroupsReportedContentResponse> getReportedContent();
+    Call<GroupsReportedContentResponse> getReportedContent(@Query("groupId") int groupId,
+                                                           @Query("$skip") int skip,
+                                                           @Query("$limit") int limit);
 
-    @POST("/api/v1/groups/categorygroupmap")
+    @POST("/api/v1/groups/report")
     Call<GroupsReportContentResponse> reportContent(@Body GroupReportContentRequest groupReportContentRequest);
 
     @POST("/api/v1/groups/moderation-view/{contentId}")
     Call<GroupsReportedContentResponse> moderateReportedContent(@Path("contentId") int contentId,
                                                                 @Body ReportedContentModerationRequest reportedContentModerationRequest);
+
+    //Groups Search
+    @GET("/api/v1/groups/search/")
+    Call<GroupPostResponse> searchWithinGroup(@Query("q") String query,
+                                              @Query("ofType") String ofType,
+                                              @Query("isActive") int isActive,
+                                              @Query("groupId") int groupId);
+
+    @GET("/api/v1/groups/search/")
+    Call<GroupsAllSearchResponse> searchGroups(@Query("q") String query);
 }

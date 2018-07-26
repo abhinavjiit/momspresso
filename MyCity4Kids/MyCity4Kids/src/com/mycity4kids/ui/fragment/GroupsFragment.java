@@ -4,7 +4,6 @@ import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.internal.LinkedTreeMap;
@@ -19,9 +19,13 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsListingResponse;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
@@ -30,7 +34,6 @@ import com.mycity4kids.widget.NoScrollGridLayoutManager;
 import com.mycity4kids.widget.SpacesItemDecoration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,13 +44,14 @@ import retrofit2.Retrofit;
  * Created by hemant on 10/4/18.
  */
 
-public class GroupsFragment extends BaseFragment implements View.OnClickListener, GroupsRecyclerGridAdapter.RecyclerViewClickListener {
+public class GroupsFragment extends BaseFragment implements View.OnClickListener, GroupsRecyclerGridAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
 
     private boolean isReuqestRunning = false;
     private ArrayList<GroupResult> joinedGroupList, allGroupList;
     private boolean isLastPageReached;
     private int skip = 0;
     private int limit = 10;
+    private GroupResult selectedGroup;
     private int totalGroupCount;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
@@ -57,6 +61,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     private TextView seeAllJoinedGpTextView;
     private TextView allGroupLabelTextView;
     private GroupsRecyclerGridAdapter getAllGroupAdapter, getJoinedGroupAdapter;
+    private LinkedTreeMap<String, String> selectedQuestionnaire;
 
     @Nullable
     @Override
@@ -254,18 +259,67 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onRecyclerItemClick(View view, int position, boolean isMember) {
+        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         if (isMember) {
-            Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
-            intent.putExtra("groupItem", joinedGroupList.get(position));
-            intent.putExtra("isMember", isMember);
+            selectedGroup = joinedGroupList.get(position);
+//            Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
+//            intent.putExtra("groupItem", joinedGroupList.get(position));
+//            intent.putExtra("isMember", isMember);
+//            startActivity(intent);
+        } else {
+            selectedGroup = allGroupList.get(position);
+            selectedQuestionnaire = (LinkedTreeMap<String, String>) allGroupList.get(position).getQuestionnaire();
+//            Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
+//            intent.putExtra("groupItem", allGroupList.get(position));
+//            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) allGroupList.get(position).getQuestionnaire());
+//            intent.putExtra("isMember", isMember);
+//            startActivity(intent);
+        }
+        groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+
+    }
+
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body) {
+        String userType = null;
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+
+        } else {
+            if (body.getData().getResult().get(0).getIsAdmin() == 1) {
+                userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+            } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
+                userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+            }
+        }
+
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+            Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
+            intent.putExtra("groupItem", selectedGroup);
+            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) selectedGroup.getQuestionnaire());
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
+            if (isAdded())
+                Toast.makeText(getActivity(), "You have been blocked from this group", Toast.LENGTH_SHORT).show();
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
+            Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
+            intent.putExtra("groupItem", selectedGroup);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            startActivity(intent);
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+            if (isAdded())
+                Toast.makeText(getActivity(), "Your membership is still pending", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
-            intent.putExtra("groupItem", allGroupList.get(position));
-            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) allGroupList.get(position).getQuestionnaire());
-            intent.putExtra("isMember", isMember);
+            intent.putExtra("groupItem", selectedGroup);
+            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) selectedGroup.getQuestionnaire());
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onMembershipStatusFetchFail() {
 
     }
 }

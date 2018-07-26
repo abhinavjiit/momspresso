@@ -22,6 +22,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.ReportedContentModerationRequest;
 import com.mycity4kids.models.response.GroupReportedContentResult;
+import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsReportedContentResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
@@ -57,6 +58,7 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
     private GroupsReportedContentRecyclerAdapter groupsReportedContentRecyclerAdapter;
     private GroupReportedContentResult selectedPost;
     private TextView noActionTextView, hideContentTextView, blockUserTextView;
+    private GroupResult groupItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,8 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
         hideContentTextView = (TextView) findViewById(R.id.hideContentTextView);
         blockUserTextView = (TextView) findViewById(R.id.blockUserTextView);
         overlayView = findViewById(R.id.overlayView);
+
+        groupItem = (GroupResult) getIntent().getParcelableExtra("groupItem");
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -118,7 +122,7 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
     private void getReportedCotent() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        Call<GroupsReportedContentResponse> call = groupsAPI.getReportedContent();
+        Call<GroupsReportedContentResponse> call = groupsAPI.getReportedContent(groupItem.getId(), skip, limit);
         call.enqueue(reportedContentResponseCallback);
     }
 
@@ -142,7 +146,6 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -201,7 +204,6 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
                 }
             }
         }
-
     }
 
     @Override

@@ -23,11 +23,13 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
+import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
 
 import java.io.File;
@@ -123,7 +125,11 @@ public class ChoosePostMediaDialogFragment extends DialogFragment implements OnC
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                try {
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(getActivity(), BaseApplication.getAppContext().getPackageName() + ".my.package.name.provider", createImageFile()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 startActivityForResult(cameraIntent, ADD_IMAGE_CAMERA_ACTIVITY_REQUEST_CODE);
             }
         }

@@ -171,7 +171,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         bottomNavigationView.enableItemShiftingMode(false);
         bottomNavigationView.setTextVisibility(false);
 
-        Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "DashboardScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         downArrowImageView.setOnClickListener(this);
         menuImageView.setOnClickListener(this);

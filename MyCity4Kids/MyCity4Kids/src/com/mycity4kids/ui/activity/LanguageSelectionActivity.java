@@ -12,6 +12,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.LanguageRecyclerViewAdapter;
 import com.mycity4kids.utils.LocaleManager;
@@ -34,6 +35,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.language_selection_activity);
+        Utils.pushOpenScreenEvent(this, "LanguageSelectionScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         currentLangTextView = (TextView) findViewById(R.id.currentLangTextView);
         englishTextView = (TextView) findViewById(R.id.englishTextView);

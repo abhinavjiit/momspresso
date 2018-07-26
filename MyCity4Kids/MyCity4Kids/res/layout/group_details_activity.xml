@@ -95,31 +95,61 @@
                     android:layout_height="wrap_content"
                     android:visibility="visible">
 
-                    <com.mycity4kids.widget.CustomFontEditText
-                        android:id="@+id/toolbarTitle"
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"
                         android:layout_toLeftOf="@+id/groupSettingsImageView"
-                        android:background="@null"
-                        android:drawableLeft="@drawable/ic_search"
-                        android:drawablePadding="10dp"
-                        android:drawableTint="@color/groups.grey"
-                        android:ellipsize="end"
-                        android:hint=""
-                        android:lines="1"
-                        android:textColor="@color/user_activities.toolbar.title"
-                        android:textColorHint="@color/groups.grey"
-                        android:textSize="20sp"
-                        app:fontName="oswald_regular.ttf" />
+                        android:background="@drawable/groups_search_bar_bg">
+
+                        <ImageView
+                            android:id="@+id/searchLogoImageView"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:drawableTint="@color/groups.grey"
+                            android:src="@drawable/ic_search"
+                            android:tint="@color/groups.grey" />
+
+                        <com.mycity4kids.widget.CustomFontEditText
+                            android:id="@+id/toolbarTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toLeftOf="@+id/clearSearchImageView"
+                            android:layout_toRightOf="@+id/searchLogoImageView"
+                            android:background="@null"
+                            android:ellipsize="end"
+                            android:hint=""
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:textColor="@color/user_activities.toolbar.title"
+                            android:textColorHint="@color/groups.grey"
+                            android:textSize="18sp"
+                            app:fontName="oswald_regular.ttf" />
+
+                        <ImageView
+                            android:id="@+id/clearSearchImageView"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_clear_search"
+                            android:tint="@color/groups.grey"
+                            android:visibility="gone" />
+                    </RelativeLayout>
 
                     <ImageView
                         android:id="@+id/groupSettingsImageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:padding="10dp"
+                        android:padding="8dp"
                         android:src="@drawable/ic_group_settings" />
                 </RelativeLayout>
             </android.support.v7.widget.Toolbar>
@@ -461,4 +491,38 @@
         android:elevation="6dp"
         android:visibility="gone" />
 
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/blockedViewContainer"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="#545454"-->
+    <!--android:clickable="true"-->
+    <!--android:elevation="5dp"-->
+    <!--android:fitsSystemWindows="true"-->
+    <!--android:visibility="gone">-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/blockedCloseImageView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_marginRight="15dp"-->
+    <!--android:layout_marginTop="15dp"-->
+    <!--android:padding="14dp"-->
+    <!--android:src="@drawable/cross_icon_back"-->
+    <!--android:tint="@color/white" />-->
+
+    <!--<com.mycity4kids.widget.CustomFontTextView-->
+    <!--android:id="@+id/blockedUserTextView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:gravity="center"-->
+    <!--android:text="You have been banned from this group"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="18sp"-->
+    <!--app:fontName="oswald.ttf" />-->
+
+    <!--</RelativeLayout>-->
 </android.support.design.widget.CoordinatorLayout>
