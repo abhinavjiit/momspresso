@@ -32,6 +32,7 @@ import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
+import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
@@ -52,6 +53,7 @@ import retrofit2.Retrofit;
 public class ExploreArticleListingTypeFragment extends BaseFragment implements View.OnClickListener {
 
     private final static String MEET_CONTRIBUTOR_ID = "meetContributorId";
+    private final static String EXPLORE_SECTION_ID = "exploreSectionId";
 
     private String[] sectionsKey = {"TRENDING", "TODAY'S BEST", "EDITOR'S PICK", "100WORDSTORY", "FOR YOU", "VIDEOS", "RECENT"};
 
@@ -181,6 +183,11 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                         if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
                             Intent intent = new Intent(getActivity(), ContributorListActivity.class);
                             startActivity(intent);
+                        } else if (EXPLORE_SECTION_ID.equals(topic.getId())) {
+                            ExploreFragment exploreFragment = new ExploreFragment();
+                            Bundle mBundle1 = new Bundle();
+                            exploreFragment.setArguments(mBundle1);
+                            ((DashboardActivity) getActivity()).addFragment(exploreFragment, mBundle1, true);
                         } else {
                             TopicsListingFragment fragment1 = new TopicsListingFragment();
                             Bundle mBundle1 = new Bundle();
@@ -458,6 +465,11 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
                 contributorListModel.setId(MEET_CONTRIBUTOR_ID);
                 mainTopicsList.add(contributorListModel);
+
+                ExploreTopicsModel exploreSectionModel = new ExploreTopicsModel();
+                exploreSectionModel.setDisplay_name(getString(R.string.home_screen_explore_title));
+                exploreSectionModel.setId(EXPLORE_SECTION_ID);
+                mainTopicsList.add(exploreSectionModel);
             }
         } catch (Exception e) {
 //            progressBar.setVisibility(View.GONE);
@@ -482,6 +494,11 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
                 contributorListModel.setId(MEET_CONTRIBUTOR_ID);
                 mainTopicsList.add(contributorListModel);
+
+                ExploreTopicsModel exploreSectionModel = new ExploreTopicsModel();
+                exploreSectionModel.setDisplay_name(getString(R.string.home_screen_explore_title));
+                exploreSectionModel.setId(EXPLORE_SECTION_ID);
+                mainTopicsList.add(exploreSectionModel);
             }
         } catch (Exception e) {
 //            progressBar.setVisibility(View.GONE);

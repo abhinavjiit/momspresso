@@ -158,7 +158,9 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                             seeAllJoinedGpTextView.setVisibility(View.VISIBLE);
                         }
                     }
-                    getAllGroupListApi(skip, limit);
+                    if (responseModel.isMember()) {
+                        getAllGroupListApi(skip, limit);
+                    }
                 } else {
 
                 }

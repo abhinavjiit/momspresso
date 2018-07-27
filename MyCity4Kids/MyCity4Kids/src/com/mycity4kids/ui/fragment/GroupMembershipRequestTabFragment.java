@@ -176,7 +176,7 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
             case R.id.rejectTextView: {
                 UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
                 updateGroupMembershipRequest.setUserId(membersList.get(position).getUserId());
-                updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
+                updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_REJECTED);
                 Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membersList.get(position).getId(), updateGroupMembershipRequest);
                 call1.enqueue(updateGroupMembershipResponseCallback);
             }

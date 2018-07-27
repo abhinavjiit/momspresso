@@ -11,6 +11,7 @@ import com.mycity4kids.models.request.GroupReportContentRequest;
 import com.mycity4kids.models.request.GroupsCategoryUpdateRequest;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.ReportedContentModerationRequest;
+import com.mycity4kids.models.request.UpdateGroupMemberRoleRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdatePostSettingsRequest;
@@ -137,7 +138,9 @@ public interface GroupsAPI {
     Call<GroupsMembershipResponse> updateMember(@Path("memberId") int memberId,
                                                 @Body UpdateGroupMembershipRequest updateGroupMembershipRequest);
 
-
+    @PATCH("/api/v1/groups/members/{memberId}")
+    Call<GroupsMembershipResponse> updateMemberRole(@Path("memberId") int memberId,
+                                                @Body UpdateGroupMemberRoleRequest updateGroupMemberRoleRequest);
     //User Settings
     @GET("/api/v1/groups/usersettings")
     Call<UserPostSettingResponse> getPostSettingForUser(@Query("postId") int postId);

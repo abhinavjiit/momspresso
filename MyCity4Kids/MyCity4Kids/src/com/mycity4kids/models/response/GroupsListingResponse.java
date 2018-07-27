@@ -12,6 +12,7 @@ public class GroupsListingResponse extends BaseResponse {
     private int skip;
     private int limit;
     private List<GroupsListingData> data;
+    private boolean isMember;
 
     public List<GroupsListingData> getData() {
         return data;
@@ -43,6 +44,14 @@ public class GroupsListingResponse extends BaseResponse {
 
     public void setLimit(int limit) {
         this.limit = limit;
+    }
+
+    public boolean isMember() {
+        return isMember;
+    }
+
+    public void setMember(boolean member) {
+        isMember = member;
     }
 }
 

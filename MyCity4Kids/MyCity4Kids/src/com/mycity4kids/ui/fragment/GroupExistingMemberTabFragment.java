@@ -20,6 +20,8 @@ import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.ui.activity.GroupMembershipRequestActivity;
+import com.mycity4kids.ui.adapter.GroupsMembersRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsMembershipRequestRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 26/7/18.
  */
 
-public class GroupExistingMemberTabFragment extends BaseFragment implements GroupsMembershipRequestRecyclerAdapter.RecyclerViewClickListener {
+public class GroupExistingMemberTabFragment extends BaseFragment implements GroupsMembersRecyclerAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 1;
     private int totalPostCount;
@@ -44,7 +46,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
     private ArrayList<GroupsMembershipResult> membersList;
 
     private RecyclerView recyclerView;
-    private GroupsMembershipRequestRecyclerAdapter adapter;
+    private GroupsMembersRecyclerAdapter adapter;
     private int groupId;
 
     @Nullable
@@ -62,11 +64,11 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
 
         membersList = new ArrayList<>();
 
-        adapter = new GroupsMembershipRequestRecyclerAdapter(getActivity(), this);
+        adapter = new GroupsMembersRecyclerAdapter(getActivity(), this);
         adapter.setData(membersList);
         recyclerView.setAdapter(adapter);
 
-        getAllPendingMembersForGroup();
+        getAllMembers();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -80,7 +82,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
                     if (!isReuqestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
-                            getAllPendingMembersForGroup();
+                            getAllMembers();
                         }
                     }
                 }
@@ -89,7 +91,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
         return view;
     }
 
-    private void getAllPendingMembersForGroup() {
+    private void getAllMembers() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         Call<GroupsMembershipResponse> call = groupsAPI.getGroupMembersByStatus(groupId, AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER, skip, limit);
@@ -161,24 +163,12 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
     }
 
     @Override
-    public void onRecyclerItemClick(View view, int position, boolean isMember) {
+    public void onRecyclerItemClick(View view, int position) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         switch (view.getId()) {
-            case R.id.acceptTextView: {
-                UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
-                updateGroupMembershipRequest.setUserId(membersList.get(position).getUserId());
-                updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER);
-                Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membersList.get(position).getId(), updateGroupMembershipRequest);
-                call1.enqueue(updateGroupMembershipResponseCallback);
-            }
-            break;
-            case R.id.rejectTextView: {
-                UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
-                updateGroupMembershipRequest.setUserId(membersList.get(position).getUserId());
-                updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
-                Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membersList.get(position).getId(), updateGroupMembershipRequest);
-                call1.enqueue(updateGroupMembershipResponseCallback);
+            case R.id.memberOptionImageView: {
+                ((GroupMembershipRequestActivity)getActivity()).showMembersOption(membersList.get(position));
             }
             break;
         }

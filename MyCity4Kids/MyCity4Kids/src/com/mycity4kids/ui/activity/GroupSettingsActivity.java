@@ -54,11 +54,11 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         leaveGroupContainer.setOnClickListener(this);
         editGroupImageView.setOnClickListener(this);
         reportedContentContainer.setOnClickListener(this);
-        memberCountTextView.setOnClickListener(this);
 
         if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
             reportedContentContainer.setVisibility(View.VISIBLE);
             editGroupImageView.setVisibility(View.VISIBLE);
+            memberCountTextView.setOnClickListener(this);
         }
 
         memberCountTextView.setText("" + groupItem.getMemberCount());

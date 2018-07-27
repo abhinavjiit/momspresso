@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,9 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
@@ -48,6 +51,7 @@ import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
 import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GpPostCommentOptionsDialogFragment;
@@ -70,7 +74,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 19/4/18.
  */
 
-public class GroupPostDetailActivity extends BaseActivity implements View.OnClickListener, GroupPostDetailsAndCommentsRecyclerAdapter.RecyclerViewClickListener {
+public class GroupPostDetailActivity extends BaseActivity implements View.OnClickListener, GroupPostDetailsAndCommentsRecyclerAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
 
     private GroupPostDetailsAndCommentsRecyclerAdapter groupPostDetailsAndCommentsRecyclerAdapter;
 
@@ -161,32 +165,35 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        if (memberType == null) {
-            checkMembership(groupId);
-        } else {
-            if (postData == null) {
-                getPostDetails();
-            } else {
-                formatPostData();
-                if (postData.getDisableComments() == 1) {
-                    openAddCommentDialog.setVisibility(View.GONE);
-                }
+        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+        groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
-                if (AppConstants.POST_TYPE_MEDIA.equals(postType)) {
-                    mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
-                    postData.setMediaUrls(mediaUrls);
-                } else if (AppConstants.POST_TYPE_IMAGE_POLL.equals(postType) || AppConstants.POST_TYPE_TEXT_POLL.equals(postType)) {
-                    pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
-                    postData.setPollOptions(pollOptions);
-                }
-
-                groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(this, this, postType);
-                groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
-                recyclerView.setAdapter(groupPostDetailsAndCommentsRecyclerAdapter);
-
-                getPostComments();
-            }
-        }
+//        if (memberType == null) {
+//            checkMembership(groupId);
+//        } else {
+//            if (postData == null) {
+//                getPostDetails();
+//            } else {
+//                formatPostData();
+//                if (postData.getDisableComments() == 1) {
+//                    openAddCommentDialog.setVisibility(View.GONE);
+//                }
+//
+//                if (AppConstants.POST_TYPE_MEDIA.equals(postType)) {
+//                    mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
+//                    postData.setMediaUrls(mediaUrls);
+//                } else if (AppConstants.POST_TYPE_IMAGE_POLL.equals(postType) || AppConstants.POST_TYPE_TEXT_POLL.equals(postType)) {
+//                    pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
+//                    postData.setPollOptions(pollOptions);
+//                }
+//
+//                groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(this, this, postType);
+//                groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
+//                recyclerView.setAdapter(groupPostDetailsAndCommentsRecyclerAdapter);
+//
+//                getPostComments();
+//            }
+//        }
 
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -1528,5 +1535,62 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         addGroupCommentReplyDialogFragment.setArguments(_args);
         addGroupCommentReplyDialogFragment.setCancelable(true);
         addGroupCommentReplyDialogFragment.show(fm, "Add Replies");
+    }
+
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body) {
+        String userType = null;
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+
+        } else {
+            if (body.getData().getResult().get(0).getIsAdmin() == 1) {
+                memberType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+            } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
+                memberType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+            }
+        }
+
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
+            showToast("You have been blocked from this group");
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
+            if (body.getData().getResult().get(0).getIsAdmin() == 1) {
+                memberType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+            } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
+                memberType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+            }
+            if (postData == null) {
+                getPostDetails();
+            } else {
+                formatPostData();
+                if (postData.getDisableComments() == 1) {
+                    openAddCommentDialog.setVisibility(View.GONE);
+                }
+
+                if (AppConstants.POST_TYPE_MEDIA.equals(postType)) {
+                    mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
+                    postData.setMediaUrls(mediaUrls);
+                } else if (AppConstants.POST_TYPE_IMAGE_POLL.equals(postType) || AppConstants.POST_TYPE_TEXT_POLL.equals(postType)) {
+                    pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
+                    postData.setPollOptions(pollOptions);
+                }
+
+                groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(this, this, postType);
+                groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
+                recyclerView.setAdapter(groupPostDetailsAndCommentsRecyclerAdapter);
+
+                getPostComments();
+            }
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+            showToast("Your membership is still pending");
+        } else {
+
+        }
+    }
+
+    @Override
+    public void onMembershipStatusFetchFail() {
+
     }
 }

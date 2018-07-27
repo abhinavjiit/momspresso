@@ -82,7 +82,7 @@ import retrofit2.Retrofit;
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
         GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener {
 
-    private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "TOP POSTS", "POLLS"};
+    private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "POLLS"};
 
     private int nextPageNumber = 1;
     private int totalPostCount;
@@ -197,7 +197,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         String[] sections = {
                 getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions), getString(R.string.groups_sections_blogs),
-                getString(R.string.groups_sections_photos), getString(R.string.groups_sections_top_posts), getString(R.string.groups_sections_polls)
+                getString(R.string.groups_sections_photos), getString(R.string.groups_sections_polls)
         };
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

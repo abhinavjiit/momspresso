@@ -507,7 +507,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             }
             break;
             case R.id.rankContainer:
-                if (AppConstants.DEBUGGING_USER_ID.equals(userId)) {
+                if (AppConstants.DEBUGGING_USER_ID.contains(userId)) {
                     Intent _intent = new Intent(getActivity(), IdTokenLoginActivity.class);
                     startActivity(_intent);
                     return;

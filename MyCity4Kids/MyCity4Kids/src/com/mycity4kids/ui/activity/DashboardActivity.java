@@ -68,6 +68,7 @@ import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.GroupsFragment;
+import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
@@ -226,10 +227,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 addFragment(fragment0, mBundle0, true);
                                 break;
                             case R.id.action_notification:
-                                if (topFragment instanceof GroupsFragment) {
+                                if (topFragment instanceof NotificationFragment) {
                                     return true;
                                 }
-                                GroupsFragment fragment = new GroupsFragment();
+                                NotificationFragment fragment = new NotificationFragment();
                                 Bundle mBundle = new Bundle();
                                 fragment.setArguments(mBundle);
                                 addFragment(fragment, mBundle, true);
@@ -253,13 +254,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 addFragment(editorPostFragment, editorBundle, true);
                                 break;
                             case R.id.action_location:
-                                if (topFragment instanceof ExploreFragment) {
+                                if (topFragment instanceof GroupsFragment) {
                                     return true;
                                 }
-                                ExploreFragment exploreFragment = new ExploreFragment();
+                                GroupsFragment groupsFragment = new GroupsFragment();
                                 Bundle eBundle = new Bundle();
-                                exploreFragment.setArguments(eBundle);
-                                addFragment(exploreFragment, eBundle, true);
+                                groupsFragment.setArguments(eBundle);
+                                addFragment(groupsFragment, eBundle, true);
                                 break;
                         }
                         return true;
@@ -723,12 +724,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 searchIntent.putExtra(Constants.TAB_POSITION, 0);
                 startActivity(searchIntent);
                 break;
-//            case R.id.readAllTextView:
-//                if (topFragment instanceof GroupsFragment) {
-//                    ((NotificationFragment) topFragment).markAllNotificationAsRead();
-//                    updateUnreadNotificationCount("0");
-//                }
-//                break;
+            case R.id.readAllTextView:
+                if (topFragment instanceof NotificationFragment) {
+                    ((NotificationFragment) topFragment).markAllNotificationAsRead();
+                    updateUnreadNotificationCount("0");
+                }
+                break;
             case R.id.firstCoachmark:
                 firstCoachmark.setVisibility(View.GONE);
                 secondCoachmark.setVisibility(View.VISIBLE);
@@ -1240,7 +1241,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            } else if (null != topFragment && topFragment instanceof GroupsFragment) {
+            } else if (null != topFragment && topFragment instanceof NotificationFragment) {
                 Utils.pushOpenScreenEvent(this, "NotificationsScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
@@ -1293,6 +1294,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            } else if (null != topFragment && topFragment instanceof ExploreFragment) {
+                Utils.pushOpenScreenEvent(this, "ExploreScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                toolbarTitleTextView.setText(getString(R.string.home_screen_explore_title));
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
+                menu.findItem(R.id.action_home).setChecked(true);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof TopicsShortStoriesContainerFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicsShortStoriesContainerFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setOnClickListener(this);
@@ -1304,10 +1314,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            } else if (null != topFragment && topFragment instanceof ExploreFragment) {
-                Utils.pushOpenScreenEvent(this, "ExploreScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                toolbarTitleTextView.setText(getString(R.string.home_screen_explore_title));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
+            } else if (null != topFragment && topFragment instanceof GroupsFragment) {
+                Utils.pushOpenScreenEvent(this, "GroupsFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                toolbarTitleTextView.setText(getString(R.string.home_screen_groups_title));
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.groups_light_black_color));
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);

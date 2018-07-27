@@ -63,4 +63,56 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/tab_layout" />
 
+    <RelativeLayout
+        android:id="@+id/postSettingsContainerMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="6dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/overlayView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:alpha="0.85"
+            android:background="#121212"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/postSettingsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/moderatorInviteTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_bookmark"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:text="Invite to be a moderator"
+                android:textColor="@color/groups.light_black_color"
+                android:textSize="16sp"
+                app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/blockUnblockUserTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_bookmark"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:text="BLOCK MEMBER/UNBLOCK"
+                android:textColor="@color/groups.light_black_color"
+                android:textSize="16sp"
+                app:fontName="open_sans.ttf" />
+
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

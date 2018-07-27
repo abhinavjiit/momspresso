@@ -661,6 +661,7 @@
 
     <string name="no_article.be_first">Be the first one to write articles in this category!</string>
 
+    <string name="home_screen.groups.title">GROUPS</string>
     <string name="groups.join_label">Lorem Ipsum</string>
     <string name="groups.sections.about">ABOUT</string>
     <string name="groups.sections.discussions">DISCUSSION</string>
