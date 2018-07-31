@@ -662,6 +662,7 @@
     <string name="no_article.be_first">Be the first one to write articles in this category!</string>
 
     <string name="home_screen.groups.title">GROUPS</string>
+    <string name="groups.summary">SUMMARY</string>
     <string name="groups.join_label">Lorem Ipsum</string>
     <string name="groups.sections.about">ABOUT</string>
     <string name="groups.sections.discussions">DISCUSSION</string>
@@ -676,13 +677,14 @@
     <string name="groups.invitation_only_gp">Invitation only group</string>
     <string name="groups.join_group">JOIN GROUP</string>
     <string name="groups.choose_media">Choose media to upload</string>
-    <string name="groups.search_in">Search in</string>
+    <string name="groups.search_in">Search</string>
     <string name="groups.post_comment">Comments</string>
     <string name="groups.post_helpful">Helpful</string>
     <string name="groups.post_nothelpful">Not Helpful</string>
     <string name="groups.post_label">POST</string>
     <string name="groups.join_form">JOINING FORM</string>
     <string name="groups.member_label">MEMBERS</string>
+    <string name="groups.reported_content">REPORTED CONTENT</string>
 
     <string name="no_story.be_first">Be the first one to write stories in this category!</string>
 

@@ -51,6 +51,7 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.version.RateVersion;
@@ -58,6 +59,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
+import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
@@ -84,7 +86,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class DashboardActivity extends BaseActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener {
+public class DashboardActivity extends BaseActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener, GroupMembershipStatus.IMembershipStatus {
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
@@ -286,6 +288,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Bundle mBundle0 = new Bundle();
             fragment0.setArguments(mBundle0);
             addFragment(fragment0, mBundle0, true);
+        } else if (Constants.SHORT_STOY_FRAGMENT.equals(fragmentToLoad)) {
+            TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
+            Bundle mBundle1 = new Bundle();
+            mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+            fragment1.setArguments(mBundle1);
+            addFragment(fragment1, mBundle1, true);
         } else {
             replaceFragment(new FragmentMC4KHomeNew(), null, false);
             String tabType = getIntent().getStringExtra("TabType");
@@ -322,6 +330,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 String authorId = notificationExtras.getString("userId");
                 String blogSlug = notificationExtras.getString("blogSlug");
                 String titleSlug = notificationExtras.getString("titleSlug");
+
                 Intent intent1 = new Intent(DashboardActivity.this, ArticleDetailsContainerActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.ARTICLE_ID, articleId);
@@ -333,6 +342,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
                 intent.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryDetails")) {
+                Intent ssIntent = new Intent(DashboardActivity.this, ShortStoryContainerActivity.class);
+                ssIntent.putExtra(Constants.AUTHOR_ID, notificationExtras.getString("userId"));
+                ssIntent.putExtra(Constants.ARTICLE_ID, notificationExtras.getString("id"));
+                ssIntent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
+                ssIntent.putExtra(Constants.BLOG_SLUG, notificationExtras.getString("blogSlug"));
+                ssIntent.putExtra(Constants.TITLE_SLUG, notificationExtras.getString("titleSlug"));
+                ssIntent.putExtra(Constants.FROM_SCREEN, "Notification");
+                ssIntent.putExtra(Constants.ARTICLE_INDEX, "-1");
+                ssIntent.putExtra(Constants.AUTHOR, notificationExtras.getString("userId") + "~");
+                startActivity(ssIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
@@ -345,6 +365,31 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
                 intent.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("group_membership")
+                    || notificationExtras.getString("type").equalsIgnoreCase("group_new_post")
+                    || notificationExtras.getString("type").equalsIgnoreCase("group_admin_group_edit")
+                    || notificationExtras.getString("type").equalsIgnoreCase("group_admin")) {
+                GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+                groupMembershipStatus.checkMembershipStatus(Integer.parseInt(notificationExtras.getString("id")), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_response")) {
+                Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
+                gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
+                gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("id")));
+                gpPostIntent.putExtra("responseId", Integer.parseInt(notificationExtras.getString("responseId")));
+                startActivity(gpPostIntent);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_reply")) {
+                Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
+                gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
+                gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("id")));
+                startActivity(gpPostIntent);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_membership")) {
+                Intent memberIntent = new Intent(this, GroupMembershipRequestActivity.class);
+                memberIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("id")));
+                startActivity(memberIntent);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_reported")) {
+                Intent reportIntent = new Intent(this, GroupsReportedContentActivity.class);
+                reportIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("id")));
+                startActivity(reportIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
                 String eventId = notificationExtras.getString("id");
                 Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
@@ -384,6 +429,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
                 startActivity(intent1);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListing")) {
+                fragmentToLoad = Constants.SHORT_STOY_FRAGMENT;
             }
         } else {
             String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
@@ -719,10 +766,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                 break;
             case R.id.searchAllImageView:
-                Intent searchIntent = new Intent(this, SearchAllActivity.class);
-                searchIntent.putExtra(Constants.FILTER_NAME, "");
-                searchIntent.putExtra(Constants.TAB_POSITION, 0);
-                startActivity(searchIntent);
+                if (topFragment instanceof GroupsFragment) {
+                    Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
+                    startActivity(searchIntent);
+                } else {
+                    Intent searchIntent = new Intent(this, SearchAllActivity.class);
+                    searchIntent.putExtra(Constants.FILTER_NAME, "");
+                    searchIntent.putExtra(Constants.TAB_POSITION, 0);
+                    startActivity(searchIntent);
+                }
                 break;
             case R.id.readAllTextView:
                 if (topFragment instanceof NotificationFragment) {
@@ -1377,4 +1429,50 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         return badge;
     }
 
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
+        String userType = null;
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+
+        } else {
+            if (body.getData().getResult().get(0).getIsAdmin() == 1) {
+                userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+            } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
+                userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+            }
+        }
+
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+            Intent intent = new Intent(this, GroupsSummaryActivity.class);
+            intent.putExtra("groupId", groupId);
+//            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) selectedGroup.getQuestionnaire());
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            startActivity(intent);
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
+            Toast.makeText(this, "You have been blocked from this group", Toast.LENGTH_SHORT).show();
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
+            Intent intent = new Intent(this, GroupDetailsActivity.class);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            startActivity(intent);
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+//            if (isAdded())
+//                Toast.makeText(getActivity(), "Your membership is still pending", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, GroupsSummaryActivity.class);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra("pendingMembershipFlag", true);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, GroupsSummaryActivity.class);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onMembershipStatusFetchFail() {
+
+    }
 }

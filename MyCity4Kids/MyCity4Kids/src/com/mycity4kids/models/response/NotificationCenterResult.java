@@ -19,6 +19,9 @@ public class NotificationCenterResult {
     private String sharingUrl;
     private String url;
     private String thumbNail;
+    private int groupId;
+    private int postId;
+    private int responseId;
 
     public String getId() {
         return id;
@@ -138,5 +141,29 @@ public class NotificationCenterResult {
 
     public void setThumbNail(String thumbNail) {
         this.thumbNail = thumbNail;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
+
+    public int getResponseId() {
+        return responseId;
+    }
+
+    public void setResponseId(int responseId) {
+        this.responseId = responseId;
     }
 }

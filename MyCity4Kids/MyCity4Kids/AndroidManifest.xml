@@ -439,6 +439,9 @@
         <activity
             android:name=".ui.activity.GroupMembershipRequestActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.GroupsSearchActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

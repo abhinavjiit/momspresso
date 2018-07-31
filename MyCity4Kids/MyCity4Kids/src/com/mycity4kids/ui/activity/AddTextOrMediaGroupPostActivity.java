@@ -219,7 +219,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         addGroupPostRequest.setType("0");
         addGroupPostRequest.setGroupId(selectedGroup.getId());
         if (SharedPrefUtils.isUserAnonymous(this)) {
-            addGroupPostRequest.setAnnon(true);
+            addGroupPostRequest.setAnnon(1);
         }
         addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
 

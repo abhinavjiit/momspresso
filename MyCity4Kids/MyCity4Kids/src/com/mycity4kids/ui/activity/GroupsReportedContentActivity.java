@@ -46,6 +46,7 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
+    private int groupId;
 
     private Animation slideAnim, fadeAnim;
 
@@ -58,7 +59,6 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
     private GroupsReportedContentRecyclerAdapter groupsReportedContentRecyclerAdapter;
     private GroupReportedContentResult selectedPost;
     private TextView noActionTextView, hideContentTextView, blockUserTextView;
-    private GroupResult groupItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
         blockUserTextView = (TextView) findViewById(R.id.blockUserTextView);
         overlayView = findViewById(R.id.overlayView);
 
-        groupItem = (GroupResult) getIntent().getParcelableExtra("groupItem");
+        groupId = getIntent().getIntExtra("groupId", 0);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -122,7 +122,7 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
     private void getReportedCotent() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        Call<GroupsReportedContentResponse> call = groupsAPI.getReportedContent(groupItem.getId(), skip, limit);
+        Call<GroupsReportedContentResponse> call = groupsAPI.getReportedContent(groupId, skip, limit);
         call.enqueue(reportedContentResponseCallback);
     }
 

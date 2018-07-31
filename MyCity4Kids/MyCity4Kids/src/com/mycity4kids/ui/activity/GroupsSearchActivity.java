@@ -2,39 +2,63 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsListingResponse;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.adapter.GroupsRecyclerGridAdapter;
+import com.mycity4kids.ui.adapter.SearchAllPagerAdapter;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.SpacesItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 /**
- * Created by hemant on 17/5/18.
+ * Created by hemant on 19/4/16.
  */
-
-public class GroupsListingActivity extends BaseActivity implements GroupsRecyclerGridAdapter.RecyclerViewClickListener {
+public class GroupsSearchActivity extends BaseActivity implements View.OnClickListener, GroupsRecyclerGridAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
 
     private GroupsRecyclerGridAdapter adapter;
 
@@ -50,25 +74,32 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     private RecyclerView recyclerGridView;
     private TextView noGroupsTextView;
     private ProgressBar progressBar;
+    private EditText toolbarTitle;
+    private ImageView searchLogoImageView;
+    private GroupResult selectedGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.groups_listing_activity);
+        Utils.pushOpenScreenEvent(this, "SearchScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
+        setContentView(R.layout.groups_search_activity);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarTitle = (EditText) findViewById(R.id.toolbarTitle);
+        searchLogoImageView = (ImageView) findViewById(R.id.searchLogoImageView);
         recyclerGridView = (RecyclerView) findViewById(R.id.recyclerGridView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         noGroupsTextView = (TextView) findViewById(R.id.noGroupsTextView);
 
-        final boolean isMember = getIntent().getBooleanExtra("isMember", false);
+        searchLogoImageView.setOnClickListener(this);
 
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerGridView.setLayoutManager(gridLayoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.groups_column_spacing);
         recyclerGridView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
 
-        adapter = new GroupsRecyclerGridAdapter(this, this, isMember, true);
+        adapter = new GroupsRecyclerGridAdapter(this, this, true, true);
         groupList = new ArrayList<>();
         adapter.setNewListData(groupList);
         recyclerGridView.setAdapter(adapter);
@@ -85,42 +116,37 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                     if (!isReuqestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
-                            if (isMember) {
-                                getJoinedGroupListApi(skip, limit);
-                            } else {
-                                getAllGroupListApi(skip, limit);
-                            }
-
+                            getSearchResults();
                         }
                     }
                 }
             }
         });
+    }
 
-        if (isMember) {
-            getJoinedGroupListApi(skip, limit);
-        } else {
-            getAllGroupListApi(skip, limit);
+    @Override
+    protected void updateUi(Response response) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.searchLogoImageView:
+                getSearchResults();
+                break;
         }
     }
 
-    private void getJoinedGroupListApi(int skip, int limit) {
+    private void getSearchResults() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupsListingResponse> call = groupsAPI.getJoinedGroupList(skip, limit);
-        call.enqueue(groupListResponseCallback);
+        Call<GroupsListingResponse> call = groupsAPI.searchGroups(toolbarTitle.getText().toString(), "group", 1, skip, limit);
+        call.enqueue(getSearchResultReponseCallback);
     }
 
-    private void getAllGroupListApi(int skip, int limit) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        Call<GroupsListingResponse> call = groupsAPI.getGroupList(skip, limit);
-        call.enqueue(groupListResponseCallback);
-    }
-
-    private Callback<GroupsListingResponse> groupListResponseCallback = new Callback<GroupsListingResponse>() {
+    private Callback<GroupsListingResponse> getSearchResultReponseCallback = new Callback<GroupsListingResponse>() {
         @Override
         public void onResponse(Call<GroupsListingResponse> call, retrofit2.Response<GroupsListingResponse> response) {
             progressBar.setVisibility(View.GONE);
@@ -187,21 +213,69 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     }
 
     @Override
-    protected void updateUi(Response response) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
     public void onRecyclerItemClick(View view, int position, boolean isMember) {
-        if (isMember) {
+        selectedGroup = groupList.get(position);
+        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+        groupMembershipStatus.checkMembershipStatus(groupList.get(position).getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+    }
+
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
+        String userType = null;
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+
+        } else {
+            if (body.getData().getResult().get(0).getIsAdmin() == 1) {
+                userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+            } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
+                userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+            }
+        }
+
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+            Intent intent = new Intent(this, GroupsSummaryActivity.class);
+            intent.putExtra("groupId", selectedGroup.getId());
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            startActivity(intent);
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
+            Toast.makeText(this, "You have been blocked from this group", Toast.LENGTH_SHORT).show();
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(this, GroupDetailsActivity.class);
-            intent.putExtra("groupId", groupList.get(position).getId());
+            intent.putExtra("groupId", selectedGroup.getId());
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            startActivity(intent);
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+            Intent intent = new Intent(this, GroupsSummaryActivity.class);
+            intent.putExtra("groupId", selectedGroup.getId());
+            intent.putExtra("pendingMembershipFlag", true);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
-            intent.putExtra("groupId", groupList.get(position).getId());
-            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) groupList.get(position).getQuestionnaire());
+            intent.putExtra("groupId", selectedGroup.getId());
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onMembershipStatusFetchFail() {
+
     }
 }

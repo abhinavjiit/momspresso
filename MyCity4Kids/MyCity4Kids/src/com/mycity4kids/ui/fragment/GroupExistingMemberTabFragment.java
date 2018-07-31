@@ -36,7 +36,6 @@ import retrofit2.Retrofit;
 
 public class GroupExistingMemberTabFragment extends BaseFragment implements GroupsMembersRecyclerAdapter.RecyclerViewClickListener {
 
-    private int nextPageNumber = 1;
     private int totalPostCount;
     private int skip = 0;
     private int limit = 10;
@@ -91,6 +90,16 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
         return view;
     }
 
+    public void refreshList() {
+        isReuqestRunning = false;
+        isLastPageReached = false;
+        skip = 0;
+        limit = 10;
+        membersList.clear();
+        adapter.notifyDataSetChanged();
+        getAllMembers();
+    }
+
     private void getAllMembers() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
@@ -138,15 +147,8 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
                 isLastPageReached = true;
             } else {
                 // No results
-//                noPostsTextView.setVisibility(View.VISIBLE);
-//                postList = dataList;
-//                groupSummaryPostRecyclerAdapter.setHeaderData(selectedGroup);
-//                groupSummaryPostRecyclerAdapter.setData(postList);
-//                groupSummaryPostRecyclerAdapter.notifyDataSetChanged();
             }
         } else {
-//            formatPostData(dataList);
-//            noPostsTextView.setVisibility(View.GONE);
             membersList.addAll(dataList);
             adapter.setData(membersList);
             skip = skip + limit;
@@ -168,7 +170,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         switch (view.getId()) {
             case R.id.memberOptionImageView: {
-                ((GroupMembershipRequestActivity)getActivity()).showMembersOption(membersList.get(position));
+                ((GroupMembershipRequestActivity) getActivity()).showMembersOption(membersList.get(position));
             }
             break;
         }

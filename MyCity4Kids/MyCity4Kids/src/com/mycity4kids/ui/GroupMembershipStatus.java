@@ -20,6 +20,7 @@ import retrofit2.Retrofit;
 public class GroupMembershipStatus {
 
     IMembershipStatus iMembershipStatus;
+    private int groupId;
 
     public GroupMembershipStatus(IMembershipStatus iMembershipStatus) {
         this.iMembershipStatus = iMembershipStatus;
@@ -28,7 +29,7 @@ public class GroupMembershipStatus {
     public void checkMembershipStatus(int groupId, String userId) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
+        this.groupId = groupId;
         Call<GroupsMembershipResponse> call = groupsAPI.getUsersMembershipDetailsForGroup(groupId, userId);
         call.enqueue(membershipDetailsResponseCallback);
     }
@@ -46,7 +47,7 @@ public class GroupMembershipStatus {
             }
             try {
                 if (response.isSuccessful()) {
-                    iMembershipStatus.onMembershipStatusFetchSuccess(response.body());
+                    iMembershipStatus.onMembershipStatusFetchSuccess(response.body(), groupId);
                 } else {
 
                 }
@@ -66,7 +67,7 @@ public class GroupMembershipStatus {
     };
 
     public interface IMembershipStatus {
-        void onMembershipStatusFetchSuccess(GroupsMembershipResponse body);
+        void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId);
 
         void onMembershipStatusFetchFail();
     }

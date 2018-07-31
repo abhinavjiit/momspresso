@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -25,6 +26,7 @@ import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.adapter.GroupMembersPagerAdapter;
+import com.mycity4kids.ui.fragment.GroupExistingMemberTabFragment;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +37,8 @@ import retrofit2.Retrofit;
  */
 
 public class GroupMembershipRequestActivity extends BaseActivity implements View.OnClickListener {
+
+    private GroupMembersPagerAdapter groupMembersPagerAdapter;
 
     private Animation slideAnim, fadeAnim;
 
@@ -78,7 +82,7 @@ public class GroupMembershipRequestActivity extends BaseActivity implements View
         tabLayout.addTab(tabLayout.newTab().setText("Requests"));
         tabLayout.addTab(tabLayout.newTab().setText("Existing Members"));
 
-        GroupMembersPagerAdapter groupMembersPagerAdapter = new GroupMembersPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), groupId);
+        groupMembersPagerAdapter = new GroupMembersPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), groupId);
         viewPager.setAdapter(groupMembersPagerAdapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -99,35 +103,6 @@ public class GroupMembershipRequestActivity extends BaseActivity implements View
             }
         });
 
-//
-//        final LinearLayoutManager llm = new LinearLayoutManager(this);
-//        llm.setOrientation(LinearLayoutManager.VERTICAL);
-//        recyclerView.setLayoutManager(llm);
-//
-//        adapter = new GroupsMembershipRequestRecyclerAdapter(this, this);
-//        adapter.setData(membersList);
-//        recyclerView.setAdapter(adapter);
-//
-//        getAllPendingMembersForGroup();
-//
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                if (dy > 0) //check for scroll down
-//                {
-//                    visibleItemCount = llm.getChildCount();
-//                    totalItemCount = llm.getItemCount();
-//                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
-//
-//                    if (!isReuqestRunning && !isLastPageReached) {
-//                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-//                            isReuqestRunning = true;
-//                            getAllPendingMembersForGroup();
-//                        }
-//                    }
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -212,4 +187,21 @@ public class GroupMembershipRequestActivity extends BaseActivity implements View
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    public void updateExistingMemberList() {
+        ((GroupExistingMemberTabFragment) groupMembersPagerAdapter.getItem(1)).refreshList();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -50,7 +50,9 @@ public class GpPostCommentOptionsDialogFragment extends DialogFragment implement
         editCommentTextView.setOnClickListener(this);
         reportCommentTextView.setOnClickListener(this);
 
-        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId) || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
+        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)
+                || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
+                || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
             deleteCommentTextView.setVisibility(View.VISIBLE);
             editCommentTextView.setVisibility(View.VISIBLE);
             reportCommentTextView.setVisibility(View.VISIBLE);
@@ -85,7 +87,7 @@ public class GpPostCommentOptionsDialogFragment extends DialogFragment implement
             }
             break;
             case R.id.reportCommentTextView: {
-                ((GroupPostDetailActivity) getActivity()).onResponseReport(position, responseType);
+                ((GroupPostDetailActivity) getActivity()).onResponseReport(commentPosition, position, responseType);
 //                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getTargetFragment();
 //                iCommentOptionAction.onResponseReport(position, responseType);
                 dismiss();

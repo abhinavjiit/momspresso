@@ -7,6 +7,7 @@ import com.mycity4kids.models.request.DeleteGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.EditGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
+import com.mycity4kids.models.request.GroupNotificationToggleRequest;
 import com.mycity4kids.models.request.GroupReportContentRequest;
 import com.mycity4kids.models.request.GroupsCategoryUpdateRequest;
 import com.mycity4kids.models.request.JoinGroupRequest;
@@ -72,6 +73,9 @@ public interface GroupsAPI {
     Call<GroupDetailResponse> updateGroup(@Path("groupId") int groupId,
                                           @Body CreateUpdateGroupRequest body);
 
+    @PATCH("/api/v1/groups/group/{groupId}")
+    Call<GroupDetailResponse> updateGroupNotification(@Path("groupId") int groupId,
+                                                      @Body GroupNotificationToggleRequest body);
 
     //Group Settings Functionalities
     @GET("/api/v1/groups/settings/")
@@ -140,7 +144,8 @@ public interface GroupsAPI {
 
     @PATCH("/api/v1/groups/members/{memberId}")
     Call<GroupsMembershipResponse> updateMemberRole(@Path("memberId") int memberId,
-                                                @Body UpdateGroupMemberRoleRequest updateGroupMemberRoleRequest);
+                                                    @Body UpdateGroupMemberRoleRequest updateGroupMemberRoleRequest);
+
     //User Settings
     @GET("/api/v1/groups/usersettings")
     Call<UserPostSettingResponse> getPostSettingForUser(@Query("postId") int postId);
@@ -158,6 +163,11 @@ public interface GroupsAPI {
                                                    @Query("postId") int postId,
                                                    @Query("$skip") int skip,
                                                    @Query("$limit") int limit);
+
+    @GET("/api/v1/groups/responsenested")
+    Call<GroupPostCommentResponse> getSinglePostComments(@Query("groupId") int groupId,
+                                                         @Query("postId") int postId,
+                                                         @Query("id") int responseId);
 
     @GET("/api/v1/groups/response")
     Call<GroupPostCommentResponse> getPostCommentReplies(@Query("groupId") int groupId,
@@ -217,8 +227,14 @@ public interface GroupsAPI {
     Call<GroupPostResponse> searchWithinGroup(@Query("q") String query,
                                               @Query("ofType") String ofType,
                                               @Query("isActive") int isActive,
-                                              @Query("groupId") int groupId);
+                                              @Query("groupId") int groupId,
+                                              @Query("$skip") int skip,
+                                              @Query("$limit") int limit);
 
     @GET("/api/v1/groups/search/")
-    Call<GroupsAllSearchResponse> searchGroups(@Query("q") String query);
+    Call<GroupsListingResponse> searchGroups(@Query("q") String query,
+                                             @Query("ofType") String ofType,
+                                             @Query("isActive") int isActive,
+                                             @Query("$skip") int skip,
+                                             @Query("$limit") int limit);
 }

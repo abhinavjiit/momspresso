@@ -36,21 +36,16 @@ public class GroupMembersPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 if (groupMembershipRequestTabFragment == null) {
                     groupMembershipRequestTabFragment = new GroupMembershipRequestTabFragment();
+                    bundle.putInt("groupId", groupId);
+                    groupMembershipRequestTabFragment.setArguments(bundle);
                 }
-                bundle.putInt("groupId", groupId);
-//                bundle.putBoolean("isPrivateProfile", isPrivateProfile);
-//                bundle.putString("contentType", "shortStory");
-                groupMembershipRequestTabFragment.setArguments(bundle);
                 return groupMembershipRequestTabFragment;
             case 1:
                 if (groupExistingMemberTabFragment == null) {
                     groupExistingMemberTabFragment = new GroupExistingMemberTabFragment();
+                    bundle.putInt("groupId", groupId);
+                    groupExistingMemberTabFragment.setArguments(bundle);
                 }
-                bundle.putInt("groupId", groupId);
-//                bundle.putString(Constants.AUTHOR_ID, authorId);
-//                bundle.putBoolean("isPrivateProfile", isPrivateProfile);
-//                bundle.putString("contentType", "shortStory");
-                groupExistingMemberTabFragment.setArguments(bundle);
                 return groupExistingMemberTabFragment;
         }
 

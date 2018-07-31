@@ -12,8 +12,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -24,15 +26,19 @@ import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.NotificationReadRequest;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
-import com.mycity4kids.ui.activity.AppSettingsActivity;
+import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.GroupDetailsActivity;
+import com.mycity4kids.ui.activity.GroupPostDetailActivity;
+import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
@@ -51,7 +57,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 21/12/16.
  */
-public class NotificationCenterListAdapter extends BaseAdapter {
+public class NotificationCenterListAdapter extends BaseAdapter implements GroupMembershipStatus.IMembershipStatus {
 
     private Context mContext;
     private LayoutInflater mInflator;
@@ -135,15 +141,19 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "article_details");
-                    Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
-                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
-                    intent.putExtra(Constants.BLOG_SLUG, notificationList.get(position).getBlogTitleSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, notificationList.get(position).getTitleSlug());
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "NotificationsScreen");
-                    intent.putExtra(Constants.FROM_SCREEN, "NotificationsScreen");
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getUserId() + "~");
+//                    Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
+//                    intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
+//                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+//                    intent.putExtra(Constants.BLOG_SLUG, notificationList.get(position).getBlogTitleSlug());
+//                    intent.putExtra(Constants.TITLE_SLUG, notificationList.get(position).getTitleSlug());
+//                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "NotificationsScreen");
+//                    intent.putExtra(Constants.FROM_SCREEN, "NotificationsScreen");
+//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+//                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getUserId() + "~");
+//                    mContext.startActivity(intent);
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postId", 91);
+                    intent.putExtra("groupId", 23);
                     mContext.startActivity(intent);
                 }
             });
@@ -210,14 +220,6 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
 
-//                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
-//                    hitNotificationReadAPI(notificationList.get(position).getId());
-//                    notifyDataSetChanged();
-//                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "app_settings");
-//                    Intent intent1 = new Intent(mContext, AppSettingsActivity.class);
-//                    intent1.putExtra("fromNotification", true);
-//                    intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
-//                    mContext.startActivity(intent1);
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "5".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_EDITOR.equals(nType)) {
@@ -298,6 +300,36 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 }
             });
+        } else if ((StringUtils.isNullOrEmpty(nType) && "10".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_GROUP_DETAILS.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+                    hitNotificationReadAPI(notificationList.get(position).getId());
+                    notifyDataSetChanged();
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
+                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
+                    groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+//                    Intent intent = new Intent(mContext, GroupDetailsActivity.class);
+//                    mContext.startActivity(intent);
+                }
+            });
+        } else if ((StringUtils.isNullOrEmpty(nType) && "11".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+                    hitNotificationReadAPI(notificationList.get(position).getId());
+                    notifyDataSetChanged();
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "postDetails");
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postId", notificationList.get(position).getPostId());
+                    intent.putExtra("groupId", notificationList.get(position).getGroupId());
+                    mContext.startActivity(intent);
+                }
+            });
         }
 
         return view;
@@ -316,6 +348,50 @@ public class NotificationCenterListAdapter extends BaseAdapter {
         bundle5.putString("from", "dashboard");
         intent1.putExtras(bundle5);
         mContext.startActivity(intent1);
+    }
+
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
+        String userType = null;
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+
+        } else {
+            if (body.getData().getResult().get(0).getIsAdmin() == 1) {
+                userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+            } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
+                userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+            }
+        }
+
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+            Intent intent = new Intent(mContext, GroupsSummaryActivity.class);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            mContext.startActivity(intent);
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
+            Toast.makeText(mContext, "You have been blocked from this group", Toast.LENGTH_SHORT).show();
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
+            Intent intent = new Intent(mContext, GroupDetailsActivity.class);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            mContext.startActivity(intent);
+        } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+            Intent intent = new Intent(mContext, GroupsSummaryActivity.class);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            intent.putExtra("pendingMembershipFlag", true);
+            mContext.startActivity(intent);
+        } else {
+            Intent intent = new Intent(mContext, GroupsSummaryActivity.class);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            mContext.startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onMembershipStatusFetchFail() {
+
     }
 
     class ViewHolder {

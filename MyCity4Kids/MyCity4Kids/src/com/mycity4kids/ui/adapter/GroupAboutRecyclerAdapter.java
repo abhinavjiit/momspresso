@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupResult;
@@ -46,7 +47,7 @@ public class GroupAboutRecyclerAdapter extends RecyclerView.Adapter<GroupAboutRe
     @Override
     public void onBindViewHolder(final GroupAboutHolder holder, final int position) {
         holder.groupDescTextView.setText(groupData.getDescription());
-        holder.createdTimeTextView.setText("Created - 12 Mar 2018");
+        holder.createdTimeTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupData.getCreatedAt()));
         if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(groupData.getType())) {
             holder.groupTypeTextView.setText(mContext.getString(R.string.groups_anyone_join));
         } else if (AppConstants.GROUP_TYPE_CLOSED_KEY.equals(groupData.getType())) {
@@ -55,7 +56,8 @@ public class GroupAboutRecyclerAdapter extends RecyclerView.Adapter<GroupAboutRe
             holder.groupTypeTextView.setText(mContext.getString(R.string.groups_invitation_only_gp));
         }
 //        holder.groupTypeTextView.setText("Closed Group");
-        holder.groupAdminTextView.setText(groupData.getCreatedBy());
+        holder.groupAdminTextView.setText(groupData.getAdminMembers().getData().get(0).getUserInfo().getFirstName() + " "
+                + groupData.getAdminMembers().getData().get(0).getUserInfo().getLastName());
     }
 
     public class GroupAboutHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

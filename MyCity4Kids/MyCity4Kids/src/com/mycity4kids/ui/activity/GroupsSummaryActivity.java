@@ -19,10 +19,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
@@ -35,6 +37,7 @@ import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupSummaryPostRecyclerAdapter;
 import com.mycity4kids.ui.fragment.GroupJoinConfirmationFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
@@ -76,7 +79,8 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     private View overlayView;
     private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView;
     private UserPostSettingResult currentPostPrefsForUser;
-    private HashMap<String, String> questionMap;
+    private LinkedTreeMap<String, String> questionMap;
+    private boolean pendingMembershipFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,9 +107,15 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         reportPostTextView.setOnClickListener(this);
         overlayView.setOnClickListener(this);
 
-        selectedGroup = getIntent().getParcelableExtra("groupItem");
+//        selectedGroup = getIntent().getParcelableExtra("groupItem");
         groupId = getIntent().getIntExtra("groupId", 0);
-        questionMap = (HashMap<String, String>) getIntent().getSerializableExtra("questionnaire");
+        pendingMembershipFlag = getIntent().getBooleanExtra("pendingMembershipFlag", false);
+//        questionMap = (HashMap<String, String>) getIntent().getSerializableExtra("questionnaire");
+
+        if (pendingMembershipFlag) {
+            joinGroupTextView.setOnClickListener(null);
+            joinGroupTextView.setText("Membership Pending");
+        }
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -123,17 +133,9 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         postList = new ArrayList<>();
         postList.add(new GroupPostResult());
 
-        groupSummaryPostRecyclerAdapter = new GroupSummaryPostRecyclerAdapter(this, this);
-        groupSummaryPostRecyclerAdapter.setData(postList);
-        groupSummaryPostRecyclerAdapter.setHeaderData(selectedGroup);
-        recyclerView.setAdapter(groupSummaryPostRecyclerAdapter);
-
 //        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
 //        BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
-        if (selectedGroup == null) {
-            getGroupDetails();
-        }
-        getGroupPosts();
+        getGroupDetails();
     }
 
     private void getGroupDetails() {
@@ -147,12 +149,36 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     private Callback<GroupDetailResponse> groupDetailsResponseCallback = new Callback<GroupDetailResponse>() {
         @Override
         public void onResponse(Call<GroupDetailResponse> call, retrofit2.Response<GroupDetailResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupDetailResponse groupPostResponse = response.body();
+                    selectedGroup = groupPostResponse.getData().getResult();
+                    questionMap = (LinkedTreeMap<String, String>) groupPostResponse.getData().getResult().getQuestionnaire();
+                    groupSummaryPostRecyclerAdapter = new GroupSummaryPostRecyclerAdapter(GroupsSummaryActivity.this, GroupsSummaryActivity.this);
+                    groupSummaryPostRecyclerAdapter.setData(postList);
+                    groupSummaryPostRecyclerAdapter.setHeaderData(selectedGroup);
+                    recyclerView.setAdapter(groupSummaryPostRecyclerAdapter);
+                    getGroupPosts();
+                } else {
 
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
         }
 
         @Override
         public void onFailure(Call<GroupDetailResponse> call, Throwable t) {
-
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
@@ -211,6 +237,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
 //                groupSummaryPostRecyclerAdapter.notifyDataSetChanged();
             }
         } else {
+            formatPostData(dataList);
             noPostsTextView.setVisibility(View.GONE);
             postList.addAll(dataList);
             groupSummaryPostRecyclerAdapter.setHeaderData(selectedGroup);
@@ -220,6 +247,46 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 isLastPageReached = true;
             }
             groupSummaryPostRecyclerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void formatPostData(ArrayList<GroupPostResult> dataList) {
+        for (int j = 0; j < dataList.size(); j++) {
+            if (dataList.get(j).getCounts() != null) {
+                for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
+                    switch (dataList.get(j).getCounts().get(i).getName()) {
+                        case "helpfullCount":
+                            dataList.get(j).setHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                        case "notHelpfullCount":
+                            dataList.get(j).setNotHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                        case "responseCount":
+                            dataList.get(j).setResponseCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                        case "votesCount": {
+                            for (int k = 0; k < dataList.get(j).getCounts().get(i).getCounts().size(); k++) {
+                                dataList.get(j).setTotalVotesCount(dataList.get(j).getTotalVotesCount() + dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                switch (dataList.get(j).getCounts().get(i).getCounts().get(k).getName()) {
+                                    case "option1":
+                                        dataList.get(j).setOption1VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        break;
+                                    case "option2":
+                                        dataList.get(j).setOption2VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        break;
+                                    case "option3":
+                                        dataList.get(j).setOption3VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        break;
+                                    case "option4":
+                                        dataList.get(j).setOption4VoteCount(dataList.get(j).getCounts().get(i).getCounts().get(k).getCount());
+                                        break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -265,26 +332,26 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
             case R.id.joinGroupTextView:
-                if (questionMap == null || questionMap.isEmpty()) {
-                    Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-                    GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-                    JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
-                    joinGroupRequest.setGroupId(selectedGroup.getId());
-                    joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
-                    Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
-                    call.enqueue(groupJoinResponseCallback);
+                Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+                GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+                if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
+                    if (questionMap == null || questionMap.isEmpty()) {
+                        JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
+                        joinGroupRequest.setGroupId(selectedGroup.getId());
+                        joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
+                        Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
+                        call.enqueue(groupJoinResponseCallback);
+                    } else {
+                        Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
+                        intent.putExtra("groupItem", selectedGroup);
+                        intent.putExtra("questionnaire", questionMap);
+                        startActivity(intent);
+                    }
                 } else {
-                    Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
-                    intent.putExtra("groupItem", selectedGroup);
-                    intent.putExtra("questionnaire", questionMap);
-                    startActivity(intent);
+
                 }
-//                if (selectedGroup.getType().equals("1")) {
-//
-//                } else {
-//
-//                }
+
+
                 break;
         }
 
@@ -429,10 +496,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         switch (view.getId()) {
             case R.id.userImageView:
             case R.id.usernameTextView: {
-                Intent intent = new Intent(GroupsSummaryActivity.this, GroupDetailsActivity.class);
-                intent.putExtra("groupItem", selectedGroup);
-                startActivity(intent);
-                break;
+
             }
             case R.id.postSettingImageView:
                 selectedPost = postList.get(position);
@@ -445,9 +509,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.postDataTextView:
             case R.id.postDateTextView: {
-                Intent intent = new Intent(GroupsSummaryActivity.this, GroupPostDetailActivity.class);
-                intent.putExtra("groupItem", selectedGroup);
-                startActivity(intent);
+
                 break;
             }
         }

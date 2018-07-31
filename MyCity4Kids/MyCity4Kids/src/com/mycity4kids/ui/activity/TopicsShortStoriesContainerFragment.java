@@ -75,6 +75,7 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
                 createTopicsData(res);
             }
             getCurrentParentTopicCategoriesAndSubCategories();
+            initializeTabsAndPager();
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -97,6 +98,7 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
                         TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
                         createTopicsData(res);
                         getCurrentParentTopicCategoriesAndSubCategories();
+                        initializeTabsAndPager();
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -110,6 +112,11 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
                 }
             });
         }
+
+        return view;
+    }
+
+    private void initializeTabsAndPager() {
         if (subTopicsList.size() == 0) {
             Topics mainTopic = new Topics();
             mainTopic.setId(parentTopicId);
@@ -161,7 +168,6 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
 
             }
         });
-        return view;
     }
 
     private void createTopicsData(TopicsResponse responseData) {

@@ -374,7 +374,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
             addGroupPostRequest.setGroupId(selectedGroup.getId());
             addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
             if (SharedPrefUtils.isUserAnonymous(this)) {
-                addGroupPostRequest.setAnnon(true);
+                addGroupPostRequest.setAnnon(1);
             }
             Map<String, String> pollOptionsMap = new HashMap<>();
             for (int i = 0; i < textChoiceList.size(); i++) {
@@ -391,7 +391,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
             addGroupPostRequest.setGroupId(selectedGroup.getId());
             addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
             if (SharedPrefUtils.isUserAnonymous(this)) {
-                addGroupPostRequest.setAnnon(true);
+                addGroupPostRequest.setAnnon(1);
             }
             Map<String, String> pollOptionsMap = new HashMap<>();
             for (int i = 0; i < urlList.size(); i++) {

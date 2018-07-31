@@ -20,6 +20,7 @@ import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.ui.activity.GroupMembershipRequestActivity;
 import com.mycity4kids.ui.adapter.GroupsMembershipRequestRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -166,6 +167,7 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         switch (view.getId()) {
             case R.id.acceptTextView: {
+                showProgressDialog(BaseApplication.getAppContext().getString(R.string.please_wait));
                 UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
                 updateGroupMembershipRequest.setUserId(membersList.get(position).getUserId());
                 updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER);
@@ -174,6 +176,7 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
             }
             break;
             case R.id.rejectTextView: {
+                showProgressDialog(BaseApplication.getAppContext().getString(R.string.please_wait));
                 UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
                 updateGroupMembershipRequest.setUserId(membersList.get(position).getUserId());
                 updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_REJECTED);
@@ -187,6 +190,7 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
     private Callback<GroupsMembershipResponse> updateGroupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
         public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            removeProgressDialog();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -197,6 +201,14 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
             try {
                 if (response.isSuccessful()) {
                     GroupsMembershipResponse groupsMembershipResponse = response.body();
+                    skip = 0;
+                    limit = 10;
+                    membersList.clear();
+                    isLastPageReached = false;
+                    isReuqestRunning = false;
+                    adapter.notifyDataSetChanged();
+                    getAllPendingMembersForGroup();
+                    ((GroupMembershipRequestActivity) getActivity()).updateExistingMemberList();
                 } else {
 
                 }
@@ -209,6 +221,7 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
 
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+            removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

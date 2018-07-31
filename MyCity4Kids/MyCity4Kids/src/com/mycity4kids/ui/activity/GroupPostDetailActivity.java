@@ -17,11 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
@@ -41,7 +39,6 @@ import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
-import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.ProfilePic;
@@ -84,7 +81,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private boolean isLoading;
     private ArrayList<GroupPostCommentResult> completeResponseList;
     private String postType;
-    private GroupResult selectedGroup;
     private int groupId;
     private int postId;
     private GroupPostResult selectedPost;
@@ -113,6 +109,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private int deleteCommentPos;
     private int deleteReplyPos;
     private String memberType;
+    private int responseId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,12 +131,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         reportPostTextView = (TextView) findViewById(R.id.reportPostTextView);
         openAddCommentDialog = (FloatingActionButton) findViewById(R.id.openAddCommentDialog);
 
-        selectedGroup = getIntent().getParcelableExtra("groupItem");
-        postType = getIntent().getStringExtra("postType");
-        postData = (GroupPostResult) getIntent().getParcelableExtra("postData");
         groupId = getIntent().getIntExtra("groupId", 0);
         postId = getIntent().getIntExtra("postId", 0);
-        memberType = getIntent().getStringExtra("memberType");
+        responseId = getIntent().getIntExtra("responseId", 0);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -166,35 +160,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         recyclerView.setLayoutManager(llm);
 
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
-        groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-
-//        if (memberType == null) {
-//            checkMembership(groupId);
-//        } else {
-//            if (postData == null) {
-//                getPostDetails();
-//            } else {
-//                formatPostData();
-//                if (postData.getDisableComments() == 1) {
-//                    openAddCommentDialog.setVisibility(View.GONE);
-//                }
-//
-//                if (AppConstants.POST_TYPE_MEDIA.equals(postType)) {
-//                    mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
-//                    postData.setMediaUrls(mediaUrls);
-//                } else if (AppConstants.POST_TYPE_IMAGE_POLL.equals(postType) || AppConstants.POST_TYPE_TEXT_POLL.equals(postType)) {
-//                    pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
-//                    postData.setPollOptions(pollOptions);
-//                }
-//
-//                groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(this, this, postType);
-//                groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
-//                recyclerView.setAdapter(groupPostDetailsAndCommentsRecyclerAdapter);
-//
-//                getPostComments();
-//            }
-//        }
-
+        groupMembershipStatus.checkMembershipStatus(groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -215,71 +181,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
         });
     }
-
-    private void checkMembership(int id) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        Call<GroupsMembershipResponse> call = groupsAPI.getUsersMembershipDetailsForGroup(id, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        call.enqueue(groupMembershipResponseCallback);
-    }
-
-    private Callback<GroupsMembershipResponse> groupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
-        @Override
-        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    GroupsMembershipResponse groupsMembershipResponse = response.body();
-                    if (groupsMembershipResponse.getData().getResult().get(0).getIsAdmin() == 1) {
-                        memberType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
-                    } else if (groupsMembershipResponse.getData().getResult().get(0).getIsModerator() == 1) {
-                        memberType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
-                    }
-
-                    if (postData == null) {
-                        getPostDetails();
-                    } else {
-                        formatPostData();
-                        if (postData.getDisableComments() == 1) {
-                            openAddCommentDialog.setVisibility(View.GONE);
-                        }
-
-                        if (AppConstants.POST_TYPE_MEDIA.equals(postType)) {
-                            mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
-                            postData.setMediaUrls(mediaUrls);
-                        } else if (AppConstants.POST_TYPE_IMAGE_POLL.equals(postType) || AppConstants.POST_TYPE_TEXT_POLL.equals(postType)) {
-                            pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
-                            postData.setPollOptions(pollOptions);
-                        }
-
-                        groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(GroupPostDetailActivity.this, GroupPostDetailActivity.this, postType);
-                        groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
-                        recyclerView.setAdapter(groupPostDetailsAndCommentsRecyclerAdapter);
-
-                        getPostComments();
-                    }
-                } else {
-
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
 
     private void getPostDetails() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
@@ -332,8 +233,12 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(GroupPostDetailActivity.this, GroupPostDetailActivity.this, postType);
                     groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
                     recyclerView.setAdapter(groupPostDetailsAndCommentsRecyclerAdapter);
+                    if (responseId == 0) {
+                        getPostComments();
+                    } else {
+                        getSinglePostComments();
+                    }
 
-                    getPostComments();
                 } else {
 
                 }
@@ -390,6 +295,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         Retrofit retro = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retro.create(GroupsAPI.class);
         Call<GroupPostCommentResponse> call = groupsAPI.getPostComments(postData.getGroupId(), postData.getId(), skip, limit);
+        call.enqueue(postCommentCallback);
+    }
+
+    private void getSinglePostComments() {
+        Retrofit retro = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retro.create(GroupsAPI.class);
+        Call<GroupPostCommentResponse> call = groupsAPI.getSinglePostComments(postData.getGroupId(), postData.getId(), responseId);
         call.enqueue(postCommentCallback);
     }
 
@@ -490,7 +402,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.postSettingImageView:
                 getCurrentPostSettingsStatus(postData);
-                if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
+                if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
+                        || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
                     getAdminPostSettingsStatus(postData);
                 }
                 if (postData.getDisableComments() == 1) {
@@ -599,7 +512,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                                 } else {
                                     showToast("already marked helpful");
                                 }
-
                             } else {
                                 if (dataArray.getJSONObject(0).has("id") && !dataArray.getJSONObject(0).isNull("id")) {
                                     patchActionId = dataArray.getJSONObject(0).getInt("id");
@@ -678,8 +590,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         if (postData.getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
                             if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                 postData.setHelpfullCount(postData.getHelpfullCount() + 1);
+                                postData.setNotHelpfullCount(postData.getNotHelpfullCount() - 1);
                             } else {
                                 postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
+                                postData.setHelpfullCount(postData.getHelpfullCount() - 1);
                             }
                         }
                     }
@@ -750,7 +664,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private void setPostCurrentPreferences(UserPostSettingResponse userPostSettingResponse) {
 
         if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this).getDynamoId())
-                || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
+                || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
+                || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
             commentToggleTextView.setVisibility(View.VISIBLE);
         } else {
             commentToggleTextView.setVisibility(View.GONE);
@@ -833,6 +748,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
+                _args.putInt("groupId", selectedPost.getGroupId());
+                _args.putInt("postId", selectedPost.getId());
+                _args.putString("type", AppConstants.GROUP_REPORT_TYPE_POST);
                 groupPostReportDialogFragment.setArguments(_args);
                 groupPostReportDialogFragment.setCancelable(true);
                 groupPostReportDialogFragment.show(fm, "Choose video report option");
@@ -1513,12 +1431,20 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 
-    public void onResponseReport(int position, String responseType) {
+    public void onResponseReport(int commentPosition, int position, String responseType) {
         GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
         FragmentManager fm = getSupportFragmentManager();
         Bundle _args = new Bundle();
         _args.putInt("groupId", groupId);
         _args.putInt("postId", postData.getId());
+        if ("REPLY".equals(responseType)) {
+            //position-1 to accommodate the parent comment above.
+            _args.putInt("responseId", completeResponseList.get(commentPosition).getChildData().get(position - 1).getId());
+//            _args.putParcelable("parentCommentData", completeResponseList.get(commentPosition).getChildData().get(position - 1));
+        } else {
+            _args.putInt("responseId", completeResponseList.get(position).getId());
+//            _args.putParcelable("parentCommentData", completeResponseList.get(position));
+        }
         _args.putString("type", AppConstants.GROUP_REPORT_TYPE_COMMENT);
         groupPostReportDialogFragment.setArguments(_args);
         groupPostReportDialogFragment.setCancelable(true);
@@ -1538,8 +1464,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     }
 
     @Override
-    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body) {
-        String userType = null;
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
         if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
 
         } else {
@@ -1551,41 +1476,30 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
 
         if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
-
+            showToast("You are not a member of this group. Please join first.");
+            Intent intent = new Intent(this, GroupsSummaryActivity.class);
+            intent.putExtra("groupId", groupId);
+            startActivity(intent);
+            finish();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
             showToast("You have been blocked from this group");
+            finish();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
             if (body.getData().getResult().get(0).getIsAdmin() == 1) {
                 memberType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
             } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
                 memberType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
             }
-            if (postData == null) {
-                getPostDetails();
-            } else {
-                formatPostData();
-                if (postData.getDisableComments() == 1) {
-                    openAddCommentDialog.setVisibility(View.GONE);
-                }
-
-                if (AppConstants.POST_TYPE_MEDIA.equals(postType)) {
-                    mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
-                    postData.setMediaUrls(mediaUrls);
-                } else if (AppConstants.POST_TYPE_IMAGE_POLL.equals(postType) || AppConstants.POST_TYPE_TEXT_POLL.equals(postType)) {
-                    pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
-                    postData.setPollOptions(pollOptions);
-                }
-
-                groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(this, this, postType);
-                groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
-                recyclerView.setAdapter(groupPostDetailsAndCommentsRecyclerAdapter);
-
-                getPostComments();
-            }
+            getPostDetails();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
-            showToast("Your membership is still pending");
+            Intent intent = new Intent(this, GroupsSummaryActivity.class);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra("pendingMembershipFlag", true);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+            startActivity(intent);
+            finish();
         } else {
-
+            finish();
         }
     }
 

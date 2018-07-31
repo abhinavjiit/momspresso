@@ -34,7 +34,7 @@
         android:gravity="center"
         android:text="247 members"
         android:textColor="@color/white"
-        android:textSize="11sp"
+        android:textSize="14sp"
         app:fontName="oswald.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -142,7 +142,7 @@
         android:layout_marginTop="14dp"
         android:layout_toRightOf="@+id/groupAdminLabelTextView"
         android:gravity="left"
-        android:text="RAMESH"
+        android:text=""
         android:textColor="@color/blue_bg"
         android:textSize="14sp"
         app:fontName="open_sans.ttf" />

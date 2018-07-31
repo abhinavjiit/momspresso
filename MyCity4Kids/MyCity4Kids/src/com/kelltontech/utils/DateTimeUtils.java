@@ -224,10 +224,14 @@ public class DateTimeUtils {
     }
 
     public static String getDateTimeFromTimestamp(long timeStampStr) {
-
         try {
             java.text.DateFormat sdf = new SimpleDateFormat("hh:mm a | MMM dd, yyyy");
-            Date netDate = new Date(timeStampStr);
+            Date netDate;
+            if (timeStampStr > 1000000000000l) {
+                netDate = new Date(timeStampStr);
+            } else {
+                netDate = new Date(timeStampStr * 1000);
+            }
             return sdf.format(netDate);
         } catch (Exception ex) {
             return "xx";

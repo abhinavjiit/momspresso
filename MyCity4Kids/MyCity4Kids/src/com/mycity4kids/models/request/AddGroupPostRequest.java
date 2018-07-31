@@ -15,7 +15,7 @@ public class AddGroupPostRequest {
     private Map<String, String> mediaUrls;
     private int groupId;
     private String userId;
-    private boolean isAnnon = false;
+    private int isAnnon;
 
     public String getContent() {
         return content;
@@ -73,11 +73,11 @@ public class AddGroupPostRequest {
         this.userId = userId;
     }
 
-    public boolean isAnnon() {
+    public int isAnnon() {
         return isAnnon;
     }
 
-    public void setAnnon(boolean annon) {
+    public void setAnnon(int annon) {
         isAnnon = annon;
     }
 }

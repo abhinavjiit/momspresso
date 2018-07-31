@@ -494,6 +494,8 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_TODAYS_BEST = "todays_best";
     public static final String NOTIFICATION_TYPE_SHORT_STORY_LIST = "short_story_list";
     public static final String NOTIFICATION_TYPE_SHORT_STORY_DETAILS = "short_story_details";
+    public static final String NOTIFICATION_TYPE_GROUP_DETAILS = "group_details";
+    public static final String NOTIFICATION_TYPE_POST_DETAILS = "post_details";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";

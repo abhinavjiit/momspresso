@@ -282,7 +282,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
-    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body) {
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
         String userType = null;
         if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
 
@@ -296,8 +296,8 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
 
         if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
             Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
-            intent.putExtra("groupItem", selectedGroup);
-            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) selectedGroup.getQuestionnaire());
+            intent.putExtra("groupId", selectedGroup.getId());
+//            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) selectedGroup.getQuestionnaire());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
@@ -305,16 +305,20 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                 Toast.makeText(getActivity(), "You have been blocked from this group", Toast.LENGTH_SHORT).show();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
-            intent.putExtra("groupItem", selectedGroup);
+            intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
-            if (isAdded())
-                Toast.makeText(getActivity(), "Your membership is still pending", Toast.LENGTH_SHORT).show();
+//            if (isAdded())
+//                Toast.makeText(getActivity(), "Your membership is still pending", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
+            intent.putExtra("groupId", selectedGroup.getId());
+            intent.putExtra("pendingMembershipFlag", true);
+            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+            startActivity(intent);
         } else {
             Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
-            intent.putExtra("groupItem", selectedGroup);
-            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) selectedGroup.getQuestionnaire());
+            intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         }
