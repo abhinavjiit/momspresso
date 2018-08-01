@@ -36,7 +36,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 9/7/18.
  */
 
-public class GroupMembershipRequestActivity extends BaseActivity implements View.OnClickListener {
+public class GroupMembershipActivity extends BaseActivity implements View.OnClickListener {
 
     private GroupMembersPagerAdapter groupMembersPagerAdapter;
 

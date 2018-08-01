@@ -52,7 +52,6 @@ import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
-import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -383,7 +382,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("id")));
                 startActivity(gpPostIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_membership")) {
-                Intent memberIntent = new Intent(this, GroupMembershipRequestActivity.class);
+                Intent memberIntent = new Intent(this, GroupMembershipActivity.class);
                 memberIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("id")));
                 startActivity(memberIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_reported")) {

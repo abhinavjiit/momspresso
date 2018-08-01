@@ -16,13 +16,11 @@ import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
-import com.mycity4kids.ui.activity.GroupMembershipRequestActivity;
+import com.mycity4kids.ui.activity.GroupMembershipActivity;
 import com.mycity4kids.ui.adapter.GroupsMembersRecyclerAdapter;
-import com.mycity4kids.ui.adapter.GroupsMembershipRequestRecyclerAdapter;
 
 import java.util.ArrayList;
 
@@ -170,7 +168,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         switch (view.getId()) {
             case R.id.memberOptionImageView: {
-                ((GroupMembershipRequestActivity) getActivity()).showMembersOption(membersList.get(position));
+                ((GroupMembershipActivity) getActivity()).showMembersOption(membersList.get(position));
             }
             break;
         }

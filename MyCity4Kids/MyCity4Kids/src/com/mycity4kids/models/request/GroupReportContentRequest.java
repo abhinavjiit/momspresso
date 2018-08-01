@@ -10,6 +10,7 @@ public class GroupReportContentRequest {
     private int groupId;
     private int postId;
     private String reason;
+    private String type;
     private int responseId;
 
     public String getReportedBy() {
@@ -42,6 +43,14 @@ public class GroupReportContentRequest {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getResponseId() {

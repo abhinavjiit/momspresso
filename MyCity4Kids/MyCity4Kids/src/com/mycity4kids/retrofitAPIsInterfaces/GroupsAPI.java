@@ -38,8 +38,10 @@ import com.mycity4kids.models.response.UserPostSettingResponse;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
@@ -61,7 +63,17 @@ public interface GroupsAPI {
 
     @GET("/api/v1/groups/grouplisting")
     Call<GroupsListingResponse> getJoinedGroupList(@Query("$skip") int skip,
-                                                   @Query("$limit") int limit);
+                                                      @Query("$limit") int limit);
+
+    @GET("/api/v1/groups/members")
+    Call<GroupsMembershipResponse> getTop4JoinedGroupList(@Query("userId") String userId);
+
+    @GET("/api/v1/groups/group")
+    Call<GroupsListingResponse> getTop4SuggestedGroups(@Query("id[$ne]") int gp0,
+                                                          @Query("id[$notIn]") int gp1,
+                                                          @Query("id[$notIn]") int gp2,
+                                                          @Query("id[$notIn]") int gp3,
+                                                          @Query("id[$notIn]") int gp4);
 
     @POST("/api/v1/groups/group")
     Call<SetupBlogResponse> createGroup();
@@ -208,6 +220,9 @@ public interface GroupsAPI {
 
     @POST("/api/v1/groups/categorygroupmap")
     Call<GroupsCategoryMappingResponse> addGroupCategory(@Body ArrayList<GroupsCategoryUpdateRequest> groupsCategoryUpdateRequest);
+
+    @DELETE("/api/v1/groups/categorygroupmap/")
+    Call<ResponseBody> removeGroupCategory(@Query("groupId") int groupId);
 
     //Report Content
     @GET("/api/v1/groups/moderation-view/")

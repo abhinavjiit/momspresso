@@ -437,7 +437,7 @@
             android:name=".ui.activity.GroupsReportedContentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.GroupMembershipRequestActivity"
+            android:name=".ui.activity.GroupMembershipActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.GroupsSearchActivity"

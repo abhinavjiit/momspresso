@@ -20,7 +20,7 @@ import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
-import com.mycity4kids.ui.activity.GroupMembershipRequestActivity;
+import com.mycity4kids.ui.activity.GroupMembershipActivity;
 import com.mycity4kids.ui.adapter.GroupsMembershipRequestRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -208,7 +208,7 @@ public class GroupMembershipRequestTabFragment extends BaseFragment implements G
                     isReuqestRunning = false;
                     adapter.notifyDataSetChanged();
                     getAllPendingMembersForGroup();
-                    ((GroupMembershipRequestActivity) getActivity()).updateExistingMemberList();
+                    ((GroupMembershipActivity) getActivity()).updateExistingMemberList();
                 } else {
 
                 }

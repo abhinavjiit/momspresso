@@ -22,6 +22,7 @@ import com.mycity4kids.models.request.GroupNotificationToggleRequest;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +42,8 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     private TextView memberCountTextView;
     private Toolbar toolbar;
     private String memberType;
+    private ImageView groupImageView;
+    private TextView groupNameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +53,11 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         disableNotificationSwitch = (Switch) findViewById(R.id.disableNotificationSwitch);
         leaveGroupContainer = (RelativeLayout) findViewById(R.id.leaveGroupContainer);
+        groupImageView = (ImageView) findViewById(R.id.groupImageView);
         editGroupImageView = (ImageView) findViewById(R.id.editGroupImageView);
         reportedContentContainer = (RelativeLayout) findViewById(R.id.reportedContentContainer);
         memberCountTextView = (TextView) findViewById(R.id.memberCountTextView);
+        groupNameTextView = (TextView) findViewById(R.id.groupNameTextView);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,6 +87,10 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         }
 
         memberCountTextView.setText("" + groupItem.getMemberCount());
+
+        groupNameTextView.setText(groupItem.getTitle());
+        Picasso.with(this).load(groupItem.getHeaderImage())
+                .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(groupImageView);
     }
 
     @Override
@@ -93,7 +102,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.memberCountTextView: {
-                Intent intent = new Intent(GroupSettingsActivity.this, GroupMembershipRequestActivity.class);
+                Intent intent = new Intent(GroupSettingsActivity.this, GroupMembershipActivity.class);
                 intent.putExtra("groupId", groupItem.getId());
                 startActivity(intent);
             }

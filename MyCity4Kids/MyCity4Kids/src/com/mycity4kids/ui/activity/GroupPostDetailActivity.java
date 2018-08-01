@@ -696,15 +696,12 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.deletePostTextView:
-                Log.d("deletePostTextView", "" + postData.getId());
                 updateAdminLevelPostPrefs("markInactive");
                 break;
             case R.id.blockUserTextView:
-                Log.d("blockUserTextView", "" + postData.getId());
                 updateAdminLevelPostPrefs("blockUser");
                 break;
             case R.id.pinPostTextView:
-                Log.d("pinPostTextView", "" + postData.getId());
                 if (pinPostTextView.getText().toString().equals("PIN THIS POST TO TOP")) {
                     updateAdminLevelPostPrefs("pinPost");
                 } else {
@@ -712,7 +709,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 }
                 break;
             case R.id.savePostTextView:
-                Log.d("savePostTextView", "" + postData.getId());
                 if (savePostTextView.getText().toString().equals("SAVE POST")) {
                     updateUserPostPreferences("savePost");
                 } else {
@@ -727,7 +723,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 }
                 break;
             case R.id.notificationToggleTextView:
-                Log.d("notifToggleTextView", "" + postData.getId());
                 if (notificationToggleTextView.getText().toString().equals("DISABLE NOTIFICATION")) {
                     updateUserPostPreferences("enableNotif");
                 } else {
@@ -744,12 +739,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
             break;
             case R.id.reportPostTextView:
-                Log.d("reportPostTextView", "" + postData.getId());
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
-                _args.putInt("groupId", selectedPost.getGroupId());
-                _args.putInt("postId", selectedPost.getId());
+                _args.putInt("groupId", postData.getGroupId());
+                _args.putInt("postId", postData.getId());
                 _args.putString("type", AppConstants.GROUP_REPORT_TYPE_POST);
                 groupPostReportDialogFragment.setArguments(_args);
                 groupPostReportDialogFragment.setCancelable(true);

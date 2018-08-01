@@ -15,9 +15,7 @@ import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.utils.AppUtils;
@@ -29,15 +27,12 @@ import java.util.ArrayList;
  * Created by hemant on 4/12/17.
  */
 
-public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<GroupBlogsRecyclerAdapter.FeedViewHolder> {
 
-    public static final int HEADER = 0;
-    public static final int ARTICLE = 1;
     private final Context mContext;
     private final LayoutInflater mInflator;
     private ArrayList<ArticleListingResult> articleDataList;
     private RecyclerViewClickListener mListener;
-    private int selectedPosition;
 
     public GroupBlogsRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
         mContext = pContext;
@@ -55,31 +50,14 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (position == 0) {
-            return HEADER;
-        } else {
-            return ARTICLE;
-        }
+    public FeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v0 = mInflator.inflate(R.layout.article_listing_item, parent, false);
+        return new FeedViewHolder(v0);
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == HEADER) {
-            View v0 = mInflator.inflate(R.layout.groups_blog_header_item, parent, false);
-            return new HeaderViewHolder(v0);
-        } else {
-            View v0 = mInflator.inflate(R.layout.article_listing_item, parent, false);
-            return new FeedViewHolder(v0);
-        }
-    }
-
-    @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        if (holder instanceof HeaderViewHolder) {
-        } else {
-            addArticleItem((GroupBlogsRecyclerAdapter.FeedViewHolder) holder, position);
-        }
+    public void onBindViewHolder(final FeedViewHolder holder, final int position) {
+        addArticleItem(holder, position);
     }
 
     private void addArticleItem(final GroupBlogsRecyclerAdapter.FeedViewHolder holder, final int position) {
@@ -177,23 +155,21 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
             }
         }
 
-        holder.watchLaterImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                addRemoveWatchLater(position, holder);
-                Utils.pushWatchLaterArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
-                        articleDataList.get(position).getId(), articleDataList.get(position).getUserId() + "~" + articleDataList.get(position).getUserName());
-            }
-        });
-
-        holder.bookmarkArticleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                addRemoveBookmark(position, holder);
-                Utils.pushBookmarkArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
-                        articleDataList.get(position).getId(), articleDataList.get(position).getUserId() + "~" + articleDataList.get(position).getUserName());
-            }
-        });
+//        holder.watchLaterImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Utils.pushWatchLaterArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
+//                        articleDataList.get(position).getId(), articleDataList.get(position).getUserId() + "~" + articleDataList.get(position).getUserName());
+//            }
+//        });
+//
+//        holder.bookmarkArticleImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Utils.pushBookmarkArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
+//                        articleDataList.get(position).getId(), articleDataList.get(position).getUserId() + "~" + articleDataList.get(position).getUserName());
+//            }
+//        });
     }
 
     public class FeedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -222,36 +198,10 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
             authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
+
+            bookmarkArticleImageView.setVisibility(View.GONE);
+            watchLaterImageView.setVisibility(View.GONE);
             itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
-        }
-    }
-
-    public class HeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        TextView groupDescTextView;
-        TextView groupAdminTextView;
-
-        HeaderViewHolder(View view) {
-            super(view);
-//            groupDescTextView = (TextView) view.findViewById(R.id.groupDescTextView);
-//            groupAdminTextView = (TextView) view.findViewById(R.id.groupAdminTextView);
-//            groupDescTextView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Log.d("GpSumPstRecyclerAdapter", "groupDescTextView");
-//                }
-//            });
-//            groupAdminTextView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Log.d("GpSumPstRecyclerAdapter", "groupAdminTextView");
-//                }
-//            });
         }
 
         @Override

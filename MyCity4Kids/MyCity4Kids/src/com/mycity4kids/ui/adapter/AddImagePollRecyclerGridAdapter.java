@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -60,21 +62,30 @@ public class AddImagePollRecyclerGridAdapter extends RecyclerView.Adapter<AddIma
 
         if (StringUtils.isNullOrEmpty(urlList.get(position))) {
             holder.addImageOptionImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
+            holder.addImageOptionImageView.setVisibility(View.INVISIBLE);
+            holder.addImageTextView.setVisibility(View.VISIBLE);
         } else {
             Picasso.with(mContext).load(urlList.get(position))
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.addImageOptionImageView);
+            holder.addImageOptionImageView.setVisibility(View.VISIBLE);
+            holder.addImageTextView.setVisibility(View.INVISIBLE);
         }
     }
 
     public class ImagePollViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView addImageOptionImageView;
         ImageView removeOptionImageView;
+        TextView addImageTextView;
+        RelativeLayout addImageOptionContainer;
 
         ImagePollViewHolder(View view) {
             super(view);
             addImageOptionImageView = (ImageView) view.findViewById(R.id.addImageOptionImageView);
+            addImageTextView = (TextView) view.findViewById(R.id.addImageTextView);
             removeOptionImageView = (ImageView) view.findViewById(R.id.removeItemImageView);
-            addImageOptionImageView.setOnClickListener(new View.OnClickListener() {
+            addImageOptionContainer = (RelativeLayout) view.findViewById(R.id.addImageOptionContainer);
+
+            addImageOptionContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mListener.onImagePollItemClick(v, getAdapterPosition());

@@ -29,6 +29,7 @@ import com.mycity4kids.utils.AppUtils;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -39,6 +40,7 @@ import retrofit2.Retrofit;
 
 public class EditGroupActivity extends BaseActivity implements View.OnClickListener {
 
+    private int groupId;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
@@ -58,7 +60,7 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
         saveGroupDetailsTextView = (TextView) findViewById(R.id.saveGroupDetailsTextView);
 
         saveGroupDetailsTextView.setOnClickListener(this);
-        int groupId = getIntent().getIntExtra("groupId", 0);
+        groupId = getIntent().getIntExtra("groupId", 0);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
 
@@ -157,46 +159,86 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
                     showToast("Please chose atleast one category");
                     return;
                 }
-                Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-                GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-                ArrayList<GroupsCategoryUpdateRequest> groupsCategoryUpdateRequestList = new ArrayList<>();
-                for (int i = 0; i < catList.size(); i++) {
-                    if (catList.get(i).isSelected()) {
-                        GroupsCategoryUpdateRequest groupsCategoryUpdateRequest = new GroupsCategoryUpdateRequest();
-                        groupsCategoryUpdateRequest.setCategoryId(catList.get(i).getCategoryId());
-                        groupsCategoryUpdateRequest.setCategoryName(catList.get(i).getCategoryName());
-                        groupsCategoryUpdateRequest.setGroupId(groupItem.getId());
-                        groupsCategoryUpdateRequest.setCreatedBy(userDynamoId);
-                        groupsCategoryUpdateRequestList.add(groupsCategoryUpdateRequest);
-                    }
-                }
-
-                Call<GroupsCategoryMappingResponse> call = groupsAPI.addGroupCategory(groupsCategoryUpdateRequestList);
-                call.enqueue(categoryUpdateResponseCallback);
-
-                GroupResult groupResult = adapter.getAllUpdatedFields();
-                if (groupResult != null) {
-
-                    CreateUpdateGroupRequest createUpdateGroupRequest = new CreateUpdateGroupRequest();
-
-                    createUpdateGroupRequest.setType(groupItem.getType());
-                    createUpdateGroupRequest.setTitle(groupItem.getTitle());
-                    createUpdateGroupRequest.setCreatedBy(groupItem.getCreatedBy());
-                    createUpdateGroupRequest.setLang(groupItem.getLang());
-                    createUpdateGroupRequest.setLogoImage(groupItem.getLogoImage());
-                    createUpdateGroupRequest.setUrl(groupItem.getUrl());
-                    createUpdateGroupRequest.setUserId(userDynamoId);
-                    createUpdateGroupRequest.setDescription(groupResult.getDescription());
-                    createUpdateGroupRequest.setHeaderImage(groupResult.getHeaderImage());
-                    createUpdateGroupRequest.setQuestionnaire(groupResult.getQuestionnaire());
-
-                    Call<GroupDetailResponse> call1 = groupsAPI.updateGroup(groupItem.getId(), createUpdateGroupRequest);
-                    call1.enqueue(updateGroupResponseCallback);
-                }
+                removeExistingCategories();
                 break;
         }
     }
+
+    private void removeExistingCategories() {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        ArrayList<GroupsCategoryUpdateRequest> groupsCategoryUpdateRequestList = new ArrayList<>();
+        Call<ResponseBody> call = groupsAPI.removeGroupCategory(groupId);
+        call.enqueue(removeCategoriesResponseCallback);
+    }
+
+    private Callback<ResponseBody> removeCategoriesResponseCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+//                    String resData = new String(response.body().bytes());
+                    ArrayList<GroupsCategoryMappingResult> catList = adapter.getUpdatedCategories();
+                    Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+                    GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+                    ArrayList<GroupsCategoryUpdateRequest> groupsCategoryUpdateRequestList = new ArrayList<>();
+                    for (int i = 0; i < catList.size(); i++) {
+                        if (catList.get(i).isSelected()) {
+                            GroupsCategoryUpdateRequest groupsCategoryUpdateRequest = new GroupsCategoryUpdateRequest();
+                            groupsCategoryUpdateRequest.setCategoryId(catList.get(i).getCategoryId());
+                            groupsCategoryUpdateRequest.setCategoryName(catList.get(i).getCategoryName());
+                            groupsCategoryUpdateRequest.setGroupId(groupItem.getId());
+                            groupsCategoryUpdateRequest.setCreatedBy(userDynamoId);
+                            groupsCategoryUpdateRequestList.add(groupsCategoryUpdateRequest);
+                        }
+                    }
+
+                    Call<GroupsCategoryMappingResponse> call1 = groupsAPI.addGroupCategory(groupsCategoryUpdateRequestList);
+                    call1.enqueue(categoryUpdateResponseCallback);
+
+                    GroupResult groupResult = adapter.getAllUpdatedFields();
+                    if (groupResult != null) {
+
+                        CreateUpdateGroupRequest createUpdateGroupRequest = new CreateUpdateGroupRequest();
+
+                        createUpdateGroupRequest.setType(groupItem.getType());
+                        createUpdateGroupRequest.setTitle(groupItem.getTitle());
+                        createUpdateGroupRequest.setCreatedBy(groupItem.getCreatedBy());
+                        createUpdateGroupRequest.setLang(groupItem.getLang());
+                        createUpdateGroupRequest.setLogoImage(groupItem.getLogoImage());
+                        createUpdateGroupRequest.setUrl(groupItem.getUrl());
+                        createUpdateGroupRequest.setUserId(userDynamoId);
+                        createUpdateGroupRequest.setDescription(groupResult.getDescription());
+                        createUpdateGroupRequest.setHeaderImage(groupResult.getHeaderImage());
+                        createUpdateGroupRequest.setQuestionnaire(groupResult.getQuestionnaire());
+
+                        Call<GroupDetailResponse> call2 = groupsAPI.updateGroup(groupItem.getId(), createUpdateGroupRequest);
+                        call2.enqueue(updateGroupResponseCallback);
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private Callback<GroupsCategoryMappingResponse> categoryUpdateResponseCallback = new Callback<GroupsCategoryMappingResponse>() {
         @Override

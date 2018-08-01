@@ -176,6 +176,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         android:paddingBottom="60dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     <!--  floating action menu with buttons -->
@@ -254,7 +255,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/circular_image_bg"
                 android:scaleType="center"
-                android:src="@drawable/ic_write_white"
+                android:src="@drawable/ic_poll"
                 android:visibility="visible" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -286,7 +287,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/circular_image_bg"
                 android:scaleType="center"
-                android:src="@drawable/ic_suggested_topics"
+                android:src="@drawable/ic_post"
                 android:visibility="visible" />
 
             <com.mycity4kids.widget.CustomFontTextView

@@ -52,6 +52,12 @@ public class GroupsMembersRecyclerAdapter extends RecyclerView.Adapter<GroupsMem
         } catch (Exception e) {
             holder.memberImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_commentor_img));
         }
+
+        if (membersDataList.get(position).getIsAdmin() == 1) {
+            holder.memberOptionImageView.setVisibility(View.GONE);
+        } else {
+            holder.memberOptionImageView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

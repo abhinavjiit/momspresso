@@ -23,6 +23,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsListingResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
+import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
@@ -113,39 +114,59 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupsListingResponse> call = groupsAPI.getJoinedGroupList(skip, limit);
+        Call<GroupsMembershipResponse> call = groupsAPI.getTop4JoinedGroupList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         call.enqueue(joinedGroupListResponseCallback);
     }
 
-    private void getAllGroupListApi(int skip, int limit) {
+    private void getAllGroupListApi(List<GroupResult> dataList) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        Call<GroupsListingResponse> call = groupsAPI.getGroupList(skip, limit);
+        Call<GroupsListingResponse> call;
+        switch (dataList.size()) {
+            case 0:
+                call = groupsAPI.getTop4SuggestedGroups(null, null, null, null, null);
+                break;
+            case 1:
+                call = groupsAPI.getTop4SuggestedGroups(dataList.get(0).getId(), null, null, null, null);
+                break;
+            case 2:
+                call = groupsAPI.getTop4SuggestedGroups(null, null, null, null, null);
+                break;
+            case 3:
+                call = groupsAPI.getTop4SuggestedGroups(null, null, null, null, null);
+                break;
+            case 4:
+                call = groupsAPI.getTop4SuggestedGroups(null, null, null, null, null);
+                break;
+            default:
+                call = groupsAPI.getTop4SuggestedGroups(null, null, null, null, null);
+                break;
+        }
+        Call<GroupsListingResponse> call = groupsAPI.getTop4SuggestedGroups();
         call.enqueue(groupListResponseCallback);
     }
 
-    private Callback<GroupsListingResponse> joinedGroupListResponseCallback = new Callback<GroupsListingResponse>() {
+    private Callback<GroupsMembershipResponse> joinedGroupListResponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
-        public void onResponse(Call<GroupsListingResponse> call, retrofit2.Response<GroupsListingResponse> response) {
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
             progressBar.setVisibility(View.GONE);
             isReuqestRunning = false;
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
-
-//                    Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
-//                    intent.putExtra("groupId", 1);
-//                    intent.putExtra("isMember", true);
-//                    startActivity(intent);
                 }
                 return;
             }
             try {
                 if (response.isSuccessful()) {
-                    GroupsListingResponse responseModel = response.body();
-                    List<GroupResult> dataList = responseModel.getData().get(0).getResult();
+                    GroupsMembershipResponse responseModel = response.body();
+                    List<GroupsMembershipResult> membershipList = responseModel.getData().getResult();
+                    List<GroupResult> dataList = new ArrayList<>();
+                    for (int i = 0; i < membershipList.size(); i++) {
+                        dataList.add(membershipList.get(i).getGroupInfo());
+                    }
+
                     if (dataList == null || dataList.isEmpty()) {
                         joinedGroupRecyclerGridView.setVisibility(View.GONE);
                         seeAllJoinedGpTextView.setVisibility(View.GONE);
@@ -158,9 +179,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                             seeAllJoinedGpTextView.setVisibility(View.VISIBLE);
                         }
                     }
-                    if (responseModel.isMember()) {
-                        getAllGroupListApi(skip, limit);
-                    }
+                    getAllGroupListApi(dataList);
                 } else {
 
                 }
@@ -172,7 +191,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         }
 
         @Override
-        public void onFailure(Call<GroupsListingResponse> call, Throwable t) {
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             isReuqestRunning = false;
             Crashlytics.logException(t);

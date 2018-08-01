@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.GroupReportContentRequest;
 import com.mycity4kids.models.response.GroupsReportContentResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -33,6 +34,7 @@ import retrofit2.Retrofit;
 public class GroupPostReportDialogFragment extends DialogFragment implements OnClickListener {
 
     private int groupId, postId, responseId;
+    private String type;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,7 +48,8 @@ public class GroupPostReportDialogFragment extends DialogFragment implements OnC
 
         groupId = getArguments().getInt("groupId");
         postId = getArguments().getInt("postId");
-        responseId = getArguments().getInt("responseId", -1);
+//        type = getArguments().getString("type");
+        responseId = getArguments().getInt("responseId", 0);
 
         RadioGroup reportReasonRadioGroup = (RadioGroup) rootView.findViewById(R.id.reportReasonRadioGroup);
         final AppCompatRadioButton reason1RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason1RadioButton);
@@ -60,9 +63,8 @@ public class GroupPostReportDialogFragment extends DialogFragment implements OnC
         final GroupReportContentRequest groupReportContentRequest = new GroupReportContentRequest();
         groupReportContentRequest.setGroupId(groupId);
         groupReportContentRequest.setPostId(postId);
-        if (responseId != -1) {
-            groupReportContentRequest.setResponseId(responseId);
-        }
+//        groupReportContentRequest.setType(type);
+        groupReportContentRequest.setResponseId(responseId);
 
         groupReportContentRequest.setReportedBy(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 

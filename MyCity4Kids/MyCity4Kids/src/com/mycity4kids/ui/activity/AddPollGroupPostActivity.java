@@ -19,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -91,24 +92,42 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
     private EditText pollQuestionEditText;
     private ImageView togglePollOptionImageView;
     private TextView publishTextView;
+    private ImageView closeEditorImageView;
+    private TextView togglePollOptionTextView;
+    private CheckBox anonymousCheckbox;
+    private ImageView addMediaTextView;
+    private TextView anonymousTextView;
+    private ImageView anonymousImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_poll_group_post_activity);
-        mLayout = findViewById(R.id.rootLayout);
+        mLayout = findViewById(R.id.rootView);
         addChoiceTextView = (TextView) findViewById(R.id.addChoiceTextView);
         publishTextView = (TextView) findViewById(R.id.publishTextView);
         togglePollOptionImageView = (ImageView) findViewById(R.id.togglePollOptionImageView);
+        togglePollOptionTextView = (TextView) findViewById(R.id.togglePollOptionTextView);
         recyclerGridView = (RecyclerView) findViewById(R.id.recyclerGridView);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         pollQuestionEditText = (EditText) findViewById(R.id.pollQuestionEditText);
+        closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
+        anonymousTextView = (TextView) findViewById(R.id.anonymousTextView);
+        anonymousCheckbox = (CheckBox) findViewById(R.id.anonymousCheckbox);
+        anonymousImageView = (ImageView) findViewById(R.id.anonymousImageView);
+
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
 
         togglePollOptionImageView.setOnClickListener(this);
+        togglePollOptionTextView.setOnClickListener(this);
         addChoiceTextView.setOnClickListener(this);
+        togglePollOptionTextView.setOnClickListener(this);
         publishTextView.setOnClickListener(this);
+        closeEditorImageView.setOnClickListener(this);
+        anonymousImageView.setOnClickListener(this);
+        anonymousTextView.setOnClickListener(this);
+        anonymousCheckbox.setOnClickListener(this);
 
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.groups_column_spacing);
         recyclerGridView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
@@ -135,6 +154,12 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         imagePollAdapter = new AddImagePollRecyclerGridAdapter(this, this);
         imagePollAdapter.setNewListData(urlList);
         recyclerGridView.setAdapter(imagePollAdapter);
+
+        if (SharedPrefUtils.isUserAnonymous(this)) {
+            anonymousCheckbox.setChecked(true);
+        } else {
+            anonymousCheckbox.setChecked(false);
+        }
 
     }
 
@@ -227,6 +252,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                                  Picasso.with(AddPollGroupPostActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(currentImageView);
 //                                 currentImageView.setVisibility(View.VISIBLE);
                                  urlList.set(currentImagePosition, responseModel.getData().getResult().getUrl());
+                                 imagePollAdapter.notifyDataSetChanged();
                                  showToast(getString(R.string.image_upload_success));
                              }
                          }
@@ -328,6 +354,15 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.anonymousImageView:
+            case R.id.anonymousTextView:
+            case R.id.anonymousCheckbox:
+                if (anonymousCheckbox.isChecked()) {
+                    SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
+                } else {
+                    SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
+                }
+                break;
             case R.id.addChoiceTextView:
                 if (recyclerView.getVisibility() == View.VISIBLE) {
                     textChoiceList.add("");
@@ -343,20 +378,26 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                     }
                 }
                 break;
+            case R.id.closeEditorImageView:
+                onBackPressed();
+                break;
             case R.id.publishTextView:
                 if (validateParams()) {
                     showToast("Valid Poll");
                     publishPoll();
                 }
                 break;
+            case R.id.togglePollOptionTextView:
             case R.id.togglePollOptionImageView:
                 if (recyclerView.getVisibility() == View.VISIBLE) {
                     recyclerView.setVisibility(View.GONE);
                     recyclerGridView.setVisibility(View.VISIBLE);
+                    togglePollOptionTextView.setText(getString(R.string.groups_text_poll));
                     togglePollOptionImageView.setImageDrawable(ContextCompat.getDrawable(AddPollGroupPostActivity.this, R.drawable.tab3));
                 } else {
                     recyclerView.setVisibility(View.VISIBLE);
                     recyclerGridView.setVisibility(View.GONE);
+                    togglePollOptionTextView.setText(getString(R.string.groups_image_poll));
                     togglePollOptionImageView.setImageDrawable(ContextCompat.getDrawable(AddPollGroupPostActivity.this, R.drawable.ic_followers));
                 }
                 break;
@@ -479,8 +520,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                     addChoiceTextView.setVisibility(View.VISIBLE);
                 }
                 break;
-            case R.id.addImageOptionImageView:
-                currentImageView = (ImageView) view;
+            case R.id.addImageOptionContainer:
+                currentImageView = (ImageView) view.findViewById(R.id.addImageOptionImageView);
                 currentImagePosition = position;
                 Intent intent1 = new Intent(Intent.ACTION_PICK);
                 intent1.setType("image/*");

@@ -21,6 +21,7 @@ public class GroupsMembershipResult {
     private long createdAt;
     private long updatedAt;
     private UserDetailResult userInfo;
+    private GroupResult groupInfo;
 
     public int getId() {
         return id;
@@ -132,5 +133,13 @@ public class GroupsMembershipResult {
 
     public void setUserInfo(UserDetailResult userInfo) {
         this.userInfo = userInfo;
+    }
+
+    public GroupResult getGroupInfo() {
+        return groupInfo;
+    }
+
+    public void setGroupInfo(GroupResult groupInfo) {
+        this.groupInfo = groupInfo;
     }
 }

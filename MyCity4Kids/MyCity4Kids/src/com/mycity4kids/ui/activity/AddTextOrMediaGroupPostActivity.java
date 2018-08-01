@@ -21,6 +21,7 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -98,6 +99,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     private RelativeLayout chooseMediaTypeContainer;
     private LinearLayout mediaContainer;
     private ImageView closeEditorImageView;
+    private TextView anonymousTextView;
+    private CheckBox anonymousCheckbox;
+    private TextView addMediaTextView;
 
 
     @Override
@@ -108,7 +112,11 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         postContentEditText = (EditText) findViewById(R.id.postContentEditText);
         closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
         anonymousImageView = (ImageView) findViewById(R.id.anonymousImageView);
+        anonymousTextView = (TextView) findViewById(R.id.anonymousTextView);
+        anonymousCheckbox = (CheckBox) findViewById(R.id.anonymousCheckbox);
         addMediaImageView = (ImageView) findViewById(R.id.addMediaImageView);
+        addMediaTextView = (TextView) findViewById(R.id.addMediaTextView);
+
         postImageView = (ImageView) findViewById(R.id.postImageView);
         publishTextView = (TextView) findViewById(R.id.publishTextView);
         chooseMediaTypeContainer = (RelativeLayout) findViewById(R.id.chooseMediaTypeContainer);
@@ -123,7 +131,10 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
         chooseMediaTypeContainer.setOnClickListener(this);
         addMediaImageView.setOnClickListener(this);
+        addMediaTextView.setOnClickListener(this);
         anonymousImageView.setOnClickListener(this);
+        anonymousTextView.setOnClickListener(this);
+        anonymousCheckbox.setOnClickListener(this);
         publishTextView.setOnClickListener(this);
         imageCameraTextView.setOnClickListener(this);
         imageGalleryTextView.setOnClickListener(this);
@@ -131,6 +142,12 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         videoGalleryTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
         closeEditorImageView.setOnClickListener(this);
+
+        if (SharedPrefUtils.isUserAnonymous(this)) {
+            anonymousCheckbox.setChecked(true);
+        } else {
+            anonymousCheckbox.setChecked(false);
+        }
     }
 
     @Override
@@ -150,6 +167,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             case R.id.chooseMediaTypeContainer:
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
+            case R.id.addMediaTextView:
             case R.id.addMediaImageView:
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -186,12 +204,20 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
             case R.id.anonymousImageView:
-                ChooseAnonymousDialogFragment chooseAnonymousDialogFragment = new ChooseAnonymousDialogFragment();
-                FragmentManager fm = getSupportFragmentManager();
-                Bundle _args = new Bundle();
-                chooseAnonymousDialogFragment.setArguments(_args);
-                chooseAnonymousDialogFragment.setCancelable(true);
-                chooseAnonymousDialogFragment.show(fm, "Go Anonymous");
+            case R.id.anonymousTextView:
+            case R.id.anonymousCheckbox:
+                if (anonymousCheckbox.isChecked()) {
+                    SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
+                } else {
+                    SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
+                }
+
+//                ChooseAnonymousDialogFragment chooseAnonymousDialogFragment = new ChooseAnonymousDialogFragment();
+//                FragmentManager fm = getSupportFragmentManager();
+//                Bundle _args = new Bundle();
+//                chooseAnonymousDialogFragment.setArguments(_args);
+//                chooseAnonymousDialogFragment.setCancelable(true);
+//                chooseAnonymousDialogFragment.show(fm, "Go Anonymous");
                 break;
             case R.id.publishTextView:
                 if (validateParams()) {

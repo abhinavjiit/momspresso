@@ -48,6 +48,8 @@ import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsActionResponse;
+import com.mycity4kids.models.response.GroupsCategoryMappingResponse;
+import com.mycity4kids.models.response.GroupsCategoryMappingResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
@@ -56,9 +58,11 @@ import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupBlogsRecyclerAdapter;
+import com.mycity4kids.ui.adapter.GroupSummaryPostRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,8 +83,10 @@ import retrofit2.Retrofit;
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
         GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener {
 
+    private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
     private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "POLLS"};
 
+    private int categoryIndex = 0;
     private int nextPageNumber = 1;
     private int totalPostCount;
     private int skip = 0;
@@ -97,6 +103,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private GroupPostResult selectedPost;
     private String memberType;
     private int groupId;
+    private String commaSepCategoryList = "";
 
     private Handler handler = new Handler();
 
@@ -126,8 +133,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private ImageView groupImageView;
     private ImageView clearSearchImageView;
     private ImageView shareGroupImageView;
-//    private RelativeLayout blockedViewContainer;
-//    private ImageView blockedCloseImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,8 +166,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         notificationToggleTextView = (TextView) findViewById(R.id.notificationToggleTextView);
         commentToggleTextView = (TextView) findViewById(R.id.commentToggleTextView);
         reportPostTextView = (TextView) findViewById(R.id.reportPostTextView);
-//        blockedViewContainer = (RelativeLayout) findViewById(R.id.blockedViewContainer);
-//        blockedCloseImageView = (ImageView) findViewById(R.id.blockedCloseImageView);
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
         groupId = getIntent().getIntExtra("groupId", 0);
@@ -227,19 +230,16 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     if (!isRequestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isRequestRunning = true;
-                            getGroupPosts();
+                            if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+                                getGroupPosts();
+                            } else {
+                                hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
+                            }
                         }
                     }
                 }
             }
         });
-
-//        if (selectedGroup == null) {
-//            checkMembership(groupId);
-//        } else {
-//            groupId = selectedGroup.getId();
-//            checkMembership(selectedGroup.getId());
-//        }
 
         toolbarTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -256,7 +256,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             public void afterTextChanged(Editable editable) {
                 if (TextUtils.isEmpty(editable)) {
                     clearSearchImageView.setVisibility(View.GONE);
-                    nextPageNumber = 1;
                     skip = 0;
                     limit = 10;
                     isRequestRunning = false;
@@ -272,7 +271,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                             runOnUiThread(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    nextPageNumber = 1;
                                     skip = 0;
                                     limit = 10;
                                     isRequestRunning = false;
@@ -287,18 +285,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 }
             }
         });
-//        if (selectedGroup == null) {
         getGroupDetails();
-//        } else {
-//            groupId = selectedGroup.getId();
-//            toolbarTitle.setHint(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
-//            groupNameTextView.setText(selectedGroup.getTitle());
-//            memberCountTextView.setText(selectedGroup.getMemberCount() + " " + getString(R.string.groups_member_label));
-//            groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(this, this);
-//            groupAboutRecyclerAdapter.setData(selectedGroup);
-//            recyclerView.setAdapter(groupAboutRecyclerAdapter);
-//            getGroupPosts();
-//        }
     }
 
     private void requestSearch() {
@@ -367,6 +354,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     toolbarTitle.setHint(getString(R.string.groups_search_in));
                     memberCountTextView.setText(selectedGroup.getMemberCount() + " " + getString(R.string.groups_member_label));
                     groupNameTextView.setText(selectedGroup.getTitle());
+
+                    Picasso.with(GroupDetailsActivity.this).load(selectedGroup.getHeaderImage())
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(groupImageView);
 
                     groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(GroupDetailsActivity.this, GroupDetailsActivity.this);
                     groupAboutRecyclerAdapter.setData(selectedGroup);
@@ -923,15 +913,27 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 if (AppConstants.GROUP_SECTION_ABOUT.equalsIgnoreCase(tab.getTag().toString())) {
                     recyclerView.setAdapter(groupAboutRecyclerAdapter);
                 } else if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab.getTag().toString())) {
+                    isRequestRunning = false;
+                    isLastPageReached = false;
                     recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
                     postList.clear();
                     skip = 0;
                     limit = 10;
                     getGroupPosts();
                 } else if (AppConstants.GROUP_SECTION_BLOGS.equalsIgnoreCase(tab.getTag().toString())) {
+                    isRequestRunning = false;
+                    isLastPageReached = false;
+                    nextPageNumber = 1;
                     recyclerView.setAdapter(groupBlogsRecyclerAdapter);
-                    hitFilteredTopicsArticleListingApi(0);
+                    if (StringUtils.isNullOrEmpty(commaSepCategoryList)) {
+                        getCategoriesTaggedWithGroups();
+                    } else {
+                        hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
+                    }
+
                 } else if (AppConstants.GROUP_SECTION_PHOTOS.equalsIgnoreCase(tab.getTag().toString())) {
+                    isRequestRunning = false;
+                    isLastPageReached = false;
                     recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
                     postList.clear();
                     skip = 0;
@@ -939,6 +941,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     postType = AppConstants.POST_TYPE_MEDIA_KEY;
                     getFilteredGroupPosts();
                 } else if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab.getTag().toString())) {
+                    isRequestRunning = false;
+                    isLastPageReached = false;
                     recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
                     postList.clear();
                     skip = 0;
@@ -967,7 +971,47 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
-    private void hitFilteredTopicsArticleListingApi(int sortType) {
+    private void getCategoriesTaggedWithGroups() {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        Call<GroupsCategoryMappingResponse> call = groupsAPI.getGroupCategories(groupId);
+        call.enqueue(groupsCategoryResponseCallback);
+    }
+
+    private Callback<GroupsCategoryMappingResponse> groupsCategoryResponseCallback = new Callback<GroupsCategoryMappingResponse>() {
+        @Override
+        public void onResponse(Call<GroupsCategoryMappingResponse> call, retrofit2.Response<GroupsCategoryMappingResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsCategoryMappingResponse groupsCategoryMappingResponse = response.body();
+                    groupMappedCategories = (ArrayList<GroupsCategoryMappingResult>) groupsCategoryMappingResponse.getData().getResult();
+                    if (groupMappedCategories != null && !groupMappedCategories.isEmpty()) {
+                        hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsCategoryMappingResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void hitFilteredTopicsArticleListingApi(String categoryId) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             ToastUtils.showToast(this, getString(R.string.error_network));
             return;
@@ -977,7 +1021,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(categoryId, 1, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
+//        Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
         filterCall.enqueue(articleListingResponseCallback);
     }
 
@@ -1015,21 +1060,27 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
 
         if (dataList.size() == 0) {
-            isLastPageReached = false;
             if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
                 //No more next results for search from pagination
+                if (categoryIndex < groupMappedCategories.size() - 1) {
+                    nextPageNumber = 1;
+                    categoryIndex++;
+                } else {
+                    isLastPageReached = true;
+                }
             } else {
-                // No results for search
-                articleDataModelsNew = dataList;
-                groupBlogsRecyclerAdapter.setData(articleDataModelsNew);
-                groupBlogsRecyclerAdapter.notifyDataSetChanged();
+                if (categoryIndex < groupMappedCategories.size() - 1) {
+                    nextPageNumber = 1;
+                    categoryIndex++;
+                    hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
+                } else {
+                    articleDataModelsNew.addAll(dataList);
+                    groupBlogsRecyclerAdapter.setData(articleDataModelsNew);
+                    groupBlogsRecyclerAdapter.notifyDataSetChanged();
+                }
             }
         } else {
-            if (nextPageNumber == 1) {
-                articleDataModelsNew = dataList;
-            } else {
-                articleDataModelsNew.addAll(dataList);
-            }
+            articleDataModelsNew.addAll(dataList);
             groupBlogsRecyclerAdapter.setData(articleDataModelsNew);
             groupBlogsRecyclerAdapter.notifyDataSetChanged();
             nextPageNumber = nextPageNumber + 1;
@@ -1039,7 +1090,16 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-        Intent intent = new Intent(GroupDetailsActivity.this, GroupsQuestionnaireActivity.class);
+        Intent intent = new Intent(this, ArticleDetailsContainerActivity.class);
+        intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+        intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+        intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+        intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "GroupDetailsArticleListing");
+        intent.putExtra(Constants.FROM_SCREEN, "GroupDetailActivity");
+        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+        intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+        intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
         startActivity(intent);
     }
 
@@ -1119,7 +1179,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                                 } else {
                                     showToast("already marked helpful");
                                 }
-
                             } else {
                                 if (dataArray.getJSONObject(0).has("id") && !dataArray.getJSONObject(0).isNull("id")) {
                                     patchActionId = dataArray.getJSONObject(0).getInt("id");
