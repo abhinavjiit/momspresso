@@ -66,7 +66,7 @@
             android:drawableLeft="@drawable/ic_group_white"
             android:drawablePadding="10dp"
             android:gravity="center"
-            android:text="247 members"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="14sp"
             app:fontName="oswald.ttf" />
@@ -80,7 +80,7 @@
             android:layout_marginBottom="10dp"
             android:drawablePadding="10dp"
             android:gravity="center"
-            android:text="MARRIAGE AND DIVORCE"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="20sp"
             app:fontName="oswald_regular.ttf" />
@@ -110,7 +110,7 @@
             android:id="@+id/inviteMemberLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="INVITE MEMBER"
+            android:text="@string/groups.invite_members"
             android:textColor="@color/groups.blue_color"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />
@@ -120,7 +120,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/inviteMemberLabel"
-            android:text="You can invite your friends, family to this group"
+            android:text="@string/groups.invite_family"
             android:textColor="@color/groups.grey"
             android:textSize="11sp"
             app:fontName="oswald.ttf" />
@@ -148,7 +148,7 @@
             android:id="@+id/disableNotificationTitleLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="DISABLE NOTIFICATIONS"
+            android:text="@string/groups.disable_notification"
             android:textColor="@color/groups.blue_color"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />
@@ -158,7 +158,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/disableNotificationTitleLabel"
-            android:text="You can choose not to receive a notification from this group"
+            android:text="@string/groups.disable_notification_this_gp"
             android:textColor="@color/groups.grey"
             android:textSize="11sp"
             app:fontName="oswald.ttf" />
@@ -192,7 +192,7 @@
             android:id="@+id/leaveGroupTitleLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="LEAVE GROUP"
+            android:text="@string/groups.leave_group"
             android:textColor="@color/groups.blue_color"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />
@@ -202,7 +202,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/leaveGroupTitleLabel"
-            android:text="Yopu can choose to exit the group at any point of time"
+            android:text="@string/groups.exit_gp"
             android:textColor="@color/groups.grey"
             android:textSize="11sp"
             app:fontName="oswald.ttf" />
@@ -231,7 +231,7 @@
             android:id="@+id/reportedContentTitleLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="REPORTED CONTENT"
+            android:text="@string/groups.reported_content"
             android:textColor="@color/groups.blue_color"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />
@@ -241,7 +241,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/reportedContentTitleLabel"
-            android:text="View all the reported content for this group"
+            android:text="@string/groups.view_all_reported"
             android:textColor="@color/groups.grey"
             android:textSize="11sp"
             app:fontName="oswald.ttf" />

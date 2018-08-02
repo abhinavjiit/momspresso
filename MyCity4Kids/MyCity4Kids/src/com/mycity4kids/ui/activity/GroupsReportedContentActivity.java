@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -30,6 +31,7 @@ import com.mycity4kids.ui.adapter.GroupsReportedContentRecyclerAdapter;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -238,13 +240,13 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
         reportedContentModerationRequest.setActionBy(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         reportedContentModerationRequest.setActionResponse(contentReportAction);
         reportedContentModerationRequest.setIsModerated(1);
-        Call<GroupsReportedContentResponse> call = groupsAPI.moderateReportedContent(contentId, reportedContentModerationRequest);
+        Call<ResponseBody> call = groupsAPI.moderateReportedContent(contentId, reportedContentModerationRequest);
         call.enqueue(reportedContentModerationReponseCallback);
     }
 
-    Callback<GroupsReportedContentResponse> reportedContentModerationReponseCallback = new Callback<GroupsReportedContentResponse>() {
+    Callback<ResponseBody> reportedContentModerationReponseCallback = new Callback<ResponseBody>() {
         @Override
-        public void onResponse(Call<GroupsReportedContentResponse> call, retrofit2.Response<GroupsReportedContentResponse> response) {
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -254,7 +256,10 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
             }
             try {
                 if (response.isSuccessful()) {
-                    GroupsReportedContentResponse reportedContentResponse = response.body();
+                    ResponseBody reportedContentResponse = response.body();
+                    postSettingsContainerMain.setVisibility(View.GONE);
+                    overlayView.setVisibility(View.GONE);
+                    postSettingsContainer.setVisibility(View.GONE);
                 } else {
 
                 }
@@ -265,7 +270,7 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
         }
 
         @Override
-        public void onFailure(Call<GroupsReportedContentResponse> call, Throwable t) {
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -282,6 +287,16 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
                 postSettingsContainer.setVisibility(View.VISIBLE);
                 overlayView.setVisibility(View.VISIBLE);
                 break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

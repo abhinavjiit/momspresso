@@ -383,7 +383,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                 break;
             case R.id.publishTextView:
                 if (validateParams()) {
-                    showToast("Valid Poll");
+//                    showToast("Valid Poll");
                     publishPoll();
                 }
                 break;
@@ -398,7 +398,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                     recyclerView.setVisibility(View.VISIBLE);
                     recyclerGridView.setVisibility(View.GONE);
                     togglePollOptionTextView.setText(getString(R.string.groups_image_poll));
-                    togglePollOptionImageView.setImageDrawable(ContextCompat.getDrawable(AddPollGroupPostActivity.this, R.drawable.ic_followers));
+                    togglePollOptionImageView.setImageDrawable(ContextCompat.getDrawable(AddPollGroupPostActivity.this, R.drawable.ic_incognito));
                 }
                 break;
         }

@@ -56,8 +56,13 @@ public class GroupAboutRecyclerAdapter extends RecyclerView.Adapter<GroupAboutRe
             holder.groupTypeTextView.setText(mContext.getString(R.string.groups_invitation_only_gp));
         }
 //        holder.groupTypeTextView.setText("Closed Group");
-        holder.groupAdminTextView.setText(groupData.getAdminMembers().getData().get(0).getUserInfo().getFirstName() + " "
-                + groupData.getAdminMembers().getData().get(0).getUserInfo().getLastName());
+        if (groupData.getAdminMembers().getData() != null && !groupData.getAdminMembers().getData().isEmpty()) {
+            holder.groupAdminTextView.setText(groupData.getAdminMembers().getData().get(0).getUserInfo().getFirstName() + " "
+                    + groupData.getAdminMembers().getData().get(0).getUserInfo().getLastName());
+        } else {
+            holder.groupAdminTextView.setText("");
+        }
+
     }
 
     public class GroupAboutHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -82,7 +87,7 @@ public class GroupAboutRecyclerAdapter extends RecyclerView.Adapter<GroupAboutRe
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+//            mListener.onRecyclerItemClick(v, getAdapterPosition());
         }
     }
 

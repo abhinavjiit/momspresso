@@ -97,12 +97,12 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/notificationToggleTextView"
                 android:background="@color/white"
-                android:drawableLeft="@drawable/ic_bookmark"
                 android:drawablePadding="20dp"
                 android:padding="20dp"
-                android:text="SAVE POST"
+                android:text="@string/groups.save_post"
                 android:textColor="@color/groups.light_black_color"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="open_sans.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -111,10 +111,9 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/commentToggleTextView"
                 android:background="@color/white"
-                android:drawableLeft="@drawable/ic_bookmark"
                 android:drawablePadding="20dp"
                 android:padding="20dp"
-                android:text="SAVE POST"
+                android:text="@string/groups.save_post"
                 android:textColor="@color/groups.light_black_color"
                 android:textSize="16sp"
                 app:fontName="open_sans.ttf" />
@@ -125,10 +124,9 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/reportPostTextView"
                 android:background="@color/white"
-                android:drawableLeft="@drawable/ic_bookmark"
                 android:drawablePadding="20dp"
                 android:padding="20dp"
-                android:text="DISABLE COMMENTS"
+                android:text="@string/groups.disable_comment"
                 android:textColor="@color/groups.light_black_color"
                 android:textSize="16sp"
                 app:fontName="open_sans.ttf" />
@@ -138,10 +136,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:drawableLeft="@drawable/ic_bookmark"
                 android:drawablePadding="20dp"
                 android:padding="20dp"
-                android:text="REPORT POST"
+                android:text="@string/groups.report_post"
                 android:textColor="@color/groups.light_black_color"
                 android:textSize="16sp"
                 app:fontName="open_sans.ttf" />

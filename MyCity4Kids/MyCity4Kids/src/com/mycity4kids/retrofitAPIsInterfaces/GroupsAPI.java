@@ -17,6 +17,7 @@ import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdatePostSettingsRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
+import com.mycity4kids.models.request.UpdateUsersGpLevelNotificationSettingRequest;
 import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.AddGroupPostResponse;
 import com.mycity4kids.models.response.GroupDetailResponse;
@@ -37,6 +38,7 @@ import com.mycity4kids.models.response.SetupBlogResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -63,17 +65,20 @@ public interface GroupsAPI {
 
     @GET("/api/v1/groups/grouplisting")
     Call<GroupsListingResponse> getJoinedGroupList(@Query("$skip") int skip,
-                                                      @Query("$limit") int limit);
+                                                   @Query("$limit") int limit);
 
     @GET("/api/v1/groups/members")
-    Call<GroupsMembershipResponse> getTop4JoinedGroupList(@Query("userId") String userId);
+    Call<GroupsMembershipResponse> getTop4JoinedGroupList(@Query("userId") String userId,
+                                                          @Query("status") String status);
 
     @GET("/api/v1/groups/group")
-    Call<GroupsListingResponse> getTop4SuggestedGroups(@Query("id[$ne]") int gp0,
-                                                          @Query("id[$notIn]") int gp1,
-                                                          @Query("id[$notIn]") int gp2,
-                                                          @Query("id[$notIn]") int gp3,
-                                                          @Query("id[$notIn]") int gp4);
+    Call<GroupsListingResponse> getTop4SuggestedGroupsSingleExclusion(@Query("id[$ne]") String gp0);
+
+    @GET("/api/v1/groups/group")
+    Call<GroupsListingResponse> getTop4SuggestedGroups(@Query("id[$notIn]") List<String> groupIdList);
+
+    @GET("/api/v1/groups/group?{params}")
+    Call<GroupsListingResponse> getTop4SuggestedGroupss(@Path("params") String param);
 
     @POST("/api/v1/groups/group")
     Call<SetupBlogResponse> createGroup();
@@ -162,12 +167,24 @@ public interface GroupsAPI {
     @GET("/api/v1/groups/usersettings")
     Call<UserPostSettingResponse> getPostSettingForUser(@Query("postId") int postId);
 
+    @GET("/api/v1/groups/usersettings")
+    Call<UserPostSettingResponse> getGroupNotificationSettingForUser(@Query("groupId") int groupId,
+                                                                     @Query("postId") int postId,
+                                                                     @Query("userId") String userId);
+
     @POST("/api/v1/groups/usersettings")
-    Call<UserPostSettingResponse> createNewPostSettingsForUser(@Body UpdateUserPostSettingsRequest joinGroupRequest);
+    Call<ResponseBody> createNewPostSettingsForUser(@Body UpdateUserPostSettingsRequest joinGroupRequest);
+
+    @POST("/api/v1/groups/usersettings")
+    Call<ResponseBody> createNewGpSettingsForUser(@Body UpdateUsersGpLevelNotificationSettingRequest notificationSettingRequest);
 
     @PATCH("/api/v1/groups/usersettings/{userSettingId}")
     Call<UserPostSettingResponse> updatePostSettingsForUser(@Path("userSettingId") int userSettingId,
                                                             @Body UpdateUserPostSettingsRequest joinGroupRequest);
+
+    @PATCH("/api/v1/groups/usersettings/{userSettingId}")
+    Call<UserPostSettingResponse> updateNotificationSettingsOfGpForUser(@Path("userSettingId") int userSettingId,
+                                                                        @Body UpdateUsersGpLevelNotificationSettingRequest joinGroupRequest);
 
     //Post Comments
     @GET("/api/v1/groups/responsenested")
@@ -233,8 +250,8 @@ public interface GroupsAPI {
     @POST("/api/v1/groups/report")
     Call<GroupsReportContentResponse> reportContent(@Body GroupReportContentRequest groupReportContentRequest);
 
-    @POST("/api/v1/groups/moderation-view/{contentId}")
-    Call<GroupsReportedContentResponse> moderateReportedContent(@Path("contentId") int contentId,
+    @PATCH("/api/v1/groups/moderation-view/{contentId}")
+    Call<ResponseBody> moderateReportedContent(@Path("contentId") int contentId,
                                                                 @Body ReportedContentModerationRequest reportedContentModerationRequest);
 
     //Groups Search

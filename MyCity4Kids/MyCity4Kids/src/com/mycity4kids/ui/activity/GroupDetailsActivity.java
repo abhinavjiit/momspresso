@@ -58,7 +58,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupBlogsRecyclerAdapter;
-import com.mycity4kids.ui.adapter.GroupSummaryPostRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.utils.AppUtils;
@@ -72,6 +71,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -133,6 +133,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private ImageView groupImageView;
     private ImageView clearSearchImageView;
     private ImageView shareGroupImageView;
+    private String source;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +171,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
         groupId = getIntent().getIntExtra("groupId", 0);
         memberType = getIntent().getStringExtra(AppConstants.GROUP_MEMBER_TYPE);
+        source = getIntent().getStringExtra("source");
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -196,7 +199,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 //        blockedCloseImageView.setOnClickListener(this);
 
         String[] sections = {
-                getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions), getString(R.string.groups_sections_blogs),
+                getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions), getString(R.string.onboarding_desc_array_tutorial_1_blogs),
                 getString(R.string.groups_sections_photos), getString(R.string.groups_sections_polls)
         };
 
@@ -525,7 +528,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
 
-                String shareUrl = selectedGroup.getUrl();
+                String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + selectedGroup.getUrl();
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
             }
@@ -563,14 +566,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.savePostTextView:
                 Log.d("savePostTextView", "" + selectedPost.getId());
-                if (savePostTextView.getText().toString().equals("SAVE POST")) {
+                if (savePostTextView.getText().toString().equals(getString(R.string.groups_save_post))) {
                     updateUserPostPreferences("savePost");
                 } else {
                     updateUserPostPreferences("deletePost");
                 }
                 break;
             case R.id.commentToggleTextView:
-                if (commentToggleTextView.getText().toString().equals("DISABLE COMMENTS")) {
+                if (commentToggleTextView.getText().toString().equals(getString(R.string.groups_disable_comment))) {
                     updatePostCommentSettings(1);
                 } else {
                     updatePostCommentSettings(0);
@@ -594,7 +597,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.pinPostTextView:
                 Log.d("pinPostTextView", "" + selectedPost.getId());
-                if (pinPostTextView.getText().toString().equals("PIN THIS POST TO TOP")) {
+                if (pinPostTextView.getText().toString().equals(getString(R.string.groups_pin_post))) {
                     updateAdminLevelPostPrefs("pinPost");
                 } else {
                     updateAdminLevelPostPrefs("unpinPost");
@@ -611,7 +614,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 groupPostReportDialogFragment.setArguments(_args);
                 groupPostReportDialogFragment.setCancelable(true);
                 groupPostReportDialogFragment.show(fm, "Choose video report option");
-                reportPostTextView.setText("UNREPORT");
+//                reportPostTextView.setText("UNREPORT");
                 break;
             case R.id.overlayView:
                 postSettingsContainerMain.setVisibility(View.GONE);
@@ -628,13 +631,16 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         UpdatePostSettingsRequest request = new UpdatePostSettingsRequest();
         if ("pinPost".equals(actionType)) {
             request.setIsPinned(1);
+            request.setIsActive(1);
         } else if ("unpinPost".equals(actionType)) {
             request.setIsPinned(0);
+            request.setIsActive(1);
         } else if ("blockUser".equals(actionType)) {
             getPostingUsersMembershipDetails(selectedPost.getGroupId(), selectedPost.getUserId());
             return;
         } else if ("markInactive".equals(actionType)) {
             request.setIsActive(0);
+            request.setIsPinned(0);
         }
 
         Call<GroupPostResponse> call = groupsAPI.updatePost(selectedPost.getId(), request);
@@ -730,9 +736,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 if (response.isSuccessful()) {
                     GroupPostResponse updatePostResponse = response.body();
                     if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
-                        pinPostTextView.setText("UNPIN THIS POST TO TOP");
+                        pinPostTextView.setText(getString(R.string.groups_unpin_post));
                     } else {
-                        pinPostTextView.setText("PIN THIS POST TO TOP");
+                        pinPostTextView.setText(getString(R.string.groups_pin_post));
                     }
                 } else {
 
@@ -776,10 +782,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 if (response.isSuccessful()) {
                     GroupPostResponse groupPostResponse = response.body();
                     if (groupPostResponse.getData().get(0).getResult().get(0).getDisableComments() == 1) {
-                        commentToggleTextView.setText("ENABLE COMMENTS");
+                        commentToggleTextView.setText(getString(R.string.groups_enable_comment));
                         selectedPost.setDisableComments(1);
                     } else {
-                        commentToggleTextView.setText("DISABLE COMMENTS");
+                        commentToggleTextView.setText(getString(R.string.groups_disable_comment));
                         selectedPost.setDisableComments(0);
                     }
                 } else {
@@ -806,8 +812,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         UpdateUserPostSettingsRequest request = new UpdateUserPostSettingsRequest();
         request.setPostId(selectedPost.getId());
         request.setIsAnno(selectedPost.getIsAnnon());
-        request.setUserId(selectedPost.getUserId());
-        Call<UserPostSettingResponse> call;
+        request.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+
         if (currentPostPrefsForUser == null) {
             if ("savePost".equals(action)) {
                 request.setIsBookmarked(1);
@@ -822,7 +828,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 request.setIsBookmarked(0);
                 request.setNotificationOff(0);
             }
-            call = groupsAPI.createNewPostSettingsForUser(request);
+            Call<ResponseBody> call = groupsAPI.createNewPostSettingsForUser(request);
+            call.enqueue(createPostSettingForUserResponseCallback);
         } else {
             if ("savePost".equals(action)) {
                 request.setIsBookmarked(1);
@@ -837,10 +844,53 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 request.setIsBookmarked(currentPostPrefsForUser.getIsBookmarked());
                 request.setNotificationOff(0);
             }
-            call = groupsAPI.updatePostSettingsForUser(currentPostPrefsForUser.getId(), request);
+            Call<UserPostSettingResponse> call = groupsAPI.updatePostSettingsForUser(currentPostPrefsForUser.getId(), request);
+            call.enqueue(updatePostSettingForUserResponseCallback);
         }
-        call.enqueue(updatePostSettingForUserResponseCallback);
+
     }
+
+    private Callback<ResponseBody> createPostSettingForUserResponseCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    String resData = new String(response.body().bytes());
+                    JSONObject jObject = new JSONObject(resData);
+                    currentPostPrefsForUser = new UserPostSettingResult();
+                    currentPostPrefsForUser.setId(jObject.getJSONObject("data").getJSONObject("result").getInt("id"));
+                    if (jObject.getJSONObject("data").getJSONObject("result").getBoolean("notificationOff")) {
+                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                    } else {
+                        notificationToggleTextView.setText("DISABLE NOTIFICATION");
+                    }
+                    if (jObject.getJSONObject("data").getJSONObject("result").getBoolean("isBookmarked")) {
+                        savePostTextView.setText(getString(R.string.groups_remove_post));
+                    } else {
+                        savePostTextView.setText(getString(R.string.groups_save_post));
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+        }
+    };
 
     private Callback<UserPostSettingResponse> updatePostSettingForUserResponseCallback = new Callback<UserPostSettingResponse>() {
         @Override
@@ -862,9 +912,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }
                     if (userPostSettingResponse.getData().get(0).getResult().get(0).getIsBookmarked() == 1) {
-                        savePostTextView.setText("UNSAVE POST");
+                        savePostTextView.setText(getString(R.string.groups_remove_post));
                     } else {
-                        savePostTextView.setText("SAVE POST");
+                        savePostTextView.setText(getString(R.string.groups_save_post));
                     }
                 } else {
 
@@ -887,7 +937,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         if (addPostContainer.getVisibility() == View.VISIBLE) {
             addPostContainer.setVisibility(View.GONE);
         } else {
-            super.onBackPressed();
+            if ("questionnaire".equals(source)) {
+                Intent intent = new Intent(this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -1121,9 +1178,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     getAdminPostSettingsStatus(selectedPost);
                 }
                 if (selectedPost.getDisableComments() == 1) {
-                    commentToggleTextView.setText("ENABLE COMMENTS");
+                    commentToggleTextView.setText(getString(R.string.groups_enable_comment));
                 } else {
-                    commentToggleTextView.setText("DISABLE COMMENTS");
+                    commentToggleTextView.setText(getString(R.string.groups_disable_comment));
                 }
                 postSettingsContainer.startAnimation(slideAnim);
                 overlayView.startAnimation(fadeAnim);
@@ -1143,6 +1200,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.downvoteContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+                break;
+            case R.id.shareTextView:
+                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+
+                String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
         }
     }
@@ -1385,16 +1450,16 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         //No existing settings for this post for this user
         if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
-            savePostTextView.setText("SAVE POST");
+            savePostTextView.setText(getString(R.string.groups_save_post));
             notificationToggleTextView.setText("ENABLE NOTIFICATION");
             currentPostPrefsForUser = null;
             return;
         }
         currentPostPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
         if (currentPostPrefsForUser.getIsBookmarked() == 1) {
-            savePostTextView.setText("UNSAVE POST");
+            savePostTextView.setText(getString(R.string.groups_remove_post));
         } else {
-            savePostTextView.setText("SAVE POST");
+            savePostTextView.setText(getString(R.string.groups_save_post));
         }
 
         if (currentPostPrefsForUser.getNotificationOff() == 1) {
@@ -1409,9 +1474,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         blockUserTextView.setVisibility(View.VISIBLE);
         deletePostTextView.setVisibility(View.VISIBLE);
         if (groupPostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
-            pinPostTextView.setText("UNPIN THIS POST TO TOP");
+            pinPostTextView.setText(getString(R.string.groups_unpin_post));
         } else {
-            pinPostTextView.setText("PIN THIS POST TO TOP");
+            pinPostTextView.setText(getString(R.string.groups_pin_post));
         }
     }
 

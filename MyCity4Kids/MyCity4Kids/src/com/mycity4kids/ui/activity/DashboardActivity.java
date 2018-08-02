@@ -74,6 +74,7 @@ import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 
 import java.util.ArrayList;
@@ -369,25 +370,25 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     || notificationExtras.getString("type").equalsIgnoreCase("group_admin_group_edit")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_admin")) {
                 GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
-                groupMembershipStatus.checkMembershipStatus(Integer.parseInt(notificationExtras.getString("id")), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                groupMembershipStatus.checkMembershipStatus(Integer.parseInt(notificationExtras.getString("groupId")), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_response")) {
                 Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
                 gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
-                gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("id")));
+                gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 gpPostIntent.putExtra("responseId", Integer.parseInt(notificationExtras.getString("responseId")));
                 startActivity(gpPostIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_reply")) {
                 Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
                 gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
-                gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("id")));
+                gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(gpPostIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_membership")) {
                 Intent memberIntent = new Intent(this, GroupMembershipActivity.class);
-                memberIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("id")));
+                memberIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(memberIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_reported")) {
                 Intent reportIntent = new Intent(this, GroupsReportedContentActivity.class);
-                reportIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("id")));
+                reportIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(reportIntent);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
                 String eventId = notificationExtras.getString("id");
@@ -509,6 +510,49 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         checkIsBlogSetup();
                     } else {
                         launchEditor();
+                    }
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_GROUPS)) {
+                    String[] separated = tempDeepLinkURL.split("/");
+                    if (separated[separated.length - 1].startsWith("comment-")) {
+                        String[] commArray = separated[separated.length - 1].split("-");
+                        long commentId = AppUtils.getIdFromHash(commArray[1]);
+
+                        String[] postArray = separated[separated.length - 2].split("-");
+                        long postId = AppUtils.getIdFromHash(postArray[1]);
+
+                        String[] groupArray = separated[separated.length - 3].split("-");
+                        long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+
+                        Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
+                        gpPostIntent.putExtra("postId", (int) postId);
+                        gpPostIntent.putExtra("groupId", (int) groupId);
+                        gpPostIntent.putExtra("responseId", (int) commentId);
+                        startActivity(gpPostIntent);
+
+                    } else if (separated[separated.length - 1].startsWith("post-")) {
+
+                        String[] postArray = separated[separated.length - 1].split("-");
+                        long postId = AppUtils.getIdFromHash(postArray[1]);
+
+                        String[] groupArray = separated[separated.length - 2].split("-");
+                        long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+
+                        Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
+                        gpPostIntent.putExtra("postId", (int) postId);
+                        gpPostIntent.putExtra("groupId", (int) groupId);
+                        startActivity(gpPostIntent);
+                    } else if (separated[separated.length - 1].equals("join")) {
+                        String[] groupArray = separated[separated.length - 2].split("-");
+                        long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+
+                        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+                        groupMembershipStatus.checkMembershipStatus((int) groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    } else {
+                        String[] groupArray = separated[separated.length - 1].split("-");
+                        long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+
+                        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+                        groupMembershipStatus.checkMembershipStatus((int) groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     }
                 } else {
                     getDeepLinkData(tempDeepLinkURL);
@@ -1367,7 +1411,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof GroupsFragment) {
                 Utils.pushOpenScreenEvent(this, "GroupsFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                toolbarTitleTextView.setText(getString(R.string.home_screen_groups_title));
+                toolbarTitleTextView.setText(getString(R.string.groups_groups));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.groups_light_black_color));
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
@@ -1444,7 +1488,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
             intent.putExtra("groupId", groupId);
-//            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) selectedGroup.getQuestionnaire());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
@@ -1455,8 +1498,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
-//            if (isAdded())
-//                Toast.makeText(getActivity(), "Your membership is still pending", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
             intent.putExtra("groupId", groupId);
             intent.putExtra("pendingMembershipFlag", true);

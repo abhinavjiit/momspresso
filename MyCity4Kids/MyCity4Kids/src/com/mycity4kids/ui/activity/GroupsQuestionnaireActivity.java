@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsJoinResponse;
@@ -201,8 +203,16 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
             }
             try {
                 if (response.isSuccessful()) {
-                    showToast("Group Join success");
-                    showSuccessDialog();
+                    if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
+                        showToast("Group Join success");
+                        Intent intent = new Intent(GroupsQuestionnaireActivity.this, GroupDetailsActivity.class);
+                        intent.putExtra("groupId", selectedGroup.getId());
+                        intent.putExtra("source", "questionnaire");
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        showSuccessDialog();
+                    }
                 } else {
                     showToast("Group Join Fail");
                 }

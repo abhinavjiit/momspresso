@@ -151,6 +151,7 @@ public class AppConstants {
     public static final Uri APP_BASE_URI = Uri.parse("android-app://com.mycity4kids/https/www.momspresso.com/");
     public static final Uri WEB_BASE_URL = Uri.parse("https://www.momspresso.com/");
 
+    public static final String GROUPS_BASE_SHARE_URL = "https://www.momspresso.com/";
     public static final String ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";
     public static final String VIDEO_ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";
     public static final String VIDEO_UPLOAD_URL = LIVE_URL + "v1/media/videos/";
@@ -462,6 +463,7 @@ public class AppConstants {
     public static final String DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL = "mc4k://www.momspresso.com/addfunnyvideo";
     public static final String DEEPLINK_UPCOMING_EVENTS = "/Events_el";
     public static final String DEEPLINK_SETUP_BLOG = "setupablog";
+    public static final String DEEPLINK_GROUPS = "momspresso.com/groups/";
 
     public static final String IGNORE_TAG = "ignore";
     public static final String EDITOR_PICKS_CATEGORY_ID = "category-66b6883fd0434683b053f18aa4d52b59";

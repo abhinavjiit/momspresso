@@ -50,6 +50,7 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
+import com.mycity4kids.widget.Hashids;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,6 +65,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -83,6 +85,7 @@ import okhttp3.ResponseBody;
  */
 public class AppUtils {
 
+    private static String SALT = "iasdas1oi23ubnaoligueiug12311028313liuege";
     private static float singleContentHeight = 1100f;
 
     public static int randInt(int min, int max) {
@@ -332,7 +335,7 @@ public class AppUtils {
         try {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             return telephonyManager.getDeviceId();
-        } catch (SecurityException se) {
+        } catch (Exception se) {
             return "";
         }
 
@@ -768,5 +771,17 @@ public class AppUtils {
             Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId,
                     authorId + "~" + authorName, "Generic");
         }
+    }
+
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
+    }
+
+    public static long getIdFromHash(String hash) {
+        Hashids hashids = new Hashids(SALT);
+        long[] id = hashids.decode(hash);
+        return id[0];
     }
 }

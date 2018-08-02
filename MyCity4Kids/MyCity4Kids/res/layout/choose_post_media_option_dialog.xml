@@ -15,7 +15,7 @@
         android:layout_marginTop="23dp"
         android:paddingLeft="23dp"
         android:paddingRight="23dp"
-        android:text="@string/groups.choose_media"
+        android:text="@string/choose_article_image.toolbar.title"
         android:textColor="@color/videos.dialog.title"
         android:textSize="18sp"
         app:fontName="oswald_regular.ttf" />

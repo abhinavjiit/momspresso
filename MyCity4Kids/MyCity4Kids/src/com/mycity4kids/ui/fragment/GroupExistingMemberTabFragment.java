@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -18,8 +20,12 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsMembershipResult;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.ui.GroupMembershipStatus;
+import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupMembershipActivity;
+import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.adapter.GroupsMembersRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -32,7 +38,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 26/7/18.
  */
 
-public class GroupExistingMemberTabFragment extends BaseFragment implements GroupsMembersRecyclerAdapter.RecyclerViewClickListener {
+public class GroupExistingMemberTabFragment extends BaseFragment implements GroupsMembersRecyclerAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
 
     private int totalPostCount;
     private int skip = 0;
@@ -45,6 +51,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
     private RecyclerView recyclerView;
     private GroupsMembersRecyclerAdapter adapter;
     private int groupId;
+    private String memberType;
 
     @Nullable
     @Override
@@ -65,8 +72,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
         adapter.setData(membersList);
         recyclerView.setAdapter(adapter);
 
-        getAllMembers();
-
+        checkMemberType();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -86,6 +92,11 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
             }
         });
         return view;
+    }
+
+    private void checkMemberType() {
+        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+        groupMembershipStatus.checkMembershipStatus(groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
 
     public void refreshList() {
@@ -168,7 +179,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         switch (view.getId()) {
             case R.id.memberOptionImageView: {
-                ((GroupMembershipActivity) getActivity()).showMembersOption(membersList.get(position));
+                ((GroupMembershipActivity) getActivity()).showMembersOption(membersList.get(position), memberType);
             }
             break;
         }
@@ -203,4 +214,25 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
+        String userType = null;
+        if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+
+        } else {
+            if (body.getData().getResult().get(0).getIsAdmin() == 1) {
+                memberType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+                getAllMembers();
+            } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
+                memberType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+                getAllMembers();
+            }
+        }
+    }
+
+    @Override
+    public void onMembershipStatusFetchFail() {
+
+    }
 }

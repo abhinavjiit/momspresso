@@ -377,7 +377,6 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
         showProgressDialog(getString(R.string.please_wait));
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
-        Log.e("requestBodyFile", requestBodyFile.toString());
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "1");
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();

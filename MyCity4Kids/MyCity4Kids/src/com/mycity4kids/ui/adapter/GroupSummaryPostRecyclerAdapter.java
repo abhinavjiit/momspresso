@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
-import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
 import com.squareup.picasso.Picasso;
@@ -47,7 +45,6 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
     private final LayoutInflater mInflator;
     private ArrayList<GroupPostResult> postDataList;
     private RecyclerViewClickListener mListener;
-    private int selectedPosition;
     private GroupResult groupDetails;
     private final String localizedNotHelpful, localizedHelpful, localizedComment;
 
@@ -55,7 +52,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
         mContext = pContext;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mListener = listener;
-        localizedComment = mContext.getString(R.string.groups_post_comment);
+        localizedComment = mContext.getString(R.string.ad_comments_title);
         localizedHelpful = mContext.getString(R.string.groups_post_helpful);
         localizedNotHelpful = mContext.getString(R.string.groups_post_nothelpful);
     }
@@ -143,8 +140,8 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             textPostViewHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
             textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
             if (postDataList.get(position).getIsAnnon() == 1) {
-                textPostViewHolder.usernameTextView.setText("Anonymous");
-                textPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                textPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                textPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 textPostViewHolder.usernameTextView.setText(postDataList.get(position).getUserInfo().getFirstName() + " " + postDataList.get(position).getUserInfo().getLastName());
                 try {
@@ -162,8 +159,8 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             mediaPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent());
             mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
             if (postDataList.get(position).getIsAnnon() == 1) {
-                mediaPostViewHolder.usernameTextView.setText("Anonymous");
-                mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                mediaPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 mediaPostViewHolder.usernameTextView.setText(postDataList.get(position).getUserInfo().getFirstName() + " " + postDataList.get(position).getUserInfo().getLastName());
                 try {
@@ -182,8 +179,8 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             textPollPostViewHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             textPollPostViewHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
             if (postDataList.get(position).getIsAnnon() == 1) {
-                textPollPostViewHolder.usernameTextView.setText("Anonymous");
-                textPollPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                textPollPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                textPollPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 textPollPostViewHolder.usernameTextView.setText(postDataList.get(position).getUserInfo().getFirstName() + " " + postDataList.get(position).getUserInfo().getLastName());
                 try {
@@ -226,8 +223,8 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
             imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
             if (postDataList.get(position).getIsAnnon() == 1) {
-                imageHolder.usernameTextView.setText("Anonymous");
-                imageHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                imageHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                imageHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
 //                imageHolder.usernameTextView.setText(postDataList.get(position).getUserInfo().getFirstName() + " " + postDataList.get(position).getUserInfo().getLastName());
                 try {
@@ -311,7 +308,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView groupImageView;
+        ImageView groupImageView, shareGroupImageView;
         TextView memberCountTextView;
         TextView groupNameTextView;
         TextView groupDescTextView;
@@ -328,6 +325,9 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             groupNameTextView = (TextView) view.findViewById(R.id.groupNameTextView);
             createdTimeTextView = (TextView) view.findViewById(R.id.createdTimeTextView);
             groupTypeTextView = (TextView) view.findViewById(R.id.groupTypeTextView);
+            shareGroupImageView = (ImageView) view.findViewById(R.id.shareGroupImageView);
+
+            shareGroupImageView.setVisibility(View.INVISIBLE);
 
             groupDescTextView.setOnClickListener(new View.OnClickListener() {
                 @Override

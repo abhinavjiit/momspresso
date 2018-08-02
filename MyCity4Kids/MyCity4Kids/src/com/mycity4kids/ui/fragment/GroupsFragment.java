@@ -63,6 +63,8 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     private TextView allGroupLabelTextView;
     private GroupsRecyclerGridAdapter getAllGroupAdapter, getJoinedGroupAdapter;
     private LinkedTreeMap<String, String> selectedQuestionnaire;
+    private TextView joinGpLabel;
+    private View underlineView;
 
     @Nullable
     @Override
@@ -71,6 +73,8 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         joinedGroupRecyclerGridView = (RecyclerView) view.findViewById(R.id.joinedGroupRecyclerGridView);
         allGroupRecyclerGridView = (RecyclerView) view.findViewById(R.id.allGroupRecyclerGridView);
         seeAllGpTextView = (TextView) view.findViewById(R.id.seeAllGpTextView);
+        joinGpLabel = (TextView) view.findViewById(R.id.joinGpLabel);
+        underlineView = view.findViewById(R.id.underlineView);
         seeAllJoinedGpTextView = (TextView) view.findViewById(R.id.seeAllJoinedGpTextView);
         allGroupLabelTextView = (TextView) view.findViewById(R.id.allGroupLabelTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -114,35 +118,30 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupsMembershipResponse> call = groupsAPI.getTop4JoinedGroupList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        Call<GroupsMembershipResponse> call = groupsAPI.getTop4JoinedGroupList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER);
         call.enqueue(joinedGroupListResponseCallback);
     }
 
     private void getAllGroupListApi(List<GroupResult> dataList) {
+
+        List<String> groupIdList = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++) {
+            groupIdList.add("" + dataList.get(i).getId());
+        }
+
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         Call<GroupsListingResponse> call;
         switch (dataList.size()) {
-            case 0:
-                call = groupsAPI.getTop4SuggestedGroups(null, null, null, null, null);
-                break;
             case 1:
-                call = groupsAPI.getTop4SuggestedGroups(dataList.get(0).getId(), null, null, null, null);
-                break;
-            case 2:
-                call = groupsAPI.getTop4SuggestedGroups(null, null, null, null, null);
-                break;
-            case 3:
-                call = groupsAPI.getTop4SuggestedGroups(null, null, null, null, null);
-                break;
-            case 4:
-                call = groupsAPI.getTop4SuggestedGroups(null, null, null, null, null);
+                call = groupsAPI.getTop4SuggestedGroupsSingleExclusion(groupIdList.get(0));
                 break;
             default:
-                call = groupsAPI.getTop4SuggestedGroups(null, null, null, null, null);
+                call = groupsAPI.getTop4SuggestedGroups(groupIdList);
                 break;
         }
-        Call<GroupsListingResponse> call = groupsAPI.getTop4SuggestedGroups();
+
         call.enqueue(groupListResponseCallback);
     }
 
@@ -170,6 +169,8 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                     if (dataList == null || dataList.isEmpty()) {
                         joinedGroupRecyclerGridView.setVisibility(View.GONE);
                         seeAllJoinedGpTextView.setVisibility(View.GONE);
+                        underlineView.setVisibility(View.GONE);
+                        joinGpLabel.setVisibility(View.GONE);
                     } else {
                         joinedGroupRecyclerGridView.setVisibility(View.VISIBLE);
                         joinedGroupList = (ArrayList<GroupResult>) dataList;

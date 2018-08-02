@@ -26,6 +26,7 @@ import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupsActionVoteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
@@ -69,7 +70,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mListener = listener;
         this.postType = postType;
-        localizedComment = mContext.getString(R.string.groups_post_comment);
+        localizedComment = mContext.getString(R.string.ad_comments_title);
         localizedHelpful = mContext.getString(R.string.groups_post_helpful);
         localizedNotHelpful = mContext.getString(R.string.groups_post_nothelpful);
     }
@@ -126,8 +127,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             textPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             textPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
-                textPostViewHolder.usernameTextView.setText("Anonymous");
-                textPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                textPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                textPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 textPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
                 try {
@@ -145,8 +146,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             mediaPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             mediaPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
-                mediaPostViewHolder.usernameTextView.setText("Anonymous");
-                mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                mediaPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 mediaPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
                 try {
@@ -165,8 +166,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             textPollPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             textPollPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
-                textPollPostViewHolder.usernameTextView.setText("Anonymous");
-                textPollPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                textPollPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                textPollPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 textPollPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
                 try {
@@ -219,8 +220,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             imageHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             imageHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
-                imageHolder.usernameTextView.setText("Anonymous");
-                imageHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                imageHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                imageHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 imageHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
                 try {
@@ -294,10 +295,10 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         textPollPostViewHolder.pollOption2ProgressBar.setProgress((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount());
         textPollPostViewHolder.pollOption3ProgressBar.setProgress((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount());
         textPollPostViewHolder.pollOption4ProgressBar.setProgress((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount());
-        textPollPostViewHolder.pollOption1ProgressTextView.setText((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount() + "%");
-        textPollPostViewHolder.pollOption2ProgressTextView.setText((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount() + "%");
-        textPollPostViewHolder.pollOption3ProgressTextView.setText((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount() + "%");
-        textPollPostViewHolder.pollOption4ProgressTextView.setText((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount() + "%");
+        textPollPostViewHolder.pollOption1ProgressTextView.setText(AppUtils.round((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        textPollPostViewHolder.pollOption2ProgressTextView.setText(AppUtils.round((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        textPollPostViewHolder.pollOption3ProgressTextView.setText(AppUtils.round((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
+        textPollPostViewHolder.pollOption4ProgressTextView.setText(AppUtils.round((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
         textPollPostViewHolder.pollOption1ProgressTextView.setVisibility(View.VISIBLE);
         textPollPostViewHolder.pollOption2ProgressTextView.setVisibility(View.VISIBLE);
         textPollPostViewHolder.pollOption3ProgressTextView.setVisibility(View.VISIBLE);
@@ -329,13 +330,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     private void showImagePollVotingData(ImagePollPostViewHolder imageHolder) {
         imageHolder.pollOption1ProgressBar.setProgress((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount());
-        imageHolder.pollOption2ProgressBar.setProgress((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount());
-        imageHolder.pollOption3ProgressBar.setProgress((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount());
-        imageHolder.pollOption4ProgressBar.setProgress((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount());
-        imageHolder.pollOption1TextView.setText((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount() + "%");
-        imageHolder.pollOption2TextView.setText((100f * groupPostResult.getOption2VoteCount()) / groupPostResult.getTotalVotesCount() + "%");
-        imageHolder.pollOption3TextView.setText((100f * groupPostResult.getOption3VoteCount()) / groupPostResult.getTotalVotesCount() + "%");
-        imageHolder.pollOption4TextView.setText((100f * groupPostResult.getOption4VoteCount()) / groupPostResult.getTotalVotesCount() + "%");
+        imageHolder.pollOption2ProgressBar.setProgress((100f * groupPostResult.getOption2VoteCount()) / groupPostResult.getTotalVotesCount());
+        imageHolder.pollOption3ProgressBar.setProgress((100f * groupPostResult.getOption3VoteCount()) / groupPostResult.getTotalVotesCount());
+        imageHolder.pollOption4ProgressBar.setProgress((100f * groupPostResult.getOption4VoteCount()) / groupPostResult.getTotalVotesCount());
+        imageHolder.pollOption1TextView.setText(AppUtils.round((100f * groupPostResult.getOption1VoteCount()) / groupPostResult.getTotalVotesCount(), 2) + "%");
+        imageHolder.pollOption2TextView.setText(AppUtils.round((100f * groupPostResult.getOption2VoteCount()) / groupPostResult.getTotalVotesCount(), 2) + "%");
+        imageHolder.pollOption3TextView.setText(AppUtils.round((100f * groupPostResult.getOption3VoteCount()) / groupPostResult.getTotalVotesCount(), 2) + "%");
+        imageHolder.pollOption4TextView.setText(AppUtils.round((100f * groupPostResult.getOption4VoteCount()) / groupPostResult.getTotalVotesCount(), 2) + "%");
         imageHolder.pollOption1ProgressBar.setVisibility(View.VISIBLE);
         imageHolder.pollOption2ProgressBar.setVisibility(View.VISIBLE);
         imageHolder.pollOption3ProgressBar.setVisibility(View.VISIBLE);
@@ -386,7 +387,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView upvoteCountTextView, downvoteCountTextView;
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
-        ImageView postSettingImageView;
+        ImageView postSettingImageView, shareTextView;
 
         TextPostViewHolder(View view) {
             super(view);
@@ -400,6 +401,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
+            shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -422,7 +424,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView upvoteCountTextView, downvoteCountTextView;
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
-        ImageView postSettingImageView;
+        ImageView postSettingImageView, shareTextView;
         private BubblePageIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
@@ -443,6 +445,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             dotIndicatorView = (BubblePageIndicator) view.findViewById(R.id.dotIndicatorView);
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
+            shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -484,7 +487,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView upvoteCountTextView, downvoteCountTextView;
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
-        ImageView postSettingImageView;
+        ImageView postSettingImageView, shareTextView;
         TextView pollQuestionTextView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
@@ -522,6 +525,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             pollOption4ProgressTextView = (TextView) view.findViewById(R.id.pollOption4ProgressTextView);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+            shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -565,7 +569,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     public class ImagePollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView;
+        ImageView userImageView, shareTextView;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
@@ -608,12 +612,14 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             option2Container = (RelativeLayout) view.findViewById(R.id.option2Container);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+            shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
+            shareTextView.setOnClickListener(this);
 
 //            upvoteCountTextView.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -761,15 +767,19 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     switch (groupsActionResponse.getData().getResult().get(0).getVoteOption()) {
                         case "option1":
                             groupPostResult.setOption1VoteCount(groupPostResult.getOption1VoteCount() + 1);
+                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + groupPostResult.getOption1VoteCount());
                             break;
                         case "option2":
                             groupPostResult.setOption2VoteCount(groupPostResult.getOption2VoteCount() + 1);
+                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + groupPostResult.getOption2VoteCount());
                             break;
                         case "option3":
                             groupPostResult.setOption3VoteCount(groupPostResult.getOption3VoteCount() + 1);
+                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + groupPostResult.getOption3VoteCount());
                             break;
                         case "option4":
                             groupPostResult.setOption4VoteCount(groupPostResult.getOption4VoteCount() + 1);
+                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + groupPostResult.getOption4VoteCount());
                             break;
                     }
                     notifyDataSetChanged();

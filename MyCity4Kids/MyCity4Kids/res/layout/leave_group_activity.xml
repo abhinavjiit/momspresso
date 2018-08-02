@@ -30,18 +30,6 @@
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/saveGroupDetailsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="12dp"
-                android:text="@string/complete_blogger_profile.save"
-                android:textColor="@color/editor.publish"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -53,7 +41,7 @@
         android:layout_marginBottom="25dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="25dp"
-        android:text="PLEASE LET US KNOW WHY YOU ARE DEACTIVATING" />
+        android:text="@string/groups.why_leave" />
 
     <RadioGroup
         android:id="@+id/leaveReasonRadioGroup"
@@ -66,28 +54,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:buttonTint="@color/groups.light_black_color"
-            android:text="This is temporary. I'll be back"
+            android:text="@string/groups.leave_be_back"
             android:textColor="@color/groups.light_black_color" />
 
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:buttonTint="@color/groups.light_black_color"
-            android:text="This is temporary. I'll be back"
+            android:text="@string/groups.spend_time"
             android:textColor="@color/groups.light_black_color" />
 
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:buttonTint="@color/groups.light_black_color"
-            android:text="This is temporary. I'll be back"
+            android:text="@string/groups.not_useful"
             android:textColor="@color/groups.light_black_color" />
 
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:buttonTint="@color/groups.light_black_color"
-            android:text="This is temporary. I'll be back"
+            android:text="@string/groups.how_to_use"
             android:textColor="@color/groups.light_black_color" />
     </RadioGroup>
 
@@ -98,8 +86,9 @@
         android:layout_margin="10dp"
         android:background="@drawable/polls_border_bg"
         android:gravity="top|left"
-        android:hint="ram kahani"
-        android:padding="10dp" />
+        android:hint=""
+        android:padding="10dp"
+        android:textColor="@color/groups.light_black_color" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/leaveGroupTextView"
@@ -111,7 +100,7 @@
         android:elevation="20dp"
         android:gravity="center"
         android:padding="15dp"
-        android:text="SUBMIT"
+        android:text="@string/submit"
         android:textColor="@color/white"
         android:textSize="17sp"
         app:fontName="oswald_regular.ttf" />

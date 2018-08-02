@@ -7,6 +7,7 @@ package com.mycity4kids.models.request;
 public class UpdateGroupMembershipRequest {
     private String userId;
     private String status;
+    private String reason;
 
     public String getUserId() {
         return userId;
@@ -22,5 +23,13 @@ public class UpdateGroupMembershipRequest {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }

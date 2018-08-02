@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -141,19 +140,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "article_details");
-//                    Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
-//                    intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
-//                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
-//                    intent.putExtra(Constants.BLOG_SLUG, notificationList.get(position).getBlogTitleSlug());
-//                    intent.putExtra(Constants.TITLE_SLUG, notificationList.get(position).getTitleSlug());
-//                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "NotificationsScreen");
-//                    intent.putExtra(Constants.FROM_SCREEN, "NotificationsScreen");
-//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-//                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getUserId() + "~");
-//                    mContext.startActivity(intent);
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postId", 91);
-                    intent.putExtra("groupId", 23);
+                    Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
+                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+                    intent.putExtra(Constants.BLOG_SLUG, notificationList.get(position).getBlogTitleSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, notificationList.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "NotificationsScreen");
+                    intent.putExtra(Constants.FROM_SCREEN, "NotificationsScreen");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getUserId() + "~");
                     mContext.startActivity(intent);
                 }
             });

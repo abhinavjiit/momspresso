@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/headerImageView"
         android:layout_centerHorizontal="true"
-        android:text="ANONYMOUS"
+        android:text="@string/groups.anonymous"
         android:textColor="@color/groups.light_black_color"
         android:textSize="24sp"
         app:fontName="oswald_regular.ttf" />

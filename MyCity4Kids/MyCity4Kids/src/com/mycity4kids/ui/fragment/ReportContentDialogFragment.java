@@ -46,6 +46,8 @@ public class ReportContentDialogFragment extends DialogFragment implements View.
         final AppCompatRadioButton reason1RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason1RadioButton);
         final AppCompatRadioButton reason2RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason2RadioButton);
         final AppCompatRadioButton reason3RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason3RadioButton);
+        final AppCompatRadioButton reason4RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason4RadioButton);
+        final AppCompatRadioButton reason5RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason5RadioButton);
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         final ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
@@ -81,6 +83,24 @@ public class ReportContentDialogFragment extends DialogFragment implements View.
                     if (isAdded())
                         Utils.pushReportShortStoryEvent(getActivity(), "ReportDialog", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                                 postId, reason3RadioButton.getText().toString(), "" + type);
+                }
+                if (reason4RadioButton.isChecked()) {
+                    Log.d("RadioGroup", "option3");
+                    reportStoryOrCommentRequest.setReason(reason4RadioButton.getText().toString());
+                    Call<ReportStoryOrCommentResponse> call = shortStoryAPI.reportStoryOrComment(reportStoryOrCommentRequest);
+                    call.enqueue(reportCallback);
+                    if (isAdded())
+                        Utils.pushReportShortStoryEvent(getActivity(), "ReportDialog", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                postId, reason4RadioButton.getText().toString(), "" + type);
+                }
+                if (reason5RadioButton.isChecked()) {
+                    Log.d("RadioGroup", "option3");
+                    reportStoryOrCommentRequest.setReason(reason5RadioButton.getText().toString());
+                    Call<ReportStoryOrCommentResponse> call = shortStoryAPI.reportStoryOrComment(reportStoryOrCommentRequest);
+                    call.enqueue(reportCallback);
+                    if (isAdded())
+                        Utils.pushReportShortStoryEvent(getActivity(), "ReportDialog", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                postId, reason5RadioButton.getText().toString(), "" + type);
                 }
             }
         });

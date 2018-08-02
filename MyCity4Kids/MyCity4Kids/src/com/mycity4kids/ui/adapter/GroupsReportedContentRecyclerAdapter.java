@@ -130,8 +130,8 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
                 textPostViewHolder.reportedOtherTextView.setVisibility(View.GONE);
             }
             if (postCommentsList.get(position).getContent().getIsAnnon() == 1) {
-                textPostViewHolder.usernameTextView.setText("Anonymous");
-                textPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                textPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                textPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 textPostViewHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
@@ -170,8 +170,8 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
                 mediaPostViewHolder.reportedOtherTextView.setVisibility(View.GONE);
             }
             if (postCommentsList.get(position).getContent().getIsAnnon() == 1) {
-                mediaPostViewHolder.usernameTextView.setText("Anonymous");
-                mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                mediaPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 mediaPostViewHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
@@ -211,8 +211,8 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
                 textPollPostViewHolder.reportedOtherTextView.setVisibility(View.GONE);
             }
             if (postCommentsList.get(position).getContent().getIsAnnon() == 1) {
-                textPollPostViewHolder.usernameTextView.setText("Anonymous");
-                textPollPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                textPollPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                textPollPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 textPollPostViewHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {
@@ -277,8 +277,8 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
                 imageHolder.reportedOtherTextView.setVisibility(View.GONE);
             }
             if (postCommentsList.get(position).getContent().getIsAnnon() == 1) {
-                imageHolder.usernameTextView.setText("Anonymous");
-                imageHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+                imageHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                imageHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 imageHolder.usernameTextView.setText(postCommentsList.get(position).getContent().getUserInfo().getFirstName() + " " + postCommentsList.get(position).getContent().getUserInfo().getLastName());
                 try {

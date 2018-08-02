@@ -95,7 +95,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     private ImageView addMediaImageView, anonymousImageView;
     private ImageView postImageView;
     private TextView publishTextView;
-    private TextView imageCameraTextView, imageGalleryTextView, videoCameraTextView, videoGalleryTextView, cancelTextView;
+    private TextView imageCameraTextView, imageGalleryTextView, cancelTextView;
     private RelativeLayout chooseMediaTypeContainer;
     private LinearLayout mediaContainer;
     private ImageView closeEditorImageView;
@@ -123,8 +123,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         mediaContainer = (LinearLayout) findViewById(R.id.mediaContainer);
         imageCameraTextView = (TextView) findViewById(R.id.imageCameraTextView);
         imageGalleryTextView = (TextView) findViewById(R.id.imageGalleryTextView);
-        videoCameraTextView = (TextView) findViewById(R.id.videoCameraTextView);
-        videoGalleryTextView = (TextView) findViewById(R.id.videoGalleryTextView);
+//        videoCameraTextView = (TextView) findViewById(R.id.videoCameraTextView);
+//        videoGalleryTextView = (TextView) findViewById(R.id.videoGalleryTextView);
         cancelTextView = (TextView) findViewById(R.id.cancelTextView);
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
@@ -138,8 +138,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         publishTextView.setOnClickListener(this);
         imageCameraTextView.setOnClickListener(this);
         imageGalleryTextView.setOnClickListener(this);
-        videoCameraTextView.setOnClickListener(this);
-        videoGalleryTextView.setOnClickListener(this);
+//        videoCameraTextView.setOnClickListener(this);
+//        videoGalleryTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
         closeEditorImageView.setOnClickListener(this);
 
@@ -351,14 +351,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-    }
-
-    private void getGroupListApi(int skip, int limit) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        Call<GroupsListingResponse> call = groupsAPI.getGroupList(skip, limit);
-//        call.enqueue(groupListResponseCallback);
     }
 
     @Override

@@ -55,7 +55,8 @@ public class GroupPostReportDialogFragment extends DialogFragment implements OnC
         final AppCompatRadioButton reason1RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason1RadioButton);
         final AppCompatRadioButton reason2RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason2RadioButton);
         final AppCompatRadioButton reason3RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason3RadioButton);
-//        final AppCompatRadioButton reason4RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason4RadioButton);
+        final AppCompatRadioButton reason4RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason4RadioButton);
+        final AppCompatRadioButton reason5RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason5RadioButton);
 
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         final GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
@@ -76,12 +77,20 @@ public class GroupPostReportDialogFragment extends DialogFragment implements OnC
                     groupReportContentRequest.setReason("0");
                 }
                 if (reason2RadioButton.isChecked()) {
-                    Log.d("RadioGroup", "option1");
-                    groupReportContentRequest.setReason("1");
+                    Log.d("RadioGroup", "option2");
+                    groupReportContentRequest.setReason("2");
                 }
                 if (reason3RadioButton.isChecked()) {
-                    Log.d("RadioGroup", "option1");
-                    groupReportContentRequest.setReason("2");
+                    Log.d("RadioGroup", "option3");
+                    groupReportContentRequest.setReason("1");
+                }
+                if (reason4RadioButton.isChecked()) {
+                    Log.d("RadioGroup", "option4");
+                    groupReportContentRequest.setReason("3");
+                }
+                if (reason5RadioButton.isChecked()) {
+                    Log.d("RadioGroup", "option5");
+                    groupReportContentRequest.setReason("4");
                 }
                 Call<GroupsReportContentResponse> call = groupsAPI.reportContent(groupReportContentRequest);
                 call.enqueue(repostContentResponseCallback);

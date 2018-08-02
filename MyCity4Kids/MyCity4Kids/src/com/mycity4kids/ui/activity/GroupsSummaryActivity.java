@@ -27,7 +27,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
-import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
@@ -37,13 +36,10 @@ import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
-import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupSummaryPostRecyclerAdapter;
 import com.mycity4kids.ui.fragment.GroupJoinConfirmationFragment;
-import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -114,7 +110,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
 
         if (pendingMembershipFlag) {
             joinGroupTextView.setOnClickListener(null);
-            joinGroupTextView.setText("Membership Pending");
+            joinGroupTextView.setText(getString(R.string.groups_membership_pending));
         }
 
         setSupportActionBar(toolbar);
@@ -293,39 +289,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.savePostTextView:
-                Log.d("savePostTextView", "" + selectedPost.getId());
-                if (savePostTextView.getText().toString().equals("SAVE POST")) {
-                    updateUserPostPreferences("savePost");
-                } else {
-                    updateUserPostPreferences("deletePost");
-                }
-                break;
-            case R.id.commentToggleTextView:
-                if (commentToggleTextView.getText().toString().equals("DISABLE COMMENTS")) {
-                    updatePostCommentSettings(1);
-                } else {
-                    updatePostCommentSettings(0);
-                }
-                break;
-            case R.id.notificationToggleTextView:
-                Log.d("notifToggleTextView", "" + selectedPost.getId());
-                if (notificationToggleTextView.getText().toString().equals("Disable Notification")) {
-                    updateUserPostPreferences("enableNotif");
-                } else {
-                    updateUserPostPreferences("disableNotif");
-                }
-                break;
-            case R.id.reportPostTextView:
-                Log.d("reportPostTextView", "" + selectedPost.getId());
-                GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
-                FragmentManager fm = getSupportFragmentManager();
-                Bundle _args = new Bundle();
-                groupPostReportDialogFragment.setArguments(_args);
-                groupPostReportDialogFragment.setCancelable(true);
-                groupPostReportDialogFragment.show(fm, "Choose video report option");
-                reportPostTextView.setText("Unreport");
-                break;
+
             case R.id.overlayView:
                 postSettingsContainerMain.setVisibility(View.GONE);
                 overlayView.setVisibility(View.GONE);
@@ -348,7 +312,18 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                         startActivity(intent);
                     }
                 } else {
-
+                    if (questionMap == null || questionMap.isEmpty()) {
+                        JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
+                        joinGroupRequest.setGroupId(selectedGroup.getId());
+                        joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
+                        Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
+                        call.enqueue(groupJoinResponseCallback);
+                    } else {
+                        Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
+                        intent.putExtra("groupItem", selectedGroup);
+                        intent.putExtra("questionnaire", questionMap);
+                        startActivity(intent);
+                    }
                 }
 
 
@@ -383,9 +358,9 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 if (response.isSuccessful()) {
                     GroupPostResponse groupPostResponse = response.body();
                     if (groupPostResponse.getData().get(0).getResult().get(0).getDisableComments() == 1) {
-                        commentToggleTextView.setText("ENABLE COMMENTS");
+                        commentToggleTextView.setText(getString(R.string.groups_enable_comment));
                     } else {
-                        commentToggleTextView.setText("DISABLE COMMENTS");
+                        commentToggleTextView.setText(getString(R.string.groups_disable_comment));
                     }
                 } else {
 
@@ -404,87 +379,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         }
     };
 
-    private void updateUserPostPreferences(String action) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        UpdateUserPostSettingsRequest request = new UpdateUserPostSettingsRequest();
-        request.setPostId(selectedPost.getId());
-        request.setIsAnno(selectedPost.getIsAnnon());
-        request.setUserId(selectedPost.getUserId());
-        Call<UserPostSettingResponse> call;
-        if (currentPostPrefsForUser == null) {
-            if ("savePost".equals(action)) {
-                request.setIsBookmarked(1);
-                request.setNotificationOff(1);
-            } else if ("deletePost".equals(action)) {
-                request.setIsBookmarked(0);
-                request.setNotificationOff(1);
-            } else if ("enableNotif".equals(action)) {
-                request.setIsBookmarked(0);
-                request.setNotificationOff(1);
-            } else if ("disableNotif".equals(action)) {
-                request.setIsBookmarked(0);
-                request.setNotificationOff(0);
-            }
-            call = groupsAPI.createNewPostSettingsForUser(request);
-        } else {
-            if ("savePost".equals(action)) {
-                request.setIsBookmarked(1);
-                request.setNotificationOff(currentPostPrefsForUser.getNotificationOff());
-            } else if ("deletePost".equals(action)) {
-                request.setIsBookmarked(0);
-                request.setNotificationOff(currentPostPrefsForUser.getNotificationOff());
-            } else if ("enableNotif".equals(action)) {
-                request.setIsBookmarked(currentPostPrefsForUser.getIsBookmarked());
-                request.setNotificationOff(1);
-            } else if ("disableNotif".equals(action)) {
-                request.setIsBookmarked(currentPostPrefsForUser.getIsBookmarked());
-                request.setNotificationOff(0);
-            }
-            call = groupsAPI.updatePostSettingsForUser(currentPostPrefsForUser.getId(), request);
-        }
-        call.enqueue(updatePostSettingForUserResponseCallback);
-    }
-
-    private Callback<UserPostSettingResponse> updatePostSettingForUserResponseCallback = new Callback<UserPostSettingResponse>() {
-        @Override
-        public void onResponse(Call<UserPostSettingResponse> call, retrofit2.Response<UserPostSettingResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    UserPostSettingResponse userPostSettingResponse = response.body();
-                    if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
-                    } else {
-                        notificationToggleTextView.setText("DISABLE NOTIFICATION");
-                    }
-                    if (userPostSettingResponse.getData().get(0).getResult().get(0).getIsBookmarked() == 1) {
-                        savePostTextView.setText("UNSAVE POST");
-                    } else {
-                        savePostTextView.setText("SAVE POST");
-                    }
-                } else {
-
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-
-        }
-    };
 
     @Override
     protected void updateUi(Response response) {
@@ -571,16 +465,16 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
 
         //No existing settings for this post for this user
         if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
-            savePostTextView.setText("SAVE POST");
+            savePostTextView.setText(getString(R.string.groups_save_post));
             notificationToggleTextView.setText("ENABLE NOTIFICATION");
             currentPostPrefsForUser = null;
             return;
         }
         currentPostPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
         if (currentPostPrefsForUser.getIsBookmarked() == 1) {
-            savePostTextView.setText("UNSAVE POST");
+            savePostTextView.setText(getString(R.string.groups_remove_post));
         } else {
-            savePostTextView.setText("SAVE POST");
+            savePostTextView.setText(getString(R.string.groups_save_post));
         }
 
         if (currentPostPrefsForUser.getNotificationOff() == 1) {
@@ -603,7 +497,15 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             }
             try {
                 if (response.isSuccessful()) {
-                    showSuccessDialog();
+                    if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
+                        Intent intent = new Intent(GroupsSummaryActivity.this, GroupDetailsActivity.class);
+                        intent.putExtra("groupId", selectedGroup.getId());
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        showSuccessDialog();
+                    }
+
 //                    GroupsJoinResponse responseModel = response.body();
 //                    processGroupListingResponse(responseModel);
                 } else {
@@ -631,7 +533,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         _args.putParcelable("groupItem", selectedGroup);
         groupJoinConfirmationFragment.setArguments(_args);
         groupJoinConfirmationFragment.setCancelable(true);
-        groupJoinConfirmationFragment.show(fm, "Choose video option");
+        groupJoinConfirmationFragment.show(fm, "Group Join Request");
     }
 
     @Override

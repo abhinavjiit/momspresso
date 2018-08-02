@@ -110,7 +110,7 @@ public class GroupMembershipActivity extends BaseActivity implements View.OnClic
 
     }
 
-    public void showMembersOption(GroupsMembershipResult groupsMembershipResult) {
+    public void showMembersOption(GroupsMembershipResult groupsMembershipResult, String memberType) {
         memberDetails = groupsMembershipResult;
 
         postSettingsContainer.startAnimation(slideAnim);
@@ -118,6 +118,14 @@ public class GroupMembershipActivity extends BaseActivity implements View.OnClic
         postSettingsContainerMain.setVisibility(View.VISIBLE);
         postSettingsContainer.setVisibility(View.VISIBLE);
         overlayView.setVisibility(View.VISIBLE);
+        if (AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
+            moderatorInviteTextView.setVisibility(View.GONE);
+        } else if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
+            moderatorInviteTextView.setVisibility(View.VISIBLE);
+        } else {
+            moderatorInviteTextView.setVisibility(View.GONE);
+            blockUnblockUserTextView.setVisibility(View.GONE);
+        }
     }
 
     @Override

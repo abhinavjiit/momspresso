@@ -53,9 +53,6 @@ public class GroupJoinConfirmationFragment extends DialogFragment implements OnC
         switch (view.getId()) {
             case R.id.okayTextView:
             case R.id.closeImageView:
-                Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
-                intent.putExtra("groupId", selectedGroup.getId());
-                startActivity(intent);
                 if (isAdded())
                     getActivity().finish();
                 break;

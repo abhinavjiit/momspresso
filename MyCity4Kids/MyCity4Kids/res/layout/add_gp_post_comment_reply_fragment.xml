@@ -52,7 +52,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:padding="10dp"
-                android:text="@string/groups.post_label"
+                android:text="@string/editor.publish"
                 android:textColor="@color/ad.comments.toolbar.title"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />

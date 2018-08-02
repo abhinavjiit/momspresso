@@ -59,12 +59,16 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
         }
         holder.topicsNameTextView.setText(topicsList.get(position).getDisplay_name().toUpperCase());
 
-        //useless backend can't do shit. tired of checking null, empty, json object or json array.
-        try {
-            Picasso.with(BaseApplication.getAppContext()).load(topicsList.get(position).getExtraData().get(0).getCategoryBackImage().getApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                    .fit().into(holder.tagsImageView);
-        } catch (Exception e) {
-            holder.tagsImageView.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.default_article));
+        if ("exploreSectionId".equals(topicsList.get(position).getId())) {
+            holder.tagsImageView.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.events_card_bg));
+        } else {
+            //useless backend can't do shit. tired of checking null, empty, json object or json array.
+            try {
+                Picasso.with(BaseApplication.getAppContext()).load(topicsList.get(position).getExtraData().get(0).getCategoryBackImage().getApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                        .fit().into(holder.tagsImageView);
+            } catch (Exception e) {
+                holder.tagsImageView.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.default_article));
+            }
         }
 
         return view;
