@@ -223,7 +223,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 imageHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
                 imageHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
-//                imageHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+                imageHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
                 try {
                     Picasso.with(mContext).load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.userImageView);
@@ -316,17 +316,13 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     private void showImagePollVotingData(ImagePollPostViewHolder imageHolder, GroupPostResult postResult) {
         imageHolder.pollOption1ProgressBar.setProgress((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount());
-        imageHolder.pollOption2ProgressBar.setProgress((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount());
-        imageHolder.pollOption3ProgressBar.setProgress((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount());
-        imageHolder.pollOption4ProgressBar.setProgress((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount());
+        imageHolder.pollOption2ProgressBar.setProgress((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount());
+        imageHolder.pollOption3ProgressBar.setProgress((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount());
+        imageHolder.pollOption4ProgressBar.setProgress((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount());
         imageHolder.pollOption1TextView.setText(AppUtils.round((100f * postResult.getOption1VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
         imageHolder.pollOption2TextView.setText(AppUtils.round((100f * postResult.getOption2VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
         imageHolder.pollOption3TextView.setText(AppUtils.round((100f * postResult.getOption3VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
         imageHolder.pollOption4TextView.setText(AppUtils.round((100f * postResult.getOption4VoteCount()) / postResult.getTotalVotesCount(), 2) + "%");
-//        imageHolder.pollOption1TextView.setText("60%");
-//        imageHolder.pollOption2TextView.setText("17%");
-//        imageHolder.pollOption3TextView.setText("13%");
-//        imageHolder.pollOption4TextView.setText("10%");
         imageHolder.pollOption1ProgressBar.setVisibility(View.VISIBLE);
         imageHolder.pollOption2ProgressBar.setVisibility(View.VISIBLE);
         imageHolder.pollOption3ProgressBar.setVisibility(View.VISIBLE);

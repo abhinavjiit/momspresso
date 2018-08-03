@@ -123,6 +123,12 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             } else {
                 textPostViewHolder.reportedUninterestingTextView.setVisibility(View.GONE);
             }
+            if (postCommentsList.get(position).getItHurtsReligiousSentimentCount() > 0) {
+                textPostViewHolder.reportedReligiousTextView.setVisibility(View.VISIBLE);
+                textPostViewHolder.reportedReligiousTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_religious) + " - " + postCommentsList.get(position).getItHurtsReligiousSentimentCount());
+            } else {
+                textPostViewHolder.reportedReligiousTextView.setVisibility(View.GONE);
+            }
             if (postCommentsList.get(position).getOtherCount() > 0) {
                 textPostViewHolder.reportedOtherTextView.setVisibility(View.VISIBLE);
                 textPostViewHolder.reportedOtherTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_other) + " - " + postCommentsList.get(position).getOtherCount());
@@ -162,6 +168,12 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
                 mediaPostViewHolder.reportedUninterestingTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_uninteresting) + " - " + +postCommentsList.get(position).getNotInterestingCount());
             } else {
                 mediaPostViewHolder.reportedUninterestingTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getItHurtsReligiousSentimentCount() > 0) {
+                mediaPostViewHolder.reportedReligiousTextView.setVisibility(View.VISIBLE);
+                mediaPostViewHolder.reportedReligiousTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_religious) + " - " + postCommentsList.get(position).getItHurtsReligiousSentimentCount());
+            } else {
+                mediaPostViewHolder.reportedReligiousTextView.setVisibility(View.GONE);
             }
             if (postCommentsList.get(position).getOtherCount() > 0) {
                 mediaPostViewHolder.reportedOtherTextView.setVisibility(View.VISIBLE);
@@ -203,6 +215,12 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
                 textPollPostViewHolder.reportedUninterestingTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_uninteresting) + " - " + postCommentsList.get(position).getNotInterestingCount());
             } else {
                 textPollPostViewHolder.reportedUninterestingTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getItHurtsReligiousSentimentCount() > 0) {
+                textPollPostViewHolder.reportedReligiousTextView.setVisibility(View.VISIBLE);
+                textPollPostViewHolder.reportedReligiousTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_religious) + " - " + postCommentsList.get(position).getItHurtsReligiousSentimentCount());
+            } else {
+                textPollPostViewHolder.reportedReligiousTextView.setVisibility(View.GONE);
             }
             if (postCommentsList.get(position).getOtherCount() > 0) {
                 textPollPostViewHolder.reportedOtherTextView.setVisibility(View.VISIBLE);
@@ -269,6 +287,12 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
                 imageHolder.reportedUninterestingTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_uninteresting) + " - " + postCommentsList.get(position).getNotInterestingCount());
             } else {
                 imageHolder.reportedUninterestingTextView.setVisibility(View.GONE);
+            }
+            if (postCommentsList.get(position).getItHurtsReligiousSentimentCount() > 0) {
+                imageHolder.reportedReligiousTextView.setVisibility(View.VISIBLE);
+                imageHolder.reportedReligiousTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_religious) + " - " + postCommentsList.get(position).getItHurtsReligiousSentimentCount());
+            } else {
+                imageHolder.reportedReligiousTextView.setVisibility(View.GONE);
             }
             if (postCommentsList.get(position).getOtherCount() > 0) {
                 imageHolder.reportedOtherTextView.setVisibility(View.VISIBLE);
@@ -340,6 +364,12 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             } else {
                 rootCommentViewHolder.reportedUninterestingTextView.setVisibility(View.GONE);
             }
+            if (postCommentsList.get(position).getItHurtsReligiousSentimentCount() > 0) {
+                rootCommentViewHolder.reportedReligiousTextView.setVisibility(View.VISIBLE);
+                rootCommentViewHolder.reportedReligiousTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_religious) + " - " + postCommentsList.get(position).getItHurtsReligiousSentimentCount());
+            } else {
+                rootCommentViewHolder.reportedReligiousTextView.setVisibility(View.GONE);
+            }
             if (postCommentsList.get(position).getOtherCount() > 0) {
                 rootCommentViewHolder.reportedOtherTextView.setVisibility(View.VISIBLE);
                 rootCommentViewHolder.reportedOtherTextView.setText(BaseApplication.getAppContext().getString(R.string.reported_other) + " - " + postCommentsList.get(position).getOtherCount());
@@ -387,7 +417,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
-        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedOtherTextView;
+        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedReligiousTextView, reportedOtherTextView;
         ImageView postSettingImageView;
 
         TextPostViewHolder(View view) {
@@ -400,6 +430,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);
             reportedAbuseTextView = (TextView) view.findViewById(R.id.reportedAbuseTextView);
             reportedUninterestingTextView = (TextView) view.findViewById(R.id.reportedUninterestingTextView);
+            reportedReligiousTextView = (TextView) view.findViewById(R.id.reportedReligiousTextView);
             reportedOtherTextView = (TextView) view.findViewById(R.id.reportedOtherTextView);
 
             userImageView.setOnClickListener(this);
@@ -418,7 +449,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
-        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedOtherTextView;
+        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedReligiousTextView, reportedOtherTextView;
         ImageView postSettingImageView;
         private BubblePageIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
@@ -438,6 +469,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);
             reportedAbuseTextView = (TextView) view.findViewById(R.id.reportedAbuseTextView);
             reportedUninterestingTextView = (TextView) view.findViewById(R.id.reportedUninterestingTextView);
+            reportedReligiousTextView = (TextView) view.findViewById(R.id.reportedReligiousTextView);
             reportedOtherTextView = (TextView) view.findViewById(R.id.reportedOtherTextView);
 
             userImageView.setOnClickListener(this);
@@ -475,7 +507,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         ImageView userImageView;
         TextView usernameTextView;
         TextView postDateTextView;
-        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedOtherTextView;
+        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedReligiousTextView, reportedOtherTextView;
         ImageView postSettingImageView;
         TextView pollQuestionTextView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
@@ -512,6 +544,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);
             reportedAbuseTextView = (TextView) view.findViewById(R.id.reportedAbuseTextView);
             reportedUninterestingTextView = (TextView) view.findViewById(R.id.reportedUninterestingTextView);
+            reportedReligiousTextView = (TextView) view.findViewById(R.id.reportedReligiousTextView);
             reportedOtherTextView = (TextView) view.findViewById(R.id.reportedOtherTextView);
 
             userImageView.setOnClickListener(this);
@@ -530,7 +563,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         ImageView userImageView;
         TextView usernameTextView;
         TextView postDateTextView;
-        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedOtherTextView;
+        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedReligiousTextView, reportedOtherTextView;
         ImageView postSettingImageView;
         TextView pollQuestionTextView;
         ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
@@ -566,6 +599,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);
             reportedAbuseTextView = (TextView) view.findViewById(R.id.reportedAbuseTextView);
             reportedUninterestingTextView = (TextView) view.findViewById(R.id.reportedUninterestingTextView);
+            reportedReligiousTextView = (TextView) view.findViewById(R.id.reportedReligiousTextView);
             reportedOtherTextView = (TextView) view.findViewById(R.id.reportedOtherTextView);
 
             userImageView.setOnClickListener(this);
@@ -585,7 +619,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
         TextView commentDateTextView;
-        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedOtherTextView;
+        TextView reportedSpamTextView, reportedAbuseTextView, reportedUninterestingTextView, reportedReligiousTextView, reportedOtherTextView;
         View underlineView;
 
         RootCommentViewHolder(View view) {
@@ -597,6 +631,7 @@ public class GroupsReportedContentRecyclerAdapter extends RecyclerView.Adapter<R
             reportedSpamTextView = (TextView) view.findViewById(R.id.reportedSpamTextView);
             reportedAbuseTextView = (TextView) view.findViewById(R.id.reportedAbuseTextView);
             reportedUninterestingTextView = (TextView) view.findViewById(R.id.reportedUninterestingTextView);
+            reportedReligiousTextView = (TextView) view.findViewById(R.id.reportedReligiousTextView);
             reportedOtherTextView = (TextView) view.findViewById(R.id.reportedOtherTextView);
 
             underlineView = view.findViewById(R.id.underlineView);

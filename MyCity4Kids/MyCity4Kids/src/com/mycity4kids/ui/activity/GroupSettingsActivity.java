@@ -58,6 +58,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     private String memberType;
     private ImageView groupImageView;
     private TextView groupNameTextView;
+    private RelativeLayout inviteMemberContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         groupImageView = (ImageView) findViewById(R.id.groupImageView);
         editGroupImageView = (ImageView) findViewById(R.id.editGroupImageView);
         reportedContentContainer = (RelativeLayout) findViewById(R.id.reportedContentContainer);
+        inviteMemberContainer = (RelativeLayout) findViewById(R.id.inviteMemberContainer);
         memberCountTextView = (TextView) findViewById(R.id.memberCountTextView);
         groupNameTextView = (TextView) findViewById(R.id.groupNameTextView);
 
@@ -84,6 +86,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         leaveGroupContainer.setOnClickListener(this);
         editGroupImageView.setOnClickListener(this);
         reportedContentContainer.setOnClickListener(this);
+        inviteMemberContainer.setOnClickListener(this);
 
         if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)) {
             reportedContentContainer.setVisibility(View.VISIBLE);
@@ -172,6 +175,15 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.inviteMemberContainer: {
+                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+
+                String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + groupItem.getUrl();
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+            }
+            break;
             case R.id.memberCountTextView: {
                 Intent intent = new Intent(GroupSettingsActivity.this, GroupMembershipActivity.class);
                 intent.putExtra("groupId", groupItem.getId());

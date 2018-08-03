@@ -70,7 +70,7 @@
         android:layout_below="@+id/toolbarUnderline"
         android:background="@null"
         android:gravity="left|top"
-        android:hint="Ask Something... "
+        android:hint="@string/groups.ask_something"
         android:maxLines="4"
         android:minLines="3"
         android:paddingBottom="20dp"

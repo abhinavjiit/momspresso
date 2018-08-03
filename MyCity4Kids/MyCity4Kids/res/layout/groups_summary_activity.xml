@@ -50,7 +50,7 @@
         android:background="#507cbe"
         android:gravity="center"
         android:padding="15dp"
-        android:text="JOIN GROUP"
+        android:text="@string/groups.join_group"
         android:textColor="@color/white"
         android:textSize="17sp"
         app:fontName="oswald_regular.ttf" />

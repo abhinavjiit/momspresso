@@ -16,25 +16,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:gravity="left"
             android:padding="10dp"
             android:text="@string/groups.join_label"
             android:textColor="@color/groups.light_black_color"
             android:textSize="16sp"
-            app:fontName="oswald.ttf" />
+            app:fontName="oswald_regular.ttf" />
 
-        <View
-            android:id="@+id/underlineView"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/joinGpLabel"
-            android:background="@color/light_underline" />
+        <!--<View-->
+        <!--android:id="@+id/underlineView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_below="@+id/joinGpLabel"-->
+        <!--android:background="@color/light_underline" />-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/joinedGroupRecyclerGridView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/underlineView"
+            android:layout_below="@id/joinGpLabel"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:gravity="center"
@@ -63,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/seeAllJoinedGpTextView"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="20dp"
             android:padding="10dp"
             android:text="@string/groups.all_groups"

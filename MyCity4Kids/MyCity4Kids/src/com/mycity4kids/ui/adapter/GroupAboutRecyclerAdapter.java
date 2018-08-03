@@ -46,23 +46,26 @@ public class GroupAboutRecyclerAdapter extends RecyclerView.Adapter<GroupAboutRe
 
     @Override
     public void onBindViewHolder(final GroupAboutHolder holder, final int position) {
-        holder.groupDescTextView.setText(groupData.getDescription());
-        holder.createdTimeTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupData.getCreatedAt()));
-        if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(groupData.getType())) {
-            holder.groupTypeTextView.setText(mContext.getString(R.string.groups_anyone_join));
-        } else if (AppConstants.GROUP_TYPE_CLOSED_KEY.equals(groupData.getType())) {
-            holder.groupTypeTextView.setText(mContext.getString(R.string.groups_closed_gp));
-        } else {
-            holder.groupTypeTextView.setText(mContext.getString(R.string.groups_invitation_only_gp));
-        }
+        try {
+            holder.groupDescTextView.setText(groupData.getDescription());
+            holder.createdTimeTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupData.getCreatedAt()));
+            if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(groupData.getType())) {
+                holder.groupTypeTextView.setText(mContext.getString(R.string.groups_anyone_join));
+            } else if (AppConstants.GROUP_TYPE_CLOSED_KEY.equals(groupData.getType())) {
+                holder.groupTypeTextView.setText(mContext.getString(R.string.groups_closed_gp));
+            } else {
+                holder.groupTypeTextView.setText(mContext.getString(R.string.groups_invitation_only_gp));
+            }
 //        holder.groupTypeTextView.setText("Closed Group");
-        if (groupData.getAdminMembers().getData() != null && !groupData.getAdminMembers().getData().isEmpty()) {
-            holder.groupAdminTextView.setText(groupData.getAdminMembers().getData().get(0).getUserInfo().getFirstName() + " "
-                    + groupData.getAdminMembers().getData().get(0).getUserInfo().getLastName());
-        } else {
-            holder.groupAdminTextView.setText("");
-        }
+            if (groupData.getAdminMembers().getData() != null && !groupData.getAdminMembers().getData().isEmpty()) {
+                holder.groupAdminTextView.setText(groupData.getAdminMembers().getData().get(0).getUserInfo().getFirstName() + " "
+                        + groupData.getAdminMembers().getData().get(0).getUserInfo().getLastName());
+            } else {
+                holder.groupAdminTextView.setText("");
+            }
+        } catch (Exception e) {
 
+        }
     }
 
     public class GroupAboutHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

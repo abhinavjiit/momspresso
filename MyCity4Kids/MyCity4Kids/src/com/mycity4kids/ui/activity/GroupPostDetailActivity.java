@@ -89,6 +89,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
+    private boolean commentDisableFlag;
 
     private Animation slideAnim, fadeAnim;
 
@@ -219,6 +220,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
                     if (postData.getDisableComments() == 1) {
                         openAddCommentDialog.setVisibility(View.GONE);
+                        commentDisableFlag = true;
+                    } else {
+                        openAddCommentDialog.setVisibility(View.VISIBLE);
+                        commentDisableFlag = false;
                     }
 
                     if (postType.equals("1")) {
@@ -387,7 +392,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
             break;
             case R.id.replyCommentTextView: {
-                openAddCommentReplyDialog(completeResponseList.get(position));
+                if (commentDisableFlag) {
+                } else {
+                    openAddCommentReplyDialog(completeResponseList.get(position));
+                }
             }
             break;
             case R.id.replyCountTextView:
@@ -396,6 +404,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 _args.putParcelable("commentReplies", completeResponseList.get(position));
                 _args.putInt("childCount", completeResponseList.get(position).getChildCount());
                 _args.putInt("position", position);
+                _args.putBoolean("commentDisableFlag", commentDisableFlag);
                 _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
                 viewGroupPostCommentsRepliesDialogFragment.setArguments(_args);
                 FragmentManager fm = getSupportFragmentManager();
@@ -924,10 +933,15 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             try {
                 if (response.isSuccessful()) {
                     GroupPostResponse groupPostResponse = response.body();
+                    postData.setDisableComments(groupPostResponse.getData().get(0).getResult().get(0).getDisableComments());
                     if (groupPostResponse.getData().get(0).getResult().get(0).getDisableComments() == 1) {
                         commentToggleTextView.setText(getString(R.string.groups_enable_comment));
+                        commentDisableFlag = true;
+                        openAddCommentDialog.setVisibility(View.GONE);
                     } else {
                         commentToggleTextView.setText(getString(R.string.groups_disable_comment));
+                        commentDisableFlag = false;
+                        openAddCommentDialog.setVisibility(View.VISIBLE);
                     }
                 } else {
 
@@ -1532,7 +1546,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             startActivity(intent);
             finish();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
-            showToast("You have been blocked from this group");
+            showToast(getString(R.string.groups_user_blocked_msg));
             finish();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
             if (body.getData().getResult().get(0).getIsAdmin() == 1) {

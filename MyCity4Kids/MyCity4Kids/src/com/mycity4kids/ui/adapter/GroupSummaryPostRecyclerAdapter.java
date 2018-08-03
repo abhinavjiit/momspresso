@@ -342,6 +342,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
                     Log.d("GpSumPstRecyclerAdapter", "groupAdminTextView");
                 }
             });
+            memberCountTextView.setOnClickListener(this);
         }
 
         @Override

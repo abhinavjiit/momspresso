@@ -16,7 +16,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="200dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
@@ -83,8 +83,7 @@
         android:layout_marginRight="10dp"
         android:ellipsize="end"
         android:gravity="left"
-        android:maxLines="3"
-        android:text="dwaa dawd aw d adwwad dwadw dwad wad awd awd dddcvdf grtd g vxrfg xfvcx refdzc zewdfczcfe sxfvxz aw dczxdfr awa cdf cdfraw waer gvt yghv czsde awef v cvzw dawd dasd sadfc vxgjuyifgf grec resa rcxf gdfvczd "
+        android:text=""
         android:textColor="@color/black"
         android:textSize="14sp"
         app:fontName="georgia.ttf" />
@@ -172,7 +171,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/ic_down_arrow" />
+            android:src="@drawable/ic_down_arrow"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

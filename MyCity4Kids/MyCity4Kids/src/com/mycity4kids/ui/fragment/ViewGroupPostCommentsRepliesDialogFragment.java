@@ -66,6 +66,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
     private FloatingActionButton openAddReplyDialog;
     private int commentPosition;
     private String memberType;
+    private boolean commentDisableFlag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,6 +104,13 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             childCount = extras.getInt("childCount");
             commentPosition = extras.getInt("position");
             memberType = extras.getString(AppConstants.GROUP_MEMBER_TYPE);
+            commentDisableFlag = extras.getBoolean("commentDisableFlag", false);
+        }
+
+        if (commentDisableFlag) {
+            openAddReplyDialog.setVisibility(View.GONE);
+        } else {
+            openAddReplyDialog.setVisibility(View.VISIBLE);
         }
 
         repliesList.add(data);

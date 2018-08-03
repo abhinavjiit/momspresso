@@ -153,7 +153,7 @@ public class GroupMembershipActivity extends BaseActivity implements View.OnClic
                 GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
                 UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
-                updateGroupMembershipRequest.setUserId(memberDetails.getUserId());
+//                updateGroupMembershipRequest.setUserId(memberDetails.getUserId());
                 updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
                 Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(memberDetails.getId(), updateGroupMembershipRequest);
                 call1.enqueue(updateGroupMemberRoleResponseCallback);

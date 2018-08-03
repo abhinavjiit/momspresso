@@ -64,6 +64,8 @@
         android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:src="@drawable/ic_more"
@@ -167,6 +169,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/postDataViewPager"
         android:layout_marginTop="15dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:orientation="horizontal">
 
         <ImageView
@@ -195,6 +199,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="16dp"
         android:layout_toRightOf="@+id/upvoteContainer"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:orientation="horizontal">
 
         <ImageView
@@ -223,6 +229,8 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/addCommentImageView"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:gravity="bottom"
         android:padding="5dp"
         android:text="20 Comments"
@@ -266,6 +274,8 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/postDataViewPager"
         android:layout_marginTop="10dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:paddingBottom="5dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"

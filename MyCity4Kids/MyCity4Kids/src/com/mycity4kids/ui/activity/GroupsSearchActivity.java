@@ -254,7 +254,7 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
-            Toast.makeText(this, "You have been blocked from this group", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(this, GroupDetailsActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());

@@ -49,6 +49,7 @@
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
+        android:visibility="gone"
         app:fab_colorNormal="@color/groups.blue_color"
         app:fab_colorPressed="@color/groups.blue_color"
         app:fab_icon="@drawable/ic_add_comments" />

@@ -22,6 +22,7 @@ public class GroupReportedContentResult {
     private int abusiveContentCount;
     private int itsASpamCount;
     private int notInterestingCount;
+    private int itHurtsReligiousSentimentCount;
     private int otherCount;
 
     public int getId() {
@@ -134,6 +135,14 @@ public class GroupReportedContentResult {
 
     public void setNotInterestingCount(int notInterestingCount) {
         this.notInterestingCount = notInterestingCount;
+    }
+
+    public int getItHurtsReligiousSentimentCount() {
+        return itHurtsReligiousSentimentCount;
+    }
+
+    public void setItHurtsReligiousSentimentCount(int itHurtsReligiousSentimentCount) {
+        this.itHurtsReligiousSentimentCount = itHurtsReligiousSentimentCount;
     }
 
     public int getOtherCount() {

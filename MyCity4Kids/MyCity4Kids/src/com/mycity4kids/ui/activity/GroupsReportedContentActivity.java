@@ -197,8 +197,11 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
                     case "itsASpam":
                         dataList.get(j).setItsASpamCount(dataList.get(j).getCounts().get(i).getCount());
                         break;
-                    case "notInteresting":
+                    case "itsInappropiate":
                         dataList.get(j).setNotInterestingCount(dataList.get(j).getCounts().get(i).getCount());
+                        break;
+                    case "itHurtsReligiousSentiment":
+                        dataList.get(j).setItHurtsReligiousSentimentCount(dataList.get(j).getCounts().get(i).getCount());
                         break;
                     case "other":
                         dataList.get(j).setOtherCount(dataList.get(j).getCounts().get(i).getCount());

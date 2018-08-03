@@ -1411,7 +1411,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof GroupsFragment) {
                 Utils.pushOpenScreenEvent(this, "GroupsFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                toolbarTitleTextView.setText(getString(R.string.groups_groups));
+                toolbarTitleTextView.setText(getString(R.string.groups_support_groups));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.groups_light_black_color));
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
@@ -1491,7 +1491,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
-            Toast.makeText(this, "You have been blocked from this group", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(this, GroupDetailsActivity.class);
             intent.putExtra("groupId", groupId);

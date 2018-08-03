@@ -364,7 +364,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             mContext.startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
-            Toast.makeText(mContext, "You have been blocked from this group", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(mContext, GroupDetailsActivity.class);
             intent.putExtra("groupId", groupId);

@@ -282,6 +282,7 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
             try {
                 if (response.isSuccessful()) {
                     GroupDetailResponse groupDetailResponse = response.body();
+                    showToast("Updated successfully");
                 } else {
 
                 }

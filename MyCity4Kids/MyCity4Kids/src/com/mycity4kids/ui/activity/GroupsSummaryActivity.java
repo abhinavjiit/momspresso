@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -22,23 +21,29 @@ import com.crashlytics.android.Crashlytics;
 import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.JoinGroupRequest;
+import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsJoinResponse;
-import com.mycity4kids.models.response.UserPostSettingResponse;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.adapter.GroupSummaryPostRecyclerAdapter;
 import com.mycity4kids.ui.fragment.GroupJoinConfirmationFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -77,6 +82,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     private UserPostSettingResult currentPostPrefsForUser;
     private LinkedTreeMap<String, String> questionMap;
     private boolean pendingMembershipFlag;
+    private boolean loopHoleFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -296,40 +302,42 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
             case R.id.joinGroupTextView:
-                Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-                GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-                if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
-                    if (questionMap == null || questionMap.isEmpty()) {
-                        JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
-                        joinGroupRequest.setGroupId(selectedGroup.getId());
-                        joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
-                        Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
-                        call.enqueue(groupJoinResponseCallback);
-                    } else {
-                        Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
-                        intent.putExtra("groupItem", selectedGroup);
-                        intent.putExtra("questionnaire", questionMap);
-                        startActivity(intent);
-                    }
-                } else {
-                    if (questionMap == null || questionMap.isEmpty()) {
-                        JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
-                        joinGroupRequest.setGroupId(selectedGroup.getId());
-                        joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
-                        Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
-                        call.enqueue(groupJoinResponseCallback);
-                    } else {
-                        Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
-                        intent.putExtra("groupItem", selectedGroup);
-                        intent.putExtra("questionnaire", questionMap);
-                        startActivity(intent);
-                    }
-                }
-
-
+                joinGroupRequest();
                 break;
         }
 
+    }
+
+    private void joinGroupRequest() {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
+            if (questionMap == null || questionMap.isEmpty()) {
+                JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
+                joinGroupRequest.setGroupId(selectedGroup.getId());
+                joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
+                Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
+                call.enqueue(groupJoinResponseCallback);
+            } else {
+                Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
+                intent.putExtra("groupItem", selectedGroup);
+                intent.putExtra("questionnaire", questionMap);
+                startActivity(intent);
+            }
+        } else {
+            if (questionMap == null || questionMap.isEmpty()) {
+                JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
+                joinGroupRequest.setGroupId(selectedGroup.getId());
+                joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
+                Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
+                call.enqueue(groupJoinResponseCallback);
+            } else {
+                Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
+                intent.putExtra("groupItem", selectedGroup);
+                intent.putExtra("questionnaire", questionMap);
+                startActivity(intent);
+            }
+        }
     }
 
     private void updatePostCommentSettings(int status) {
@@ -388,18 +396,14 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.memberCountTextView:
+                joinAndBecomeAdmin();
+                break;
             case R.id.userImageView:
             case R.id.usernameTextView: {
 
             }
             case R.id.postSettingImageView:
-                selectedPost = postList.get(position);
-                getCurrentPostSettingsStatus(selectedPost);
-                postSettingsContainer.startAnimation(slideAnim);
-                overlayView.startAnimation(fadeAnim);
-                postSettingsContainerMain.setVisibility(View.VISIBLE);
-                postSettingsContainer.setVisibility(View.VISIBLE);
-                overlayView.setVisibility(View.VISIBLE);
                 break;
             case R.id.postDataTextView:
             case R.id.postDateTextView: {
@@ -409,79 +413,9 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-    private void getCurrentPostSettingsStatus(GroupPostResult selectedPost) {
-        progressBar.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        Call<UserPostSettingResponse> call = groupsAPI.getPostSettingForUser(selectedPost.getId());
-        call.enqueue(userPostSettingResponseCallback);
-    }
-
-    private Callback<UserPostSettingResponse> userPostSettingResponseCallback = new Callback<UserPostSettingResponse>() {
-        @Override
-        public void onResponse(Call<UserPostSettingResponse> call, retrofit2.Response<UserPostSettingResponse> response) {
-            progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    UserPostSettingResponse userPostSettingResponse = response.body();
-                    setPostCurrentPreferences(userPostSettingResponse);
-                } else {
-
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-            progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private void setPostCurrentPreferences(UserPostSettingResponse userPostSettingResponse) {
-
-        if (selectedPost.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId())) {
-            commentToggleTextView.setVisibility(View.VISIBLE);
-        } else {
-            commentToggleTextView.setVisibility(View.GONE);
-        }
-
-        //No existing settings for this post for this user
-        if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
-            savePostTextView.setText(getString(R.string.groups_save_post));
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
-            currentPostPrefsForUser = null;
-            return;
-        }
-        currentPostPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
-        if (currentPostPrefsForUser.getIsBookmarked() == 1) {
-            savePostTextView.setText(getString(R.string.groups_remove_post));
-        } else {
-            savePostTextView.setText(getString(R.string.groups_save_post));
-        }
-
-        if (currentPostPrefsForUser.getNotificationOff() == 1) {
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
-        } else {
-            notificationToggleTextView.setText("DISABLE NOTIFICATION");
-        }
+    private void joinAndBecomeAdmin() {
+//        loopHoleFlag = true;
+//        joinGroupRequest();
     }
 
     private Callback<GroupsJoinResponse> groupJoinResponseCallback = new Callback<GroupsJoinResponse>() {
@@ -490,8 +424,27 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             progressBar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    if (response.code() == 400) {
+                        try {
+                            String errorBody = new String(response.errorBody().bytes());
+                            JSONObject jObject = new JSONObject(errorBody);
+                            String reason = jObject.getString("reason");
+                            if (!StringUtils.isNullOrEmpty(reason) && "already member".equals(reason)) {
+                                String status = jObject.getJSONObject("data").getJSONArray("data").getJSONObject(0).getString("status");
+                                if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(status)) {
+                                    showToast(getString(R.string.groups_user_blocked_msg));
+                                } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_LEFT.equals(status)) {
+                                    patchMembershipRequest(jObject.getJSONObject("data").getJSONArray("data").getJSONObject(0).getInt("id"));
+                                } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_REJECTED.equals(status)) {
+                                    showToast(getString(R.string.groups_user_membership_rejected_msg));
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 return;
             }
@@ -521,6 +474,57 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onFailure(Call<GroupsJoinResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void patchMembershipRequest(int membershipId) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
+        updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER);
+        Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membershipId, updateGroupMembershipRequest);
+        call1.enqueue(updateGroupMemberRoleResponseCallback);
+    }
+
+    private Callback<GroupsMembershipResponse> updateGroupMemberRoleResponseCallback = new Callback<GroupsMembershipResponse>() {
+        @Override
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                showToast("Failed to update membership");
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
+                        showToast("Group Join success");
+                        Intent intent = new Intent(GroupsSummaryActivity.this, GroupDetailsActivity.class);
+                        intent.putExtra("groupId", selectedGroup.getId());
+                        intent.putExtra("source", "questionnaire");
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        showSuccessDialog();
+                    }
+                } else {
+                    showToast("Group Join Fail");
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+            showToast("Failed to update membership");
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

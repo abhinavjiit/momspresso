@@ -64,7 +64,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     private GroupsRecyclerGridAdapter getAllGroupAdapter, getJoinedGroupAdapter;
     private LinkedTreeMap<String, String> selectedQuestionnaire;
     private TextView joinGpLabel;
-    private View underlineView;
+//    private View underlineView;
 
     @Nullable
     @Override
@@ -74,7 +74,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         allGroupRecyclerGridView = (RecyclerView) view.findViewById(R.id.allGroupRecyclerGridView);
         seeAllGpTextView = (TextView) view.findViewById(R.id.seeAllGpTextView);
         joinGpLabel = (TextView) view.findViewById(R.id.joinGpLabel);
-        underlineView = view.findViewById(R.id.underlineView);
+//        underlineView = view.findViewById(R.id.underlineView);
         seeAllJoinedGpTextView = (TextView) view.findViewById(R.id.seeAllJoinedGpTextView);
         allGroupLabelTextView = (TextView) view.findViewById(R.id.allGroupLabelTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -102,7 +102,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         joinedGroupRecyclerGridView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
         allGroupRecyclerGridView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
 
-        getAllGroupAdapter = new GroupsRecyclerGridAdapter(getActivity(), this, false, false);
+        getAllGroupAdapter = new GroupsRecyclerGridAdapter(getActivity(), this, false, true);
         getJoinedGroupAdapter = new GroupsRecyclerGridAdapter(getActivity(), this, true, false);
 
         joinedGroupRecyclerGridView.setAdapter(getJoinedGroupAdapter);
@@ -166,10 +166,10 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                         dataList.add(membershipList.get(i).getGroupInfo());
                     }
 
-                    if (dataList == null || dataList.isEmpty()) {
+                    if (dataList.isEmpty()) {
                         joinedGroupRecyclerGridView.setVisibility(View.GONE);
                         seeAllJoinedGpTextView.setVisibility(View.GONE);
-                        underlineView.setVisibility(View.GONE);
+//                        underlineView.setVisibility(View.GONE);
                         joinGpLabel.setVisibility(View.GONE);
                     } else {
                         joinedGroupRecyclerGridView.setVisibility(View.VISIBLE);
@@ -232,7 +232,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                         getAllGroupAdapter.setNewListData(allGroupList);
                         getAllGroupAdapter.notifyDataSetChanged();
                         allGroupRecyclerGridView.setVisibility(View.VISIBLE);
-                        seeAllGpTextView.setVisibility(View.VISIBLE);
+//                        seeAllGpTextView.setVisibility(View.VISIBLE);
                         allGroupLabelTextView.setVisibility(View.VISIBLE);
                     }
                 } else {
@@ -322,7 +322,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
             if (isAdded())
-                Toast.makeText(getActivity(), "You have been blocked from this group", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());

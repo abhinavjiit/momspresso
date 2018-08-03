@@ -20,14 +20,20 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.JoinGroupRequest;
+import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsJoinResponse;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.GroupsSettingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.adapter.GroupsQuestionnaireRecyclerAdapter;
 import com.mycity4kids.ui.fragment.GroupJoinConfirmationFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -196,8 +202,27 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
             progressBar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    if (response.code() == 400) {
+                        try {
+                            String errorBody = new String(response.errorBody().bytes());
+                            JSONObject jObject = new JSONObject(errorBody);
+                            String reason = jObject.getString("reason");
+                            if (!StringUtils.isNullOrEmpty(reason) && "already member".equals(reason)) {
+                                String status = jObject.getJSONObject("data").getJSONArray("data").getJSONObject(0).getString("status");
+                                if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(status)) {
+                                    showToast(getString(R.string.groups_user_blocked_msg));
+                                } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_LEFT.equals(status)) {
+                                    patchMembershipRequest(jObject.getJSONObject("data").getJSONArray("data").getJSONObject(0).getInt("id"));
+                                } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_REJECTED.equals(status)) {
+                                    showToast(getString(R.string.groups_user_membership_rejected_msg));
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 return;
             }
@@ -227,6 +252,57 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
         public void onFailure(Call<GroupsJoinResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             showToast("Group Join Request wrong");
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void patchMembershipRequest(int membershipId) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
+        updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
+        Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membershipId, updateGroupMembershipRequest);
+        call1.enqueue(updateGroupMemberRoleResponseCallback);
+    }
+
+    private Callback<GroupsMembershipResponse> updateGroupMemberRoleResponseCallback = new Callback<GroupsMembershipResponse>() {
+        @Override
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                showToast("Failed to update membership");
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
+                        showToast("Group Join success");
+                        Intent intent = new Intent(GroupsQuestionnaireActivity.this, GroupDetailsActivity.class);
+                        intent.putExtra("groupId", selectedGroup.getId());
+                        intent.putExtra("source", "questionnaire");
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        showSuccessDialog();
+                    }
+                } else {
+                    showToast("Group Join Fail");
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+            showToast("Failed to update membership");
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

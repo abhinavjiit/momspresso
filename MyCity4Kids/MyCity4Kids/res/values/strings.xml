@@ -719,7 +719,7 @@
     <string name="groups.membership_req">MEMBERSHIP REQUEST</string>
     <string name="groups.now_member_gp">You are now member of the group</string>
     <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
-    <string name="groups.support_groups">Support Groups</string>
+    <string name="groups.support_groups">SUPPORT GROUPS</string>
     <string name="groups.post_helpful">Helpful</string>
     <string name="groups.post_nothelpful">Not Helpful</string>
     <string name="groups.summary">SUMMARY</string>
@@ -747,6 +747,11 @@
     <string name="groups.spend_time">I spend too much time using Momspresso.</string>
     <string name="groups.not_useful">I don\'t find Momspresso useful.</string>
     <string name="groups.how_to_use">I don\'t understand how to use Momspresso</string>
+    <string name="groups.user_blocked_msg">You have been blocked from this group</string>
+    <string name="groups.user_membership_rejected_msg">Your membership has been rejected for this group</string>
+    <string name="groups.join_group">JOIN GROUP</string>
+    <string name="groups.ask_something">Ask something ...</string>
+    <string name="groups.post_label">POST</string>
 
     <string name="no_story.be_first">Be the first one to write stories in this category!</string>
 
@@ -781,6 +786,7 @@
 
     <string name="reported.spam">Reported as Spam</string>
     <string name="reported.abuse">Reported as Abusive</string>
-    <string name="reported.uninteresting">Reported as Not Interesting</string>
+    <string name="reported.uninteresting">Reported as Inappropriate</string>
+    <string name="reported.religious">Reported as Hurts Religious Sentiment</string>
     <string name="reported.other">Reported as Other</string>
 </resources>
