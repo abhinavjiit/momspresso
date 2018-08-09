@@ -365,8 +365,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     groupAboutRecyclerAdapter.setData(selectedGroup);
                     TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
                     tab.select();
-                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
-                    getGroupPosts();
                 } else {
 
                 }
