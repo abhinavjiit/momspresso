@@ -41,7 +41,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:gravity="left"
-        android:maxLines="3"
         android:text="Closed group"
         android:textColor="@color/black"
         android:textSize="14sp"

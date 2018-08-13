@@ -284,18 +284,9 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         if (isMember) {
             selectedGroup = joinedGroupList.get(position);
-//            Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
-//            intent.putExtra("groupItem", joinedGroupList.get(position));
-//            intent.putExtra("isMember", isMember);
-//            startActivity(intent);
         } else {
             selectedGroup = allGroupList.get(position);
             selectedQuestionnaire = (LinkedTreeMap<String, String>) allGroupList.get(position).getQuestionnaire();
-//            Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
-//            intent.putExtra("groupItem", allGroupList.get(position));
-//            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) allGroupList.get(position).getQuestionnaire());
-//            intent.putExtra("isMember", isMember);
-//            startActivity(intent);
         }
         groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 

@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
-        android:background="#507cbe"
+        android:background="@color/groups.blue_color"
         android:gravity="center"
         android:padding="15dp"
         android:text="@string/groups.join_group"

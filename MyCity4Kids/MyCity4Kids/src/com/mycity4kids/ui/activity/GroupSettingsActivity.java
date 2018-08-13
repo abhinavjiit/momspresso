@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -51,7 +52,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     GroupResult groupItem;
 
     private RelativeLayout leaveGroupContainer, reportedContentContainer;
-    private Switch disableNotificationSwitch;
+    private SwitchCompat disableNotificationSwitch;
     private ImageView editGroupImageView;
     private TextView memberCountTextView;
     private Toolbar toolbar;
@@ -66,7 +67,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.group_settings_activity);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        disableNotificationSwitch = (Switch) findViewById(R.id.disableNotificationSwitch);
+        disableNotificationSwitch = (SwitchCompat) findViewById(R.id.disableNotificationSwitch);
         leaveGroupContainer = (RelativeLayout) findViewById(R.id.leaveGroupContainer);
         groupImageView = (ImageView) findViewById(R.id.groupImageView);
         editGroupImageView = (ImageView) findViewById(R.id.editGroupImageView);

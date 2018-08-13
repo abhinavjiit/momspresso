@@ -79,8 +79,8 @@ public class GroupMembershipActivity extends BaseActivity implements View.OnClic
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Requests"));
         tabLayout.addTab(tabLayout.newTab().setText("Existing Members"));
+        tabLayout.addTab(tabLayout.newTab().setText("Requests"));
 
         groupMembersPagerAdapter = new GroupMembersPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), groupId);
         viewPager.setAdapter(groupMembersPagerAdapter);

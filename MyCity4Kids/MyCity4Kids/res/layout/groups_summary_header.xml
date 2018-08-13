@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/groupImageView"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="200dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
@@ -32,7 +32,7 @@
         android:drawableLeft="@drawable/ic_group_white"
         android:drawablePadding="10dp"
         android:gravity="center"
-        android:text="247 members"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="14sp"
         app:fontName="oswald.ttf" />
@@ -67,7 +67,7 @@
         android:layout_below="@+id/groupImageView"
         android:layout_marginBottom="18dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="28dp"
         android:gravity="center"
         android:text="ABOUT"
         android:textColor="@color/black"

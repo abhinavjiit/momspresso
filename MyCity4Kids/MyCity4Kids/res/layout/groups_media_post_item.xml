@@ -53,9 +53,9 @@
         android:ellipsize="end"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:text="16 March 2018"
+        android:text=""
         android:textColor="@color/ad.comment.body"
-        android:textSize="10sp"
+        android:textSize="12sp"
         app:fontName="open_sans.ttf" />
 
     <ImageView
@@ -69,7 +69,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:src="@drawable/ic_more"
-        android:tint="#507cbe" />
+        android:tint="@color/groups.blue_color" />
 
     <!--<com.daimajia.slider.library.SliderLayout-->
     <!--android:id="@+id/postDataViewPager"-->
@@ -89,10 +89,9 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:ellipsize="end"
-        android:gravity="left"
-        android:maxLines="3"
-        android:text="lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ddwdctgbhtg dawdw vfbgb ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum"
-        android:textColor="#9c9dac"
+        android:gravity="start"
+        android:text=""
+        android:textColor="@color/groups.grey"
         android:textSize="10sp"
         app:fontName="open_sans.ttf" />
 

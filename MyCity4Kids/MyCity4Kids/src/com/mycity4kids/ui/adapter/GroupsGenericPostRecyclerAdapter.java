@@ -28,6 +28,7 @@ import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsActionVoteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
@@ -409,6 +410,20 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+
+            postCommentsTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("groupItem", selectedGroup);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                }
+            });
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -419,7 +434,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
                     intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    mContext.startActivity(intent);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
                 }
             });
         }
@@ -487,6 +502,21 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+
+            postCommentsTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_MEDIA);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getMediaUrls();
+                    intent.putExtra("mediaUrls", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                }
+            });
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -498,7 +528,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
                     intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    mContext.startActivity(intent);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
                 }
             });
         }
@@ -563,6 +593,21 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+
+            postCommentsTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                    intent.putExtra("pollOptions", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                }
+            });
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -574,7 +619,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
                     intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    mContext.startActivity(intent);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
                 }
             });
 
@@ -666,6 +711,21 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+
+            postCommentsTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                    intent.putExtra("pollOptions", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                }
+            });
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -677,7 +737,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
                     intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    mContext.startActivity(intent);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
                 }
             });
 

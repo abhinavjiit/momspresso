@@ -257,6 +257,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void afterTextChanged(Editable editable) {
+//                TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
+//                tab.select();
                 if (TextUtils.isEmpty(editable)) {
                     clearSearchImageView.setVisibility(View.GONE);
                     skip = 0;
@@ -385,8 +387,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupPostResponse> call = groupsAPI.getAllPostsForAGroup(selectedGroup.getId(), skip, limit);
-        call.enqueue(groupPostResponseCallback);
+        if (selectedGroup != null) {
+            Call<GroupPostResponse> call = groupsAPI.getAllPostsForAGroup(selectedGroup.getId(), skip, limit);
+            call.enqueue(groupPostResponseCallback);
+        }
     }
 
     private void getFilteredGroupPosts() {
@@ -735,11 +739,23 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             try {
                 if (response.isSuccessful()) {
                     GroupPostResponse updatePostResponse = response.body();
-                    if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
-                        pinPostTextView.setText(getString(R.string.groups_unpin_post));
-                    } else {
-                        pinPostTextView.setText(getString(R.string.groups_pin_post));
-                    }
+//                    if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
+//                        pinPostTextView.setText(getString(R.string.groups_unpin_post));
+//                    } else {
+//                        pinPostTextView.setText(getString(R.string.groups_pin_post));
+//                    }
+                    postSettingsContainerMain.setVisibility(View.GONE);
+                    overlayView.setVisibility(View.GONE);
+                    postSettingsContainer.setVisibility(View.GONE);
+                    clearSearchImageView.setVisibility(View.GONE);
+                    skip = 0;
+                    limit = 10;
+                    isRequestRunning = false;
+                    isLastPageReached = false;
+                    postList.clear();
+                    groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                    TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
+                    tab.select();
                 } else {
 
                 }
@@ -987,7 +1003,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     } else {
                         hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
                     }
-
                 } else if (AppConstants.GROUP_SECTION_PHOTOS.equalsIgnoreCase(tab.getTag().toString())) {
                     isRequestRunning = false;
                     isLastPageReached = false;
@@ -1017,12 +1032,43 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 if (AppConstants.GROUP_SECTION_ABOUT.equalsIgnoreCase(tab.getTag().toString())) {
+                    recyclerView.setAdapter(groupAboutRecyclerAdapter);
                 } else if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab.getTag().toString())) {
+                    isRequestRunning = false;
+                    isLastPageReached = false;
+                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+                    postList.clear();
+                    skip = 0;
+                    limit = 10;
+                    getGroupPosts();
                 } else if (AppConstants.GROUP_SECTION_BLOGS.equalsIgnoreCase(tab.getTag().toString())) {
+                    isRequestRunning = false;
+                    isLastPageReached = false;
+                    nextPageNumber = 1;
+                    recyclerView.setAdapter(groupBlogsRecyclerAdapter);
+                    if (StringUtils.isNullOrEmpty(commaSepCategoryList)) {
+                        getCategoriesTaggedWithGroups();
+                    } else {
+                        hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
+                    }
                 } else if (AppConstants.GROUP_SECTION_PHOTOS.equalsIgnoreCase(tab.getTag().toString())) {
-                } else if (AppConstants.GROUP_SECTION_VIDEOS.equalsIgnoreCase(tab.getTag().toString())) {
-                } else if (AppConstants.GROUP_SECTION_TOP_POSTS.equalsIgnoreCase(tab.getTag().toString())) {
+                    isRequestRunning = false;
+                    isLastPageReached = false;
+                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+                    postList.clear();
+                    skip = 0;
+                    limit = 10;
+                    postType = AppConstants.POST_TYPE_MEDIA_KEY;
+                    getFilteredGroupPosts();
                 } else if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab.getTag().toString())) {
+                    isRequestRunning = false;
+                    isLastPageReached = false;
+                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+                    postList.clear();
+                    skip = 0;
+                    limit = 10;
+                    postType = AppConstants.POST_TYPE_POLL_KEY;
+                    getFilteredGroupPosts();
                 }
             }
         });
@@ -1483,15 +1529,19 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1111) {
-            if (addPostContainer.getVisibility() == View.VISIBLE) {
-                addPostContainer.setVisibility(View.GONE);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1111) {
+                if (addPostContainer.getVisibility() == View.VISIBLE) {
+                    addPostContainer.setVisibility(View.GONE);
+                }
+                isLastPageReached = false;
+                skip = 0;
+                limit = 10;
+                postList.clear();
+                groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
+                tab.select();
             }
-            isLastPageReached = false;
-            skip = 0;
-            limit = 10;
-            postList.clear();
-            getGroupPosts();
         }
     }
 

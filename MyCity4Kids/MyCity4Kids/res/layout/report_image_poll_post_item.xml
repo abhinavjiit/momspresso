@@ -67,7 +67,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:src="@drawable/ic_more"
-        android:tint="#507cbe" />
+        android:tint="@color/groups.blue_color" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/pollQuestionTextView"
@@ -125,7 +125,7 @@
                 app:rcBackgroundPadding="0dp"
                 app:rcMax="100"
                 app:rcProgress="0"
-                app:rcProgressColor="#507cbe"
+                app:rcProgressColor="@color/groups.blue_color"
                 app:rcRadius="0dp"
                 app:rcReverse="false" />
 
@@ -179,7 +179,7 @@
                 app:rcBackgroundPadding="0dp"
                 app:rcMax="100"
                 app:rcProgress="0"
-                app:rcProgressColor="#507cbe"
+                app:rcProgressColor="@color/groups.blue_color"
                 app:rcRadius="0dp"
                 app:rcReverse="false" />
 
@@ -243,7 +243,7 @@
                 app:rcBackgroundPadding="0dp"
                 app:rcMax="100"
                 app:rcProgress="0"
-                app:rcProgressColor="#507cbe"
+                app:rcProgressColor="@color/groups.blue_color"
                 app:rcRadius="0dp"
                 app:rcReverse="false" />
 
@@ -297,7 +297,7 @@
                 app:rcBackgroundPadding="0dp"
                 app:rcMax="100"
                 app:rcProgress="0"
-                app:rcProgressColor="#507cbe"
+                app:rcProgressColor="@color/groups.blue_color"
                 app:rcRadius="0dp"
                 app:rcReverse="false" />
 

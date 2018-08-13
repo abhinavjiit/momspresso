@@ -69,7 +69,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:src="@drawable/ic_more"
-        android:tint="#507cbe" />
+        android:tint="@color/groups.blue_color" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/pollQuestionTextView"
@@ -79,9 +79,9 @@
         android:layout_marginEnd="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginTop="15dp"
-        android:gravity="left"
-        android:text="What is your favorite color?"
-        android:textColor="@color/groups.light_black_color"
+        android:gravity="start"
+        android:text=""
+        android:textColor="@color/groups.grey"
         android:textSize="14sp"
         android:visibility="visible"
         app:fontName="open_sans.ttf" />
@@ -94,7 +94,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="20dp"
         android:background="@color/white"
-        android:text="BLUE"
+        android:text=""
         android:visibility="gone"
         app:fontName="oswald_regular.ttf" />
 
@@ -111,7 +111,7 @@
         app:rcBackgroundPadding="0dp"
         app:rcMax="100"
         app:rcProgress="0"
-        app:rcProgressColor="#507cbe"
+        app:rcProgressColor="@color/groups.blue_color"
         app:rcRadius="0dp"
         app:rcReverse="false" />
 
@@ -125,7 +125,7 @@
         android:background="@color/transparent"
         android:clickable="false"
         android:gravity="center_vertical"
-        android:text="BLUE"
+        android:text=""
         android:textColor="@color/groups.light_black_color"
         app:fontName="oswald_regular.ttf" />
 
@@ -137,7 +137,7 @@
         android:layout_below="@+id/pollResult1TextView"
         android:layout_marginTop="20dp"
         android:background="@color/white"
-        android:text="40%"
+        android:text=""
         android:visibility="invisible" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -148,7 +148,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:background="@color/white"
-        android:text="GREEN"
+        android:text=""
         android:visibility="gone"
         app:fontName="oswald_regular.ttf" />
 
@@ -165,7 +165,7 @@
         app:rcBackgroundPadding="0dp"
         app:rcMax="100"
         app:rcProgress="0"
-        app:rcProgressColor="#507cbe"
+        app:rcProgressColor="@color/groups.blue_color"
         app:rcRadius="0dp"
         app:rcReverse="false" />
 
@@ -179,7 +179,7 @@
         android:background="@color/transparent"
         android:clickable="false"
         android:gravity="center_vertical"
-        android:text="GREEN"
+        android:text=""
         android:textColor="@color/groups.light_black_color"
         app:fontName="oswald_regular.ttf" />
 
@@ -191,7 +191,7 @@
         android:layout_below="@+id/pollResult2TextView"
         android:layout_marginTop="20dp"
         android:background="@color/white"
-        android:text="40%"
+        android:text=""
         android:visibility="invisible" />
 
     <RelativeLayout
@@ -208,7 +208,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:text="YELLOW"
+            android:text=""
             android:visibility="gone"
             app:fontName="oswald_regular.ttf" />
 
@@ -225,7 +225,7 @@
             app:rcBackgroundPadding="0dp"
             app:rcMax="100"
             app:rcProgress="0"
-            app:rcProgressColor="#507cbe"
+            app:rcProgressColor="@color/groups.blue_color"
             app:rcRadius="0dp"
             app:rcReverse="false" />
 
@@ -239,7 +239,7 @@
             android:background="@color/transparent"
             android:clickable="false"
             android:gravity="center_vertical"
-            android:text="YELLOW"
+            android:text=""
             android:textColor="@color/groups.light_black_color"
             app:fontName="oswald_regular.ttf" />
 
@@ -251,7 +251,7 @@
             android:layout_below="@+id/pollResult3TextView"
             android:layout_marginTop="20dp"
             android:background="@color/white"
-            android:text="40%"
+            android:text=""
             android:visibility="invisible" />
     </RelativeLayout>
 
@@ -269,7 +269,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:text="RED"
+            android:text=""
             android:visibility="gone"
             app:fontName="oswald_regular.ttf" />
 
@@ -286,7 +286,7 @@
             app:rcBackgroundPadding="0dp"
             app:rcMax="100"
             app:rcProgress="0"
-            app:rcProgressColor="#507cbe"
+            app:rcProgressColor="@color/groups.blue_color"
             app:rcRadius="0dp"
             app:rcReverse="false" />
 
@@ -300,7 +300,7 @@
             android:background="@color/transparent"
             android:clickable="false"
             android:gravity="center_vertical"
-            android:text="RED"
+            android:text=""
             android:textColor="@color/groups.light_black_color"
             app:fontName="oswald_regular.ttf" />
 

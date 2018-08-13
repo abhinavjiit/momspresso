@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.mycity4kids.R;
 import com.squareup.picasso.Picasso;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.ArrayList;
 
@@ -85,6 +86,8 @@ public class GroupMediaPostViewPagerAdapter extends PagerAdapter implements View
 
     @Override
     public void onClick(View v) {
-
+        new ImageViewer.Builder(context, mediaList)
+                .setStartPosition(0)
+                .show();
     }
 }

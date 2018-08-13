@@ -812,11 +812,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             try {
                 if (response.isSuccessful()) {
                     GroupPostResponse updatePostResponse = response.body();
-                    if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
-                        pinPostTextView.setText(getString(R.string.groups_unpin_post));
-                    } else {
-                        pinPostTextView.setText(getString(R.string.groups_pin_post));
-                    }
+//                    if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
+//                        pinPostTextView.setText(getString(R.string.groups_unpin_post));
+//                    } else {
+//                        pinPostTextView.setText(getString(R.string.groups_pin_post));
+//                    }
+                    setResult(RESULT_OK);
+                    onBackPressed();
                 } else {
 
                 }

@@ -16,6 +16,7 @@ import com.android.volley.toolbox.Volley;
 import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
@@ -243,6 +244,8 @@ public class BaseApplication extends Application {
 
         setInstance(this);
         VolleyLog.setTag("VolleyLogs");
+
+        Fresco.initialize(this);
         createRetrofitInstance(AppConstants.LIVE_URL);
 
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());

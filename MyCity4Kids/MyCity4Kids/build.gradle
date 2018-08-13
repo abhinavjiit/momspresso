@@ -81,6 +81,8 @@ dependencies {
     compile "im.ene.toro3:toro-ext-exoplayer:3.4.1"  // to get ExoPlayer support
     compile 'com.shuhart.bubblepagerindicator:bubblepagerindicator:1.0.13'
     compile 'com.mixpanel.android:mixpanel-android:5.+'
+    compile 'com.facebook.fresco:fresco:1.10.0'
+    compile 'com.github.stfalcon:frescoimageviewer:0.5.0'
 
 }
 

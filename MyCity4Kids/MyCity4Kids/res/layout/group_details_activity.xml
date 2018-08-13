@@ -172,7 +172,7 @@
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/grey"
             app:tabTextAppearance="@style/CustomTabText"
-            app:tabTextColor="#507cbe" /><!-- no flags -->
+            app:tabTextColor="@color/groups.blue_color" /><!-- no flags -->
 
     </android.support.design.widget.AppBarLayout>
 

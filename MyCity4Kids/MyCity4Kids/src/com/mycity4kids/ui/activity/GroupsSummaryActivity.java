@@ -311,19 +311,22 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     private void joinGroupRequest() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        if (selectedGroup == null) {
+            return;
+        }
         if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
-            if (questionMap == null || questionMap.isEmpty()) {
+//            if (questionMap == null || questionMap.isEmpty()) {
                 JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
                 joinGroupRequest.setGroupId(selectedGroup.getId());
                 joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
                 Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
                 call.enqueue(groupJoinResponseCallback);
-            } else {
-                Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
-                intent.putExtra("groupItem", selectedGroup);
-                intent.putExtra("questionnaire", questionMap);
-                startActivity(intent);
-            }
+//            } else {
+//                Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
+//                intent.putExtra("groupItem", selectedGroup);
+//                intent.putExtra("questionnaire", questionMap);
+//                startActivity(intent);
+//            }
         } else {
             if (questionMap == null || questionMap.isEmpty()) {
                 JoinGroupRequest joinGroupRequest = new JoinGroupRequest();

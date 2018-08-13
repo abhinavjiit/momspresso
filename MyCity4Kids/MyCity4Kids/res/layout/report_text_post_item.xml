@@ -67,7 +67,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:src="@drawable/ic_more"
-        android:tint="#507cbe" />
+        android:tint="@color/groups.blue_color" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/postDataTextView"
@@ -77,10 +77,8 @@
         android:layout_marginEnd="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginTop="15dp"
-        android:ellipsize="end"
         android:gravity="left"
-        android:maxLines="3"
-        android:text="lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ddwdctgbhtg dawdw vfbgb ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum"
+        android:text=""
         android:textColor="#9c9dac"
         android:textSize="12sp"
         android:visibility="visible"

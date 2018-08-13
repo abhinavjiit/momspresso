@@ -33,14 +33,14 @@ public class GroupMembersPagerAdapter extends FragmentStatePagerAdapter {
         Bundle bundle = new Bundle();
         switch (position) {
 
-            case 0:
+            case 1:
                 if (groupMembershipRequestTabFragment == null) {
                     groupMembershipRequestTabFragment = new GroupMembershipRequestTabFragment();
                     bundle.putInt("groupId", groupId);
                     groupMembershipRequestTabFragment.setArguments(bundle);
                 }
                 return groupMembershipRequestTabFragment;
-            case 1:
+            case 0:
                 if (groupExistingMemberTabFragment == null) {
                     groupExistingMemberTabFragment = new GroupExistingMemberTabFragment();
                     bundle.putInt("groupId", groupId);

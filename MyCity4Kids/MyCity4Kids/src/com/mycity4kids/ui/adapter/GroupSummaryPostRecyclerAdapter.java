@@ -299,7 +299,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
 
     @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder instanceof GroupsGenericPostRecyclerAdapter.MediaPostViewHolder) {
+        if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder viewHolder = (MediaPostViewHolder) holder;
             mViewPageStates.put(holder.getAdapterPosition(), viewHolder.postDataViewPager.getCurrentItem());
             super.onViewRecycled(holder);
