@@ -83,6 +83,7 @@ import retrofit2.Retrofit;
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
         GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener {
 
+    private static final int EDIT_POST_REQUEST_CODE = 1010;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
     private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "POLLS"};
 
@@ -126,7 +127,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
     private View overlayView;
-    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, deletePostTextView, blockUserTextView, pinPostTextView;
+    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView;
     private ProgressBar progressBar;
     private ImageView groupSettingsImageView;
     private TextView memberCountTextView;
@@ -161,6 +162,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         overlayView = findViewById(R.id.overlayView);
         savePostTextView = (TextView) findViewById(R.id.savePostTextView);
         deletePostTextView = (TextView) findViewById(R.id.deletePostTextView);
+        editPostTextView = (TextView) findViewById(R.id.editPostTextView);
         blockUserTextView = (TextView) findViewById(R.id.blockUserTextView);
         pinPostTextView = (TextView) findViewById(R.id.pinPostTextView);
         memberCountTextView = (TextView) findViewById(R.id.memberCountTextView);
@@ -191,6 +193,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         reportPostTextView.setOnClickListener(this);
         overlayView.setOnClickListener(this);
         groupSettingsImageView.setOnClickListener(this);
+        editPostTextView.setOnClickListener(this);
         deletePostTextView.setOnClickListener(this);
         blockUserTextView.setOnClickListener(this);
         pinPostTextView.setOnClickListener(this);
@@ -591,6 +594,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     updateUserPostPreferences("disableNotif");
                 }
                 break;
+            case R.id.editPostTextView:
+                Log.d("editPostTextView", "" + selectedPost.getId());
+                openEditPostOption();
+                break;
             case R.id.deletePostTextView:
                 Log.d("deletePostTextView", "" + selectedPost.getId());
                 updateAdminLevelPostPrefs("markInactive");
@@ -626,6 +633,12 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    private void openEditPostOption() {
+        Intent intent = new Intent(this, GroupsEditPostActivity.class);
+        intent.putExtra("postData", selectedPost);
+        startActivityForResult(intent, EDIT_POST_REQUEST_CODE);
     }
 
     private void updateAdminLevelPostPrefs(String actionType) {
@@ -1228,11 +1241,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 } else {
                     commentToggleTextView.setText(getString(R.string.groups_disable_comment));
                 }
-                postSettingsContainer.startAnimation(slideAnim);
-                overlayView.startAnimation(fadeAnim);
-                postSettingsContainerMain.setVisibility(View.VISIBLE);
-                postSettingsContainer.setVisibility(View.VISIBLE);
-                overlayView.setVisibility(View.VISIBLE);
+//                postSettingsContainer.startAnimation(slideAnim);
+//                overlayView.startAnimation(fadeAnim);
+//                postSettingsContainerMain.setVisibility(View.VISIBLE);
+//                postSettingsContainer.setVisibility(View.VISIBLE);
+//                overlayView.setVisibility(View.VISIBLE);
                 break;
             case R.id.postDataTextView:
             case R.id.postDateTextView: {
@@ -1424,6 +1437,12 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 if (response.isSuccessful()) {
                     UserPostSettingResponse userPostSettingResponse = response.body();
                     setPostCurrentPreferences(userPostSettingResponse);
+
+                    postSettingsContainer.startAnimation(slideAnim);
+                    overlayView.startAnimation(fadeAnim);
+                    postSettingsContainerMain.setVisibility(View.VISIBLE);
+                    postSettingsContainer.setVisibility(View.VISIBLE);
+                    overlayView.setVisibility(View.VISIBLE);
                 } else {
 
                 }
@@ -1494,6 +1513,12 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             commentToggleTextView.setVisibility(View.GONE);
         }
 
+        if (selectedPost.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupDetailsActivity.this).getDynamoId())) {
+            editPostTextView.setVisibility(View.VISIBLE);
+        } else {
+            editPostTextView.setVisibility(View.GONE);
+        }
+
         //No existing settings for this post for this user
         if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
             savePostTextView.setText(getString(R.string.groups_save_post));
@@ -1541,6 +1566,12 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
                 TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
                 tab.select();
+            } else if (requestCode == EDIT_POST_REQUEST_CODE) {
+                if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
+                    postSettingsContainerMain.setVisibility(View.GONE);
+                }
+                selectedPost.setContent(data.getStringExtra("updatedContent"));
+                groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
             }
         }
     }

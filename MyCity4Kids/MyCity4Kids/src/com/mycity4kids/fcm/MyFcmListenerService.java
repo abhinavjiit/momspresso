@@ -372,6 +372,11 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
 
+                } else if (type.equalsIgnoreCase("group_membership") || type.equalsIgnoreCase("group_new_post")
+                        || type.equalsIgnoreCase("group_admin_group_edit") || type.equalsIgnoreCase("group_admin")
+                        || type.equalsIgnoreCase("group_new_response") || type.equalsIgnoreCase("group_new_reply")
+                        || type.equalsIgnoreCase("group_admin_membership") || type.equalsIgnoreCase("group_admin_reported")) {
+
                 } else {
                     Log.i(TAG, " Default : " + msg);
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");

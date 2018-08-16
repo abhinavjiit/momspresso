@@ -23,6 +23,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsListingResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
+import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
@@ -58,6 +59,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     private ProgressBar progressBar;
     private GroupResult selectedGroup;
     private LinkedTreeMap<String, String> selectedQuestionnaire;
+    private TextView toolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +70,14 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         recyclerGridView = (RecyclerView) findViewById(R.id.recyclerGridView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         noGroupsTextView = (TextView) findViewById(R.id.noGroupsTextView);
+        toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
+
+        final boolean isMember = getIntent().getBooleanExtra("isMember", false);
+
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        final boolean isMember = getIntent().getBooleanExtra("isMember", false);
 
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerGridView.setLayoutManager(gridLayoutManager);
@@ -111,8 +115,10 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
 
         if (isMember) {
             getJoinedGroupListApi(skip, limit);
+            toolbarTitle.setText(getString(R.string.groups_join_label));
         } else {
             getAllGroupListApi(skip, limit);
+            toolbarTitle.setText(getString(R.string.groups_all_groups));
         }
     }
 
@@ -120,8 +126,95 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupsListingResponse> call = groupsAPI.getJoinedGroupList(skip, limit);
-        call.enqueue(groupListResponseCallback);
+        Call<GroupsMembershipResponse> call = groupsAPI.getJoinedGroupList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER, skip, limit);
+        call.enqueue(joinedGroupListResponseCallback);
+    }
+
+    private Callback<GroupsMembershipResponse> joinedGroupListResponseCallback = new Callback<GroupsMembershipResponse>() {
+        @Override
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            progressBar.setVisibility(View.GONE);
+            isReuqestRunning = false;
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsMembershipResponse responseModel = response.body();
+                    processGroupListingResponse(responseModel);
+//                    if (dataList.isEmpty()) {
+//                        joinedGroupRecyclerGridView.setVisibility(View.GONE);
+//                        seeAllJoinedGpTextView.setVisibility(View.GONE);
+////                        underlineView.setVisibility(View.GONE);
+//                        joinGpLabel.setVisibility(View.GONE);
+//                    } else {
+//                        joinedGroupRecyclerGridView.setVisibility(View.VISIBLE);
+//                        joinedGroupList = (ArrayList<GroupResult>) dataList;
+//                        getJoinedGroupAdapter.setNewListData(joinedGroupList);
+//                        getJoinedGroupAdapter.notifyDataSetChanged();
+//                        if (joinedGroupList.size() > 4) {
+//                            seeAllJoinedGpTextView.setVisibility(View.VISIBLE);
+//                        }
+//                    }
+//                    getAllGroupListApi(dataList);
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
+            progressBar.setVisibility(View.GONE);
+            isReuqestRunning = false;
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void processGroupListingResponse(GroupsMembershipResponse responseModel) {
+        totalGroupCount = responseModel.getTotal();
+        List<GroupsMembershipResult> membershipList = responseModel.getData().getResult();
+        List<GroupResult> dataList = new ArrayList<>();
+        for (int i = 0; i < membershipList.size(); i++) {
+            dataList.add(membershipList.get(i).getGroupInfo());
+        }
+        if (dataList.size() == 0) {
+            isLastPageReached = false;
+            if (null != groupList && !groupList.isEmpty()) {
+                //No more next results for search from pagination
+                isLastPageReached = true;
+            } else {
+                // No results for search
+                noGroupsTextView.setVisibility(View.VISIBLE);
+                groupList = (ArrayList<GroupResult>) dataList;
+                adapter.setNewListData(groupList);
+                adapter.notifyDataSetChanged();
+                recyclerGridView.setVisibility(View.GONE);
+            }
+        } else {
+            noGroupsTextView.setVisibility(View.GONE);
+            if (skip == 0) {
+                groupList = (ArrayList<GroupResult>) dataList;
+            } else {
+                groupList.addAll(dataList);
+            }
+            adapter.setNewListData(groupList);
+            skip = skip + limit;
+            if (skip >= totalGroupCount) {
+                isLastPageReached = true;
+            }
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void getAllGroupListApi(int skip, int limit) {
@@ -208,31 +301,11 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         if (isMember) {
             selectedGroup = groupList.get(position);
-//            Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
-//            intent.putExtra("groupItem", joinedGroupList.get(position));
-//            intent.putExtra("isMember", isMember);
-//            startActivity(intent);
         } else {
             selectedGroup = groupList.get(position);
             selectedQuestionnaire = (LinkedTreeMap<String, String>) groupList.get(position).getQuestionnaire();
-//            Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
-//            intent.putExtra("groupItem", allGroupList.get(position));
-//            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) allGroupList.get(position).getQuestionnaire());
-//            intent.putExtra("isMember", isMember);
-//            startActivity(intent);
         }
         groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-
-//        if (isMember) {
-//            Intent intent = new Intent(this, GroupDetailsActivity.class);
-//            intent.putExtra("groupId", groupList.get(position).getId());
-//            startActivity(intent);
-//        } else {
-//            Intent intent = new Intent(this, GroupsSummaryActivity.class);
-//            intent.putExtra("groupId", groupList.get(position).getId());
-//            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) groupList.get(position).getQuestionnaire());
-//            startActivity(intent);
-//        }
     }
 
     @Override
@@ -262,8 +335,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
-//            if (isAdded())
-//                Toast.makeText(getActivity(), "Your membership is still pending", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra("pendingMembershipFlag", true);

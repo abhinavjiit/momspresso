@@ -1,9 +1,16 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +27,14 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupsActionVoteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
@@ -52,15 +61,12 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public static final int HEADER = -1;
     public static final int COMMENT_LEVEL_ROOT = 0;
-    public static final int COMMENT_LEVEL_REPLY = 1;
     private final String localizedNotHelpful, localizedHelpful, localizedComment;
 
-    public static final int COMMENT_LEVEL_REPLY_REPLY = 2;
     private final Context mContext;
     private final LayoutInflater mInflator;
     private ArrayList<GroupPostCommentResult> postCommentsList;
     private RecyclerViewClickListener mListener;
-    private int selectedPosition;
     private String postType;
     private int currentPagerPos = 0;
     private GroupPostResult groupPostResult;
@@ -121,7 +127,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
-            textPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
+
+            textPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(groupPostResult.getContent()));
+            Linkify.addLinks(textPostViewHolder.postDataTextView, Linkify.WEB_URLS);
+            textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(textPostViewHolder.postDataTextView);
+
             textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             textPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
             textPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
@@ -140,7 +152,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             }
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
-            mediaPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
+
+            mediaPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(groupPostResult.getContent()));
+            Linkify.addLinks(mediaPostViewHolder.postDataTextView, Linkify.WEB_URLS);
+            mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(mediaPostViewHolder.postDataTextView);
+
             mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             mediaPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
             mediaPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
@@ -160,7 +178,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             initializeViews((MediaPostViewHolder) holder, position);
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
-            textPollPostViewHolder.pollQuestionTextView.setText(groupPostResult.getContent());
+
+            textPollPostViewHolder.pollQuestionTextView.setText(AppUtils.fromHtml(groupPostResult.getContent()));
+            Linkify.addLinks(textPollPostViewHolder.pollQuestionTextView, Linkify.WEB_URLS);
+            textPollPostViewHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            textPollPostViewHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
+
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             textPollPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
             textPollPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
@@ -213,9 +237,15 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             }
         } else if (holder instanceof ImagePollPostViewHolder) {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
+
+            imageHolder.pollQuestionTextView.setText(AppUtils.fromHtml(groupPostResult.getContent()));
+            Linkify.addLinks(imageHolder.pollQuestionTextView, Linkify.WEB_URLS);
+            imageHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            imageHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(imageHolder.pollQuestionTextView);
+
             imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             imageHolder.usernameTextView.setText(groupPostResult.getUserId());
-            imageHolder.pollQuestionTextView.setText(groupPostResult.getContent());
             imageHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
             imageHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             imageHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
@@ -408,6 +438,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postSettingImageView.setOnClickListener(this);
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
+            shareTextView.setOnClickListener(this);
         }
 
         @Override
@@ -452,6 +483,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postSettingImageView.setOnClickListener(this);
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
+            shareTextView.setOnClickListener(this);
 
             mViewPagerAdapter = new GroupMediaPostViewPagerAdapter(mContext);
             postDataViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -532,6 +564,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postSettingImageView.setOnClickListener(this);
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
+            shareTextView.setOnClickListener(this);
 
             pollOption1ProgressBar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -799,51 +832,39 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         }
     };
 
-//    private void markAsHelpfulOrUnhelpful(int position, String markType) {
-//        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-//        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-//        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
-//        groupActionsRequest.setGroupId(groupPostResult.getGroupId());
-//        groupActionsRequest.setPostId(groupPostResult.getId());
-//        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
-//        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
-//        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
-//        call.enqueue(groupActionResponseCallback);
-//    }
-//
-//    private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
-//        @Override
-//        public void onResponse(Call<GroupsActionResponse> call, Response<GroupsActionResponse> response) {
-//            if (response == null || response.body() == null) {
-//                if (response != null && response.raw() != null) {
-//                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-//                    Crashlytics.logException(nee);
-//                }
-//                return;
-//            }
-//            try {
-//                if (response.isSuccessful()) {
-//                    GroupsActionResponse groupsActionResponse = response.body();
-//                    groupPostResult.setVoted(true);
-//                    notifyDataSetChanged();
-//                } else {
-//
-//                }
-//            } catch (Exception e) {
-//                Crashlytics.logException(e);
-//                Log.d("MC4kException", Log.getStackTraceString(e));
-//            }
-//        }
-//
-//        @Override
-//        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-//            Crashlytics.logException(t);
-//            Log.d("MC4kException", Log.getStackTraceString(t));
-//        }
-//    };
-
     public interface RecyclerViewClickListener {
         void onRecyclerItemClick(View view, int position);
     }
 
+    private void addLinkHandler(TextView textView) {
+        CharSequence text = textView.getText();
+        if (text instanceof Spannable) {
+            int end = text.length();
+            Spannable sp = (Spannable) textView.getText();
+            URLSpan[] urls = sp.getSpans(0, end, URLSpan.class);
+            SpannableStringBuilder style = new SpannableStringBuilder(text);
+            style.clearSpans();//should clear old spans
+            for (URLSpan url : urls) {
+                CustomerTextClick click = new CustomerTextClick(url.getURL());
+                style.setSpan(click, sp.getSpanStart(url), sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            textView.setText(style);
+        }
+    }
+
+    private class CustomerTextClick extends ClickableSpan {
+
+        private String mUrl;
+
+        CustomerTextClick(String url) {
+            mUrl = url;
+        }
+
+        @Override
+        public void onClick(View widget) {
+            Intent intent = new Intent(mContext, NewsLetterWebviewActivity.class);
+            intent.putExtra(Constants.URL, mUrl);
+            mContext.startActivity(intent);
+        }
+    }
 }

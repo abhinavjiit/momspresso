@@ -197,12 +197,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             isReuqestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-
-//            Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
-//            intent.putExtra("groupId", 1);
-//            intent.putExtra("isMember", true);
-//            startActivity(intent);
-
         }
     };
 

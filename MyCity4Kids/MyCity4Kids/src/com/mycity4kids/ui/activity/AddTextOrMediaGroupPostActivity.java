@@ -89,6 +89,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     private Uri imageUri;
     private File photoFile;
     private String mCurrentPhotoPath, absoluteImagePath;
+    private boolean isRequestRunning = false;
 
     private View mLayout;
     private EditText postContentEditText;
@@ -102,7 +103,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     private TextView anonymousTextView;
     private CheckBox anonymousCheckbox;
     private TextView addMediaTextView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,7 +220,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 //                chooseAnonymousDialogFragment.show(fm, "Go Anonymous");
                 break;
             case R.id.publishTextView:
-                if (validateParams()) {
+                if (!isRequestRunning && validateParams()) {
+                    isRequestRunning = true;
                     publishPost();
                 }
                 break;
@@ -267,6 +268,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     private Callback<AddGroupPostResponse> postAdditionResponseCallback = new Callback<AddGroupPostResponse>() {
         @Override
         public void onResponse(Call<AddGroupPostResponse> call, retrofit2.Response<AddGroupPostResponse> response) {
+            isRequestRunning = false;
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -286,12 +288,15 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
 //                showToast(getString(R.string.went_wrong));
             }
         }
 
         @Override
         public void onFailure(Call<AddGroupPostResponse> call, Throwable t) {
+            isRequestRunning = false;
+            showToast(getString(R.string.went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

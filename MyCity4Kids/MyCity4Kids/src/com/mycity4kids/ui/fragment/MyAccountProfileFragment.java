@@ -359,6 +359,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             boolean topicsCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "topics");
             boolean topicsArticleCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "topics_article");
             boolean articleCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "article_details");
+            boolean groupsCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "groups");
             String appLocale = SharedPrefUtils.getAppLocale(getActivity());
 
             SharedPrefUtils.clearPrefrence(getActivity());
@@ -367,6 +368,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics", topicsCoach);
             SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", topicsArticleCoach);
             SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "article_details", articleCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "groups", groupsCoach);
             SharedPrefUtils.setAppLocale(getActivity(), appLocale);
             /**
              * delete table from local also;

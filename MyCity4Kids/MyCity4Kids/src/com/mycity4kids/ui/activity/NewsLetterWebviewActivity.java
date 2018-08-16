@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -17,21 +19,24 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 
 /**
- * Created by khushboo.goyal on 25-08-2015.
+ * Created by Hemant Parmar on 25-08-2015.
  */
 public class NewsLetterWebviewActivity extends BaseActivity {
     private String url;
     private WebView webview;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newsletter_webview);
-        Utils.pushOpenScreenEvent(NewsLetterWebviewActivity.this, "Push NewsLetter Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
-        NotificationManager nMgr = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        nMgr.cancel(getIntent().getIntExtra(AppConstants.NOTIFICATION_ID, 0));
-
+        Utils.pushOpenScreenEvent(NewsLetterWebviewActivity.this, "WebViewScreen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         webview = (WebView) findViewById(R.id.webview);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -71,5 +76,15 @@ public class NewsLetterWebviewActivity extends BaseActivity {
     @Override
     protected void updateUi(Response response) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

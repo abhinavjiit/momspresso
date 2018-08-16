@@ -79,9 +79,9 @@
         android:layout_marginEnd="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginTop="15dp"
-        android:gravity="left"
-        android:text="What is your favorite color?"
-        android:textColor="@color/groups.light_black_color"
+        android:gravity="start"
+        android:text=""
+        android:textColor="@color/groups.grey"
         android:textSize="14sp"
         android:visibility="visible"
         app:fontName="open_sans.ttf" />

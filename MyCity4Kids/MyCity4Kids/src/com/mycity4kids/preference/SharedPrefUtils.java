@@ -84,11 +84,13 @@ public class SharedPrefUtils {
     private static final String PHOENIX_FIRST_LAUNCH_FLAG = "phoenixFirstLaunchFlag";
     private static final String FB_CONNECT_FIRST_LAUNCH_FLAG = "fbConnectFirstLaunchFlag";
     private static final String LOCALIZATION_FIRST_LAUNCH_FLAG = "localizationFirstLaunchFlag";
+    private static final String GROUP_TOUR_LAUNCH_FLAG = "groupTourLaunchFlag";
 
     private static final String COACHMARK_HOME = "coachmarkHome";
     private static final String COACHMARK_TOPICS = "coachmarkTopics";
     private static final String COACHMARK_TOPICS_ARTICLE = "coachmarkTopicsArticle";
     private static final String COACHMARK_ARTICLE_DETAILS = "coachmarkArticleDetails";
+    private static final String COACHMARK_GROUP = "coachmarkGroups";
 
     private static final String CHANGE_CITY_FLAG = "changeCityFlag";
 
@@ -406,6 +408,18 @@ public class SharedPrefUtils {
         return _sharedPref.getBoolean(LOCALIZATION_FIRST_LAUNCH_FLAG, true);
     }
 
+    public static void setGroupTourFirstLaunch(Context context, boolean flag) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(GROUP_TOUR_LAUNCH_FLAG, flag);
+        _editor.commit();
+    }
+
+    public static boolean isGroupTourFirstLaunch(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getBoolean(GROUP_TOUR_LAUNCH_FLAG, true);
+    }
+
     public static void setCoachmarksShownFlag(Context context, String screenName, boolean flag) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
@@ -417,6 +431,8 @@ public class SharedPrefUtils {
             _editor.putBoolean(COACHMARK_TOPICS_ARTICLE, flag);
         } else if ("article_details".equals(screenName)) {
             _editor.putBoolean(COACHMARK_ARTICLE_DETAILS, flag);
+        } else if ("groups".equals(screenName)) {
+            _editor.putBoolean(COACHMARK_GROUP, flag);
         }
 
         _editor.commit();
@@ -432,6 +448,8 @@ public class SharedPrefUtils {
             return _sharedPref.getBoolean(COACHMARK_TOPICS_ARTICLE, false);
         } else if ("article_details".equals(screenName)) {
             return _sharedPref.getBoolean(COACHMARK_ARTICLE_DETAILS, false);
+        } else if ("groups".equals(screenName)) {
+            return _sharedPref.getBoolean(COACHMARK_GROUP, false);
         }
         return true;
     }

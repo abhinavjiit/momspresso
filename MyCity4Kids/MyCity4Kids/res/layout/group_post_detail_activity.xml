@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/user_activities.toolbar.title"
+                android:text=""
                 android:textColor="@color/user_activities.toolbar.title"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
@@ -82,7 +82,6 @@
                 android:id="@+id/savePostTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/notificationToggleTextView"
                 android:background="@color/white"
                 android:drawablePadding="20dp"
                 android:padding="20dp"
@@ -96,7 +95,6 @@
                 android:id="@+id/notificationToggleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/commentToggleTextView"
                 android:background="@color/white"
                 android:drawablePadding="20dp"
                 android:padding="20dp"
@@ -109,7 +107,6 @@
                 android:id="@+id/commentToggleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/reportPostTextView"
                 android:background="@color/white"
                 android:drawablePadding="20dp"
                 android:padding="20dp"
@@ -128,6 +125,19 @@
                 android:text="@string/groups.report_post"
                 android:textColor="@color/groups.light_black_color"
                 android:textSize="16sp"
+                app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/editPostTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:text="@string/groups.edit_post"
+                android:textColor="@color/groups.light_black_color"
+                android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="open_sans.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView

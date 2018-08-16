@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="96"
-    android:versionName="9.1.1">
+    android:versionCode="97"
+    android:versionName="9.1.2">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -441,6 +441,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.GroupsSearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.GroupsEditPostActivity"
             android:screenOrientation="portrait" />
 
         <receiver

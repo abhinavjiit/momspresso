@@ -117,8 +117,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView langTextView;
     private FrameLayout transparentLayerToolbar;
     private FrameLayout transparentLayerNavigation;
-    private RelativeLayout firstCoachmark, secondCoachmark;
+    private RelativeLayout groupCoachmark, firstCoachmark, secondCoachmark;
     private TextView selectedlangGuideTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +165,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
         langTextView = (TextView) findViewById(R.id.langTextView);
         selectedlangGuideTextView = (TextView) findViewById(R.id.selectedlangGuideTextView);
+        groupCoachmark = (RelativeLayout) findViewById(R.id.groupCoachmark);
         firstCoachmark = (RelativeLayout) findViewById(R.id.firstCoachmark);
         secondCoachmark = (RelativeLayout) findViewById(R.id.secondCoachmark);
         transparentLayerToolbar = (FrameLayout) findViewById(R.id.transparentLayerToolbar);
@@ -182,6 +184,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         searchAllImageView.setOnClickListener(this);
         readAllNotificationTextView.setOnClickListener(this);
         langTextView.setOnClickListener(this);
+        groupCoachmark.setOnClickListener(this);
         firstCoachmark.setOnClickListener(this);
         secondCoachmark.setOnClickListener(this);
 
@@ -292,6 +295,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
             Bundle mBundle1 = new Bundle();
             mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+            fragment1.setArguments(mBundle1);
+            addFragment(fragment1, mBundle1, true);
+        } else if (Constants.GROUP_LISTING_FRAGMENT.equals(fragmentToLoad)) {
+            GroupsFragment fragment1 = new GroupsFragment();
+            Bundle mBundle1 = new Bundle();
             fragment1.setArguments(mBundle1);
             addFragment(fragment1, mBundle1, true);
         } else {
@@ -431,6 +439,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListing")) {
                 fragmentToLoad = Constants.SHORT_STOY_FRAGMENT;
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("group_listing")) {
+                fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
             }
         } else {
             String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
@@ -824,6 +834,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     ((NotificationFragment) topFragment).markAllNotificationAsRead();
                     updateUnreadNotificationCount("0");
                 }
+                break;
+            case R.id.groupCoachmark:
+                groupCoachmark.setVisibility(View.GONE);
+                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "home")) {
+                    firstCoachmark.setVisibility(View.VISIBLE);
+                    secondCoachmark.setVisibility(View.GONE);
+                }
+                SharedPrefUtils.setGroupTourFirstLaunch(this, false);
+                SharedPrefUtils.setCoachmarksShownFlag(this, "groups", true);
                 break;
             case R.id.firstCoachmark:
                 firstCoachmark.setVisibility(View.GONE);
@@ -1358,8 +1377,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "home")) {
-                    firstCoachmark.setVisibility(View.VISIBLE);
+                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "groups")) {
+                    groupCoachmark.setVisibility(View.VISIBLE);
                 }
                 langTextView.setVisibility(View.VISIBLE);
                 toolbarTitleTextView.setOnClickListener(this);

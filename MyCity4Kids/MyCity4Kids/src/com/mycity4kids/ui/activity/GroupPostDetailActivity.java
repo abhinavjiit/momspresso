@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -74,6 +75,8 @@ import retrofit2.Retrofit;
 
 public class GroupPostDetailActivity extends BaseActivity implements View.OnClickListener, GroupPostDetailsAndCommentsRecyclerAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
 
+    private static final int EDIT_POST_REQUEST_CODE = 1010;
+
     private GroupPostDetailsAndCommentsRecyclerAdapter groupPostDetailsAndCommentsRecyclerAdapter;
 
     private int totalPostCount;
@@ -84,7 +87,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private String postType;
     private int groupId;
     private int postId;
-    private GroupPostResult selectedPost;
     private UserPostSettingResult currentPostPrefsForUser;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private boolean isReuqestRunning = false;
@@ -101,7 +103,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
     private View overlayView;
-    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, deletePostTextView, blockUserTextView, pinPostTextView;
+    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView;
     private ProgressBar progressBar;
     private FloatingActionButton openAddCommentDialog;
     private int actionItemPosition;
@@ -126,6 +128,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         savePostTextView = (TextView) findViewById(R.id.savePostTextView);
         notificationToggleTextView = (TextView) findViewById(R.id.notificationToggleTextView);
         commentToggleTextView = (TextView) findViewById(R.id.commentToggleTextView);
+        editPostTextView = (TextView) findViewById(R.id.editPostTextView);
         deletePostTextView = (TextView) findViewById(R.id.deletePostTextView);
         blockUserTextView = (TextView) findViewById(R.id.blockUserTextView);
         pinPostTextView = (TextView) findViewById(R.id.pinPostTextView);
@@ -150,6 +153,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         reportPostTextView.setOnClickListener(this);
         overlayView.setOnClickListener(this);
         openAddCommentDialog.setOnClickListener(this);
+        editPostTextView.setOnClickListener(this);
         deletePostTextView.setOnClickListener(this);
         blockUserTextView.setOnClickListener(this);
         pinPostTextView.setOnClickListener(this);
@@ -681,7 +685,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     private void setPostCurrentPreferences(UserPostSettingResponse userPostSettingResponse) {
 
-        if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this).getDynamoId())
+        if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
+            editPostTextView.setVisibility(View.VISIBLE);
+        } else {
+            editPostTextView.setVisibility(View.GONE);
+        }
+
+        if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())
                 || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
                 || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
             commentToggleTextView.setVisibility(View.VISIBLE);
@@ -713,6 +723,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.editPostTextView:
+                openEditPostOption();
+                break;
             case R.id.deletePostTextView:
                 updateAdminLevelPostPrefs("markInactive");
                 break;
@@ -774,6 +787,12 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    private void openEditPostOption() {
+        Intent intent = new Intent(this, GroupsEditPostActivity.class);
+        intent.putExtra("postData", postData);
+        startActivityForResult(intent, EDIT_POST_REQUEST_CODE);
     }
 
     private void updateAdminLevelPostPrefs(String actionType) {
@@ -1572,5 +1591,19 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onMembershipStatusFetchFail() {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == EDIT_POST_REQUEST_CODE) {
+                if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
+                    postSettingsContainerMain.setVisibility(View.GONE);
+                }
+                postData.setContent(data.getStringExtra("updatedContent"));
+                groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

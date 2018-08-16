@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -52,6 +54,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
     private GroupsMembersRecyclerAdapter adapter;
     private int groupId;
     private String memberType;
+    private RelativeLayout mLodingView;
 
     @Nullable
     @Override
@@ -59,6 +62,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
         View view = inflater.inflate(R.layout.groups_existing_member_tab_fragment, null);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
 
         groupId = getArguments().getInt("groupId");
 
@@ -71,6 +75,8 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
         adapter = new GroupsMembersRecyclerAdapter(getActivity(), this);
         adapter.setData(membersList);
         recyclerView.setAdapter(adapter);
+
+        view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
         checkMemberType();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -85,6 +91,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
                     if (!isReuqestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
+                            mLodingView.setVisibility(View.VISIBLE);
                             getAllMembers();
                         }
                     }
@@ -100,6 +107,7 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
     }
 
     public void refreshList() {
+        mLodingView.setVisibility(View.GONE);
         isReuqestRunning = false;
         isLastPageReached = false;
         skip = 0;
@@ -119,6 +127,8 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
     private Callback<GroupsMembershipResponse> memberShipReponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
         public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            isReuqestRunning = false;
+            mLodingView.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -142,7 +152,10 @@ public class GroupExistingMemberTabFragment extends BaseFragment implements Grou
 
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
-
+            isReuqestRunning = false;
+            mLodingView.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 

@@ -82,6 +82,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
     private ArrayList<String> urlList;
     private ArrayList<String> textChoiceList;
     private GroupResult selectedGroup;
+    private boolean isRequestRunning = false;
 
     private TextView addChoiceTextView;
     private LinearLayout choicesContainer;
@@ -382,8 +383,9 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                 onBackPressed();
                 break;
             case R.id.publishTextView:
-                if (validateParams()) {
+                if (!isRequestRunning && validateParams()) {
 //                    showToast("Valid Poll");
+                    isRequestRunning = true;
                     publishPoll();
                 }
                 break;
@@ -447,6 +449,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
     private Callback<AddGroupPostResponse> postAdditionResponseCallback = new Callback<AddGroupPostResponse>() {
         @Override
         public void onResponse(Call<AddGroupPostResponse> call, retrofit2.Response<AddGroupPostResponse> response) {
+            isRequestRunning = false;
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -459,21 +462,22 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                     AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
                     onBackPressed();
-//                    processGroupListingResponse(responseModel);
                 } else {
 
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
+                showToast(getString(R.string.went_wrong));
             }
         }
 
         @Override
         public void onFailure(Call<AddGroupPostResponse> call, Throwable t) {
+            isRequestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
+            showToast(getString(R.string.went_wrong));
         }
     };
 

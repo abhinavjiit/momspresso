@@ -3,7 +3,7 @@ package com.mycity4kids.constants;
 import android.net.Uri;
 
 /**
- * @author Deepanker Chaudhary
+ * @author Hemant Parmar
  */
 public class AppConstants {
 
@@ -16,7 +16,7 @@ public class AppConstants {
 
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
 
-    //    public static final String GROUPS_LIVE_URL = "https://groups.momspresso.com/";
+//    public static final String GROUPS_LIVE_URL = "https://groups.momspresso.com/";
     public static final String GROUPS_LIVE_URL = "http://35.200.233.99/";
     //Enable For Testing
     //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());
@@ -415,6 +415,7 @@ public class AppConstants {
     public static final String PHOENIX_RELEASE_VERSION = "5.0";
     public static final String VENUS_RELEASE_VERSION = "5.0";
     public static final String LOCALIZATION_RELEASE_VERSION = "8.0.0";
+    public static final String GROUPS_COACHMARK_VERSION = "9.1.2";
     public static final String FACEBOOK_CONNECT_RELEASE_VERSION = "5.5";
     public static final String UPLOAD_VIDEO_RELEASE_VERSION = "5.6.2";
 
@@ -499,6 +500,7 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_SHORT_STORY_DETAILS = "short_story_details";
     public static final String NOTIFICATION_TYPE_GROUP_DETAILS = "group_details";
     public static final String NOTIFICATION_TYPE_POST_DETAILS = "post_details";
+    public static final String NOTIFICATION_TYPE_GROUP_LISTING = "group_listing";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";

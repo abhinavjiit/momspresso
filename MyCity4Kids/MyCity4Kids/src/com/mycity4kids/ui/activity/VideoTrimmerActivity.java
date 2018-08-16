@@ -56,7 +56,7 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
         mVideoTrimmer = ((K4LVideoTrimmer) findViewById(R.id.timeLine));
 
         if (mVideoTrimmer != null) {
-            mVideoTrimmer.setMaxDuration(58);
+            mVideoTrimmer.setMaxDuration(174);
             mVideoTrimmer.setOnTrimVideoListener(this);
 //            mVideoTrimmer.setOnK4LVideoListener(this);
             AppUtils.createDirIfNotExists("MyCity4Kids/videos");

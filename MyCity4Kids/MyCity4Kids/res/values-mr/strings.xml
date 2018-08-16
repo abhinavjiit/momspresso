@@ -650,6 +650,7 @@
     <string name="guide.sub_topics_list_tour">Click here to look at more categories</string>
     <string name="guide.share_like_bookmark_tour">Share, Bookmark and Love this post</string>
     <string name="guide.listen_tour">Click here to listen to this blog</string>
+    <string name="guide.groups_tour">Join Support Groups. Ask questions (even anonymously) \nand get answers from the community.</string>
 
     <string name="author_type.blogger">ब्लॉगर</string>
     <string name="author_type.editor">संपादक</string>
@@ -729,6 +730,33 @@
     <string name="groups.add_image">ADD IMAGE</string>
     <string name="groups.image_poll">IMAGE POLL</string>
     <string name="groups.text_poll">TEXT POLL</string>
+    <string name="groups.anonymous">ANONYMOUS</string>
+    <string name="groups.anyone_join">Anyone can join</string>
+    <string name="groups.closed_gp">Closed group</string>
+    <string name="groups.invitation_only_gp">Invitation only group</string>
+    <string name="groups.created">Created</string>
+    <string name="groups.member_label">MEMBERS</string>
+    <string name="groups.sections.about">ABOUT</string>
+    <string name="groups.sections.discussions">DISCUSSION</string>
+    <string name="groups.sections.blogs">BLOGS</string>
+    <string name="groups.sections.photos">PHOTOS</string>
+    <string name="groups.sections.videos">VIDEOS</string>
+    <string name="groups.sections.top_posts">TOP POSTS</string>
+    <string name="groups.sections.polls">POLLS</string>
+    <string name="groups.search_in">Search</string>
+    <string name="groups.join_form">JOINING FORM</string>
+    <string name="groups.membership_pending">Membership Pending</string>
+    <string name="groups.why_leave">Please let us know why you are leaving.</string>
+    <string name="groups.leave_be_back">This is temporary. I\'ll be back.</string>
+    <string name="groups.spend_time">I spend too much time using Momspresso.</string>
+    <string name="groups.not_useful">I don\'t find Momspresso useful.</string>
+    <string name="groups.how_to_use">I don\'t understand how to use Momspresso</string>
+    <string name="groups.user_blocked_msg">You have been blocked from this group</string>
+    <string name="groups.user_membership_rejected_msg">Your membership has been rejected for this group</string>
+    <string name="groups.join_group">JOIN GROUP</string>
+    <string name="groups.ask_something">Ask something ...</string>
+    <string name="groups.post_label">POST</string>
+    <string name="groups.edit_post">EDIT POST</string>
 
     <string name="no_story.be_first">Be the first one to write stories in this category!</string>
 

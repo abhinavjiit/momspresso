@@ -651,6 +651,7 @@
     <string name="guide.sub_topics_list_tour">Click here to look at more categories</string>
     <string name="guide.share_like_bookmark_tour">Share, Bookmark and Love this post</string>
     <string name="guide.listen_tour">Click here to listen to this blog</string>
+    <string name="guide.groups_tour">Join Support Groups. Ask questions (even anonymously) \nand get answers from the community.</string>
 
     <string name="author_type.blogger">BLOGGER</string>
     <string name="author_type.editor">EDITOR</string>
@@ -752,6 +753,7 @@
     <string name="groups.join_group">JOIN GROUP</string>
     <string name="groups.ask_something">Ask something ...</string>
     <string name="groups.post_label">POST</string>
+    <string name="groups.edit_post">EDIT POST</string>
 
     <string name="no_story.be_first">Be the first one to write stories in this category!</string>
 

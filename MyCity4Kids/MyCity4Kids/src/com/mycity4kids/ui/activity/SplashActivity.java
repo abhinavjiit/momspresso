@@ -143,6 +143,12 @@ public class SplashActivity extends BaseActivity {
 
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
+
+            if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.GROUPS_COACHMARK_VERSION) && SharedPrefUtils.isGroupTourFirstLaunch(this)) {
+                SharedPrefUtils.setCoachmarksShownFlag(this, "groups", false);
+                SharedPrefUtils.setGroupTourFirstLaunch(this, false);
+            }
+
             if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.LOCALIZATION_RELEASE_VERSION) && SharedPrefUtils.isLocalizationFirstLaunch(this)) {
                 SharedPrefUtils.setCoachmarksShownFlag(this, "home", false);
                 SharedPrefUtils.setCoachmarksShownFlag(this, "topics", false);
