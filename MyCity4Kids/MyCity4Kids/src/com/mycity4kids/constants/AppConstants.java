@@ -16,8 +16,8 @@ public class AppConstants {
 
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
 
-//    public static final String GROUPS_LIVE_URL = "https://groups.momspresso.com/";
-    public static final String GROUPS_LIVE_URL = "http://35.200.233.99/";
+    public static final String GROUPS_LIVE_URL = "https://groups.momspresso.com/";
+//    public static final String GROUPS_LIVE_URL = "http://35.200.233.99/";
     //Enable For Testing
     //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());
 
@@ -415,7 +415,7 @@ public class AppConstants {
     public static final String PHOENIX_RELEASE_VERSION = "5.0";
     public static final String VENUS_RELEASE_VERSION = "5.0";
     public static final String LOCALIZATION_RELEASE_VERSION = "8.0.0";
-    public static final String GROUPS_COACHMARK_VERSION = "9.1.2";
+    public static final String GROUPS_COACHMARK_VERSION = "9.1.3";
     public static final String FACEBOOK_CONNECT_RELEASE_VERSION = "5.5";
     public static final String UPLOAD_VIDEO_RELEASE_VERSION = "5.6.2";
 
