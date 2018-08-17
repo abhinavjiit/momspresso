@@ -2,6 +2,8 @@ package com.mycity4kids.constants;
 
 import android.net.Uri;
 
+import com.mycity4kids.BuildConfig;
+
 /**
  * @author Hemant Parmar
  */
@@ -16,7 +18,7 @@ public class AppConstants {
 
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
 
-    public static final String GROUPS_LIVE_URL = "https://groups.momspresso.com/";
+    public static final String GROUPS_LIVE_URL = BuildConfig.GROUPS_LIVE_URL;
 //    public static final String GROUPS_LIVE_URL = "http://35.200.233.99/";
     //Enable For Testing
     //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());
@@ -608,4 +610,6 @@ public class AppConstants {
     public static final String GROUP_MEMBERSHIP_STATUS_LEFT = "2";
     public static final String GROUP_MEMBERSHIP_STATUS_BLOCKED = "3";
     public static final String GROUP_MEMBERSHIP_STATUS_REJECTED = "4";
+
+    public static final String MIX_PANEL_TOKEN = "76ebc952badcc143b417b3a4cf89cadd";
 }

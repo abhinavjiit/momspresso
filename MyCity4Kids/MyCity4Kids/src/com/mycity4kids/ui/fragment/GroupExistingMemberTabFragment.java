@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -25,9 +23,7 @@ import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
-import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupMembershipActivity;
-import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.adapter.GroupsMembersRecyclerAdapter;
 
 import java.util.ArrayList;

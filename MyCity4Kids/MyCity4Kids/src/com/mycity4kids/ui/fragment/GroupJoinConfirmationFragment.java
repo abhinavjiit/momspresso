@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,16 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.GroupResult;
-import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.GroupDetailsActivity;
-import com.mycity4kids.utils.LocaleManager;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by user on 08-06-2015.

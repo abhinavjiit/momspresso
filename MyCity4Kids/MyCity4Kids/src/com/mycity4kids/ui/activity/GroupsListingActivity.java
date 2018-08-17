@@ -17,9 +17,11 @@ import com.crashlytics.android.Crashlytics;
 import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsListingResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
@@ -60,11 +62,14 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     private GroupResult selectedGroup;
     private LinkedTreeMap<String, String> selectedQuestionnaire;
     private TextView toolbarTitle;
+    private MixpanelAPI mixpanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_listing_activity);
+
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerGridView = (RecyclerView) findViewById(R.id.recyclerGridView);
@@ -116,9 +121,11 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         if (isMember) {
             getJoinedGroupListApi(skip, limit);
             toolbarTitle.setText(getString(R.string.groups_join_label));
+            Utils.pushOpenScreenEvent(this, "JoinedGroupsListingScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         } else {
             getAllGroupListApi(skip, limit);
             toolbarTitle.setText(getString(R.string.groups_all_groups));
+            Utils.pushOpenScreenEvent(this, "AllGroupsListingScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         }
     }
 
@@ -147,21 +154,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 if (response.isSuccessful()) {
                     GroupsMembershipResponse responseModel = response.body();
                     processGroupListingResponse(responseModel);
-//                    if (dataList.isEmpty()) {
-//                        joinedGroupRecyclerGridView.setVisibility(View.GONE);
-//                        seeAllJoinedGpTextView.setVisibility(View.GONE);
-////                        underlineView.setVisibility(View.GONE);
-//                        joinGpLabel.setVisibility(View.GONE);
-//                    } else {
-//                        joinedGroupRecyclerGridView.setVisibility(View.VISIBLE);
-//                        joinedGroupList = (ArrayList<GroupResult>) dataList;
-//                        getJoinedGroupAdapter.setNewListData(joinedGroupList);
-//                        getJoinedGroupAdapter.notifyDataSetChanged();
-//                        if (joinedGroupList.size() > 4) {
-//                            seeAllJoinedGpTextView.setVisibility(View.VISIBLE);
-//                        }
-//                    }
-//                    getAllGroupListApi(dataList);
                 } else {
 
                 }
@@ -324,7 +316,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
-//            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) selectedGroup.getQuestionnaire());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {

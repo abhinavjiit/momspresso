@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.kelltontech.utils.DateTimeUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupPostResult;
@@ -129,8 +130,18 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             ((HeaderViewHolder) holder).memberCountTextView.setText(groupDetails.getMemberCount() + " " + mContext.getString(R.string.groups_member_label));
             ((HeaderViewHolder) holder).groupDescTextView.setText(groupDetails.getDescription());
             if (groupDetails.getAdminMembers().getData() != null && !groupDetails.getAdminMembers().getData().isEmpty()) {
-                ((HeaderViewHolder) holder).groupAdminTextView.setText(groupDetails.getAdminMembers().getData().get(0).getUserInfo().getFirstName() + " "
-                        + groupDetails.getAdminMembers().getData().get(0).getUserInfo().getLastName());
+                String modeList = "";
+                for (int i = 0; i < groupDetails.getAdminMembers().getData().size(); i++) {
+                    if (StringUtils.isNullOrEmpty(modeList)) {
+                        modeList = modeList + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getFirstName() + " "
+                                + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getLastName();
+                    } else {
+                        modeList = modeList + ", " + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getFirstName() + " "
+                                + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getLastName();
+                    }
+
+                }
+                ((HeaderViewHolder) holder).groupAdminTextView.setText(modeList);
             }
         } else if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;

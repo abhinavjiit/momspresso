@@ -31,10 +31,12 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
@@ -105,6 +107,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private String memberType;
     private int groupId;
     private String commaSepCategoryList = "";
+    private String source;
 
     private Handler handler = new Handler();
 
@@ -134,12 +137,12 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private ImageView groupImageView;
     private ImageView clearSearchImageView;
     private ImageView shareGroupImageView;
-    private String source;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_details_activity);
+        Utils.pushOpenScreenEvent(this, "GroupDetailsScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -175,6 +178,17 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         memberType = getIntent().getStringExtra(AppConstants.GROUP_MEMBER_TYPE);
         source = getIntent().getStringExtra("source");
 
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("groupId", "" + groupId);
+            mixpanel.track("GroupDetail", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -199,7 +213,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         pinPostTextView.setOnClickListener(this);
         clearSearchImageView.setOnClickListener(this);
         shareGroupImageView.setOnClickListener(this);
-//        blockedCloseImageView.setOnClickListener(this);
 
         String[] sections = {
                 getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions), getString(R.string.onboarding_desc_array_tutorial_1_blogs),
@@ -527,16 +540,23 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.blockedCloseImageView: {
-//                onBackPressed();
-//            }
-//            break;
             case R.id.shareGroupImageView: {
+                MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("groupId", "" + groupId);
+                    mixpanel.track("GroupInvite", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
 
                 String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + selectedGroup.getUrl();
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, selectedGroup.getDescription() + "\n\n" + "Join " + selectedGroup.getTitle() + " support group\n" + shareUrl);
+//                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
             }
             break;
@@ -1556,6 +1576,17 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 1111) {
+
+                MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("groupId", "" + groupId);
+                    mixpanel.track("GroupPostCreation", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 if (addPostContainer.getVisibility() == View.VISIBLE) {
                     addPostContainer.setVisibility(View.GONE);
                 }

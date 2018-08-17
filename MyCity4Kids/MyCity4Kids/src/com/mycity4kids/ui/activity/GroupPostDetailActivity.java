@@ -23,9 +23,11 @@ import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.DeleteGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.EditGpPostCommentOrReplyRequest;
@@ -119,6 +121,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_post_detail_activity);
+        Utils.pushOpenScreenEvent(this, "GroupPostDetailsScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -1109,6 +1113,17 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     };
 
     public void addComment(String content) {
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("groupId", "" + groupId);
+            jsonObject.put("postId", "" + postData.getId());
+            mixpanel.track("CreateGroupComment", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();

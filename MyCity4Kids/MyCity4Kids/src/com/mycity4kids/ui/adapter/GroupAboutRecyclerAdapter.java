@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kelltontech.utils.DateTimeUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupResult;
@@ -56,10 +57,19 @@ public class GroupAboutRecyclerAdapter extends RecyclerView.Adapter<GroupAboutRe
             } else {
                 holder.groupTypeTextView.setText(mContext.getString(R.string.groups_invitation_only_gp));
             }
-//        holder.groupTypeTextView.setText("Closed Group");
             if (groupData.getAdminMembers().getData() != null && !groupData.getAdminMembers().getData().isEmpty()) {
-                holder.groupAdminTextView.setText(groupData.getAdminMembers().getData().get(0).getUserInfo().getFirstName() + " "
-                        + groupData.getAdminMembers().getData().get(0).getUserInfo().getLastName());
+                String modeList = "";
+                for (int i = 0; i < groupData.getAdminMembers().getData().size(); i++) {
+                    if (StringUtils.isNullOrEmpty(modeList)) {
+                        modeList = modeList + groupData.getAdminMembers().getData().get(i).getUserInfo().getFirstName() + " "
+                                + groupData.getAdminMembers().getData().get(i).getUserInfo().getLastName();
+                    } else {
+                        modeList = modeList + ", " + groupData.getAdminMembers().getData().get(i).getUserInfo().getFirstName() + " "
+                                + groupData.getAdminMembers().getData().get(i).getUserInfo().getLastName();
+                    }
+
+                }
+                holder.groupAdminTextView.setText(modeList);
             } else {
                 holder.groupAdminTextView.setText("");
             }

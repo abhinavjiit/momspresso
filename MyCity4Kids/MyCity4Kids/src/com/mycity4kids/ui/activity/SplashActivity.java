@@ -69,6 +69,8 @@ import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.location.GPSTracker;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -79,7 +81,7 @@ import retrofit2.Retrofit;
 public class SplashActivity extends BaseActivity {
 
     private static final int REQUEST_INIT_PERMISSION = 1;
-    private static final String MIX_PANEL_TOKEN = "76ebc952badcc143b417b3a4cf89cadd";
+
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
@@ -122,7 +124,7 @@ public class SplashActivity extends BaseActivity {
         extras = getIntent().getExtras();
         setUpGTM();
         MobileAds.initialize(this, getString(R.string.admob_id));
-        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), MIX_PANEL_TOKEN);
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         if (getIntent().getBooleanExtra("fromNotification", false)) {
             Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");
@@ -353,11 +355,18 @@ public class SplashActivity extends BaseActivity {
         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
         if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken()) && AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) { // if he signup
-            Log.e("MYCITY4KIDS", "USER logged In");
+
             Intent intent5 = new Intent(this, PushTokenService.class);
             startService(intent5);
-//            startSyncing();
             startSyncingUserInfo();
+
+            try {
+                JSONObject prop = new JSONObject();
+                prop.put("userId", SharedPrefUtils.getUserDetailModel(this).getDynamoId() );
+                mixpanel.registerSuperProperties(prop);
+            } catch (Exception e) {
+
+            }
 
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -737,7 +746,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mixpanel.flush();
+        super.onDestroy();
     }
 }

@@ -17,9 +17,11 @@ import com.crashlytics.android.Crashlytics;
 import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsListingResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
@@ -34,6 +36,9 @@ import com.mycity4kids.ui.adapter.GroupsRecyclerGridAdapter;
 import com.mycity4kids.widget.NoScrollGridLayoutManager;
 import com.mycity4kids.widget.SpacesItemDecoration;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,14 +52,8 @@ import retrofit2.Retrofit;
 
 public class GroupsFragment extends BaseFragment implements View.OnClickListener, GroupsRecyclerGridAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
 
-    private boolean isReuqestRunning = false;
     private ArrayList<GroupResult> joinedGroupList, allGroupList;
-    private boolean isLastPageReached;
-    private int skip = 0;
-    private int limit = 10;
     private GroupResult selectedGroup;
-    private int totalGroupCount;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private RecyclerView joinedGroupRecyclerGridView, allGroupRecyclerGridView;
     private ProgressBar progressBar;
@@ -64,17 +63,28 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     private GroupsRecyclerGridAdapter getAllGroupAdapter, getJoinedGroupAdapter;
     private LinkedTreeMap<String, String> selectedQuestionnaire;
     private TextView joinGpLabel;
-//    private View underlineView;
+    private MixpanelAPI mixpanel;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.groups_fragment, container, false);
+        Utils.pushOpenScreenEvent(getActivity(), "GroupsListingScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            mixpanel.track("GroupListing", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         joinedGroupRecyclerGridView = (RecyclerView) view.findViewById(R.id.joinedGroupRecyclerGridView);
         allGroupRecyclerGridView = (RecyclerView) view.findViewById(R.id.allGroupRecyclerGridView);
         seeAllGpTextView = (TextView) view.findViewById(R.id.seeAllGpTextView);
         joinGpLabel = (TextView) view.findViewById(R.id.joinGpLabel);
-//        underlineView = view.findViewById(R.id.underlineView);
         seeAllJoinedGpTextView = (TextView) view.findViewById(R.id.seeAllJoinedGpTextView);
         allGroupLabelTextView = (TextView) view.findViewById(R.id.allGroupLabelTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -110,11 +120,11 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         joinedGroupList = new ArrayList<>();
         getJoinedGroupAdapter.setNewListData(joinedGroupList);
 
-        getJoinedGroupListApi(skip, limit);
+        getJoinedGroupListApi();
         return view;
     }
 
-    private void getJoinedGroupListApi(int skip, int limit) {
+    private void getJoinedGroupListApi() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
@@ -149,7 +159,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         @Override
         public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
             progressBar.setVisibility(View.GONE);
-            isReuqestRunning = false;
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -169,7 +178,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                     if (dataList.isEmpty()) {
                         joinedGroupRecyclerGridView.setVisibility(View.GONE);
                         seeAllJoinedGpTextView.setVisibility(View.GONE);
-//                        underlineView.setVisibility(View.GONE);
                         joinGpLabel.setVisibility(View.GONE);
                     } else {
                         joinedGroupRecyclerGridView.setVisibility(View.VISIBLE);
@@ -194,7 +202,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         @Override
         public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
-            isReuqestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -204,7 +211,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         @Override
         public void onResponse(Call<GroupsListingResponse> call, retrofit2.Response<GroupsListingResponse> response) {
             progressBar.setVisibility(View.GONE);
-            isReuqestRunning = false;
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -226,7 +232,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                         getAllGroupAdapter.setNewListData(allGroupList);
                         getAllGroupAdapter.notifyDataSetChanged();
                         allGroupRecyclerGridView.setVisibility(View.VISIBLE);
-//                        seeAllGpTextView.setVisibility(View.VISIBLE);
                         allGroupLabelTextView.setVisibility(View.VISIBLE);
                     }
                 } else {
@@ -235,7 +240,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
 
         }
@@ -243,7 +247,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         @Override
         public void onFailure(Call<GroupsListingResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
-            isReuqestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
 
@@ -302,7 +305,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
         if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
             Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
-//            intent.putExtra("questionnaire", (LinkedTreeMap<String, String>) selectedGroup.getQuestionnaire());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
@@ -314,8 +316,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
-//            if (isAdded())
-//                Toast.makeText(getActivity(), "Your membership is still pending", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra("pendingMembershipFlag", true);

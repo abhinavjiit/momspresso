@@ -40,6 +40,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -119,6 +120,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private FrameLayout transparentLayerNavigation;
     private RelativeLayout groupCoachmark, firstCoachmark, secondCoachmark;
     private TextView selectedlangGuideTextView;
+    private MixpanelAPI mMixpanel;
 
 
     @Override
@@ -140,6 +142,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
         // Send a screen view.
         t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        mMixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         onNewIntent(getIntent());
         Intent intent = getIntent();
@@ -666,6 +670,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
+        mMixpanel.flush();
         super.onDestroy();
     }
 

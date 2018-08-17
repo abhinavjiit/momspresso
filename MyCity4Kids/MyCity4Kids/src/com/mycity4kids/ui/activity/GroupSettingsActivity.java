@@ -17,6 +17,7 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.share.Share;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -60,6 +61,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     private ImageView groupImageView;
     private TextView groupNameTextView;
     private RelativeLayout inviteMemberContainer;
+    private MixpanelAPI mixpanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,11 +179,21 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.inviteMemberContainer: {
+                MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("groupId", "" + groupItem.getId());
+                    mixpanel.track("GroupInvite", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
 
                 String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + groupItem.getUrl();
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, groupItem.getDescription() + "\n\n" + "Join " + groupItem.getTitle() + " support group\n" + shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
             }
             break;
@@ -230,6 +242,16 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
             }
             break;
             case R.id.leaveGroupContainer: {
+                MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("groupId", "" + groupItem.getId());
+                    mixpanel.track("LeaveGroup", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 Intent intent = new Intent(GroupSettingsActivity.this, LeaveGroupActivity.class);
                 intent.putExtra("groupItem", groupItem);
                 startActivity(intent);

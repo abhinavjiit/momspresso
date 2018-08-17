@@ -10,8 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -22,19 +20,19 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
-import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
-import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.adapter.GroupSummaryPostRecyclerAdapter;
@@ -59,16 +57,10 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     private GroupSummaryPostRecyclerAdapter groupSummaryPostRecyclerAdapter;
     private GroupResult selectedGroup;
     private ArrayList<GroupPostResult> postList;
-    private boolean isReuqestRunning = false;
-    private boolean isLastPageReached;
     private int skip = 0;
     private int limit = 10;
     private int totalPostCount;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private int groupId;
-    private GroupPostResult selectedPost;
-
-    private Animation slideAnim, fadeAnim;
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
@@ -79,7 +71,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     private RelativeLayout postSettingsContainerMain;
     private View overlayView;
     private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView;
-    private UserPostSettingResult currentPostPrefsForUser;
     private LinkedTreeMap<String, String> questionMap;
     private boolean pendingMembershipFlag;
     private boolean loopHoleFlag;
@@ -88,6 +79,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_summary_activity);
+        Utils.pushOpenScreenEvent(this, "GroupSummaryScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -109,10 +101,8 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         reportPostTextView.setOnClickListener(this);
         overlayView.setOnClickListener(this);
 
-//        selectedGroup = getIntent().getParcelableExtra("groupItem");
         groupId = getIntent().getIntExtra("groupId", 0);
         pendingMembershipFlag = getIntent().getBooleanExtra("pendingMembershipFlag", false);
-//        questionMap = (HashMap<String, String>) getIntent().getSerializableExtra("questionnaire");
 
         if (pendingMembershipFlag) {
             joinGroupTextView.setOnClickListener(null);
@@ -123,9 +113,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
-        fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
-
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -135,8 +122,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         postList = new ArrayList<>();
         postList.add(new GroupPostResult());
 
-//        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-//        BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
         getGroupDetails();
     }
 
@@ -226,17 +211,9 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         totalPostCount = response.getTotal();
         ArrayList<GroupPostResult> dataList = (ArrayList<GroupPostResult>) response.getData().get(0).getResult();
         if (dataList.size() == 0) {
-            isLastPageReached = false;
             if (null != postList && !postList.isEmpty()) {
                 //No more next results for search from pagination
-                isLastPageReached = true;
             } else {
-                // No results
-//                noPostsTextView.setVisibility(View.VISIBLE);
-//                postList = dataList;
-//                groupSummaryPostRecyclerAdapter.setHeaderData(selectedGroup);
-//                groupSummaryPostRecyclerAdapter.setData(postList);
-//                groupSummaryPostRecyclerAdapter.notifyDataSetChanged();
             }
         } else {
             formatPostData(dataList);
@@ -246,7 +223,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             groupSummaryPostRecyclerAdapter.setData(postList);
             skip = skip + limit;
             if (skip >= totalPostCount) {
-                isLastPageReached = true;
             }
             groupSummaryPostRecyclerAdapter.notifyDataSetChanged();
         }
@@ -295,7 +271,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.overlayView:
                 postSettingsContainerMain.setVisibility(View.GONE);
                 overlayView.setVisibility(View.GONE);
@@ -305,7 +280,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 joinGroupRequest();
                 break;
         }
-
     }
 
     private void joinGroupRequest() {
@@ -315,18 +289,11 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             return;
         }
         if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
-//            if (questionMap == null || questionMap.isEmpty()) {
-                JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
-                joinGroupRequest.setGroupId(selectedGroup.getId());
-                joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
-                Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
-                call.enqueue(groupJoinResponseCallback);
-//            } else {
-//                Intent intent = new Intent(GroupsSummaryActivity.this, GroupsQuestionnaireActivity.class);
-//                intent.putExtra("groupItem", selectedGroup);
-//                intent.putExtra("questionnaire", questionMap);
-//                startActivity(intent);
-//            }
+            JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
+            joinGroupRequest.setGroupId(selectedGroup.getId());
+            joinGroupRequest.setUserId(SharedPrefUtils.getUserDetailModel(GroupsSummaryActivity.this).getDynamoId());
+            Call<GroupsJoinResponse> call = groupsAPI.createMember(joinGroupRequest);
+            call.enqueue(groupJoinResponseCallback);
         } else {
             if (questionMap == null || questionMap.isEmpty()) {
                 JoinGroupRequest joinGroupRequest = new JoinGroupRequest();
@@ -342,54 +309,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             }
         }
     }
-
-    private void updatePostCommentSettings(int status) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        UpdateGroupPostRequest updateGroupPostRequest = new UpdateGroupPostRequest();
-        updateGroupPostRequest.setGroupId(selectedGroup.getId());
-        updateGroupPostRequest.setDisableComments(status);
-
-        Call<GroupPostResponse> call = groupsAPI.disablePostComment(selectedPost.getId(), updateGroupPostRequest);
-        call.enqueue(postUpdateResponseListener);
-    }
-
-    private Callback<GroupPostResponse> postUpdateResponseListener = new Callback<GroupPostResponse>() {
-        @Override
-        public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    GroupPostResponse groupPostResponse = response.body();
-                    if (groupPostResponse.getData().get(0).getResult().get(0).getDisableComments() == 1) {
-                        commentToggleTextView.setText(getString(R.string.groups_enable_comment));
-                    } else {
-                        commentToggleTextView.setText(getString(R.string.groups_disable_comment));
-                    }
-                } else {
-
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<GroupPostResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
 
     @Override
     protected void updateUi(Response response) {
@@ -453,6 +372,15 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
             }
             try {
                 if (response.isSuccessful()) {
+                    MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("groupId", "" + groupId);
+                        mixpanel.track("JoinGroup", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
                         Intent intent = new Intent(GroupsSummaryActivity.this, GroupDetailsActivity.class);
                         intent.putExtra("groupId", selectedGroup.getId());
@@ -461,9 +389,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                     } else {
                         showSuccessDialog();
                     }
-
-//                    GroupsJoinResponse responseModel = response.body();
-//                    processGroupListingResponse(responseModel);
                 } else {
 
                 }
