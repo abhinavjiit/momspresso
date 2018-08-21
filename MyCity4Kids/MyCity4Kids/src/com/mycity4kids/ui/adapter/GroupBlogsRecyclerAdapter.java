@@ -63,27 +63,45 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<GroupBlogsRe
     private void addArticleItem(final GroupBlogsRecyclerAdapter.FeedViewHolder holder, final int position) {
         holder.txvArticleTitle.setText(articleDataList.get(position).getTitle());
 
-        if (StringUtils.isNullOrEmpty(articleDataList.get(position).getReason())) {
-            holder.forYouInfoLL.setVisibility(View.GONE);
-        } else {
-            holder.forYouInfoLL.setVisibility(View.VISIBLE);
-            holder.forYouInfoLL.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("For You", "for you article -- " + articleDataList.get(position).getTitle());
-                    ForYouInfoDialogFragment forYouInfoDialogFragment = new ForYouInfoDialogFragment();
-                    FragmentManager fm = ((ArticleListingActivity) mContext).getSupportFragmentManager();
-                    Bundle _args = new Bundle();
-                    _args.putString("reason", articleDataList.get(position).getReason());
-                    _args.putString("articleId", articleDataList.get(position).getId());
-                    _args.putInt("position", position);
-                    forYouInfoDialogFragment.setArguments(_args);
-                    forYouInfoDialogFragment.setCancelable(true);
-                    forYouInfoDialogFragment.setListener((ForYouInfoDialogFragment.IForYourArticleRemove) mContext);
-                    forYouInfoDialogFragment.show(fm, "For You");
-                }
-            });
-        }
+//        if (StringUtils.isNullOrEmpty(articleDataList.get(position).getReason())) {
+//            holder.forYouInfoLL.setVisibility(View.GONE);
+//        } else {
+//            holder.forYouInfoLL.setVisibility(View.VISIBLE);
+//            holder.forYouInfoLL.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Log.d("For You", "for you article -- " + articleDataList.get(position).getTitle());
+//                    ForYouInfoDialogFragment forYouInfoDialogFragment = new ForYouInfoDialogFragment();
+//                    FragmentManager fm = ((ArticleListingActivity) mContext).getSupportFragmentManager();
+//                    Bundle _args = new Bundle();
+//                    _args.putString("reason", articleDataList.get(position).getReason());
+//                    _args.putString("articleId", articleDataList.get(position).getId());
+//                    _args.putInt("position", position);
+//                    forYouInfoDialogFragment.setArguments(_args);
+//                    forYouInfoDialogFragment.setCancelable(true);
+//                    forYouInfoDialogFragment.setListener((ForYouInfoDialogFragment.IForYourArticleRemove) mContext);
+//                    forYouInfoDialogFragment.show(fm, "For You");
+//                }
+//            });
+//        }
+
+//        holder.forYouInfoLL.setVisibility(View.VISIBLE);
+//        holder.forYouInfoLL.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("For You", "for you article -- " + articleDataList.get(position).getTitle());
+//                ForYouInfoDialogFragment forYouInfoDialogFragment = new ForYouInfoDialogFragment();
+//                FragmentManager fm = ((ArticleListingActivity) mContext).getSupportFragmentManager();
+//                Bundle _args = new Bundle();
+//                _args.putString("reason", articleDataList.get(position).getReason());
+//                _args.putString("articleId", articleDataList.get(position).getId());
+//                _args.putInt("position", position);
+//                forYouInfoDialogFragment.setArguments(_args);
+//                forYouInfoDialogFragment.setCancelable(true);
+//                forYouInfoDialogFragment.setListener((ForYouInfoDialogFragment.IForYourArticleRemove) mContext);
+//                forYouInfoDialogFragment.show(fm, "For You");
+//            }
+//        });
 
         if (null == articleDataList.get(position).getArticleCount() || "0".equals(articleDataList.get(position).getArticleCount())) {
             holder.viewCountTextView.setVisibility(View.GONE);
@@ -199,9 +217,11 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<GroupBlogsRe
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
 
+//            forYouInfoLL.setVisibility(View.GONE);
             bookmarkArticleImageView.setVisibility(View.GONE);
             watchLaterImageView.setVisibility(View.GONE);
             itemView.setOnClickListener(this);
+            forYouInfoLL.setOnClickListener(this);
         }
 
         @Override

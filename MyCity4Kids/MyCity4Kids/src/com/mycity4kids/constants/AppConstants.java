@@ -158,6 +158,7 @@ public class AppConstants {
     public static final String ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";
     public static final String VIDEO_ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";
     public static final String VIDEO_UPLOAD_URL = LIVE_URL + "v1/media/videos/";
+    public static final String BLOG_SHARE_BASE_URL = "https://www.momspresso.com";
 //    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
 
     /*New Login/Sign Up Constants*/

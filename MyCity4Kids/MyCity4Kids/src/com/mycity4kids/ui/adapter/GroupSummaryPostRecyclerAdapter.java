@@ -1,9 +1,16 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +25,11 @@ import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
+import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
 import com.squareup.picasso.Picasso;
@@ -145,7 +155,14 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             }
         } else if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
-            textPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent());
+//            textPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent());
+
+            textPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(postDataList.get(position).getContent()));
+            Linkify.addLinks(textPostViewHolder.postDataTextView, Linkify.WEB_URLS);
+            textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(textPostViewHolder.postDataTextView);
+
             textPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + " " + localizedHelpful);
             textPostViewHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             textPostViewHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
@@ -164,10 +181,17 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             }
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
+
+            mediaPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(postDataList.get(position).getContent()));
+            Linkify.addLinks(mediaPostViewHolder.postDataTextView, Linkify.WEB_URLS);
+            mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(mediaPostViewHolder.postDataTextView);
+
             mediaPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + " " + localizedHelpful);
             mediaPostViewHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             mediaPostViewHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
-            mediaPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent());
+//            mediaPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent());
             mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
             if (postDataList.get(position).getIsAnnon() == 1) {
                 mediaPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
@@ -184,7 +208,13 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             initializeViews((MediaPostViewHolder) holder, position);
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
-            textPollPostViewHolder.pollQuestionTextView.setText(postDataList.get(position).getContent());
+//            textPollPostViewHolder.pollQuestionTextView.setText(postDataList.get(position).getContent());
+            textPollPostViewHolder.pollQuestionTextView.setText(AppUtils.fromHtml(postDataList.get(position).getContent()));
+            Linkify.addLinks(textPollPostViewHolder.pollQuestionTextView, Linkify.WEB_URLS);
+            textPollPostViewHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            textPollPostViewHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
+
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
             textPollPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + " " + localizedHelpful);
             textPollPostViewHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
@@ -232,6 +262,13 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             textPollPostViewHolder.pollOption4ProgressBar.setProgress(0f);
         } else {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
+
+            imageHolder.pollQuestionTextView.setText(AppUtils.fromHtml(postDataList.get(position).getContent()));
+            Linkify.addLinks(imageHolder.pollQuestionTextView, Linkify.WEB_URLS);
+            imageHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            imageHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(imageHolder.pollQuestionTextView);
+
             imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
             if (postDataList.get(position).getIsAnnon() == 1) {
                 imageHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
@@ -248,7 +285,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             imageHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + " " + localizedHelpful);
             imageHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             imageHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
-            imageHolder.pollQuestionTextView.setText(postDataList.get(position).getContent());
+//            imageHolder.pollQuestionTextView.setText(postDataList.get(position).getContent());
             Map<String, String> imageMap = (Map<String, String>) postDataList.get(position).getPollOptions();
             imageHolder.lastOptionsContainer.setVisibility(View.GONE);
             imageHolder.option3Container.setVisibility(View.GONE);
@@ -562,4 +599,35 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
         void onRecyclerItemClick(View view, int position);
     }
 
+    private void addLinkHandler(TextView textView) {
+        CharSequence text = textView.getText();
+        if (text instanceof Spannable) {
+            int end = text.length();
+            Spannable sp = (Spannable) textView.getText();
+            URLSpan[] urls = sp.getSpans(0, end, URLSpan.class);
+            SpannableStringBuilder style = new SpannableStringBuilder(text);
+            style.clearSpans();//should clear old spans
+            for (URLSpan url : urls) {
+                CustomerTextClick click = new CustomerTextClick(url.getURL());
+                style.setSpan(click, sp.getSpanStart(url), sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            textView.setText(style);
+        }
+    }
+
+    private class CustomerTextClick extends ClickableSpan {
+
+        private String mUrl;
+
+        CustomerTextClick(String url) {
+            mUrl = url;
+        }
+
+        @Override
+        public void onClick(View widget) {
+            Intent intent = new Intent(mContext, NewsLetterWebviewActivity.class);
+            intent.putExtra(Constants.URL, mUrl);
+            mContext.startActivity(intent);
+        }
+    }
 }

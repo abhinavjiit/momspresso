@@ -754,6 +754,7 @@
     <string name="groups.ask_something">Ask something ...</string>
     <string name="groups.post_label">POST</string>
     <string name="groups.edit_post">EDIT POST</string>
+    <string name="groups.total_votes">TOTAL VOTES: %1$s</string>
 
     <string name="no_story.be_first">Be the first one to write stories in this category!</string>
 

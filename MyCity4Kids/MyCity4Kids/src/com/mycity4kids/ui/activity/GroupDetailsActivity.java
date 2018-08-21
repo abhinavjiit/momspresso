@@ -61,7 +61,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupBlogsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
+import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
+import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -83,7 +85,7 @@ import retrofit2.Retrofit;
  */
 
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
-        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener {
+        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener, ShareBlogInDiscussionDialogFragment.IForYourArticleRemove {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
@@ -1226,17 +1228,35 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-        Intent intent = new Intent(this, ArticleDetailsContainerActivity.class);
-        intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
-        intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
-        intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
-        intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "GroupDetailsArticleListing");
-        intent.putExtra(Constants.FROM_SCREEN, "GroupDetailActivity");
-        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-        intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-        intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
-        startActivity(intent);
+        switch (view.getId()) {
+            case R.id.forYouInfoLL:
+                ShareBlogInDiscussionDialogFragment shareBlogInDiscussionDialogFragment = new ShareBlogInDiscussionDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+//                _args.putString("reason", articleDataList.get(position).getReason());
+//                _args.putString("articleId", articleDataList.get(position).getId());
+                _args.putInt("position", position);
+                _args.putInt("groupId", groupId);
+                _args.putString("articleUrl", AppConstants.BLOG_SHARE_BASE_URL + articleDataModelsNew.get(position).getUrl());
+                shareBlogInDiscussionDialogFragment.setArguments(_args);
+                shareBlogInDiscussionDialogFragment.setCancelable(true);
+                shareBlogInDiscussionDialogFragment.setListener(this);
+                shareBlogInDiscussionDialogFragment.show(fm, "For You");
+                break;
+            default:
+                Intent intent = new Intent(this, ArticleDetailsContainerActivity.class);
+                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "GroupDetailsArticleListing");
+                intent.putExtra(Constants.FROM_SCREEN, "GroupDetailActivity");
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+                startActivity(intent);
+        }
+
     }
 
     @Override
@@ -1287,8 +1307,22 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+
+                hitShareAPI();
                 break;
         }
+    }
+
+    private void hitShareAPI() {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+//        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
+//        groupActionsRequest.setGroupId(postList.get(position).getGroupId());
+//        groupActionsRequest.setPostId(postList.get(position).getId());
+//        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+//        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
+//        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+//        call.enqueue(groupActionResponseCallback);
     }
 
     private void markAsHelpfulOrUnhelpful(String markType, int position) {
@@ -1615,5 +1649,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onForYouArticleRemoved(int position) {
+
     }
 }

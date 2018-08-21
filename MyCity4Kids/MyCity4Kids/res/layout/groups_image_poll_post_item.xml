@@ -320,41 +320,19 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <!--<com.mycity4kids.widget.CustomFontTextView-->
-    <!--android:id="@+id/upvoteTextView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/lastOptionsContainer"-->
-    <!--android:layout_marginTop="15dp"-->
-    <!--android:drawableLeft="@drawable/fav_icon"-->
-    <!--android:drawablePadding="5dp"-->
-    <!--android:gravity="bottom"-->
-    <!--android:text="20 Helpful"-->
-    <!--android:textColor="@color/groups.light_black_color"-->
-    <!--android:textSize="10sp"-->
-    <!--app:fontName="oswald.ttf" />-->
-
-    <!--<com.mycity4kids.widget.CustomFontTextView-->
-    <!--android:id="@+id/downvoteTextView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/lastOptionsContainer"-->
-    <!--android:layout_marginLeft="5dp"-->
-    <!--android:layout_marginTop="15dp"-->
-    <!--android:layout_toRightOf="@+id/upvoteTextView"-->
-    <!--android:drawableLeft="@drawable/fav_icon"-->
-    <!--android:drawablePadding="5dp"-->
-    <!--android:gravity="bottom"-->
-    <!--android:text="0 Not Helpful"-->
-    <!--android:textColor="@color/ad.comment.date"-->
-    <!--android:textSize="10sp"-->
-    <!--app:fontName="oswald.ttf" />-->
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/totalVoteCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lastOptionsContainer"
+        android:layout_marginTop="15dp"
+        android:text="" />
 
     <LinearLayout
         android:id="@+id/upvoteContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lastOptionsContainer"
+        android:layout_below="@+id/totalVoteCountTextView"
         android:layout_marginTop="15dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
@@ -382,7 +360,7 @@
         android:id="@+id/downvoteContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lastOptionsContainer"
+        android:layout_below="@+id/totalVoteCountTextView"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="16dp"
         android:layout_toRightOf="@+id/upvoteContainer"
@@ -408,28 +386,11 @@
             app:fontName="oswald.ttf" />
     </LinearLayout>
 
-    <!--<com.mycity4kids.widget.CustomFontTextView-->
-    <!--android:id="@+id/postCommentsTextView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/lastOptionsContainer"-->
-    <!--android:layout_marginRight="10dp"-->
-    <!--android:layout_marginTop="10dp"-->
-    <!--android:layout_toLeftOf="@+id/shareTextView"-->
-    <!--android:drawablePadding="5dp"-->
-    <!--android:drawableRight="@drawable/ic_comments"-->
-    <!--android:gravity="bottom"-->
-    <!--android:padding="5dp"-->
-    <!--android:text="20"-->
-    <!--android:textColor="@color/ad.comment.date"-->
-    <!--android:textSize="12sp"-->
-    <!--app:fontName="oswald.ttf" />-->
-
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/postCommentsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lastOptionsContainer"
+        android:layout_below="@+id/totalVoteCountTextView"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/addCommentImageView"
@@ -446,7 +407,7 @@
         android:id="@+id/addCommentImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lastOptionsContainer"
+        android:layout_below="@+id/totalVoteCountTextView"
         android:layout_marginRight="4dp"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/shareTextView"
@@ -459,7 +420,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/lastOptionsContainer"
+        android:layout_below="@+id/totalVoteCountTextView"
         android:layout_marginTop="10dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"

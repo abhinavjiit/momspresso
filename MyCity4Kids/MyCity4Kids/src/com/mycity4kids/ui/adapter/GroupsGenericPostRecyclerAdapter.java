@@ -238,6 +238,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             textPollPostViewHolder.pollOption2ProgressBar.setProgress(0f);
             textPollPostViewHolder.pollOption3ProgressBar.setProgress(0f);
             textPollPostViewHolder.pollOption4ProgressBar.setProgress(0f);
+            textPollPostViewHolder.totalVoteCountTextView.setText(mContext.getString(R.string.groups_total_votes, postList.get(position).getTotalVotesCount()));
             if (postList.get(position).isVoted()) {
                 showVotingData(textPollPostViewHolder, postList.get(position));
             } else {
@@ -300,6 +301,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             imageHolder.pollOption2ProgressBar.setProgress(0f);
             imageHolder.pollOption3ProgressBar.setProgress(0f);
             imageHolder.pollOption4ProgressBar.setProgress(0f);
+            imageHolder.totalVoteCountTextView.setText(mContext.getString(R.string.groups_total_votes, postList.get(position).getTotalVotesCount()));
             if (postList.get(position).isVoted()) {
                 showImagePollVotingData(imageHolder, postList.get(position));
             } else {
@@ -585,6 +587,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
         TextView pollResult1TextView, pollResult2TextView, pollResult3TextView, pollResult4TextView;
         TextView pollOption1ProgressTextView, pollOption2ProgressTextView, pollOption3ProgressTextView, pollOption4ProgressTextView;
+        TextView totalVoteCountTextView;
         RelativeLayout option3Container, option4Container;
 
         TextPollPostViewHolder(View view) {
@@ -616,6 +619,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             pollOption2ProgressTextView = (TextView) view.findViewById(R.id.pollOption2ProgressTextView);
             pollOption3ProgressTextView = (TextView) view.findViewById(R.id.pollOption3ProgressTextView);
             pollOption4ProgressTextView = (TextView) view.findViewById(R.id.pollOption4ProgressTextView);
+            totalVoteCountTextView = (TextView) view.findViewById(R.id.totalVoteCountTextView);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
 
@@ -703,6 +707,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
+        TextView totalVoteCountTextView;
         LinearLayout lastOptionsContainer;
         RelativeLayout option1Container, option2Container, option3Container, option4Container;
 
@@ -730,6 +735,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             pollOption2TextView = (TextView) view.findViewById(R.id.pollOption2TextView);
             pollOption3TextView = (TextView) view.findViewById(R.id.pollOption3TextView);
             pollOption4TextView = (TextView) view.findViewById(R.id.pollOption4TextView);
+            totalVoteCountTextView = (TextView) view.findViewById(R.id.totalVoteCountTextView);
             pollQuestionTextView = (TextView) view.findViewById(R.id.pollQuestionTextView);
             lastOptionsContainer = (LinearLayout) view.findViewById(R.id.lastOptionsContainer);
             option1Container = (RelativeLayout) view.findViewById(R.id.option1Container);
@@ -873,19 +879,19 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                             switch (groupsActionResponse.getData().getResult().get(0).getVoteOption()) {
                                 case "option1":
                                     postList.get(i).setOption1VoteCount(postList.get(i).getOption1VoteCount() + 1);
-                                    postList.get(i).setTotalVotesCount(postList.get(i).getTotalVotesCount() + postList.get(i).getOption1VoteCount());
+                                    postList.get(i).setTotalVotesCount(postList.get(i).getTotalVotesCount() + 1);
                                     break;
                                 case "option2":
                                     postList.get(i).setOption2VoteCount(postList.get(i).getOption2VoteCount() + 1);
-                                    postList.get(i).setTotalVotesCount(postList.get(i).getTotalVotesCount() + postList.get(i).getOption2VoteCount());
+                                    postList.get(i).setTotalVotesCount(postList.get(i).getTotalVotesCount() + 1);
                                     break;
                                 case "option3":
                                     postList.get(i).setOption3VoteCount(postList.get(i).getOption3VoteCount() + 1);
-                                    postList.get(i).setTotalVotesCount(postList.get(i).getTotalVotesCount() + postList.get(i).getOption3VoteCount());
+                                    postList.get(i).setTotalVotesCount(postList.get(i).getTotalVotesCount() + 1);
                                     break;
                                 case "option4":
                                     postList.get(i).setOption4VoteCount(postList.get(i).getOption4VoteCount() + 1);
-                                    postList.get(i).setTotalVotesCount(postList.get(i).getTotalVotesCount() + postList.get(i).getOption4VoteCount());
+                                    postList.get(i).setTotalVotesCount(postList.get(i).getTotalVotesCount() + 1);
                                     break;
                             }
                             notifyDataSetChanged();

@@ -49,6 +49,7 @@ public class GroupMediaPostViewPagerAdapter extends PagerAdapter implements View
         final View v = inflater.inflate(R.layout.group_media_pager_item, container, false);
         ImageView iv = (ImageView) v.findViewById(R.id.mediaImageView);
         Picasso.with(context).load(mediaList.get(position)).error(R.drawable.default_article).into(iv);
+        iv.setTag(position);
         iv.setOnClickListener(this);
         container.addView(v);
         return v;
@@ -87,7 +88,7 @@ public class GroupMediaPostViewPagerAdapter extends PagerAdapter implements View
     @Override
     public void onClick(View v) {
         new ImageViewer.Builder(context, mediaList)
-                .setStartPosition(0)
+                .setStartPosition((int) v.getTag())
                 .show();
     }
 }

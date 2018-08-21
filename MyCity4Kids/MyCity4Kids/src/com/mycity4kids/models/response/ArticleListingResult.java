@@ -39,6 +39,7 @@ public class ArticleListingResult implements Parcelable {
     private String lang;
     private String contentType;
     private boolean isLiked;
+    private String url;
 
     public ArticleListingResult() {
     }
@@ -66,6 +67,7 @@ public class ArticleListingResult implements Parcelable {
         isMomspresso = in.readString();
         lang = in.readString();
         body = in.readString();
+        url = in.readString();
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -305,6 +307,14 @@ public class ArticleListingResult implements Parcelable {
         isLiked = liked;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -333,5 +343,6 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(isMomspresso);
         dest.writeString(lang);
         dest.writeString(body);
+        dest.writeString(url);
     }
 }
