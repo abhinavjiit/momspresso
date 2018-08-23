@@ -41,7 +41,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
-import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.ExploreEventsResourcesActivity;
 import com.mycity4kids.utils.NearMyCity;
 
 import java.util.ArrayList;
@@ -196,11 +196,11 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                 bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getActivity()));
                 bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
                 fragment.setArguments(bundle);
-                ((DashboardActivity) getActivity()).addFragment(fragment, bundle, true);
+                ((ExploreEventsResourcesActivity) getActivity()).addFragment(fragment, bundle, true);
                 break;
             case R.id.resImageView:
                 Constants.IS_SEARCH_LISTING = false;
-                ((DashboardActivity) getActivity()).addFragment(new FragmentHomeCategory(), null, true);
+                ((ExploreEventsResourcesActivity) getActivity()).addFragment(new FragmentHomeCategory(), null, true);
                 break;
             case R.id.thingToDoImageView:
                 Utils.pushOpenScreenEvent(getActivity(), "BestOfCityScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");

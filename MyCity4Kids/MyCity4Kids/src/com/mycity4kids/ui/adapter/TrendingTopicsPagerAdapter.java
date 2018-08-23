@@ -43,4 +43,5 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return mNumOfTabs;
     }
+
 }

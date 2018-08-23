@@ -53,7 +53,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
 
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    //    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -203,10 +203,8 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-//            progressBar.setVisibility(View.INVISIBLE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
-//            showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -289,5 +287,9 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         intent.putParcelableArrayListExtra("pagerListData", trendingTopicData.getArticleList());
         intent.putExtra(Constants.AUTHOR, trendingTopicData.getArticleList().get(position).getUserId() + "~" + trendingTopicData.getArticleList().get(position).getUserName());
         startActivity(intent);
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 }

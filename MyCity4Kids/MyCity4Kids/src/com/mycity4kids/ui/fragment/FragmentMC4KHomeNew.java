@@ -3,6 +3,8 @@ package com.mycity4kids.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -134,7 +136,19 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                FragmentManager fm = getChildFragmentManager();
+                Fragment f = (Fragment) adapter.instantiateItem(viewPager, viewPager.getCurrentItem());
+                if (f != null) {
+                    if (tab.getPosition() == 0) {
+                        TrendingTopicsAllTabFragment fragment = (TrendingTopicsAllTabFragment) f;
+                        if (null != fragment.getRecyclerView())
+                            fragment.getRecyclerView().smoothScrollToPosition(0);
+                    } else {
+                        TrendingTopicsTabFragment fragment = (TrendingTopicsTabFragment) f;
+                        if (null != fragment.getRecyclerView())
+                            fragment.getRecyclerView().smoothScrollToPosition(0);
+                    }
+                }
             }
         });
 

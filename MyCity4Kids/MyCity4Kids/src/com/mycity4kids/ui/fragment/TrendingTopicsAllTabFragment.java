@@ -260,6 +260,9 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                 startActivity(intent);
                 break;
         }
+    }
 
+    public RecyclerView getRecyclerView(){
+        return recyclerView;
     }
 }

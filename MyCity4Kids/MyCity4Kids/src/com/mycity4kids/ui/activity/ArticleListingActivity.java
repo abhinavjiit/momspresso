@@ -115,6 +115,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_editor_picks));
         }
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
@@ -485,4 +487,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                 break;
         }
     }
+
+
 }

@@ -95,6 +95,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 langListOverlay.setVisibility(View.GONE);
                 break;
             case R.id.englishTextView:
+                continueTextView.setVisibility(View.VISIBLE);
                 selectedLang = AppConstants.LOCALE_ENGLISH;
                 englishTextView.setSelected(true);
                 hindiTextView.setSelected(false);
@@ -104,6 +105,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 teluguTextView.setSelected(false);
                 break;
             case R.id.hindiTextView:
+                continueTextView.setVisibility(View.VISIBLE);
                 selectedLang = AppConstants.LOCALE_HINDI;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(true);
@@ -113,6 +115,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 teluguTextView.setSelected(false);
                 break;
             case R.id.marathiTextView:
+                continueTextView.setVisibility(View.VISIBLE);
                 selectedLang = AppConstants.LOCALE_MARATHI;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(false);
@@ -122,6 +125,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 teluguTextView.setSelected(false);
                 break;
             case R.id.bengaliTextView:
+                continueTextView.setVisibility(View.VISIBLE);
                 selectedLang = AppConstants.LOCALE_BENGALI;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(false);
@@ -131,6 +135,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 teluguTextView.setSelected(false);
                 break;
             case R.id.tamilTextView:
+                continueTextView.setVisibility(View.VISIBLE);
                 selectedLang = AppConstants.LOCALE_TAMIL;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(false);
@@ -140,6 +145,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 teluguTextView.setSelected(false);
                 break;
             case R.id.teluguTextView:
+                continueTextView.setVisibility(View.VISIBLE);
                 selectedLang = AppConstants.LOCALE_TELUGU;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(false);

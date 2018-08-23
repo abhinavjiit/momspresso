@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="app_light_black">#545454</color>
+    <color name="app_dark_black">#333333</color>
+    <color name="app_grey">#9c9dac</color>
+    <color name="app_blue">#507cbe</color>
+
     <color name="a_light_blue">#e3eaff</color>
     <color name="a_light_pink">#ffedf0</color>
     <color name="a_bg_blue">#F0F4FF</color>
@@ -129,7 +134,7 @@
 
 
     <color name="bottom_navigation_bar.textColor">#000000</color>
-    <color name="home.toolbar.titlecolor">#507cbe</color>
+    <color name="home.toolbar.titlecolor">#545454</color>
     <color name="home.trending.tabbar_text">#545454</color>
     <color name="select_option.toolbar.titlecolor">#545454</color>
     <color name="home.trending.tabbar_indicator">#507cbe</color>

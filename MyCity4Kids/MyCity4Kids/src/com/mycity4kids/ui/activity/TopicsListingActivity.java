@@ -3,16 +3,17 @@ package com.mycity4kids.ui.activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
-import com.kelltontech.ui.BaseFragment;
+import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -24,8 +25,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
 import com.mycity4kids.utils.AppUtils;
-
-import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,12 +40,12 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 25/5/17.
  */
-public class TopicsListingFragment extends BaseFragment {
+public class TopicsListingActivity extends BaseActivity {
 
-    private View view;
+    //    private View view;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private FrameLayout tablayoutLayer;
+    private FrameLayout topLayerGuideLayout;
 
     private TopicsPagerAdapter pagerAdapter;
 
@@ -54,16 +53,26 @@ public class TopicsListingFragment extends BaseFragment {
     private ArrayList<Topics> allTopicsList;
     private String parentTopicId;
     private ArrayList<Topics> subTopicsList;
-
+    private Toolbar toolbar;
+    private TextView toolbarTitleTextView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.topic_listing_activity, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.topic_listing_activity);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tablayoutLayer = (FrameLayout) view.findViewById(R.id.topLayerGuideLayout);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        parentTopicId = getArguments().getString("parentTopicId");
+        parentTopicId = getIntent().getStringExtra("parentTopicId");
+
+        Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         try {
             allTopicsList = BaseApplication.getTopicList();
             allTopicsMap = BaseApplication.getTopicsMap();
@@ -81,8 +90,6 @@ public class TopicsListingFragment extends BaseFragment {
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
-//            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-//            call.enqueue(downloadCategoriesJSONCallback);
             Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -114,11 +121,7 @@ public class TopicsListingFragment extends BaseFragment {
             Topics mainTopic = new Topics();
             mainTopic.setId(parentTopicId);
             String allCategoryLabel = "";
-            if (isAdded()) {
-                allCategoryLabel = getString(R.string.all_categories_label);
-            } else {
-                allCategoryLabel = "ALL";
-            }
+            allCategoryLabel = getString(R.string.all_categories_label);
             mainTopic.setDisplay_name(allCategoryLabel);
             mainTopic.setTitle(allCategoryLabel);
 
@@ -138,11 +141,9 @@ public class TopicsListingFragment extends BaseFragment {
         }
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-        AppUtils.changeTabsFont(getActivity(), tabLayout);
+        AppUtils.changeTabsFont(this, tabLayout);
 
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
-        pagerAdapter = new TopicsPagerAdapter
-                (getChildFragmentManager(), tabLayout.getTabCount(), subTopicsList);
+        pagerAdapter = new TopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -161,7 +162,10 @@ public class TopicsListingFragment extends BaseFragment {
 
             }
         });
-        return view;
+
+        if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article")) {
+            showGuideView();
+        }
     }
 
     private void createTopicsData(TopicsResponse responseData) {
@@ -228,10 +232,8 @@ public class TopicsListingFragment extends BaseFragment {
             BaseApplication.setTopicList(allTopicsList);
             BaseApplication.setTopicsMap(allTopicsMap);
         } catch (Exception e) {
-//            progressBar.setVisibility(View.GONE);
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-//            showToast(getString(R.string.went_wrong));
         }
     }
 
@@ -241,71 +243,14 @@ public class TopicsListingFragment extends BaseFragment {
             //Selected topic is Main Category
             if (parentTopicId.equals(allTopicsList.get(i).getId())) {
                 subTopicsList.addAll(allTopicsList.get(i).getChild());
-                ((DashboardActivity) getActivity()).setDynamicToolbarTitle(allTopicsList.get(i).getDisplay_name());
-                Utils.pushViewTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                toolbarTitleTextView.setText(allTopicsList.get(i).getDisplay_name());
+//                ((DashboardActivity) getActivity()).setDynamicToolbarTitle(allTopicsList.get(i).getDisplay_name());
+                Utils.pushViewTopicArticlesEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "",
                         allTopicsList.get(i).getId() + "~" + allTopicsList.get(i).getDisplay_name());
                 return;
             }
         }
-
     }
-
-    Callback<ResponseBody> downloadCategoriesJSONCallback = new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            if (response == null || response.body() == null) {
-//                showToast("Something went wrong from server");
-                return;
-            }
-            try {
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-
-                Retrofit retro = BaseApplication.getInstance().getRetrofit();
-                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-                caller.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
-                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
-                        try {
-
-                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                            TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-                            createTopicsData(res);
-                            getCurrentParentTopicCategoriesAndSubCategories();
-                        } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
-                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
-                        Log.d("MC4KException", Log.getStackTraceString(t));
-                    }
-                });
-            } catch (Exception e) {
-//                progressBar.setVisibility(View.GONE);
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-//            progressBar.setVisibility(View.GONE);
-//            showToast(getString(R.string.went_wrong));
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-        }
-    };
 
     @Override
     protected void updateUi(Response response) {
@@ -329,11 +274,21 @@ public class TopicsListingFragment extends BaseFragment {
         topicsArticlesTabFragment.showGuideView();
     }
 
-    public void showTabLayer() {
-        tablayoutLayer.setVisibility(View.VISIBLE);
+    public void showGuideTopLayer() {
+        topLayerGuideLayout.setVisibility(View.VISIBLE);
     }
 
-    public void hideTabLayer() {
-        tablayoutLayer.setVisibility(View.GONE);
+    public void hideGuideTopLayer() {
+        topLayerGuideLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

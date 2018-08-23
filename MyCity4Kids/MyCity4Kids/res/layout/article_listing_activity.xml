@@ -20,23 +20,22 @@
             android:layout_height="wrap_content"
             android:visibility="visible">
 
-            <ImageView
-                android:id="@+id/menuImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
-                android:src="@drawable/hamburger_menu" />
+            <!--<ImageView-->
+            <!--android:id="@+id/menuImageView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:paddingBottom="10dp"-->
+            <!--android:paddingRight="10dp"-->
+            <!--android:paddingTop="10dp"-->
+            <!--android:src="@drawable/hamburger_menu" />-->
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/menuImageView"
-                android:text="dwadawdadaw dwad"
+                android:text=""
                 android:textColor="@color/various_list.toolbar.title"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />

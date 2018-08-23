@@ -62,7 +62,7 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
         view = inflater.inflate(R.layout.topic_listing_activity, container, false);
 
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tablayoutLayer = (FrameLayout) view.findViewById(R.id.tablayoutLayer);
+        tablayoutLayer = (FrameLayout) view.findViewById(R.id.topLayerGuideLayout);
 
         parentTopicId = getArguments().getString("parentTopicId");
         try {

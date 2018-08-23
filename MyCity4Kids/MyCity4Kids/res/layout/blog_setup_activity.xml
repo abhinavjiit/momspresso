@@ -377,7 +377,6 @@
                     android:backgroundTint="@color/light_underline"
                     android:drawablePadding="10dp"
                     android:hint="@string/blog_setup.hint_phone"
-                    android:inputType="phone"
                     android:paddingBottom="20dp"
                     android:paddingTop="20dp"
                     android:textColor="@color/blog_setup.text_city"

@@ -4,16 +4,17 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
-import com.kelltontech.ui.BaseFragment;
+import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -32,7 +33,6 @@ import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
-import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
@@ -50,53 +50,66 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 25/5/17.
  */
-public class ExploreArticleListingTypeFragment extends BaseFragment implements View.OnClickListener {
+public class ExploreArticleListingTypeActivity extends BaseActivity implements View.OnClickListener {
 
     private final static String MEET_CONTRIBUTOR_ID = "meetContributorId";
     private final static String EXPLORE_SECTION_ID = "exploreSectionId";
-
-    private String[] sectionsKey = {"TRENDING", "TODAY'S BEST", "EDITOR'S PICK", "100WORDSTORY", "FOR YOU", "VIDEOS", "RECENT"};
 
     private ArrayList<ExploreTopicsModel> mainTopicsList;
     private String fragType = "";
     private String dynamoUserId;
 
-    private TabLayout tabLayout;
+    //    private TabLayout tabLayout;
     private GridView gridview;
 
     private ParentTopicsGridAdapter adapter;
-    private View view;
+    //    private View view;
     private EditText searchTopicsEditText;
     private TextView exploreCategoriesLabel;
-//    private TabLayout guideTabLayout;
+    //    private TabLayout guideTabLayout;
     private RelativeLayout guideOverLay;
     private TextView guideTopicTextView1;
     private TextView guideTopicTextView2;
+    private Toolbar toolbar;
+    private HorizontalScrollView quickLinkContainer;
+    private TextView todaysBestTextView, editorsPickTextView, shortStoryTextView, forYouTextView, videosTextView, recentTextView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.explore_article_listing_type_activity, container, false);
-        if (getArguments() != null) {
-            fragType = getArguments().getString("fragType", "");
-        }
-        String[] sections = {
-                getString(R.string.article_listing_type_trending_label), getString(R.string.article_listing_type_todays_best_label), getString(R.string.article_listing_type_editor_label),
-                getString(R.string.article_listing_type_short_story_label), getString(R.string.article_listing_type_for_you_label),
-                getString(R.string.article_listing_type_videos_label), getString(R.string.article_listing_type_recent_label)
-        };
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.explore_article_listing_type_activity);
 
-        dynamoUserId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
-        tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        gridview = (GridView) view.findViewById(R.id.gridview);
-        exploreCategoriesLabel = (TextView) view.findViewById(R.id.exploreCategoriesLabel);
-        searchTopicsEditText = (EditText) view.findViewById(R.id.searchTopicsEditText);
-//        guideTabLayout = (TabLayout) view.findViewById(R.id.guide_tab_layout);
-        guideOverLay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
-        guideTopicTextView1 = (TextView) view.findViewById(R.id.guideTopicTextView1);
-        guideTopicTextView2 = (TextView) view.findViewById(R.id.guideTopicTextView2);
+        dynamoUserId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        quickLinkContainer = (HorizontalScrollView) findViewById(R.id.quickLinkContainer);
+        gridview = (GridView) findViewById(R.id.gridview);
+        exploreCategoriesLabel = (TextView) findViewById(R.id.exploreCategoriesLabel);
+        searchTopicsEditText = (EditText) findViewById(R.id.searchTopicsEditText);
+        guideOverLay = (RelativeLayout) findViewById(R.id.guideOverlay);
+        guideTopicTextView1 = (TextView) findViewById(R.id.guideTopicTextView1);
+        guideTopicTextView2 = (TextView) findViewById(R.id.guideTopicTextView2);
+        todaysBestTextView = (TextView) findViewById(R.id.todaysBestTextView);
+        editorsPickTextView = (TextView) findViewById(R.id.editorsPickTextView);
+        shortStoryTextView = (TextView) findViewById(R.id.shortStoryTextView);
+        forYouTextView = (TextView) findViewById(R.id.forYouTextView);
+        videosTextView = (TextView) findViewById(R.id.videosTextView);
+        recentTextView = (TextView) findViewById(R.id.recentTextView);
 
-        if (fragType.equals("search")) {
-            tabLayout.setVisibility(View.GONE);
+        fragType = getIntent().getStringExtra("fragType");
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        todaysBestTextView.setOnClickListener(this);
+        editorsPickTextView.setOnClickListener(this);
+        shortStoryTextView.setOnClickListener(this);
+        forYouTextView.setOnClickListener(this);
+        videosTextView.setOnClickListener(this);
+        recentTextView.setOnClickListener(this);
+
+        if ("search".equals(fragType)) {
+            quickLinkContainer.setVisibility(View.GONE);
             searchTopicsEditText.setVisibility(View.VISIBLE);
             exploreCategoriesLabel.setText(getString(R.string.search_topics_title));
             try {
@@ -121,7 +134,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         } else {
             searchTopicsEditText.setVisibility(View.GONE);
             exploreCategoriesLabel.setText(getString(R.string.explore_listing_explore_categories_title));
-            setUpTabLayout(sections);
+//            setUpTabLayout(sections);
             guideOverLay.setOnClickListener(this);
             try {
                 FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
@@ -168,6 +181,9 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     }
                 });
             }
+            if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics")) {
+                showGuideView();
+            }
         }
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -175,32 +191,26 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (adapterView.getAdapter() instanceof ParentTopicsGridAdapter) {
                     ExploreTopicsModel topic = (ExploreTopicsModel) adapterView.getAdapter().getItem(position);
-                    if (fragType.equals("search")) {
-                        Intent subscribeTopicIntent = new Intent(getActivity(), SubscribeTopicsActivity.class);
+                    if ("search".equals(fragType)) {
+                        Intent subscribeTopicIntent = new Intent(ExploreArticleListingTypeActivity.this, SubscribeTopicsActivity.class);
                         subscribeTopicIntent.putExtra("tabPos", position);
                         startActivity(subscribeTopicIntent);
                     } else {
                         if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
-                            Intent intent = new Intent(getActivity(), ContributorListActivity.class);
+                            Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ContributorListActivity.class);
                             startActivity(intent);
                         } else if (EXPLORE_SECTION_ID.equals(topic.getId())) {
-                            ExploreFragment exploreFragment = new ExploreFragment();
-                            Bundle mBundle1 = new Bundle();
-                            exploreFragment.setArguments(mBundle1);
-                            ((DashboardActivity) getActivity()).addFragment(exploreFragment, mBundle1, true);
+                            Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ExploreEventsResourcesActivity.class);
+                            startActivity(intent);
                         } else {
-                            TopicsListingFragment fragment1 = new TopicsListingFragment();
-                            Bundle mBundle1 = new Bundle();
-                            mBundle1.putString("parentTopicId", topic.getId());
-                            fragment1.setArguments(mBundle1);
-                            ((DashboardActivity) getActivity()).addFragment(fragment1, mBundle1, true);
+                            Intent intent = new Intent(ExploreArticleListingTypeActivity.this, TopicsListingActivity.class);
+                            intent.putExtra("parentTopicId", topic.getId());
+                            startActivity(intent);
                         }
                     }
                 }
             }
         });
-
-        return view;
     }
 
     private void initializeTopicSearch() {
@@ -284,162 +294,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         }
     };
 
-
-    private void setUpTabLayout(String[] sections) {
-        for (int i = 0; i < sections.length; i++) {
-            TabLayout.Tab tab = tabLayout.newTab();
-            tab.setTag(sectionsKey[i]);
-            tabLayout.addTab(tab.setText(sections[i]));
-//            guideTabLayout.addTab(guideTabLayout.newTab().setText(sections[i]));
-        }
-
-        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-//        guideTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-
-        AppUtils.changeTabsFont(getActivity(), tabLayout);
-//        AppUtils.changeTabsFont(getActivity(), guideTabLayout);
-
-        wrapTabIndicatorToTitle(tabLayout, 25, 25);
-//        wrapTabIndicatorToTitle(guideTabLayout, 25, 25);
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                Intent intent1 = new Intent(getActivity(), ArticleListingActivity.class);
-                if (Constants.TAB_FOR_YOU.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.pushOpenScreenEvent(getActivity(), "ForYouScreen", dynamoUserId + "");
-                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "ForYouScreen");
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
-                } else if (Constants.TAB_POPULAR.equalsIgnoreCase(tab.getTag().toString())) {
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_POPULAR);
-                } else if (Constants.TAB_EDITOR_PICKS.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.pushOpenScreenEvent(getActivity(), "EditorsPickScreen", dynamoUserId + "");
-                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "EditorsPickScreen");
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
-                } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.pushOpenScreenEvent(getActivity(), "TodaysBestScreen", dynamoUserId + "");
-                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "TodaysBestScreen");
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
-                } else if (Constants.TAB_100WORD_STORY.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.pushOpenScreenEvent(getActivity(), "ShortStoryListingScreen", dynamoUserId + "");
-                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "ShortStoryListingScreen");
-                    TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
-                    Bundle mBundle1 = new Bundle();
-                    mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-                    fragment1.setArguments(mBundle1);
-                    ((DashboardActivity) getActivity()).addFragment(fragment1, mBundle1, true);
-                    return;
-                } else if (Constants.TAB_RECENT.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.pushOpenScreenEvent(getActivity(), "RecentScreen", dynamoUserId + "");
-                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "RecentScreen");
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_RECENT);
-                } else if (Constants.TAB_IN_YOUR_CITY.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.pushOpenScreenEvent(getActivity(), "TopicScreen", dynamoUserId + "");
-                    Intent cityIntent = new Intent(getActivity(), ArticleListingActivity.class);
-                    cityIntent.putExtra(Constants.SORT_TYPE, Constants.KEY_IN_YOUR_CITY);
-                    startActivity(cityIntent);
-                    return;
-                } else if (Constants.KEY_TRENDING.equalsIgnoreCase(tab.getTag().toString())) {
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    fm.popBackStack();
-                    return;
-                } else if (Constants.TAB_LANGUAGE.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.pushOpenScreenEvent(getActivity(), "LanguageScreen", dynamoUserId + "");
-                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "LanguageScreen");
-                    Intent cityIntent = new Intent(getActivity(), LanguageSpecificArticleListingActivity.class);
-                    startActivity(cityIntent);
-                    return;
-                } else if (Constants.TAB_VIDEOS.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.pushOpenScreenEvent(getActivity(), "VideosScreen", dynamoUserId + "");
-                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "VideosScreen");
-                    Intent cityIntent = new Intent(getActivity(), AllVideosListingActivity.class);
-                    startActivity(cityIntent);
-                    return;
-                }
-                intent1.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
-                startActivity(intent1);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                Intent intent1 = new Intent(getActivity(), ArticleListingActivity.class);
-                if (Constants.TAB_FOR_YOU.equalsIgnoreCase(tab.getTag().toString())) {
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
-                } else if (Constants.TAB_POPULAR.equalsIgnoreCase(tab.getTag().toString())) {
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_POPULAR);
-                } else if (Constants.TAB_EDITOR_PICKS.equalsIgnoreCase(tab.getTag().toString())) {
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
-                } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(tab.getTag().toString())) {
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
-                } else if (Constants.TAB_100WORD_STORY.equalsIgnoreCase(tab.getTag().toString())) {
-                    TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
-                    Bundle mBundle1 = new Bundle();
-                    mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-                    fragment1.setArguments(mBundle1);
-                    ((DashboardActivity) getActivity()).addFragment(fragment1, mBundle1, true);
-                    return;
-                } else if (Constants.TAB_RECENT.equalsIgnoreCase(tab.getTag().toString())) {
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_RECENT);
-                } else if (Constants.TAB_IN_YOUR_CITY.equalsIgnoreCase(tab.getTag().toString())) {
-                    Intent cityIntent = new Intent(getActivity(), ArticleListingActivity.class);
-                    cityIntent.putExtra(Constants.SORT_TYPE, Constants.KEY_IN_YOUR_CITY);
-                    startActivity(cityIntent);
-                    return;
-                } else if (Constants.KEY_TRENDING.equalsIgnoreCase(tab.getTag().toString())) {
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    fm.popBackStack();
-                    return;
-                } else if (Constants.TAB_LANGUAGE.equalsIgnoreCase(tab.getTag().toString())) {
-                    Intent cityIntent = new Intent(getActivity(), LanguageSpecificArticleListingActivity.class);
-                    startActivity(cityIntent);
-                    return;
-                } else if (Constants.TAB_VIDEOS.equalsIgnoreCase(tab.getTag().toString())) {
-                    Intent cityIntent = new Intent(getActivity(), AllVideosListingActivity.class);
-                    startActivity(cityIntent);
-                    return;
-                }
-                intent1.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
-                startActivity(intent1);
-            }
-        });
-    }
-
-    public void wrapTabIndicatorToTitle(TabLayout tabLayout, int externalMargin, int internalMargin) {
-        View tabStrip = tabLayout.getChildAt(0);
-        if (tabStrip instanceof ViewGroup) {
-            ViewGroup tabStripGroup = (ViewGroup) tabStrip;
-            int childCount = ((ViewGroup) tabStrip).getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View tabView = tabStripGroup.getChildAt(i);
-                //set minimum width to 0 for instead for small texts, indicator is not wrapped as expected
-                tabView.setMinimumWidth(0);
-                // set padding to 0 for wrapping indicator as title
-                tabView.setPadding(0, tabView.getPaddingTop(), 0, tabView.getPaddingBottom());
-                // setting custom margin between tabs
-                if (tabView.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-                    ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) tabView.getLayoutParams();
-                    if (i == 0) {
-                        // left
-                        setMargin(layoutParams, externalMargin, internalMargin);
-                    } else if (i == childCount - 1) {
-                        // right
-                        setMargin(layoutParams, internalMargin, externalMargin);
-                    } else {
-                        // internal
-                        setMargin(layoutParams, internalMargin, internalMargin);
-                    }
-                }
-            }
-
-            tabLayout.requestLayout();
-        }
-    }
-
     private void setMargin(ViewGroup.MarginLayoutParams layoutParams, int start, int end) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             layoutParams.setMarginStart(start);
@@ -460,7 +314,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     mainTopicsList.add(responseData[i]);
                 }
             }
-            if (!fragType.equals("search")) {
+            if (!"search".equals(fragType)) {
                 ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
                 contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
                 contributorListModel.setId(MEET_CONTRIBUTOR_ID);
@@ -472,10 +326,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 mainTopicsList.add(exploreSectionModel);
             }
         } catch (Exception e) {
-//            progressBar.setVisibility(View.GONE);
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-//            showToast(getString(R.string.went_wrong));
         }
     }
 
@@ -489,7 +341,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     mainTopicsList.add(responseData.getData().get(i));
                 }
             }
-            if (!fragType.equals("search")) {
+            if (!"search".equals(fragType)) {
                 ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
                 contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
                 contributorListModel.setId(MEET_CONTRIBUTOR_ID);
@@ -501,10 +353,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 mainTopicsList.add(exploreSectionModel);
             }
         } catch (Exception e) {
-//            progressBar.setVisibility(View.GONE);
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-//            showToast(getString(R.string.went_wrong));
         }
     }
 
@@ -531,11 +381,70 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         switch (v.getId()) {
             case R.id.guideOverlay:
                 guideOverLay.setVisibility(View.GONE);
-                if (isAdded()) {
-                    ((DashboardActivity) getActivity()).hideToolbarAndNavigationLayer();
-                    SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics", true);
-                }
+                SharedPrefUtils.setCoachmarksShownFlag(this, "topics", true);
                 break;
+            case R.id.todaysBestTextView: {
+                Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "TodaysBestScreen", dynamoUserId + "");
+                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen", dynamoUserId + "", "TodaysBestScreen");
+                Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ArticleListingActivity.class);
+                intent.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
+                startActivity(intent);
+            }
+            break;
+            case R.id.editorsPickTextView: {
+                Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "EditorsPickScreen", dynamoUserId + "");
+                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen", dynamoUserId + "", "EditorsPickScreen");
+                Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ArticleListingActivity.class);
+                intent.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
+                startActivity(intent);
+            }
+            break;
+            case R.id.shortStoryTextView: {
+                Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ShortStoriesListingContainerActivity.class);
+                intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                startActivity(intent);
+            }
+            break;
+            case R.id.forYouTextView: {
+                Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "ForYouScreen", dynamoUserId + "");
+                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen", dynamoUserId + "", "ForYouScreen");
+                Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ArticleListingActivity.class);
+                intent.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
+                startActivity(intent);
+            }
+            break;
+            case R.id.videosTextView: {
+                Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "VideosScreen", dynamoUserId + "");
+                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen", dynamoUserId + "", "VideosScreen");
+                Intent cityIntent = new Intent(ExploreArticleListingTypeActivity.this, AllVideosListingActivity.class);
+                startActivity(cityIntent);
+            }
+            break;
+            case R.id.recentTextView: {
+                Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "RecentScreen", dynamoUserId + "");
+                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen", dynamoUserId + "", "RecentScreen");
+                Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ArticleListingActivity.class);
+                intent.putExtra(Constants.SORT_TYPE, Constants.KEY_RECENT);
+                startActivity(intent);
+            }
+            break;
+
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.overridePendingTransition(R.anim.activity_drawer_slide_in_from_right, R.anim.activity_drawer_slide_out_to_left);
     }
 }

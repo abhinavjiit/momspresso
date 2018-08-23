@@ -37,8 +37,7 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.TopicsListingFragment;
+import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.FeedNativeAd;
@@ -208,11 +207,12 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 expandImageView.setVisibility(View.VISIBLE);
                 if (showGuide) {
                     guideOverlay.setVisibility(View.VISIBLE);
-                    if (isAdded()) {
-                        ((DashboardActivity) getActivity()).showToolbarAndNavigationLayer();
-                    }
-                    TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
-                    frag.showTabLayer();
+//                    if (isAdded()) {
+//                        ((DashboardActivity) getActivity()).showToolbarAndNavigationLayer();
+//                    }
+//                    TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
+//                    frag.showTabLayer();
+                    ((TopicsListingActivity) getActivity()).showGuideTopLayer();
                 }
             } else {
                 FlowLayout.LayoutParams layoutParams
@@ -267,11 +267,12 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                     expandImageView.setVisibility(View.VISIBLE);
                     if (showGuide) {
                         guideOverlay.setVisibility(View.VISIBLE);
-                        if (isAdded()) {
-                            ((DashboardActivity) getActivity()).showToolbarAndNavigationLayer();
-                        }
-                        TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
-                        frag.showTabLayer();
+//                        if (isAdded()) {
+//                            ((TopicsListingActivity) getActivity()).showToolbarAndNavigationLayer();
+//                        }
+//                        TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
+//                        frag.showTabLayer();
+                        ((TopicsListingActivity) getActivity()).showGuideTopLayer();
                     }
                 } else {
                     FlowLayout.LayoutParams layoutParams
@@ -449,11 +450,12 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         showGuide = true;
         if (expandImageView != null && expandImageView.getVisibility() == View.VISIBLE) {
             guideOverlay.setVisibility(View.VISIBLE);
-            TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
-            frag.showTabLayer();
-            if (isAdded()) {
-                ((DashboardActivity) getActivity()).showToolbarAndNavigationLayer();
-            }
+            ((TopicsListingActivity) getActivity()).showGuideTopLayer();
+//            TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
+//            frag.showTabLayer();
+//            if (isAdded()) {
+//                ((DashboardActivity) getActivity()).showToolbarAndNavigationLayer();
+//            }
         }
 
     }
@@ -479,12 +481,14 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 break;
             case R.id.guideOverlay:
                 guideOverlay.setVisibility(View.GONE);
-                TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
-                frag.hideTabLayer();
-                if (isAdded()) {
-                    ((DashboardActivity) getActivity()).hideToolbarAndNavigationLayer();
-                    SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", true);
-                }
+//                TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
+//                frag.hideTabLayer();
+                ((TopicsListingActivity) getActivity()).hideGuideTopLayer();
+                SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", true);
+//                if (isAdded()) {
+//                    ((DashboardActivity) getActivity()).hideToolbarAndNavigationLayer();
+//                    SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", true);
+//                }
                 break;
             case R.id.recentSortFAB:
                 fabMenu.collapse();

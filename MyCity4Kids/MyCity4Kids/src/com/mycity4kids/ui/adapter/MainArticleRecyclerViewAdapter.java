@@ -30,6 +30,7 @@ import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.FeedNativeAd;
@@ -64,6 +65,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private boolean isAdChoiceAdded = false;
     private boolean topicHeaderVisibilityFlag;
     private List<NativeAd> adList = new ArrayList<>(10);
+    private boolean isRequestRunning;
 
     public MainArticleRecyclerViewAdapter(Context pContext, FeedNativeAd feedNativeAd, RecyclerViewClickListener listener, boolean topicHeaderVisibilityFlag) {
         mContext = pContext;
@@ -272,7 +274,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         holder.bookmarkArticleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addRemoveBookmark(position, holder);
+                if (!isRequestRunning) {
+                    addRemoveBookmark(position, holder);
+                }
                 Utils.pushBookmarkArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
                         articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
             }
@@ -386,7 +390,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         holder.bookmarkArticleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addRemoveBookmark(position, holder);
+                if (!isRequestRunning) {
+                    addRemoveBookmark(position, holder);
+                }
                 Utils.pushBookmarkArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
                         articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
             }
@@ -500,7 +506,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         holder.bookmarkArticleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addRemoveBookmark(position, holder);
+                if (!isRequestRunning) {
+                    addRemoveBookmark(position, holder);
+                }
                 Utils.pushBookmarkArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
                         articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
             }
@@ -645,12 +653,17 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private void addRemoveBookmark(int position, RecyclerView.ViewHolder holder) {
+        isRequestRunning = true;
         if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+            articleDataModelsNew.get(position).setListingBookmarkStatus(1);
+            notifyDataSetChanged();
             ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
             articleDetailRequest.setArticleId(articleDataModelsNew.get(position).getId());
             String jsonString = new Gson().toJson(articleDetailRequest);
             new MainArticleRecyclerViewAdapter.AddRemoveBookmarkAsyncTask(holder, "bookmarkArticle", position).execute(jsonString, "bookmarkArticle");
         } else {
+            articleDataModelsNew.get(position).setListingBookmarkStatus(0);
+            notifyDataSetChanged();
             DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
             deleteBookmarkRequest.setId(articleDataModelsNew.get(position).getBookmarkId());
             String jsonString = new Gson().toJson(deleteBookmarkRequest);
@@ -760,7 +773,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         @Override
         protected void onPostExecute(String result) {
-
+            isRequestRunning = false;
             if (result == null) {
                 resetFollowUnfollowStatus();
                 return;
@@ -782,7 +795,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else {
                                     ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 }
-
+                                if (mContext instanceof DashboardActivity) {
+                                    ((DashboardActivity) mContext).showBookmarkConfirmationTooltip();
+                                }
                             } else if ("unbookmarkArticle".equals(type)) {
                                 articleDataModelsNew.get(i).setListingBookmarkStatus(0);
                                 articleDataModelsNew.get(i).setBookmarkId("");

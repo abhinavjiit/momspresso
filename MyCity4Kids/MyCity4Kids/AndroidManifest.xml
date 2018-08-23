@@ -445,6 +445,18 @@
         <activity
             android:name=".ui.activity.GroupsEditPostActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ExploreArticleListingTypeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ShortStoriesListingContainerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.TopicsListingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ExploreEventsResourcesActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

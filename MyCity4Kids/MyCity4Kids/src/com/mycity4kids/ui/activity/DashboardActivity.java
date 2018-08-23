@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -23,6 +24,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -103,6 +107,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private String mToolbarTitle = "";
     private String fragmentToLoad = "";
 
+    private Animation slideDownAnim;
+
     private Toolbar mToolbar;
     private TextView toolbarTitleTextView;
     private ImageView searchAllImageView;
@@ -121,6 +127,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout groupCoachmark, firstCoachmark, secondCoachmark;
     private TextView selectedlangGuideTextView;
     private MixpanelAPI mMixpanel;
+    private RelativeLayout bookmarkInfoView;
+    private TextView viewBookmarkedArticleTextView;
 
 
     @Override
@@ -174,6 +182,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         secondCoachmark = (RelativeLayout) findViewById(R.id.secondCoachmark);
         transparentLayerToolbar = (FrameLayout) findViewById(R.id.transparentLayerToolbar);
         transparentLayerNavigation = (FrameLayout) findViewById(R.id.transparentLayerNavigation);
+        bookmarkInfoView = (RelativeLayout) findViewById(R.id.bookmarkInfoView);
+        viewBookmarkedArticleTextView = (TextView) findViewById(R.id.viewBookmarkedArticleTextView);
 
         bottomNavigationView.enableAnimation(false);
         bottomNavigationView.enableShiftingMode(false);
@@ -184,13 +194,36 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         downArrowImageView.setOnClickListener(this);
         menuImageView.setOnClickListener(this);
-        toolbarTitleTextView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
         readAllNotificationTextView.setOnClickListener(this);
         langTextView.setOnClickListener(this);
         groupCoachmark.setOnClickListener(this);
         firstCoachmark.setOnClickListener(this);
         secondCoachmark.setOnClickListener(this);
+        viewBookmarkedArticleTextView.setOnClickListener(this);
+
+        slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
+        slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        bookmarkInfoView.setVisibility(View.GONE);
+                    }
+                }, 3000);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(this))) {
             langTextView.setText(getString(R.string.language_label_english));
@@ -816,10 +849,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     onBackPressed();
                 } else {
                     Utils.pushTopMenuClickEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                    ExploreArticleListingTypeFragment fragment1 = new ExploreArticleListingTypeFragment();
-                    Bundle mBundle1 = new Bundle();
-                    fragment1.setArguments(mBundle1);
-                    addFragment(fragment1, mBundle1, true);
+//                    ExploreArticleListingTypeFragment fragment1 = new ExploreArticleListingTypeFragment();
+//                    Bundle mBundle1 = new Bundle();
+//                    fragment1.setArguments(mBundle1);
+//                    addFragment(fragment1, mBundle1, true);
+                    Intent intent = new Intent(this, ExploreArticleListingTypeActivity.class);
+                    startActivity(intent);
+                    this.overridePendingTransition(R.anim.activity_drawer_slide_in_from_left, R.anim.activity_drawer_slide_out_to_right);
                 }
 
                 break;
@@ -1295,7 +1331,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         selectOptToolbarTitle.setVisibility(View.GONE);
         toolbarTitleTextView.setVisibility(View.VISIBLE);
         downArrowImageView.setVisibility(View.INVISIBLE);
-        menuImageView.setVisibility(View.GONE);
+//        menuImageView.setVisibility(View.GONE);
         readAllNotificationTextView.setVisibility(View.GONE);
         langTextView.setVisibility(View.GONE);
         if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
@@ -1305,7 +1341,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             mToolbar.setVisibility(View.VISIBLE);
             toolbarUnderline.setVisibility(View.VISIBLE);
-            toolbarTitleTextView.setOnClickListener(null);
+//            toolbarTitleTextView.setOnClickListener(null);
             toolbarTitleTextView.setVisibility(View.GONE);
             downArrowImageView.setVisibility(View.GONE);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
@@ -1330,7 +1366,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (null != topFragment && topFragment instanceof BecomeBloggerFragment) {
             mToolbar.setVisibility(View.VISIBLE);
             toolbarUnderline.setVisibility(View.VISIBLE);
-            toolbarTitleTextView.setOnClickListener(null);
+//            toolbarTitleTextView.setOnClickListener(null);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_become_blogger));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
@@ -1340,7 +1376,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (null != topFragment && topFragment instanceof UploadVideoInfoFragment) {
             mToolbar.setVisibility(View.VISIBLE);
             toolbarUnderline.setVisibility(View.VISIBLE);
-            toolbarTitleTextView.setOnClickListener(null);
+//            toolbarTitleTextView.setOnClickListener(null);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_first_video_upload));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
@@ -1350,7 +1386,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else {
             mToolbar.setVisibility(View.VISIBLE);
             toolbarUnderline.setVisibility(View.VISIBLE);
-            toolbarTitleTextView.setOnClickListener(null);
+//            toolbarTitleTextView.setOnClickListener(null);
             if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
                 Utils.pushOpenScreenEvent(this, "PrivateProfileScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_profile_title));
@@ -1386,7 +1422,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     groupCoachmark.setVisibility(View.VISIBLE);
                 }
                 langTextView.setVisibility(View.VISIBLE);
-                toolbarTitleTextView.setOnClickListener(this);
+//                toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_trending_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
@@ -1397,7 +1433,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof AddArticleVideoFragment) {
                 menu.findItem(R.id.action_write).setChecked(true);
-                mToolbar.setVisibility(View.GONE);
+//                mToolbar.setVisibility(View.GONE);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                menuImageView.setVisibility(View.VISIBLE);
+                setSupportActionBar(mToolbar);
                 toolbarUnderline.setVisibility(View.GONE);
             } else if (null != topFragment && topFragment instanceof TopicsListingFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
@@ -1538,5 +1577,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onMembershipStatusFetchFail() {
 
+    }
+
+    public void showBookmarkConfirmationTooltip() {
+        bookmarkInfoView.setVisibility(View.VISIBLE);
+        bookmarkInfoView.startAnimation(slideDownAnim);
+//        bookmarkInfoView.setVisibility(View.VISIBLE);
+//        TranslateAnimation animate = new TranslateAnimation(
+//                0,                 // fromXDelta
+//                0,                 // toXDelta
+//                -bookmarkInfoView.getHeight(),  // fromYDelta
+//                0);                // toYDelta
+//        animate.setDuration(1500);
+//        animate.setFillAfter(true);
+//        bookmarkInfoView.startAnimation(animate);
     }
 }
