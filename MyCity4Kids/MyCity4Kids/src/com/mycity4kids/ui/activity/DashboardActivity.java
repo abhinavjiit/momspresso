@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
+import android.animation.Animator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -24,8 +25,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -117,7 +120,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout rootLayout;
     private ImageView downArrowImageView;
     private TextView selectOptToolbarTitle;
-    private TextView readAllNotificationTextView;
+    //    private TextView readAllNotificationTextView;
     private Badge badge;
     private View toolbarUnderline;
     private ImageView menuImageView;
@@ -174,7 +177,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
         searchAllImageView = (ImageView) mToolbar.findViewById(R.id.searchAllImageView);
         selectOptToolbarTitle = (TextView) findViewById(R.id.selectOptToolbarTitle);
-        readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
+//        readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
         langTextView = (TextView) findViewById(R.id.langTextView);
         selectedlangGuideTextView = (TextView) findViewById(R.id.selectedlangGuideTextView);
         groupCoachmark = (RelativeLayout) findViewById(R.id.groupCoachmark);
@@ -195,7 +198,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         downArrowImageView.setOnClickListener(this);
         menuImageView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
-        readAllNotificationTextView.setOnClickListener(this);
+//        readAllNotificationTextView.setOnClickListener(this);
         langTextView.setOnClickListener(this);
         groupCoachmark.setOnClickListener(this);
         firstCoachmark.setOnClickListener(this);
@@ -216,7 +219,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     public void run() {
                         bookmarkInfoView.setVisibility(View.GONE);
                     }
-                }, 3000);
+                }, 2000);
             }
 
             @Override
@@ -758,6 +761,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    public void showHideNotificationCenterMark(boolean flag) {
+        if (flag) {
+            addBadgeAt(1, "1");
+        } else {
+            addBadgeAt(1, "0");
+        }
+    }
+
     @Override
     public void setTitle(CharSequence title) {
     }
@@ -870,12 +881,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     startActivity(searchIntent);
                 }
                 break;
-            case R.id.readAllTextView:
-                if (topFragment instanceof NotificationFragment) {
-                    ((NotificationFragment) topFragment).markAllNotificationAsRead();
-                    updateUnreadNotificationCount("0");
-                }
-                break;
+//            case R.id.readAllTextView:
+//                if (topFragment instanceof NotificationFragment) {
+//                    ((NotificationFragment) topFragment).markAllNotificationAsRead();
+//                    updateUnreadNotificationCount("0");
+//                }
+//                break;
             case R.id.groupCoachmark:
                 groupCoachmark.setVisibility(View.GONE);
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "home")) {
@@ -1332,14 +1343,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         toolbarTitleTextView.setVisibility(View.VISIBLE);
         downArrowImageView.setVisibility(View.INVISIBLE);
 //        menuImageView.setVisibility(View.GONE);
-        readAllNotificationTextView.setVisibility(View.GONE);
+//        readAllNotificationTextView.setVisibility(View.GONE);
         langTextView.setVisibility(View.GONE);
         if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
             String fragType = "";
             if (topFragment.getArguments() != null) {
                 fragType = topFragment.getArguments().getString("fragType", "");
             }
-            mToolbar.setVisibility(View.VISIBLE);
+//            mToolbar.setVisibility(View.VISIBLE);
             toolbarUnderline.setVisibility(View.VISIBLE);
 //            toolbarTitleTextView.setOnClickListener(null);
             toolbarTitleTextView.setVisibility(View.GONE);
@@ -1364,7 +1375,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else if (null != topFragment && topFragment instanceof BecomeBloggerFragment) {
-            mToolbar.setVisibility(View.VISIBLE);
+//            mToolbar.setVisibility(View.VISIBLE);
             toolbarUnderline.setVisibility(View.VISIBLE);
 //            toolbarTitleTextView.setOnClickListener(null);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_become_blogger));
@@ -1374,7 +1385,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else if (null != topFragment && topFragment instanceof UploadVideoInfoFragment) {
-            mToolbar.setVisibility(View.VISIBLE);
+//            mToolbar.setVisibility(View.VISIBLE);
             toolbarUnderline.setVisibility(View.VISIBLE);
 //            toolbarTitleTextView.setOnClickListener(null);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_first_video_upload));
@@ -1384,7 +1395,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
-            mToolbar.setVisibility(View.VISIBLE);
+//            mToolbar.setVisibility(View.VISIBLE);
             toolbarUnderline.setVisibility(View.VISIBLE);
 //            toolbarTitleTextView.setOnClickListener(null);
             if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
@@ -1401,7 +1412,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 searchAllImageView.setVisibility(View.GONE);
-                readAllNotificationTextView.setVisibility(View.VISIBLE);
+//                readAllNotificationTextView.setVisibility(View.VISIBLE);
                 menu.findItem(R.id.action_notification).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
@@ -1518,7 +1529,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private Badge addBadgeAt(int position, String number) {
         if (badge != null) {
-            badge.setBadgeText(number);
+            badge.setBadgeText("");
             if (number.equals("0")) {
                 badge.hide(false);
             }
@@ -1526,8 +1537,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         // add badge
         badge = new QBadgeView(this)
-                .setBadgeText(number)
-                .setGravityOffset(16, 2, true)
+                .setBadgeText("")
+                .setGravityOffset(24, 14, true)
                 .bindTarget(bottomNavigationView.getBottomNavigationItemView(position));
         if (number.equals("0")) {
             badge.hide(false);
@@ -1582,14 +1593,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void showBookmarkConfirmationTooltip() {
         bookmarkInfoView.setVisibility(View.VISIBLE);
         bookmarkInfoView.startAnimation(slideDownAnim);
-//        bookmarkInfoView.setVisibility(View.VISIBLE);
-//        TranslateAnimation animate = new TranslateAnimation(
-//                0,                 // fromXDelta
-//                0,                 // toXDelta
-//                -bookmarkInfoView.getHeight(),  // fromYDelta
-//                0);                // toYDelta
-//        animate.setDuration(1500);
-//        animate.setFillAfter(true);
-//        bookmarkInfoView.startAnimation(animate);
+    }
+
+    public void hideViews() {
+        getSupportActionBar().hide();
+    }
+
+    public void showViews() {
+        getSupportActionBar().show();
     }
 }

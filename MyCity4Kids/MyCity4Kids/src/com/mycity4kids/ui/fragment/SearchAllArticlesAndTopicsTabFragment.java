@@ -19,11 +19,9 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.SearchArticleResult;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.models.response.SearchTopicResult;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
@@ -64,8 +62,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = null;
-        view = getActivity().getLayoutInflater().inflate(R.layout.search_all_article_topic_tab_fragment, container, false);
+        View view = inflater.inflate(R.layout.search_all_article_topic_tab_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);

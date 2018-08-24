@@ -13,6 +13,7 @@ public class SearchArticleResult {
     private String body;
     private String blogSlug;
     private String contentType;
+    private ImageURL imageUrl;
 
     public String getId() {
         return id;
@@ -76,5 +77,13 @@ public class SearchArticleResult {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public ImageURL getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(ImageURL imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -59,7 +59,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     private boolean isHeaderVisible = false;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
-//    private SwipeRefreshLayout swipe_refresh_layout;
 
     @Nullable
     @Override
@@ -68,16 +67,13 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         View view = inflater.inflate(R.layout.new_article_layout, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-//        swipe_refresh_layout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-//        swipe_refresh_layout.setOnRefreshListener(this);
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
-
 
         if (SharedPrefUtils.getFollowedTopicsCount(getActivity()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
             isHeaderVisible = true;
@@ -96,8 +92,11 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
 
         hitFilteredTopicsArticleListingApi(0);
 
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private static final int HIDE_THRESHOLD = 20;
+            private int scrolledDistance = 0;
+            private boolean controlsVisible = true;
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) //check for scroll down
@@ -114,9 +113,34 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                         }
                     }
                 }
-            }
-        });
+                int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                //show views if first item is first visible position and views are hidden
+                if (firstVisibleItem == 0) {
+                    if (!controlsVisible) {
+                        if (isAdded())
+                        ((DashboardActivity) getActivity()).showViews();
+                        controlsVisible = true;
+                    }
+                } else {
+                    if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
+                        if (isAdded())
+                        ((DashboardActivity) getActivity()).hideViews();
+                        controlsVisible = false;
+                        scrolledDistance = 0;
+                    } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
+                        if (isAdded())
+                        ((DashboardActivity) getActivity()).showViews();
+                        controlsVisible = true;
+                        scrolledDistance = 0;
+                    }
+                }
 
+                if ((controlsVisible && dy > 0) || (!controlsVisible && dy < 0)) {
+                    scrolledDistance += dy;
+                }
+            }
+
+        });
         return view;
     }
 
@@ -138,7 +162,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
-//            swipe_refresh_layout.setRefreshing(false);
             progressBar.setVisibility(View.INVISIBLE);
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
@@ -164,7 +187,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-//            swipe_refresh_layout.setRefreshing(false);
             progressBar.setVisibility(View.INVISIBLE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
@@ -215,7 +237,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     @Override
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-//            swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             return;
         }
@@ -262,7 +283,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         }
     }
 
-    public RecyclerView getRecyclerView(){
+    public RecyclerView getRecyclerView() {
         return recyclerView;
     }
 }

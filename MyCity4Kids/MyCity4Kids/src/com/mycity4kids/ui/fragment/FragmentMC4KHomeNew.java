@@ -168,7 +168,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         NotificationsAPI notificationsAPI = retrofit.create(NotificationsAPI.class);
 
-        Call<NotificationCenterListResponse> filterCall = notificationsAPI.getUnreadNotificationCount(userId);
+        Call<NotificationCenterListResponse> filterCall = notificationsAPI.getNotificationCenterList(userId, 1, "");
         filterCall.enqueue(unreadNotificationCountResponseCallback);
     }
 
@@ -190,7 +190,12 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
             try {
                 NotificationCenterListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    ((DashboardActivity) getActivity()).updateUnreadNotificationCount(responseData.getData().getTotal());
+                    if (responseData.getData().getResult().get(0).getId().equals(SharedPrefUtils.getLastNotificationIdForUnreadFlag(BaseApplication.getAppContext()))) {
+                        ((DashboardActivity) getActivity()).showHideNotificationCenterMark(false);
+                    } else {
+                        ((DashboardActivity) getActivity()).showHideNotificationCenterMark(true);
+                    }
+//                    ((DashboardActivity) getActivity()).updateUnreadNotificationCount(responseData.getData().getTotal());
                 } else {
                     ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
                 }

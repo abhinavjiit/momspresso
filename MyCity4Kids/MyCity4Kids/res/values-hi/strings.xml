@@ -327,9 +327,9 @@
     <string name="search.author_label">लेखक</string>
     <string name="search.topic_label">शीर्षक</string>
     <string name="search.show_more">और दिखाएँ</string>
-    <string name="search.article_topic_tab_label">आर्टिकल और विषय</string>
+    <string name="search.article_topic_tab_label">आर्टिकल</string>
     <string name="search.author_tab_label">लेखक</string>
-    <string name="search.article_no_result">कोई आर्टिकल या विषय नहीं मिल पाया.</string>
+    <string name="search.article_no_result">कोई विषय नहीं मिल पाया.</string>
     <string name="search.author_no_result">कोई लेखक नहीं मिल पाया</string>
 
     <string name="search_topics.toolbar_title">श्रेणी चुने</string>

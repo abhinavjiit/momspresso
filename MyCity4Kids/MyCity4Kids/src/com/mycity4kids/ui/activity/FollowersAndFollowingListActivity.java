@@ -45,27 +45,29 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
     ArrayList<FollowersFollowingResult> mDatalist;
     private String userId;
     private String followListType;
+    private TextView toolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.follower_following_list_activity);
+
         followListType = getIntent().getStringExtra(AppConstants.FOLLOW_LIST_TYPE);
         userId = getIntent().getStringExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS);
-
         if (null == userId) {
             userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         }
+
         followerFollowingListView = (ListView) findViewById(R.id.followerFollowingListView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         noResultTextView = (TextView) findViewById(R.id.emptyList);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         mDatalist = new ArrayList<>();
-
 
         followerFollowingListAdapter = new FollowerFollowingListAdapter(this, followListType);
         followerFollowingListAdapter.setData(mDatalist);
@@ -94,12 +96,12 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             Call<FollowersFollowingResponse> callFollowerList = followListAPI.getFollowersList(userId);
             callFollowerList.enqueue(getFollowersListResponseCallback);
             progressBar.setVisibility(View.VISIBLE);
-            getSupportActionBar().setTitle(getString(R.string.myprofile_followers_label));
+            toolbarTitle.setText(getString(R.string.myprofile_followers_label));
         } else {
             Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingList(userId);
             callFollowingList.enqueue(getFollowersListResponseCallback);
             progressBar.setVisibility(View.VISIBLE);
-            getSupportActionBar().setTitle(getString(R.string.myprofile_following_label));
+            toolbarTitle.setText(getString(R.string.myprofile_following_label));
         }
     }
 

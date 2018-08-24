@@ -28,6 +28,7 @@ import com.mycity4kids.models.response.TrendingListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.widget.FeedNativeAd;
 
@@ -49,11 +50,9 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
     private TrendingListingResult trendingTopicData;
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
-//    private MainArticleListingAdapter adapter;
 
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
-    //    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -64,18 +63,14 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
 
         View view = inflater.inflate(R.layout.new_article_layout, container, false);
 
-//        final ListView listView = (ListView) view.findViewById(R.id.scroll);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
-//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 
         if (getArguments() != null) {
             trendingTopicData = getArguments().getParcelable("trendingTopicsData");
         }
         Log.d("searchName", "" + trendingTopicData.getDisplay_name());
-
-//        swipeRefreshLayout.setOnRefreshListener(this);
 
         feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
@@ -86,31 +81,15 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         recyclerAdapter.setNewListData(trendingTopicData.getArticleList());
         recyclerView.setAdapter(recyclerAdapter);
 
-//        adapter = new MainArticleListingAdapter(getActivity());
-//        adapter.setNewListData(trendingTopicData.getArticleList());
-//        listView.setAdapter(adapter);
-
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//
-//                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-//                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-//                    mLodingView.setVisibility(View.VISIBLE);
-//                    hitFilteredTopicsArticleListingApi(0);
-//                    isReuqestRunning = true;
-//                }
-//            }
-//        });
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            private static final int HIDE_THRESHOLD = 20;
+            private int scrolledDistance = 0;
+            private boolean controlsVisible = true;
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
                 if (dy > 0) //check for scroll down
                 {
                     visibleItemCount = llm.getChildCount();
@@ -125,38 +104,33 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
                         }
                     }
                 }
+                int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                //show views if first item is first visible position and views are hidden
+                if (firstVisibleItem == 0) {
+                    if (!controlsVisible) {
+                        if (isAdded())
+                            ((DashboardActivity) getActivity()).showViews();
+                        controlsVisible = true;
+                    }
+                } else {
+                    if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
+                        if (isAdded())
+                            ((DashboardActivity) getActivity()).hideViews();
+                        controlsVisible = false;
+                        scrolledDistance = 0;
+                    } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
+                        if (isAdded())
+                            ((DashboardActivity) getActivity()).showViews();
+                        controlsVisible = true;
+                        scrolledDistance = 0;
+                    }
+                }
+
+                if ((controlsVisible && dy > 0) || (!controlsVisible && dy < 0)) {
+                    scrolledDistance += dy;
+                }
             }
         });
-
-
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getItemAtPosition(i);
-//
-//                if (null == parentingListData) {
-//                    Utils.pushOpenFollowTopicEvent(getActivity(), "HomeScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
-//                    ExploreArticleListingTypeFragment searchTopicFrag = new ExploreArticleListingTypeFragment();
-//                    Bundle searchBundle = new Bundle();
-//                    searchBundle.putString("fragType", "search");
-//                    searchTopicFrag.setArguments(searchBundle);
-//                    ((DashboardActivity) getActivity()).addFragment(searchTopicFrag, searchBundle, true);
-//                } else {
-//                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-//                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-//                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-//                    intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
-//                    intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-//                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Trending" + "~" + trendingTopicData.getDisplay_name());
-//                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-//                    intent.putParcelableArrayListExtra("pagerListData", trendingTopicData.getArticleList());
-//                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
-//                    startActivity(intent);
-//                }
-//
-//            }
-//        });
 
         return view;
     }

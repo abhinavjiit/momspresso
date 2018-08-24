@@ -77,8 +77,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = null;
-        view = getActivity().getLayoutInflater().inflate(R.layout.user_published_article_tab_fragment, container, false);
+        View view = inflater.inflate(R.layout.user_published_article_tab_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);

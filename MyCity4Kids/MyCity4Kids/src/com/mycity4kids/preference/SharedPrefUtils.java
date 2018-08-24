@@ -108,6 +108,7 @@ public class SharedPrefUtils {
 
     private static final String LOCALE_LANGUAGE_KEY = "language_key";
     private static final String ANONYMOUS_FLAG = "anonymousFlag";
+    private static final String NOTIFICATION_CENTER_FLAG = "notificationCenterFlag";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -626,5 +627,18 @@ public class SharedPrefUtils {
         Editor _editor = _sharedPref.edit();
         _editor.putBoolean(ANONYMOUS_FLAG, flag);
         _editor.commit();
+    }
+
+    public static void setLastNotificationIdForUnreadFlag(Context pContext, String flag) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(NOTIFICATION_CENTER_FLAG, flag);
+        _editor.commit();
+    }
+
+    public static String getLastNotificationIdForUnreadFlag(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        String language = (_sharedPref.getString(NOTIFICATION_CENTER_FLAG, "0"));
+        return language;
     }
 }

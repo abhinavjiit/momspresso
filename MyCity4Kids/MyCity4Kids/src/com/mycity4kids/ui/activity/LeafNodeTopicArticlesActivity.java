@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
@@ -21,45 +20,35 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.adapter.TopicsPagerAdapter;
+import com.mycity4kids.ui.adapter.LeafTopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
 import com.mycity4kids.utils.AppUtils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-
-/**
- * Created by hemant on 25/5/17.
- */
-public class TopicsListingActivity extends BaseActivity {
+public class LeafNodeTopicArticlesActivity extends BaseActivity {
 
     //    private View view;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private FrameLayout topLayerGuideLayout;
 
-    private TopicsPagerAdapter pagerAdapter;
+    private LeafTopicsPagerAdapter pagerAdapter;
 
     private HashMap<Topics, List<Topics>> allTopicsMap;
     private ArrayList<Topics> allTopicsList;
-    private String parentTopicId;
-    private ArrayList<Topics> subTopicsList;
+    //    private ArrayList<Topics> subTopicsList;
     private Toolbar toolbar;
     private TextView toolbarTitleTextView;
+    private Topics leafTopic, leafTopicParent;
+    private int tabPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.topic_listing_activity);
+        setContentView(R.layout.leaf_topic_articles_activity);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
@@ -70,78 +59,35 @@ public class TopicsListingActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        parentTopicId = getIntent().getStringExtra("parentTopicId");
+        leafTopicParent = getIntent().getParcelableExtra("leafTopicParent");
+        leafTopic = getIntent().getParcelableExtra("leafTopic");
 
-        Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-        try {
-            allTopicsList = BaseApplication.getTopicList();
-            allTopicsMap = BaseApplication.getTopicsMap();
+        toolbarTitleTextView.setText(leafTopicParent.getDisplay_name());
 
-            if (allTopicsList == null || allTopicsMap == null) {
-                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-                createTopicsData(res);
+        Utils.pushOpenScreenEvent(this, "LeafTopicArticlesScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
+//        if (subTopicsList.size() == 0) {
+        Topics mainTopic = new Topics();
+        mainTopic.setId(leafTopicParent.getId());
+        String allCategoryLabel = "";
+        allCategoryLabel = getString(R.string.all_categories_label);
+        mainTopic.setDisplay_name(allCategoryLabel);
+        mainTopic.setTitle(allCategoryLabel);
+
+        leafTopicParent.getChild().add(0, mainTopic);
+
+        for (int i = 0; i < leafTopicParent.getChild().size(); i++) {
+            tabLayout.addTab(tabLayout.newTab().setText(leafTopicParent.getChild().get(i).getDisplay_name()));
+            if (leafTopicParent.getChild().get(i).getId().equals(leafTopic.getId())) {
+                tabPosition = i;
             }
-            getCurrentParentTopicCategoriesAndSubCategories();
-        } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
-            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-            caller.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-                    try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-                        createTopicsData(res);
-                        getCurrentParentTopicCategoriesAndSubCategories();
-                    } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
-                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
-                    Log.d("MC4KException", Log.getStackTraceString(t));
-                }
-            });
-        }
-        if (subTopicsList.size() == 0) {
-            Topics mainTopic = new Topics();
-            mainTopic.setId(parentTopicId);
-            String allCategoryLabel = "";
-            allCategoryLabel = getString(R.string.all_categories_label);
-            mainTopic.setDisplay_name(allCategoryLabel);
-            mainTopic.setTitle(allCategoryLabel);
-
-            Topics childTopic = new Topics();
-            childTopic.setId(parentTopicId);
-            childTopic.setDisplay_name(allCategoryLabel);
-            childTopic.setTitle(allCategoryLabel);
-
-            ArrayList<Topics> aa = new ArrayList<Topics>();
-            aa.add(childTopic);
-
-            mainTopic.setChild(aa);
-            subTopicsList.add(mainTopic);
-        }
-        for (int i = 0; i < subTopicsList.size(); i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
         }
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         AppUtils.changeTabsFont(this, tabLayout);
 
-        pagerAdapter = new TopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
+        pagerAdapter = new LeafTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), leafTopicParent.getChild());
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -160,7 +106,7 @@ public class TopicsListingActivity extends BaseActivity {
 
             }
         });
-
+        viewPager.setCurrentItem(tabPosition);
         if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article")) {
             showGuideView();
         }
@@ -232,21 +178,6 @@ public class TopicsListingActivity extends BaseActivity {
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-        }
-    }
-
-    private void getCurrentParentTopicCategoriesAndSubCategories() {
-        for (int i = 0; i < allTopicsList.size(); i++) {
-            subTopicsList = new ArrayList<>();
-            //Selected topic is Main Category
-            if (parentTopicId.equals(allTopicsList.get(i).getId())) {
-                subTopicsList.addAll(allTopicsList.get(i).getChild());
-                toolbarTitleTextView.setText(allTopicsList.get(i).getDisplay_name());
-//                ((DashboardActivity) getActivity()).setDynamicToolbarTitle(allTopicsList.get(i).getDisplay_name());
-                Utils.pushViewTopicArticlesEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "",
-                        allTopicsList.get(i).getId() + "~" + allTopicsList.get(i).getDisplay_name());
-                return;
-            }
         }
     }
 

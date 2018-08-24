@@ -14,9 +14,8 @@
         android:id="@+id/searchTopicTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/articleImageView"
         android:maxLines="1"
-        android:text="Pregnancy"
+        android:text=""
         android:textColor="@color/search.article_title"
         android:textSize="15sp"
         app:fontName="oswald_regular.ttf" />

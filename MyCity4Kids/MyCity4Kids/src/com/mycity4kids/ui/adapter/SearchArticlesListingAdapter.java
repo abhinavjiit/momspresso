@@ -1,34 +1,38 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.text.Html;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.SearchArticleResult;
+import com.mycity4kids.utils.AppUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 21/7/16.
  */
-public class SearchArticlesListingAdapter extends BaseAdapter {
+public class SearchArticlesListingAdapter extends RecyclerView.Adapter<SearchArticlesListingAdapter.ArticleViewHolder> {
 
     private Context mContext;
     private LayoutInflater mInflator;
     ArrayList<SearchArticleResult> articleDataModelsNew;
     private final float density;
+    private RecyclerViewClickListener mListener;
 
-    public SearchArticlesListingAdapter(Context pContext) {
+    public SearchArticlesListingAdapter(Context pContext, RecyclerViewClickListener listener) {
 
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
+        this.mListener = listener;
     }
 
     public void setListData(ArrayList<SearchArticleResult> mParentingLists) {
@@ -36,51 +40,56 @@ public class SearchArticlesListingAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return articleDataModelsNew == null ? 0 : articleDataModelsNew.size();
+    public ArticleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        ArticleViewHolder viewHolder = null;
+        View v0 = mInflator.inflate(R.layout.search_all_article_item, parent, false);
+        viewHolder = new ArticleViewHolder(v0, mListener);
+        return viewHolder;
     }
 
     @Override
-    public Object getItem(int position) {
-        return articleDataModelsNew.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    class ViewHolder {
-        TextView titleTextView;
-        TextView bodyTextView;
-    }
-
-    @Override
-    public View getView(final int position, View view, ViewGroup parent) {
-
-        final ViewHolder holder;
-        if (view == null) {
-            view = mInflator.inflate(R.layout.search_article_item_layout, null);
-            holder = new ViewHolder();
-            holder.titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-            holder.bodyTextView = (TextView) view.findViewById(R.id.bodyTextView);
-            view.setTag(holder);
-        } else {
-            holder = (ViewHolder) view.getTag();
-        }
-
-        holder.titleTextView.setText(Html.fromHtml(articleDataModelsNew.get(position).getTitle()));
+    public void onBindViewHolder(ArticleViewHolder holder, int position) {
+        holder.titleTextView.setText(AppUtils.fromHtml(articleDataModelsNew.get(position).getTitle()));
         if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getBody())) {
             holder.bodyTextView.setText("");
         } else {
-            holder.bodyTextView.setText(Html.fromHtml(articleDataModelsNew.get(position).getBody()));
+            holder.bodyTextView.setText(AppUtils.fromHtml(articleDataModelsNew.get(position).getBody()));
         }
-        return view;
+
+        try {
+            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
+                    placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+        } catch (Exception e) {
+            holder.articleImageView.setBackgroundResource(R.drawable.article_default);
+        }
     }
 
+    @Override
+    public int getItemCount() {
+        return articleDataModelsNew == null ? 0 : articleDataModelsNew.size();
+    }
 
-    public void refreshArticleList(ArrayList<SearchArticleResult> newList) {
-        this.articleDataModelsNew = newList;
+    public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView titleTextView;
+        TextView bodyTextView;
+        ImageView articleImageView;
+
+        public ArticleViewHolder(View itemView, RecyclerViewClickListener listener) {
+            super(itemView);
+            titleTextView = (TextView) itemView.findViewById(R.id.articleTitleTextView);
+            bodyTextView = (TextView) itemView.findViewById(R.id.articleDescTextView);
+            articleImageView = (ImageView) itemView.findViewById(R.id.articleImageView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mListener.onClick(v, getAdapterPosition());
+        }
+    }
+
+    public interface RecyclerViewClickListener {
+        void onClick(View view, int position);
     }
 
 }

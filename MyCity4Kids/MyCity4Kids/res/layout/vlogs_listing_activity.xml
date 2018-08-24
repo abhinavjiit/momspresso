@@ -6,64 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <ListView
+        android:id="@+id/vlogsListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:elevation="5dp"
-        android:minHeight="?attr/actionBarSize"
-        fab:theme="@style/ToolbarTheme"
-        fab:titleTextAppearance="@style/ToolbarTheme.Title">
-
-        <RelativeLayout
-            android:id="@+id/toolbarRelativeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/toolbarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/user_funny_video.toolbar.title"
-                android:textColor="@color/user_funny_video.toolbar.title"
-                android:textSize="20sp"
-                fab:fontName="oswald_regular.ttf" />
-
-            <ImageView
-                android:id="@+id/searchAllImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:src="@drawable/ic_search" />
-
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar">
-
-        <ListView
-            android:id="@+id/vlogsListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
-            android:layout_marginTop="2dp"
-            android:background="@color/white"
-            android:clipToPadding="false"
-            android:paddingBottom="70dp" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="2dp"
+        android:background="@color/white"
+        android:clipToPadding="false"
+        android:paddingBottom="70dp" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/noBlogsTextView"
@@ -123,67 +74,10 @@
         android:layout_centerVertical="true"
         android:visibility="invisible" />
 
-    <FrameLayout
-        android:id="@+id/frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#B3000000"
-        android:visibility="visible">
-        <!--  floating action menu with buttons -->
-
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/fab_menu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|bottom"
-            fab:fab_addButtonColorNormal="@color/transparent"
-            fab:fab_addButtonColorPressed="@color/transparent"
-            fab:fab_addButtonPlusIconColor="@color/transparent"
-            fab:fab_addButtonStrokeVisible="false"
-            fab:fab_labelStyle="@style/menu_labels_style"
-            fab:fab_labelsPosition="left">
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/recentSortFAB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/fab.white"
-                fab:fab_colorPressed="@color/fab.white"
-                fab:fab_icon="@drawable/ic_recent"
-                fab:fab_plusIconColor="@color/white_color"
-                fab:fab_size="mini"
-                fab:fab_title="@string/sort.recent" />
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/popularSortFAB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/fab.white"
-                fab:fab_colorPressed="@color/fab.white"
-                fab:fab_icon="@drawable/ic_popular"
-                fab:fab_plusIconColor="@color/white_color"
-                fab:fab_size="mini"
-                fab:fab_title="@string/sort.popular" />
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
-    </FrameLayout>
-
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabSort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="right|bottom"
-        fab:fab_colorNormal="@color/fab.white"
-        fab:fab_colorPressed="@color/fab.white"
-        fab:fab_icon="@drawable/ic_flip" />
-
     <RelativeLayout
         android:id="@+id/firstUploadLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
         android:background="@color/white"
         android:clickable="true"
         android:orientation="vertical"

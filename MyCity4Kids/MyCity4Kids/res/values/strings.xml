@@ -326,9 +326,9 @@
     <string name="search.author_label">AUTHOR</string>
     <string name="search.topic_label">TOPIC</string>
     <string name="search.show_more">SHOW MORE</string>
-    <string name="search.article_topic_tab_label">ARTICLES &amp; TOPICS</string>
+    <string name="search.article_topic_tab_label">ARTICLES</string>
     <string name="search.author_tab_label">AUTHORS</string>
-    <string name="search.article_no_result">No articles or topics found.</string>
+    <string name="search.article_no_result">No topics found.</string>
     <string name="search.author_no_result">No authors found.</string>
 
     <string name="search_topics.toolbar_title">SELECT CATEGORIES</string>

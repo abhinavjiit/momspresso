@@ -327,7 +327,7 @@
     <string name="search.author_label">লেখক</string>
     <string name="search.topic_label">বিষয়</string>
     <string name="search.show_more">আরও দেখান</string>
-    <string name="search.article_topic_tab_label">প্রবন্ধ ও বিষয়সমূহ</string>
+    <string name="search.article_topic_tab_label">প্রবন্ধ </string>
     <string name="search.author_tab_label">লেখক</string>
     <string name="search.article_no_result">কোন প্রবন্ধ বা বিষয় খুঁজে পাওয়া যায়নি</string>
     <string name="search.author_no_result">কোন লেখক খুঁজে পাওয়া যায়নি</string>

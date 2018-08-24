@@ -85,32 +85,32 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new TimerTask() {
-                            @Override
-                            public void run() {
-                                requestSearch();
-                            }
-                        });
-                    }
-                }, 500);
-            }
-        });
+//        searchEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        runOnUiThread(new TimerTask() {
+//                            @Override
+//                            public void run() {
+//                                requestSearch();
+//                            }
+//                        });
+//                    }
+//                }, 500);
+//            }
+//        });
 
         AppUtils.changeTabsFont(this, mSlidingTabLayout);
         searchImageView.setOnClickListener(this);

@@ -1,20 +1,16 @@
 package com.mycity4kids.ui.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,7 +26,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -40,10 +35,7 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.LeafNodeTopicArticlesActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.FeedNativeAd;
-
-import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.ArrayList;
 
@@ -54,7 +46,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class LeafTopicArticlesTabFragment extends BaseFragment implements View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 1;
     private int limit = 15;
@@ -64,16 +56,12 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     private ArrayList<ArticleListingResult> mDatalist;
     private Topics currentSubTopic;
     private Topics selectedTopic;
-    private boolean isHeaderVisible = false;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
 
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
-    private FlowLayout flowLayout;
-    private RelativeLayout headerRL;
-    private ImageView expandImageView;
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private FloatingActionButton popularSortFAB;
@@ -83,7 +71,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     private FeedNativeAd feedNativeAd;
     private RelativeLayout guideOverlay;
     private RelativeLayout writeArticleCell;
-    private boolean showGuide = false;
 
     @Nullable
     @Override
@@ -155,180 +142,11 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             currentSubTopic = getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;
         }
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-
-        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        int lineCount = 0;
-        int width = displayMetrics.widthPixels;
-        Log.d("\nsearchName", "*********" + currentSubTopic.getDisplay_name() + " measured width = " + width);
-
-        headerRL = (RelativeLayout) view.findViewById(R.id.headerRL);
-        if (currentSubTopic.getChild().size() == 1 && currentSubTopic.getChild().get(0).getId().equals(currentSubTopic.getId())) {
-            //The child is same as the parent(this child is added for filters or follow unfollow logic)
-            //this duplicate child might not be required here but leaving it unchanged for now.
-            isHeaderVisible = false;
-            headerRL.setVisibility(View.GONE);
-        } else {
-            headerRL.setVisibility(View.VISIBLE);
-            flowLayout = (FlowLayout) headerRL.findViewById(R.id.flowLayout);
-            expandImageView = (ImageView) headerRL.findViewById(R.id.expandImageView);
-
-            final LinearLayout allSubsubLL = (LinearLayout) inflater.inflate(R.layout.sub_sub_topic_item, null);
-            TextView allCatTextView = ((TextView) allSubsubLL.getChildAt(0));
-
-            String allCategoryLabel = "";
-            if (isAdded()) {
-                allCategoryLabel = getString(R.string.all_categories_label);
-            } else {
-                allCategoryLabel = "ALL";
-            }
-
-            allCatTextView.setText(allCategoryLabel);
-            allCatTextView.measure(0, 0);
-            allSubsubLL.setTag(currentSubTopic);
-            width = width - allCatTextView.getMeasuredWidth() - allSubsubLL.getPaddingLeft() - allSubsubLL.getPaddingRight();
-            if (width < 0) {
-                lineCount++;
-                width = displayMetrics.widthPixels - allCatTextView.getMeasuredWidth() - allSubsubLL.getPaddingLeft() - allSubsubLL.getPaddingRight();
-                if (lineCount == 1) {
-                    width = width - AppUtils.dpTopx(50) - expandImageView.getPaddingLeft() - expandImageView.getPaddingRight();
-                }
-            }
-
-            if (lineCount == 2) {
-                lineCount++;
-                FlowLayout.LayoutParams layoutParams
-                        = new FlowLayout.LayoutParams
-                        (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.setNewLine(true);
-                allSubsubLL.setLayoutParams(layoutParams);
-                expandImageView.setVisibility(View.VISIBLE);
-                if (showGuide) {
-                    guideOverlay.setVisibility(View.VISIBLE);
-                    ((TopicsListingActivity) getActivity()).showGuideTopLayer();
-                }
-            } else {
-                FlowLayout.LayoutParams layoutParams
-                        = new FlowLayout.LayoutParams
-                        (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.setNewLine(false);
-                allSubsubLL.setLayoutParams(layoutParams);
-            }
-
-            flowLayout.addView(allSubsubLL);
-            allSubsubLL.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    for (int i = 0; i < flowLayout.getChildCount(); i++) {
-//                        flowLayout.getChildAt(i).setSelected(false);
-//                    }
-//                    allSubsubLL.setSelected(true);
-                    selectedTopic = (Topics) allSubsubLL.getTag();
-//                    nextPageNumber = 1;
-//                    if (mDatalist != null) {
-//                        mDatalist.clear();
-//                        recyclerAdapter.notifyDataSetChanged();
-//                    }
-//                    Utils.pushFilterTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
-//                            selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), currentSubTopic.getId() + "~" + currentSubTopic.getDisplay_name());
-//                    hitFilteredTopicsArticleListingApi(sortType);
-                    openFilteredTopicArticles();
-                }
-            });
-
-            for (int i = 0; i < currentSubTopic.getChild().size(); i++) {
-                final LinearLayout subsubLL = (LinearLayout) inflater.inflate(R.layout.sub_sub_topic_item, null);
-                TextView catTextView = ((TextView) subsubLL.getChildAt(0));
-                catTextView.setText(currentSubTopic.getChild().get(i).getDisplay_name().toUpperCase());
-                catTextView.measure(0, 0);
-                subsubLL.setTag(currentSubTopic.getChild().get(i));
-                width = width - catTextView.getMeasuredWidth() - subsubLL.getPaddingLeft() - subsubLL.getPaddingRight();
-                if (width < 0) {
-                    lineCount++;
-                    width = displayMetrics.widthPixels - catTextView.getMeasuredWidth() - subsubLL.getPaddingLeft() - subsubLL.getPaddingRight();
-                    if (lineCount == 1) {
-                        width = width - AppUtils.dpTopx(50) - expandImageView.getPaddingLeft() - expandImageView.getPaddingRight();
-                    }
-                }
-
-                if (lineCount == 2) {
-                    lineCount++;
-                    FlowLayout.LayoutParams layoutParams
-                            = new FlowLayout.LayoutParams
-                            (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
-                    layoutParams.setNewLine(true);
-                    subsubLL.setLayoutParams(layoutParams);
-                    expandImageView.setVisibility(View.VISIBLE);
-                    if (showGuide) {
-                        guideOverlay.setVisibility(View.VISIBLE);
-                        ((TopicsListingActivity) getActivity()).showGuideTopLayer();
-                    }
-                } else {
-                    FlowLayout.LayoutParams layoutParams
-                            = new FlowLayout.LayoutParams
-                            (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
-                    layoutParams.setNewLine(false);
-                    subsubLL.setLayoutParams(layoutParams);
-                }
-
-                flowLayout.addView(subsubLL);
-                subsubLL.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        for (int i = 0; i < flowLayout.getChildCount(); i++) {
-//                            flowLayout.getChildAt(i).setSelected(false);
-//                        }
-//                        if (mDatalist != null) {
-//                            mDatalist.clear();
-//                            recyclerAdapter.notifyDataSetChanged();
-//                        }
-//                        subsubLL.setSelected(true);
-                        selectedTopic = (Topics) subsubLL.getTag();
-//                        nextPageNumber = 1;
-//                        Utils.pushFilterTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
-//                                selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), currentSubTopic.getId() + "~" + currentSubTopic.getDisplay_name());
-//                        hitFilteredTopicsArticleListingApi(sortType);
-                        openFilteredTopicArticles();
-                    }
-                });
-            }
-
-            if (lineCount == 0) {
-                ViewGroup.LayoutParams layoutParams = flowLayout.getLayoutParams();
-                layoutParams.height = AppUtils.dpTopx(50);
-                flowLayout.setLayoutParams(layoutParams);
-            }
-            expandImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    flowLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                    expandImageView.setVisibility(View.INVISIBLE);
-                }
-            });
-            try {
-                isHeaderVisible = true;
-            } catch (Exception e) {
-
-            }
-        }
-
         hitFilteredTopicsArticleListingApi(sortType);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int pos = llm.findFirstVisibleItemPosition();
-                if (llm.findViewByPosition(pos) != null) {
-                    if (llm.findViewByPosition(pos).getTop() == 0 && pos == 0) {
-                        if (isHeaderVisible)
-                            headerRL.setVisibility(View.VISIBLE);
-                    } else {
-                        headerRL.setVisibility(View.GONE);
-                    }
-                }
-
                 if (dy > 0) //check for scroll down
                 {
                     visibleItemCount = llm.getChildCount();
@@ -439,15 +257,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
 
     @Override
     protected void updateUi(Response response) {
-
-    }
-
-    public void showGuideView() {
-        showGuide = true;
-        if (expandImageView != null && expandImageView.getVisibility() == View.VISIBLE) {
-            guideOverlay.setVisibility(View.VISIBLE);
-            ((TopicsListingActivity) getActivity()).showGuideTopLayer();
-        }
 
     }
 

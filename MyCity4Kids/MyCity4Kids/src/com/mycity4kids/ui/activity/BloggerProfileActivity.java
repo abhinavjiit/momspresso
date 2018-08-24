@@ -61,7 +61,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
     private RelativeLayout topArticle_1, topArticle_2, topArticle_3;
     private ImageView imgTopArticle_1, imgTopArticle_2, imgTopArticle_3;
     private TextView txvTopArticle_1, txvTopArticle_2, txvTopArticle_3;
-    private TextView articleSectionTextView, storySectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView;
+    private TextView publishedSectionTextView, activitySectionTextView, rankingSectionTextView;
     private TextView followButton, unfollowButton;
     private TextView rankLanguageTextView;
     private LinearLayout followerContainer, followingContainer, rankContainer;
@@ -100,11 +100,11 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         topArticle_1 = (RelativeLayout) findViewById(R.id.topArticle_1);
         topArticle_2 = (RelativeLayout) findViewById(R.id.topArticle_2);
         topArticle_3 = (RelativeLayout) findViewById(R.id.topArticle_3);
-        articleSectionTextView = (TextView) findViewById(R.id.articleSectionTextView);
-        videosSectionTextView = (TextView) findViewById(R.id.videosSectionTextView);
+        publishedSectionTextView = (TextView) findViewById(R.id.publishedSectionTextView);
+//        videosSectionTextView = (TextView) findViewById(R.id.videosSectionTextView);
         activitySectionTextView = (TextView) findViewById(R.id.activitySectionTextView);
         rankingSectionTextView = (TextView) findViewById(R.id.rankingSectionTextView);
-        storySectionTextView = (TextView) findViewById(R.id.storySectionTextView);
+//        storySectionTextView = (TextView) findViewById(R.id.storySectionTextView);
         followButton = (TextView) findViewById(R.id.followTextView);
         unfollowButton = (TextView) findViewById(R.id.unfollowTextView);
         topArticleLabel = (TextView) findViewById(R.id.topArticleLabel);
@@ -119,11 +119,11 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         imgProfile.setOnClickListener(this);
         followButton.setOnClickListener(this);
         unfollowButton.setOnClickListener(this);
-        articleSectionTextView.setOnClickListener(this);
-        videosSectionTextView.setOnClickListener(this);
+        publishedSectionTextView.setOnClickListener(this);
+//        videosSectionTextView.setOnClickListener(this);
         activitySectionTextView.setOnClickListener(this);
         rankingSectionTextView.setOnClickListener(this);
-        storySectionTextView.setOnClickListener(this);
+//        storySectionTextView.setOnClickListener(this);
         followingContainer.setOnClickListener(this);
         followerContainer.setOnClickListener(this);
 
@@ -676,17 +676,17 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 }
                 isExpanded = !isExpanded;
                 break;
-            case R.id.articleSectionTextView:
-                Intent articleIntent = new Intent(this, UserPublishedAndDraftsActivity.class);
+            case R.id.publishedSectionTextView:
+                Intent articleIntent = new Intent(this, UserPublishedContentActivity.class);
                 articleIntent.putExtra(Constants.AUTHOR_ID, authorId);
                 startActivity(articleIntent);
                 break;
-            case R.id.videosSectionTextView:
-                Intent funnyIntent = new Intent(this, MyFunnyVideosListingActivity.class);
-                funnyIntent.putExtra(Constants.AUTHOR_ID, authorId);
-                funnyIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
-                startActivity(funnyIntent);
-                break;
+//            case R.id.videosSectionTextView:
+//                Intent funnyIntent = new Intent(this, MyFunnyVideosListingActivity.class);
+//                funnyIntent.putExtra(Constants.AUTHOR_ID, authorId);
+//                funnyIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
+//                startActivity(funnyIntent);
+//                break;
             case R.id.activitySectionTextView: {
                 Intent intent = new Intent(BloggerProfileActivity.this, UserActivitiesActivity.class);
                 intent.putExtra(Constants.AUTHOR_ID, authorId);
@@ -699,12 +699,12 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 startActivity(intent);
             }
             break;
-            case R.id.storySectionTextView:
-                Intent ssIntent = new Intent(this, UserPublishedAndDraftsActivity.class);
-                ssIntent.putExtra(Constants.AUTHOR_ID, authorId);
-                ssIntent.putExtra("contentType", "shortStory");
-                startActivity(ssIntent);
-                break;
+//            case R.id.storySectionTextView:
+//                Intent ssIntent = new Intent(this, UserPublishedAndDraftsActivity.class);
+//                ssIntent.putExtra(Constants.AUTHOR_ID, authorId);
+//                ssIntent.putExtra("contentType", "shortStory");
+//                startActivity(ssIntent);
+//                break;
             case R.id.followingContainer: {
 //                Intent intent = new Intent(this, FollowersAndFollowingListActivity.class);
 //                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST);

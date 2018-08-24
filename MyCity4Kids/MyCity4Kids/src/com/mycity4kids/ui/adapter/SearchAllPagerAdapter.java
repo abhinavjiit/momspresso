@@ -11,7 +11,9 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.newmodels.parentingmodel.ArticleModelNew;
 import com.mycity4kids.ui.fragment.SearchAllArticlesAndTopicsTabFragment;
+import com.mycity4kids.ui.fragment.SearchAllArticlesTabFragment;
 import com.mycity4kids.ui.fragment.SearchAllAuthorsTabFragment;
+import com.mycity4kids.ui.fragment.SearchAllTopicsTabFragment;
 
 /**
  * Created by hemant on 19/4/16.
@@ -21,8 +23,9 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
     ArticleModelNew.AllArticles articlelist;
     Activity activity;
     Context context;
-    private SearchAllArticlesAndTopicsTabFragment mArticlefragment;
+    private SearchAllArticlesTabFragment mArticlefragment;
     private SearchAllAuthorsTabFragment mAuthorsFragment;
+    private SearchAllTopicsTabFragment mSearchAllTopicsTabFragment;
     String searchName = "";
 
     int currentPosition = 0;
@@ -42,7 +45,7 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -54,22 +57,21 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         if (position == 0) {
             return activity.getString(R.string.search_article_topic_tab_label);
-        } else {
+        } else if (position == 1) {
             return activity.getString(R.string.search_author_tab_label);
+        } else {
+            return activity.getString(R.string.search_topic_label);
         }
     }
 
     @Override
     public Fragment getItem(int position) {
-
         currentPosition = position;
-
         Bundle bundle = new Bundle();
         switch (position) {
-
             case 0:
                 if (mArticlefragment == null) {
-                    mArticlefragment = new SearchAllArticlesAndTopicsTabFragment();
+                    mArticlefragment = new SearchAllArticlesTabFragment();
                 }
                 bundle.putString(Constants.SEARCH_PARAM, searchName);
                 mArticlefragment.setArguments(bundle);
@@ -81,6 +83,14 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
                 bundle.putString(Constants.SEARCH_PARAM, searchName);
                 mAuthorsFragment.setArguments(bundle);
                 return mAuthorsFragment;
+            case 2:
+                if (mSearchAllTopicsTabFragment == null) {
+                    mSearchAllTopicsTabFragment = new SearchAllTopicsTabFragment();
+                }
+                bundle.putString(Constants.SEARCH_PARAM, searchName);
+                mSearchAllTopicsTabFragment.setArguments(bundle);
+                return mSearchAllTopicsTabFragment;
+
         }
 
         return null;
@@ -88,9 +98,9 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
 
     public void refreshArticlesAuthors(String searchText, int pos) {
         if (null == mArticlefragment) {
-            mArticlefragment = new SearchAllArticlesAndTopicsTabFragment();
+            mArticlefragment = new SearchAllArticlesTabFragment();
         }
-        mArticlefragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
+        mArticlefragment.refreshAllArticles(searchText);
         mArticlefragment.resetOnceLoadedFlag(searchText);
 
         if (null == mAuthorsFragment) {
@@ -99,6 +109,11 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
         mAuthorsFragment.refreshAllAuthors(searchText);
         mAuthorsFragment.resetOnceLoadedFlag(searchText);
 
+        if (null == mSearchAllTopicsTabFragment) {
+            mSearchAllTopicsTabFragment = new SearchAllTopicsTabFragment();
+        }
+        mSearchAllTopicsTabFragment.refreshAllTopics(searchText);
+        mSearchAllTopicsTabFragment.resetOnceLoadedFlag(searchText);
     }
 
 }

@@ -81,7 +81,9 @@ import com.mycity4kids.ui.activity.IdTokenLoginActivity;
 import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
 import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.ui.activity.UserActivitiesActivity;
+import com.mycity4kids.ui.activity.UserDraftsContentActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
+import com.mycity4kids.ui.activity.UserPublishedContentActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.RoundedTransformation;
@@ -130,7 +132,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     private TextView followingCountTextView, followerCountTextView, rankCountTextView;
     private TextView rankLanguageTextView;
     private TextView authorNameTextView, authorTypeTextView, authorBioTextView;
-    private TextView articleSectionTextView, storySectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView, settingsSectionTextView, signoutSectionTextView;
+    private TextView publishedSectionTextView, draftSectionTextView, bookmarksSectionTextView, activitySectionTextView, rankingSectionTextView, settingsSectionTextView, signoutSectionTextView;
     private ImageView imgProfile;
     private ImageView settingImageView;
     private LinearLayout followerContainer, followingContainer, rankContainer;
@@ -161,9 +163,9 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         followerCountTextView = (TextView) rootView.findViewById(R.id.followerCountTextView);
         rankCountTextView = (TextView) rootView.findViewById(R.id.rankCountTextView);
         rankLanguageTextView = (TextView) rootView.findViewById(R.id.rankLanguageTextView);
-        articleSectionTextView = (TextView) rootView.findViewById(R.id.articleSectionTextView);
-        storySectionTextView = (TextView) rootView.findViewById(R.id.storySectionTextView);
-        videosSectionTextView = (TextView) rootView.findViewById(R.id.videosSectionTextView);
+        publishedSectionTextView = (TextView) rootView.findViewById(R.id.publishedSectionTextView);
+        draftSectionTextView = (TextView) rootView.findViewById(R.id.draftSectionTextView);
+        bookmarksSectionTextView = (TextView) rootView.findViewById(R.id.bookmarksSectionTextView);
         activitySectionTextView = (TextView) rootView.findViewById(R.id.activitySectionTextView);
         rankingSectionTextView = (TextView) rootView.findViewById(R.id.rankingSectionTextView);
         settingsSectionTextView = (TextView) rootView.findViewById(R.id.settingsSectionTextView);
@@ -178,9 +180,9 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         authorTypeTextView.setOnClickListener(this);
         authorBioTextView.setOnClickListener(this);
         imgProfile.setOnClickListener(this);
-        articleSectionTextView.setOnClickListener(this);
-        storySectionTextView.setOnClickListener(this);
-        videosSectionTextView.setOnClickListener(this);
+        publishedSectionTextView.setOnClickListener(this);
+        draftSectionTextView.setOnClickListener(this);
+        bookmarksSectionTextView.setOnClickListener(this);
         activitySectionTextView.setOnClickListener(this);
         rankingSectionTextView.setOnClickListener(this);
         rankContainer.setOnClickListener(this);
@@ -484,24 +486,24 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                     chooseImageOptionPopUp(imgProfile);
                 }
                 break;
-            case R.id.articleSectionTextView:
-                Intent articleIntent = new Intent(getActivity(), UserPublishedAndDraftsActivity.class);
+            case R.id.publishedSectionTextView:
+                Intent articleIntent = new Intent(getActivity(), UserPublishedContentActivity.class);
                 articleIntent.putExtra("isPrivateProfile", true);
                 articleIntent.putExtra(Constants.AUTHOR_ID, userId);
                 startActivity(articleIntent);
                 break;
-            case R.id.storySectionTextView:
-                Intent ssIntent = new Intent(getActivity(), UserPublishedAndDraftsActivity.class);
+            case R.id.draftSectionTextView:
+                Intent ssIntent = new Intent(getActivity(), UserDraftsContentActivity.class);
                 ssIntent.putExtra("isPrivateProfile", true);
                 ssIntent.putExtra("contentType", "shortStory");
                 ssIntent.putExtra(Constants.AUTHOR_ID, userId);
                 startActivity(ssIntent);
                 break;
-            case R.id.videosSectionTextView:
-                Intent funnyIntent = new Intent(getActivity(), MyFunnyVideosListingActivity.class);
-                funnyIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
-                startActivity(funnyIntent);
-                break;
+            case R.id.bookmarksSectionTextView: {
+                Intent intent = new Intent(getActivity(), UserActivitiesActivity.class);
+                intent.putExtra(Constants.AUTHOR_ID, userId);
+                startActivity(intent);
+            }
             case R.id.activitySectionTextView: {
                 Intent intent = new Intent(getActivity(), UserActivitiesActivity.class);
                 intent.putExtra(Constants.AUTHOR_ID, userId);

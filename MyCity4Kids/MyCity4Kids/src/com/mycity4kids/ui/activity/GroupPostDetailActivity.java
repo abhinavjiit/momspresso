@@ -1165,6 +1165,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostCommentResult.setLang(groupPostResponse.getData().getResult().getLang());
                     groupPostCommentResult.setCreatedAt(groupPostResponse.getData().getResult().getCreatedAt());
                     groupPostCommentResult.setUpdatedAt(groupPostResponse.getData().getResult().getUpdatedAt());
+                    groupPostCommentResult.setChildData(new ArrayList<GroupPostCommentResult>());
 
                     UserDetailResult userDetailResult = new UserDetailResult();
                     UserInfo userInfo = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);

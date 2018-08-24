@@ -26,6 +26,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
+import com.mycity4kids.ui.activity.UserPublishedContentActivity;
 import com.mycity4kids.utils.PermissionUtil;
 
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         if ("dashboard".equals(activity)) {
                             ((DashboardActivity) getActivity()).requestPermissions("camera");
                         } else if ("myfunnyvideos".equals(activity)) {
-                            ((MyFunnyVideosListingActivity) getActivity()).requestPermissions("camera");
+                            ((UserFunnyVideosTabFragment) getTargetFragment()).requestPermissions("camera");
                         } else if ("vlogslisting".equals(activity)) {
                         } else if ("allvideosection".equals(activity)) {
                         }
@@ -108,7 +109,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         if ("dashboard".equals(activity)) {
                             ((DashboardActivity) getActivity()).requestPermissions("gallery");
                         } else if ("myfunnyvideos".equals(activity)) {
-                            ((MyFunnyVideosListingActivity) getActivity()).requestPermissions("gallery");
+                            ((UserFunnyVideosTabFragment) getTargetFragment()).requestPermissions("gallery");
                         } else if ("vlogslisting".equals(activity)) {
                         } else if ("allvideosection".equals(activity)) {
                         }
