@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.share.Share;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -671,9 +672,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         if ("pinPost".equals(actionType)) {
             request.setIsPinned(1);
             request.setIsActive(1);
+            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         } else if ("unpinPost".equals(actionType)) {
             request.setIsPinned(0);
             request.setIsActive(1);
+            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         } else if ("blockUser".equals(actionType)) {
             getPostingUsersMembershipDetails(selectedPost.getGroupId(), selectedPost.getUserId());
             return;
@@ -706,13 +709,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             try {
                 if (response.isSuccessful()) {
+                    GroupsMembershipResponse membershipResponse = response.body();
                     Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
                     GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
                     UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
                     updateGroupMembershipRequest.setUserId(selectedPost.getUserId());
                     updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
-                    Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(selectedPost.getId(), updateGroupMembershipRequest);
+                    Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membershipResponse.getData().getResult().get(0).getId(), updateGroupMembershipRequest);
                     call1.enqueue(updateGroupMembershipResponseCallback);
                 } else {
 
@@ -720,7 +724,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -744,13 +747,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             try {
                 if (response.isSuccessful()) {
                     GroupsMembershipResponse groupsMembershipResponse = response.body();
+                    postSettingsContainerMain.setVisibility(View.GONE);
                 } else {
 
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -774,11 +777,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             try {
                 if (response.isSuccessful()) {
                     GroupPostResponse updatePostResponse = response.body();
-//                    if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
-//                        pinPostTextView.setText(getString(R.string.groups_unpin_post));
-//                    } else {
-//                        pinPostTextView.setText(getString(R.string.groups_pin_post));
-//                    }
                     postSettingsContainerMain.setVisibility(View.GONE);
                     overlayView.setVisibility(View.GONE);
                     postSettingsContainer.setVisibility(View.GONE);
@@ -1569,8 +1567,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         if (selectedPost.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupDetailsActivity.this).getDynamoId())) {
             editPostTextView.setVisibility(View.VISIBLE);
+            deletePostTextView.setVisibility(View.VISIBLE);
         } else {
             editPostTextView.setVisibility(View.GONE);
+            deletePostTextView.setVisibility(View.GONE);
         }
 
         //No existing settings for this post for this user

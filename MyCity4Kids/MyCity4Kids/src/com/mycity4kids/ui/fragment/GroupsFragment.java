@@ -233,6 +233,9 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                         getAllGroupAdapter.notifyDataSetChanged();
                         allGroupRecyclerGridView.setVisibility(View.VISIBLE);
                         allGroupLabelTextView.setVisibility(View.VISIBLE);
+                        if (allGroupList.size() == 10) {
+                            seeAllGpTextView.setVisibility(View.VISIBLE);
+                        }
                     }
                 } else {
 

@@ -304,7 +304,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             RootCommentViewHolder rootCommentViewHolder = (RootCommentViewHolder) holder;
             rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
                     + " " + postCommentsList.get(position).getUserInfo().getLastName());
+
             rootCommentViewHolder.commentDataTextView.setText(postCommentsList.get(position).getContent());
+            Linkify.addLinks(rootCommentViewHolder.commentDataTextView, Linkify.WEB_URLS);
+            rootCommentViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            rootCommentViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(rootCommentViewHolder.commentDataTextView);
+
             rootCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getCreatedAt()));
             if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);

@@ -691,8 +691,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
         if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
             editPostTextView.setVisibility(View.VISIBLE);
+            deletePostTextView.setVisibility(View.VISIBLE);
         } else {
             editPostTextView.setVisibility(View.GONE);
+            deletePostTextView.setVisibility(View.GONE);
         }
 
         if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())
@@ -783,7 +785,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 groupPostReportDialogFragment.setArguments(_args);
                 groupPostReportDialogFragment.setCancelable(true);
                 groupPostReportDialogFragment.show(fm, "Choose video report option");
-//                reportPostTextView.setText("Unreport");
                 break;
             case R.id.overlayView:
                 postSettingsContainerMain.setVisibility(View.GONE);
@@ -807,9 +808,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         if ("pinPost".equals(actionType)) {
             request.setIsPinned(1);
             request.setIsActive(1);
+            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         } else if ("unpinPost".equals(actionType)) {
             request.setIsPinned(0);
             request.setIsActive(1);
+            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         } else if ("blockUser".equals(actionType)) {
             getPostingUsersMembershipDetails(postData.getGroupId(), postData.getUserId());
             return;
@@ -878,13 +881,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
             try {
                 if (response.isSuccessful()) {
+                    GroupsMembershipResponse membershipResponse = response.body();
                     Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
                     GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
                     UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
                     updateGroupMembershipRequest.setUserId(postData.getUserId());
                     updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
-                    Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(postData.getId(), updateGroupMembershipRequest);
+                    Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membershipResponse.getData().getResult().get(0).getId(), updateGroupMembershipRequest);
                     call1.enqueue(updateGroupMembershipResponseCallback);
                 } else {
 
@@ -916,6 +920,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             try {
                 if (response.isSuccessful()) {
                     GroupsMembershipResponse groupsMembershipResponse = response.body();
+                    postSettingsContainerMain.setVisibility(View.GONE);
                 } else {
 
                 }
@@ -1165,6 +1170,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostCommentResult.setLang(groupPostResponse.getData().getResult().getLang());
                     groupPostCommentResult.setCreatedAt(groupPostResponse.getData().getResult().getCreatedAt());
                     groupPostCommentResult.setUpdatedAt(groupPostResponse.getData().getResult().getUpdatedAt());
+                    groupPostCommentResult.setChildData(new ArrayList<GroupPostCommentResult>());
 
                     UserDetailResult userDetailResult = new UserDetailResult();
                     UserInfo userInfo = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);

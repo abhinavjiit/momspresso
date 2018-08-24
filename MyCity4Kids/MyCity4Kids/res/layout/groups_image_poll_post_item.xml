@@ -82,7 +82,7 @@
         android:gravity="start"
         android:text=""
         android:textColor="@color/groups.grey"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:visibility="visible"
         app:fontName="open_sans.ttf" />
 
@@ -326,7 +326,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/lastOptionsContainer"
         android:layout_marginTop="15dp"
-        android:text="" />
+        android:text=""
+        app:fontName="oswald.ttf" />
 
     <LinearLayout
         android:id="@+id/upvoteContainer"

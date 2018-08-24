@@ -366,6 +366,27 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    } else if (response.code() == 409) {
+                        try {
+                            String errorBody = new String(response.errorBody().bytes());
+                            JSONObject jObject = new JSONObject(errorBody);
+                            String reason = jObject.getString("reason");
+                            if (!StringUtils.isNullOrEmpty(reason) && "already member".equals(reason)) {
+                                Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+                                GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+                                UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
+                                updateGroupMembershipRequest.setUserId(jObject.getJSONObject("data").getJSONArray("result").getJSONObject(0).getString("userId"));
+                                updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER);
+                                Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(jObject.getJSONObject("data").getJSONArray("result").getJSONObject(0).getInt("id"),
+                                        updateGroupMembershipRequest);
+                                call1.enqueue(groupRejoinResponseCallback);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 return;
@@ -401,6 +422,53 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
 
         @Override
         public void onFailure(Call<GroupsJoinResponse> call, Throwable t) {
+            progressBar.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private Callback<GroupsMembershipResponse> groupRejoinResponseCallback = new Callback<GroupsMembershipResponse>() {
+        @Override
+        public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
+            progressBar.setVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("groupId", "" + groupId);
+                        mixpanel.track("JoinGroup", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
+                        Intent intent = new Intent(GroupsSummaryActivity.this, GroupDetailsActivity.class);
+                        intent.putExtra("groupId", selectedGroup.getId());
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        showSuccessDialog();
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsMembershipResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));

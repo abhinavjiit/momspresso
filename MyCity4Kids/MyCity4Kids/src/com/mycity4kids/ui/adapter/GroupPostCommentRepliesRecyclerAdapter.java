@@ -1,7 +1,15 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +18,9 @@ import android.widget.TextView;
 
 import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.GroupPostCommentResult;
+import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.Picasso;
 
@@ -68,13 +78,15 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof CommentsViewHolder) {
             CommentsViewHolder commentsViewHolder = (CommentsViewHolder) holder;
-//            commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserId());
-//            commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
-//            commentsViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
-
             commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
                     + " " + repliesList.get(position).getUserInfo().getLastName());
+
             commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
+            Linkify.addLinks(commentsViewHolder.commentDataTextView, Linkify.WEB_URLS);
+            commentsViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            commentsViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(commentsViewHolder.commentDataTextView);
+
             commentsViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
             try {
                 Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp()).placeholder(R.drawable.default_commentor_img)
@@ -84,12 +96,15 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             }
         } else {
             RepliesViewHolder repliesViewHolder = (RepliesViewHolder) holder;
-//            repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserId());
-//            repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
-//            repliesViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
             repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
                     + " " + repliesList.get(position).getUserInfo().getLastName());
+
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
+            Linkify.addLinks(repliesViewHolder.commentDataTextView, Linkify.WEB_URLS);
+            repliesViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            repliesViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(repliesViewHolder.commentDataTextView);
+
             repliesViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
             try {
                 Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp()).placeholder(R.drawable.default_commentor_img)
@@ -163,5 +178,37 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
 
     public interface RecyclerViewClickListener {
         void onRecyclerItemClick(View view, int position);
+    }
+
+    private void addLinkHandler(TextView textView) {
+        CharSequence text = textView.getText();
+        if (text instanceof Spannable) {
+            int end = text.length();
+            Spannable sp = (Spannable) textView.getText();
+            URLSpan[] urls = sp.getSpans(0, end, URLSpan.class);
+            SpannableStringBuilder style = new SpannableStringBuilder(text);
+            style.clearSpans();//should clear old spans
+            for (URLSpan url : urls) {
+                CustomerTextClick click = new CustomerTextClick(url.getURL());
+                style.setSpan(click, sp.getSpanStart(url), sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            textView.setText(style);
+        }
+    }
+
+    private class CustomerTextClick extends ClickableSpan {
+
+        private String mUrl;
+
+        CustomerTextClick(String url) {
+            mUrl = url;
+        }
+
+        @Override
+        public void onClick(View widget) {
+            Intent intent = new Intent(mContext, NewsLetterWebviewActivity.class);
+            intent.putExtra(Constants.URL, mUrl);
+            mContext.startActivity(intent);
+        }
     }
 }
