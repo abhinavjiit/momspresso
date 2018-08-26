@@ -60,7 +60,7 @@
             android:singleLine="false"
             android:text="Comment Desc"
             android:textColor="@color/ad.comment.body"
-            android:textSize="@dimen/ad_comments_text"
+            android:textSize="16sp"
             app:fontName="open_sans.ttf" />
 
         <LinearLayout
@@ -80,7 +80,7 @@
                 android:padding="5dp"
                 android:text="Reply"
                 android:textColor="@color/ad.comment.date"
-                android:textSize="@dimen/ad_comments_date"
+                android:textSize="14sp"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -91,7 +91,7 @@
                 android:padding="5dp"
                 android:text="Date"
                 android:textColor="@color/ad.comment.date"
-                android:textSize="@dimen/ad_comments_date"
+                android:textSize="14sp"
                 app:fontName="oswald.ttf" />
         </LinearLayout>
 

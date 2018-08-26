@@ -8,6 +8,7 @@ public class UpdatePostSettingsRequest {
     private String userId;
     private int isActive;
     private int isPinned;
+    private String pinnedBy;
 
     public String getUserId() {
         return userId;
@@ -31,5 +32,13 @@ public class UpdatePostSettingsRequest {
 
     public void setIsPinned(int isPinned) {
         this.isPinned = isPinned;
+    }
+
+    public String getPinnedBy() {
+        return pinnedBy;
+    }
+
+    public void setPinnedBy(String pinnedBy) {
+        this.pinnedBy = pinnedBy;
     }
 }

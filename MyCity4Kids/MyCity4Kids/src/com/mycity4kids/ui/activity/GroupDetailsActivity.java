@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.share.Share;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -61,7 +62,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupBlogsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
+import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
+import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -83,7 +86,7 @@ import retrofit2.Retrofit;
  */
 
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
-        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener {
+        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener, ShareBlogInDiscussionDialogFragment.IForYourArticleRemove {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
@@ -669,9 +672,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         if ("pinPost".equals(actionType)) {
             request.setIsPinned(1);
             request.setIsActive(1);
+            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         } else if ("unpinPost".equals(actionType)) {
             request.setIsPinned(0);
             request.setIsActive(1);
+            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         } else if ("blockUser".equals(actionType)) {
             getPostingUsersMembershipDetails(selectedPost.getGroupId(), selectedPost.getUserId());
             return;
@@ -704,13 +709,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             try {
                 if (response.isSuccessful()) {
+                    GroupsMembershipResponse membershipResponse = response.body();
                     Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
                     GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
                     UpdateGroupMembershipRequest updateGroupMembershipRequest = new UpdateGroupMembershipRequest();
                     updateGroupMembershipRequest.setUserId(selectedPost.getUserId());
                     updateGroupMembershipRequest.setStatus(AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED);
-                    Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(selectedPost.getId(), updateGroupMembershipRequest);
+                    Call<GroupsMembershipResponse> call1 = groupsAPI.updateMember(membershipResponse.getData().getResult().get(0).getId(), updateGroupMembershipRequest);
                     call1.enqueue(updateGroupMembershipResponseCallback);
                 } else {
 
@@ -718,7 +724,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -742,13 +747,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             try {
                 if (response.isSuccessful()) {
                     GroupsMembershipResponse groupsMembershipResponse = response.body();
+                    postSettingsContainerMain.setVisibility(View.GONE);
                 } else {
 
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -772,11 +777,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             try {
                 if (response.isSuccessful()) {
                     GroupPostResponse updatePostResponse = response.body();
-//                    if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
-//                        pinPostTextView.setText(getString(R.string.groups_unpin_post));
-//                    } else {
-//                        pinPostTextView.setText(getString(R.string.groups_pin_post));
-//                    }
                     postSettingsContainerMain.setVisibility(View.GONE);
                     overlayView.setVisibility(View.GONE);
                     postSettingsContainer.setVisibility(View.GONE);
@@ -1226,17 +1226,35 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-        Intent intent = new Intent(this, ArticleDetailsContainerActivity.class);
-        intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
-        intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
-        intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
-        intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "GroupDetailsArticleListing");
-        intent.putExtra(Constants.FROM_SCREEN, "GroupDetailActivity");
-        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-        intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-        intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
-        startActivity(intent);
+        switch (view.getId()) {
+            case R.id.forYouInfoLL:
+                ShareBlogInDiscussionDialogFragment shareBlogInDiscussionDialogFragment = new ShareBlogInDiscussionDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+//                _args.putString("reason", articleDataList.get(position).getReason());
+//                _args.putString("articleId", articleDataList.get(position).getId());
+                _args.putInt("position", position);
+                _args.putInt("groupId", groupId);
+                _args.putString("articleUrl", AppConstants.BLOG_SHARE_BASE_URL + articleDataModelsNew.get(position).getUrl());
+                shareBlogInDiscussionDialogFragment.setArguments(_args);
+                shareBlogInDiscussionDialogFragment.setCancelable(true);
+                shareBlogInDiscussionDialogFragment.setListener(this);
+                shareBlogInDiscussionDialogFragment.show(fm, "For You");
+                break;
+            default:
+                Intent intent = new Intent(this, ArticleDetailsContainerActivity.class);
+                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "GroupDetailsArticleListing");
+                intent.putExtra(Constants.FROM_SCREEN, "GroupDetailActivity");
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+                startActivity(intent);
+        }
+
     }
 
     @Override
@@ -1287,8 +1305,22 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+
+                hitShareAPI();
                 break;
         }
+    }
+
+    private void hitShareAPI() {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+//        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
+//        groupActionsRequest.setGroupId(postList.get(position).getGroupId());
+//        groupActionsRequest.setPostId(postList.get(position).getId());
+//        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+//        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
+//        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+//        call.enqueue(groupActionResponseCallback);
     }
 
     private void markAsHelpfulOrUnhelpful(String markType, int position) {
@@ -1535,8 +1567,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         if (selectedPost.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupDetailsActivity.this).getDynamoId())) {
             editPostTextView.setVisibility(View.VISIBLE);
+            deletePostTextView.setVisibility(View.VISIBLE);
         } else {
             editPostTextView.setVisibility(View.GONE);
+            deletePostTextView.setVisibility(View.GONE);
         }
 
         //No existing settings for this post for this user
@@ -1615,5 +1649,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onForYouArticleRemoved(int position) {
+
     }
 }

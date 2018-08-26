@@ -82,7 +82,7 @@
         android:gravity="start"
         android:text=""
         android:textColor="@color/groups.grey"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:visibility="visible"
         app:fontName="open_sans.ttf" />
 
@@ -316,11 +316,20 @@
             android:visibility="invisible" />
     </RelativeLayout>
 
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/totalVoteCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/option4Container"
+        android:layout_marginTop="15dp"
+        android:text=""
+        app:fontName="oswald.ttf" />
+
     <LinearLayout
         android:id="@+id/upvoteContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/option4Container"
+        android:layout_below="@+id/totalVoteCountTextView"
         android:layout_marginTop="15dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
@@ -348,7 +357,7 @@
         android:id="@+id/downvoteContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/option4Container"
+        android:layout_below="@+id/totalVoteCountTextView"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="16dp"
         android:layout_toRightOf="@+id/upvoteContainer"
@@ -378,7 +387,7 @@
         android:id="@+id/postCommentsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/option4Container"
+        android:layout_below="@+id/totalVoteCountTextView"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/addCommentImageView"
@@ -395,7 +404,7 @@
         android:id="@+id/addCommentImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/option4Container"
+        android:layout_below="@+id/totalVoteCountTextView"
         android:layout_marginRight="4dp"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/shareTextView"
@@ -408,7 +417,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/option4Container"
+        android:layout_below="@+id/totalVoteCountTextView"
         android:layout_marginTop="10dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"

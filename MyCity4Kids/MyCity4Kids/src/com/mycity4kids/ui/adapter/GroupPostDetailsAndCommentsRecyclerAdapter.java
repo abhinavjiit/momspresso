@@ -230,6 +230,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             textPollPostViewHolder.pollOption2ProgressBar.setProgress(0f);
             textPollPostViewHolder.pollOption3ProgressBar.setProgress(0f);
             textPollPostViewHolder.pollOption4ProgressBar.setProgress(0f);
+            textPollPostViewHolder.totalVoteCountTextView.setText(mContext.getString(R.string.groups_total_votes, groupPostResult.getTotalVotesCount()));
             if (groupPostResult.isVoted()) {
                 showVotingData(textPollPostViewHolder, groupPostResult);
             } else {
@@ -293,6 +294,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             imageHolder.pollOption2ProgressBar.setProgress(0f);
             imageHolder.pollOption3ProgressBar.setProgress(0f);
             imageHolder.pollOption4ProgressBar.setProgress(0f);
+            imageHolder.totalVoteCountTextView.setText(mContext.getString(R.string.groups_total_votes, groupPostResult.getTotalVotesCount()));
             if (groupPostResult.isVoted()) {
                 showImagePollVotingData(imageHolder);
             } else {
@@ -302,7 +304,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             RootCommentViewHolder rootCommentViewHolder = (RootCommentViewHolder) holder;
             rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
                     + " " + postCommentsList.get(position).getUserInfo().getLastName());
+
             rootCommentViewHolder.commentDataTextView.setText(postCommentsList.get(position).getContent());
+            Linkify.addLinks(rootCommentViewHolder.commentDataTextView, Linkify.WEB_URLS);
+            rootCommentViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            rootCommentViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+            addLinkHandler(rootCommentViewHolder.commentDataTextView);
+
             rootCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getCreatedAt()));
             if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
@@ -525,6 +533,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
         TextView pollResult1TextView, pollResult2TextView, pollResult3TextView, pollResult4TextView;
         TextView pollOption1ProgressTextView, pollOption2ProgressTextView, pollOption3ProgressTextView, pollOption4ProgressTextView;
+        TextView totalVoteCountTextView;
         RelativeLayout option3Container, option4Container;
 
         TextPollPostViewHolder(View view) {
@@ -557,6 +566,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             pollOption4ProgressTextView = (TextView) view.findViewById(R.id.pollOption4ProgressTextView);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+            totalVoteCountTextView = (TextView) view.findViewById(R.id.totalVoteCountTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
 
             userImageView.setOnClickListener(this);
@@ -613,6 +623,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
+        TextView totalVoteCountTextView;
         RelativeLayout option1Container, option2Container, option3Container, option4Container;
         LinearLayout lastOptionsContainer;
 
@@ -645,6 +656,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             option2Container = (RelativeLayout) view.findViewById(R.id.option2Container);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+            totalVoteCountTextView = (TextView) view.findViewById(R.id.totalVoteCountTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
 
             userImageView.setOnClickListener(this);
@@ -654,18 +666,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
 
-//            upvoteCountTextView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    markAsHelpfulOrUnhelpful(getAdapterPosition(), AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
-//                }
-//            });
-//            downvoteCountTextView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    markAsHelpfulOrUnhelpful(getAdapterPosition(), AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
-//                }
-//            });
             option1Container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -800,19 +800,19 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     switch (groupsActionResponse.getData().getResult().get(0).getVoteOption()) {
                         case "option1":
                             groupPostResult.setOption1VoteCount(groupPostResult.getOption1VoteCount() + 1);
-                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + groupPostResult.getOption1VoteCount());
+                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + 1);
                             break;
                         case "option2":
                             groupPostResult.setOption2VoteCount(groupPostResult.getOption2VoteCount() + 1);
-                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + groupPostResult.getOption2VoteCount());
+                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + 1);
                             break;
                         case "option3":
                             groupPostResult.setOption3VoteCount(groupPostResult.getOption3VoteCount() + 1);
-                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + groupPostResult.getOption3VoteCount());
+                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + 1);
                             break;
                         case "option4":
                             groupPostResult.setOption4VoteCount(groupPostResult.getOption4VoteCount() + 1);
-                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + groupPostResult.getOption4VoteCount());
+                            groupPostResult.setTotalVotesCount(groupPostResult.getTotalVotesCount() + 1);
                             break;
                     }
                     notifyDataSetChanged();
