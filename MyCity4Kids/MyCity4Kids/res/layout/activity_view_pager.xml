@@ -1,11 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/dotIndicatorView" />
+
+    <com.shuhart.bubblepagerindicator.BubblePageIndicator
+        android:id="@+id/dotIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        app:bpi_fillColor="@color/groups.blue_color"
+        app:bpi_marginBetweenCircles="4dp"
+        app:bpi_onSurfaceCount="4"
+        app:bpi_pageColor="@color/line_separator_color"
+        app:bpi_radius="5dp"
+        app:bpi_risingCount="3" />
+
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="25dp"
+        android:background="@color/white">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/getStartedTextView"
+            android:layout_width="175dp"
+            android:layout_height="45dp"
+            android:layout_above="@+id/bottomContainer"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/get_started_button_bg"
+            android:gravity="center"
+            android:text="@string/onboarding.get_started"
+            android:textColor="@color/onboarding.get_started"
+            android:textSize="19sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <LinearLayout
+            android:id="@+id/bottomContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/alreadyMemberTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="8dp"
+                android:text="@string/onboarding.already_member"
+                android:textColor="@color/onboarding.already_member"
+                android:textSize="14sp"
+                app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/signinTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/alreadyMemberTextView"
+                android:paddingBottom="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/onboarding.signin"
+                android:textColor="@color/onboarding.sign_in"
+                android:textSize="14sp"
+                app:fontName="open_sans.ttf" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

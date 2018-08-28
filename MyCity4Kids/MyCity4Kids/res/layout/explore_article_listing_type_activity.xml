@@ -32,25 +32,21 @@
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/continueTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:text="@string/lang_sel.continue"
+                android:textColor="@color/publish_button_selector"
+                android:textSize="18sp"
+                android:visibility="gone"
+                app:fontName="oswald_regular.ttf" />
+
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
-
-    <!--<android.support.design.widget.TabLayout-->
-    <!--android:id="@+id/tab_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/toolbar"-->
-    <!--android:background="?attr/colorPrimary"-->
-    <!--android:elevation="3dp"-->
-    <!--android:minHeight="?attr/actionBarSize"-->
-    <!--android:paddingLeft="10dp"-->
-    <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
-    <!--app:tabIndicatorColor="@color/explore_listing.tabbar_indicator"-->
-    <!--app:tabIndicatorHeight="2dp"-->
-    <!--app:tabMode="scrollable"-->
-    <!--app:tabSelectedTextColor="@color/explore_listing.tabbar_text"-->
-    <!--app:tabTextAppearance="@style/CustomTabText"-->
-    <!--app:tabTextColor="@color/explore_listing.tabbar_text" />-->
 
     <HorizontalScrollView
         android:id="@+id/quickLinkContainer"
@@ -168,13 +164,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/exploreCategoriesLabel"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
-        android:horizontalSpacing="15dp"
+        android:horizontalSpacing="16dp"
         android:numColumns="2"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="15dp"
+        android:verticalSpacing="16dp"
         android:visibility="visible" />
 
     <RelativeLayout

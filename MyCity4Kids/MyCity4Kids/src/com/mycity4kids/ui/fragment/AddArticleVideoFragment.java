@@ -20,7 +20,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;

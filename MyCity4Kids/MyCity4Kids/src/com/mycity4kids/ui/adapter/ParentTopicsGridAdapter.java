@@ -24,9 +24,11 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
     private ArrayList<ExploreTopicsModel> topicsList;
     private ArrayList<ExploreTopicsModel> arraylist;
     private LayoutInflater mInflator;
+    private String source;
 
-    public ParentTopicsGridAdapter() {
+    public ParentTopicsGridAdapter(String source) {
         mInflator = (LayoutInflater) BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.source = source;
     }
 
     @Override
@@ -53,6 +55,7 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
             view = mInflator.inflate(R.layout.explore_topics_grid_item, null);
             holder.tagsImageView = (ImageView) view.findViewById(R.id.tagImageView);
             holder.topicsNameTextView = (TextView) view.findViewById(R.id.topicsNameTextView);
+            holder.selectorView = view.findViewById(R.id.selectorView);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -71,6 +74,16 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
             }
         }
 
+        if ("search".equals(source)) {
+            if (topicsList.get(position).isSelected()) {
+                holder.selectorView.setVisibility(View.GONE);
+            } else {
+                holder.selectorView.setVisibility(View.VISIBLE);
+            }
+        } else {
+            holder.selectorView.setVisibility(View.GONE);
+        }
+
         return view;
     }
 
@@ -83,6 +96,7 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
     class ViewHolder {
         ImageView tagsImageView;
         TextView topicsNameTextView;
+        View selectorView;
     }
 
     // Filter Class

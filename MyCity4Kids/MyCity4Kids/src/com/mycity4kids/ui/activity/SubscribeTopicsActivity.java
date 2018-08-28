@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -28,6 +29,7 @@ import com.mycity4kids.newmodels.SelectTopic;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.SubscribeTopicsPagerAdapter;
+import com.mycity4kids.ui.adapter.SubscribeTopicsTabAdapter;
 import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONObject;
@@ -57,8 +59,11 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
     private ArrayList<String> updateTopicList;
 
     private Toolbar toolbar;
-    private TabLayout tabLayout;
+    //    private TabLayout tabLayout;
     private TextView saveTextView, cancelTextView;
+    private ArrayList<String> categoryIdList;
+    private SubscribeTopicsTabAdapter searchTopicsSplashAdapter;
+    private ListView popularTopicsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,14 +74,16 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
         Utils.pushOpenScreenEvent(this, "FollowTopicScreen", userId + "");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+//        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         saveTextView = (TextView) findViewById(R.id.saveTextView);
         cancelTextView = (TextView) findViewById(R.id.cancelTextView);
+        popularTopicsListView = (ListView) findViewById(R.id.popularTopicsListView);
 
         saveTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
 
         tabPos = getIntent().getIntExtra("tabPos", 0);
+        categoryIdList = getIntent().getStringArrayListExtra("selectedTopicList");
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -232,7 +239,30 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 selectTopic.add(st);
             }
             BaseApplication.setSelectedTopicsMap(selectedTopicsMap);
-            processTrendingResponse();
+//            processTrendingResponse();
+            ArrayList<SelectTopic> filteredTopicList = new ArrayList<>();
+            for (int i = 0; i < categoryIdList.size(); i++) {
+                for (int j = 0; j < selectTopic.size(); j++) {
+                    if (categoryIdList.get(i).equals(selectTopic.get(j).getId())) {
+                        filteredTopicList.add(selectTopic.get(j));
+                    }
+                }
+            }
+            ArrayList<Topics> otherTopicsChildList = new ArrayList<>();
+            SelectTopic selectTopicNew = new SelectTopic();
+            selectTopicNew.setDisplayName("OTHERS");
+            for (int i = 0; i < selectTopic.size(); i++) {
+                if (categoryIdList.contains(selectTopic.get(i).getId())) {
+
+                } else {
+                    if (selectTopic.get(i).getChildTopics() != null)
+                        otherTopicsChildList.addAll(selectTopic.get(i).getChildTopics());
+                }
+            }
+            selectTopicNew.setChildTopics(otherTopicsChildList);
+            filteredTopicList.add(selectTopicNew);
+            searchTopicsSplashAdapter = new SubscribeTopicsTabAdapter(this, filteredTopicList, BaseApplication.getSelectedTopicsMap(), 0);
+            popularTopicsListView.setAdapter(searchTopicsSplashAdapter);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -241,32 +271,32 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
     }
 
     private void processTrendingResponse() {
-        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-        for (int i = 0; i < selectTopic.size(); i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(selectTopic.get(i).getDisplayName()));
-        }
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final SubscribeTopicsPagerAdapter adapter = new SubscribeTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), selectTopic, previouslyFollowedTopics);
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        viewPager.setCurrentItem(tabPos);
+//        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+//        for (int i = 0; i < selectTopic.size(); i++) {
+//            tabLayout.addTab(tabLayout.newTab().setText(selectTopic.get(i).getDisplayName()));
+//        }
+//        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+//        final SubscribeTopicsPagerAdapter adapter = new SubscribeTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), selectTopic, previouslyFollowedTopics);
+//        viewPager.setAdapter(adapter);
+//        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+//            @Override
+//            public void onTabSelected(TabLayout.Tab tab) {
+//                viewPager.setCurrentItem(tab.getPosition());
+//            }
+//
+//            @Override
+//            public void onTabUnselected(TabLayout.Tab tab) {
+//
+//            }
+//
+//            @Override
+//            public void onTabReselected(TabLayout.Tab tab) {
+//
+//            }
+//        });
+//
+//        viewPager.setCurrentItem(tabPos);
     }
 
     @Override

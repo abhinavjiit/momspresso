@@ -141,7 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
                     if (!fragmentPopped) { // fragment not in back stack, create
                         // it.
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.setCustomAnimations(R.anim.transition_enter_from_right, R.anim.transition_exit_to_left, R.anim.transition_enter_from_left, R.anim.transition_exit_to_right);
+//                        ft.setCustomAnimations(R.anim.transition_enter_from_right, R.anim.transition_exit_to_left, R.anim.transition_enter_from_left, R.anim.transition_exit_to_right);
                         ft.add(R.id.content_frame, fragment);
                         ft.addToBackStack(backStateName);
                         ft.commit();

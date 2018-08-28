@@ -605,9 +605,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     @Override
     public void onBackPressed() {
         try {
-            Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-            if (topFragment instanceof ExploreArticleListingTypeFragment) {
-            }
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
                 finish();
             } else {

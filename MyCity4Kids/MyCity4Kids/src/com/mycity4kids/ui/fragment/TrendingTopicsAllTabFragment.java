@@ -29,7 +29,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.ExploreArticleListingTypeFragment;
+import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.widget.FeedNativeAd;
 
@@ -118,18 +118,18 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                 if (firstVisibleItem == 0) {
                     if (!controlsVisible) {
                         if (isAdded())
-                        ((DashboardActivity) getActivity()).showViews();
+                            ((DashboardActivity) getActivity()).showViews();
                         controlsVisible = true;
                     }
                 } else {
                     if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
                         if (isAdded())
-                        ((DashboardActivity) getActivity()).hideViews();
+                            ((DashboardActivity) getActivity()).hideViews();
                         controlsVisible = false;
                         scrolledDistance = 0;
                     } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
                         if (isAdded())
-                        ((DashboardActivity) getActivity()).showViews();
+                            ((DashboardActivity) getActivity()).showViews();
                         controlsVisible = true;
                         scrolledDistance = 0;
                     }
@@ -259,11 +259,14 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.headerView:
-                ExploreArticleListingTypeFragment searchTopicFrag = new ExploreArticleListingTypeFragment();
-                Bundle searchBundle = new Bundle();
-                searchBundle.putString("fragType", "search");
-                searchTopicFrag.setArguments(searchBundle);
-                ((DashboardActivity) getActivity()).addFragment(searchTopicFrag, searchBundle, true);
+                Intent intent1 = new Intent(getActivity(), ExploreArticleListingTypeActivity.class);
+                intent1.putExtra("fragType", "search");
+                startActivity(intent1);
+//                ExploreArticleListingTypeFragment searchTopicFrag = new ExploreArticleListingTypeFragment();
+//                Bundle searchBundle = new Bundle();
+//                searchBundle.putString("fragType", "search");
+//                searchTopicFrag.setArguments(searchBundle);
+//                ((DashboardActivity) getActivity()).addFragment(searchTopicFrag, searchBundle, true);
                 break;
             case R.id.headerArticleView:
             case R.id.fbAdArticleView:

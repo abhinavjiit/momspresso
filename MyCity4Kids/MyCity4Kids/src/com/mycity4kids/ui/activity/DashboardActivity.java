@@ -3,7 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
-import android.animation.Animator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -25,11 +24,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -75,8 +71,8 @@ import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
-import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.GroupsFragment;
+import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
@@ -922,9 +918,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         try {
-            Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-            if (topFragment instanceof ExploreArticleListingTypeFragment) {
-            }
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
                 finish();
             } else {
@@ -1345,39 +1338,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //        menuImageView.setVisibility(View.GONE);
 //        readAllNotificationTextView.setVisibility(View.GONE);
         langTextView.setVisibility(View.GONE);
-        if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
-            String fragType = "";
-            if (topFragment.getArguments() != null) {
-                fragType = topFragment.getArguments().getString("fragType", "");
-            }
-//            mToolbar.setVisibility(View.VISIBLE);
+        if (null != topFragment && topFragment instanceof BecomeBloggerFragment) {
             toolbarUnderline.setVisibility(View.VISIBLE);
-//            toolbarTitleTextView.setOnClickListener(null);
-            toolbarTitleTextView.setVisibility(View.GONE);
-            downArrowImageView.setVisibility(View.GONE);
-            toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            selectOptToolbarTitle.setVisibility(View.VISIBLE);
-            menu.findItem(R.id.action_home).setChecked(true);
-            if (fragType.equals("search")) {
-                selectOptToolbarTitle.setText(getString(R.string.search_topics_toolbar_title));
-            } else {
-                Utils.pushOpenScreenEvent(this, "TopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
-                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics")) {
-                    showToolbarAndNavigationLayer();
-                    ((ExploreArticleListingTypeFragment) topFragment).showGuideView();
-                } else {
-                    bottomNavigationView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } else if (null != topFragment && topFragment instanceof BecomeBloggerFragment) {
-//            mToolbar.setVisibility(View.VISIBLE);
-            toolbarUnderline.setVisibility(View.VISIBLE);
-//            toolbarTitleTextView.setOnClickListener(null);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_become_blogger));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
@@ -1385,9 +1347,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else if (null != topFragment && topFragment instanceof UploadVideoInfoFragment) {
-//            mToolbar.setVisibility(View.VISIBLE);
             toolbarUnderline.setVisibility(View.VISIBLE);
-//            toolbarTitleTextView.setOnClickListener(null);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_first_video_upload));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
@@ -1395,9 +1355,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
-//            mToolbar.setVisibility(View.VISIBLE);
             toolbarUnderline.setVisibility(View.VISIBLE);
-//            toolbarTitleTextView.setOnClickListener(null);
             if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
                 Utils.pushOpenScreenEvent(this, "PrivateProfileScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_profile_title));
@@ -1412,7 +1370,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 searchAllImageView.setVisibility(View.GONE);
-//                readAllNotificationTextView.setVisibility(View.VISIBLE);
                 menu.findItem(R.id.action_notification).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
@@ -1433,7 +1390,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     groupCoachmark.setVisibility(View.VISIBLE);
                 }
                 langTextView.setVisibility(View.VISIBLE);
-//                toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_trending_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
@@ -1444,7 +1400,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof AddArticleVideoFragment) {
                 menu.findItem(R.id.action_write).setChecked(true);
-//                mToolbar.setVisibility(View.GONE);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 menuImageView.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);

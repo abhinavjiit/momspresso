@@ -4,6 +4,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="false"
     android:paddingBottom="14dp">
 
     <com.mycity4kids.widget.CustomFontTextView

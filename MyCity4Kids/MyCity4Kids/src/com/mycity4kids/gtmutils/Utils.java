@@ -217,14 +217,14 @@ public class Utils {
         Log.d("pushFollowTopicEvent", "" + screenName + " --- " + topic);
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "FollowTopic",
-                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.Author, topic));
+                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagTopic, topic));
     }
 
     public static void pushUnfollowTopicEvent(Context context, String screenName, String user, String topic) {
         Log.d("pushUnfollowTopicEvent", "" + screenName + " --- " + topic);
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "UnfollowTopic",
-                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.Author, topic));
+                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagTopic, topic));
     }
 
     public static void pushEnableNotificationEvent(Context context, String screenName, String user, String notificationType) {

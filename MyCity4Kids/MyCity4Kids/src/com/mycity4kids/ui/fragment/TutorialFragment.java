@@ -3,6 +3,7 @@ package com.mycity4kids.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +27,12 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
     private TextView getStartedTextView;
     private RelativeLayout lnrRoot;
     private LinearLayout tutorial_desc_1, tutorial_desc_2, tutorial_desc_3, tutorial_desc_4;
-    private ImageView one, two, three, four;
+//    private ImageView one, two, three, four;
 
     private int mPosition;
     private ArrayList<Integer> pagerImagesList;
     private TextView txvTitle;
+    private ImageView onboardingImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,9 +41,10 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         initilaize();
         view = inflater.inflate(R.layout.fragment_tutorial, container, false);
 
-        signinTextView = (TextView) view.findViewById(R.id.signinTextView);
-        getStartedTextView = (TextView) view.findViewById(R.id.getStartedTextView);
+//        signinTextView = (TextView) view.findViewById(R.id.signinTextView);
+//        getStartedTextView = (TextView) view.findViewById(R.id.getStartedTextView);
         txvTitle = (TextView) view.findViewById(R.id.txvTitle);
+        onboardingImageView = (ImageView) view.findViewById(R.id.onboardingImageView);
 
         tutorial_desc_1 = (LinearLayout) view.findViewById(R.id.tutorial_desc_1);
         tutorial_desc_2 = (LinearLayout) view.findViewById(R.id.tutorial_desc_2);
@@ -49,8 +52,8 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         tutorial_desc_4 = (LinearLayout) view.findViewById(R.id.tutorial_desc_4);
 
 
-        signinTextView.setOnClickListener(this);
-        getStartedTextView.setOnClickListener(this);
+//        signinTextView.setOnClickListener(this);
+//        getStartedTextView.setOnClickListener(this);
 
         return view;
     }
@@ -80,10 +83,10 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         mPosition = getArguments().getInt(AppConstants.SLIDER_POSITION);
         lnrRoot = (RelativeLayout) view.findViewById(R.id.lnrRoot);
-        one = (ImageView) view.findViewById(R.id.one);
-        two = (ImageView) view.findViewById(R.id.two);
-        three = (ImageView) view.findViewById(R.id.three);
-        four = (ImageView) view.findViewById(R.id.four);
+//        one = (ImageView) view.findViewById(R.id.one);
+//        two = (ImageView) view.findViewById(R.id.two);
+//        three = (ImageView) view.findViewById(R.id.three);
+//        four = (ImageView) view.findViewById(R.id.four);
 
         setImageInPager();
     }
@@ -99,19 +102,19 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         switch (mPosition + 1) {
             case 1:
                 tutorial_desc_1.setVisibility(View.VISIBLE);
-                one.setAlpha(0.8f);
+                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.onboarding_1));
                 break;
             case 2:
                 tutorial_desc_2.setVisibility(View.VISIBLE);
-                two.setAlpha(0.8f);
+                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.onboarding_2));
                 break;
             case 3:
                 tutorial_desc_3.setVisibility(View.VISIBLE);
-                three.setAlpha(0.8f);
+                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.onboarding_3));
                 break;
             case 4:
                 tutorial_desc_4.setVisibility(View.VISIBLE);
-                four.setAlpha(0.8f);
+                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.onboarding_4));
                 break;
         }
     }
@@ -119,18 +122,18 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.signinTextView: {
-                Intent intent = new Intent(getActivity(), ActivityLogin.class);
-                intent.putExtra(AppConstants.LAUNCH_FRAGMENT, AppConstants.FRAGMENT_SIGNIN);
-                startActivity(intent);
-            }
-            break;
-            case R.id.getStartedTextView: {
-                Intent intent = new Intent(getActivity(), ActivityLogin.class);
-                intent.putExtra(AppConstants.LAUNCH_FRAGMENT, AppConstants.FRAGMENT_SIGNUP);
-                startActivity(intent);
-            }
-            break;
+//            case R.id.signinTextView: {
+//                Intent intent = new Intent(getActivity(), ActivityLogin.class);
+//                intent.putExtra(AppConstants.LAUNCH_FRAGMENT, AppConstants.FRAGMENT_SIGNIN);
+//                startActivity(intent);
+//            }
+//            break;
+//            case R.id.getStartedTextView: {
+//                Intent intent = new Intent(getActivity(), ActivityLogin.class);
+//                intent.putExtra(AppConstants.LAUNCH_FRAGMENT, AppConstants.FRAGMENT_SIGNUP);
+//                startActivity(intent);
+//            }
+//            break;
         }
     }
 

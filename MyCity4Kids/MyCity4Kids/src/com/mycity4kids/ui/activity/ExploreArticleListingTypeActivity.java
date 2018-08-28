@@ -3,7 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -73,6 +72,8 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
     private Toolbar toolbar;
     private HorizontalScrollView quickLinkContainer;
     private TextView todaysBestTextView, editorsPickTextView, shortStoryTextView, forYouTextView, videosTextView, recentTextView;
+    private TextView toolbarTitle;
+    private TextView continueTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
         quickLinkContainer = (HorizontalScrollView) findViewById(R.id.quickLinkContainer);
         gridview = (GridView) findViewById(R.id.gridview);
         exploreCategoriesLabel = (TextView) findViewById(R.id.exploreCategoriesLabel);
+        toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
         searchTopicsEditText = (EditText) findViewById(R.id.searchTopicsEditText);
         guideOverLay = (RelativeLayout) findViewById(R.id.guideOverlay);
         guideTopicTextView1 = (TextView) findViewById(R.id.guideTopicTextView1);
@@ -94,6 +96,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
         forYouTextView = (TextView) findViewById(R.id.forYouTextView);
         videosTextView = (TextView) findViewById(R.id.videosTextView);
         recentTextView = (TextView) findViewById(R.id.recentTextView);
+        continueTextView = (TextView) findViewById(R.id.continueTextView);
 
         fragType = getIntent().getStringExtra("fragType");
 
@@ -109,19 +112,24 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
         recentTextView.setOnClickListener(this);
 
         if ("search".equals(fragType)) {
+            toolbarTitle.setText(getString(R.string.search_topics_toolbar_title));
             quickLinkContainer.setVisibility(View.GONE);
-            searchTopicsEditText.setVisibility(View.VISIBLE);
+            continueTextView.setVisibility(View.VISIBLE);
+            continueTextView.setEnabled(false);
+            continueTextView.setOnClickListener(this);
+//            searchTopicsEditText.setVisibility(View.VISIBLE);
             exploreCategoriesLabel.setText(getString(R.string.search_topics_title));
+            exploreCategoriesLabel.setVisibility(View.GONE);
             try {
                 FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
                 createTopicsDataForFollow(res);
-                adapter = new ParentTopicsGridAdapter();
+                adapter = new ParentTopicsGridAdapter(fragType);
                 gridview.setAdapter(adapter);
                 adapter.setDatalist(mainTopicsList);
-                initializeTopicSearch();
+//                initializeTopicSearch();
             } catch (FileNotFoundException e) {
                 Crashlytics.logException(e);
                 Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -142,7 +150,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
                 createTopicsData(res);
-                adapter = new ParentTopicsGridAdapter();
+                adapter = new ParentTopicsGridAdapter(fragType);
                 gridview.setAdapter(adapter);
                 adapter.setDatalist(mainTopicsList);
                 guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());
@@ -163,7 +171,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                             ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
                             createTopicsData(res);
-                            adapter = new ParentTopicsGridAdapter();
+                            adapter = new ParentTopicsGridAdapter(fragType);
                             gridview.setAdapter(adapter);
                             adapter.setDatalist(mainTopicsList);
                             guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());
@@ -189,12 +197,20 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                view.setSelected(true);
                 if (adapterView.getAdapter() instanceof ParentTopicsGridAdapter) {
                     ExploreTopicsModel topic = (ExploreTopicsModel) adapterView.getAdapter().getItem(position);
                     if ("search".equals(fragType)) {
-                        Intent subscribeTopicIntent = new Intent(ExploreArticleListingTypeActivity.this, SubscribeTopicsActivity.class);
-                        subscribeTopicIntent.putExtra("tabPos", position);
-                        startActivity(subscribeTopicIntent);
+                        topic.setIsSelected(!topic.isSelected());
+                        if (getSelectedTopicCount() > 0) {
+                            continueTextView.setEnabled(true);
+                        } else {
+                            continueTextView.setEnabled(false);
+                        }
+                        adapter.notifyDataSetChanged();
+//                        Intent subscribeTopicIntent = new Intent(ExploreArticleListingTypeActivity.this, SubscribeTopicsActivity.class);
+//                        subscribeTopicIntent.putExtra("tabPos", position);
+//                        startActivity(subscribeTopicIntent);
                     } else {
                         if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
                             Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ContributorListActivity.class);
@@ -211,6 +227,16 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                 }
             }
         });
+    }
+
+    private int getSelectedTopicCount() {
+        int selectedTopic = 0;
+        for (int i = 0; i < mainTopicsList.size(); i++) {
+            if (mainTopicsList.get(i).isSelected()) {
+                selectedTopic++;
+            }
+        }
+        return selectedTopic;
     }
 
     private void initializeTopicSearch() {
@@ -265,7 +291,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                             ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
                             createTopicsDataForFollow(res);
-                            adapter = new ParentTopicsGridAdapter();
+                            adapter = new ParentTopicsGridAdapter(fragType);
                             gridview.setAdapter(adapter);
                             adapter.setDatalist(mainTopicsList);
                             initializeTopicSearch();
@@ -310,7 +336,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
 
             //Prepare structure for multi-expandable listview.
             for (int i = 0; i < responseData.length; i++) {
-                if ("1".equals(responseData[i].getShowInMenu())) {
+                if ("1".equals(responseData[i].getShowInMenu()) && responseData[i].getChild() != null && !responseData[i].getChild().isEmpty()) {
                     mainTopicsList.add(responseData[i]);
                 }
             }
@@ -379,6 +405,13 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.continueTextView: {
+//                getSelectedTopicsList();
+                Intent intent = new Intent(ExploreArticleListingTypeActivity.this, SubscribeTopicsActivity.class);
+                intent.putStringArrayListExtra("selectedTopicList", getSelectedTopicsList());
+                startActivity(intent);
+            }
+            break;
             case R.id.guideOverlay:
                 guideOverLay.setVisibility(View.GONE);
                 SharedPrefUtils.setCoachmarksShownFlag(this, "topics", true);
@@ -430,6 +463,17 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
             break;
 
         }
+    }
+
+    private ArrayList<String> getSelectedTopicsList() {
+        ArrayList<String> categoryIdList = new ArrayList<>();
+        int selectedTopic = 0;
+        for (int i = 0; i < mainTopicsList.size(); i++) {
+            if (mainTopicsList.get(i).isSelected()) {
+                categoryIdList.add(mainTopicsList.get(i).getId());
+            }
+        }
+        return categoryIdList;
     }
 
     @Override

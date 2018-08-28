@@ -61,12 +61,12 @@ public class SubscribeTopicsTabAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 1;
+        return selectTopicArrayList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return selectTopicArrayList.get(tabPosition);
+        return selectTopicArrayList;
     }
 
     @Override
@@ -91,9 +91,9 @@ public class SubscribeTopicsTabAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        holder.parentCategoryTextView.setText(selectTopicArrayList.get(tabPosition).getDisplayName().toUpperCase());
+        holder.parentCategoryTextView.setText(selectTopicArrayList.get(position).getDisplayName().toUpperCase());
 
-        final List<Topics> top3Cat = selectTopicArrayList.get(tabPosition).getChildTopics();
+        final List<Topics> top3Cat = selectTopicArrayList.get(position).getChildTopics();
         holder.rootView.removeAllViews();
 
         for (int i = 0; i < top3Cat.size(); i++) {
