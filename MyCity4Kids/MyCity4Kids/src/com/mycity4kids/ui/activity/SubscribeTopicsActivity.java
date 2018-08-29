@@ -15,6 +15,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -52,18 +53,29 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
     private String userId;
     private ArrayList<SelectTopic> selectTopic;
     private ArrayList<String> previouslyFollowedTopics = new ArrayList<>();
-    int tabPos;
+    private ArrayList<Topics> previouslyFollowedTopicsObjects = new ArrayList<>();
+    private int tabPos;
+    private int followTopicChangeNewUser = 0;
+    private MixpanelAPI mixpanel;
+
     private HashMap<String, Topics> selectedTopicsMap;
+    private HashMap<String, Topics> initSelectedTopicsMap;
     private ArrayList<String> updateTopicList;
+    private ArrayList<String> followCategoriesArrayList;
+    private ArrayList<String> unfollowCategoriesArrayList;
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private TextView saveTextView, cancelTextView;
+    private String source;
+    private String screen = "other";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.subscribe_topics_activity);
+
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         Utils.pushOpenScreenEvent(this, "FollowTopicScreen", userId + "");
@@ -77,12 +89,20 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
         cancelTextView.setOnClickListener(this);
 
         tabPos = getIntent().getIntExtra("tabPos", 0);
+        source = getIntent().getStringExtra("source");
+
+        if ("home".equals(source)) {
+            screen = "FollowTopicScreen";
+        } else if ("settings".equals(source)) {
+            screen = "UserProfileSettingScreen";
+        }
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         selectedTopicsMap = new HashMap<>();
+        initSelectedTopicsMap = new HashMap<>();
 
         showProgressDialog("Getting selected topics");
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -217,6 +237,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                         if (responseData[i].getChild().get(j).getId().equals(previouslyFollowedTopics.get(k))) {
                             //highlight previously selected topics in the current data.
                             selectedTopicsMap.put(responseData[i].getChild().get(j).getId(), responseData[i].getChild().get(j));
+                            initSelectedTopicsMap.put(responseData[i].getChild().get(j).getId(), responseData[i].getChild().get(j));
                             responseData[i].getChild().get(j).setIsSelected(true);
                         }
                     }
@@ -279,24 +300,41 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
 
         switch (v.getId()) {
             case R.id.saveTextView:
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("ScreenName", screen);
+                    Log.d("SaveTopicSelection", jsonObject.toString());
+                    mixpanel.track("SaveTopicSelection", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 ArrayList<Topics> topicsList = new ArrayList<Topics>(BaseApplication.getSelectedTopicsMap().values());
 
                 Set<String> updateSet = new HashSet<>();
+                Set<String> followCategories = new HashSet<>();
+                Set<String> unfollowCategories = new HashSet<>();
 
                 //create datalist for updating the topics at backend
                 //need to remove the previously selected topics (if they are not unselected)
                 //as the API is toggle functionality and if the previously selected items are unselected add them to the dataset.
                 for (int i = 0; i < topicsList.size(); i++) {
                     updateSet.add(topicsList.get(i).getId());
+                    followCategories.add(topicsList.get(i).getId());
                 }
+
                 for (int i = 0; i < previouslyFollowedTopics.size(); i++) {
                     if (!updateSet.contains(previouslyFollowedTopics.get(i))) {
                         updateSet.add(previouslyFollowedTopics.get(i));
+                        unfollowCategories.add(previouslyFollowedTopics.get(i));
                     } else {
                         updateSet.remove(previouslyFollowedTopics.get(i));
+                        followCategories.remove(previouslyFollowedTopics.get(i));
                     }
                 }
                 updateTopicList = new ArrayList<>(updateSet);
+                followCategoriesArrayList = new ArrayList<>(followCategories);
+                unfollowCategoriesArrayList = new ArrayList<>(unfollowCategories);
 
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -306,9 +344,18 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 Call<FollowUnfollowCategoriesResponse> categoriesResponseCall =
                         topicsCategoryAPI.followCategories(userId, followUnfollowCategoriesRequest);
                 categoriesResponseCall.enqueue(followUnfollowCategoriesResponseCallback);
-                Log.d("dwad", "dwad");
+
                 break;
             case R.id.cancelTextView:
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("ScreenName", screen);
+                    Log.d("CancelTopicSelection", jsonObject.toString());
+                    mixpanel.track("CancelTopicSelection", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
                 break;
         }
@@ -325,13 +372,44 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 return;
             }
             try {
+                if (SharedPrefUtils.getFollowTopicApproachChangeFlag(BaseApplication.getAppContext())) {
+                    followTopicChangeNewUser = 1;
+                }
                 FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    try {
+                        for (int i = 0; i < followCategoriesArrayList.size(); i++) {
+                            try {
+                                JSONObject jsonObject = new JSONObject();
+                                jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                                jsonObject.put("Topic", followCategoriesArrayList.get(i) + "~" + selectedTopicsMap.get(followCategoriesArrayList.get(i)).getDisplay_name().toUpperCase());
+                                jsonObject.put("ScreenName", screen);
+                                jsonObject.put("isFirstTimeUser", followTopicChangeNewUser);
+                                Log.d("FollowTopics", jsonObject.toString());
+                                mixpanel.track("FollowTopic", jsonObject);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        for (int i = 0; i < unfollowCategoriesArrayList.size(); i++) {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                            jsonObject.put("Topic", unfollowCategoriesArrayList.get(i) + "~" + initSelectedTopicsMap.get(unfollowCategoriesArrayList.get(i)).getDisplay_name().toUpperCase());
+                            jsonObject.put("ScreenName", screen);
+                            jsonObject.put("isFirstTimeUser", followTopicChangeNewUser);
+                            Log.d("UnfollowTopics", jsonObject.toString());
+                            mixpanel.track("UnfollowTopic", jsonObject);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    SharedPrefUtils.setTopicSelectionChanged(SubscribeTopicsActivity.this, true);
                     SharedPrefUtils.setFollowedTopicsCount(SubscribeTopicsActivity.this, responseData.getData().size());
                     showToast(getString(R.string.subscribe_topics_toast_topic_updated));
                     Intent intent = getIntent();
                     intent.putStringArrayListExtra("updatedTopicList", updateTopicList);
                     setResult(RESULT_OK, intent);
+                    finish();
                 } else {
                     showToast(responseData.getReason());
                 }
@@ -358,6 +436,20 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 onBackPressed();
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("ScreenName", screen);
+            Log.d("CancelTopicSelection", jsonObject.toString());
+            mixpanel.track("CancelTopicSelection", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

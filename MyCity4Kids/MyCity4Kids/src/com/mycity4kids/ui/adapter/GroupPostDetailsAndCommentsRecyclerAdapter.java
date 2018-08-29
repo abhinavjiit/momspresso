@@ -302,8 +302,19 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             }
         } else {
             RootCommentViewHolder rootCommentViewHolder = (RootCommentViewHolder) holder;
-            rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
-                    + " " + postCommentsList.get(position).getUserInfo().getLastName());
+            if (postCommentsList.get(position).getIsAnnon() == 1) {
+                rootCommentViewHolder.commentorUsernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                rootCommentViewHolder.commentorImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
+            } else {
+                rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
+                        + " " + postCommentsList.get(position).getUserInfo().getLastName());
+                try {
+                    Picasso.with(mContext).load(postCommentsList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(rootCommentViewHolder.commentorImageView);
+                } catch (Exception e) {
+                    rootCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
+                }
+            }
 
             rootCommentViewHolder.commentDataTextView.setText(postCommentsList.get(position).getContent());
             Linkify.addLinks(rootCommentViewHolder.commentDataTextView, Linkify.WEB_URLS);
@@ -318,13 +329,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
                 rootCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
             }
-            try {
-                Picasso.with(mContext).load(postCommentsList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
-                        .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(rootCommentViewHolder.commentorImageView);
-            } catch (Exception e) {
-                rootCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
-            }
-
         }
     }
 
@@ -720,6 +724,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
 
+            commentDataTextView.setOnLongClickListener(this);
             view.setOnLongClickListener(this);
             replyCommentTextView.setOnClickListener(this);
             replyCountTextView.setOnClickListener(this);

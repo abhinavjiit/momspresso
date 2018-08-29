@@ -37,6 +37,16 @@
                     android:paddingTop="5dp"
                     android:src="@drawable/ic_lanuage_circle" />
 
+                <ImageView
+                    android:id="@+id/closeImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:padding="12dp"
+                    android:src="@drawable/cross_icon_back"
+                    android:visibility="gone" />
+
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/trendingHeaderTitle"
                     android:layout_width="match_parent"

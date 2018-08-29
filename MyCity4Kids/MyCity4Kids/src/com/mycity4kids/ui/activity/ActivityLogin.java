@@ -27,6 +27,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -51,6 +52,8 @@ import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 import com.mycity4kids.ui.fragment.SignInFragment;
 import com.mycity4kids.ui.fragment.SignUpFragment;
+
+import org.json.JSONObject;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -120,9 +123,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         if (ConnectivityUtils.isNetworkEnabled(this)) {
             showProgressDialog(getString(R.string.please_wait));
 
-//            fbAccessToken = AccessToken.getCurrentAccessToken();
-            //  LoginManager.getInstance().logOut();
-//            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
             FacebookUtils.facebookLogin(this, this);
         } else {
             showToast(getString(R.string.error_network));
@@ -326,6 +326,17 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     model.setLoginMode(loginMode);
                     SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
                     SharedPrefUtils.setProfileImgUrl(ActivityLogin.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                    SharedPrefUtils.setLastLoginTimestamp(ActivityLogin.this, System.currentTimeMillis());
+
+                    MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("loginFrom", loginMode);
+                        mixpanel.track("UserLogin", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
                         //token already expired or not yet connected with facebook

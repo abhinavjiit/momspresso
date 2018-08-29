@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -26,6 +28,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.GroupPostCommentResult;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.squareup.picasso.Picasso;
 
@@ -40,7 +43,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private EditText commentReplyEditText;
     private TextView replyToTextView;
     private View separator;
-    private ImageView anonymousImageView;
     private GroupPostCommentResult commentOrReplyData;
     private String actionType;
     private int position;
@@ -50,6 +52,10 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private TextView commentorUsernameTextView;
     private TextView commentDataTextView;
     private TextView commentDateTextView;
+    private ImageView anonymousImageView;
+    private TextView anonymousTextView;
+    private CheckBox anonymousCheckbox;
+    private View bottombarTopline;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +65,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 false);
 
         closeImageView = (ImageView) rootView.findViewById(R.id.closeImageView);
-        anonymousImageView = (ImageView) rootView.findViewById(R.id.anonymousImageView);
         addCommentTextView = (TextView) rootView.findViewById(R.id.postCommentReplyTextView);
         commentReplyEditText = (EditText) rootView.findViewById(R.id.commentReplyEditText);
         headingTextView = (TextView) rootView.findViewById(R.id.headingTextView);
@@ -68,6 +73,10 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         commentorUsernameTextView = (TextView) rootView.findViewById(R.id.commentorUsernameTextView);
         commentDataTextView = (TextView) rootView.findViewById(R.id.commentDataTextView);
         commentDateTextView = (TextView) rootView.findViewById(R.id.commentDateTextView);
+        anonymousImageView = (ImageView) rootView.findViewById(R.id.anonymousImageView);
+        anonymousTextView = (TextView) rootView.findViewById(R.id.anonymousTextView);
+        anonymousCheckbox = (CheckBox) rootView.findViewById(R.id.anonymousCheckbox);
+        bottombarTopline = rootView.findViewById(R.id.bottombarTopline);
 
         Bundle extras = getArguments();
         commentOrReplyData = (GroupPostCommentResult) extras.get("parentCommentData");
@@ -76,6 +85,15 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
         addCommentTextView.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
+        anonymousImageView.setOnClickListener(this);
+        anonymousTextView.setOnClickListener(this);
+        anonymousCheckbox.setOnClickListener(this);
+
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
+            anonymousCheckbox.setChecked(true);
+        } else {
+            anonymousCheckbox.setChecked(false);
+        }
 
         if (commentOrReplyData == null) {
             headingTextView.setText(BaseApplication.getAppContext().getString(R.string.short_s_add_comment));
@@ -85,19 +103,30 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.ad_comments_edit_label));
                 relativeMainContainer.setVisibility(View.GONE);
                 commentReplyEditText.setText(commentOrReplyData.getContent());
+                anonymousImageView.setVisibility(View.GONE);
+                anonymousTextView.setVisibility(View.GONE);
+                anonymousCheckbox.setVisibility(View.GONE);
+                bottombarTopline.setVisibility(View.GONE);
             } else {
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.reply));
                 relativeMainContainer.setVisibility(View.VISIBLE);
-                try {
-                    Picasso.with(getActivity()).load(commentOrReplyData.getUserInfo().getProfilePicUrl().getClientApp())
-                            .placeholder(R.drawable.default_commentor_img).into((commentorImageView));
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                    if (isAdded())
-                        Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(commentorImageView);
+
+                if (commentOrReplyData.getIsAnnon() == 1) {
+                    commentorUsernameTextView.setText(BaseApplication.getAppContext().getString(R.string.groups_anonymous));
+                    commentorImageView.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.ic_incognito));
+                } else {
+                    try {
+                        Picasso.with(getActivity()).load(commentOrReplyData.getUserInfo().getProfilePicUrl().getClientApp())
+                                .placeholder(R.drawable.default_commentor_img).into((commentorImageView));
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                        if (isAdded())
+                            Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(commentorImageView);
+                    }
+                    commentorUsernameTextView.setText(commentOrReplyData.getUserInfo().getFirstName() + " " + commentOrReplyData.getUserInfo().getLastName());
                 }
-                commentorUsernameTextView.setText(commentOrReplyData.getUserInfo().getFirstName() + " " + commentOrReplyData.getUserInfo().getLastName());
+
                 commentDataTextView.setText(commentOrReplyData.getContent());
                 commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(commentOrReplyData.getCreatedAt()));
             }
@@ -126,43 +155,35 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
     @Override
     public void onClick(View view) {
-
         switch (view.getId()) {
             case R.id.postCommentReplyTextView:
                 if (isValid()) {
                     if ("EDIT_COMMENT".equals(actionType)) {
                         ((GroupPostDetailActivity) getActivity()).editComment(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), position);
-//                        ((ArticleCommentsFragment) getTargetFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
                     } else if ("EDIT_REPLY".equals(actionType)) {
-//                        ((ArticleCommentsFragment) getTargetFragment()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
                         ((GroupPostDetailActivity) getActivity()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentId(), commentOrReplyData.getId());
                     } else {
                         if (commentOrReplyData == null) {
                             ((GroupPostDetailActivity) getActivity()).addComment(commentReplyEditText.getText().toString());
                         } else {
                             ((GroupPostDetailActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString());
-//                            ((ArticleCommentsFragment) getTargetFragment()).addReply(commentReplyEditText.getText().toString(), commentOrReplyData.get_id());
                         }
                     }
                     dismiss();
                 }
-//                if (isValid()) {
-//                    ((GroupPostDetailActivity) getActivity()).addComment(commentReplyEditText.getText().toString());
-//                    dismiss();
-//                }
                 break;
             case R.id.closeImageView:
                 dismiss();
                 break;
             case R.id.anonymousImageView:
-                ChooseAnonymousDialogFragment chooseAnonymousDialogFragment = new ChooseAnonymousDialogFragment();
-                FragmentManager fm = getChildFragmentManager();
-                Bundle _args = new Bundle();
-                chooseAnonymousDialogFragment.setArguments(_args);
-                chooseAnonymousDialogFragment.setCancelable(true);
-                chooseAnonymousDialogFragment.show(fm, "Go Anonymous");
+            case R.id.anonymousTextView:
+            case R.id.anonymousCheckbox:
+                if (anonymousCheckbox.isChecked()) {
+                    SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
+                } else {
+                    SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
+                }
                 break;
-
         }
 
     }

@@ -83,9 +83,10 @@
         android:layout_marginRight="10dp"
         android:ellipsize="end"
         android:gravity="left"
+        android:lineSpacingExtra="3dp"
         android:text=""
         android:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:fontName="georgia.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView

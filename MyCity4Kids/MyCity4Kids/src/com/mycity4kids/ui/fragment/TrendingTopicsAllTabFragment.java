@@ -19,6 +19,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -32,6 +33,8 @@ import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeFragment;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.widget.FeedNativeAd;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -68,23 +71,36 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         View view = inflater.inflate(R.layout.new_article_layout, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-//        swipe_refresh_layout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-//        swipe_refresh_layout.setOnRefreshListener(this);
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
 
-
-        if (SharedPrefUtils.getFollowedTopicsCount(getActivity()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
-            isHeaderVisible = true;
+        long timeDiff = System.currentTimeMillis() - SharedPrefUtils.getLastLoginTimestamp(BaseApplication.getAppContext()) - AppConstants.HOURS_24_TIMESTAMP;
+        Log.d("Login Time Diff", "" + timeDiff);
+        if (SharedPrefUtils.getFollowTopicApproachChangeFlag(BaseApplication.getAppContext())) {
+            if (SharedPrefUtils.getFollowedTopicsCount(getActivity()) < 1 && timeDiff < 0 &&
+                    !SharedPrefUtils.isTopicSelectionChanged(BaseApplication.getAppContext()) &&
+                    !SharedPrefUtils.getUserSkippedFollowTopicFlag(BaseApplication.getAppContext())) {
+                isHeaderVisible = true;
+            } else {
+                isHeaderVisible = false;
+            }
         } else {
-            isHeaderVisible = false;
+            if (SharedPrefUtils.getFollowedTopicsCount(getActivity()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
+                isHeaderVisible = true;
+            } else {
+                isHeaderVisible = false;
+            }
         }
-
+//        if (SharedPrefUtils.getFollowedTopicsCount(getActivity()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
+//            isHeaderVisible = true;
+//        } else {
+//            isHeaderVisible = false;
+//        }
         feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, isHeaderVisible);
@@ -138,7 +154,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
-//            swipe_refresh_layout.setRefreshing(false);
             progressBar.setVisibility(View.INVISIBLE);
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
@@ -164,7 +179,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-//            swipe_refresh_layout.setRefreshing(false);
             progressBar.setVisibility(View.INVISIBLE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
@@ -215,7 +229,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     @Override
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-//            swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             return;
         }
@@ -237,6 +250,19 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.closeImageView:
+                MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    mixpanel.track("FollowTopicCardClose", jsonObject);
+                    Log.d("FollowUnfollowTopics", jsonObject.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                SharedPrefUtils.setUserSkippedFollowTopicFlag(BaseApplication.getAppContext(), true);
+                hideFollowTopicHeader();
+                break;
             case R.id.headerView:
                 ExploreArticleListingTypeFragment searchTopicFrag = new ExploreArticleListingTypeFragment();
                 Bundle searchBundle = new Bundle();
@@ -261,5 +287,11 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                 break;
         }
 
+    }
+
+    public void hideFollowTopicHeader() {
+        isHeaderVisible = false;
+        recyclerAdapter.hideFollowTopicHeader();
+        recyclerAdapter.notifyDataSetChanged();
     }
 }

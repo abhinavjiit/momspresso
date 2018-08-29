@@ -38,6 +38,7 @@ import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.animation.MyCityAnimationsUtil;
 import com.mycity4kids.application.BaseApplication;
@@ -89,6 +90,8 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -350,6 +353,14 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         LogoutResponse responseData = (LogoutResponse) response.getResponseObject();
         String message = responseData.getResult().getMessage();
         if (responseData.getResponseCode() == 200) {
+            MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                mixpanel.track("UserLogout", jsonObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             FacebookUtils.logout(getActivity());
             gPlusSignOut();

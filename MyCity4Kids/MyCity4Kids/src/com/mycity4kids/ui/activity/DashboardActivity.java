@@ -679,6 +679,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         super.onResume();
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
+        if (topFragment instanceof FragmentMC4KHomeNew && SharedPrefUtils.isTopicSelectionChanged(this)) {
+            ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
+        }
         refreshMenu();
         if (topFragment instanceof FragmentBusinesslistEvents) {
 
@@ -1384,6 +1387,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "groups")) {
                     groupCoachmark.setVisibility(View.VISIBLE);
+                }
+                if (SharedPrefUtils.isTopicSelectionChanged(this)) {
+                    ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
                 }
                 langTextView.setVisibility(View.VISIBLE);
                 toolbarTitleTextView.setOnClickListener(this);

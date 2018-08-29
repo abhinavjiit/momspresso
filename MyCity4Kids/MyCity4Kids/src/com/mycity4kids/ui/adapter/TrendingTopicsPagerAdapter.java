@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
     private ArrayList<TrendingListingResult> trendingListingResults;
+    private TrendingTopicsAllTabFragment trendingTopicsAllTabFragment;
 
     public TrendingTopicsPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<TrendingListingResult> trendingListingResults) {
         super(fm);
@@ -28,9 +29,9 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
         if (position == 0) {
-            TrendingTopicsAllTabFragment tab1 = new TrendingTopicsAllTabFragment();
-            tab1.setArguments(bundle);
-            return tab1;
+            trendingTopicsAllTabFragment = new TrendingTopicsAllTabFragment();
+            trendingTopicsAllTabFragment.setArguments(bundle);
+            return trendingTopicsAllTabFragment;
         } else {
             bundle.putParcelable("trendingTopicsData", trendingListingResults.get(position - 1));
             TrendingTopicsTabFragment tab1 = new TrendingTopicsTabFragment();
@@ -42,5 +43,9 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return mNumOfTabs;
+    }
+
+    public void hideFollowTopicHeader() {
+        trendingTopicsAllTabFragment.hideFollowTopicHeader();
     }
 }

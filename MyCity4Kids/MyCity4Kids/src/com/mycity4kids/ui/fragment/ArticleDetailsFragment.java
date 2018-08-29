@@ -49,6 +49,7 @@ import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -90,6 +91,7 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
+import com.mycity4kids.ui.activity.SubscribeTopicsActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.CustomFontTextView;
@@ -98,6 +100,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.apmem.tools.layouts.FlowLayout;
+import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -160,6 +163,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private String articleLanguageCategoryId;
     private String from;
     private String gtmLanguage;
+    private int followTopicChangeNewUser = 0;
 
     private ObservableScrollView mScrollView;
     private LinearLayout commentLayout;
@@ -275,12 +279,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             writeArticleTextView = ((TextView) fragmentView.findViewById(R.id.writeArticleTextView));
             writeArticleImageView = ((ImageView) fragmentView.findViewById(R.id.writeArticleImageView));
-//            mAdView = (AdView) fragmentView.findViewById(R.id.adView);
-//            AdRequest adRequest = new AdRequest.Builder()
-//                    .build();
-
-//            mAdView.loadAd(adRequest);
-//            mAdView.setVisibility(View.GONE);
 
             relatedArticles1.setOnClickListener(this);
             relatedArticles2.setOnClickListener(this);
@@ -299,7 +297,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             writeArticleTextView.setOnClickListener(this);
 
             mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
-//            fragmentView.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
             mScrollView = (ObservableScrollView) fragmentView.findViewById(R.id.scroll_view);
             mScrollView.setScrollViewCallbacks(this);
@@ -344,8 +341,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             scrollBounds = new Rect();
             mScrollView.getHitRect(scrollBounds);
-//            AdSettings.addTestDevice("515fe7a9766e5910cfead95b96ab424b");
-//            AdSettings.clearTestDevices();
             showNativeAd();
         } catch (Exception e) {
             removeProgressDialog();
@@ -544,6 +539,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void getResponseUpdateUi(ArticleDetailResult detailsResponse) {
+        if (SharedPrefUtils.getFollowTopicApproachChangeFlag(BaseApplication.getAppContext())) {
+            followTopicChangeNewUser = 1;
+        }
+
         detailData = detailsResponse;
         imageList = detailData.getBody().getImage();
         videoList = detailData.getBody().getVideo();
@@ -2063,8 +2062,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         ArrayList<String> topicIdLList = new ArrayList<>();
         topicIdLList.add(selectedTopic);
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
+
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         if (action == 0) {
-            Log.d("GTM FOLLOW", "displayName" + selectedTopic);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                jsonObject.put("Topic", "" + selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
+                jsonObject.put("ScreenName", "ArticleDetailScreen");
+                jsonObject.put("isFirstTimeUser", followTopicChangeNewUser);
+                Log.d("UnfollowTopics", jsonObject.toString());
+                mixpanel.track("UnfollowTopic", jsonObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             Utils.pushUnfollowTopicEvent(getActivity(), "DetailArticleScreen", userDynamoId, selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
@@ -2079,7 +2091,18 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             });
         } else {
-            Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                jsonObject.put("Topic", "" + selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
+                jsonObject.put("ScreenName", "ArticleDetailScreen");
+                jsonObject.put("isFirstTimeUser", followTopicChangeNewUser);
+                Log.d("FollowTopics", jsonObject.toString());
+                mixpanel.track("FollowTopic", jsonObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             Utils.pushFollowTopicEvent(getActivity(), "DetailArticleScreen", userDynamoId, selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
@@ -2094,6 +2117,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             });
         }
+//        SharedPrefUtils.setTopicSelectionChanged(BaseApplication.getAppContext(), true);
         Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.followCategories(userDynamoId, followUnfollowCategoriesRequest);
         call.enqueue(followUnfollowCategoriesResponseCallback);
     }
@@ -2107,7 +2131,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 Crashlytics.logException(nee);
                 if (isAdded())
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                ;
                 return;
             }
             try {

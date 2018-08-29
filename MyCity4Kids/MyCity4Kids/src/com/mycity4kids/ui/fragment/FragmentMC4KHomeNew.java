@@ -38,6 +38,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 
     private View view;
     private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TrendingTopicsPagerAdapter adapter;
 
     private ArrayList<TrendingListingResult> trendingArraylist;
     private String userId;
@@ -70,7 +72,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         public void onResponse(Call<TrendingListingResponse> call, retrofit2.Response<TrendingListingResponse> response) {
             if (response == null || response.body() == null) {
                 ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                ;
                 return;
             }
 
@@ -102,7 +103,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 
     private void processTrendingResponse(TrendingListingResponse responseData) {
         trendingArraylist.addAll(responseData.getData().get(0).getResult());
-//        Collections.shuffle(trendingArraylist);
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         String allCategoryLabel = "";
         if (isAdded()) {
@@ -115,9 +115,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
             tabLayout.addTab(tabLayout.newTab().setText(trendingArraylist.get(i).getDisplay_name()));
         }
         AppUtils.changeTabsFont(getActivity(), tabLayout);
-//        wrapTabIndicatorToTitle(tabLayout, 25, 25);
-        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
-        final TrendingTopicsPagerAdapter adapter = new TrendingTopicsPagerAdapter
+        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        adapter = new TrendingTopicsPagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount(), trendingArraylist);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -168,8 +167,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         @Override
         public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
             if (response == null || response.body() == null) {
-//                if (isAdded())
-//                    ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 return;
             }
 
@@ -192,4 +189,9 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
+
+    public void hideFollowTopicHeader() {
+        if (adapter != null)
+            adapter.hideFollowTopicHeader();
+    }
 }

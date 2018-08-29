@@ -10,6 +10,7 @@ public class AddGpPostCommentOrReplyRequest {
     private int groupId;
     private String content;
     private int parentId;
+    private int isAnnon;
 
     public String getUserId() {
         return userId;
@@ -49,5 +50,13 @@ public class AddGpPostCommentOrReplyRequest {
 
     public void setParentId(int parentId) {
         this.parentId = parentId;
+    }
+
+    public int getIsAnnon() {
+        return isAnnon;
+    }
+
+    public void setIsAnnon(int isAnnon) {
+        this.isAnnon = isAnnon;
     }
 }

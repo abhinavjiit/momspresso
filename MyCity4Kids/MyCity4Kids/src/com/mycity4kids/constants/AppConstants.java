@@ -613,4 +613,5 @@ public class AppConstants {
     public static final String GROUP_MEMBERSHIP_STATUS_REJECTED = "4";
 
     public static final String MIX_PANEL_TOKEN = "76ebc952badcc143b417b3a4cf89cadd";
+    public static final long HOURS_24_TIMESTAMP = 86400000;
 }
