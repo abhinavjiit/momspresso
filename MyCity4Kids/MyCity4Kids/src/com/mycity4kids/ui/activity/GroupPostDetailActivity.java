@@ -386,6 +386,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.commentDataTextView:
             case R.id.commentRootView: {
                 GpPostCommentOptionsDialogFragment commentOptionsDialogFragment = new GpPostCommentOptionsDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
@@ -1134,6 +1135,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();
         addGpPostCommentOrReplyRequest.setGroupId(postData.getGroupId());
         addGpPostCommentOrReplyRequest.setPostId(postData.getId());
+        if (SharedPrefUtils.isUserAnonymous(this)) {
+            addGpPostCommentOrReplyRequest.setIsAnnon(1);
+        }
         addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         addGpPostCommentOrReplyRequest.setContent(content);
         Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
@@ -1161,7 +1165,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostCommentResult.setParentId(groupPostResponse.getData().getResult().getParentId());
                     groupPostCommentResult.setGroupId(groupPostResponse.getData().getResult().getGroupId());
                     groupPostCommentResult.setPostId(groupPostResponse.getData().getResult().getPostId());
-                    groupPostCommentResult.setUserId(groupPostResponse.getData().getResult().getUserId());
+
                     groupPostCommentResult.setIsActive(groupPostResponse.getData().getResult().isActive());
                     groupPostCommentResult.setIsAnnon(groupPostResponse.getData().getResult().isAnnon());
                     groupPostCommentResult.setModerationStatus(groupPostResponse.getData().getResult().getModerationStatus());
@@ -1173,18 +1177,24 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostCommentResult.setChildData(new ArrayList<GroupPostCommentResult>());
 
                     UserDetailResult userDetailResult = new UserDetailResult();
-                    UserInfo userInfo = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);
-                    userDetailResult.setDynamoId(userInfo.getDynamoId());
-                    userDetailResult.setUserType(userInfo.getUserType());
-                    userDetailResult.setFirstName(userInfo.getFirst_name());
-                    userDetailResult.setLastName(userInfo.getLast_name());
-                    ProfilePic profilePic = new ProfilePic();
-                    profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(GroupPostDetailActivity.this));
-                    userDetailResult.setProfilePicUrl(profilePic);
+                    if (groupPostResponse.getData().getResult().isAnnon() == 1) {
+//                        groupPostCommentResult.setUserId(groupPostResponse.getData().getResult().getUserId());
+                    } else {
+                        groupPostCommentResult.setUserId(groupPostResponse.getData().getResult().getUserId());
+                        UserInfo userInfo = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);
+                        userDetailResult.setDynamoId(userInfo.getDynamoId());
+                        userDetailResult.setUserType(userInfo.getUserType());
+                        userDetailResult.setFirstName(userInfo.getFirst_name());
+                        userDetailResult.setLastName(userInfo.getLast_name());
+                        ProfilePic profilePic = new ProfilePic();
+                        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(GroupPostDetailActivity.this));
+                        userDetailResult.setProfilePicUrl(profilePic);
+                    }
 
                     groupPostCommentResult.setUserInfo(userDetailResult);
-                    completeResponseList.add(1, groupPostCommentResult);
+                    completeResponseList.add(groupPostCommentResult);
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
+                    recyclerView.smoothScrollToPosition(completeResponseList.size());
                 } else {
                     showToast("Failed to add comment. Please try again");
                 }
@@ -1258,6 +1268,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         addGpPostCommentOrReplyRequest.setGroupId(postData.getGroupId());
         addGpPostCommentOrReplyRequest.setPostId(postData.getId());
         addGpPostCommentOrReplyRequest.setParentId(parentId);
+        if (SharedPrefUtils.isUserAnonymous(this)) {
+            addGpPostCommentOrReplyRequest.setIsAnnon(1);
+        }
         addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         addGpPostCommentOrReplyRequest.setContent(content);
         Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
@@ -1273,7 +1286,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     Crashlytics.logException(nee);
                 }
                 showToast("Failed to add reply. Please try again");
-
                 return;
             }
             try {
@@ -1287,23 +1299,28 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     commentListData.setPostId(responseData.getData().getResult().getPostId());
                     commentListData.setParentId(responseData.getData().getResult().getParentId());
                     commentListData.setUserId(responseData.getData().getResult().getUserId());
+                    commentListData.setIsAnnon(responseData.getData().getResult().isAnnon());
 
                     UserDetailResult userDetailResult = new UserDetailResult();
-                    UserInfo sharedPrefUser = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);
-                    userDetailResult.setDynamoId(sharedPrefUser.getDynamoId());
-                    userDetailResult.setUserType(sharedPrefUser.getUserType());
-                    userDetailResult.setFirstName(sharedPrefUser.getFirst_name());
-                    userDetailResult.setLastName(sharedPrefUser.getLast_name());
-
-                    ProfilePic profilePic = new ProfilePic();
-                    profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(GroupPostDetailActivity.this));
-                    userDetailResult.setProfilePicUrl(profilePic);
+                    if (responseData.getData().getResult().isAnnon() == 1) {
+//                        commentListData.setUserId(responseData.getData().getResult().getUserId());
+                    } else {
+                        commentListData.setUserId(responseData.getData().getResult().getUserId());
+                        UserInfo sharedPrefUser = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);
+                        userDetailResult.setDynamoId(sharedPrefUser.getDynamoId());
+                        userDetailResult.setUserType(sharedPrefUser.getUserType());
+                        userDetailResult.setFirstName(sharedPrefUser.getFirst_name());
+                        userDetailResult.setLastName(sharedPrefUser.getLast_name());
+                        ProfilePic profilePic = new ProfilePic();
+                        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(GroupPostDetailActivity.this));
+                        userDetailResult.setProfilePicUrl(profilePic);
+                    }
 
                     commentListData.setUserInfo(userDetailResult);
 
                     for (int i = 0; i < completeResponseList.size(); i++) {
                         if (completeResponseList.get(i).getId() == responseData.getData().getResult().getParentId()) {
-                            completeResponseList.get(i).getChildData().add(0, commentListData);
+                            completeResponseList.get(i).getChildData().add(commentListData);
                             completeResponseList.get(i).setChildCount(completeResponseList.get(i).getChildCount() + 1);
                             if (viewGroupPostCommentsRepliesDialogFragment != null) {
                                 viewGroupPostCommentsRepliesDialogFragment.updateRepliesList(completeResponseList.get(i));
@@ -1312,7 +1329,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         }
                     }
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
-//                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "add", "reply");
                 } else {
                     showToast("Failed to add reply. Please try again");
                 }

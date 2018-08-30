@@ -39,6 +39,7 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.asynctask.HeavyDbTask;
@@ -340,12 +341,14 @@ public class SplashActivity extends BaseActivity {
     public void onStart() {
         super.onStart();
         mClient.connect();
-        AppIndex.AppIndexApi.start(mClient, getAction());
+        if (!BuildConfig.DEBUG)
+            AppIndex.AppIndexApi.start(mClient, getAction());
     }
 
     @Override
     public void onStop() {
-        AppIndex.AppIndexApi.end(mClient, getAction());
+        if (!BuildConfig.DEBUG)
+            AppIndex.AppIndexApi.end(mClient, getAction());
         mClient.disconnect();
         super.onStop();
     }
@@ -362,7 +365,7 @@ public class SplashActivity extends BaseActivity {
 
             try {
                 JSONObject prop = new JSONObject();
-                prop.put("userId", SharedPrefUtils.getUserDetailModel(this).getDynamoId() );
+                prop.put("userId", SharedPrefUtils.getUserDetailModel(this).getDynamoId());
                 mixpanel.registerSuperProperties(prop);
             } catch (Exception e) {
 

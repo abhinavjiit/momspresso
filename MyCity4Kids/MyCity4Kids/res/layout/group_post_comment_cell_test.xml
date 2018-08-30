@@ -17,7 +17,7 @@
         android:paddingRight="10dp"
         android:paddingTop="8dp">
 
-        <ImageView
+        <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/commentorImageView"
             android:layout_width="@dimen/ad_comments_profile_pic_width"
             android:layout_height="@dimen/ad_comments_profile_pic_width"
@@ -26,7 +26,11 @@
             android:layout_alignParentTop="true"
             android:contentDescription="@string/author_img"
             android:src="@drawable/default_commentor_img"
-            android:visibility="visible" />
+            android:visibility="visible"
+            app:civ_border="true"
+            app:civ_border_color="@color/line_separator_color"
+            app:civ_border_width="1px"
+            app:civ_shadow="false" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/commentorUsernameTextView"

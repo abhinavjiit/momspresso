@@ -2,7 +2,6 @@ package com.mycity4kids.ui.fragment;
 
 import android.Manifest;
 import android.accounts.NetworkErrorException;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -30,21 +29,16 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.ArticleImageTagUploadActivity;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsCategoryMappingResponse;
 import com.mycity4kids.models.response.GroupsCategoryMappingResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.EditGroupActivity;
 import com.mycity4kids.ui.activity.GroupCategoriesSelectionActivity;
-import com.mycity4kids.ui.activity.SubscribeTopicsActivity;
 import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
@@ -53,7 +47,6 @@ import org.apmem.tools.layouts.FlowLayout;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;

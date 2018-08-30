@@ -409,6 +409,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
 //                getSelectedTopicsList();
                 Intent intent = new Intent(ExploreArticleListingTypeActivity.this, SubscribeTopicsActivity.class);
                 intent.putStringArrayListExtra("selectedTopicList", getSelectedTopicsList());
+                intent.putExtra("source", "home");
                 startActivity(intent);
             }
             break;

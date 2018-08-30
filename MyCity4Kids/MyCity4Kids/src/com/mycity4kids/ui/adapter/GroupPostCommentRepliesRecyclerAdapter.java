@@ -78,8 +78,19 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof CommentsViewHolder) {
             CommentsViewHolder commentsViewHolder = (CommentsViewHolder) holder;
-            commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
-                    + " " + repliesList.get(position).getUserInfo().getLastName());
+            if (repliesList.get(position).getIsAnnon() == 1) {
+                commentsViewHolder.commentorUsernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                commentsViewHolder.commentorImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
+            } else {
+                commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
+                        + " " + repliesList.get(position).getUserInfo().getLastName());
+                try {
+                    Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(commentsViewHolder.commentorImageView);
+                } catch (Exception e) {
+                    commentsViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
+                }
+            }
 
             commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(commentsViewHolder.commentDataTextView, Linkify.WEB_URLS);
@@ -88,16 +99,22 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             addLinkHandler(commentsViewHolder.commentDataTextView);
 
             commentsViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
-            try {
-                Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp()).placeholder(R.drawable.default_commentor_img)
-                        .error(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(commentsViewHolder.commentorImageView);
-            } catch (Exception e) {
-                commentsViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
-            }
+
         } else {
             RepliesViewHolder repliesViewHolder = (RepliesViewHolder) holder;
-            repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
-                    + " " + repliesList.get(position).getUserInfo().getLastName());
+            if (repliesList.get(position).getIsAnnon() == 1) {
+                repliesViewHolder.commentorUsernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                repliesViewHolder.commentorImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
+            } else {
+                repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
+                        + " " + repliesList.get(position).getUserInfo().getLastName());
+                try {
+                    Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(repliesViewHolder.commentorImageView);
+                } catch (Exception e) {
+                    repliesViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
+                }
+            }
 
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(repliesViewHolder.commentDataTextView, Linkify.WEB_URLS);
@@ -106,12 +123,6 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             addLinkHandler(repliesViewHolder.commentDataTextView);
 
             repliesViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
-            try {
-                Picasso.with(mContext).load(repliesList.get(position).getUserInfo().getProfilePicUrl().getClientApp()).placeholder(R.drawable.default_commentor_img)
-                        .error(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(repliesViewHolder.commentorImageView);
-            } catch (Exception e) {
-                repliesViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
-            }
         }
     }
 

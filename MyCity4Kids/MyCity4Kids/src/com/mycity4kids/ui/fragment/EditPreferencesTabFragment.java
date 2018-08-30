@@ -388,23 +388,23 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             catTextView.setSelected(true);
             subsubLL.setTag(followedSubSubTopicList.get(i));
             flowLayout.addView(subsubLL);
-            subsubLL.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Topics top = (Topics) subsubLL.getTag();
-                    if (top.isSelected()) {
-                        top.setIsSelected(false);
-                        catTextView.setSelected(false);
-                        Utils.pushUnfollowTopicEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
-                                top.getId() + "~" + top.getDisplay_name());
-                    } else {
-                        top.setIsSelected(true);
-                        catTextView.setSelected(true);
-                        Utils.pushFollowTopicEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
-                                top.getId() + "~" + top.getDisplay_name());
-                    }
-                }
-            });
+//            subsubLL.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Topics top = (Topics) subsubLL.getTag();
+//                    if (top.isSelected()) {
+//                        top.setIsSelected(false);
+//                        catTextView.setSelected(false);
+//                        Utils.pushUnfollowTopicEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+//                                top.getId() + "~" + top.getDisplay_name());
+//                    } else {
+//                        top.setIsSelected(true);
+//                        catTextView.setSelected(true);
+//                        Utils.pushFollowTopicEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+//                                top.getId() + "~" + top.getDisplay_name());
+//                    }
+//                }
+//            });
         }
     }
 
@@ -587,6 +587,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             case R.id.addTopicsBtn:
 
                 Intent subscribeTopicIntent = new Intent(getActivity(), SubscribeTopicsActivity.class);
+                subscribeTopicIntent.putExtra("source", "settings");
                 startActivityForResult(subscribeTopicIntent, 1111);
                 break;
             case R.id.saveTextView:

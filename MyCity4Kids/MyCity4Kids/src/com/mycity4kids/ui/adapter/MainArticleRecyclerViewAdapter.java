@@ -22,6 +22,7 @@ import com.facebook.ads.NativeAd;
 import com.google.gson.Gson;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.ArticleDetailRequest;
@@ -76,6 +77,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         for (int i = 0; i < 10; i++) {
             adList.add(null);
         }
+    }
+
+    public void hideFollowTopicHeader() {
+        topicHeaderVisibilityFlag = false;
     }
 
     public void setNewListData(ArrayList<ArticleListingResult> mParentingLists_new) {
@@ -613,6 +618,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView txvArticleTitle;
         TextView txvAuthorName;
         ImageView articleImageView;
+        ImageView closeImageView;
         ImageView videoIndicatorImageView;
         LinearLayout forYouInfoLL;
         TextView viewCountTextView;
@@ -630,6 +636,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
             txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
             articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
+            closeImageView = (ImageView) view.findViewById(R.id.closeImageView);
             videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
             forYouInfoLL = (LinearLayout) view.findViewById(R.id.forYouInfoLL);
             viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
@@ -638,6 +645,14 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
+
+            if (SharedPrefUtils.getFollowTopicApproachChangeFlag(BaseApplication.getAppContext())) {
+                closeImageView.setVisibility(View.VISIBLE);
+            } else {
+                closeImageView.setVisibility(View.GONE);
+            }
+
+            closeImageView.setOnClickListener(this);
             headerView.setOnClickListener(this);
             headerArticleView.setOnClickListener(this);
         }

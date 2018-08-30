@@ -170,6 +170,7 @@
         android:id="@+id/commentReplyEditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottombarTopline"
         android:layout_below="@+id/separator"
         android:background="@null"
         android:gravity="top|start"
@@ -184,28 +185,51 @@
         android:visibility="visible"
         app:fontName="oswald_regular.ttf" />
 
-    <!--<View-->
-    <!--android:id="@+id/bottombarTopline"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="1dp"-->
-    <!--android:layout_above="@+id/bottombar"-->
-    <!--android:background="@color/light_underline" />-->
+    <View
+        android:id="@+id/bottombarTopline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/anonymousImageView"
+        android:background="@color/light_underline" />
 
-    <!--<RelativeLayout-->
-    <!--android:id="@+id/bottombar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:background="@color/white">-->
+    <ImageView
+        android:id="@+id/anonymousImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/anonymousTextView"
+        android:padding="10dp"
+        android:src="@drawable/ic_incognito" />
 
-    <!--<ImageView-->
-    <!--android:id="@+id/anonymousImageView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:padding="14dp"-->
-    <!--android:src="@drawable/ic_followers" />-->
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/anonymousTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/anonymousImageView"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/anonymousImageView"
+        android:layout_toLeftOf="@+id/anonymousCheckbox"
+        android:gravity="center_vertical"
+        android:paddingRight="10dp"
+        android:text="@string/groups.anonymous" />
 
-    <!--</RelativeLayout>-->
-
+    <CheckBox
+        android:id="@+id/anonymousCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:button="@drawable/language_selector_checkbox"
+        android:checked="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="2dp"
+        android:paddingTop="10dp"
+        android:textColor="@color/app_settings.edit_prefs.pref_lang_name"
+        android:textSize="16sp" />
 </RelativeLayout>

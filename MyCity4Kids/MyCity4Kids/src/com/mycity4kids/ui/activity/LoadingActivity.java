@@ -203,6 +203,11 @@ public class LoadingActivity extends BaseActivity {
                     ArrayList<String> mDatalist = (ArrayList<String>) responseData.getData();
                     if (mDatalist != null) {
                         ArrayList<String> topicList = (ArrayList<String>) responseData.getData();
+                        PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                        int version = pInfo.versionCode;
+                        if (version > 100 && (topicList == null || topicList.size() < 1)) {
+                            SharedPrefUtils.setFollowTopicApproachChangeFlag(LoadingActivity.this, true);
+                        }
                         SharedPrefUtils.setFollowedTopicsCount(LoadingActivity.this, topicList.size());
                     }
                 } else {

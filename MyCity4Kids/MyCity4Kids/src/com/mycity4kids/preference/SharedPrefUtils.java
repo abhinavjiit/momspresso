@@ -108,7 +108,12 @@ public class SharedPrefUtils {
 
     private static final String LOCALE_LANGUAGE_KEY = "language_key";
     private static final String ANONYMOUS_FLAG = "anonymousFlag";
+
     private static final String NOTIFICATION_CENTER_FLAG = "notificationCenterFlag";
+    private static final String FOLLOW_TOPIC_APPROACH_FLAG = "followTopicApproachFlag";
+    private static final String LAST_LOGIN_TIMESTAMP = "lastLoginTimestamp";
+    private static final String USER_SKIPPED_FOLLOW_TOPIC_FLAG = "userSkippedFollowTopicFlag";
+    private static final String HAS_TOPIC_SELECTION_CHANGED = "topicSelectionChangeFlag";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -629,6 +634,7 @@ public class SharedPrefUtils {
         _editor.commit();
     }
 
+
     public static void setLastNotificationIdForUnreadFlag(Context pContext, String flag) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
@@ -640,5 +646,57 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         String language = (_sharedPref.getString(NOTIFICATION_CENTER_FLAG, "0"));
         return language;
+    }
+
+    public static boolean getFollowTopicApproachChangeFlag(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (_sharedPref.getBoolean(FOLLOW_TOPIC_APPROACH_FLAG, false));
+        return flag;
+    }
+
+    public static void setFollowTopicApproachChangeFlag(Context pContext, boolean flag) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(FOLLOW_TOPIC_APPROACH_FLAG, flag);
+        _editor.commit();
+    }
+
+    public static long getLastLoginTimestamp(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        long flag = (_sharedPref.getLong(LAST_LOGIN_TIMESTAMP, 0));
+        return flag;
+    }
+
+    public static void setLastLoginTimestamp(Context pContext, long timestamp) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putLong(LAST_LOGIN_TIMESTAMP, timestamp);
+        _editor.commit();
+    }
+
+    public static boolean getUserSkippedFollowTopicFlag(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (_sharedPref.getBoolean(USER_SKIPPED_FOLLOW_TOPIC_FLAG, false));
+        return flag;
+    }
+
+    public static void setUserSkippedFollowTopicFlag(Context pContext, boolean flag) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(USER_SKIPPED_FOLLOW_TOPIC_FLAG, flag);
+        _editor.commit();
+    }
+
+    public static boolean isTopicSelectionChanged(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (_sharedPref.getBoolean(HAS_TOPIC_SELECTION_CHANGED, false));
+        return flag;
+    }
+
+    public static void setTopicSelectionChanged(Context pContext, boolean flag) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(HAS_TOPIC_SELECTION_CHANGED, flag);
+        _editor.commit();
     }
 }

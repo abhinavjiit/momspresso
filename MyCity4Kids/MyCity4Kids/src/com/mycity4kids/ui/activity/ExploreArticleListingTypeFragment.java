@@ -178,6 +178,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     if (fragType.equals("search")) {
                         Intent subscribeTopicIntent = new Intent(getActivity(), SubscribeTopicsActivity.class);
                         subscribeTopicIntent.putExtra("tabPos", position);
+                        subscribeTopicIntent.putExtra("source", "home");
                         startActivity(subscribeTopicIntent);
                     } else {
                         if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
