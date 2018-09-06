@@ -399,6 +399,8 @@
     <string name="app_settings.edit_profile.toast_user_bio_max">Maximum limit for bio is</string>
     <string name="app_settings.edit_profile.toast_user_bio_words">words</string>
     <string name="app_settings.edit_profile.toast_incorrect_date">Please enter a valid date for kids birthday</string>
+    <string name="app_settings.edit_profile.toast_empty_name_kid">Please enter a valid name for your kid</string>
+    <string name="app_settings.edit_profile.toast_choose_gender">Please choose your child\'s gender</string>
 
     <string name="app_settings.edit_prefs.notifications">NOTIFICATIONS</string>
     <string name="app_settings.edit_prefs.subscriptions">SUBSCRIPTIONS</string>

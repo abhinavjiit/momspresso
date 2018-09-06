@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -259,10 +260,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         switch (item.getItemId()) {
 
                             case R.id.action_profile:
-                                if (topFragment instanceof MyAccountProfileFragment) {
+//                                if (topFragment instanceof MyAccountProfileFragment) {
+//                                    return true;
+//                                }
+//                                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+//                                Bundle mBundle0 = new Bundle();
+//                                fragment0.setArguments(mBundle0);
+//                                addFragment(fragment0, mBundle0, true);
+                                if (topFragment instanceof ExploreArticleListingTypeFragment) {
                                     return true;
                                 }
-                                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+                                ExploreArticleListingTypeFragment fragment0 = new ExploreArticleListingTypeFragment();
                                 Bundle mBundle0 = new Bundle();
                                 fragment0.setArguments(mBundle0);
                                 addFragment(fragment0, mBundle0, true);
@@ -754,17 +762,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     public void updateUnreadNotificationCount(String unreadNotifCount) {
         if (StringUtils.isNullOrEmpty(unreadNotifCount) || "0".equals(unreadNotifCount)) {
-            addBadgeAt(1, "0");
+            addBadgeAt(3, "0");
         } else {
-            addBadgeAt(1, unreadNotifCount);
+            addBadgeAt(3, unreadNotifCount);
         }
     }
 
     public void showHideNotificationCenterMark(boolean flag) {
         if (flag) {
-            addBadgeAt(1, "1");
+            addBadgeAt(3, "1");
         } else {
-            addBadgeAt(1, "0");
+            addBadgeAt(3, "0");
         }
     }
 
@@ -1359,7 +1367,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
             toolbarUnderline.setVisibility(View.VISIBLE);
-            if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
+            if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
+                Utils.pushOpenScreenEvent(this, "TopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                toolbarTitleTextView.setText(getString(R.string.home_screen_select_an_option_title));
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.myprofile_toolbar_title));
+                menu.findItem(R.id.action_profile).setChecked(true);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
+                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics")) {
+                    showToolbarAndNavigationLayer();
+                    ((ExploreArticleListingTypeFragment) topFragment).showGuideView();
+                }
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            } else if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
                 Utils.pushOpenScreenEvent(this, "PrivateProfileScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_profile_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.myprofile_toolbar_title));
@@ -1492,20 +1514,32 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (badge != null) {
             badge.setBadgeText("");
             if (number.equals("0")) {
-                badge.hide(false);
+//                badge.hide(false);
             }
             return badge;
         }
         // add badge
         badge = new QBadgeView(this)
                 .setBadgeText("")
-                .setGravityOffset(24, 14, true)
+                .setBadgePadding(5, true)
+                .setBadgeGravity(Gravity.TOP | Gravity.END)
+                .setGravityOffset(25, 12, true)
                 .bindTarget(bottomNavigationView.getBottomNavigationItemView(position));
         if (number.equals("0")) {
-            badge.hide(false);
+//            badge.hide(false);
         }
+
+        new QBadgeView(this)
+                .setBadgeText(" New ")
+                .setBadgeTextSize(7, true)
+                .setBadgePadding(3, true)
+                .setBadgeGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL)
+                .setGravityOffset(0, 0, true)
+                .bindTarget(bottomNavigationView.getBottomNavigationItemView(4));
+
         return badge;
     }
+
 
     @Override
     public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {

@@ -484,7 +484,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                     if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
                         Log.i("BlogResponse message", responseModel.getData().getMsg());
                     }
-                    if (responseModel.getData().getResult().getIsSetup() == 0) {
+                    if (responseModel.getData().getResult().getIsSetup() == 1) {
                         showProgressDialog(getResources().getString(R.string.please_wait));
                         pref = getApplicationContext().getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                         SharedPreferences.Editor editor = pref.edit();
@@ -492,7 +492,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         Log.e("blog setup in update ui", true + "");
                         editor.commit();
                         publishArticleRequest();
-                    } else if (responseModel.getData().getResult().getIsSetup() == 1) {
+                    } else if (responseModel.getData().getResult().getIsSetup() == 0) {
                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
                         startActivity(intent);
                     }

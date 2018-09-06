@@ -35,27 +35,33 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
+    <LinearLayout
+        android:id="@+id/tabContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        android:background="?attr/colorPrimary"
-        android:elevation="3dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:tabIndicatorColor="@color/topic_articles.tabbar_indicator"
-        app:tabIndicatorHeight="2dp"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/topic_articles.tabbar_text"
-        app:tabTextAppearance="@style/CustomTabText"
-        app:tabTextColor="@color/topic_articles.tabbar_text" />
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:elevation="3dp"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:tabIndicatorColor="@color/topic_articles.tabbar_indicator"
+            app:tabIndicatorHeight="2dp"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/topic_articles.tabbar_text"
+            app:tabTextAppearance="@style/CustomTabText"
+            app:tabTextColor="@color/topic_articles.tabbar_text" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/topLayerGuideLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tab_layout"
+        android:layout_alignBottom="@+id/tabContainer"
         android:layout_alignTop="@+id/toolbar"
         android:background="@color/dark_transparent"
         android:clickable="true"
@@ -66,5 +72,5 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tab_layout" />
+        android:layout_below="@id/tabContainer" />
 </RelativeLayout>

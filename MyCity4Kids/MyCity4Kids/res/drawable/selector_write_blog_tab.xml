@@ -2,5 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/tab3_selected" android:state_checked="true" />
     <item android:drawable="@drawable/tab3_selected" android:state_pressed="true" />
-    <item android:drawable="@drawable/tab3" />
+    <item android:drawable="@drawable/navigation_create_button" />
 </selector>

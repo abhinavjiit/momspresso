@@ -5,11 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.models.response.ArticleListingResult;
 
 import java.util.ArrayList;
 
@@ -54,7 +52,7 @@ public class LanguageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER) {
-            View v0 = mInflator.inflate(R.layout.language_selection_header, parent, false);
+            View v0 = mInflator.inflate(R.layout.language_selection_item, parent, false);
             return new HeaderViewHolder(v0);
         } else {
             View v0 = mInflator.inflate(R.layout.language_selection_grid_item, parent, false);

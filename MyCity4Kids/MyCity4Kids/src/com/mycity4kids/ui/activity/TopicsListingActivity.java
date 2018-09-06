@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -137,8 +139,24 @@ public class TopicsListingActivity extends BaseActivity {
         for (int i = 0; i < subTopicsList.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
         }
+        tabLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                // don't forget to add Tab first before measuring..
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int widthS = displayMetrics.widthPixels;
+                tabLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                int widthT = tabLayout.getMeasuredWidth();
 
-        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+                if (widthS > widthT) {
+                    tabLayout.setTabMode(TabLayout.MODE_FIXED);
+                    tabLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+                }
+            }
+        });
+//        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         AppUtils.changeTabsFont(this, tabLayout);
 
         pagerAdapter = new TopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);

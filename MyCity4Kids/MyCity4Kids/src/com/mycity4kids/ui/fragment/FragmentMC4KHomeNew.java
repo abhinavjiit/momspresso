@@ -1,15 +1,18 @@
 package com.mycity4kids.ui.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -116,6 +119,23 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         for (int i = 0; i < trendingArraylist.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(trendingArraylist.get(i).getDisplay_name()));
         }
+//        tabLayout.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                // don't forget to add Tab first before measuring..
+//                DisplayMetrics displayMetrics = new DisplayMetrics();
+//                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//                int widthS = displayMetrics.widthPixels;
+//                tabLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+//                int widthT = tabLayout.getMeasuredWidth();
+//
+//                if (widthS > widthT) {
+//                    tabLayout.setTabMode(TabLayout.MODE_FIXED);
+//                    tabLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+//                            LinearLayout.LayoutParams.WRAP_CONTENT));
+//                }
+//            }
+//        });
         AppUtils.changeTabsFont(getActivity(), tabLayout);
         viewPager = (ViewPager) view.findViewById(R.id.pager);
         adapter = new TrendingTopicsPagerAdapter

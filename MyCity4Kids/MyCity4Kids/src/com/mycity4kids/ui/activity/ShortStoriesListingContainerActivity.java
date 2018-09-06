@@ -3,17 +3,15 @@ package com.mycity4kids.ui.activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -50,15 +48,23 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
     private ArrayList<Topics> shortStoriesTopicList;
     private String parentTopicId;
     private ArrayList<Topics> subTopicsList;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_listing_activity);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tablayoutLayer = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
 
         parentTopicId = getIntent().getStringExtra("parentTopicId");
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         try {
             shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
 
@@ -273,7 +279,6 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
                     }
                 }
                 responseData.getData().get(i).setChild(tempUpList);
-
                 shortStoriesTopicList.add(responseData.getData().get(i));
             }
             BaseApplication.setShortStoryTopicList(shortStoriesTopicList);
@@ -297,7 +302,6 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
                 return;
             }
         }
-
     }
 
     @Override
@@ -315,7 +319,6 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         } catch (Exception e) {
 
         }
-
     }
 
     @Override
@@ -323,4 +326,15 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         super.onDestroy();
         Log.d("TopicListingFragment", "onDestroy");
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
+
 }

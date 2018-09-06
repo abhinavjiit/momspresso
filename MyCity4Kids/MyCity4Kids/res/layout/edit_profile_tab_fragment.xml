@@ -25,12 +25,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:backgroundTint="@color/app_settings.edit_profile.edit_text_underline"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:hint="@string/app_settings.edit_profile.hint_fn"
+                android:inputType="textPersonName"
                 android:paddingBottom="15dp"
                 android:textColor="@color/app_settings.edit_profile.text_fn"
                 android:textColorHint="@color/app_settings.edit_profile.hint_fn"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontEditText
@@ -39,12 +40,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:backgroundTint="@color/app_settings.edit_profile.edit_text_underline"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:hint="@string/app_settings.edit_profile.hint_ln"
+                android:inputType="textPersonName"
                 android:paddingBottom="15dp"
                 android:textColor="@color/app_settings.edit_profile.text_ln"
                 android:textColorHint="@color/app_settings.edit_profile.hint_ln"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -58,6 +60,7 @@
                 android:text="email@email.com"
                 android:textColor="@color/app_settings.edit_profile.email"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontEditText
@@ -72,6 +75,7 @@
                 android:textColor="@color/app_settings.edit_profile.text_phone"
                 android:textColorHint="@color/app_settings.edit_profile.hint_phone"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -166,27 +170,6 @@
                 android:textSize="16sp"
                 app:fontName="oswald.ttf" />
 
-            <com.mycity4kids.rangebar.RangeBar
-                android:id="@+id/rangebar"
-                android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                app:barWeight="2dp"
-                app:connectingLineColor="#507cbe"
-                app:pinColor="#507cbe"
-                app:pinMaxFont="11sp"
-                app:rangeBar="false"
-                app:rangeBarColor="#9c9dac"
-                app:selectorBoundaryColor="#507cbe"
-                app:selectorColor="#507cbe"
-                app:selectorSize="5dp"
-                app:temporaryPins="false"
-                app:tickColor="@color/white"
-                app:tickEnd="8"
-                app:tickInterval="1"
-                app:tickStart="0" />
-
             <LinearLayout
                 android:id="@+id/childInfoContainer"
                 android:layout_width="match_parent"
@@ -195,6 +178,102 @@
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/addKidContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:visibility="visible">
+
+                <com.mycity4kids.widget.CustomFontEditText
+                    android:id="@+id/kidNameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/deleteKidTextView"
+                    android:backgroundTint="@color/app_settings.edit_profile.edit_text_underline"
+                    android:hint="Enter Kid's name"
+                    android:textColor="@color/app_light_black"
+                    app:fontName="oswald.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/deleteKidTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/kidNameEditText"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/kidNameEditText"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="Delete Kid"
+                    android:textColor="@color/app_blue"
+                    android:visibility="gone"
+                    app:fontName="oswald.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/kidsDOBTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/kidNameEditText"
+                    android:background="@null"
+                    android:drawableBottom="@drawable/underline"
+                    android:drawablePadding="3dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/app_settings.edit_profile.dob"
+                    android:textColor="@color/app_settings.edit_profile.dob"
+                    app:fontName="oswald.ttf" />
+
+                <RadioGroup
+                    android:id="@+id/genderRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/kidsDOBTextView"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp">
+
+                    <RadioButton
+                        android:id="@+id/maleRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#507cbe"
+                        android:checked="true"
+                        android:layoutDirection="rtl"
+                        android:padding="4dp"
+                        android:text="Male" />
+
+                    <RadioButton
+                        android:id="@+id/femaleRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:buttonTint="#507cbe"
+                        android:layoutDirection="rtl"
+                        android:padding="4dp"
+                        android:text="Female" />
+                </RadioGroup>
+            </RelativeLayout>
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/addNewKidTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/lang_sel.continue_bg"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:text="@string/app_settings.edit_prefs.add"
+                android:textColor="@color/white"
+                app:fontName="oswald_regular.ttf" />
         </LinearLayout>
     </ScrollView>
 

@@ -41,4 +41,9 @@
     <dimen name="related_article.article_image.height">38dp</dimen>
 
     <dimen name="groups.column_spacing">10dp</dimen>
+
+    <dimen name="item_margin">8dp</dimen>
+    <dimen name="item_margin_half">8dp</dimen>
+
+    <dimen name="column_width">80dp</dimen>
 </resources>

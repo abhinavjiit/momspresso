@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_dialog_bg"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/closeDialogImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:src="@drawable/cross_icon_back" />
+
+    <RelativeLayout
+        android:id="@+id/addKidContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/closeDialogImageView"
+        android:visibility="visible">
+
+        <com.mycity4kids.widget.CustomFontEditText
+            android:id="@+id/kidNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/app_settings.edit_profile.edit_text_underline"
+            android:hint="Enter kid's name"
+            android:textColor="@color/app_light_black"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/kidsDOBTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/kidNameEditText"
+            android:background="@null"
+            android:drawableBottom="@drawable/underline"
+            android:drawablePadding="3dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="8dp"
+            android:text="@string/app_settings.edit_profile.dob"
+            android:textColor="@color/app_settings.edit_profile.dob"
+            app:fontName="oswald.ttf" />
+
+        <RadioGroup
+            android:id="@+id/genderRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/kidsDOBTextView"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <RadioButton
+                android:id="@+id/maleRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/app_blue"
+                android:checked="true"
+                android:layoutDirection="rtl"
+                android:padding="4dp"
+                android:text="Male" />
+
+            <RadioButton
+                android:id="@+id/femaleRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:buttonTint="@color/app_blue"
+                android:layoutDirection="rtl"
+                android:padding="4dp"
+                android:text="Female" />
+        </RadioGroup>
+    </RelativeLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/saveKidInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/addKidContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/lang_sel.continue_bg"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:text="@string/app_settings.edit_profile.save"
+        android:textColor="@color/white"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/deleteKidInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addKidContainer"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="12dp"
+        android:layout_toLeftOf="@+id/saveKidInfoTextView"
+        android:background="@color/app_grey"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:text="DELETE"
+        android:textColor="@color/white"
+        app:fontName="oswald_regular.ttf" />
+</RelativeLayout>

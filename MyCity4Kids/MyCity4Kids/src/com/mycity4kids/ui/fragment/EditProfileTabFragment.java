@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,12 +55,11 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.rangebar.RangeBar;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.widget.KidsInfoCustomView;
+import com.mycity4kids.widget.KidsInfoNewCustomView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -79,6 +79,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
     private static final int MAX_WORDS = 200;
     private static final int MAX_CHARACTER = 200;
+    private EditKidInfoDialogFragment editKidInfoDialogFragment;
 
     private CityListingDialogFragment cityFragment;
     private InputFilter filter;
@@ -88,10 +89,11 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
     private EditText firstNameEditText, lastNameEditText, phoneEditText, describeSelfEditText, blogTitleEditText;
     private TextView emailTextView;
     private TextView cityNameTextView;
-    private RangeBar rangebar;
+    //    private RangeBar rangebar;
     private ProgressBar progressBar;
     private TextView saveTextView;
     private static TextView dobTextView;
+    private String kidsInfoActionType = "";
 
     public ArrayList<CityInfoItem> mDatalist;
     private int selectedCityId;
@@ -99,6 +101,16 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
     private ArrayList<AddRemoveKidsRequest> kidsModelArrayList;
     private String currentCityName;
     private String newSelectedCityId;
+    private TextView addNewKidTextView;
+    private RelativeLayout addKidContainer;
+    private TextView kidNameEditText, kidsDOBTextView;
+    private RadioButton maleRadioButton, femaleRadioButton;
+    private RadioGroup genderRadioGroup;
+    private KidsModel editKidModel;
+    private TextView deleteKidTextView;
+    private boolean isEditFlag = false;
+    private KidsInfoNewCustomView viewInEditMode;
+    private int kidsViewPosition;
 
     @Nullable
     @Override
@@ -114,12 +126,30 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         describeSelfEditText = (EditText) view.findViewById(R.id.describeSelfEditText);
         blogTitleEditText = (EditText) view.findViewById(R.id.blogTitleEditText);
         cityNameTextView = (TextView) view.findViewById(R.id.cityNameTextView);
-        rangebar = (RangeBar) view.findViewById(R.id.rangebar);
+        addNewKidTextView = (TextView) view.findViewById(R.id.addNewKidTextView);
+        kidNameEditText = (TextView) view.findViewById(R.id.kidNameEditText);
+        kidsDOBTextView = (TextView) view.findViewById(R.id.kidsDOBTextView);
+        deleteKidTextView = (TextView) view.findViewById(R.id.deleteKidTextView);
+        maleRadioButton = (RadioButton) view.findViewById(R.id.maleRadioButton);
+        femaleRadioButton = (RadioButton) view.findViewById(R.id.femaleRadioButton);
+        genderRadioGroup = (RadioGroup) view.findViewById(R.id.genderRadioGroup);
+        addKidContainer = (RelativeLayout) view.findViewById(R.id.addKidContainer);
+//        rangebar = (RangeBar) view.findViewById(R.id.rangebar);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         saveTextView = (TextView) view.findViewById(R.id.saveTextView);
 
         saveTextView.setOnClickListener(this);
         cityNameTextView.setOnClickListener(this);
+        addNewKidTextView.setOnClickListener(this);
+        deleteKidTextView.setOnClickListener(this);
+
+        kidsDOBTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dobTextView = kidsDOBTextView;
+                showDatePickerDialog();
+            }
+        });
 
         describeSelfEditText.addTextChangedListener(new TextWatcher() {
 
@@ -188,31 +218,32 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getKids() == null) {
-                    rangebar.setRangePinsByValue(0, 0);
+//                    rangebar.setRangePinsByValue(0, 0);
                 } else {
-                    if (responseData.getData().get(0).getResult().getKids().size() > 8) {
-                        rangebar.setRangePinsByValue(0, 8);
-                    } else {
-                        rangebar.setRangePinsByValue(0, responseData.getData().get(0).getResult().getKids().size());
-                    }
-
+//                    if (responseData.getData().get(0).getResult().getKids().size() > 8) {
+//                        rangebar.setRangePinsByValue(0, 8);
+//                    } else {
+//                        rangebar.setRangePinsByValue(0, responseData.getData().get(0).getResult().getKids().size());
+//                    }
+                    int position = 0;
                     for (KidsModel km : responseData.getData().get(0).getResult().getKids()) {
-                        addKidView(km);
+                        addKidView(km, position);
+                        position++;
                     }
 
                 }
-                rangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
-                    @Override
-                    public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
-                        if (childInfoContainer.getChildCount() < rightPinIndex) {
-                            while (rightPinIndex - childInfoContainer.getChildCount() > 0) {
-                                addKidView(null);
-                            }
-                        } else if (childInfoContainer.getChildCount() > rightPinIndex) {
-                            childInfoContainer.removeViews(rightPinIndex, childInfoContainer.getChildCount() - rightPinIndex);
-                        }
-                    }
-                });
+//                rangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+//                    @Override
+//                    public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+//                        if (childInfoContainer.getChildCount() < rightPinIndex) {
+//                            while (rightPinIndex - childInfoContainer.getChildCount() > 0) {
+//                                addKidView(null);
+//                            }
+//                        } else if (childInfoContainer.getChildCount() > rightPinIndex) {
+//                            childInfoContainer.removeViews(rightPinIndex, childInfoContainer.getChildCount() - rightPinIndex);
+//                        }
+//                    }
+//                });
 
                 firstNameEditText.setText(responseData.getData().get(0).getResult().getFirstName());
                 emailTextView.setText(responseData.getData().get(0).getResult().getEmail());
@@ -287,24 +318,34 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         }
     };
 
-    private void addKidView(KidsModel km) {
+    private void addKidView(final KidsModel km, final int position) {
         try {
-            final KidsInfoCustomView kidsInfo1 = new KidsInfoCustomView(getActivity());
+            final KidsInfoNewCustomView kidsInfo1 = new KidsInfoNewCustomView(getActivity());
             if (km == null) {
-                kidsInfo1.setKids_bdy(getString(R.string.dob));
+                kidsInfo1.setKids_bdy(BaseApplication.getAppContext().getString(R.string.dob));
             } else {
+                kidsInfo1.setKidName(km.getName());
                 kidsInfo1.setKids_bdy(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + km.getBirthDay()));
                 if ("0".equals(km.getGender())) {
-                    kidsInfo1.setMaleRadioButton(true);
+                    kidsInfo1.setGenderAsMale(true);
                 } else {
-                    kidsInfo1.setFemaleRadioButton(true);
+                    kidsInfo1.setGenderAsFemale(true);
                 }
             }
-            kidsInfo1.getKidsDOBTextView().setOnClickListener(new View.OnClickListener() {
+            kidsInfo1.getEditKidInfoIV().setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    dobTextView = kidsInfo1.getKidsDOBTextView();
-                    showDatePickerDialog();
+                public void onClick(View view) {
+                    isEditFlag = true;
+                    kidsViewPosition = position;
+                    viewInEditMode = kidsInfo1;
+                    editKidInfoDialogFragment = new EditKidInfoDialogFragment();
+                    FragmentManager fm = getChildFragmentManager();
+                    Bundle _args = new Bundle();
+                    _args.putParcelable("editKidInfo", km);
+                    editKidInfoDialogFragment.setArguments(_args);
+                    editKidInfoDialogFragment.setTargetFragment(EditProfileTabFragment.this, 1111);
+                    editKidInfoDialogFragment.setCancelable(true);
+                    editKidInfoDialogFragment.show(fm, "Choose video option");
                 }
             });
             childInfoContainer.addView(kidsInfo1);
@@ -316,21 +357,21 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
     public void saveKidsAndCity() {
         progressBar.setVisibility(View.VISIBLE);
-        ArrayList<KidsInfo> kidsList = getEnteredKidsInfo();
-
-        kidsModelArrayList = new ArrayList<>();
-        for (KidsInfo ki : kidsList) {
-            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
-            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(ki.getDate_of_birth());
-            if (bdaytimestamp != 0) {
-                kmodel.setBirthDay(bdaytimestamp * 1000);
-            } else {
-                Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            kmodel.setGender(ki.getGender());
-            kidsModelArrayList.add(kmodel);
-        }
+//        ArrayList<KidsInfo> kidsList = getEnteredKidsInfo();
+//
+//        kidsModelArrayList = new ArrayList<>();
+//        for (KidsInfo ki : kidsList) {
+//            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
+//            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(ki.getDate_of_birth());
+//            if (bdaytimestamp != 0) {
+//                kmodel.setBirthDay(bdaytimestamp * 1000);
+//            } else {
+//                Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            kmodel.setGender(ki.getGender());
+//            kidsModelArrayList.add(kmodel);
+//        }
 
         addCityAndKidsDetails();
     }
@@ -342,38 +383,25 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             View innerLayout = childInfoContainer.getChildAt(position);
 
             final TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kidsDOBTextView);
-            RadioGroup genderRadioGroup = (RadioGroup) innerLayout.findViewById(R.id.genderRadioGroup);
-            RadioButton maleRadio = (RadioButton) innerLayout.findViewById(R.id.maleRadioButton);
+            TextView kidsNameTV = (TextView) innerLayout.findViewById(R.id.nameTextView);
+            TextView genderTV = (TextView) innerLayout.findViewById(R.id.genderLabelTextView);
 
-            int radioButtonID = genderRadioGroup.getCheckedRadioButtonId();
-
-            dobOfKidSpn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dobTextView = dobOfKidSpn;
-                    showDatePickerDialog();
-                }
-            });
-
-            if ((dobOfKidSpn.getText().toString().trim().equals(""))) {
-
+            KidsInfo kidsInformation = new KidsInfo();
+            kidsInformation.setName(kidsNameTV.getText().toString());
+            kidsInformation.setDate_of_birth(dobOfKidSpn.getText().toString().trim());
+            if ("M".equals(genderTV.getText().toString())) {
+                kidsInformation.setGender("0");
             } else {
-                KidsInfo kidsInformation = new KidsInfo();
-                kidsInformation.setDate_of_birth((dobOfKidSpn).getText().toString().trim());
-                if (radioButtonID == maleRadio.getId()) {
-                    kidsInformation.setGender("0");
-                } else {
-                    kidsInformation.setGender("1");
-                }
-                kidsInfoList.add(kidsInformation);
+                kidsInformation.setGender("1");
             }
+            kidsInfoList.add(kidsInformation);
         }
         return kidsInfoList;
     }
 
     private void addCityAndKidsDetails() {
         UpdateUserDetailsRequest addCityAndKidsInformationRequest = new UpdateUserDetailsRequest();
-        addCityAndKidsInformationRequest.setKids(kidsModelArrayList);
+//        addCityAndKidsInformationRequest.setKids(kidsModelArrayList);
 
         if (selectedCityId != 0) {
             addCityAndKidsInformationRequest.setCityId("" + selectedCityId);
@@ -571,6 +599,12 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                     saveKidsAndCity();
                 }
                 break;
+            case R.id.addNewKidTextView:
+                if (validateKidsInfo()) {
+                    kidsInfoActionType = "ADD";
+                    saveKidsInfo();
+                }
+                break;
             case R.id.cityNameTextView:
                 cityFragment = new CityListingDialogFragment();
                 cityFragment.setTargetFragment(this, 0);
@@ -584,6 +618,160 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                 break;
         }
     }
+
+    private boolean validateKidsInfo() {
+        if (kidNameEditText.getText() == null || kidNameEditText.getText().toString().isEmpty()) {
+            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_empty_name_kid), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (StringUtils.isNullOrEmpty(kidsDOBTextView.getText().toString()) || !DateTimeUtils.isValidDate(kidsDOBTextView.getText().toString())) {
+            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!maleRadioButton.isChecked() && !femaleRadioButton.isChecked()) {
+            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_choose_gender), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    public void saveEditKidInfo(KidsInfo kidsinfo) {
+        viewInEditMode.setKidName(kidsinfo.getName());
+        viewInEditMode.setKids_bdy(kidsinfo.getDate_of_birth());
+        if ("0".equals(kidsinfo.getGender())) {
+            viewInEditMode.setGenderAsMale(true);
+        } else {
+            viewInEditMode.setGenderAsFemale(true);
+        }
+        kidsInfoActionType = "EDIT";
+        saveKidsInfo();
+    }
+
+    private void saveKidsInfo() {
+        kidsModelArrayList = new ArrayList<>();
+        ArrayList<KidsInfo> kidsList = getEnteredKidsInfo();
+
+        kidsModelArrayList = new ArrayList<>();
+        for (KidsInfo ki : kidsList) {
+            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
+            kmodel.setName(ki.getName());
+            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(ki.getDate_of_birth());
+            if (bdaytimestamp != 0) {
+                kmodel.setBirthDay(bdaytimestamp * 1000);
+            } else {
+                if (isAdded())
+                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            kmodel.setGender(ki.getGender());
+            kidsModelArrayList.add(kmodel);
+        }
+
+        if ("ADD".equals(kidsInfoActionType)) {
+            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
+            kmodel.setName(kidNameEditText.getText().toString());
+            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(kidsDOBTextView.getText().toString());
+            kmodel.setBirthDay(bdaytimestamp * 1000);
+            int radioButtonID = genderRadioGroup.getCheckedRadioButtonId();
+            if (radioButtonID == maleRadioButton.getId()) {
+                kmodel.setGender("0");
+            } else {
+                kmodel.setGender("1");
+            }
+            kidsModelArrayList.add(kmodel);
+        }
+
+        UpdateUserDetailsRequest addCityAndKidsInformationRequest = new UpdateUserDetailsRequest();
+        addCityAndKidsInformationRequest.setKids(kidsModelArrayList);
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
+        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(addCityAndKidsInformationRequest);
+        call.enqueue(updateKidsInfoResponseListener);
+    }
+
+    public void deleteKid() {
+        kidsInfoActionType = "DELETE";
+        kidsModelArrayList = new ArrayList<>();
+        ArrayList<KidsInfo> kidsList = getEnteredKidsInfo();
+
+        kidsModelArrayList = new ArrayList<>();
+        for (KidsInfo ki : kidsList) {
+            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
+            kmodel.setName(ki.getName());
+            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(ki.getDate_of_birth());
+            if (bdaytimestamp != 0) {
+                kmodel.setBirthDay(bdaytimestamp * 1000);
+            } else {
+                if (isAdded())
+                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            kmodel.setGender(ki.getGender());
+            kidsModelArrayList.add(kmodel);
+        }
+        kidsModelArrayList.remove(kidsViewPosition);
+
+        UpdateUserDetailsRequest addCityAndKidsInformationRequest = new UpdateUserDetailsRequest();
+        addCityAndKidsInformationRequest.setKids(kidsModelArrayList);
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
+        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(addCityAndKidsInformationRequest);
+        call.enqueue(updateKidsInfoResponseListener);
+    }
+
+    private Callback<UserDetailResponse> updateKidsInfoResponseListener = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            if (editKidInfoDialogFragment != null) {
+                editKidInfoDialogFragment.dismiss();
+            }
+            Log.d("SUCCESS", "" + response);
+            progressBar.setVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if ("DELETE".equals(kidsInfoActionType)) {
+                        childInfoContainer.removeViewAt(kidsViewPosition);
+                    } else if ("EDIT".equals(kidsInfoActionType)) {
+
+                    } else {
+                        KidsModel km = new KidsModel();
+                        km.setName(kidsModelArrayList.get(kidsModelArrayList.size() - 1).getName());
+                        km.setBirthDay("" + kidsModelArrayList.get(kidsModelArrayList.size() - 1).getBirthDay());
+                        km.setGender(kidsModelArrayList.get(kidsModelArrayList.size() - 1).getGender());
+                        addKidView(km, kidsModelArrayList.size());
+                    }
+                    addNewKidTextView.setText(BaseApplication.getAppContext().getString(R.string.app_settings_edit_prefs_add));
+                    kidNameEditText.setText("");
+                    kidsDOBTextView.setText(BaseApplication.getAppContext().getString(R.string.app_settings_edit_profile_dob));
+                } else {
+                    Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            if (editKidInfoDialogFragment != null) {
+                editKidInfoDialogFragment.dismiss();
+            }
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+        }
+    };
 
     private boolean validateFields() {
         if (StringUtils.isNullOrEmpty(firstNameEditText.getText().toString().trim())) {

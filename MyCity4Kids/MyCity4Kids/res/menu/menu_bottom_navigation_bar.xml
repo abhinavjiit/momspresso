@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_profile"
-        android:icon="@drawable/selector_profile_tab"
-        android:title="" />
-    <item
-        android:id="@+id/action_notification"
-        android:icon="@drawable/selector_notification_tab"
-        android:title="" />
-    <item
         android:id="@+id/action_home"
         android:icon="@drawable/selector_home_tab"
         android:title="" />
     <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/selector_profile_tab"
+        android:title="" />
+    <item
         android:id="@+id/action_write"
         android:icon="@drawable/selector_write_blog_tab"
+        android:title="" />
+    <item
+        android:id="@+id/action_notification"
+        android:icon="@drawable/selector_notification_tab"
         android:title="" />
     <item
         android:id="@+id/action_location"

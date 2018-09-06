@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/genderImageView"
+            android:layout_width="@dimen/ad_comments_profile_pic_width"
+            android:layout_height="@dimen/ad_comments_profile_pic_width"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="8dp"
+            android:src="@drawable/tab1"
+            android:visibility="visible"
+            app:civ_border="true"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="1px"
+            app:civ_shadow="false" />
+
+        <ImageView
+            android:id="@+id/editInfoImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/genderImageView"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_article" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/genderImageView"
+            android:padding="4dp"
+            android:text="Chunnu munnu"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/genderLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/nameTextView"
+            android:layout_below="@+id/nameTextView"
+            android:padding="4dp"
+            android:text="M"
+            app:fontName="oswald.ttf" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/genderLabelTextView"
+            android:layout_alignTop="@+id/genderLabelTextView"
+            android:layout_toRightOf="@+id/genderLabelTextView"
+            android:background="@color/line_separator_color"
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="6dp" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/kidsDOBTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/genderLabelTextView"
+            android:layout_toRightOf="@+id/separator"
+            android:background="@null"
+            android:gravity="left"
+            android:padding="4dp"
+            android:text="@string/app_settings.edit_profile.dob"
+            android:textColor="@color/app_settings.edit_profile.dob"
+            app:fontName="oswald.ttf" />
+    </RelativeLayout>
+</merge>

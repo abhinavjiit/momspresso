@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text=""
-                android:textColor="@color/various_list.toolbar.title"
+                android:textColor="@color/app_light_black"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
