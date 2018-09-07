@@ -253,6 +253,9 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 selectTopic.add(st);
             }
             BaseApplication.setSelectedTopicsMap(selectedTopicsMap);
+            if (BaseApplication.getSelectedTopicsMap() == null || BaseApplication.getSelectedTopicsMap().isEmpty()) {
+                saveTextView.setEnabled(false);
+            }
             processTrendingResponse();
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -450,6 +453,14 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
             mixpanel.track("CancelTopicSelection", jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void topicSelectionChanged() {
+        if (BaseApplication.getSelectedTopicsMap() == null || BaseApplication.getSelectedTopicsMap().isEmpty()) {
+            saveTextView.setEnabled(false);
+        } else {
+            saveTextView.setEnabled(true);
         }
     }
 }

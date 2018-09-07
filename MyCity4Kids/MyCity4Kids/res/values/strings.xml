@@ -246,6 +246,7 @@
     <string name="permission_phone_state_rationale">Phone state permission is required to keep you updated with latest content via notifications.</string>
     <string name="permision_available_init">All required permissions have been granted.</string>
     <string name="permission_calendar_rationale">Calendar permission is needed to add a reminder.</string>
+    <string name="permission_storage_story">Storage permission is required for publishing story.</string>
 
     <string name="home.toolbar.title">TRENDING</string>
     <string name="explore_listing.explore_categories.title">YOU COULD ALSO EXPLORE THE CATEGORIES</string>
@@ -792,4 +793,8 @@
     <string name="reported.uninteresting">Reported as Inappropriate</string>
     <string name="reported.religious">Reported as Hurts Religious Sentiment</string>
     <string name="reported.other">Reported as Other</string>
+
+    <string name="groups.join_support_gp">JOIN SUPPORT GROUP</string>
+    <string name="groups.not_alone">#YOUARENOTALONE</string>
+
 </resources>

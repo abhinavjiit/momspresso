@@ -1,7 +1,9 @@
 package com.mycity4kids.ui.activity;
 
+import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +16,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,6 +69,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ShortStoryTopicsRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.widget.StartSnapHelper;
 
 import org.json.JSONArray;
@@ -89,6 +95,10 @@ import retrofit2.Retrofit;
 
 public class AddShortStoryActivity extends BaseActivity implements View.OnClickListener, ShortStoryTopicsRecyclerAdapter.RecyclerViewClickListener {
 
+    private static final int REQUEST_INIT_PERMISSION = 1;
+    private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
     private static final int MAX_WORDS = 100;
     private Toolbar toolbar;
     private TextView publishTextView;
@@ -110,12 +120,14 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String articleId;
     private String tagsJson;
     private boolean isMaxLengthToastShown = false;
+    private View mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_short_story_activity);
         Utils.pushOpenScreenEvent(this, "AddShortStoryScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        mLayout = findViewById(R.id.rootLayout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         publishTextView = (TextView) toolbar.findViewById(R.id.publishTextView);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -467,7 +479,19 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             BlogPageResponse responseModel = response.body();
             if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                 if (responseModel.getData().getResult().getIsSetup() == 1) {
-                    createAndUploadShareableImage();
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ActivityCompat.checkSelfPermission(AddShortStoryActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED
+                                || ActivityCompat.checkSelfPermission(AddShortStoryActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
+                            requestStoragePermissions();
+                        } else {
+                            createAndUploadShareableImage();
+                        }
+                    } else {
+                        createAndUploadShareableImage();
+                    }
                 } else if (responseModel.getData().getResult().getIsSetup() == 0) {
                     Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
                     startActivity(intent);
@@ -483,6 +507,43 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         }
     };
 
+    private void requestStoragePermissions() {
+        // BEGIN_INCLUDE(contacts_permission_request)
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example, if the request has been denied previously.
+            Log.i("Permissions",
+                    "Displaying storage permission rationale to provide additional context.");
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    })
+                    .show();
+        }
+    }
+
+    private void requestUngrantedPermissions() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
+            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(PERMISSIONS_INIT[i]);
+            }
+        }
+        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+        ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION);
+    }
+
     private void createAndUploadShareableImage() {
         Bitmap finalBitmap = null;
         try {
@@ -496,6 +557,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
         String path = MediaStore.Images.Media.insertImage(getContentResolver(), finalBitmap, "Title", null);
+        Log.d("ShortStory", "Path = " + path);
         Uri imageUriTemp = Uri.parse(path);
 
         File file = FileUtils.getFile(this, imageUriTemp);
@@ -709,5 +771,30 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             }
         });
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_INIT_PERMISSION) {
+            Log.i("Permissions", "Received response for storage permissions request.");
+            // We have requested multiple permissions for contacts, so all of them need to be
+            // checked.
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                // All required permissions have been granted, display contacts fragment.
+                Snackbar.make(mLayout, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                createAndUploadShareableImage();
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.fragment;
 
+import android.accounts.NetworkErrorException;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -15,15 +16,18 @@ import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.response.GroupIdCategoryIdMappingResponse;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.TrendingListingResponse;
 import com.mycity4kids.models.response.TrendingListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.TrendingTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.GroupIdCategoryMap;
 
 import java.util.ArrayList;
 
@@ -34,7 +38,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 24/5/17.
  */
-public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickListener {
+public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickListener, GroupIdCategoryMap.GroupCategoryInterface {
 
     private View view;
     private TabLayout tabLayout;
@@ -46,6 +50,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private int lowerLimit = 1;
     private int upperLimit = 3;
     private int articleCount = 10;
+    private String gpHeading, gpSubHeading, gpImageUrl;
+    private int groupId;
 
     @Nullable
     @Override
@@ -55,8 +61,22 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         trendingArraylist = new ArrayList<>();
-        hitTrendingDataAPI();
+        getGroupIdForCurrentCategory();
         return view;
+    }
+
+    private void getGroupIdForCurrentCategory() {
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap("", this);
+        groupIdCategoryMap.getGroupIdForCurrentCategory();
+    }
+
+    @Override
+    public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
+        this.groupId = groupId;
+        this.gpHeading = gpHeading;
+        this.gpSubHeading = gpSubHeading;
+        this.gpImageUrl = gpImageUrl;
+        hitTrendingDataAPI();
     }
 
     public void hitTrendingDataAPI() {
@@ -118,6 +138,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         viewPager = (ViewPager) view.findViewById(R.id.pager);
         adapter = new TrendingTopicsPagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount(), trendingArraylist);
+        adapter.setGroupInfo(gpHeading, gpSubHeading, gpImageUrl, groupId);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -194,4 +215,5 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         if (adapter != null)
             adapter.hideFollowTopicHeader();
     }
+
 }

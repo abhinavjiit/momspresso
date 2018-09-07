@@ -107,7 +107,7 @@
             android:layout_alignParentRight="true"
             android:padding="20dp"
             android:text="@string/subscribe_topics.save"
-            android:textColor="@color/subscribe_topics.save"
+            android:textColor="@color/publish_button_selector"
             app:fontName="oswald_regular.ttf" />
     </RelativeLayout>
 </RelativeLayout>

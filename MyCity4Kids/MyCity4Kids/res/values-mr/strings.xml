@@ -248,6 +248,7 @@
     <string name="permission_phone_state_rationale">फोन स्टेट अनुमती आवश्यक आहे </string>
     <string name="permision_available_init">सर्व आवश्यक अनुमती दिल्ये गेलेल्या आहेत </string>
     <string name="permission_calendar_rationale">दिनदर्शिका अनुमती आवश्यक आहे रिमाइंडर जोडण्यासाठी </string>
+    <string name="permission_storage_story">Storage permission is required for publishing story.</string>
 
     <string name="home.toolbar.title">ट्रेंडिंग </string>
     <string name="explore_listing.explore_categories.title">तुम्ही विविध श्रेणी बघू शकता </string>

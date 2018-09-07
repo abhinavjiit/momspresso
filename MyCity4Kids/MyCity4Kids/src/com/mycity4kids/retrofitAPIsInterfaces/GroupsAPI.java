@@ -22,6 +22,7 @@ import com.mycity4kids.models.request.UpdateUsersGpLevelNotificationSettingReque
 import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.AddGroupPostResponse;
 import com.mycity4kids.models.response.GroupDetailResponse;
+import com.mycity4kids.models.response.GroupIdCategoryIdMappingResponse;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
@@ -276,4 +277,12 @@ public interface GroupsAPI {
                                              @Query("isActive") int isActive,
                                              @Query("$skip") int skip,
                                              @Query("$limit") int limit);
+
+    @GET("/api/v1/groups/groups-banner/")
+    Call<GroupIdCategoryIdMappingResponse> getGroupIdForSingleCategory(@Query("platform") String query,
+                                                                       @Query("categoryId") String ofType);
+
+    @GET("/api/v1/groups/groups-banner/")
+    Call<GroupIdCategoryIdMappingResponse> getGroupIdForMultipleCategories(@Query("platform") String query,
+                                                                           @Query("categoryId[$in]") List<String> groupIdList);
 }

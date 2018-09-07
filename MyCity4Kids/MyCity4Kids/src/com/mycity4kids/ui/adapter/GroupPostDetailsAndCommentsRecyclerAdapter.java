@@ -128,7 +128,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
 
-            textPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(groupPostResult.getContent()));
+            textPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(groupPostResult.getContent().replace(" ","&nbsp;").replace("\n","<br />")));
             Linkify.addLinks(textPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -153,7 +153,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
 
-            mediaPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(groupPostResult.getContent()));
+            mediaPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(groupPostResult.getContent().replace(" ","&nbsp;").replace("\n","<br />")));
             Linkify.addLinks(mediaPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -179,7 +179,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
 
-            textPollPostViewHolder.pollQuestionTextView.setText(AppUtils.fromHtml(groupPostResult.getContent()));
+            textPollPostViewHolder.pollQuestionTextView.setText(AppUtils.fromHtml(groupPostResult.getContent().replace(" ","&nbsp;").replace("\n","<br />")));
             Linkify.addLinks(textPollPostViewHolder.pollQuestionTextView, Linkify.WEB_URLS);
             textPollPostViewHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
             textPollPostViewHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -239,7 +239,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         } else if (holder instanceof ImagePollPostViewHolder) {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
 
-            imageHolder.pollQuestionTextView.setText(AppUtils.fromHtml(groupPostResult.getContent()));
+            imageHolder.pollQuestionTextView.setText(AppUtils.fromHtml(groupPostResult.getContent().replace(" ","&nbsp;").replace("\n","<br />")));
             Linkify.addLinks(imageHolder.pollQuestionTextView, Linkify.WEB_URLS);
             imageHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
             imageHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -316,7 +316,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 }
             }
 
-            rootCommentViewHolder.commentDataTextView.setText(postCommentsList.get(position).getContent());
+            rootCommentViewHolder.commentDataTextView.setText(postCommentsList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />"));
             Linkify.addLinks(rootCommentViewHolder.commentDataTextView, Linkify.WEB_URLS);
             rootCommentViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             rootCommentViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));

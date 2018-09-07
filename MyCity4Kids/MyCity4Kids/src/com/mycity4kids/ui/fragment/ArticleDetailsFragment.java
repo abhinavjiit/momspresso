@@ -75,6 +75,7 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
@@ -87,13 +88,17 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
+import com.mycity4kids.ui.activity.GroupDetailsActivity;
+import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.SubscribeTopicsActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
@@ -120,13 +125,14 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 6/6/17.
  */
-public class ArticleDetailsFragment extends BaseFragment implements View.OnClickListener, ObservableScrollViewCallbacks, AddEditCommentReplyFragment.IAddCommentReply {
+public class ArticleDetailsFragment extends BaseFragment implements View.OnClickListener, ObservableScrollViewCallbacks, AddEditCommentReplyFragment.IAddCommentReply, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
 
     private final static int ADD_BOOKMARK = 1;
 
     private final static int REPLY_LEVEL_PARENT = 1;
     private final static int REPLY_LEVEL_CHILD = 2;
 
+    private MixpanelAPI mixpanel;
     private ArticleDetailResult detailData;
     private Bitmap defaultBloggerBitmap;
     private ArticleDetailsAPI articleDetailsAPI;
@@ -208,6 +214,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private NativeAd nativeAd;
     private LinearLayout nativeAdContainer;
     private LinearLayout adView;
+    private RelativeLayout groupHeaderView;
+    private ImageView groupHeaderImageView;
+    private TextView groupHeadingTextView, groupSubHeadingTextView;
+    private int groupId;
 
     @Nullable
     @Override
@@ -218,7 +228,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         deepLinkURL = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);
         try {
-
+            mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
             fragmentView.findViewById(R.id.user_name).setOnClickListener(this);
 
             floatingActionButton = (ImageView) fragmentView.findViewById(R.id.user_image);
@@ -279,6 +289,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             writeArticleTextView = ((TextView) fragmentView.findViewById(R.id.writeArticleTextView));
             writeArticleImageView = ((ImageView) fragmentView.findViewById(R.id.writeArticleImageView));
+            groupHeaderView = (RelativeLayout) fragmentView.findViewById(R.id.groupHeaderView);
+            groupHeaderImageView = (ImageView) fragmentView.findViewById(R.id.groupHeaderImageView);
+            groupHeadingTextView = (TextView) fragmentView.findViewById(R.id.groupHeadingTextView);
+            groupSubHeadingTextView = (TextView) fragmentView.findViewById(R.id.groupSubHeadingTextView);
 
             relatedArticles1.setOnClickListener(this);
             relatedArticles2.setOnClickListener(this);
@@ -295,6 +309,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             viewCommentsTextView.setOnClickListener(this);
             writeArticleImageView.setOnClickListener(this);
             writeArticleTextView.setOnClickListener(this);
+            groupHeaderView.setOnClickListener(this);
 
             mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
 
@@ -341,7 +356,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             scrollBounds = new Rect();
             mScrollView.getHitRect(scrollBounds);
-            showNativeAd();
+//            showNativeAd();
         } catch (Exception e) {
             removeProgressDialog();
             Crashlytics.logException(e);
@@ -869,6 +884,27 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public void onClick(View v) {
         try {
             switch (v.getId()) {
+                case R.id.groupHeaderView: {
+                    if (groupId == 0) {
+                        Intent groupIntent = new Intent(getActivity(), DashboardActivity.class);
+                        groupIntent.putExtra("TabType", "group");
+                        startActivity(groupIntent);
+                    } else {
+                        GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+                        groupMembershipStatus.checkMembershipStatus(groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    }
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("screenName", "" + "DetailArticleScreen");
+                        jsonObject.put("Topic", "" + "ArticleDetail");
+//                        Log.d("JoinSupportGroupBannerClick", jsonObject.toString());
+                        mixpanel.track("JoinSupportGroupBannerClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
                 case R.id.writeArticleTextView:
                 case R.id.writeArticleImageView:
                     launchEditor();
@@ -1324,6 +1360,73 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onReplyAddition(CommentsData cd) {
+
+    }
+
+    @Override
+    public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
+        this.groupId = groupId;
+        try {
+            Picasso.with(getActivity()).load(gpImageUrl).placeholder(R.drawable.groups_generic)
+                    .error(R.drawable.groups_generic).into(groupHeaderImageView);
+        } catch (Exception e) {
+            groupHeaderImageView.setImageResource(R.drawable.groups_generic);
+        }
+        if (StringUtils.isNullOrEmpty(gpHeading)) {
+            groupHeadingTextView.setText(BaseApplication.getAppContext().getString(R.string.groups_join_support_gp));
+        } else {
+            groupHeadingTextView.setText(gpHeading);
+        }
+        if (StringUtils.isNullOrEmpty(gpSubHeading)) {
+            groupSubHeadingTextView.setText(BaseApplication.getAppContext().getString(R.string.groups_not_alone));
+        } else {
+            groupSubHeadingTextView.setText(gpSubHeading);
+        }
+    }
+
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
+        String userType = null;
+        if (isAdded()) {
+            if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+
+            } else {
+                if (body.getData().getResult().get(0).getIsAdmin() == 1) {
+                    userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+                } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
+                    userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+                }
+            }
+
+            if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+                Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                startActivity(intent);
+            } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
+                Toast.makeText(getActivity(), getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
+            } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
+                Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                startActivity(intent);
+            } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+                Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra("pendingMembershipFlag", true);
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                startActivity(intent);
+            }
+        }
+    }
+
+    @Override
+    public void onMembershipStatusFetchFail() {
 
     }
 
@@ -2052,6 +2155,25 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 tagsLayout.addView(topicView);
             }
         }
+
+        loadGroupDataForCategories(tagsList);
+    }
+
+    private void loadGroupDataForCategories(ArrayList<Map<String, String>> tagsList) {
+
+        ArrayList<String> categoriesList = new ArrayList<>();
+        for (int i = 0; i < tagsList.size(); i++) {
+            categoriesList.addAll(tagsList.get(i).keySet());
+        }
+
+        if (categoriesList.size() == 1) {
+            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList.get(0), this);
+            groupIdCategoryMap.getGroupIdForCurrentCategory();
+        } else {
+            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList, this);
+            groupIdCategoryMap.getGroupIdForMultipleCategories();
+        }
+
     }
 
 
@@ -2063,13 +2185,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         topicIdLList.add(selectedTopic);
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
 
-        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         if (action == 0) {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("Topic", "" + selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
-                jsonObject.put("ScreenName", "ArticleDetailScreen");
+                jsonObject.put("ScreenName", "DetailArticleScreen");
                 jsonObject.put("isFirstTimeUser", followTopicChangeNewUser);
                 Log.d("UnfollowTopics", jsonObject.toString());
                 mixpanel.track("UnfollowTopic", jsonObject);
@@ -2095,7 +2216,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("Topic", "" + selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
-                jsonObject.put("ScreenName", "ArticleDetailScreen");
+                jsonObject.put("ScreenName", "DetailArticleScreen");
                 jsonObject.put("isFirstTimeUser", followTopicChangeNewUser);
                 Log.d("FollowTopics", jsonObject.toString());
                 mixpanel.track("FollowTopic", jsonObject);

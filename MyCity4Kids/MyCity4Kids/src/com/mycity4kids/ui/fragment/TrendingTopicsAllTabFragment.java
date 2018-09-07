@@ -31,7 +31,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeFragment;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.FeedNativeAd;
 
 import org.json.JSONObject;
@@ -75,8 +77,12 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-        progressBar.setVisibility(View.VISIBLE);
+        String gpHeading = getArguments().getString("gpHeading");
+        String gpSubHeading = getArguments().getString("gpSubHeading");
+        String gpImageUrl = getArguments().getString("gpImageUrl");
+        int groupId = getArguments().getInt("groupId");
 
+        progressBar.setVisibility(View.VISIBLE);
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
 
         long timeDiff = System.currentTimeMillis() - SharedPrefUtils.getLastLoginTimestamp(BaseApplication.getAppContext()) - AppConstants.HOURS_24_TIMESTAMP;
@@ -103,11 +109,12 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
 //        }
         feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, isHeaderVisible);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, isHeaderVisible, "TrendingAll");
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
+        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
         recyclerView.setAdapter(recyclerAdapter);
 
         hitFilteredTopicsArticleListingApi(0);
@@ -270,20 +277,45 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                 searchTopicFrag.setArguments(searchBundle);
                 ((DashboardActivity) getActivity()).addFragment(searchTopicFrag, searchBundle, true);
                 break;
+//            case R.id.groupHeaderView:
+//                GroupsFragment groupsFragment = new GroupsFragment();
+//                Bundle bundle = new Bundle();
+//                groupsFragment.setArguments(bundle);
+//                ((DashboardActivity) getActivity()).addFragment(groupsFragment, bundle, true);
+//                break;
             case R.id.headerArticleView:
             case R.id.fbAdArticleView:
+            case R.id.storyHeaderView:
             default:
-                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
-                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
-                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
-                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
-                intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-                intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
-                startActivity(intent);
+                if ("1".equals(articleDataModelsNew.get(position).getContentType())) {
+                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
+                    intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsNew, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, articleDataModelsNew, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
+                    intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsNew, AppConstants.CONTENT_TYPE_ARTICLE);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, articleDataModelsNew, AppConstants.CONTENT_TYPE_ARTICLE));
+                    startActivity(intent);
+                }
                 break;
         }
 

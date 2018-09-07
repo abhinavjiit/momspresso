@@ -78,6 +78,8 @@ import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import life.knowledge4.videotrimmer.utils.FileUtils;
@@ -311,8 +313,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             String tabType = getIntent().getStringExtra("TabType");
             if ("profile".equals(tabType)) {
                 bottomNavigationView.setSelectedItemId(R.id.action_profile);
-            } else {
-
+            } else if ("group".equals(tabType)) {
+                bottomNavigationView.setSelectedItemId(R.id.action_location);
             }
         }
 
@@ -354,6 +356,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
                 intent.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "article_details");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryDetails")) {
                 Intent ssIntent = new Intent(DashboardActivity.this, ShortStoryContainerActivity.class);
                 ssIntent.putExtra(Constants.AUTHOR_ID, notificationExtras.getString("userId"));
@@ -365,6 +375,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 ssIntent.putExtra(Constants.ARTICLE_INDEX, "-1");
                 ssIntent.putExtra(Constants.AUTHOR, notificationExtras.getString("userId") + "~");
                 startActivity(ssIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "shortStoryDetails");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
@@ -377,31 +395,79 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
                 intent.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "video_details");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_membership")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_new_post")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_admin_group_edit")
                     || notificationExtras.getString("type").equalsIgnoreCase("group_admin")) {
                 GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
                 groupMembershipStatus.checkMembershipStatus(Integer.parseInt(notificationExtras.getString("groupId")), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "" + notificationExtras.getString("type"));
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_response")) {
                 Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
                 gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
                 gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 gpPostIntent.putExtra("responseId", Integer.parseInt(notificationExtras.getString("responseId")));
                 startActivity(gpPostIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "group_new_response");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_reply")) {
                 Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
                 gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
                 gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(gpPostIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "group_new_reply");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_membership")) {
                 Intent memberIntent = new Intent(this, GroupMembershipActivity.class);
                 memberIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(memberIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "group_admin_membership");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_admin_reported")) {
                 Intent reportIntent = new Intent(this, GroupsReportedContentActivity.class);
                 reportIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
                 startActivity(reportIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "group_admin_reported");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
                 String eventId = notificationExtras.getString("id");
                 Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
@@ -412,14 +478,38 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
                 resultIntent.putExtra(Constants.DISTANCE, "0");
                 startActivity(resultIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "event_details");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("webView")) {
                 String url = notificationExtras.getString("url");
                 Intent intent1 = new Intent(this, LoadWebViewActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.WEB_VIEW_URL, url);
                 startActivity(intent1);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "webView");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("write_blog")) {
                 launchEditor();
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "write_blog");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("profile")) {
                 String u_id = notificationExtras.getString("userId");
                 if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(u_id)) {
@@ -432,22 +522,78 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else {
                     fragmentToLoad = Constants.PROFILE_FRAGMENT;
                 }
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "profile");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("upcoming_event_list")) {
                 fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "upcoming_event_list");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("suggested_topics")) {
                 fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "suggested_topics");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
                 Intent intent1 = new Intent(this, AppSettingsActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
                 startActivity(intent1);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", AppConstants.APP_SETTINGS_DEEPLINK);
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryListing")) {
                 fragmentToLoad = Constants.SHORT_STOY_FRAGMENT;
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "shortStoryListing");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_listing")) {
                 fragmentToLoad = Constants.GROUP_LISTING_FRAGMENT;
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "group_listing");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                jsonObject.put("url", "" + tempDeepLinkURL);
+                mMixpanel.track("DeepLinking", jsonObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (!StringUtils.isNullOrEmpty(tempDeepLinkURL)) {
                 if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDITOR_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
