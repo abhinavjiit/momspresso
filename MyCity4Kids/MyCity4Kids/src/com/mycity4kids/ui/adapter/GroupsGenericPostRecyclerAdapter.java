@@ -136,7 +136,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
 
-            textPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(postList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />")));
+            textPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(textPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -161,7 +161,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
 
-            mediaPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(postList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />")));
+            mediaPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(mediaPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -187,7 +187,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
 
-            textPollPostViewHolder.pollQuestionTextView.setText(AppUtils.fromHtml(postList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />")));
+            textPollPostViewHolder.pollQuestionTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(textPollPostViewHolder.pollQuestionTextView, Linkify.WEB_URLS);
             textPollPostViewHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
             textPollPostViewHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -247,7 +247,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         } else {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
 
-            imageHolder.pollQuestionTextView.setText(AppUtils.fromHtml(postList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />")));
+            imageHolder.pollQuestionTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(imageHolder.pollQuestionTextView, Linkify.WEB_URLS);
             imageHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
             imageHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));

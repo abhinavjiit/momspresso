@@ -521,6 +521,13 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             break;
             case R.id.rankContainer:
                 if (AppConstants.DEBUGGING_USER_ID.contains(userId)) {
+                    rankContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            BaseApplication.getInstance().toggleGroupBaseURL();
+                            return false;
+                        }
+                    });
                     Intent _intent = new Intent(getActivity(), IdTokenLoginActivity.class);
                     startActivity(_intent);
                     return;

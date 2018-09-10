@@ -93,7 +93,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                 }
             }
 
-            commentsViewHolder.commentDataTextView.setText(AppUtils.fromHtml(repliesList.get(position).getContent().replace(" ", "&nbsp;").replace("\n", "<br />")));
+            commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(commentsViewHolder.commentDataTextView, Linkify.WEB_URLS);
             commentsViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             commentsViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -118,7 +118,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             }
 
 //            repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
-            repliesViewHolder.commentDataTextView.setText(AppUtils.fromHtml(repliesList.get(position).getContent().replace(" ", "&nbsp;").replace("\n", "<br />")));
+            repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(repliesViewHolder.commentDataTextView, Linkify.WEB_URLS);
             repliesViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             repliesViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));

@@ -83,7 +83,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI trendinAPI = retrofit.create(TopicsCategoryAPI.class);
 
-        Call<TrendingListingResponse> trendingCall = trendinAPI.getTrendingTopicAndArticles("" + lowerLimit, "" + upperLimit, "" + articleCount, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<TrendingListingResponse> trendingCall = trendinAPI.getTrendingTopicAndArticles("" + lowerLimit, "" + upperLimit, "" + articleCount, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         trendingCall.enqueue(trendingResponseCallback);
     }
 
@@ -91,7 +91,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         @Override
         public void onResponse(Call<TrendingListingResponse> call, retrofit2.Response<TrendingListingResponse> response) {
             if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                if (isAdded())
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 return;
             }
 
@@ -100,7 +101,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processTrendingResponse(responseData);
                 } else {
-                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                    if (isAdded())
+                        ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -470,6 +471,20 @@ public class BaseApplication extends Application {
             createGroupRetrofitInstance(AppConstants.GROUPS_LIVE_URL);
         }
         return groupsRetrofit;
+    }
+
+    public void toggleGroupBaseURL() {
+
+        if (HttpUrl.parse(AppConstants.GROUPS_TEST_LIVE_URL).equals(groupsRetrofit.baseUrl())) {
+            groupsRetrofit = null;
+            createGroupRetrofitInstance(AppConstants.GROUPS_TEST_STAGING_URL);
+            Toast.makeText(this, "switch to staging", Toast.LENGTH_SHORT).show();
+        } else {
+            groupsRetrofit = null;
+            createGroupRetrofitInstance(AppConstants.GROUPS_TEST_LIVE_URL);
+            Toast.makeText(this, "switch to live", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public static void changeApiBaseUrl() {

@@ -80,7 +80,7 @@
     <!--android:layout_marginRight="2dp"-->
     <!--android:layout_marginTop="15dp" />-->
 
-    <com.mycity4kids.widget.CustomFontTextView
+    <com.mycity4kids.widget.LinkifiedTextView
         android:id="@+id/postDataTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

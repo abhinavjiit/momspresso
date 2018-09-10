@@ -50,7 +50,7 @@
             android:textSize="@dimen/ad_comments_username"
             app:fontName="oswald_regular.ttf" />
 
-        <com.mycity4kids.widget.CustomFontTextView
+        <com.mycity4kids.widget.LinkifiedTextView
             android:id="@+id/commentDataTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
