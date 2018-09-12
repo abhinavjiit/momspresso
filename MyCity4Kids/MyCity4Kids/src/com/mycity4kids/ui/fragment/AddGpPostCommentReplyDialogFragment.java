@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -9,8 +10,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -27,9 +35,12 @@ import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
+import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
+import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -77,6 +88,21 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         anonymousTextView = (TextView) rootView.findViewById(R.id.anonymousTextView);
         anonymousCheckbox = (CheckBox) rootView.findViewById(R.id.anonymousCheckbox);
         bottombarTopline = rootView.findViewById(R.id.bottombarTopline);
+
+        commentReplyEditText.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                if (commentReplyEditText.hasFocus()) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_SCROLL:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         Bundle extras = getArguments();
         commentOrReplyData = (GroupPostCommentResult) extras.get("parentCommentData");
@@ -128,6 +154,10 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 }
 
                 commentDataTextView.setText(commentOrReplyData.getContent());
+                Linkify.addLinks(commentDataTextView, Linkify.WEB_URLS);
+                commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                commentDataTextView.setLinkTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.groups_blue_color));
+                addLinkHandler(commentDataTextView);
                 commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(commentOrReplyData.getCreatedAt()));
             }
         }
@@ -221,6 +251,40 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             return false;
         }
         return true;
+    }
+
+    private void addLinkHandler(TextView textView) {
+        CharSequence text = textView.getText();
+        if (text instanceof Spannable) {
+            int end = text.length();
+            Spannable sp = (Spannable) textView.getText();
+            URLSpan[] urls = sp.getSpans(0, end, URLSpan.class);
+            SpannableStringBuilder style = new SpannableStringBuilder(text);
+            style.clearSpans();//should clear old spans
+            for (URLSpan url : urls) {
+                CustomerTextClick click = new CustomerTextClick(url.getURL());
+                style.setSpan(click, sp.getSpanStart(url), sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            textView.setText(style);
+        }
+    }
+
+    private class CustomerTextClick extends ClickableSpan {
+
+        private String mUrl;
+
+        CustomerTextClick(String url) {
+            mUrl = url;
+        }
+
+        @Override
+        public void onClick(View widget) {
+            if (isAdded()) {
+                Intent intent = new Intent(getActivity(), NewsLetterWebviewActivity.class);
+                intent.putExtra(Constants.URL, mUrl);
+                getActivity().startActivity(intent);
+            }
+        }
     }
 
 }

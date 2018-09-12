@@ -71,7 +71,7 @@
         android:src="@drawable/ic_more"
         android:tint="@color/groups.blue_color" />
 
-    <com.mycity4kids.widget.CustomFontTextView
+    <com.mycity4kids.widget.LinkifiedTextView
         android:id="@+id/pollQuestionTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

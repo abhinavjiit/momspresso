@@ -248,6 +248,7 @@
     <string name="permission_phone_state_rationale">আপনাকে সর্বশেষ বিষয়্গুলি সমন্ধে বিজ্ঞপ্তি জানাতে ফোনের অনুমতির প্রয়োজন</string>
     <string name="permision_available_init">সমস্ত প্রয়োজনীয় অনুমতি দেওয়া হল</string>
     <string name="permission_calendar_rationale">মনে রাখতে ক্যালেন্ডারের অনুমতি নিন</string>
+    <string name="permission_storage_story">Storage permission is required for publishing story.</string>
 
     <string name="home.toolbar.title">ট্রেন্ডিং</string>
     <string name="explore_listing.explore_categories.title">শ্রেনী বিশ্লেষণ করুন</string>

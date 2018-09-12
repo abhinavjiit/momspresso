@@ -155,9 +155,9 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             }
         } else if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
-//            textPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent());
+//            textPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />"));
 
-            textPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(postDataList.get(position).getContent()));
+            textPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent());
             Linkify.addLinks(textPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -182,7 +182,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
 
-            mediaPostViewHolder.postDataTextView.setText(AppUtils.fromHtml(postDataList.get(position).getContent()));
+            mediaPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent());
             Linkify.addLinks(mediaPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -191,7 +191,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             mediaPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + " " + localizedHelpful);
             mediaPostViewHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             mediaPostViewHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
-//            mediaPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent());
+//            mediaPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />"));
             mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
             if (postDataList.get(position).getIsAnnon() == 1) {
                 mediaPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
@@ -208,8 +208,8 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             initializeViews((MediaPostViewHolder) holder, position);
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
-//            textPollPostViewHolder.pollQuestionTextView.setText(postDataList.get(position).getContent());
-            textPollPostViewHolder.pollQuestionTextView.setText(AppUtils.fromHtml(postDataList.get(position).getContent()));
+//            textPollPostViewHolder.pollQuestionTextView.setText(postDataList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />"));
+            textPollPostViewHolder.pollQuestionTextView.setText(postDataList.get(position).getContent());
             Linkify.addLinks(textPollPostViewHolder.pollQuestionTextView, Linkify.WEB_URLS);
             textPollPostViewHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
             textPollPostViewHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -263,7 +263,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
         } else {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
 
-            imageHolder.pollQuestionTextView.setText(AppUtils.fromHtml(postDataList.get(position).getContent()));
+            imageHolder.pollQuestionTextView.setText(postDataList.get(position).getContent());
             Linkify.addLinks(imageHolder.pollQuestionTextView, Linkify.WEB_URLS);
             imageHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
             imageHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
@@ -285,7 +285,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             imageHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + " " + localizedHelpful);
             imageHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             imageHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
-//            imageHolder.pollQuestionTextView.setText(postDataList.get(position).getContent());
+//            imageHolder.pollQuestionTextView.setText(postDataList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />"));
             Map<String, String> imageMap = (Map<String, String>) postDataList.get(position).getPollOptions();
             imageHolder.lastOptionsContainer.setVisibility(View.GONE);
             imageHolder.option3Container.setVisibility(View.GONE);

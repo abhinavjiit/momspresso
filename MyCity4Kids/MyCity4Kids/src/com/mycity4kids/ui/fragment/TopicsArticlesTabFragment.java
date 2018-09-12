@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -30,17 +31,22 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.GroupDetailsActivity;
+import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LeafNodeTopicArticlesActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.widget.FeedNativeAd;
 
 import org.apmem.tools.layouts.FlowLayout;
@@ -54,8 +60,10 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
 
+    private int groupId;
+    public String gpsubHeading, gpHeading, gpImageUrl;
     private int nextPageNumber = 1;
     private int limit = 15;
     private boolean isReuqestRunning = false;
@@ -141,23 +149,22 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             }
         });
 
+        if (getArguments() != null) {
+            currentSubTopic = getArguments().getParcelable("currentSubTopic");
+            selectedTopic = currentSubTopic;
+        }
+
         mDatalist = new ArrayList<>();
         feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, selectedTopic.getId() + "~" + selectedTopic.getDisplay_name());
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(mDatalist);
         recyclerView.setAdapter(recyclerAdapter);
 
-        if (getArguments() != null) {
-            currentSubTopic = getArguments().getParcelable("currentSubTopic");
-            selectedTopic = currentSubTopic;
-        }
-
         DisplayMetrics displayMetrics = new DisplayMetrics();
-
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         int lineCount = 0;
@@ -221,20 +228,9 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             allSubsubLL.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    for (int i = 0; i < flowLayout.getChildCount(); i++) {
-//                        flowLayout.getChildAt(i).setSelected(false);
-//                    }
-//                    allSubsubLL.setSelected(true);
                     selectedTopic = (Topics) allSubsubLL.getTag();
-//                    nextPageNumber = 1;
-//                    if (mDatalist != null) {
-//                        mDatalist.clear();
-//                        recyclerAdapter.notifyDataSetChanged();
-//                    }
-//                    Utils.pushFilterTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
-//                            selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), currentSubTopic.getId() + "~" + currentSubTopic.getDisplay_name());
-//                    hitFilteredTopicsArticleListingApi(sortType);
                     openFilteredTopicArticles();
+
                 }
             });
 
@@ -277,19 +273,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 subsubLL.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        for (int i = 0; i < flowLayout.getChildCount(); i++) {
-//                            flowLayout.getChildAt(i).setSelected(false);
-//                        }
-//                        if (mDatalist != null) {
-//                            mDatalist.clear();
-//                            recyclerAdapter.notifyDataSetChanged();
-//                        }
-//                        subsubLL.setSelected(true);
                         selectedTopic = (Topics) subsubLL.getTag();
-//                        nextPageNumber = 1;
-//                        Utils.pushFilterTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
-//                                selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), currentSubTopic.getId() + "~" + currentSubTopic.getDisplay_name());
-//                        hitFilteredTopicsArticleListingApi(sortType);
                         openFilteredTopicArticles();
                     }
                 });
@@ -313,8 +297,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
 
             }
         }
-
-        hitFilteredTopicsArticleListingApi(sortType);
+        getGroupIdForCurrentCategory();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -349,11 +332,29 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         return view;
     }
 
+
     private void openFilteredTopicArticles() {
         Intent intent = new Intent(getActivity(), LeafNodeTopicArticlesActivity.class);
         intent.putExtra("leafTopicParent", currentSubTopic);
         intent.putExtra("leafTopic", selectedTopic);
         startActivity(intent);
+    }
+
+
+    private void getGroupIdForCurrentCategory() {
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(selectedTopic.getId(), this);
+        groupIdCategoryMap.getGroupIdForCurrentCategory();
+    }
+
+    @Override
+    public void onGroupMappingResult(int groupId, String gpHeading, String gpsubHeading, String gpImageUrl) {
+        this.groupId = groupId;
+        this.gpHeading = gpHeading;
+        this.gpsubHeading = gpsubHeading;
+        this.gpImageUrl = gpImageUrl;
+        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpsubHeading, gpImageUrl);
+        recyclerAdapter.notifyDataSetChanged();
+        hitFilteredTopicsArticleListingApi(sortType);
     }
 
     @Override
@@ -481,7 +482,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 0;
                 nextPageNumber = 1;
-                hitFilteredTopicsArticleListingApi(0);
+                getGroupIdForCurrentCategory();
+//                hitFilteredTopicsArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
                 fabMenu.collapse();
@@ -489,7 +491,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 1;
                 nextPageNumber = 1;
-                hitFilteredTopicsArticleListingApi(1);
+                getGroupIdForCurrentCategory();
+//                hitFilteredTopicsArticleListingApi(1);
                 break;
         }
     }
@@ -506,16 +509,97 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-        Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-        intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-        intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
-        intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
-        intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
-        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
-        intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
-        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-        intent.putParcelableArrayListExtra("pagerListData", mDatalist);
-        intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
-        startActivity(intent);
+        switch (view.getId()) {
+//            case R.id.groupHeaderView:
+//                if (groupId == 0) {
+//                    Intent groupIntent = new Intent(getActivity(), DashboardActivity.class);
+//                    groupIntent.putExtra("TabType", "group");
+//                    startActivity(groupIntent);
+//                    if (isAdded())
+//                        getActivity().finish();
+//                } else {
+//                    GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
+//                    groupMembershipStatus.checkMembershipStatus(groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+//                }
+//                break;
+            default:
+                if ("1".equals(mDatalist.get(position).getContentType())) {
+                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
+                    intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
+                    intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
+
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(mDatalist, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, mDatalist, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
+                    intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
+                    intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
+
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(mDatalist, AppConstants.CONTENT_TYPE_ARTICLE);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, mDatalist, AppConstants.CONTENT_TYPE_ARTICLE));
+                    startActivity(intent);
+                }
+                break;
+        }
+
+    }
+
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
+        String userType = null;
+        if (isAdded()) {
+            if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+
+            } else {
+                if (body.getData().getResult().get(0).getIsAdmin() == 1) {
+                    userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
+                } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
+                    userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+                }
+            }
+
+            if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
+                Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                startActivity(intent);
+            } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
+                Toast.makeText(getActivity(), getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
+            } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
+                Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                startActivity(intent);
+            } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
+                Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra("pendingMembershipFlag", true);
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
+                intent.putExtra("groupId", groupId);
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                startActivity(intent);
+            }
+        }
+    }
+
+    @Override
+    public void onMembershipStatusFetchFail() {
+
     }
 }

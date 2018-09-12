@@ -16,6 +16,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.newmodels.SelectTopic;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.activity.SubscribeTopicsActivity;
 import com.mycity4kids.widget.MyBounceInterpolator;
 
 import org.apmem.tools.layouts.FlowLayout;
@@ -115,11 +116,15 @@ public class SubscribeTopicsTabAdapter extends BaseAdapter {
                         ((Topics) tv.getTag()).setIsSelected(true);
                         tv.setSelected(true);
                         Utils.pushFollowTopicEvent(mContext, "FollowTopicScreen", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), ((Topics) tv.getTag()).getId() + "~" + ((Topics) tv.getTag()).getDisplay_name());
+                        if (mContext != null)
+                            ((SubscribeTopicsActivity) mContext).topicSelectionChanged();
                     } else {
                         selectedTopicsMap.remove(((Topics) tv.getTag()).getId());
                         ((Topics) tv.getTag()).setIsSelected(false);
                         tv.setSelected(false);
                         Utils.pushUnfollowTopicEvent(mContext, "FollowTopicScreen", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), ((Topics) tv.getTag()).getId() + "~" + ((Topics) tv.getTag()).getDisplay_name());
+                        if (mContext != null)
+                            ((SubscribeTopicsActivity) mContext).topicSelectionChanged();
                     }
                 }
             });

@@ -124,7 +124,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
 
         feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, sortType);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);

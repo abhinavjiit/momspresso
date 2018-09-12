@@ -48,7 +48,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 /**
- * Created by hemant on 17/7/17.
+ * Created by' hemant on 17/7/17.
  */
 public class SubscribeTopicsActivity extends BaseActivity implements View.OnClickListener {
 
@@ -288,6 +288,10 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
             filteredTopicList.add(selectTopicNew);
             searchTopicsSplashAdapter = new SubscribeTopicsTabAdapter(this, filteredTopicList, BaseApplication.getSelectedTopicsMap(), 0);
             popularTopicsListView.setAdapter(searchTopicsSplashAdapter);
+            if (BaseApplication.getSelectedTopicsMap() == null || BaseApplication.getSelectedTopicsMap().isEmpty()) {
+                saveTextView.setEnabled(false);
+            }
+//            processTrendingResponse();
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -484,6 +488,14 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
             mixpanel.track("CancelTopicSelection", jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void topicSelectionChanged() {
+        if (BaseApplication.getSelectedTopicsMap() == null || BaseApplication.getSelectedTopicsMap().isEmpty()) {
+            saveTextView.setEnabled(false);
+        } else {
+            saveTextView.setEnabled(true);
         }
     }
 }

@@ -19,7 +19,7 @@ public class AppConstants {
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
 
     public static final String GROUPS_LIVE_URL = BuildConfig.GROUPS_LIVE_URL;
-//    public static final String GROUPS_LIVE_URL = "http://35.200.233.99/";
+
     //Enable For Testing
     //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());
 
@@ -50,6 +50,8 @@ public class AppConstants {
     public static final String NEW_PARENTING_BLOG_ARTICLE_LISTING_URL = STAGING_CLIENT_SERVER_URL + "apiparentingstop/";
     public static final String SHARE_BLOG_ARTICLE_URL = STAGING_CLIENT_SERVER_URL + "apiparentingstop/share_blog";
 
+    public static final String GROUPS_TEST_STAGING_URL = "http://35.200.233.99:3030/";
+    public static final String GROUPS_TEST_LIVE_URL = "https://groups.momspresso.com/";
 
     public static final String MISSING_PLACE_URL = STAGING_CLIENT_SERVER_URL + "apilistings/";
 

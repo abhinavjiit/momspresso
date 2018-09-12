@@ -37,7 +37,9 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />
+        android:layout_below="@+id/toolbar"
+        android:clipToPadding="false"
+        android:paddingBottom="60dp" />
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/openAddCommentDialog"

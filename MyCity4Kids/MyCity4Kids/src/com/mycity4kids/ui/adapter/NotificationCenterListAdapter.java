@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -48,6 +49,8 @@ import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -59,6 +62,7 @@ import retrofit2.Retrofit;
  */
 public class NotificationCenterListAdapter extends BaseAdapter implements GroupMembershipStatus.IMembershipStatus {
 
+    private MixpanelAPI mixpanel;
     private Context mContext;
     private LayoutInflater mInflator;
     private ArrayList<NotificationCenterResult> notificationList;
@@ -67,6 +71,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.notificationList = notificationList;
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
     }
 
     @Override
@@ -130,6 +135,16 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Intent intent1 = new Intent(mContext, LoadWebViewActivity.class);
                     intent1.putExtra(Constants.WEB_VIEW_URL, notificationList.get(position).getUrl());
                     mContext.startActivity(intent1);
+
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "0");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "1".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_ARTICLE_DETAILS.equals(nType)) {
@@ -151,6 +166,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
                     intent.putExtra(Constants.AUTHOR, notificationList.get(position).getUserId() + "~");
                     mContext.startActivity(intent);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "1");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "4".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_VIDEO_DETAILS.equals(nType)) {
@@ -167,6 +191,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
                     intent.putExtra(Constants.AUTHOR, notificationList.get(position).getAuthorId() + "~");
                     mContext.startActivity(intent);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "4");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "3".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_UPCOMING_EVENTS.equals(nType)) {
@@ -185,6 +218,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
                     fragment.setArguments(bundle);
                     ((DashboardActivity) mContext).addFragment(fragment, bundle, true);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "3");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "2".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_PROFILE.equals(nType)) {
@@ -208,14 +250,30 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                         intent1.putExtra(Constants.FROM_SCREEN, "Notification Center List");
                         mContext.startActivity(intent1);
                     }
-
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "2");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "-1".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_APP_SETTINGS.equals(nType)) {
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "-1");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "5".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_EDITOR.equals(nType)) {
@@ -228,6 +286,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "write_blog");
                     launchEditor();
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "5");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "6".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_SUGGESTED_TOPICS.equals(nType)) {
@@ -243,6 +310,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Bundle mBundle0 = new Bundle();
                     fragment0.setArguments(mBundle0);
                     ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "6");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "7".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_TODAYS_BEST.equals(nType)) {
@@ -257,6 +333,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Intent intent1 = new Intent(mContext, ArticleListingActivity.class);
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
                     mContext.startActivity(intent1);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "7");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "8".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_SHORT_STORY_LIST.equals(nType)) {
@@ -273,6 +358,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                     fragment1.setArguments(mBundle1);
                     ((DashboardActivity) mContext).addFragment(fragment1, mBundle1, true);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "8");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "9".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_SHORT_STORY_DETAILS.equals(nType)) {
@@ -294,6 +388,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
                     intent.putExtra(Constants.AUTHOR, notificationList.get(position).getUserId() + "~");
                     mContext.startActivity(intent);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "9");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "10".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_GROUP_DETAILS.equals(nType)) {
@@ -309,6 +412,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 //                    Intent intent = new Intent(mContext, GroupDetailsActivity.class);
 //                    mContext.startActivity(intent);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "10");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "11".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
@@ -322,6 +434,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "11");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "12".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
@@ -337,6 +458,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra("postId", notificationList.get(position).getPostId());
                     intent.putExtra("groupId", notificationList.get(position).getGroupId());
                     mContext.startActivity(intent);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "12");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "13".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
@@ -352,6 +482,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra("postId", notificationList.get(position).getPostId());
                     intent.putExtra("groupId", notificationList.get(position).getGroupId());
                     mContext.startActivity(intent);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "13");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "14".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
@@ -365,6 +504,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "14");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "15".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
@@ -378,6 +526,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "15");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "16".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
@@ -391,6 +548,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "16");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "17".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_POST_DETAILS.equals(nType)) {
@@ -404,6 +570,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "groupDetails");
                     GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(NotificationCenterListAdapter.this);
                     groupMembershipStatus.checkMembershipStatus(notificationList.get(position).getGroupId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "17");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "18".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_GROUP_LISTING.equals(nType)) {
@@ -419,6 +594,15 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Bundle mBundle0 = new Bundle();
                     fragment0.setArguments(mBundle0);
                     ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", "18");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }

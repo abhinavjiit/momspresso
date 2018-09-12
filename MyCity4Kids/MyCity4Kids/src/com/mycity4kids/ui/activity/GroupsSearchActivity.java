@@ -65,7 +65,7 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(this, "SearchScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "GroupSearchScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         setContentView(R.layout.groups_search_activity);
 

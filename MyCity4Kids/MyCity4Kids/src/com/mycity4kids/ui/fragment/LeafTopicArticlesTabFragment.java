@@ -29,12 +29,15 @@ import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.LeafNodeTopicArticlesActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
+import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
@@ -46,8 +49,11 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class LeafTopicArticlesTabFragment extends BaseFragment implements View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class LeafTopicArticlesTabFragment extends BaseFragment implements View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener
+        , GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
 
+    private int groupId;
+    public String gpsubHeading, gpHeading, gpImageUrl;
     private int nextPageNumber = 1;
     private int limit = 15;
     private boolean isReuqestRunning = false;
@@ -131,7 +137,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         mDatalist = new ArrayList<>();
         feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false,selectedTopic.getId() + "~" + selectedTopic.getDisplay_name());
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -142,7 +148,8 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
             currentSubTopic = getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;
         }
-        hitFilteredTopicsArticleListingApi(sortType);
+//        hitFilteredTopicsArticleListingApi(sortType);
+        getGroupIdForCurrentCategory();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -167,11 +174,20 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         return view;
     }
 
-    private void openFilteredTopicArticles() {
-        Intent intent = new Intent(getActivity(), LeafNodeTopicArticlesActivity.class);
-        intent.putExtra("leafTopicParent", currentSubTopic);
-        intent.putExtra("leafTopic", selectedTopic);
-        startActivity(intent);
+    private void getGroupIdForCurrentCategory() {
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(selectedTopic.getId(), this);
+        groupIdCategoryMap.getGroupIdForCurrentCategory();
+    }
+
+    @Override
+    public void onGroupMappingResult(int groupId, String gpHeading, String gpsubHeading, String gpImageUrl) {
+        this.groupId = groupId;
+        this.gpHeading = gpHeading;
+        this.gpsubHeading = gpsubHeading;
+        this.gpImageUrl = gpImageUrl;
+        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpsubHeading, gpImageUrl);
+        recyclerAdapter.notifyDataSetChanged();
+        hitFilteredTopicsArticleListingApi(sortType);
     }
 
     @Override
@@ -290,7 +306,8 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 0;
                 nextPageNumber = 1;
-                hitFilteredTopicsArticleListingApi(0);
+                getGroupIdForCurrentCategory();
+//                hitFilteredTopicsArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
                 fabMenu.collapse();
@@ -298,7 +315,8 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 1;
                 nextPageNumber = 1;
-                hitFilteredTopicsArticleListingApi(1);
+                getGroupIdForCurrentCategory();
+//                hitFilteredTopicsArticleListingApi(1);
                 break;
         }
     }
@@ -326,5 +344,15 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         intent.putParcelableArrayListExtra("pagerListData", mDatalist);
         intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
         startActivity(intent);
+    }
+
+    @Override
+    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
+
+    }
+
+    @Override
+    public void onMembershipStatusFetchFail() {
+
     }
 }

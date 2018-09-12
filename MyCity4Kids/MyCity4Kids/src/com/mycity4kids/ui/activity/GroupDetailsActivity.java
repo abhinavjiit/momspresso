@@ -25,7 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.share.Share;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -62,7 +61,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupBlogsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
-import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment;
 import com.mycity4kids.utils.AppUtils;

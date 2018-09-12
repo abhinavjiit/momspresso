@@ -1,18 +1,15 @@
 package com.mycity4kids.ui.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -29,6 +26,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.TrendingTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.GroupIdCategoryMap;
 
 import java.util.ArrayList;
 
@@ -39,7 +37,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 24/5/17.
  */
-public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickListener {
+public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickListener, GroupIdCategoryMap.GroupCategoryInterface {
 
     private View view;
     private TabLayout tabLayout;
@@ -51,6 +49,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private int lowerLimit = 1;
     private int upperLimit = 3;
     private int articleCount = 10;
+    private String gpHeading, gpSubHeading, gpImageUrl;
+    private int groupId;
 
     @Nullable
     @Override
@@ -60,15 +60,29 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         trendingArraylist = new ArrayList<>();
-        hitTrendingDataAPI();
+        getGroupIdForCurrentCategory();
         return view;
+    }
+
+    private void getGroupIdForCurrentCategory() {
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap("", this);
+        groupIdCategoryMap.getGroupIdForCurrentCategory();
+    }
+
+    @Override
+    public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
+        this.groupId = groupId;
+        this.gpHeading = gpHeading;
+        this.gpSubHeading = gpSubHeading;
+        this.gpImageUrl = gpImageUrl;
+        hitTrendingDataAPI();
     }
 
     public void hitTrendingDataAPI() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI trendinAPI = retrofit.create(TopicsCategoryAPI.class);
 
-        Call<TrendingListingResponse> trendingCall = trendinAPI.getTrendingTopicAndArticles("" + lowerLimit, "" + upperLimit, "" + articleCount, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<TrendingListingResponse> trendingCall = trendinAPI.getTrendingTopicAndArticles("" + lowerLimit, "" + upperLimit, "" + articleCount, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         trendingCall.enqueue(trendingResponseCallback);
     }
 
@@ -76,7 +90,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         @Override
         public void onResponse(Call<TrendingListingResponse> call, retrofit2.Response<TrendingListingResponse> response) {
             if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                if (isAdded())
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 return;
             }
 
@@ -85,7 +100,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processTrendingResponse(responseData);
                 } else {
-                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                    if (isAdded())
+                        ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -140,6 +156,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         viewPager = (ViewPager) view.findViewById(R.id.pager);
         adapter = new TrendingTopicsPagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount(), trendingArraylist);
+        adapter.setGroupInfo(gpHeading, gpSubHeading, gpImageUrl, groupId);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -233,4 +250,5 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         if (adapter != null)
             adapter.hideFollowTopicHeader();
     }
+
 }

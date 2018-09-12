@@ -37,7 +37,7 @@ public class ArticleListingResult implements Parcelable {
     private String isMomspresso;
     private int listingWatchLaterStatus = 0;
     private String lang;
-    private String contentType;
+    private String contentType = "0";
     private boolean isLiked;
     private String url;
 

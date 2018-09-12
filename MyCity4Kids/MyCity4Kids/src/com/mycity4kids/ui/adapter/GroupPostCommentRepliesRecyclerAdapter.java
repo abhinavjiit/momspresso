@@ -21,6 +21,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.Picasso;
 
@@ -116,6 +117,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                 }
             }
 
+//            repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(repliesViewHolder.commentDataTextView, Linkify.WEB_URLS);
             repliesViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
