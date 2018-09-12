@@ -782,6 +782,9 @@ public class AppUtils {
     public static long getIdFromHash(String hash) {
         Hashids hashids = new Hashids(SALT);
         long[] id = hashids.decode(hash);
+        if (id == null || id.length == 0) {
+            return -1;
+        }
         return id[0];
     }
 }

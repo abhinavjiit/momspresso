@@ -710,7 +710,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         String[] groupArray = separated[separated.length - 1].split("-");
                         long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
-
+                        if (groupId == -1) {
+                            return;
+                        }
                         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
                         groupMembershipStatus.checkMembershipStatus((int) groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     }
@@ -1548,6 +1550,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof AddArticleVideoFragment) {
+                Utils.pushOpenScreenEvent(this, "CreateContentScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 menu.findItem(R.id.action_write).setChecked(true);
                 mToolbar.setVisibility(View.GONE);
                 toolbarUnderline.setVisibility(View.GONE);

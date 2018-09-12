@@ -519,5 +519,19 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/blue_bg" />
+        <!--<service-->
+            <!--android:name="com.google.android.gms.measurement.AppMeasurementService"-->
+            <!--android:enabled="false"-->
+            <!--android:exported="false"-->
+            <!--tools:replace="android:enabled" />-->
+
+        <!--<receiver-->
+            <!--android:name="com.google.android.gms.measurement.AppMeasurementReceiver"-->
+            <!--android:enabled="false"-->
+            <!--tools:replace="android:enabled">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.gms.measurement.UPLOAD" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
     </application>
 </manifest>

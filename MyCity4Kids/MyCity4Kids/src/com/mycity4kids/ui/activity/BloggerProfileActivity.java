@@ -80,7 +80,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blogger_profile_activity);
-
+        Utils.pushOpenScreenEvent(this, "PublicProfileScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
         authorNameTextView = (TextView) findViewById(R.id.authorNameTextView);

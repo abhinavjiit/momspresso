@@ -29,6 +29,7 @@ MyCity4Kids/WordPressEditor/WordPressEditor.iml
 /MyCity4Kids/WordPressEditor/build
 /MyCity4Kids/progressviewslib/build
 /MyCity4Kids/progressviewslib/progressviewslib.iml
+/MyCity4Kids/MyCity4Kids/src/com/mycity4kids/ui/activity/IdTokenLoginActivity.java
 /.idea
 .idea
 *.properties
