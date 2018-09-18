@@ -54,7 +54,7 @@
     <screenName name="com.mycity4kids.ui.activity.ActivityEditAppointment">Edit Appointment</screenName>
     <screenName name="com.mycity4kids.ui.activity.ForgotPasswordActivity">Forgot Password</screenName>
     <screenName name="com.mycity4kids.ui.activity.BusinessListActivityKidsResources">Resources List</screenName>
-    <screenName name="com.mycity4kids.ui.activity.ProfileActivity">Edit Profile</screenName>
+    <screenName name="com.mycity4kids.ui.activity.PrivateProfileActivity">Edit Profile</screenName>
     <screenName name="com.mycity4kids.ui.activity.WriteReviewActivity">Write Review</screenName>
     <screenName name="com.mycity4kids.ui.activity.BusinessDetailsActivity">Resource/Event Details Screen</screenName>
     <screenName name="com.mycity4kids.ui.activity.BookOrPayWebActivity">Booking Payment Webpage</screenName>

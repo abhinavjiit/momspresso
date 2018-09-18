@@ -789,4 +789,6 @@
     <string name="report.spam">স্প্যাম</string>
     <string name="report.not_relevant">অন্য কিছু</string>
     <string name="reply">উত্তর</string>
+    <string name="profile_completion">Profile Completion</string>
+    <string name="improve_reachability">Improve the reachability by updating the bio.</string>
 </resources>

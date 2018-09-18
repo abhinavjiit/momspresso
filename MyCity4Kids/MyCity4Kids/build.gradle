@@ -82,7 +82,9 @@ dependencies {
     compile 'com.mixpanel.android:mixpanel-android:5.+'
     compile 'com.facebook.fresco:fresco:1.10.0'
     compile 'com.github.stfalcon:frescoimageviewer:0.5.0'
-
+    compile 'com.github.florent37:diagonallayout:1.0.9'
+    compile 'com.github.jrvansuita:GaussianBlur:+'
+    compile 'com.github.irshulx:laser-native-editor:2.3.1'
 }
 
 //dependencies {
@@ -90,7 +92,7 @@ dependencies {
 //}
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion "25.0.3"
     useLibrary 'org.apache.http.legacy'
     sourceSets {
@@ -122,6 +124,8 @@ android {
         dexOptions {
             javaMaxHeapSize "4g"
         }
+        renderscriptTargetApi 19
+        renderscriptSupportModeEnabled true
     }
     lintOptions {
         checkReleaseBuilds false

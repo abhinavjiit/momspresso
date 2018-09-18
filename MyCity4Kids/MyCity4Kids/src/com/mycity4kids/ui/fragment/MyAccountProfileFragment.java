@@ -79,11 +79,10 @@ import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity;
 import com.mycity4kids.ui.activity.IdTokenLoginActivity;
-import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
+import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.ui.activity.UserActivitiesActivity;
 import com.mycity4kids.ui.activity.UserDraftsContentActivity;
-import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.activity.UserPublishedContentActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GenericFileProvider;
@@ -250,7 +249,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                         rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in) + " ENGLISH");
                     } else {
                         rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
-                                + " " + AppUtils.getLangModelForLanguage(getActivity(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+                                + " " + AppUtils.getLangModelForLanguage(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
                     }
                 } else {
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
@@ -457,8 +456,11 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.authorNameTextView:
-                break;
+            case R.id.authorNameTextView: {
+                Intent intent = new Intent(getActivity(), PrivateProfileActivity.class);
+                startActivity(intent);
+            }
+            break;
             case R.id.authorTypeTextView:
                 break;
             case R.id.authorBioTextView:
@@ -794,7 +796,6 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 Log.d("MC4kException", Log.getStackTraceString(t));
             }
         });
-
     }
 
     @Override

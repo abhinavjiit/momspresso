@@ -74,6 +74,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
     private TextView todaysBestTextView, editorsPickTextView, shortStoryTextView, forYouTextView, videosTextView, recentTextView;
     private TextView toolbarTitle;
     private TextView continueTextView;
+    private String source;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
         continueTextView = (TextView) findViewById(R.id.continueTextView);
 
         fragType = getIntent().getStringExtra("fragType");
+        source = getIntent().getStringExtra("source");
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -409,7 +411,11 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
 //                getSelectedTopicsList();
                 Intent intent = new Intent(ExploreArticleListingTypeActivity.this, SubscribeTopicsActivity.class);
                 intent.putStringArrayListExtra("selectedTopicList", getSelectedTopicsList());
-                intent.putExtra("source", "home");
+                if (source == null) {
+                    intent.putExtra("source", "home");
+                } else {
+                    intent.putExtra("source", source);
+                }
                 startActivity(intent);
             }
             break;

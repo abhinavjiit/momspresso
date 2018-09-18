@@ -466,6 +466,9 @@
         <activity
             android:name=".ui.activity.LeafNodeTopicArticlesActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.PrivateProfileActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

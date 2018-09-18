@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">Momspresso</string>
+
+    <string name="home">Home</string>
+
     <string name="unknown_person">Unknown</string>
     <string name="resend_email">Resend Email</string>
 
@@ -798,5 +801,12 @@
 
     <string name="groups.join_support_gp">JOIN SUPPORT GROUP</string>
     <string name="groups.not_alone">#YOUARENOTALONE</string>
+
+    <string name="read_more">Read More</string>
+    <string name="read_less">Read Less</string>
+    <string name="profile_completion">Profile Completion</string>
+    <string name="update">UPDATE</string>
+    <string name="improve_reachability">Improve the reachability by updating the bio.</string>
+    <string name="profile">Profile</string>
 
 </resources>

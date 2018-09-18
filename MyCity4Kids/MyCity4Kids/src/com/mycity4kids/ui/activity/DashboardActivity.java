@@ -13,11 +13,14 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -111,6 +114,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private Animation slideDownAnim;
 
+    private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private TextView toolbarTitleTextView;
     private ImageView searchAllImageView;
@@ -122,7 +126,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     //    private TextView readAllNotificationTextView;
     private Badge badge;
     private View toolbarUnderline;
-    private ImageView menuImageView;
+    //    private ImageView menuImageView;
     private TextView langTextView;
     private FrameLayout transparentLayerToolbar;
     private FrameLayout transparentLayerNavigation;
@@ -131,6 +135,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private MixpanelAPI mMixpanel;
     private RelativeLayout bookmarkInfoView;
     private TextView viewBookmarkedArticleTextView;
+    private ImageView profileImageView;
 
 
     @Override
@@ -169,7 +174,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         downArrowImageView = (ImageView) findViewById(R.id.downArrowImageView);
-        menuImageView = (ImageView) findViewById(R.id.menuImageView);
+//        menuImageView = (ImageView) findViewById(R.id.menuImageView);
         toolbarUnderline = findViewById(R.id.toolbarUnderline);
         bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.navigation);
         toolbarRelativeLayout = (RelativeLayout) mToolbar.findViewById(R.id.toolbarRelativeLayout);
@@ -186,6 +191,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         transparentLayerNavigation = (FrameLayout) findViewById(R.id.transparentLayerNavigation);
         bookmarkInfoView = (RelativeLayout) findViewById(R.id.bookmarkInfoView);
         viewBookmarkedArticleTextView = (TextView) findViewById(R.id.viewBookmarkedArticleTextView);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        profileImageView = (ImageView) findViewById(R.id.profileImageView);
 
         bottomNavigationView.enableAnimation(false);
         bottomNavigationView.enableShiftingMode(false);
@@ -195,7 +202,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         Utils.pushOpenScreenEvent(this, "DashboardScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         downArrowImageView.setOnClickListener(this);
-        menuImageView.setOnClickListener(this);
+//        menuImageView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
 //        readAllNotificationTextView.setOnClickListener(this);
         langTextView.setOnClickListener(this);
@@ -203,6 +210,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         firstCoachmark.setOnClickListener(this);
         secondCoachmark.setOnClickListener(this);
         viewBookmarkedArticleTextView.setOnClickListener(this);
+        profileImageView.setOnClickListener(this);
 
         slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
         slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -227,6 +235,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                });
+
         if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(this))) {
             langTextView.setText(getString(R.string.language_label_english));
             selectedlangGuideTextView.setText(getString(R.string.language_label_english));
@@ -250,6 +275,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             selectedlangGuideTextView.setText(getString(R.string.language_label_english));
         }
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.hamburger_menu);
 
         bottomNavigationView.setItemIconTintList(null);
         bottomNavigationView.setIconSize(30, 30);
@@ -945,8 +972,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                 break;
             case android.R.id.home:
-                onBackPressed();
-                break;
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
             case R.id.kidsresource_bookmark:
                 if (topFragment instanceof FragmentHomeCategory) {
                     Log.d("KIDS RESOURCE ", "bookmark kids resource");
@@ -990,6 +1017,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
+            case R.id.profileImageView:
+                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+                Bundle mBundle0 = new Bundle();
+                fragment0.setArguments(mBundle0);
+                addFragment(fragment0, mBundle0, true);
+                break;
             case R.id.langTextView: {
                 ChangePreferredLanguageDialogFragment changePreferredLanguageDialogFragment = new ChangePreferredLanguageDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
@@ -1005,7 +1038,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent4);
                 break;
             case R.id.downArrowImageView:
-            case R.id.menuImageView:
+//            case R.id.menuImageView:
             case R.id.toolbarTitle:
                 if (topFragment instanceof TopicsListingFragment) {
                     Utils.pushTopMenuClickEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
@@ -1502,17 +1535,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_become_blogger));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            setSupportActionBar(mToolbar);
+            //getSupportActionBar().setDisplayShowHomeEnabled(true);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else if (null != topFragment && topFragment instanceof UploadVideoInfoFragment) {
             toolbarUnderline.setVisibility(View.VISIBLE);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_first_video_upload));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            setSupportActionBar(mToolbar);
+            //getSupportActionBar().setDisplayShowHomeEnabled(true);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
             toolbarUnderline.setVisibility(View.VISIBLE);
             if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
@@ -1526,18 +1559,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     showToolbarAndNavigationLayer();
                     ((ExploreArticleListingTypeFragment) topFragment).showGuideView();
                 }
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             } else if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
                 Utils.pushOpenScreenEvent(this, "PrivateProfileScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_profile_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.myprofile_toolbar_title));
                 menu.findItem(R.id.action_profile).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             } else if (null != topFragment && topFragment instanceof NotificationFragment) {
                 Utils.pushOpenScreenEvent(this, "NotificationsScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
@@ -1545,18 +1578,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 searchAllImageView.setVisibility(View.GONE);
                 menu.findItem(R.id.action_notification).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             } else if (null != topFragment && topFragment instanceof SuggestedTopicsFragment) {
                 Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_suggested_topic_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_write).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "groups")) {
@@ -1570,16 +1603,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                menuImageView.setVisibility(View.VISIBLE);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                menuImageView.setVisibility(View.VISIBLE);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             } else if (null != topFragment && topFragment instanceof AddArticleVideoFragment) {
                 Utils.pushOpenScreenEvent(this, "CreateContentScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 menu.findItem(R.id.action_write).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                menuImageView.setVisibility(View.VISIBLE);
-                setSupportActionBar(mToolbar);
+//                menuImageView.setVisibility(View.VISIBLE);
+//                setSupportActionBar(mToolbar);
                 toolbarUnderline.setVisibility(View.GONE);
             } else if (null != topFragment && topFragment instanceof TopicsListingFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
@@ -1591,19 +1624,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                menuImageView.setVisibility(View.VISIBLE);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                menuImageView.setVisibility(View.VISIBLE);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             } else if (null != topFragment && topFragment instanceof ExploreFragment) {
                 Utils.pushOpenScreenEvent(this, "ExploreScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_explore_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             } else if (null != topFragment && topFragment instanceof TopicsShortStoriesContainerFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicsShortStoriesContainerFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setOnClickListener(this);
@@ -1611,19 +1644,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                menuImageView.setVisibility(View.VISIBLE);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                menuImageView.setVisibility(View.VISIBLE);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             } else if (null != topFragment && topFragment instanceof GroupsFragment) {
                 Utils.pushOpenScreenEvent(this, "GroupsFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.groups_support_groups));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.groups_light_black_color));
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             } else if (null != topFragment && topFragment instanceof FragmentBusinesslistEvents) {
                 Utils.pushOpenScreenEvent(this, "EventsListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_upcoming_events_title));
@@ -1631,9 +1664,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 searchAllImageView.setVisibility(View.GONE);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             } else if (null != topFragment && topFragment instanceof FragmentHomeCategory) {
                 Utils.pushOpenScreenEvent(this, "ResourceListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_kids_res_title));
@@ -1641,9 +1674,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 searchAllImageView.setVisibility(View.GONE);
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setDisplayShowHomeEnabled(false);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//                setSupportActionBar(mToolbar);
+                //getSupportActionBar().setDisplayShowHomeEnabled(true);
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }
 

@@ -51,6 +51,23 @@
         <attr name="pinRadius" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="ReadMoreTextView">
+        <attr name="trimExpandedText" format="string" />
+        <attr name="trimCollapsedText" format="string" />
+        <attr name="trimLength" format="integer" />
+        <attr name="showTrimExpandedText" format="boolean" />
+        <attr name="colorClickableText" format="color" />
+        <attr name="trimLines" format="integer" />
+        <attr name="trimMode">
+            <enum name="trimModeLine" value="0" />
+            <enum name="trimModeLength" value="1" />
+        </attr>
+    </declare-styleable>
 
+    <declare-styleable name="RoundedHorizontalProgress">
+        <attr name="backgroundColor" format="color" />
+        <attr name="progressColor" format="color" />
+        <attr name="isRounded" format="boolean" />
+    </declare-styleable>
     <!--<declare-styleable name="KidsInfoComponent">--><!--<attr name="searchArticleTitle" format="string" localization="suggested" />--><!--<attr name="searchArticleDesc" format="string" localization="suggested" />--><!--<attr name="searchArticleImage" format="integer" />--><!--</declare-styleable>-->
 </resources>

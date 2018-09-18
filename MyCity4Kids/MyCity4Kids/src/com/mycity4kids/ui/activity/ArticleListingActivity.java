@@ -482,8 +482,10 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addTopicsLayout:
-                Intent subscribeTopicIntent = new Intent(ArticleListingActivity.this, SubscribeTopicsActivity.class);
-                startActivityForResult(subscribeTopicIntent, 1111);
+                Intent intent1 = new Intent(this, ExploreArticleListingTypeActivity.class);
+                intent1.putExtra("fragType", "search");
+                intent1.putExtra("source", "foryou");
+                startActivity(intent1);
                 break;
         }
     }
