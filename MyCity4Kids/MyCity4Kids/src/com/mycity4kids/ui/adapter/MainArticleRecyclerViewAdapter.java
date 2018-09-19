@@ -125,7 +125,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     @Override
     public int getItemCount() {
-        return articleDataModelsNew.size();
+        return articleDataModelsNew == null ? 0 : articleDataModelsNew.size();
     }
 
     @Override

@@ -645,7 +645,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)) {
                     Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
-                    startActivity(intent);
+                    startActivity(ssIntent);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
 //                    final String draftId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     Intent ssIntent = new Intent(this, UserPublishedAndDraftsActivity.class);

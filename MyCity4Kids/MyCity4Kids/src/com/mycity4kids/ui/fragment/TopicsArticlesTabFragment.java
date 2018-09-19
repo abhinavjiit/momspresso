@@ -372,7 +372,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     }
 
     private void getGroupIdForCurrentCategory() {
-        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(selectedTopic.getId(), this);
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(selectedTopic.getId(), this, "listing");
         groupIdCategoryMap.getGroupIdForCurrentCategory();
     }
 
@@ -436,8 +436,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     }
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ToastUtils.showToast(getActivity(), getString(R.string.error_network));
+        if (!ConnectivityUtils.isNetworkEnabled(BaseApplication.getAppContext())) {
+            ToastUtils.showToast(BaseApplication.getAppContext(), getString(R.string.error_network));
             return;
         }
 

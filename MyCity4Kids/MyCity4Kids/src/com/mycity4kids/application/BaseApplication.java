@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.widget.Toast;
@@ -266,7 +267,9 @@ public class BaseApplication extends Application {
             e.printStackTrace();
         }
         appVersion = pInfo.versionName;
-        Log.i(LOG_TAG, "onCreate()");
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
     }
 
     /**

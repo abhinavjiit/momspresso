@@ -646,7 +646,7 @@
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
     <string name="language_label.tamil">தமிழ்</string>
-    <string name="language_label.telegu">తెలుగ</string>
+    <string name="language_label.telegu">తెలుగు</string>
 
     <string name="choose_pref_lang">अपनी पसंदीदा भाषा चुनें</string>
     <string name="choose_pref_lang.cancel">कैंसिल</string>

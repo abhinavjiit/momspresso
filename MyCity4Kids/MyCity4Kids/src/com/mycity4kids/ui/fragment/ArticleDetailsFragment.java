@@ -2167,10 +2167,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
 
         if (categoriesList.size() == 1) {
-            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList.get(0), this);
+            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList.get(0), this, "details");
             groupIdCategoryMap.getGroupIdForCurrentCategory();
         } else {
-            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList, this);
+            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList, this, "details");
             groupIdCategoryMap.getGroupIdForMultipleCategories();
         }
 
