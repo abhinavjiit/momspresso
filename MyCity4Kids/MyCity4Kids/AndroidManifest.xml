@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="105"
-    android:versionName="9.2.0">
+    android:versionCode="106"
+    android:versionName="9.2.1">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -520,18 +520,18 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/blue_bg" />
         <!--<service-->
-            <!--android:name="com.google.android.gms.measurement.AppMeasurementService"-->
-            <!--android:enabled="false"-->
-            <!--android:exported="false"-->
-            <!--tools:replace="android:enabled" />-->
+        <!--android:name="com.google.android.gms.measurement.AppMeasurementService"-->
+        <!--android:enabled="false"-->
+        <!--android:exported="false"-->
+        <!--tools:replace="android:enabled" />-->
 
         <!--<receiver-->
-            <!--android:name="com.google.android.gms.measurement.AppMeasurementReceiver"-->
-            <!--android:enabled="false"-->
-            <!--tools:replace="android:enabled">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.gms.measurement.UPLOAD" />-->
-            <!--</intent-filter>-->
+        <!--android:name="com.google.android.gms.measurement.AppMeasurementReceiver"-->
+        <!--android:enabled="false"-->
+        <!--tools:replace="android:enabled">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="com.google.android.gms.measurement.UPLOAD" />-->
+        <!--</intent-filter>-->
         <!--</receiver>-->
     </application>
 </manifest>
