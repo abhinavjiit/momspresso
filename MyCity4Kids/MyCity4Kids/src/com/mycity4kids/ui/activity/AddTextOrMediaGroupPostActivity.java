@@ -379,6 +379,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                         File file2 = FileUtils.getFile(this, imageUriTemp);
                         sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
+                        Crashlytics.logException(e);
                         e.printStackTrace();
                     }
                 }

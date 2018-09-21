@@ -10,6 +10,7 @@
     <!--but now we are using client APP ID -->
     <string name="facebook_app_id">206155642763202</string>
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">089d77e1898bf3ef59048cc2fe58408b</string>
     <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
 
     <string name="write_review_prompt">What would you like to review?</string>
