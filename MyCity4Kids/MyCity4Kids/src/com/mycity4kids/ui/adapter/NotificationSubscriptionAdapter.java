@@ -14,7 +14,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.NotificationSettingsModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 

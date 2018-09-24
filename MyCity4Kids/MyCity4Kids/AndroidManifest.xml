@@ -445,6 +445,9 @@
         <activity
             android:name=".ui.activity.GroupsEditPostActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.NewEditorPostActivity"
+            android:theme="@style/EditorTheme" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

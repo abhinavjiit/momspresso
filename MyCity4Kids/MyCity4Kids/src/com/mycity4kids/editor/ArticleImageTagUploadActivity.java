@@ -300,9 +300,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.publish:
-
-                break;
         }
         return true;
     }

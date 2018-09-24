@@ -26,6 +26,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.NewEditorPostActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -138,7 +139,7 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
             }
             break;
             case R.id.writeArticleLL: {
-                Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+                Intent intent = new Intent(getActivity(), NewEditorPostActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(EditorPostActivity.TITLE_PARAM, "");
                 bundle.putString(EditorPostActivity.CONTENT_PARAM, "");

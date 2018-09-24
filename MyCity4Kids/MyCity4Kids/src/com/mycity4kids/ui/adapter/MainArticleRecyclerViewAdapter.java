@@ -378,7 +378,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
             holder.watchLaterImageView.setVisibility(View.INVISIBLE);
 
-            if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+            if ("0".equals(articleDataModelsNew.get(position).getIs_bookmark())) {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
@@ -492,7 +492,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
             holder.watchLaterImageView.setVisibility(View.INVISIBLE);
 
-            if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+            if ("0".equals(articleDataModelsNew.get(position).getIs_bookmark())) {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
@@ -606,7 +606,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
             holder.watchLaterImageView.setVisibility(View.INVISIBLE);
 
-            if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+            if ("0".equals(articleDataModelsNew.get(position).getIs_bookmark())) {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
@@ -720,7 +720,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
             holder.watchLaterImageView.setVisibility(View.INVISIBLE);
 
-            if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+            if ("0".equals(articleDataModelsNew.get(position).getIs_bookmark())) {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
@@ -1109,7 +1109,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private void addRemoveBookmark(int position, RecyclerView.ViewHolder holder) {
-        if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+        if ("0".equals(articleDataModelsNew.get(position).getIs_bookmark())) {
             ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
             articleDetailRequest.setArticleId(articleDataModelsNew.get(position).getId());
             String jsonString = new Gson().toJson(articleDetailRequest);
@@ -1237,7 +1237,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     for (int i = 0; i < articleDataModelsNew.size(); i++) {
                         if (articleDataModelsNew.get(i).getId().equals(responseData.getData().getResult().getArticleId())) {
                             if ("bookmarkArticle".equals(type)) {
-                                articleDataModelsNew.get(i).setListingBookmarkStatus(1);
+                                articleDataModelsNew.get(i).setIs_bookmark("1");
                                 articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
@@ -1248,7 +1248,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 }
 
                             } else if ("unbookmarkArticle".equals(type)) {
-                                articleDataModelsNew.get(i).setListingBookmarkStatus(0);
+                                articleDataModelsNew.get(i).setIs_bookmark("0");
                                 articleDataModelsNew.get(i).setBookmarkId("");
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));

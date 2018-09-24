@@ -82,6 +82,7 @@ dependencies {
     compile 'com.mixpanel.android:mixpanel-android:5.+'
     compile 'com.facebook.fresco:fresco:1.10.0'
     compile 'com.github.stfalcon:frescoimageviewer:0.5.0'
+    compile 'com.github.irshulx:laser-native-editor:2.3.1'
 
 }
 

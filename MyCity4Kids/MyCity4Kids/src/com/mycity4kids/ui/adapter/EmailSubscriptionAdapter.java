@@ -10,11 +10,10 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.mycity4kids.R;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 

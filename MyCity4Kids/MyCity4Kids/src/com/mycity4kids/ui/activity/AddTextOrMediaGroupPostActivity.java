@@ -16,8 +16,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,18 +37,14 @@ import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.models.request.AddGroupPostRequest;
 import com.mycity4kids.models.response.AddGroupPostResponse;
 import com.mycity4kids.models.response.GroupResult;
-import com.mycity4kids.models.response.GroupsListingResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
-import com.mycity4kids.ui.fragment.ChooseAnonymousDialogFragment;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
-
-import org.wordpress.android.editor.EditorFragmentAbstract;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -375,7 +369,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                         imageBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
                         String path = MediaStore.Images.Media.insertImage(AddTextOrMediaGroupPostActivity.this.getContentResolver(), imageBitmap, "Title", null);
                         Uri imageUriTemp = Uri.parse(path);
-                        EditorFragmentAbstract.imageUploading = 0;
                         File file2 = FileUtils.getFile(this, imageUriTemp);
                         sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
@@ -416,7 +409,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                         fos.flush();
                         fos.close();
                         imageUri = Uri.fromFile(photoFile);
-                        EditorFragmentAbstract.imageUploading = 0;
                         File file2 = FileUtils.getFile(this, imageUri);
                         sendUploadProfileImageRequest(file2);
                         // compressImage(filePath);

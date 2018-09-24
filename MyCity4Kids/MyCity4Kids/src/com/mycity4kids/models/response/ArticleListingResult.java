@@ -40,6 +40,7 @@ public class ArticleListingResult implements Parcelable {
     private String contentType = "0";
     private boolean isLiked;
     private String url;
+    private String is_bookmark = "0";
 
     public ArticleListingResult() {
     }
@@ -68,6 +69,7 @@ public class ArticleListingResult implements Parcelable {
         lang = in.readString();
         body = in.readString();
         url = in.readString();
+        is_bookmark = in.readString();
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -315,6 +317,14 @@ public class ArticleListingResult implements Parcelable {
         this.url = url;
     }
 
+    public String getIs_bookmark() {
+        return is_bookmark;
+    }
+
+    public void setIs_bookmark(String is_bookmark) {
+        this.is_bookmark = is_bookmark;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -344,5 +354,6 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(lang);
         dest.writeString(body);
         dest.writeString(url);
+        dest.writeString(is_bookmark);
     }
 }

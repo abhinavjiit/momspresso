@@ -65,6 +65,7 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void hideFollowTopicHeader() {
-        trendingTopicsAllTabFragment.hideFollowTopicHeader();
+        if (trendingTopicsAllTabFragment != null)
+            trendingTopicsAllTabFragment.hideFollowTopicHeader();
     }
 }
