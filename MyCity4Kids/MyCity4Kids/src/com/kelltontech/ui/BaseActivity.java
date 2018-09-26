@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.comscore.analytics.comScore;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.Tracker;
 import com.kelltontech.network.Response;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -376,7 +377,13 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
         mProgressDialog.setMessage(bodyText);
 
         if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
+            try {
+                mProgressDialog.show();
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
         }
     }
 

@@ -32,17 +32,6 @@
         android:src="@drawable/icon_italic" />
 
     <ImageButton
-        android:id="@+id/action_color"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@android:color/transparent"
-        android:maxHeight="20dp"
-        android:maxWidth="20dp"
-        android:padding="11dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/highlight" />
-
-    <ImageButton
         android:id="@+id/action_bulleted"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -68,14 +57,5 @@
         android:maxHeight="20dp"
         android:maxWidth="20dp"
         android:src="@drawable/icon_link" />
-
-    <ImageButton
-        android:id="@+id/action_html"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@android:color/transparent"
-        android:maxHeight="20dp"
-        android:maxWidth="20dp"
-        android:src="@drawable/terminal" />
 
 </LinearLayout>

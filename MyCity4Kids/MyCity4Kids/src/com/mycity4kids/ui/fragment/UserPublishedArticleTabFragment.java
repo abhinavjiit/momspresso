@@ -35,6 +35,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.NewEditorPostActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.UserPublishedArticleAdapter;
@@ -380,7 +381,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             content = bodyImgTxt;
         }
 
-        Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+        Intent intent = new Intent(getActivity(), NewEditorPostActivity.class);
         intent.putExtra("from", "publishedList");
         intent.putExtra("title", detailData.getTitle());
         intent.putExtra("content", content);

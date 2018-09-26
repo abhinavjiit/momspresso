@@ -15,10 +15,12 @@ public class DraftListResult implements Serializable {
     String createdTime;
     String body;
     String title;
-//    ImageURL imageUrl;
+    //    ImageURL imageUrl;
     int itemType = 1;
-//    private Map<String, List<Map<String, String>>> tags;
+    //    private Map<String, List<Map<String, String>>> tags;
     private ArrayList<Map<String, String>> tags;
+    private String userAgent1;
+
     public String getId() {
         return id;
     }
@@ -97,5 +99,13 @@ public class DraftListResult implements Serializable {
 
     public void setTags(ArrayList<Map<String, String>> tags) {
         this.tags = tags;
+    }
+
+    public String getUserAgent1() {
+        return userAgent1;
+    }
+
+    public void setUserAgent1(String userAgent1) {
+        this.userAgent1 = userAgent1;
     }
 }

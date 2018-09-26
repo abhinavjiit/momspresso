@@ -44,6 +44,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.request.SaveDraftRequest;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
@@ -135,6 +136,7 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
     private TextView publishTextView;
     private TextView lastSavedTextView;
     private Editor editor;
+    private EditText titleEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,12 +148,34 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
         lastSavedTextView = (TextView) findViewById(R.id.lastSavedTextView);
         publishTextView = (TextView) findViewById(R.id.publishTextView);
         editor = (Editor) findViewById(R.id.editor);
+        titleEditText = (EditText) findViewById(R.id.titleEditText);
 
         closeEditorImageView.setOnClickListener(this);
         publishTextView.setOnClickListener(this);
 
+        editor.clearAllContents();
+
         title = getIntent().getStringExtra(TITLE_PARAM);
         content = getIntent().getStringExtra("content");
+        if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
+            draftObject = (DraftListResult) getIntent().getSerializableExtra("draftItem");
+            title = draftObject.getTitle().trim();
+            content = draftObject.getBody();
+            draftId = draftObject.getId();
+            if (StringUtils.isNullOrEmpty(moderation_status)) {
+                moderation_status = "0";
+            }
+            titleEditText.setText(title);
+        } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+            title = getIntent().getStringExtra("title").trim();
+            content = getIntent().getStringExtra("content");
+            tag = getIntent().getStringExtra("tag");
+            cities = getIntent().getStringExtra("cities");
+            thumbnailUrl = getIntent().getStringExtra("thumbnailUrl");
+            articleId = getIntent().getStringExtra("articleId");
+        } else {
+
+        }
 
         if (null != draftObject) {
             try {
@@ -179,6 +203,19 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+//        if ((mEditorFragment.getTitle().toString().isEmpty() && (mEditorFragment.getContent().toString().isEmpty())) || (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
+//            super.onBackPressed();
+//            finish();
+//        } else if (EditorFragmentAbstract.imageUploading == 0) {
+//            Log.e("imageuploading", EditorFragmentAbstract.imageUploading + "");
+//            showToast(getString(R.string.image_upload_wait));
+//        } else {
+//            if (!ConnectivityUtils.isNetworkEnabled(this)) {
+//                showToast(getString(R.string.error_network));
+//                return;
+//            }
+        saveDraftRequest(titleEditText.getText().toString(), editor.getContentAsHTML(), draftId);
+//        }
     }
 
     @Override
@@ -526,6 +563,19 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
                     }
                 }
                 break;
+            case 1:
+                if (data == null || data.getData() == null) {
+                    return;
+                }
+                Uri uri = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    editor.insertImage(bitmap);
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                break;
 
         }
     }
@@ -546,7 +596,13 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
             body = " ";
         }
         if (draftId1.isEmpty()) {
-            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0");
+            SaveDraftRequest saveDraftRequest = new SaveDraftRequest();
+            saveDraftRequest.setTitle(title);
+            saveDraftRequest.setBody(body);
+            saveDraftRequest.setArticleType("0");
+            saveDraftRequest.setUserAgent1(null);
+            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(saveDraftRequest);
+//            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null/*AppConstants.ANDROID_NEW_EDITOR*/);
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
@@ -590,8 +646,13 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
                 }
             });
         } else {
-
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0");
+            SaveDraftRequest saveDraftRequest = new SaveDraftRequest();
+            saveDraftRequest.setTitle(title);
+            saveDraftRequest.setBody(body);
+            saveDraftRequest.setArticleType("0");
+            saveDraftRequest.setUserAgent1(null);
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(draftId1, saveDraftRequest);
+//            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0", null/*AppConstants.ANDROID_NEW_EDITOR*/);
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
@@ -675,18 +736,10 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
             }
         });
 
-        //editor.dividerBackground=R.drawable.divider_background_dark;
-        //editor.setFontFace(R.string.fontFamily__serif);
-//        Map<Integer, String> headingTypeface = getHeadingTypeface();
-//        Map<Integer, String> contentTypeface = getContentface();
-//        editor.setHeadingTypeface(headingTypeface);
-//        editor.setContentTypeface(contentTypeface);
         editor.setDividerLayout(R.layout.tmpl_divider_layout);
         editor.setEditorImageLayout(R.layout.tmpl_image_view);
         editor.setListItemLayout(R.layout.tmpl_list_item);
-        //editor.setNormalTextSize(10);
-        // editor.setEditorTextColor("#FF3333");
-        //editor.StartEditor();
+
         editor.setEditorListener(new EditorListener() {
             @Override
             public void onTextChanged(EditText editText, Editable text) {
@@ -700,55 +753,100 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
                  * TODO do your upload here from the bitmap received and all onImageUploadComplete(String url); to insert the result url to
                  * let the editor know the upload has completed
                  */
-                editor.onImageUploadComplete("http://www.videogamesblogger.com/wp-content/uploads/2015/08/metal-gear-solid-5-the-phantom-pain-cheats-640x325.jpg", uuid);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.PNG, 75, stream);
+                String path = MediaStore.Images.Media.insertImage(NewEditorPostActivity.this.getContentResolver(), image, "Title", null);
+                Uri imageUriTemp = Uri.parse(path);
+                EditorFragmentAbstract.imageUploading = 0;
+                File file2 = FileUtils.getFile(NewEditorPostActivity.this, imageUriTemp);
+                uploadImage(file2, uuid);
                 // editor.onImageUploadFailed(uuid);
             }
         });
+        if (StringUtils.isNullOrEmpty(content)) {
+            content = "<p></p>";
+        }
         render();
-        //editor.render();  // this method must be called to start the editor
-        //editor.render("<p>Hello man, whats up!</p>");
+    }
 
-//        findViewById(R.id.btnRender).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                /*
-//                Retrieve the content as serialized, you could also say getContentAsHTML();
-//                */
-//                String text = editor.getContentAsSerialized();
-//                Intent intent = new Intent(getApplicationContext(), RenderTestActivity.class);
-//                intent.putExtra("content", text);
-//                startActivity(intent);
-//            }
-//        });
+    public void uploadImage(File file, final String uuid) {
+//        showProgressDialog(getString(R.string.please_wait));
+        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
+        RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), //"" + userModel.getUser().getId());
+                0 + "");
+        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "2");
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
+
+        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
+                imageType,
+                requestBodyFile);
+        //asynchronous call
+        call.enqueue(new Callback<ImageUploadResponse>() {
+                         @Override
+                         public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
+//                             removeProgressDialog();
+                             if (response == null || response.body() == null) {
+                                 showToast(getString(R.string.went_wrong));
+                                 return;
+                             }
+                             ImageUploadResponse responseModel = response.body();
+                             Log.e("responseURL", responseModel.getData().getResult().getUrl());
+
+                             if (responseModel.getCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 removeProgressDialog();
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
+                                     Log.i("Uploaded Image URL", responseModel.getData().getResult().getUrl());
+                                     editor.onImageUploadComplete(responseModel.getData().getResult().getUrl(), uuid);
+//                                     mediaFile.setFileURL(responseModel.getData().getResult().getUrl());
+//                                     ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
+                                 }
+                             }
+                         }
+
+                         @Override
+                         public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
+                             removeProgressDialog();
+                             Crashlytics.logException(t);
+                             Toast.makeText(NewEditorPostActivity.this, "Error while uploading image", Toast.LENGTH_SHORT).show();
+                             Log.d("MC4kException", Log.getStackTraceString(t));
+                         }
+                     }
+        );
     }
 
     private void render() {
-        String x = "<h2 id=\"installation\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;color:#c00000;background-color:#333;text-align:center; margin-top: -80px !important;\">Installation</h2>" +
-                "<h3 id=\"requires-html5-doctype\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;color:#ff0000; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Requires HTML5 doctype</h3>" +
-                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">Bootstrap uses certain HTML elements and CSS properties which require HTML5 doctype. Include&nbsp;<code style=\"font-size: 12.6px;\">&lt;!DOCTYPE html&gt;</code>&nbsp;in the beginning of all your projects.</p>" +
-                "<img src=\"http://www.scifibloggers.com/wp-content/uploads/TOR_2.jpg\" />" +
-                "<h2 id=\"integration\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-top: -80px !important;\">Integration</h2>" +
-                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">3rd parties available in django, rails, angular and so on.</p>" +
-                "<h3 id=\"django\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Django</h3>" +
-                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">Handy update for your django admin page.</p>" +
-                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: #c00000;\">django-summernote</li><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://pypi.python.org/pypi/django-summernote\" target=\"_blank\">summernote plugin for Django</a></li></ul>" +
-                "<h3 id=\"ruby-on-rails\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Ruby On Rails</h3>" +
-                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">This gem was built to gemify the assets used in Summernote.</p>" +
-                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://github.com/summernote/summernote-rails\" target=\"_blank\">summernote-rails</a></li></ul>" +
-                "<h3 id=\"angularjs\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">AngularJS</h3>" +
-                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">AngularJS directive to Summernote.</p>" +
-                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://github.com/summernote/angular-summernote\">angular-summernote</a></li></ul>" +
-                "<h3 id=\"apache-wicket\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Apache Wicket</h3>" +
-                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">Summernote widget for Wicket Bootstrap.</p>" +
-                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"http://wb-mgrigorov.rhcloud.com/summernote\" target=\"_blank\">demo</a></li><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://github.com/l0rdn1kk0n/wicket-bootstrap/tree/4f97ca783f7279ca43f9e2ee790703161f59fa40/bootstrap-extensions/src/main/java/de/agilecoders/wicket/extensions/markup/html/bootstrap/editor\" target=\"_blank\">source code</a></li></ul>" +
-                "<h3 id=\"webpack\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Webpack</h3>" +
-                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">Example about using summernote with webpack.</p>" +
-                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://github.com/hackerwins/summernote-webpack-example\" target=\"_blank\">summernote-webpack-example</a></li></ul>" +
-                "<h3 id=\"meteor\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Meteor</h3>" +
-                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">Example about using summernote with meteor.</p>" +
-                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://github.com/hackerwins/summernote-meteor-example\" target=\"_blank\">summernote-meteor-example</a></li></ul>" +
-                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\"><br></p>";
-        editor.render("<img src=\"http://www.scifibloggers.com/wp-content/uploads/TOR_2.jpg\" /></p>" + content);
+//        String x = "<h2 id=\"installation\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;color:#c00000;background-color:#333;text-align:center; margin-top: -80px !important;\">Installation</h2>" +
+//                "<h3 id=\"requires-html5-doctype\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;color:#ff0000; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Requires HTML5 doctype</h3>" +
+//                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">Bootstrap uses certain HTML elements and CSS properties which require HTML5 doctype. Include&nbsp;<code style=\"font-size: 12.6px;\">&lt;!DOCTYPE html&gt;</code>&nbsp;in the beginning of all your projects.</p>" +
+//                "<img src=\"http://www.scifibloggers.com/wp-content/uploads/TOR_2.jpg\" />" +
+//                "<h2 id=\"integration\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-top: -80px !important;\">Integration</h2>" +
+//                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">3rd parties available in django, rails, angular and so on.</p>" +
+//                "<h3 id=\"django\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Django</h3>" +
+//                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">Handy update for your django admin page.</p>" +
+//                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: #c00000;\">django-summernote</li><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://pypi.python.org/pypi/django-summernote\" target=\"_blank\">summernote plugin for Django</a></li></ul>" +
+//                "<h3 id=\"ruby-on-rails\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Ruby On Rails</h3>" +
+//                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">This gem was built to gemify the assets used in Summernote.</p>" +
+//                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://github.com/summernote/summernote-rails\" target=\"_blank\">summernote-rails</a></li></ul>" +
+//                "<h3 id=\"angularjs\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">AngularJS</h3>" +
+//                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">AngularJS directive to Summernote.</p>" +
+//                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://github.com/summernote/angular-summernote\">angular-summernote</a></li></ul>" +
+//                "<h3 id=\"apache-wicket\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Apache Wicket</h3>" +
+//                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">Summernote widget for Wicket Bootstrap.</p>" +
+//                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"http://wb-mgrigorov.rhcloud.com/summernote\" target=\"_blank\">demo</a></li><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://github.com/l0rdn1kk0n/wicket-bootstrap/tree/4f97ca783f7279ca43f9e2ee790703161f59fa40/bootstrap-extensions/src/main/java/de/agilecoders/wicket/extensions/markup/html/bootstrap/editor\" target=\"_blank\">source code</a></li></ul>" +
+//                "<h3 id=\"webpack\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Webpack</h3>" +
+//                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">Example about using summernote with webpack.</p>" +
+//                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://github.com/hackerwins/summernote-webpack-example\" target=\"_blank\">summernote-webpack-example</a></li></ul>" +
+//                "<h3 id=\"meteor\" style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin-bottom: 8px; margin-right: 0px; margin-left: 0px;\">Meteor</h3>" +
+//                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\">Example about using summernote with meteor.</p>" +
+//                "<ul style=\"color: rgb(51, 51, 51);\"><li style=\"font-size: 14px; color: rgb(104, 116, 127);\"><a href=\"https://github.com/hackerwins/summernote-meteor-example\" target=\"_blank\">summernote-meteor-example</a></li></ul>" +
+//                "<p style=\"font-size: 14px; color: rgb(104, 116, 127);\"><br></p>";
+        editor.render(content);
 
     }
 
@@ -844,11 +942,9 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
                                  return;
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
-                                     //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                                      Log.i("Uploaded Image URL", responseModel.getData().getResult().getUrl());
                                  }
                                  mediaFile.setFileURL(responseModel.getData().getResult().getUrl());
-
                                  ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
                              }
                          }
@@ -878,22 +974,19 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
                 onBackPressed();
                 break;
             case R.id.publishTextView:
-                if (mEditorFragment.getTitle().toString().isEmpty()) {
+                if (titleEditText.getText().toString().isEmpty()) {
                     showToast(getString(R.string.editor_title_empty));
-                } else if (mEditorFragment.getTitle().toString().length() > 150) {
+                } else if (titleEditText.getText().toString().length() > 150) {
                     showToast(getString(R.string.editor_title_char_limit));
-                } else if (mEditorFragment.getContent().toString().isEmpty()) {
+                } else if (Html.fromHtml(editor.getContentAsHTML()) == null || Html.fromHtml(editor.getContentAsHTML()).toString().isEmpty()) {
                     showToast(getString(R.string.editor_body_empty));
-                } else if (mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length < 299 && !BuildConfig.DEBUG) {
+                } else if (Html.fromHtml(editor.getContentAsHTML()).toString().replace("&nbsp;", " ").split("\\s+").length < 299 && !BuildConfig.DEBUG) {
                     showToast(getString(R.string.editor_body_min_words));
-                } else if (EditorFragmentAbstract.imageUploading == 0) {
-                    Log.e("imageuploading", EditorFragmentAbstract.imageUploading + "");
-                    showToast(getString(R.string.image_upload_wait));
                 } else {
                     if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
                         launchSpellCheckDialog();
                     } else {
-                        saveDraftBeforePublishRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
+                        saveDraftBeforePublishRequest(titleEditText.getText().toString().trim(), Html.fromHtml(editor.getContentAsHTML()).toString(), draftId);
                     }
                 }
                 break;
@@ -912,10 +1005,10 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
             return;
         }
         if (draftId1.isEmpty()) {
-            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0");
+            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null/*AppConstants.ANDROID_NEW_EDITOR*/);
             call.enqueue(saveDraftBeforePublishResponseListener);
         } else {
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0");
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0", null/*AppConstants.ANDROID_NEW_EDITOR*/);
             call.enqueue(saveDraftBeforePublishResponseListener);
         }
 
@@ -970,8 +1063,8 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
     public void onContinuePublish() {
         PublishDraftObject publishObject = new PublishDraftObject();
 
-        publishObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
-        publishObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
+        publishObject.setBody(Html.fromHtml(editor.getContentAsHTML()).toString());
+        publishObject.setTitle(titleEditText.getText().toString());
         Log.d("draftId = ", draftId + "");
         if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
             // coming from edit published articles

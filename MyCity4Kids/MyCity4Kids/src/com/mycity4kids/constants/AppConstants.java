@@ -616,4 +616,6 @@ public class AppConstants {
 
     public static final String MIX_PANEL_TOKEN = "76ebc952badcc143b417b3a4cf89cadd";
     public static final long HOURS_24_TIMESTAMP = 86400000;
+    public static final String ANDROID_NEW_EDITOR = "android_new_editor";
+    public static final String ANDROID_OLD_EDITOR = "android_old_editor";
 }

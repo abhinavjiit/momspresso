@@ -95,7 +95,6 @@ import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
-import com.mycity4kids.ui.activity.SubscribeTopicsActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.GroupIdCategoryMap;
@@ -628,6 +627,17 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //                    author_type.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
+                    } else {
+                        shareUrl = deepLinkURL;
+                    }
+                } else {
+                    if (isAdded()) {
+                        author_type.setText(getString(R.string.author_type_user));
+                    } else {
+                        author_type.setText(AppConstants.AUTHOR_TYPE_USER.toUpperCase());
+                    }
+                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug().trim() + "/article/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }

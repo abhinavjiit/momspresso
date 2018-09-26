@@ -447,6 +447,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.NewEditorPostActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
 
         <receiver

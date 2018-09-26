@@ -1,10 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".editor.EditorPostActivity">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -88,7 +86,8 @@
 
 
         </HorizontalScrollView>
-        <!--End of Editor toolbar -->
+
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -96,16 +95,44 @@
             android:layout_marginBottom="40dp"
             android:scrollbars="vertical">
 
-            <com.github.irshulx.Editor
-                android:id="@+id/editor"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="100dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="10dp"
-                app:placeholder="Start writing here..."
-                app:render_type="Editor" />
+                android:layout_height="wrap_content"
+                android:minHeight="300dp"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/titleEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/title"
+                    android:paddingBottom="14dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="14dp"
+                    android:textColor="@color/groups.light_black_color" />
+
+                <View
+                    android:id="@+id/dividerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/light_underline" />
+
+                <com.github.irshulx.Editor
+                    android:id="@+id/editor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minHeight="200dp"
+                    android:paddingBottom="100dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="10dp"
+                    app:placeholder="@string/example_post_content_placeholder"
+                    app:render_type="Editor" />
+            </LinearLayout>
         </ScrollView>
     </RelativeLayout>
 
