@@ -1249,7 +1249,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
                             } else if ("unbookmarkArticle".equals(type)) {
                                 articleDataModelsNew.get(i).setIs_bookmark("0");
-                                articleDataModelsNew.get(i).setBookmarkId("");
+                                articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 } else if (viewHolder instanceof HeaderViewHolder) {
@@ -1269,7 +1269,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 }
                             } else if ("unbookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(0);
-                                articleDataModelsNew.get(i).setBookmarkId("");
+                                articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                                 } else if (viewHolder instanceof HeaderViewHolder) {
