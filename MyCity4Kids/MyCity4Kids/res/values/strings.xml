@@ -8,9 +8,9 @@
     <!-- <string name="facebook_app_id">1437325266589625</string>-->
 
     <!--but now we are using client APP ID -->
-    <string name="facebook_app_id">206155642763202</string>
-    <string name="fb_login_protocol_scheme">fb206155642763202</string>
-    <string name="ACCOUNT_KIT_CLIENT_TOKEN">089d77e1898bf3ef59048cc2fe58408b</string>
+    <string name="facebook_app_id">1461805040785467</string>
+    <string name="fb_login_protocol_scheme">fb1461805040785467</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">bf06204cc86ad19b6c66eef0826adab5</string>
     <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
 
     <string name="write_review_prompt">What would you like to review?</string>
@@ -315,6 +315,7 @@
 
     <string name="signup.connect_via_facebook">CONNECT USING FACEBOOK</string>
     <string name="signup.connect_via_google">CONNECT USING GOOGLE</string>
+    <string name="signup.connect_via_phone">CONNECT USING PHONE</string>
 
     <string name="for_you.reason.why_label">Why am I seeing this?</string>
     <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
@@ -797,5 +798,6 @@
 
     <string name="groups.join_support_gp">JOIN SUPPORT GROUP</string>
     <string name="groups.not_alone">#YOUARENOTALONE</string>
+    <string name="choose_account">Choose an account to continue</string>
 
 </resources>

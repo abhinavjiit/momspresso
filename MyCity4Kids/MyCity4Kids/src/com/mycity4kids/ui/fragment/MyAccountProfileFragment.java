@@ -29,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.accountkit.AccessToken;
+import com.facebook.accountkit.AccountKit;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -358,11 +360,19 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 mixpanel.track("UserLogout", jsonObject);
+
+                AccountKit.logOut();
+                AccessToken accessToken = AccountKit.getCurrentAccessToken();
+                if (accessToken != null) {
+                } else {
+
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             FacebookUtils.logout(getActivity());
+
             gPlusSignOut();
 
             String pushToken = SharedPrefUtils.getDeviceToken(getActivity());

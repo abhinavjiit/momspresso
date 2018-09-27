@@ -789,4 +789,5 @@
     <string name="report.spam">स्पॅम आहे</string>
     <string name="report.not_relevant">दुसरं अन्य</string>
     <string name="reply">उत्तर द्या</string>
+    <string name="choose_account">Choose an account to continue</string>
 </resources>
