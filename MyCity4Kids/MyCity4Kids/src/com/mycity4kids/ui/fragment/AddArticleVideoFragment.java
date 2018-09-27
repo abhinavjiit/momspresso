@@ -20,13 +20,11 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.NewEditorPostActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -139,7 +137,21 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
             }
             break;
             case R.id.writeArticleLL: {
-                Intent intent = new Intent(getActivity(), NewEditorPostActivity.class);
+//                if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+//                    Intent intent = new Intent(getActivity(), NewEditorPostActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString(EditorPostActivity.TITLE_PARAM, "");
+//                    bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
+//                    bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+//                            getString(R.string.example_post_title_placeholder));
+//                    bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+//                            getString(R.string.example_post_content_placeholder));
+//                    bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+//                    bundle.putString("from", "dashboard");
+//                    intent.putExtras(bundle);
+//                    startActivity(intent);
+//                } else {
+                Intent intent = new Intent(getActivity(), EditorPostActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(EditorPostActivity.TITLE_PARAM, "");
                 bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
@@ -151,6 +163,8 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
                 bundle.putString("from", "dashboard");
                 intent.putExtras(bundle);
                 startActivity(intent);
+//                }
+
             }
             break;
             case R.id.addVideoLL: {

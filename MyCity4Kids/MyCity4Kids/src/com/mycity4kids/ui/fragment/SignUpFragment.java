@@ -26,6 +26,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private LayoutInflater mInflator;
     private CustomFontTextView facebookLoginTextView;
     private CustomFontTextView googleLoginTextView;
+    private CustomFontTextView phoneLoginTextView;
     private CustomFontTextView signinTextView;
 
     @Override
@@ -37,10 +38,12 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         lnrRoot = (RelativeLayout) view.findViewById(R.id.rootLayout);
         facebookLoginTextView = (CustomFontTextView) view.findViewById(R.id.connect_facebook);
         googleLoginTextView = (CustomFontTextView) view.findViewById(R.id.connect_googleplus);
+        phoneLoginTextView = (CustomFontTextView) view.findViewById(R.id.connect_phone);
         signinTextView = (CustomFontTextView) view.findViewById(R.id.signinTextView);
 
         facebookLoginTextView.setOnClickListener(this);
         googleLoginTextView.setOnClickListener(this);
+        phoneLoginTextView.setOnClickListener(this);
         signinTextView.setOnClickListener(this);
 
         return view;
@@ -50,6 +53,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
+            case R.id.connect_phone:
+                ((ActivityLogin) getActivity()).fbAccountKitVerification();
+                break;
             case R.id.connect_facebook:
                 ((ActivityLogin) getActivity()).loginWithFacebook();
                 break;

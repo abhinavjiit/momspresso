@@ -68,6 +68,7 @@
                 android:backgroundTint="@color/app_settings.edit_profile.edit_text_underline"
                 android:hint="@string/app_settings.edit_profile.hint_phone"
                 android:inputType="phone"
+                android:maxLength="10"
                 android:paddingBottom="15dp"
                 android:textColor="@color/app_settings.edit_profile.text_phone"
                 android:textColorHint="@color/app_settings.edit_profile.hint_phone"

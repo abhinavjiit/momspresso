@@ -35,6 +35,7 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
@@ -113,6 +114,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
     private ArticleTagsImagesGridAdapter adapter;
     private View mLayout;
+    private String userAgent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +138,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
         tags = getIntent().getStringExtra("tag");
+        userAgent = getIntent().getStringExtra("userAgent");
+
         setTagsList();
         Utils.pushOpenScreenEvent(this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
@@ -343,6 +347,9 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             articleDraftRequest.setTags(tagsList);
             articleDraftRequest.setImageUrl(url);
             articleDraftRequest.setArticleType("1");
+            if (AppConstants.ANDROID_NEW_EDITOR.equals(userAgent)) {
+                articleDraftRequest.setUserAgent1(userAgent);
+            }
 
             Call<ArticleDraftResponse> call = articlePublishAPI.publishArticle(articleDraftRequest);
             Log.e("Publish Request", draftObject.getBody());
@@ -413,7 +420,9 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             articleDraftRequest.setTags(tagsList);
             articleDraftRequest.setImageUrl(url);
             articleDraftRequest.setArticleType("1");
-
+            if (AppConstants.ANDROID_NEW_EDITOR.equals(userAgent)) {
+                articleDraftRequest.setUserAgent1(userAgent);
+            }
             Call<ArticleDraftResponse> call1 = articlePublishAPI.updateArticle(draftObject.getId(), articleDraftRequest);
             call1.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override

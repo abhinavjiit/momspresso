@@ -35,7 +35,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
-import com.mycity4kids.ui.activity.NewEditorPostActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.UserDraftArticleAdapter;
 import com.mycity4kids.ui.adapter.UserDraftShortStoriesAdapter;
@@ -254,39 +253,42 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.editDraftTextView:
-                if (AppConstants.ANDROID_NEW_EDITOR.equals(draftList.get(position).getUserAgent1())) {
+//                if (AppConstants.ANDROID_NEW_EDITOR.equals(draftList.get(position).getUserAgent())) {
+//                    if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+//                        Intent intent = new Intent(getActivity(), NewEditorPostActivity.class);
+//                        intent.putExtra("draftItem", draftList.get(position));
+//                        intent.putExtra("from", "draftList");
+//                        startActivity(intent);
+//                    } else {
+//                        Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+//                        intent.putExtra("draftItem", draftList.get(position));
+//                        intent.putExtra("from", "draftList");
+//                        startActivity(intent);
+//                    }
+//                } else {
+                if (Build.VERSION.SDK_INT > 15) {
+                    Utils.pushEditDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
                     Intent intent = new Intent(getActivity(), EditorPostActivity.class);
                     intent.putExtra("draftItem", draftList.get(position));
                     intent.putExtra("from", "draftList");
                     startActivity(intent);
                 } else {
-                    if (Build.VERSION.SDK_INT > 15) {
-                        Utils.pushEditDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
-                        Intent intent = new Intent(getActivity(), EditorPostActivity.class);
-                        intent.putExtra("draftItem", draftList.get(position));
-                        intent.putExtra("from", "draftList");
-                        startActivity(intent);
-                    } else {
-                        Intent viewIntent =
-                                new Intent("android.intent.action.VIEW",
-                                        Uri.parse("http://www.momspresso.com/parenting/admin/setupablog"));
-                        startActivity(viewIntent);
-                    }
+                    Intent viewIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse("http://www.momspresso.com/parenting/admin/setupablog"));
+                    startActivity(viewIntent);
                 }
+//                }
                 break;
             case R.id.deleteDraftImageView:
-                Intent intent = new Intent(getActivity(), NewEditorPostActivity.class);
-                intent.putExtra("draftItem", draftList.get(position));
-                intent.putExtra("from", "draftList");
-                startActivity(intent);
-//                ConfirmationDialogFragment confirmationDialogFragment = new ConfirmationDialogFragment();
-//                FragmentManager fm = getChildFragmentManager();
-//                confirmationDialogFragment.setTargetFragment(this, 0);
-//                Bundle _args = new Bundle();
-//                _args.putInt("position", position);
-//                confirmationDialogFragment.setArguments(_args);
-//                confirmationDialogFragment.setCancelable(true);
-//                confirmationDialogFragment.show(fm, "Delete Draft");
+                ConfirmationDialogFragment confirmationDialogFragment = new ConfirmationDialogFragment();
+                FragmentManager fm = getChildFragmentManager();
+                confirmationDialogFragment.setTargetFragment(this, 0);
+                Bundle _args = new Bundle();
+                _args.putInt("position", position);
+                confirmationDialogFragment.setArguments(_args);
+                confirmationDialogFragment.setCancelable(true);
+                confirmationDialogFragment.show(fm, "Delete Draft");
                 break;
         }
     }

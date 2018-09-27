@@ -20,6 +20,7 @@ public class ArticleDraftRequest {
     private String articleType;
     private List<Map<String, String>> tags;
     private List<Map<String, String>> cities;
+    private String userAgent1;
 
     public String getBody() {
         return body;
@@ -107,5 +108,13 @@ public class ArticleDraftRequest {
 
     public void setCities(List<Map<String, String>> cities) {
         this.cities = cities;
+    }
+
+    public String getUserAgent1() {
+        return userAgent1;
+    }
+
+    public void setUserAgent1(String userAgent1) {
+        this.userAgent1 = userAgent1;
     }
 }

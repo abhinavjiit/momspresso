@@ -19,7 +19,7 @@ public class DraftListResult implements Serializable {
     int itemType = 1;
     //    private Map<String, List<Map<String, String>>> tags;
     private ArrayList<Map<String, String>> tags;
-    private String userAgent1;
+    private String userAgent;
 
     public String getId() {
         return id;
@@ -101,11 +101,11 @@ public class DraftListResult implements Serializable {
         this.tags = tags;
     }
 
-    public String getUserAgent1() {
-        return userAgent1;
+    public String getUserAgent() {
+        return userAgent;
     }
 
-    public void setUserAgent1(String userAgent1) {
-        this.userAgent1 = userAgent1;
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 }

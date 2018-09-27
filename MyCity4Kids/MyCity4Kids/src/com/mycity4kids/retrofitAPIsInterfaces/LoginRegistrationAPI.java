@@ -3,14 +3,19 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.request.AddEditKidsInformationRequest;
 import com.mycity4kids.models.request.ChangePasswordRequest;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.request.PhoneLoginRequest;
 import com.mycity4kids.models.request.SocialConnectRequest;
 import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.ChangePasswordResponse;
+import com.mycity4kids.models.response.FBPhoneLoginResponse;
 import com.mycity4kids.models.response.ForgotPasswordResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -44,4 +49,7 @@ public interface LoginRegistrationAPI {
 
     @PUT("v1/users/socialTokens/")
     Call<BaseResponse> socialConnect(@Body SocialConnectRequest body);
+
+    @POST("v1/users/loginfbnumber")
+    Call<FBPhoneLoginResponse> loginWithPhone(@Body PhoneLoginRequest phoneLoginRequest);
 }

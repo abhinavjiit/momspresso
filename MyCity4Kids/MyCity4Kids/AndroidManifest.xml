@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="106"
-    android:versionName="9.2.1">
+    android:versionCode="107"
+    android:versionName="9.2.2">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -63,10 +63,15 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
+        <meta-data
+            android:name="com.facebook.accountkit.ApplicationName"
+            android:value="@string/app_name" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.accountkit.ClientToken"
+            android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
 
         <receiver
             android:name="com.mycity4kids.receiver.InstallReferrerReceiver"
@@ -449,6 +454,10 @@
             android:name=".ui.activity.NewEditorPostActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
+        <activity android:name="com.facebook.accountkit.ui.AccountKitActivity" />
+        <activity
+            android:name=".ui.activity.FacebookPhoneLoginActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

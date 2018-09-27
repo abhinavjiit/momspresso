@@ -69,6 +69,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
     private String tags, cities;
 
     private AddArticleTopicsPagerAdapter adapter;
+    private String userAgent;
 
     /**
      * Called when the activity is first created.
@@ -90,6 +91,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         clearAllTextView = (TextView) findViewById(R.id.clearAllTextView);
 
         userNavigatingFrom = getIntent().getStringExtra("from");
+        userAgent = getIntent().getStringExtra("userAgent");
         draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
 
 
@@ -179,6 +181,9 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 _intent.putExtra("articleId", articleId);
                 _intent.putExtra("tag", tags);
                 _intent.putExtra("cities", cities);
+                if (AppConstants.ANDROID_NEW_EDITOR.equals(userAgent)) {
+                    _intent.putExtra("userAgent", AppConstants.ANDROID_NEW_EDITOR);
+                }
                 startActivity(_intent);
 
             }

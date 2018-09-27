@@ -600,7 +600,7 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
             saveDraftRequest.setTitle(title);
             saveDraftRequest.setBody(body);
             saveDraftRequest.setArticleType("0");
-            saveDraftRequest.setUserAgent1(null);
+            saveDraftRequest.setUserAgent1(AppConstants.ANDROID_NEW_EDITOR);
             Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(saveDraftRequest);
 //            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null/*AppConstants.ANDROID_NEW_EDITOR*/);
             call.enqueue(new Callback<ArticleDraftResponse>() {
@@ -650,7 +650,7 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
             saveDraftRequest.setTitle(title);
             saveDraftRequest.setBody(body);
             saveDraftRequest.setArticleType("0");
-            saveDraftRequest.setUserAgent1(null);
+            saveDraftRequest.setUserAgent1(AppConstants.ANDROID_NEW_EDITOR);
             Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(draftId1, saveDraftRequest);
 //            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0", null/*AppConstants.ANDROID_NEW_EDITOR*/);
             call.enqueue(new Callback<ArticleDraftResponse>() {
@@ -1076,6 +1076,7 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
             intent_1.putExtra("articleId", articleId);
             intent_1.putExtra("tag", tag);
             intent_1.putExtra("cities", cities);
+            intent_1.putExtra("userAgent", AppConstants.ANDROID_NEW_EDITOR);
             startActivity(intent_1);
         } else {
             Intent intent_3 = new Intent(NewEditorPostActivity.this, AddArticleTopicsActivityNew.class);
@@ -1084,6 +1085,7 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
             }
             intent_3.putExtra("draftItem", publishObject);
             intent_3.putExtra("from", "editor");
+            intent_3.putExtra("userAgent", AppConstants.ANDROID_NEW_EDITOR);
             startActivity(intent_3);
         }
     }

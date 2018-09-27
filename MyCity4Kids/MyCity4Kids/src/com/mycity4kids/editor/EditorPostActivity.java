@@ -578,7 +578,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             body = " ";
         }
         if (draftId1.isEmpty()) {
-            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null/*AppConstants.ANDROID_OLD_EDITOR*/);
+            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null);
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
@@ -623,8 +623,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             });
         } else {
 
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body,
-                    "0", null/*AppConstants.ANDROID_OLD_EDITOR*/);
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0", null);
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
@@ -873,11 +872,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             return;
         }
         if (draftId1.isEmpty()) {
-            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null/*AppConstants.ANDROID_OLD_EDITOR*/);
+            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null);
             call.enqueue(saveDraftBeforePublishResponseListener);
         } else {
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body
-                    , "0", null/*AppConstants.ANDROID_OLD_EDITOR*/);
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0", null);
             call.enqueue(saveDraftBeforePublishResponseListener);
         }
 
