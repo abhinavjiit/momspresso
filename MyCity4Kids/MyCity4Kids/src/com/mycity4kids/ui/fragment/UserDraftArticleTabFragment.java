@@ -239,9 +239,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
                 adapter.setListData(draftList);
                 adapter.notifyDataSetChanged();
             }
-
         }
-
     }
 
     @Override
@@ -255,6 +253,19 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.editDraftTextView:
+//                if (AppConstants.ANDROID_NEW_EDITOR.equals(draftList.get(position).getUserAgent())) {
+//                    if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+//                        Intent intent = new Intent(getActivity(), NewEditorPostActivity.class);
+//                        intent.putExtra("draftItem", draftList.get(position));
+//                        intent.putExtra("from", "draftList");
+//                        startActivity(intent);
+//                    } else {
+//                        Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+//                        intent.putExtra("draftItem", draftList.get(position));
+//                        intent.putExtra("from", "draftList");
+//                        startActivity(intent);
+//                    }
+//                } else {
                 if (Build.VERSION.SDK_INT > 15) {
                     Utils.pushEditDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
                     Intent intent = new Intent(getActivity(), EditorPostActivity.class);
@@ -267,6 +278,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
                                     Uri.parse("http://www.momspresso.com/parenting/admin/setupablog"));
                     startActivity(viewIntent);
                 }
+//                }
                 break;
             case R.id.deleteDraftImageView:
                 ConfirmationDialogFragment confirmationDialogFragment = new ConfirmationDialogFragment();

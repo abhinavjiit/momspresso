@@ -638,7 +638,7 @@
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
     <string name="language_label.tamil">தமிழ்</string>
-    <string name="language_label.telegu">తెలుగ</string>
+    <string name="language_label.telegu">తెలుగు</string>
 
     <string name="choose_pref_lang">तुमची प्राधान्य भाषा निवडा</string>
     <string name="choose_pref_lang.cancel">कॅन्सल</string>
@@ -791,4 +791,5 @@
     <string name="reply">उत्तर द्या</string>
     <string name="profile_completion">Profile Completion</string>
     <string name="improve_reachability">Improve the reachability by updating the bio.</string>
+    <string name="choose_account">Choose an account to continue</string>
 </resources>

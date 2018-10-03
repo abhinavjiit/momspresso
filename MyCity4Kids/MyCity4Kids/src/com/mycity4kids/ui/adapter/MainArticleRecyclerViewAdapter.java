@@ -125,7 +125,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     @Override
     public int getItemCount() {
-        return articleDataModelsNew.size();
+        return articleDataModelsNew == null ? 0 : articleDataModelsNew.size();
     }
 
     @Override
@@ -378,7 +378,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
             holder.watchLaterImageView.setVisibility(View.INVISIBLE);
 
-            if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+            if ("0".equals(articleDataModelsNew.get(position).getIs_bookmark())) {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
@@ -494,7 +494,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
             holder.watchLaterImageView.setVisibility(View.INVISIBLE);
 
-            if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+            if ("0".equals(articleDataModelsNew.get(position).getIs_bookmark())) {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
@@ -610,7 +610,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
             holder.watchLaterImageView.setVisibility(View.INVISIBLE);
 
-            if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+            if ("0".equals(articleDataModelsNew.get(position).getIs_bookmark())) {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
@@ -726,7 +726,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
             holder.watchLaterImageView.setVisibility(View.INVISIBLE);
 
-            if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+            if ("0".equals(articleDataModelsNew.get(position).getIs_bookmark())) {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
@@ -1115,16 +1115,23 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private void addRemoveBookmark(int position, RecyclerView.ViewHolder holder) {
+//<<<<<<< HEAD
+//                isRequestRunning = true;
+//        if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+//            articleDataModelsNew.get(position).setListingBookmarkStatus(1);
+//            notifyDataSetChanged();
+//=======
         isRequestRunning = true;
-        if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
-            articleDataModelsNew.get(position).setListingBookmarkStatus(1);
+        if ("0".equals(articleDataModelsNew.get(position).getIs_bookmark())) {
+//>>>>>>> 0aaeb070f0c343a960a10bc78e8b0060908f9742
+            articleDataModelsNew.get(position).setIs_bookmark("1");
             notifyDataSetChanged();
             ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
             articleDetailRequest.setArticleId(articleDataModelsNew.get(position).getId());
             String jsonString = new Gson().toJson(articleDetailRequest);
             new MainArticleRecyclerViewAdapter.AddRemoveBookmarkAsyncTask(holder, "bookmarkArticle", position).execute(jsonString, "bookmarkArticle");
         } else {
-            articleDataModelsNew.get(position).setListingBookmarkStatus(0);
+            articleDataModelsNew.get(position).setIs_bookmark("0");
             notifyDataSetChanged();
             DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
             deleteBookmarkRequest.setId(articleDataModelsNew.get(position).getBookmarkId());
@@ -1248,7 +1255,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     for (int i = 0; i < articleDataModelsNew.size(); i++) {
                         if (articleDataModelsNew.get(i).getId().equals(responseData.getData().getResult().getArticleId())) {
                             if ("bookmarkArticle".equals(type)) {
-                                articleDataModelsNew.get(i).setListingBookmarkStatus(1);
+                                articleDataModelsNew.get(i).setIs_bookmark("1");
                                 articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
@@ -1261,8 +1268,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((DashboardActivity) mContext).showBookmarkConfirmationTooltip();
                                 }
                             } else if ("unbookmarkArticle".equals(type)) {
-                                articleDataModelsNew.get(i).setListingBookmarkStatus(0);
-                                articleDataModelsNew.get(i).setBookmarkId("");
+                                articleDataModelsNew.get(i).setIs_bookmark("0");
+                                articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 } else if (viewHolder instanceof HeaderViewHolder) {
@@ -1282,7 +1289,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 }
                             } else if ("unbookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(0);
-                                articleDataModelsNew.get(i).setBookmarkId("");
+                                articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                                 } else if (viewHolder instanceof HeaderViewHolder) {

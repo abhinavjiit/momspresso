@@ -31,6 +31,7 @@ public class ArticleDetailResult {
     private ArrayList<Map<String, String>> cities;
     private String bookmarkId;
     private String isMomspresso;
+    private String userAgent;
 
     public String getId() {
         return id;
@@ -214,5 +215,13 @@ public class ArticleDetailResult {
 
     public void setIsMomspresso(String isMomspresso) {
         this.isMomspresso = isMomspresso;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 }

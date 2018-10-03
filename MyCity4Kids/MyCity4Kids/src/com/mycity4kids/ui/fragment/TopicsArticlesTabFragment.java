@@ -23,6 +23,7 @@ import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
+import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -342,7 +343,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
 
 
     private void getGroupIdForCurrentCategory() {
-        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(selectedTopic.getId(), this);
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(selectedTopic.getId(), this, "listing");
         groupIdCategoryMap.getGroupIdForCurrentCategory();
     }
 
@@ -363,8 +364,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     }
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ToastUtils.showToast(getActivity(), getString(R.string.error_network));
+        if (!ConnectivityUtils.isNetworkEnabled(BaseApplication.getAppContext())) {
+            ToastUtils.showToast(BaseApplication.getAppContext(), getString(R.string.error_network));
             return;
         }
 
@@ -372,7 +373,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         filterCall.enqueue(articleListingResponseCallback);
     }
 

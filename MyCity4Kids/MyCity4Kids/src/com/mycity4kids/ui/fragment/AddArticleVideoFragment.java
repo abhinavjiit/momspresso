@@ -137,6 +137,20 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
             }
             break;
             case R.id.writeArticleLL: {
+//                if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
+//                    Intent intent = new Intent(getActivity(), NewEditorPostActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString(EditorPostActivity.TITLE_PARAM, "");
+//                    bundle.putString(EditorPostActivity.CONTENT_PARAM, "");
+//                    bundle.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+//                            getString(R.string.example_post_title_placeholder));
+//                    bundle.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+//                            getString(R.string.example_post_content_placeholder));
+//                    bundle.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+//                    bundle.putString("from", "dashboard");
+//                    intent.putExtras(bundle);
+//                    startActivity(intent);
+//                } else {
                 Intent intent = new Intent(getActivity(), EditorPostActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(EditorPostActivity.TITLE_PARAM, "");
@@ -149,6 +163,8 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
                 bundle.putString("from", "dashboard");
                 intent.putExtras(bundle);
                 startActivity(intent);
+//                }
+
             }
             break;
             case R.id.addVideoLL: {

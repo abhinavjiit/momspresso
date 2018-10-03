@@ -11,7 +11,7 @@ import android.widget.CompoundButton;
 import com.mycity4kids.R;
 import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 

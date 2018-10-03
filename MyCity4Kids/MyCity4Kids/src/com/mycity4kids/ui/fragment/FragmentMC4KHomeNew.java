@@ -65,7 +65,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     }
 
     private void getGroupIdForCurrentCategory() {
-        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap("", this);
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap("", this, "listing");
         groupIdCategoryMap.getGroupIdForCurrentCategory();
     }
 

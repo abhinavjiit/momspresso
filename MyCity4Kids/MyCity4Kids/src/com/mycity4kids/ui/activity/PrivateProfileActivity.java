@@ -127,7 +127,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private TextView followingCountTextView, followerCountTextView, rankCountTextView;
     private TextView rankLanguageTextView;
     private TextView authorNameTextView, locationTextView, authorBioTextView;
-    private TextView publishedSectionTextView, draftSectionTextView, bookmarksSectionTextView, activitySectionTextView, rankingSectionTextView, settingsSectionTextView, signoutSectionTextView;
+    private TextView publishedSectionTextView, draftSectionTextView, activitySectionTextView, signoutSectionTextView;
     private View rootView;
 
     @Override
@@ -160,12 +160,12 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         rankLanguageTextView = (TextView) findViewById(R.id.rankLanguageTextView);
         publishedSectionTextView = (TextView) findViewById(R.id.publishedSectionTextView);
         draftSectionTextView = (TextView) findViewById(R.id.draftSectionTextView);
-        bookmarksSectionTextView = (TextView) findViewById(R.id.bookmarksSectionTextView);
+//        bookmarksSectionTextView = (TextView) findViewById(R.id.bookmarksSectionTextView);
         activitySectionTextView = (TextView) findViewById(R.id.activitySectionTextView);
-        rankingSectionTextView = (TextView) findViewById(R.id.rankingSectionTextView);
-        settingsSectionTextView = (TextView) findViewById(R.id.settingsSectionTextView);
+//        rankingSectionTextView = (TextView) findViewById(R.id.rankingSectionTextView);
+//        settingsSectionTextView = (TextView) findViewById(R.id.settingsSectionTextView);
         signoutSectionTextView = (TextView) findViewById(R.id.signoutSectionTextView);
-        imgProfile = (ImageView) findViewById(R.id.imgProfile);
+        imgProfile = (ImageView) findViewById(R.id.profileImageView);
         settingImageView = (ImageView) findViewById(R.id.settingImageView);
         followerContainer = (LinearLayout) findViewById(R.id.followerContainer);
         followingContainer = (LinearLayout) findViewById(R.id.followingContainer);
@@ -177,11 +177,11 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         imgProfile.setOnClickListener(this);
         publishedSectionTextView.setOnClickListener(this);
         draftSectionTextView.setOnClickListener(this);
-        bookmarksSectionTextView.setOnClickListener(this);
+//        bookmarksSectionTextView.setOnClickListener(this);
         activitySectionTextView.setOnClickListener(this);
-        rankingSectionTextView.setOnClickListener(this);
+//        rankingSectionTextView.setOnClickListener(this);
         rankContainer.setOnClickListener(this);
-        settingsSectionTextView.setOnClickListener(this);
+//        settingsSectionTextView.setOnClickListener(this);
         signoutSectionTextView.setOnClickListener(this);
         settingImageView.setOnClickListener(this);
         followingContainer.setOnClickListener(this);
@@ -673,10 +673,10 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                     startActivity(_intent);
                     return;
                 }
-                if (rankingSectionTextView.getVisibility() == View.VISIBLE) {
-                    Intent intent = new Intent(this, RankingActivity.class);
-                    startActivity(intent);
-                }
+//                if (rankingSectionTextView.getVisibility() == View.VISIBLE) {
+//                    Intent intent = new Intent(this, RankingActivity.class);
+//                    startActivity(intent);
+//                }
                 break;
             case R.id.rankingSectionTextView: {
                 Intent intent = new Intent(this, RankingActivity.class);

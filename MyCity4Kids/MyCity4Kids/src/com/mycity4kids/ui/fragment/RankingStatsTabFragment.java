@@ -444,7 +444,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     changeDataset(responseData, getDatesL(responseData.getData().getViews()), "custom");
                 } else {
-                    if (org.apache.commons.lang.StringUtils.isNotEmpty(responseData.getReason())) {
+                    if (org.apache.commons.lang3.StringUtils.isNotEmpty(responseData.getReason())) {
                     } else {
 
                     }

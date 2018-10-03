@@ -4,16 +4,32 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.accountkit.Account;
+import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.AccountKitCallback;
+import com.facebook.accountkit.AccountKitError;
+import com.facebook.accountkit.AccountKitLoginResult;
+import com.facebook.accountkit.PhoneNumber;
+import com.facebook.accountkit.ui.AccountKitActivity;
+import com.facebook.accountkit.ui.AccountKitConfiguration;
+import com.facebook.accountkit.ui.LoginType;
+import com.facebook.accountkit.ui.SkinManager;
+import com.facebook.accountkit.ui.UIManager;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.auth.api.Auth;
@@ -39,19 +55,25 @@ import com.mycity4kids.google.GooglePlusUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.request.PhoneLoginRequest;
 import com.mycity4kids.models.request.SocialConnectRequest;
 import com.mycity4kids.models.response.BaseResponse;
+import com.mycity4kids.models.response.FBPhoneLoginResponse;
 import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
+import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
+import com.mycity4kids.ui.fragment.ChooseLoginAccountDialogFragment;
+import com.mycity4kids.ui.fragment.CityListingDialogFragment;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 import com.mycity4kids.ui.fragment.SignInFragment;
 import com.mycity4kids.ui.fragment.SignUpFragment;
+import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONObject;
 
@@ -60,6 +82,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -71,6 +94,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     public static final int RECOVERABLE_REQUEST_CODE = 98;
     private static final int RC_SIGN_IN = 007;
+    public static int APP_REQUEST_CODE = 99;
+
+    public ChooseLoginAccountDialogFragment chooseLoginAccountFragment;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -133,6 +159,75 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void phoneLogin(String authCode) {
+        loginMode = "phone";
+        showProgressDialog(getString(R.string.please_wait));
+        PhoneLoginRequest phoneLoginRequest = new PhoneLoginRequest();
+        phoneLoginRequest.setCode(authCode);
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+        Call<FBPhoneLoginResponse> call = loginRegistrationAPI.loginWithPhone(phoneLoginRequest);
+        call.enqueue(fbPhoneLoginResponseCallback);
+    }
+
+    private Callback<FBPhoneLoginResponse> fbPhoneLoginResponseCallback = new Callback<FBPhoneLoginResponse>() {
+        @Override
+        public void onResponse(Call<FBPhoneLoginResponse> call, retrofit2.Response<FBPhoneLoginResponse> response) {
+            Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            try {
+                FBPhoneLoginResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if (responseData.getData().get(0).getResult().size() > 1) {
+                        chooseLoginAccountFragment = new ChooseLoginAccountDialogFragment();
+                        Bundle _args = new Bundle();
+                        _args.putParcelableArrayList("accountList", (ArrayList<? extends Parcelable>) responseData.getData().get(0).getResult());
+                        chooseLoginAccountFragment.setArguments(_args);
+                        FragmentManager fm = getSupportFragmentManager();
+                        chooseLoginAccountFragment.show(fm, "Accounts");
+                    } else {
+                        loginWithAccount(responseData.getData().get(0).getResult().get(0));
+                    }
+
+
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FBPhoneLoginResponse> call, Throwable t) {
+
+        }
+    };
+
+    public void fbAccountKitVerification() {
+        final Intent intent = new Intent(this, AccountKitActivity.class);
+        AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder = new AccountKitConfiguration.AccountKitConfigurationBuilder(
+                LoginType.PHONE, AccountKitActivity.ResponseType.CODE); // or .ResponseType.CODE
+        UIManager uiManager = new SkinManager(
+                SkinManager.Skin.TRANSLUCENT,
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? getResources().getColor(R.color.colorPrimary, null) : getResources().getColor(R.color.colorPrimary)),
+                R.drawable.phone_login_bg,
+                SkinManager.Tint.WHITE,
+                0.55
+        );
+        /*If you want default country code*/
+//        configurationBuilder.setDefaultCountryCode("IN");
+        configurationBuilder.setUIManager(uiManager);
+        intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configurationBuilder.build());
+        startActivityForResult(intent, APP_REQUEST_CODE);
     }
 
     @Override
@@ -238,6 +333,94 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     }
 
+    public void loginWithAccount(UserDetailResult userDetailResult) {
+        UserInfo model = new UserInfo();
+        model.setId(userDetailResult.getId());
+        model.setDynamoId(userDetailResult.getDynamoId());
+        model.setEmail(userDetailResult.getEmail());
+        model.setMc4kToken(userDetailResult.getMc4kToken());
+        model.setIsValidated(userDetailResult.getIsValidated());
+        model.setFirst_name(userDetailResult.getFirstName());
+        model.setLast_name(userDetailResult.getLastName());
+        model.setProfilePicUrl(userDetailResult.getProfilePicUrl().getClientApp());
+        model.setSessionId(userDetailResult.getSessionId());
+        model.setIsLangSelection(userDetailResult.getIsLangSelection());
+        model.setUserType(userDetailResult.getUserType());
+        int cityIdFromLocation = SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId();
+        if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
+            model.setCityId(userDetailResult.getCityId());
+        }
+        model.setSessionId(userDetailResult.getSessionId());
+        model.setLoginMode(loginMode);
+        SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
+        SharedPrefUtils.setProfileImgUrl(ActivityLogin.this, userDetailResult.getProfilePicUrl().getClientApp());
+        SharedPrefUtils.setLastLoginTimestamp(ActivityLogin.this, System.currentTimeMillis());
+
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("loginFrom", loginMode);
+            mixpanel.track("UserLogin", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (null == userDetailResult.getSocialTokens()) {
+            //token already expired or not yet connected with facebook
+            SharedPrefUtils.setFacebookConnectedFlag(ActivityLogin.this, "1");
+        } else {
+            SharedPrefUtils.setFacebookConnectedFlag(ActivityLogin.this,
+                    userDetailResult.getSocialTokens().getFb().getIsExpired());
+        }
+
+        String version = AppUtils.getAppVersion(this);
+        if (version.equals(AppConstants.PHOENIX_RELEASE_VERSION)) {
+            SharedPrefUtils.setPhoenixFirstLaunch(ActivityLogin.this, false);
+        }
+        if (version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION)) {
+            SharedPrefUtils.setFBConnectFirstLaunch(ActivityLogin.this, false);
+        }
+
+        if ("fb".equals(loginMode)) {
+            SocialConnectRequest socialConnectRequest = new SocialConnectRequest();
+            socialConnectRequest.setToken(accessToken);
+            socialConnectRequest.setReferer("fb");
+
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            LoginRegistrationAPI socialConnectAPI = retrofit.create(LoginRegistrationAPI.class);
+            Call<BaseResponse> socialConnectCall = socialConnectAPI.socialConnect(socialConnectRequest);
+            socialConnectCall.enqueue(socialConnectResponseListener);
+        }
+
+        //facebook login with an account without email
+        if (!AppConstants.VALIDATED_USER.equals(model.getIsValidated()) && "fb".equals(loginMode)) {
+            dialogFragment = new FacebookAddEmailDialogFragment();
+            dialogFragment.setTargetFragment(dialogFragment, 2);
+            Bundle bundle = new Bundle();
+            bundle.putString(AppConstants.FROM_ACTIVITY, AppConstants.ACTIVITY_LOGIN);
+            dialogFragment.setArguments(bundle);
+            dialogFragment.show(getFragmentManager(), "verify email");
+        }
+        //Custom sign up user but email is not yet verfifed.
+//        else if (!AppConstants.VALIDATED_USER.equals(model.getIsValidated())) {
+//            showVerifyEmailDialog("Error", "Please verify your account to login");
+//        }
+        //Verified User
+        else {
+            if (null != userDetailResult.getKids()) {
+                saveKidsInformation(userDetailResult.getKids());
+            }
+            Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
+            startService(intent);
+            Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
+            startService(mServiceIntent);
+            Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
+            startActivity(intent1);
+            startSyncingUserInfo();
+        }
+    }
+
     public class GetGoogleToken extends AsyncTask<Void, String, String> {
 
         @Override
@@ -288,9 +471,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
             Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
             call.enqueue(onLoginResponseReceivedListener);
-
         }
-
     }
 
     Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
@@ -604,6 +785,10 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
             call.enqueue(onLoginResponseReceivedListener);
 
+        } else if (_requestCode == APP_REQUEST_CODE && _resultCode == RESULT_OK) {
+//            loginWithPhone();
+            String authCode = ((AccountKitLoginResult) _data.getParcelableExtra(AccountKitLoginResult.RESULT_KEY)).getAuthorizationCode();
+            phoneLogin(authCode);
         } else {
             if (_resultCode == 0) {
                 removeProgressDialog();

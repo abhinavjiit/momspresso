@@ -1,22 +1,16 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
 import com.mycity4kids.models.response.ContributorListResult;
 import com.squareup.picasso.Picasso;
-
-import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 

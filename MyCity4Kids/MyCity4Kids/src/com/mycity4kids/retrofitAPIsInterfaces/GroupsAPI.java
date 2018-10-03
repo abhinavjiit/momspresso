@@ -280,9 +280,11 @@ public interface GroupsAPI {
 
     @GET("/api/v1/groups/groups-banner/")
     Call<GroupIdCategoryIdMappingResponse> getGroupIdForSingleCategory(@Query("platform") String query,
-                                                                       @Query("categoryId") String ofType);
+                                                                       @Query("categoryId") String ofType,
+                                                                       @Query("position") String position);
 
     @GET("/api/v1/groups/groups-banner/")
     Call<GroupIdCategoryIdMappingResponse> getGroupIdForMultipleCategories(@Query("platform") String query,
-                                                                           @Query("categoryId[$in]") List<String> groupIdList);
+                                                                           @Query("categoryId[$in]") List<String> groupIdList,
+                                                                           @Query("position") String position);
 }

@@ -630,6 +630,17 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     } else {
                         shareUrl = deepLinkURL;
                     }
+                } else {
+                    if (isAdded()) {
+                        author_type.setText(getString(R.string.author_type_user));
+                    } else {
+                        author_type.setText(AppConstants.AUTHOR_TYPE_USER.toUpperCase());
+                    }
+                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug().trim() + "/article/" + detailData.getTitleSlug();
+                    } else {
+                        shareUrl = deepLinkURL;
+                    }
                 }
             } else {
                 // Default Author type set to Blogger
@@ -2166,10 +2177,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
 
         if (categoriesList.size() == 1) {
-            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList.get(0), this);
+            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList.get(0), this, "details");
             groupIdCategoryMap.getGroupIdForCurrentCategory();
         } else {
-            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList, this);
+            GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(categoriesList, this, "details");
             groupIdCategoryMap.getGroupIdForMultipleCategories();
         }
 

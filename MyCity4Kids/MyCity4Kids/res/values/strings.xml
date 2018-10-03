@@ -13,6 +13,7 @@
     <!--but now we are using client APP ID -->
     <string name="facebook_app_id">206155642763202</string>
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">089d77e1898bf3ef59048cc2fe58408b</string>
     <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
 
     <string name="write_review_prompt">What would you like to review?</string>
@@ -314,9 +315,11 @@
     <string name="signin.login_via_facebook">LOGIN USING FACEBOOK</string>
     <string name="signin.login_via_google">LOGIN USING GOOGLE</string>
     <string name="signin.login_via_email">LOGIN USING EMAIL</string>
+    <string name="signin.login_via_phone">LOGIN USING PHONE</string>
 
     <string name="signup.connect_via_facebook">CONNECT USING FACEBOOK</string>
     <string name="signup.connect_via_google">CONNECT USING GOOGLE</string>
+    <string name="signup.connect_via_phone">CONNECT USING PHONE</string>
 
     <string name="for_you.reason.why_label">Why am I seeing this?</string>
     <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
@@ -644,7 +647,7 @@
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
     <string name="language_label.tamil">தமிழ்</string>
-    <string name="language_label.telegu">తెలుగ</string>
+    <string name="language_label.telegu">తెలుగు</string>
 
     <string name="choose_pref_lang">Choose your preferred language</string>
     <string name="choose_pref_lang.cancel">CANCEL</string>
@@ -801,6 +804,7 @@
 
     <string name="groups.join_support_gp">JOIN SUPPORT GROUP</string>
     <string name="groups.not_alone">#YOUARENOTALONE</string>
+    <string name="choose_account">Choose an account to continue</string>
 
     <string name="read_more">Read More</string>
     <string name="read_less">Read Less</string>

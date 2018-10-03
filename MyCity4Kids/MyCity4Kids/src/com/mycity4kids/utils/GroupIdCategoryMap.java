@@ -25,23 +25,26 @@ public class GroupIdCategoryMap {
     private List<String> categoriesList;
     private int groupId;
     private String gpHeading, gpSubHeading, gpImageUrl;
-    GroupCategoryInterface groupCategoryInterface;
+    private String position;
+    private GroupCategoryInterface groupCategoryInterface;
 
-    public GroupIdCategoryMap(String categoryId, GroupCategoryInterface groupCategoryInterface) {
+    public GroupIdCategoryMap(String categoryId, GroupCategoryInterface groupCategoryInterface, String position) {
         this.categoryId = categoryId;
         this.groupCategoryInterface = groupCategoryInterface;
+        this.position = position;
     }
 
-    public GroupIdCategoryMap(ArrayList<String> categoriesList, GroupCategoryInterface groupCategoryInterface) {
+    public GroupIdCategoryMap(ArrayList<String> categoriesList, GroupCategoryInterface groupCategoryInterface, String position) {
         this.categoriesList = categoriesList;
         this.groupCategoryInterface = groupCategoryInterface;
+        this.position = position;
     }
 
     public void getGroupIdForCurrentCategory() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupIdCategoryIdMappingResponse> mappingCall = groupsAPI.getGroupIdForSingleCategory("android", categoryId);
+        Call<GroupIdCategoryIdMappingResponse> mappingCall = groupsAPI.getGroupIdForSingleCategory("android", categoryId, position);
         mappingCall.enqueue(groupIdResponseCallback);
     }
 
@@ -49,7 +52,7 @@ public class GroupIdCategoryMap {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupIdCategoryIdMappingResponse> mappingCall = groupsAPI.getGroupIdForMultipleCategories("android", categoriesList);
+        Call<GroupIdCategoryIdMappingResponse> mappingCall = groupsAPI.getGroupIdForMultipleCategories("android", categoriesList, position);
         mappingCall.enqueue(groupIdResponseCallback);
     }
 

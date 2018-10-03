@@ -28,6 +28,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
     private CustomFontTextView googleLoginTextView;
     private CustomFontTextView loginEmailTextView;
     private CustomFontTextView signupTextView;
+    private CustomFontTextView phoneLoginTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,11 +40,13 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
         facebookLoginTextView = (CustomFontTextView) view.findViewById(R.id.connect_facebook);
         googleLoginTextView = (CustomFontTextView) view.findViewById(R.id.connect_googleplus);
         loginEmailTextView = (CustomFontTextView) view.findViewById(R.id.loginEmailTextView);
+        phoneLoginTextView = (CustomFontTextView) view.findViewById(R.id.connect_phone);
         signupTextView = (CustomFontTextView) view.findViewById(R.id.signupTextView);
 
         facebookLoginTextView.setOnClickListener(this);
         googleLoginTextView.setOnClickListener(this);
         loginEmailTextView.setOnClickListener(this);
+        phoneLoginTextView.setOnClickListener(this);
         signupTextView.setOnClickListener(this);
 
         return view;
@@ -53,6 +56,9 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         Intent intent = null;
         switch (v.getId()) {
+            case R.id.connect_phone:
+                ((ActivityLogin) getActivity()).fbAccountKitVerification();
+                break;
             case R.id.connect_facebook:
                 ((ActivityLogin) getActivity()).loginWithFacebook();
                 break;

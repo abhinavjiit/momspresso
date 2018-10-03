@@ -46,8 +46,6 @@ import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
-import org.wordpress.android.editor.EditorFragmentAbstract;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -371,10 +369,10 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                         imageBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
                         String path = MediaStore.Images.Media.insertImage(AddTextOrMediaGroupPostActivity.this.getContentResolver(), imageBitmap, "Title", null);
                         Uri imageUriTemp = Uri.parse(path);
-                        EditorFragmentAbstract.imageUploading = 0;
                         File file2 = FileUtils.getFile(this, imageUriTemp);
                         sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
+                        Crashlytics.logException(e);
                         e.printStackTrace();
                     }
                 }
@@ -412,7 +410,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                         fos.flush();
                         fos.close();
                         imageUri = Uri.fromFile(photoFile);
-                        EditorFragmentAbstract.imageUploading = 0;
                         File file2 = FileUtils.getFile(this, imageUri);
                         sendUploadProfileImageRequest(file2);
                         // compressImage(filePath);

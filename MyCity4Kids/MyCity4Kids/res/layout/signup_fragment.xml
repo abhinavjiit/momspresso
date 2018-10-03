@@ -69,6 +69,25 @@
             android:textSize="14sp"
             app:fontName="open_sans.ttf" />
 
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/connect_phone"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/phone_login_rounded_corners"
+            android:drawablePadding="-30dp"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="8dp"
+            android:text="@string/signup.connect_via_phone"
+            android:textColor="@color/white_color"
+            android:textSize="14sp"
+            app:fontName="open_sans.ttf" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"

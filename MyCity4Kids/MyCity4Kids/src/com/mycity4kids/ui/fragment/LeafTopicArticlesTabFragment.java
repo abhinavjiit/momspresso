@@ -137,7 +137,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         mDatalist = new ArrayList<>();
         feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false,selectedTopic.getId() + "~" + selectedTopic.getDisplay_name());
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, selectedTopic.getId() + "~" + selectedTopic.getDisplay_name());
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -175,7 +175,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
     }
 
     private void getGroupIdForCurrentCategory() {
-        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(selectedTopic.getId(), this);
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(selectedTopic.getId(), this, "listing");
         groupIdCategoryMap.getGroupIdForCurrentCategory();
     }
 

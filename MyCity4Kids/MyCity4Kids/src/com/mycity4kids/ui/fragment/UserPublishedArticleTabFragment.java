@@ -27,7 +27,6 @@ import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
@@ -379,15 +378,27 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             content = bodyImgTxt;
         }
 
-        Intent intent = new Intent(getActivity(), EditorPostActivity.class);
-        intent.putExtra("from", "publishedList");
-        intent.putExtra("title", detailData.getTitle());
-        intent.putExtra("content", content);
-        intent.putExtra("thumbnailUrl", detailData.getImageUrl().getThumbMax());
-        intent.putExtra("articleId", detailData.getId());
-        intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
-        intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
-        startActivity(intent);
+//        if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext())) && AppConstants.ANDROID_NEW_EDITOR.equals(detailData.getUserAgent())) {
+//            Intent intent = new Intent(getActivity(), NewEditorPostActivity.class);
+//            intent.putExtra("from", "publishedList");
+//            intent.putExtra("title", detailData.getTitle());
+//            intent.putExtra("content", content);
+//            intent.putExtra("thumbnailUrl", detailData.getImageUrl().getThumbMax());
+//            intent.putExtra("articleId", detailData.getId());
+//            intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
+//            intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
+//            startActivity(intent);
+//        } else {
+            Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+            intent.putExtra("from", "publishedList");
+            intent.putExtra("title", detailData.getTitle());
+            intent.putExtra("content", content);
+            intent.putExtra("thumbnailUrl", detailData.getImageUrl().getThumbMax());
+            intent.putExtra("articleId", detailData.getId());
+            intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
+            intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
+            startActivity(intent);
+//        }
     }
 
     @Override
