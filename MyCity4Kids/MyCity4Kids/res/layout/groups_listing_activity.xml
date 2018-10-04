@@ -42,8 +42,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:gravity="center"
-        android:horizontalSpacing="15dp"
-        android:numColumns="2"
+        android:nestedScrollingEnabled="false"
+
         android:stretchMode="columnWidth"
         android:verticalSpacing="15dp"
         android:visibility="visible" />

@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -29,6 +30,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
+import com.mycity4kids.ui.adapter.Recycleshimmer;
 import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
@@ -47,16 +49,15 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private TrendingListingResult trendingTopicData;
-
     private MainArticleRecyclerViewAdapter recyclerAdapter;
-//    private MainArticleListingAdapter adapter;
-
+    //    private MainArticleListingAdapter adapter;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    //    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    // ShimmerFrameLayout nshimmerFrameLayout;
 
     @Nullable
     @Override
@@ -69,7 +70,8 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
 //        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
-
+        //   nshimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer1);
+        // nshimmerFrameLayout.startShimmerAnimation();
         if (getArguments() != null) {
             trendingTopicData = getArguments().getParcelable("trendingTopicsData");
         }
@@ -129,10 +131,10 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         });
 
 
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getItemAtPosition(i);
+//       listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//       @Override
+//       public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//              ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getItemAtPosition(i);
 //
 //                if (null == parentingListData) {
 //                    Utils.pushOpenFollowTopicEvent(getActivity(), "HomeScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
@@ -190,6 +192,8 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
+                    //     nshimmerFrameLayout.stopShimmerAnimation();
+                    //   nshimmerFrameLayout.setVisibility(View.GONE);
                 } else {
                 }
             } catch (Exception e) {
@@ -290,4 +294,16 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         intent.putExtra(Constants.AUTHOR, trendingTopicData.getArticleList().get(position).getUserId() + "~" + trendingTopicData.getArticleList().get(position).getUserName());
         startActivity(intent);
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        nshimmerFrameLayout.startShimmerAnimation();
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        nshimmerFrameLayout.stopShimmerAnimation();
+//        super.onPause();
+//    }
 }

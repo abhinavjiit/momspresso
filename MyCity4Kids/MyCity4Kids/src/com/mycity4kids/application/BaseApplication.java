@@ -93,7 +93,7 @@ public class BaseApplication extends Application {
     //private static final boolean GA_IS_DRY_RUN = false;
 
     // GA Logger.
-/*    private static final LogLevel GA_LOG_VERBOSITY = LogLevel.ERROR;*/
+    /*    private static final LogLevel GA_LOG_VERBOSITY = LogLevel.ERROR;*/
 
     // Key used to store a user's tracking preferences in SharedPreferences.
     private static final String TRACKING_PREF_KEY = "trackingPreference";
@@ -201,8 +201,8 @@ public class BaseApplication extends Application {
     }
 
     /*
-         * Returns the Google Analytics tracker.
-         */
+     * Returns the Google Analytics tracker.
+     */
     public static Tracker getGaTracker() {
         return mTracker;
     }

@@ -82,6 +82,7 @@
                 android:gravity="left|top"
                 android:hint="@string/groups.ask_something"
                 android:paddingBottom="28dp"
+                android:inputType="textMultiLine"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
                 android:paddingTop="28dp"

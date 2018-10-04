@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -62,6 +63,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     private boolean isHeaderVisible = false;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
+    ShimmerFrameLayout mshimmerFrameLayout;
 //    private SwipeRefreshLayout swipe_refresh_layout;
 
     @Nullable
@@ -74,8 +76,8 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-
-        progressBar.setVisibility(View.VISIBLE);
+        mshimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer1);
+       // progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
 
@@ -165,6 +167,8 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
+                    mshimmerFrameLayout.stopShimmerAnimation();
+                    mshimmerFrameLayout.setVisibility(View.GONE);
                 } else {
                 }
             } catch (Exception e) {
@@ -293,5 +297,17 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         isHeaderVisible = false;
         recyclerAdapter.hideFollowTopicHeader();
         recyclerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mshimmerFrameLayout.startShimmerAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        mshimmerFrameLayout.stopShimmerAnimation();
+        super.onPause();
     }
 }

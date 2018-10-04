@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
@@ -85,6 +86,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     private RelativeLayout guideOverlay;
     private RelativeLayout writeArticleCell;
     private boolean showGuide = false;
+    ShimmerFrameLayout shimmerFrameLayout;
 
     @Nullable
     @Override
@@ -97,6 +99,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
         writeArticleCell = (RelativeLayout) view.findViewById(R.id.writeArticleCell);
+        shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer1);
 
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
@@ -359,6 +362,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     @Override
     public void onResume() {
         super.onResume();
+        shimmerFrameLayout.startShimmerAnimation();
     }
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
@@ -389,6 +393,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
+                    shimmerFrameLayout.stopShimmerAnimation();
+                    shimmerFrameLayout.setVisibility(View.GONE);
                 } else {
                 }
             } catch (Exception e) {
@@ -487,6 +493,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 }
                 break;
             case R.id.recentSortFAB:
+                shimmerFrameLayout.startShimmerAnimation();
+                shimmerFrameLayout.setVisibility(View.VISIBLE);
                 fabMenu.collapse();
                 mDatalist.clear();
                 recyclerAdapter.notifyDataSetChanged();
@@ -495,6 +503,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 hitFilteredTopicsArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
+                shimmerFrameLayout.startShimmerAnimation();
+                shimmerFrameLayout.setVisibility(View.VISIBLE);
                 fabMenu.collapse();
                 mDatalist.clear();
                 recyclerAdapter.notifyDataSetChanged();
@@ -528,5 +538,11 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         intent.putParcelableArrayListExtra("pagerListData", mDatalist);
         intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
         startActivity(intent);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        shimmerFrameLayout.stopShimmerAnimation();
     }
 }

@@ -47,6 +47,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private int upperLimit = 3;
     private int articleCount = 10;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +55,9 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+      
         trendingArraylist = new ArrayList<>();
+
         hitTrendingDataAPI();
         return view;
     }
@@ -79,6 +82,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
                 TrendingListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processTrendingResponse(responseData);
+                
                 } else {
                     ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
                 }
@@ -160,8 +164,12 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
+      
+
         updateUnreadNotificationCount();
     }
+
+
 
     private Callback<NotificationCenterListResponse> unreadNotificationCountResponseCallback = new Callback<NotificationCenterListResponse>() {
         @Override

@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
@@ -64,6 +65,7 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
     private String fromScreen;
+    ShimmerFrameLayout funnyvideosshimmer;
 
     @Nullable
     @Override
@@ -81,7 +83,7 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
         popularSortFAB = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
         recentSortFAB = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
         fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
-
+        funnyvideosshimmer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_funny_videos_article);
         frameLayout.getBackground().setAlpha(0);
 
         popularSortFAB.setOnClickListener(this);
@@ -118,7 +120,7 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
 
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
         nextPageNumber = 1;
@@ -187,7 +189,7 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
         Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(from, from + limit - 1, sortType, 3);
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
-        progressBar.setVisibility(View.VISIBLE);
+        // progressBar.setVisibility(View.VISIBLE);
 
     }
 
@@ -207,6 +209,8 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
                 VlogsListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponse(responseData);
+                    funnyvideosshimmer.stopShimmerAnimation();
+                    funnyvideosshimmer.setVisibility(View.GONE);
 //                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());
 //                    notificationCenterListAdapter.notifyDataSetChanged();
                 } else {
@@ -280,6 +284,8 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recentSortFAB:
+                funnyvideosshimmer.startShimmerAnimation();
+                funnyvideosshimmer.setVisibility(View.VISIBLE);
                 fabMenu.collapse();
                 isLastPageReached = false;
                 articleDataModelsNew.clear();
@@ -289,6 +295,8 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
                 hitArticleListingApi();
                 break;
             case R.id.popularSortFAB:
+                funnyvideosshimmer.startShimmerAnimation();
+                funnyvideosshimmer.setVisibility(View.VISIBLE);
                 fabMenu.collapse();
                 isLastPageReached = false;
                 articleDataModelsNew.clear();
@@ -299,4 +307,17 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
                 break;
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        funnyvideosshimmer.startShimmerAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        funnyvideosshimmer.stopShimmerAnimation();
+    }
 }
+

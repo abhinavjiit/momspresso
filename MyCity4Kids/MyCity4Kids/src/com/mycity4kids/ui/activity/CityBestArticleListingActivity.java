@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
@@ -66,18 +67,20 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
     private TextView noBlogsTextView;
     private ProgressBar progressBar;
     private FrameLayout frameLayout;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    //    private SwipeRefreshLayout swipeRefreshLayout;
     private FrameLayout sortBgLayout;
     private RelativeLayout bottomOptionMenu;
     private FloatingActionsMenu fabMenu;
     private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
+    ShimmerFrameLayout cityshimmerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.best_in_your_city_activity);
+        cityshimmerFragment = (ShimmerFrameLayout) findViewById(R.id.shimmer_city_article_listing);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -138,7 +141,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         });
 
 //        swipeRefreshLayout.setOnRefreshListener(CityBestArticleListingActivity.this);
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
@@ -277,7 +280,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
             return;
         }
         if (nextPageNumber == 1) {
-            progressBar.setVisibility(View.VISIBLE);
+            // progressBar.setVisibility(View.VISIBLE);
         }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -307,6 +310,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
+                    cityshimmerFragment.stopShimmerAnimation();
+                    cityshimmerFragment.setVisibility(View.GONE);
                 } else {
                     showToast(getString(R.string.went_wrong));
                 }
@@ -320,6 +325,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
             Crashlytics.logException(t);
+            cityshimmerFragment.startShimmerAnimation();
             Log.d("MC4KException", Log.getStackTraceString(t));
             showToast(getString(R.string.went_wrong));
         }
@@ -395,6 +401,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recentSortFAB:
+                cityshimmerFragment.startShimmerAnimation();
+                cityshimmerFragment.setVisibility(View.VISIBLE);
                 Utils.pushSortListingEvent(CityBestArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(CityBestArticleListingActivity.this).getDynamoId(),
                         "Best of City Listing", "recent");
                 sortBgLayout.setVisibility(View.GONE);
@@ -406,6 +414,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                 hitBestofCityArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
+                cityshimmerFragment.startShimmerAnimation();
+                cityshimmerFragment.setVisibility(View.VISIBLE);
                 Utils.pushSortListingEvent(CityBestArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(CityBestArticleListingActivity.this).getDynamoId(),
                         "Best of City Listing", "popular");
                 sortBgLayout.setVisibility(View.GONE);
@@ -443,5 +453,17 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
         intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cityshimmerFragment.startShimmerAnimation();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cityshimmerFragment.stopShimmerAnimation();
     }
 }

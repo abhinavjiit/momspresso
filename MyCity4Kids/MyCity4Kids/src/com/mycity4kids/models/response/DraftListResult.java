@@ -15,11 +15,11 @@ public class DraftListResult implements Serializable {
     String createdTime;
     String body;
     String title;
-//    ImageURL imageUrl;
+    //    ImageURL imageUrl;
     int itemType = 1;
-//    private Map<String, List<Map<String, String>>> tags;
+    //    private Map<String, List<Map<String, String>>> tags;
     private ArrayList<Map<String, String>> tags;
-    public String getId() {
+public String getId() {
         return id;
     }
 

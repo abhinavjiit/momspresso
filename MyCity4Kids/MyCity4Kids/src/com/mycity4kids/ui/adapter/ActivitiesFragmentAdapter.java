@@ -26,76 +26,78 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ActivitiesFragmentAdapter extends BaseAdapter implements Filterable {
-	private ArrayList<Activities> mActivitiesList;
-	private LayoutInflater mInflator;
-	private HashMap<MapTypeFilter, String> mFilterMap;
+        private ArrayList<Activities> mActivitiesList;
+        private LayoutInflater mInflator;
+        private HashMap<MapTypeFilter, String> mFilterMap;
     ArrayList<Integer> checkboxlist;
-	boolean[] checkBoxState;
-	private ItemFilter mFilter = new ItemFilter();
-	private ArrayList<Activities> filteredData;
-	public	ActivitiesFragmentAdapter(Context pContext, Fragment fragment, ArrayList<Activities> pActivitiesList){
-		mInflator=LayoutInflater.from(pContext);
-		mActivitiesList=pActivitiesList;
-		filteredData=pActivitiesList;
-		if (fragment == null) {
-			mFilterMap = ((BusinessListActivityKidsResources)pContext).mFilterMap;
-		} else {
-			mFilterMap= FragmentBusinesslistEvents.mFilterMap;
-		}
-		checkboxlist=new ArrayList<>();
-		checkBoxState=new boolean[mActivitiesList.size()];
-	}
+    boolean[] checkBoxState;
+    private ItemFilter mFilter = new ItemFilter();
+    private ArrayList<Activities> filteredData;
 
-  public void setList(ArrayList<Activities> pActivitiesList)
-  {
-	  mActivitiesList=pActivitiesList;
+    public ActivitiesFragmentAdapter(Context pContext, Fragment fragment, ArrayList<Activities> pActivitiesList) {
+        mInflator = LayoutInflater.from(pContext);
+        mActivitiesList = pActivitiesList;
+        filteredData = pActivitiesList;
+        if (fragment == null) {
+            mFilterMap = ((BusinessListActivityKidsResources) pContext).mFilterMap;
+        } else {
+            mFilterMap = FragmentBusinesslistEvents.mFilterMap;
+        }
+        checkboxlist = new ArrayList<>();
+        checkBoxState = new boolean[mActivitiesList.size()];
+    }
 
-  }
-	/*@Override
-	public int getCount() {
-		return mActivitiesList == null ? 0 : mActivitiesList.size();
-	}
+    public void setList(ArrayList<Activities> pActivitiesList) {
+        mActivitiesList = pActivitiesList;
 
-	@Override
-	public Object getItem(int position) {
-		return mActivitiesList.get(position);
-	}
+    }
 
-	@Override
-	public long getItemId(int position) {
-		// TODO Auto-generated method stub
-		return position;
-	}*/
-	public int getCount() {
-		return filteredData == null ? 0 :filteredData.size();
-	}
+    /*@Override
+    public int getCount() {
+        return mActivitiesList == null ? 0 : mActivitiesList.size();
+    }
 
-	public Object getItem(int position) {
-		return filteredData.get(position);
-	}
+    @Override
+    public Object getItem(int position) {
+        return mActivitiesList.get(position);
+    }
 
-	public long getItemId(int position) {
-		return position;
-	}
-	@Override
-	public View getView(final int position, View view, ViewGroup parent) {
-		final ViewHolder holder;
-		if (view == null) {
-			view = mInflator.inflate(R.layout.list_item_with_check_box, null);
-			holder = new ViewHolder();
-			holder.lnrRoot = (LinearLayout) view.findViewById(R.id.lnrRoot);
-			holder.mActivityName = (TextView) view.findViewById(R.id.txvAgeGroupName);
-			holder.mCheckBox = (CheckBox) view.findViewById(R.id.checkBox);
-			//Log.d("check", "isChecked before " + holder.mCheckBox.isChecked());
-			view.setTag(holder);
-		} else {
-			holder = (ViewHolder) view.getTag();
-		}
-		//Log.d("check", "checkBoxState[position]  " + checkBoxState[position]);
-		//holder.mCheckBox.setChecked(checkBoxState[position]);
-		//holder.mCheckBox.setChecked(true);
+    @Override
+    public long getItemId(int position) {
+        // TODO Auto-generated method stub
+        return position;
+    }*/
+    public int getCount() {
+        return filteredData == null ? 0 : filteredData.size();
+    }
 
-		//Log.d("check", "isChecked " + holder.mCheckBox.isChecked());
+    public Object getItem(int position) {
+        return filteredData.get(position);
+    }
+
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(final int position, View view, ViewGroup parent) {
+        final ViewHolder holder;
+        if (view == null) {
+            view = mInflator.inflate(R.layout.list_item_with_check_box, null);
+            holder = new ViewHolder();
+            holder.lnrRoot = (LinearLayout) view.findViewById(R.id.lnrRoot);
+            holder.mActivityName = (TextView) view.findViewById(R.id.txvAgeGroupName);
+            holder.mCheckBox = (CheckBox) view.findViewById(R.id.checkBox);
+            //Log.d("check", "isChecked before " + holder.mCheckBox.isChecked());
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+        //Log.d("check", "checkBoxState[position]  " + checkBoxState[position]);
+        //holder.mCheckBox.setChecked(checkBoxState[position]);
+        //holder.mCheckBox.setChecked(true);
+
+        //Log.d("check", "isChecked " + holder.mCheckBox.isChecked());
 		/*if(checkboxlist.size()>0)
 		{
 			for(int i=0;i<checkboxlist.size();i++) {
@@ -105,108 +107,105 @@ public class ActivitiesFragmentAdapter extends BaseAdapter implements Filterable
 					holder.mCheckBox.setChecked(true);
 			}
 		}*/
-		holder.mActivityName.setText(filteredData.get(position).getName());
-		holder.mCheckBox.setChecked(filteredData.get(position).isSelected());
-		//holder.mCheckBox.setTag(mActivitiesList.get(position));
+        holder.mActivityName.setText(filteredData.get(position).getName());
+        holder.mCheckBox.setChecked(filteredData.get(position).isSelected());
+        //holder.mCheckBox.setTag(mActivitiesList.get(position));
 
-		holder.mCheckBox.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
+        holder.mCheckBox.setOnClickListener(new OnClickListener() {
 
-				CheckBox chkBok=(CheckBox)v;
-				filteredData.get(position).setSelected(chkBok.isChecked());
-				for (Activities activities : mActivitiesList){
-					if (activities.equals(filteredData.get(position))){
-						activities.setSelected(filteredData.get(position).isSelected());
-						break;
-					}
-				}
-				//notifyDataSetChanged();
+            @Override
+            public void onClick(View v) {
+
+                CheckBox chkBok = (CheckBox) v;
+                filteredData.get(position).setSelected(chkBok.isChecked());
+                for (Activities activities : mActivitiesList) {
+                    if (activities.equals(filteredData.get(position))) {
+                        activities.setSelected(filteredData.get(position).isSelected());
+                        break;
+                    }
+                }
+                //notifyDataSetChanged();
 			/*	Activities activity=(Activities)chkBok.getTag();
 				activity.setSelected(chkBok.isChecked());
 				notifyDataSetChanged();*/
-				
-				addOrRemoveFilters(mActivitiesList);
-			}
-		});
-		
-		
 
-		return view;
-	}
+                addOrRemoveFilters(mActivitiesList);
+            }
+        });
 
 
-	class ViewHolder{
-		LinearLayout lnrRoot;
-		TextView mActivityName;
-		CheckBox mCheckBox;
+        return view;
+    }
 
 
-	}
-
-	private void addOrRemoveFilters(ArrayList<Activities> mActivitiesList){
-		mFilterMap.remove(MapTypeFilter.Activities);
-		ArrayList<Activities> selected_filters = new ArrayList<Activities>() ; 
-		for(int i = 0 ; i < mActivitiesList.size() ; i++) {
-			Activities activity = mActivitiesList.get(i) ; 
-			if(activity.isSelected()) {
-				selected_filters.add(activity) ; 
-			}
-		}
-		if((selected_filters!=null) && !(selected_filters.isEmpty()))
-		{
-
-			if(selected_filters != null ) {
-				String activityStr = "" ; 
-				for(int i = 0 ; i < selected_filters.size() ; i++) {
-					activityStr += selected_filters.get(i).getId() + "," ; 
-				}
-				String finalString=activityStr.substring(0 , activityStr.length() - 1 ) ;
-
-				mFilterMap.put(MapTypeFilter.Activities, "&activities="+finalString);
-
-				// add in list
-				// remove from business list
-				try
-				{
-					(FragmentBusinesslistEvents.mFilterMap).remove(MapTypeFilter.Activities);
-					(FragmentBusinesslistEvents.mFilterMap).put(MapTypeFilter.Activities, "&activities="+finalString);
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+    class ViewHolder {
+        LinearLayout lnrRoot;
+        TextView mActivityName;
+        CheckBox mCheckBox;
 
 
-			}
-		}
-	}
-	public Filter getFilter() {
-		return mFilter;
-	}
-	private class ItemFilter extends Filter {
-		@Override
-		protected FilterResults performFiltering(CharSequence constraint) {
+    }
 
-			//String filterString = constraint.toString().toLowerCase();
-			String filterString = constraint.toString();
-			FilterResults results = new FilterResults();
+    private void addOrRemoveFilters(ArrayList<Activities> mActivitiesList) {
+        mFilterMap.remove(MapTypeFilter.Activities);
+        ArrayList<Activities> selected_filters = new ArrayList<Activities>();
+        for (int i = 0; i < mActivitiesList.size(); i++) {
+            Activities activity = mActivitiesList.get(i);
+            if (activity.isSelected()) {
+                selected_filters.add(activity);
+            }
+        }
+        if ((selected_filters != null) && !(selected_filters.isEmpty())) {
 
-			final List<Activities> list = mActivitiesList;
+            if (selected_filters != null) {
+                String activityStr = "";
+                for (int i = 0; i < selected_filters.size(); i++) {
+                    activityStr += selected_filters.get(i).getId() + ",";
+                }
+                String finalString = activityStr.substring(0, activityStr.length() - 1);
 
-			int count = list.size();
-			final ArrayList<Activities> nlist = new ArrayList<Activities>(count);
+                mFilterMap.put(MapTypeFilter.Activities, "&activities=" + finalString);
 
-			if (!StringUtils.isNullOrEmpty(filterString)) {
-				for (Activities activities : mActivitiesList) {
-					if (activities.getName().toLowerCase().startsWith(filterString.toLowerCase())) {
-						nlist.add(activities);
-					}
-				}
-			} else {
-				nlist.addAll(mActivitiesList);
-			}
+                // add in list
+                // remove from business list
+                try {
+                    (FragmentBusinesslistEvents.mFilterMap).remove(MapTypeFilter.Activities);
+                    (FragmentBusinesslistEvents.mFilterMap).put(MapTypeFilter.Activities, "&activities=" + finalString);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }
+    }
+
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    private class ItemFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            //String filterString = constraint.toString().toLowerCase();
+            String filterString = constraint.toString();
+            FilterResults results = new FilterResults();
+
+            final List<Activities> list = mActivitiesList;
+
+            int count = list.size();
+            final ArrayList<Activities> nlist = new ArrayList<Activities>(count);
+
+            if (!StringUtils.isNullOrEmpty(filterString)) {
+                for (Activities activities : mActivitiesList) {
+                    if (activities.getName().toLowerCase().startsWith(filterString.toLowerCase())) {
+                        nlist.add(activities);
+                    }
+                }
+            } else {
+                nlist.addAll(mActivitiesList);
+            }
 
 //			String filterableString ;
 //         Log.d("check","filterString "+filterString);
@@ -220,20 +219,20 @@ public class ActivitiesFragmentAdapter extends BaseAdapter implements Filterable
 //				}
 //			}
 
-			results.values = nlist;
-			results.count = nlist.size();
+            results.values = nlist;
+            results.count = nlist.size();
 
-			return results;
-		}
+            return results;
+        }
 
-		@Override
-		protected void publishResults(CharSequence constraint, FilterResults results) {
-			filteredData = (ArrayList<Activities>) results.values;
-			Log.d("check","constraint "+constraint);
-			Log.d("check","results.values "+results.values);
-			notifyDataSetChanged();
-		}
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredData = (ArrayList<Activities>) results.values;
+            Log.d("check", "constraint " + constraint);
+            Log.d("check", "results.values " + results.values);
+            notifyDataSetChanged();
+        }
 
-	}
+    }
 }
 
