@@ -15,6 +15,7 @@
         android:textSize="18sp" />
 
     <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/about_edittext"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginLeft="13dp"
@@ -22,8 +23,11 @@
         android:layout_marginTop="3dp"
         android:background="@drawable/mainprofile_thin_border"
         android:gravity="top"
+        android:overScrollMode="always"
         android:paddingLeft="20dp"
-        android:paddingTop="23dp"
+        android:paddingTop="15dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
         android:textColor="#000"
         android:textSize="16sp" />
 
@@ -52,10 +56,12 @@
             android:layout_height="40dp"
             android:layout_marginLeft="13dp"
             android:layout_marginRight="17dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/mainprofile_thin_border"
             android:gravity="center_vertical"
             android:hint="NAME (optional)"
+            android:inputType="textPersonName"
+            android:maxLines="1"
             android:paddingLeft="8dp"
             android:textColor="#000"
             android:textSize="14sp" />
@@ -65,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="75dp"
             android:text="Gender"
             android:textColor="#000"
             android:textSize="14sp" />
@@ -75,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="200dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="75dp"
             android:text="DOB"
             android:textColor="#000"
             android:textSize="14sp" />
@@ -96,22 +102,25 @@
             android:layout_width="135dp"
             android:layout_height="40dp"
             android:layout_below="@id/gender"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="18dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+
             android:layout_marginTop="8dp"
             android:backgroundTint="#000" />
 
-        <com.mycity4kids.widget.CustomFontEditText
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/date_picker"
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_below="@id/dob"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="18dp"
             android:layout_marginLeft="200dp"
             android:layout_marginStart="200dp"
             android:layout_marginTop="8dp"
-            android:background="#fff" />
+            android:background="#fff"
+            android:gravity="center"
+            android:textColor="#000" />
 
     </RelativeLayout>
 </LinearLayout>
