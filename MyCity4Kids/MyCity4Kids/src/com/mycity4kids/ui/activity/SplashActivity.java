@@ -75,6 +75,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -110,6 +111,7 @@ public class SplashActivity extends BaseActivity {
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
     protected void onNewIntent(Intent intent) {
+       
         String action = intent.getAction();
         String data = intent.getDataString();
         if (Intent.ACTION_VIEW.equals(action) && data != null) {
@@ -120,6 +122,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         Utils.pushAppOpenEvent(this, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         onNewIntent(getIntent());
         extras = getIntent().getExtras();
@@ -132,7 +135,7 @@ public class SplashActivity extends BaseActivity {
         }
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-       /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
+        /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         // mUrl = Uri.parse("http://www.mycity4kids.com/parenting/kalpana---without-boundaries/article/From-the-Bicycle-to-the-Recycle-days...");
         mUrl = Uri.parse("android-app://com.mycity4kids/http/momspresso.com");
@@ -142,7 +145,7 @@ public class SplashActivity extends BaseActivity {
 
             setContentView(R.layout.splash_activity);
             mLayout = findViewById(R.id.rootLayout);
-           /* AnalyticsHelper.logEvent("Application Launch...");*/
+            /* AnalyticsHelper.logEvent("Application Launch...");*/
 
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
@@ -337,6 +340,8 @@ public class SplashActivity extends BaseActivity {
                 .build();
     }
 
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -345,6 +350,7 @@ public class SplashActivity extends BaseActivity {
             AppIndex.AppIndexApi.start(mClient, getAction());
     }
 
+  
     @Override
     public void onStop() {
         if (!BuildConfig.DEBUG)

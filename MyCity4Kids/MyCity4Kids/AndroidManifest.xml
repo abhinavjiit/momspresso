@@ -8,18 +8,18 @@
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="26"
-        tools:overrideLibrary="life.knowledge4.videotrimmer, im.ene.toro.exoplayer, im.ene.toro" />
+        tools:overrideLibrary="life.knowledge4.videotrimmer, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer" />
     <!-- So that we can get the account name -->
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Used to request data from the Google+ APIs in the SignInActivity -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
+    <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <!-- Required if we need to invalidate access tokens -->
-    <!--<uses-permission android:name="android.permission.USE_CREDENTIALS" />-->
+    <!-- <uses-permission android:name="android.permission.USE_CREDENTIALS" /> -->
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <!-- External storage for caching. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -32,7 +32,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
     !-- Maps API needs OpenGL ES 2.0. -->
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -49,20 +48,19 @@
 
         <!-- API key For Google Map Local -->
 
-        <!--<meta-data-->
-        <!--android:name="com.google.android.maps.v2.API_KEY"-->
-        <!--android:value="AIzaSyDW1kR3eOOksMp4gBrOnyGVB-q9bFJ21x4" />-->
 
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.maps.v2.API_KEY" -->
+        <!-- android:value="AIzaSyDW1kR3eOOksMp4gBrOnyGVB-q9bFJ21x4" /> -->
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCLaeioxT3JtDNGj4aczM_Clno7T_WTfWU" />
 
-        <!--// this is old one keyyyyy-->
+        <!-- // this is old one keyyyyy -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.facebook.accountkit.ApplicationName"
             android:value="@string/app_name" />
@@ -81,7 +79,6 @@
             </intent-filter>
         </receiver>
         -->
-
         <activity
             android:name=".filechooser.com.ipaulpro.afilechooser.FileChooserActivity"
             android:enabled="@bool/use_activity"
@@ -97,7 +94,6 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.SplashActivity"
             android:icon="@drawable/myicon"
@@ -110,7 +106,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!--The following intent filter is added to provide deep linking to the MC4K app  -->
+            <!-- The following intent filter is added to provide deep linking to the MC4K app -->
             <intent-filter android:autoVerify="true">
                 <data android:scheme="mc4k" />
                 <data android:scheme="mck" />
@@ -178,21 +174,18 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
-
         <activity
             android:name=".ui.activity.MissingPlaceActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".ui.activity.NewsLetterWebviewActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".ui.activity.LoadWebViewActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
@@ -200,20 +193,17 @@
             android:parentActivityName=".ui.activity.DashboardActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".cropimage.CropImage"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".ui.activity.ActivityLogin"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-
         <activity android:name=".googlemap.MapActivity" />
         <activity
             android:name=".ui.activity.HomeCategoryActivity"
@@ -299,7 +289,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/transparent_status"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".editor.EditorPostActivity"
             android:screenOrientation="portrait"
@@ -313,16 +302,16 @@
         <activity
             android:name="com.google.android.gms.tagmanager.PreviewActivity"
             android:label="@string/app_name"
-            android:noHistory="true">  <!-- optional, removes the previewActivity from the activity stack. -->
+            android:noHistory="true"> <!-- optional, removes the previewActivity from the activity stack. -->
             <intent-filter>
                 <data android:scheme="tagmanager.c.com.mycity4kids" />
+
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.ArticleListingActivity"
             android:screenOrientation="portrait" />
@@ -511,6 +500,7 @@
                 <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
             </intent-filter>
         </receiver>
+
         <service
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
@@ -546,28 +536,22 @@
         <service
             android:name=".sync.CategorySyncService"
             android:exported="false" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/notification_icon"
             tools:ignore="ManifestResource" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <!--
+             Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/blue_bg" />
-        <!--<service-->
-        <!--android:name="com.google.android.gms.measurement.AppMeasurementService"-->
-        <!--android:enabled="false"-->
-        <!--android:exported="false"-->
-        <!--tools:replace="android:enabled" />-->
 
-        <!--<receiver-->
-        <!--android:name="com.google.android.gms.measurement.AppMeasurementReceiver"-->
-        <!--android:enabled="false"-->
-        <!--tools:replace="android:enabled">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="com.google.android.gms.measurement.UPLOAD" />-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
+        <activity android:name=".ui.activity.Mainprofile" />
+        <activity android:name=".MainProfile" />
+
     </application>
+
 </manifest>

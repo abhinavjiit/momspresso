@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -74,13 +75,14 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     private FeedNativeAd feedNativeAd;
     private LinearLayout addTopicsLayout;
     private FrameLayout headerArticleCardLayout;
+    ShimmerFrameLayout ashimmerFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_listing_activity);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
+        ashimmerFrameLayout = (ShimmerFrameLayout) findViewById(R.id.shimmer_article_listing);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -96,7 +98,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
-        progressBar.setVisibility(View.VISIBLE);
+        // progressBar.setVisibility(View.VISIBLE);
 
         sortType = getIntent().getStringExtra(Constants.SORT_TYPE);
         fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
@@ -335,6 +337,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
+                    ashimmerFrameLayout.stopShimmerAnimation();
+                    ashimmerFrameLayout.setVisibility(View.GONE);
                 } else {
                 }
             } catch (Exception e) {
@@ -490,5 +494,14 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         }
     }
 
+    protected void onResume() {
+        super.onResume();
+        ashimmerFrameLayout.startShimmerAnimation();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ashimmerFrameLayout.stopShimmerAnimation();
+    }
 }

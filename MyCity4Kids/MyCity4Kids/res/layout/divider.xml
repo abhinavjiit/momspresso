@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/viewdivider"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="80dp"
+        android:background="#66d3d3d3" />
+
+
+</LinearLayout>

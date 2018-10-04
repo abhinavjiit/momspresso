@@ -82,6 +82,7 @@ public class AllVideosListingActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+
                 break;
         }
         return true;

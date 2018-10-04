@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -92,21 +93,25 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
 
         seeAllGpTextView.setOnClickListener(this);
         seeAllJoinedGpTextView.setOnClickListener(this);
+        LinearLayoutManager dlinearLayoutManager = new LinearLayoutManager(getActivity());
+        joinedGroupRecyclerGridView.setLayoutManager(dlinearLayoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        allGroupRecyclerGridView.setLayoutManager(linearLayoutManager);
 
-        final NoScrollGridLayoutManager joinedGpGridLayoutManager = new NoScrollGridLayoutManager(getActivity(), 2) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        joinedGroupRecyclerGridView.setLayoutManager(joinedGpGridLayoutManager);
-        final NoScrollGridLayoutManager allGpGridLayoutManager = new NoScrollGridLayoutManager(getActivity(), 2) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        allGroupRecyclerGridView.setLayoutManager(allGpGridLayoutManager);
+        //  final NoScrollGridLayoutManager joinedGpGridLayoutManager = new NoScrollGridLayoutManager(getActivity(), 2) {
+        //    @Override
+        //  public boolean canScrollVertically() {
+        //    return false;
+        //}
+        //};
+
+        // joinedGroupRecyclerGridView.setLayoutManager(joinedGpGridLayoutManager);
+        // final NoScrollGridLayoutManager allGpGridLayoutManager = new NoScrollGridLayoutManager(getActivity(), 2) {
+        //   @Override
+        // public boolean canScrollVertically() {
+        //   return false;
+        //}
+        //};
 
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.groups_column_spacing);
         joinedGroupRecyclerGridView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));

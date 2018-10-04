@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.GroupResult;
 import com.squareup.picasso.Picasso;
@@ -69,15 +71,38 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
         }
         holder.groupsNameTextView.setText(groupsDataList.get(position).getTitle());
 //        holder.groupsNameTextView.setSelected(position == selectedPosition);
+        if (isFullList) {
+            if (position == groupsDataList.size() - 1) {
+                holder.as.setVisibility(View.GONE);
+            } else {
+                holder.as.setVisibility(View.VISIBLE);
+            }
+        } //else {
+        //holder.as.setVisibility(View.VISIBLE);
+        // }
+        if (!isFullList) {
+            if (groupsDataList.size() >= 4) {
+                if (position == 3)
+                    holder.as.setVisibility(View.GONE);
+            } else {
+                holder.as.setVisibility(View.VISIBLE);
+            }
+        }
+
+
     }
+
 
     public class GroupsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView groupsNameTextView;
         ImageView groupImageView;
+        // LinearLayout linearLayout;
+        View as;
 
         GroupsViewHolder(View view) {
             super(view);
             groupImageView = (ImageView) view.findViewById(R.id.groupImageView);
+            as = (View) view.findViewById(R.id.viewdivider);
             groupsNameTextView = (TextView) view.findViewById(R.id.groupNameTextView);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

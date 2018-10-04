@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -142,7 +143,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         } else {
             anonymousCheckbox.setChecked(false);
         }
-    }
+  }
 
     @Override
     protected void updateUi(Response response) {
@@ -215,6 +216,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 break;
             case R.id.publishTextView:
                 if (!isRequestRunning && validateParams()) {
+                 //   String str=postContentEditText.getText().toString();
+                   // Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
                     isRequestRunning = true;
                     publishPost();
                 }
@@ -237,6 +240,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
         AddGroupPostRequest addGroupPostRequest = new AddGroupPostRequest();
         addGroupPostRequest.setContent(postContentEditText.getText().toString());
+     //   String str=postContentEditText.getText().toString();
         addGroupPostRequest.setType("0");
         addGroupPostRequest.setGroupId(selectedGroup.getId());
         if (SharedPrefUtils.isUserAnonymous(this)) {

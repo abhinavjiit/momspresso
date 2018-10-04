@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
@@ -64,12 +65,13 @@ public class MomspressoVideosTabFragment extends BaseFragment implements View.On
     private FloatingActionButton fabSort;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
+    ShimmerFrameLayout momvideosshimmer;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.momspresso_videos_tab_fragment, container, false);
-
+        momvideosshimmer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_videos_article);
 //        ListView listView = (ListView) view.findViewById(R.id.scroll);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
@@ -226,6 +228,8 @@ public class MomspressoVideosTabFragment extends BaseFragment implements View.On
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
+                    momvideosshimmer.stopShimmerAnimation();
+                    momvideosshimmer.setVisibility(View.GONE);
                 } else {
 //                    showToast(getString(R.string.went_wrong));
                 }
@@ -292,6 +296,8 @@ public class MomspressoVideosTabFragment extends BaseFragment implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.recentSortFAB:
+                momvideosshimmer.startShimmerAnimation();
+                momvideosshimmer.setVisibility(View.VISIBLE);
 //                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
 //                        listingType, "recent");
                 fabMenu.collapse();
@@ -302,7 +308,11 @@ public class MomspressoVideosTabFragment extends BaseFragment implements View.On
                 hitFilteredTopicsArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
-//                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
+                momvideosshimmer.startShimmerAnimation();
+                momvideosshimmer.setVisibility(View.VISIBLE);
+// momvideosshimmer.startShimmerAnimation();
+//                momvideosshimmer.setVisibility(View.VISIBLE);
+//  Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
 //                        listingType, "popular");
                 fabMenu.collapse();
                 mDatalist.clear();
@@ -338,5 +348,18 @@ public class MomspressoVideosTabFragment extends BaseFragment implements View.On
         intent.putParcelableArrayListExtra("pagerListData", mDatalist);
         intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        momvideosshimmer.startShimmerAnimation();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        momvideosshimmer.stopShimmerAnimation();
     }
 }

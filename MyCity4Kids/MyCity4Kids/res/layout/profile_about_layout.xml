@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="17dp"
+        android:text="About"
+        android:textColor="#000"
+        android:textSize="18sp" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/mainprofile_thin_border"
+        android:gravity="top"
+        android:paddingLeft="20dp"
+        android:paddingTop="23dp"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="25dp"
+        android:text="Add Child Details"
+        android:textColor="#000"
+        android:textSize="16sp"
+
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/profe_layout">
+
+        <com.mycity4kids.widget.CustomFontEditText
+
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="17dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/mainprofile_thin_border"
+            android:gravity="center_vertical"
+            android:hint="NAME (optional)"
+            android:paddingLeft="8dp"
+            android:textColor="#000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="60dp"
+            android:text="Gender"
+            android:textColor="#000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/dob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="200dp"
+            android:layout_marginTop="60dp"
+            android:text="DOB"
+            android:textColor="#000"
+            android:textSize="14sp" />
+
+        <FrameLayout
+            android:id="@+id/spinner_hlp"
+            android:layout_width="135dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/gender"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="#fff" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="135dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/gender"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#000" />
+
+        <com.mycity4kids.widget.CustomFontEditText
+            android:id="@+id/date_picker"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/dob"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="200dp"
+            android:layout_marginStart="200dp"
+            android:layout_marginTop="8dp"
+            android:background="#fff" />
+
+    </RelativeLayout>
+</LinearLayout>
