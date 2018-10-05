@@ -131,6 +131,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private TextView publishedSectionTextView, draftSectionTextView, activitySectionTextView, signoutSectionTextView;
     private View rootView;
     private ImageView backArrowImageView;
+    private TextView updateProfileTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +154,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         rootView = findViewById(R.id.rootView);
         blurImageView = (ImageView) findViewById(R.id.blurImageView);
 
+        updateProfileTextView = (TextView) findViewById(R.id.updateProfileTextView);
         backArrowImageView = (ImageView) findViewById(R.id.menuImageView);
         authorNameTextView = (TextView) findViewById(R.id.nameTextView);
         locationTextView = (TextView) findViewById(R.id.locationTextView);
@@ -190,6 +192,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         followingContainer.setOnClickListener(this);
         followerContainer.setOnClickListener(this);
         backArrowImageView.setOnClickListener(this);
+        updateProfileTextView.setOnClickListener(this);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
 
@@ -606,6 +609,11 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.updateProfileTextView: {
+                Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
+                startActivity(intent);
+            }
+            break;
             case R.id.menuImageView:
                 onBackPressed();
                 break;

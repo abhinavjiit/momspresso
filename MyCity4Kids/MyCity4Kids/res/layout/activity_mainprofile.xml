@@ -2,10 +2,10 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_content"
+    android:id="@+id/mainprofile_parent_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.Mainprofile">
+    tools:context=".ui.activity.EditProfileNewActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/id_appbar"
@@ -41,12 +41,12 @@
                 android:layout_marginTop="90dp"
                 android:src="@drawable/family_xxhdpi" />
 
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="220dp"
-                android:layout_marginTop="175dp"
-                android:background="@drawable/family_xxhdpi" />
+            <ImageView
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="210dp"
+                android:layout_marginTop="165dp"
+                android:background="@drawable/profile_camera_circle" />
         </RelativeLayout>
 
         <android.support.design.widget.TabLayout

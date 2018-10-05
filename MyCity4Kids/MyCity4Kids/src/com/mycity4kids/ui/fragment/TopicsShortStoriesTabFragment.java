@@ -41,9 +41,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
-import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
+import com.mycity4kids.ui.activity.ShortStoriesListingContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsListingFragment;
 import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
@@ -323,7 +323,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
                 frag.hideTabLayer();
                 if (isAdded()) {
-                    ((DashboardActivity) getActivity()).hideToolbarAndNavigationLayer();
+//                    ((ShortStoriesListingContainerActivity) getActivity()).hideToolbarAndNavigationLayer();
                     SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", true);
                 }
                 break;
@@ -436,7 +436,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 //                    Bundle mBundle0 = new Bundle();
 //                    fragment0.setArguments(mBundle0);
 //                    if (isAdded())
-//                        ((DashboardActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+//                        ((ShortStoriesListingContainerActivity) getActivity()).addFragment(fragment0, mBundle0, true);
                     Intent pIntent = new Intent(getActivity(), PrivateProfileActivity.class);
                     startActivity(pIntent);
                 } else {
@@ -471,7 +471,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 if (!isAdded()) {
                     return;
                 }
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ((ShortStoriesListingContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 return;
             }
 
@@ -500,18 +500,18 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     }
                     recyclerAdapter.notifyDataSetChanged();
                     if (isAdded()) {
-                        ((DashboardActivity) getActivity()).showToast("" + responseData.getReason());
+                        ((ShortStoriesListingContainerActivity) getActivity()).showToast("" + responseData.getReason());
                     }
 
                 } else {
                     if (isAdded())
-                        ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                        ((ShortStoriesListingContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 if (isAdded())
-                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                    ((ShortStoriesListingContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
             }
         }
 

@@ -23,8 +23,8 @@ public class KidsInfoNewCustomView extends RelativeLayout {
     private RadioButton maleRadioButton, femaleRadioButton;
     private TextView nameTextView;
     private TextView genderLabelTextView;
-    private ImageView genderImageView;
-    private ImageView editInfoImageView;
+    //    private ImageView genderImageView;
+    private TextView editInfoTextView;
 
     public KidsInfoNewCustomView(Context context) {
         super(context);
@@ -49,8 +49,8 @@ public class KidsInfoNewCustomView extends RelativeLayout {
         kidsDOBTextView = (TextView) this.findViewById(R.id.kidsDOBTextView);
         nameTextView = (TextView) this.findViewById(R.id.nameTextView);
         genderLabelTextView = (TextView) this.findViewById(R.id.genderLabelTextView);
-        genderImageView = (ImageView) this.findViewById(R.id.genderImageView);
-        editInfoImageView = (ImageView) this.findViewById(R.id.editInfoImageView);
+//        genderImageView = (ImageView) this.findViewById(R.id.genderImageView);
+        editInfoTextView = (TextView) this.findViewById(R.id.editKidsInfoTextView);
 //        Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/" + "oswald.ttf");
     }
 
@@ -87,7 +87,7 @@ public class KidsInfoNewCustomView extends RelativeLayout {
         return kidsDOBTextView;
     }
 
-    public ImageView getEditKidInfoIV() {
-        return editInfoImageView;
+    public TextView getEditKidInfoIV() {
+        return editInfoTextView;
     }
 }

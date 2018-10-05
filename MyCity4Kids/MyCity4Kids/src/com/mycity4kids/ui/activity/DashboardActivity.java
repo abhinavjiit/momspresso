@@ -78,6 +78,7 @@ import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.GroupsFragment;
+import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
@@ -1215,6 +1216,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.settingTextView: {
+                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+                Bundle mBundle0 = new Bundle();
+                fragment0.setArguments(mBundle0);
+                addFragment(fragment0, mBundle0, true);
 //                Intent cityIntent = new Intent(this, AllVideosListingActivity.class);
 //                startActivity(cityIntent);
             }

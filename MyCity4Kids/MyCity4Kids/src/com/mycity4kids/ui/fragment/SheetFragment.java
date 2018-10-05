@@ -24,7 +24,7 @@ import com.mycity4kids.models.response.DraftListData;
 import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
-import com.mycity4kids.ui.activity.Mainprofile;
+import com.mycity4kids.ui.activity.EditProfileNewActivity;
 import com.mycity4kids.ui.adapter.Recyclenormal;
 
 import org.json.JSONArray;
@@ -47,7 +47,7 @@ public class SheetFragment extends Fragment implements View.OnClickListener {
     TextView textView;
     Recyclenormal adapter;
     RelativeLayout relativeLayout;
-    
+
     View view;
     ShimmerFrameLayout mShimmerFrameLayout;
     RecyclerView recyclerView1;
@@ -234,7 +234,7 @@ public class SheetFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.test_profile) {
-             Intent intent = new Intent(getActivity(), Mainprofile.class);
+            Intent intent = new Intent(getActivity(), EditProfileNewActivity.class);
             startActivity(intent);
 
         }

@@ -26,8 +26,8 @@ import java.util.ArrayList;
 
 public class ViewPagerAdapterEventdetail extends CacheFragmentStatePagerAdapter {
 
-    CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
-    int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
+    CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when UserProfilePagerAdapter is created
+    int NumbOfTabs; // Store the number of tabs, this will also be passed when the UserProfilePagerAdapter is created
     private Context mContext;
     private DetailsResponse mDetailsResponse;
     private int mEventOrBusiness;

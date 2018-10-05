@@ -555,8 +555,7 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/blue_bg" />
 
-        <activity android:name=".ui.activity.Mainprofile" />
-        <activity android:name=".MainProfile" />
+        <activity android:name=".ui.activity.EditProfileNewActivity" />
 
     </application>
 
