@@ -33,9 +33,10 @@
                 app:civ_shadow="false" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/nameTextView"
+                android:id="@+id/usernameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:onClick="onClick"
                 android:text="John Farishon"
@@ -44,14 +45,14 @@
                 app:fontName="oswald_regular.ttf" />
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="20dp"
-            android:padding="16dp"
-            android:src="@drawable/cross_icon_back" />
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:padding="16dp"-->
+        <!--android:src="@drawable/cross_icon_back" />-->
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/homeTextView"
@@ -59,8 +60,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/topContainer"
             android:layout_marginTop="20dp"
-            android:drawableLeft="@drawable/cross_icon_back"
+            android:drawableLeft="@drawable/drawer_home_red"
             android:drawablePadding="20dp"
+            android:gravity="center_vertical"
             android:paddingBottom="16dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
@@ -73,8 +75,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/homeTextView"
-            android:drawableLeft="@drawable/cross_icon_back"
+            android:drawableLeft="@drawable/drawer_video_red"
             android:drawablePadding="20dp"
+            android:gravity="center_vertical"
             android:paddingBottom="16dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
@@ -87,8 +90,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/videosTextView"
-            android:drawableLeft="@drawable/cross_icon_back"
+            android:drawableLeft="@drawable/drawer_shortstory_red"
             android:drawablePadding="20dp"
+            android:gravity="center_vertical"
             android:paddingBottom="16dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
@@ -99,10 +103,11 @@
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/groupsTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_below="@+id/shortStoryTextView"
-            android:drawableLeft="@drawable/cross_icon_back"
+            android:drawableLeft="@drawable/ic_group_icon"
             android:drawablePadding="20dp"
+            android:gravity="center_vertical"
             android:paddingBottom="16dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
@@ -123,9 +128,9 @@
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/bookmarksTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_below="@+id/divider1"
-            android:drawableLeft="@drawable/cross_icon_back"
+            android:drawableLeft="@drawable/ic_bookmark"
             android:drawablePadding="20dp"
             android:paddingBottom="20dp"
             android:paddingLeft="30dp"
@@ -146,15 +151,15 @@
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/settingTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_below="@+id/divider2"
-            android:drawableLeft="@drawable/cross_icon_back"
+            android:drawableLeft="@drawable/ic_settings"
             android:drawablePadding="20dp"
             android:paddingBottom="20dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
             android:paddingTop="20dp"
-            android:text="@string/user_activities.tabs.bookmark"
+            android:text="Settings"
             app:fontName="oswald.ttf" />
     </RelativeLayout>
 

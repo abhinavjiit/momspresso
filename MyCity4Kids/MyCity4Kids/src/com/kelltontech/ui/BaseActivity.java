@@ -173,6 +173,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         if (animationType.equals("topToBottom")) {
                             ft.setCustomAnimations(R.anim.transition_enter_from_bottom, R.anim.transition_exit_to_top, R.anim.transition_enter_from_top, R.anim.transition_exit_to_bottom);
+                        } else if (animationType.equals("bottomSheet")) {
+                            ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down, R.anim.transition_enter_from_top, R.anim.transition_exit_to_bottom);
                         } else {
                             ft.setCustomAnimations(R.anim.transition_enter_from_right, R.anim.transition_exit_to_left, R.anim.transition_enter_from_left, R.anim.transition_exit_to_right);
                         }

@@ -29,8 +29,8 @@ import com.mycity4kids.models.response.SearchAuthorResult;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
-import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.adapter.SearchAuthorsListingAdapter;
 
@@ -121,7 +121,7 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
                     profileIntent.putExtra("TabType", "profile");
                     startActivity(profileIntent);
                 } else {
-                    Intent intentnn = new Intent(getActivity(), BloggerProfileActivity.class);
+                    Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getUserId());
                     intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + itemSelected.getFirst_name().replace("<b>", "").replace("</b>", "") + " " + itemSelected.getLast_name().replace("<b>", "").replace("</b>", ""));
                     intentnn.putExtra(Constants.FROM_SCREEN, "Search Authors List");

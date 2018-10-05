@@ -3,8 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,11 +32,10 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.adapter.TopicsRecyclerGridAdapter;
+import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.HeaderGridView;
-import com.mycity4kids.widget.MarginDecoration;
-import com.mycity4kids.widget.SpacesItemDecoration;
 
 import org.json.JSONObject;
 
@@ -75,8 +72,11 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
     private TextView guideTopicTextView1;
     private TextView guideTopicTextView2;
     private HorizontalScrollView quickLinkContainer;
-    private TextView todaysBestTextView, editorsPickTextView, shortStoryTextView, forYouTextView, videosTextView, recentTextView;
+    private TextView todaysBestTextView, editorsPickTextView, /*shortStoryTextView,*/
+            forYouTextView, /*videosTextView,*/
+            recentTextView;
     private TextView continueTextView;
+    private LinearLayout videosContainer, storyContainer, groupsContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,9 +93,9 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         guideTopicTextView2 = (TextView) view.findViewById(R.id.guideTopicTextView2);
         todaysBestTextView = (TextView) view.findViewById(R.id.todaysBestTextView);
         editorsPickTextView = (TextView) view.findViewById(R.id.editorsPickTextView);
-        shortStoryTextView = (TextView) view.findViewById(R.id.shortStoryTextView);
+//        shortStoryTextView = (TextView) view.findViewById(R.id.shortStoryTextView);
         forYouTextView = (TextView) view.findViewById(R.id.forYouTextView);
-        videosTextView = (TextView) view.findViewById(R.id.videosTextView);
+//        videosTextView = (TextView) view.findViewById(R.id.videosTextView);
         recentTextView = (TextView) view.findViewById(R.id.recentTextView);
         continueTextView = (TextView) view.findViewById(R.id.continueTextView);
 
@@ -103,16 +103,22 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
         todaysBestTextView.setOnClickListener(this);
         editorsPickTextView.setOnClickListener(this);
-        shortStoryTextView.setOnClickListener(this);
+//        shortStoryTextView.setOnClickListener(this);
         forYouTextView.setOnClickListener(this);
-        videosTextView.setOnClickListener(this);
+//        videosTextView.setOnClickListener(this);
         recentTextView.setOnClickListener(this);
 
         searchTopicsEditText.setVisibility(View.GONE);
         guideOverLay.setOnClickListener(this);
 
         View gridViewHeader = LayoutInflater.from(BaseApplication.getAppContext()).inflate(R.layout.grid_view_header, gridview, false);
+        videosContainer = (LinearLayout) gridViewHeader.findViewById(R.id.videosContainer);
+        storyContainer = (LinearLayout) gridViewHeader.findViewById(R.id.storyContainer);
+        groupsContainer = (LinearLayout) gridViewHeader.findViewById(R.id.groupsContainer);
 
+        videosContainer.setOnClickListener(this);
+        storyContainer.setOnClickListener(this);
+        groupsContainer.setOnClickListener(this);
         try {
             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -182,26 +188,24 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             showGuideView();
         }
 
-//        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                view.setSelected(true);
-//                if (adapterView.getAdapter() instanceof ParentTopicsGridAdapter) {
-//                    ExploreTopicsModel topic = (ExploreTopicsModel) adapterView.getAdapter().getItem(position);
-//                    if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
-//                        Intent intent = new Intent(getActivity(), ContributorListActivity.class);
-//                        startActivity(intent);
-//                    } else if (EXPLORE_SECTION_ID.equals(topic.getId())) {
-//                        Intent intent = new Intent(getActivity(), ExploreEventsResourcesActivity.class);
-//                        startActivity(intent);
-//                    } else {
-//                        Intent intent = new Intent(getActivity(), TopicsListingActivity.class);
-//                        intent.putExtra("parentTopicId", topic.getId());
-//                        startActivity(intent);
-//                    }
-//                }
-//            }
-//        });
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                view.setSelected(true);
+                ExploreTopicsModel topic = (ExploreTopicsModel) adapterView.getAdapter().getItem(position);
+                if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
+                    Intent intent = new Intent(getActivity(), ContributorListActivity.class);
+                    startActivity(intent);
+                } else if (EXPLORE_SECTION_ID.equals(topic.getId())) {
+                    Intent intent = new Intent(getActivity(), ExploreEventsResourcesActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), TopicsListingActivity.class);
+                    intent.putExtra("parentTopicId", topic.getId());
+                    startActivity(intent);
+                }
+            }
+        });
 
         return view;
     }
@@ -307,7 +311,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     mainTopicsList.add(responseData[i]);
                 }
             }
-            if (!fragType.equals("search")) {
+            if (!"search".equals(fragType)) {
                 ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
                 contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
                 contributorListModel.setId(MEET_CONTRIBUTOR_ID);
@@ -336,7 +340,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     mainTopicsList.add(responseData.getData().get(i));
                 }
             }
-            if (!fragType.equals("search")) {
+            if (!"search".equals(fragType)) {
                 ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
                 contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
                 contributorListModel.setId(MEET_CONTRIBUTOR_ID);
@@ -399,7 +403,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 startActivity(intent);
             }
             break;
-            case R.id.shortStoryTextView: {
+//            case R.id.shortStoryTextView:
+            case R.id.storyContainer: {
                 Intent intent = new Intent(getActivity(), ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                 startActivity(intent);
@@ -413,7 +418,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 startActivity(intent);
             }
             break;
-            case R.id.videosTextView: {
+//            case R.id.videosTextView:
+            case R.id.videosContainer: {
                 Utils.pushOpenScreenEvent(getActivity(), "VideosScreen", dynamoUserId + "");
                 Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "VideosScreen");
                 Intent cityIntent = new Intent(getActivity(), AllVideosListingActivity.class);
@@ -428,6 +434,14 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 startActivity(intent);
             }
             break;
+            case R.id.groupsContainer: {
+                GroupsFragment fragment0 = new GroupsFragment();
+                Bundle mBundle0 = new Bundle();
+                fragment0.setArguments(mBundle0);
+                ((DashboardActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+            }
+            break;
+
         }
     }
 

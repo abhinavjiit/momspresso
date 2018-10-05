@@ -38,13 +38,9 @@ public class AllVideosListingActivity extends BaseActivity {
         toolbarTitleTextView = (TextView) toolbar.findViewById(R.id.toolbarTitle);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        menuImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
         toolbarTitleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +78,6 @@ public class AllVideosListingActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-
                 break;
         }
         return true;

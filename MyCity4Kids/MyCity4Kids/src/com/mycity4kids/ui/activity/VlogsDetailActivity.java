@@ -39,7 +39,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -1294,7 +1293,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                             profileIntent.putExtra("TabType", "profile");
                             startActivity(profileIntent);
                         } else {
-                            Intent profileIntent = new Intent(this, BloggerProfileActivity.class);
+                            Intent profileIntent = new Intent(this, PublicProfileActivity.class);
                             profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
                             profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
                             profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
@@ -1315,7 +1314,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                             profileIntent.putExtra("TabType", "profile");
                             startActivity(profileIntent);
                         } else {
-                            Intent profileIntent = new Intent(this, BloggerProfileActivity.class);
+                            Intent profileIntent = new Intent(this, PublicProfileActivity.class);
                             profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
                             profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
                             profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
@@ -1342,7 +1341,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                         profileIntent.putExtra("TabType", "profile");
                         startActivity(profileIntent);
                     } else {
-                        Intent intentnn = new Intent(this, BloggerProfileActivity.class);
+                        Intent intentnn = new Intent(this, PublicProfileActivity.class);
                         intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId);
                         intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + author);
                         intentnn.putExtra(Constants.FROM_SCREEN, "Video Details");

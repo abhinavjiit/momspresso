@@ -20,6 +20,4 @@
         android:id="@+id/action_location"
         android:icon="@drawable/selector_events_tab"
         android:title="" />
-
-
 </menu>

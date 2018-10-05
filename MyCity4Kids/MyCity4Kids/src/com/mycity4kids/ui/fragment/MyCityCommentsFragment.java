@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
@@ -42,8 +41,8 @@ import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -178,7 +177,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                         profileIntent.putExtra("TabType", "profile");
                         startActivity(profileIntent);
                     } else {
-                        Intent profileIntent = new Intent(getActivity(), BloggerProfileActivity.class);
+                        Intent profileIntent = new Intent(getActivity(), PublicProfileActivity.class);
                         profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
                         profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
                         profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
@@ -199,7 +198,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                         profileIntent.putExtra("TabType", "profile");
                         startActivity(profileIntent);
                     } else {
-                        Intent profileIntent = new Intent(getActivity(), BloggerProfileActivity.class);
+                        Intent profileIntent = new Intent(getActivity(), PublicProfileActivity.class);
                         profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
                         profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
                         profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");

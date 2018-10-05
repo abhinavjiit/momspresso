@@ -134,6 +134,11 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
             }
         });
 
+        if (getArguments() != null) {
+            currentSubTopic = getArguments().getParcelable("currentSubTopic");
+            selectedTopic = currentSubTopic;
+        }
+
         mDatalist = new ArrayList<>();
         feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
@@ -144,11 +149,6 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         recyclerAdapter.setNewListData(mDatalist);
         recyclerView.setAdapter(recyclerAdapter);
 
-        if (getArguments() != null) {
-            currentSubTopic = getArguments().getParcelable("currentSubTopic");
-            selectedTopic = currentSubTopic;
-        }
-//        hitFilteredTopicsArticleListingApi(sortType);
         getGroupIdForCurrentCategory();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

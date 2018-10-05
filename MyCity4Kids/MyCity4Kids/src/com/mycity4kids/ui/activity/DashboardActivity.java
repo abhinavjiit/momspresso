@@ -3,7 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,10 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -26,9 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -38,7 +33,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -77,10 +71,8 @@ import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
-import com.mycity4kids.ui.adapter.Recycle;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
-import com.mycity4kids.ui.fragment.BottomSheetFragment;
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.fragment.ExploreFragment;
@@ -88,7 +80,6 @@ import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.GroupsFragment;
-import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
@@ -97,6 +88,7 @@ import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -113,7 +105,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
-    private DrawerLayout mDrawerLayout;
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
@@ -136,7 +127,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView selectOptToolbarTitle;
     //    private TextView readAllNotificationTextView;
     private Badge badge;
-    private RecyclerView recyclerView;
     private View toolbarUnderline;
     //    private ImageView menuImageView;
     private TextView langTextView;
@@ -148,7 +138,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout bookmarkInfoView;
     private TextView viewBookmarkedArticleTextView;
     private ImageView profileImageView;
-
+    private Animation slideAnim, fadeAnim;
+    private LinearLayout actionItemContainer, articleContainer, videoContainer, storyContainer;
+    private View overlayView;
+    private RelativeLayout createContentContainer;
+    private TextView usernameTextView, videosTextView, shortStoryTextView, groupsTextView, bookmarksTextView, settingTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,10 +151,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         final LinearLayout bottomsheetview = (LinearLayout) findViewById(R.id.viewbottom);
         final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cordinate);
-        recyclerView = (RecyclerView) findViewById(R.id.list_view_inside_nav);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(new Recycle(this));
         t = ((BaseApplication) getApplication()).getTracker(
                 BaseApplication.TrackerName.APP_TRACKER);
         // Enable Display Features.
@@ -187,7 +178,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             if ("upcoming_event_list".equals(((Bundle) intent.getParcelableExtra("notificationExtras")).getString("type")))
                 fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
         }
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
@@ -204,7 +194,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         searchAllImageView = (ImageView) mToolbar.findViewById(R.id.searchAllImageView);
         selectOptToolbarTitle = (TextView) findViewById(R.id.selectOptToolbarTitle);
         langTextView = (TextView) findViewById(R.id.langTextView);
-        readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
+//        readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
         selectedlangGuideTextView = (TextView) findViewById(R.id.selectedlangGuideTextView);
         groupCoachmark = (RelativeLayout) findViewById(R.id.groupCoachmark);
         firstCoachmark = (RelativeLayout) findViewById(R.id.firstCoachmark);
@@ -215,10 +205,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         viewBookmarkedArticleTextView = (TextView) findViewById(R.id.viewBookmarkedArticleTextView);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         profileImageView = (ImageView) findViewById(R.id.profileImageView);
+        actionItemContainer = (LinearLayout) findViewById(R.id.actionItemContainer);
+        createContentContainer = (RelativeLayout) findViewById(R.id.createContentContainer);
+        overlayView = findViewById(R.id.overlayView);
+        articleContainer = (LinearLayout) findViewById(R.id.articleContainer);
+        videoContainer = (LinearLayout) findViewById(R.id.videoContainer);
+        storyContainer = (LinearLayout) findViewById(R.id.storyContainer);
+        videosTextView = (TextView) findViewById(R.id.videosTextView);
+        shortStoryTextView = (TextView) findViewById(R.id.shortStoryTextView);
+        groupsTextView = (TextView) findViewById(R.id.groupsTextView);
+        bookmarksTextView = (TextView) findViewById(R.id.bookmarksTextView);
+        settingTextView = (TextView) findViewById(R.id.settingTextView);
+        usernameTextView = (TextView) findViewById(R.id.usernameTextView);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        // NavigationMenuView navMenuView = (NavigationMenuView) navigationView.getChildAt(0);
-        //navMenuView.addItemDecoration(new DividerItemDecoration(DashboardActivity.this, DividerItemDecoration.VERTICAL));
         bottomNavigationView.enableAnimation(false);
         bottomNavigationView.enableShiftingMode(false);
         bottomNavigationView.enableItemShiftingMode(false);
@@ -246,8 +245,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         searchAllImageView.setOnClickListener(this);
         toolbarTitleTextView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
-        readAllNotificationTextView.setOnClickListener(this);
-
+        overlayView.setOnClickListener(this);
+        articleContainer.setOnClickListener(this);
+        storyContainer.setOnClickListener(this);
+        videoContainer.setOnClickListener(this);
+        shortStoryTextView.setOnClickListener(this);
+        groupsTextView.setOnClickListener(this);
+        bookmarksTextView.setOnClickListener(this);
+        videosTextView.setOnClickListener(this);
+        settingTextView.setOnClickListener(this);
 
         langTextView.setOnClickListener(this);
         groupCoachmark.setOnClickListener(this);
@@ -256,6 +262,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         viewBookmarkedArticleTextView.setOnClickListener(this);
         profileImageView.setOnClickListener(this);
 
+        slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
+        fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
         slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
         slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -296,6 +304,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 });
 
+        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
+            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
+                    .error(R.drawable.family_xxhdpi).into(profileImageView);
+        }
+        usernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
+
         if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(this))) {
             langTextView.setText(getString(R.string.language_label_english));
             selectedlangGuideTextView.setText(getString(R.string.language_label_english));
@@ -333,35 +347,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         switch (item.getItemId()) {
 
                             case R.id.action_profile:
-//                                if (topFragment instanceof MyAccountProfileFragment) {
-//                                    return true;
-//                                }
-//                                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-//                                Bundle mBundle0 = new Bundle();
-//                                fragment0.setArguments(mBundle0);
-//                                addFragment(fragment0, mBundle0, true);
                                 if (topFragment instanceof ExploreArticleListingTypeFragment) {
                                     return true;
                                 }
+                                hideCreateContentView();
                                 ExploreArticleListingTypeFragment fragment0 = new ExploreArticleListingTypeFragment();
-                                FragmentManager fragMan = getSupportFragmentManager();
-                                fragment0 = new SheetFragment();
-                                //fragment0.show(fragMan, fragment0.getTag());
-                                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down).replace(R.id.cordinate, fragment0).commit();
-                                coordinatorLayout.setVisibility(View.VISIBLE);
-                                bottomsheetview.setVisibility(View.VISIBLE);
-                                AlphaAnimation alpha = new AlphaAnimation(0.0F, 0.6F);
-                                alpha.setDuration(500);
-                                alpha.setFillAfter(true);
-                                bottomsheetview.startAnimation(alpha);
                                 Bundle mBundle0 = new Bundle();
                                 fragment0.setArguments(mBundle0);
-                                //addFragment(fragment0, mBundle0, true);
+                                addFragment(fragment0, mBundle0, true);
                                 break;
                             case R.id.action_notification:
                                 if (topFragment instanceof NotificationFragment) {
                                     return true;
                                 }
+                                hideCreateContentView();
                                 NotificationFragment fragment = new NotificationFragment();
                                 Bundle mBundle = new Bundle();
                                 fragment.setArguments(mBundle);
@@ -371,24 +370,28 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 if (topFragment instanceof FragmentMC4KHomeNew) {
                                     return true;
                                 }
+
                                 FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
                                 Bundle mBundle1 = new Bundle();
                                 fragment1.setArguments(mBundle1);
                                 addFragment(fragment1, mBundle1, true);
                                 break;
                             case R.id.action_write:
-                                if (topFragment instanceof AddArticleVideoFragment) {
-                                    return true;
+                                if (createContentContainer.getVisibility() == View.VISIBLE) {
+                                } else {
+                                    createContentContainer.setVisibility(View.VISIBLE);
+                                    actionItemContainer.setVisibility(View.VISIBLE);
+                                    overlayView.setVisibility(View.VISIBLE);
+                                    actionItemContainer.startAnimation(slideAnim);
+                                    overlayView.startAnimation(fadeAnim);
                                 }
-                                AddArticleVideoFragment editorPostFragment = new AddArticleVideoFragment();
-                                Bundle editorBundle = new Bundle();
-                                editorPostFragment.setArguments(editorBundle);
-                                addFragment(editorPostFragment, editorBundle, true);
+
                                 break;
                             case R.id.action_location:
                                 if (topFragment instanceof GroupsFragment) {
                                     return true;
                                 }
+                                hideCreateContentView();
                                 GroupsFragment groupsFragment = new GroupsFragment();
                                 Bundle eBundle = new Bundle();
                                 groupsFragment.setArguments(eBundle);
@@ -410,10 +413,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             fragment.setArguments(mBundle);
             replaceFragment(fragment, mBundle, true);
         } else if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
-            MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-            Bundle mBundle0 = new Bundle();
-            fragment0.setArguments(mBundle0);
-            addFragment(fragment0, mBundle0, true);
+//            MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+//            Bundle mBundle0 = new Bundle();
+//            fragment0.setArguments(mBundle0);
+//            addFragment(fragment0, mBundle0, true);
+            Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+            startActivity(pIntent);
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
             SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
             Bundle mBundle0 = new Bundle();
@@ -660,7 +665,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("profile")) {
                 String u_id = notificationExtras.getString("userId");
                 if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(u_id)) {
-                    Intent intent1 = new Intent(this, BloggerProfileActivity.class);
+                    Intent intent1 = new Intent(this, PublicProfileActivity.class);
                     intent1.putExtra("fromNotification", true);
                     intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, u_id);
                     intent1.putExtra(AppConstants.AUTHOR_NAME, "");
@@ -1045,7 +1050,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case android.R.id.home: {
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
-
             }
             case R.id.filter:
                 if (topFragment instanceof FragmentBusinesslistEvents) {
@@ -1098,11 +1102,43 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
+            case R.id.articleContainer:
+                hideCreateContentView();
+                if ("0".equals(SharedPrefUtils.getUserDetailModel(this).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(this)) {
+                    BecomeBloggerFragment becomeBloggerFragment = new BecomeBloggerFragment();
+                    Bundle searchBundle = new Bundle();
+                    becomeBloggerFragment.setArguments(searchBundle);
+                    addFragment(becomeBloggerFragment, searchBundle, true);
+                } else {
+                    launchEditor();
+                }
+                break;
+            case R.id.storyContainer:
+                hideCreateContentView();
+                Intent ssintent = new Intent(this, AddShortStoryActivity.class);
+                startActivity(ssintent);
+                break;
+            case R.id.videoContainer:
+                hideCreateContentView();
+                if (SharedPrefUtils.getFirstVideoUploadFlag(this)) {
+                    launchAddVideoOptions();
+                } else {
+                    UploadVideoInfoFragment uploadVideoInfoFragment = new UploadVideoInfoFragment();
+                    Bundle searchBundle = new Bundle();
+                    uploadVideoInfoFragment.setArguments(searchBundle);
+                    addFragment(uploadVideoInfoFragment, searchBundle, true);
+                }
+                break;
+            case R.id.overlayView:
+                hideCreateContentView();
+                break;
             case R.id.profileImageView:
-                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-                Bundle mBundle0 = new Bundle();
-                fragment0.setArguments(mBundle0);
-                addFragment(fragment0, mBundle0, true);
+                Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+                startActivity(pIntent);
+//                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+//                Bundle mBundle0 = new Bundle();
+//                fragment0.setArguments(mBundle0);
+//                addFragment(fragment0, mBundle0, true);
                 break;
             case R.id.langTextView: {
                 ChangePreferredLanguageDialogFragment changePreferredLanguageDialogFragment = new ChangePreferredLanguageDialogFragment();
@@ -1115,7 +1151,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.imgProfile:
-                Intent intent4 = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
+                Intent intent4 = new Intent(DashboardActivity.this, PublicProfileActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.downArrowImageView:
@@ -1172,6 +1208,35 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 secondCoachmark.setVisibility(View.GONE);
                 SharedPrefUtils.setCoachmarksShownFlag(this, "home", true);
                 break;
+            case R.id.videosTextView: {
+                Intent cityIntent = new Intent(this, AllVideosListingActivity.class);
+                startActivity(cityIntent);
+            }
+            break;
+            case R.id.shortStoryTextView: {
+                Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
+                intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                startActivity(intent);
+            }
+            break;
+            case R.id.groupsTextView: {
+                mDrawerLayout.closeDrawers();
+                GroupsFragment fragment = new GroupsFragment();
+                Bundle mBundle = new Bundle();
+                fragment.setArguments(mBundle);
+                addFragment(fragment, mBundle, true);
+            }
+            break;
+            case R.id.bookmarksTextView: {
+                Intent cityIntent = new Intent(this, UsersBookmarkListActivity.class);
+                startActivity(cityIntent);
+            }
+            break;
+            case R.id.settingTextView: {
+//                Intent cityIntent = new Intent(this, AllVideosListingActivity.class);
+//                startActivity(cityIntent);
+            }
+            break;
 //            case R.id.flot:
 //                Intent intent=new Intent(DashboardActivity.this,Samplee.class);
 //                startActivity(intent);
@@ -1179,6 +1244,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             default:
                 break;
         }
+    }
+
+    private void hideCreateContentView() {
+        createContentContainer.setVisibility(View.INVISIBLE);
+        overlayView.setVisibility(View.INVISIBLE);
+        actionItemContainer.setVisibility(View.INVISIBLE);
     }
 
     public void launchAddVideoOptions() {
@@ -1382,7 +1453,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_id())) {
-            Intent intent = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, PublicProfileActivity.class);
             intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
             intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
             intent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -1442,7 +1513,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_name())) {
-            Intent _authorListIntent = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
+            Intent _authorListIntent = new Intent(DashboardActivity.this, PublicProfileActivity.class);
             _authorListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
             _authorListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             _authorListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -1453,7 +1524,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderBloggerListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getBlog_title())) {
-            Intent _bloggerListIntent = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
+            Intent _bloggerListIntent = new Intent(DashboardActivity.this, PublicProfileActivity.class);
             _bloggerListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
             _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             _bloggerListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -1645,13 +1716,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //                setSupportActionBar(mToolbar);
                 //getSupportActionBar().setDisplayShowHomeEnabled(true);
                 //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            } else if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
+            }
+            /*else if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
                 Utils.pushOpenScreenEvent(this, "PrivateProfileScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_profile_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.myprofile_toolbar_title));
                 menu.findItem(R.id.action_profile).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (null != topFragment && topFragment instanceof NotificationFragment) {
+            }*/
+            else if (null != topFragment && topFragment instanceof NotificationFragment) {
                 Utils.pushOpenScreenEvent(this, "NotificationsScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
@@ -1823,10 +1896,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     public void hideViews() {
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
     }
 
     public void showViews() {
-        getSupportActionBar().show();
+//        getSupportActionBar().show();
     }
 }

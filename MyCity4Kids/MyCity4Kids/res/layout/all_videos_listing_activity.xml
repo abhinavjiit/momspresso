@@ -20,42 +20,15 @@
             android:layout_height="wrap_content"
             android:visibility="visible">
 
-            <ImageView
-                android:id="@+id/menuImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
-                android:src="@drawable/hamburger_menu" />
-
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/menuImageView"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
                 android:text="@string/all_videos.toolbar.title"
-                android:textColor="@color/home.toolbar.titlecolor"
+                android:textColor="@color/app_light_black"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
-
-            <!--<ImageView-->
-            <!--android:id="@+id/downArrowImageView"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_toEndOf="@+id/toolbarTitle"-->
-            <!--android:layout_toRightOf="@+id/toolbarTitle"-->
-            <!--android:paddingBottom="15dp"-->
-            <!--android:paddingLeft="10dp"-->
-            <!--android:paddingRight="10dp"-->
-            <!--android:paddingTop="15dp"-->
-            <!--android:src="@drawable/arrow_bluexxhdpidown"-->
-            <!--android:tint="#507cbe" />-->
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>

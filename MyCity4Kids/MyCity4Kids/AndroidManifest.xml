@@ -470,6 +470,12 @@
         <activity
             android:name=".ui.activity.FacebookPhoneLoginActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.UsersBookmarkListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.PublicProfileActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

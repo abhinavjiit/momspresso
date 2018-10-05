@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
 import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -168,9 +167,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-
         if (holder instanceof AdViewHolder) {
-
             try {
                 addArticleItem((AdViewHolder) holder, position);
                 if (position <= 80 && adList.get((position / 8) - 1) == null) {
@@ -824,7 +821,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView commentCountTextView;
         TextView recommendCountTextView;
         TextView authorTypeTextView;
-
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
 
@@ -838,6 +834,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             nativeAdBody = (TextView) adView.findViewById(R.id.native_ad_body);
             nativeAdCallToAction = (Button) adView.findViewById(R.id.native_ad_call_to_action);
             adChoicesContainer = (LinearLayout) adView.findViewById(R.id.ad_choices_container);
+
             fbAdArticleView = (FrameLayout) adView.findViewById(R.id.fbAdArticleView);
             txvArticleTitle = (TextView) adView.findViewById(R.id.txvArticleTitle);
             txvAuthorName = (TextView) adView.findViewById(R.id.txvAuthorName);
@@ -850,7 +847,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             authorTypeTextView = (TextView) adView.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) adView.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) adView.findViewById(R.id.watchLaterImageView);
-
             fbAdArticleView.setOnClickListener(this);
         }
 
@@ -1350,10 +1346,4 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
 
     }
-
-
 }
-
-
-
-

@@ -129,11 +129,12 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private TextView authorNameTextView, locationTextView, authorBioTextView;
     private TextView publishedSectionTextView, draftSectionTextView, activitySectionTextView, signoutSectionTextView;
     private View rootView;
+    private ImageView backArrowImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile_layout);
+        setContentView(R.layout.private_profile_activity);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -151,6 +152,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         rootView = findViewById(R.id.rootView);
         blurImageView = (ImageView) findViewById(R.id.blurImageView);
 
+        backArrowImageView = (ImageView) findViewById(R.id.menuImageView);
         authorNameTextView = (TextView) findViewById(R.id.nameTextView);
         locationTextView = (TextView) findViewById(R.id.locationTextView);
         authorBioTextView = (TextView) findViewById(R.id.userbioTextView);
@@ -186,6 +188,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         settingImageView.setOnClickListener(this);
         followingContainer.setOnClickListener(this);
         followerContainer.setOnClickListener(this);
+        backArrowImageView.setOnClickListener(this);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
 
@@ -601,6 +604,9 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.menuImageView:
+                onBackPressed();
+                break;
             case R.id.authorNameTextView: {
                 Intent intent = new Intent(this, PrivateProfileActivity.class);
                 startActivity(intent);

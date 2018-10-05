@@ -90,11 +90,11 @@ import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
+import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.GroupIdCategoryMap;
@@ -955,7 +955,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             profileIntent.putExtra("TabType", "profile");
                             startActivity(profileIntent);
                         } else {
-                            Intent profileIntent = new Intent(getActivity(), BloggerProfileActivity.class);
+                            Intent profileIntent = new Intent(getActivity(), PublicProfileActivity.class);
                             profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
                             profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
                             profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
@@ -976,7 +976,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             profileIntent.putExtra("TabType", "profile");
                             startActivity(profileIntent);
                         } else {
-                            Intent profileIntent = new Intent(getActivity(), BloggerProfileActivity.class);
+                            Intent profileIntent = new Intent(getActivity(), PublicProfileActivity.class);
                             profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
                             profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
                             profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
@@ -1000,7 +1000,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         profileIntent.putExtra("TabType", "profile");
                         startActivity(profileIntent);
                     } else {
-                        Intent intentnn = new Intent(getActivity(), BloggerProfileActivity.class);
+                        Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
                         intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
                         intentnn.putExtra(AppConstants.AUTHOR_NAME, detailData.getUserName());
                         intentnn.putExtra(Constants.FROM_SCREEN, "Article Details");

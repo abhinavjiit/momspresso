@@ -43,8 +43,8 @@ import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
-import com.mycity4kids.ui.adapter.CustomSpinnerAdapter;
 import com.mycity4kids.ui.adapter.ContributorListAdapter;
+import com.mycity4kids.ui.adapter.CustomSpinnerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
 import java.io.FileInputStream;
@@ -152,7 +152,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                     profileIntent.putExtra("TabType", "profile");
                     startActivity(profileIntent);
                 } else {
-                    Intent intent = new Intent(ContributorListActivity.this, BloggerProfileActivity.class);
+                    Intent intent = new Intent(ContributorListActivity.this, PublicProfileActivity.class);
                     intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
                     intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
                     intent.putExtra(Constants.FROM_SCREEN, "Contributor List");

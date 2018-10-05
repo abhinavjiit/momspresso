@@ -34,18 +34,18 @@ import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
-import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
+import com.mycity4kids.ui.activity.PrivateProfileActivity;
+import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.GroupsFragment;
-import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.squareup.picasso.Picasso;
 
@@ -239,12 +239,14 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "profile");
                     if (notificationList.get(position).getAuthorId().equals(notificationList.get(position).getUserId())) {
-                        MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-                        Bundle mBundle0 = new Bundle();
-                        fragment0.setArguments(mBundle0);
-                        ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
+//                        MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+//                        Bundle mBundle0 = new Bundle();
+//                        fragment0.setArguments(mBundle0);
+//                        ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
+                        Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                        mContext.startActivity(pIntent);
                     } else {
-                        Intent intent1 = new Intent(mContext, BloggerProfileActivity.class);
+                        Intent intent1 = new Intent(mContext, PublicProfileActivity.class);
                         intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, notificationList.get(position).getAuthorId());
                         intent1.putExtra(AppConstants.AUTHOR_NAME, "");
                         intent1.putExtra(Constants.FROM_SCREEN, "Notification Center List");

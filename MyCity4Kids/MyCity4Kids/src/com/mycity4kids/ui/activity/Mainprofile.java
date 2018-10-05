@@ -1,17 +1,13 @@
 package com.mycity4kids.ui.activity;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.Toolbar;
 
 import com.mycity4kids.R;
-
 import com.mycity4kids.ui.fragment.About;
 import com.mycity4kids.ui.fragment.Contactdetails;
 

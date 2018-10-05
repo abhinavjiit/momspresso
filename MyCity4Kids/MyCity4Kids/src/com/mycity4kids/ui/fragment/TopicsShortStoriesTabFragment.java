@@ -41,8 +41,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
-import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.PrivateProfileActivity;
+import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsListingFragment;
 import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
@@ -431,13 +432,15 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             break;
             case R.id.authorNameTextView:
                 if (userDynamoId.equals(mDatalist.get(position).getUserId())) {
-                    MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-                    Bundle mBundle0 = new Bundle();
-                    fragment0.setArguments(mBundle0);
-                    if (isAdded())
-                        ((DashboardActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+//                    MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+//                    Bundle mBundle0 = new Bundle();
+//                    fragment0.setArguments(mBundle0);
+//                    if (isAdded())
+//                        ((DashboardActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+                    Intent pIntent = new Intent(getActivity(), PrivateProfileActivity.class);
+                    startActivity(pIntent);
                 } else {
-                    Intent intentnn = new Intent(getActivity(), BloggerProfileActivity.class);
+                    Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, mDatalist.get(position).getUserId());
                     intentnn.putExtra(AppConstants.AUTHOR_NAME, mDatalist.get(position).getUserName());
                     intentnn.putExtra(Constants.FROM_SCREEN, "ShortStoryScreen");

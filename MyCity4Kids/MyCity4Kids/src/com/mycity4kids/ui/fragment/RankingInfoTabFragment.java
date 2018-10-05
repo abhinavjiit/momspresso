@@ -35,8 +35,8 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
-import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.ui.adapter.RankingTopBloggerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -315,7 +315,7 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
             profileIntent.putExtra("TabType", "profile");
             startActivity(profileIntent);
         } else {
-            Intent intent = new Intent(getActivity(), BloggerProfileActivity.class);
+            Intent intent = new Intent(getActivity(), PublicProfileActivity.class);
             intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
             intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
             intent.putExtra(Constants.FROM_SCREEN, "Ranking");

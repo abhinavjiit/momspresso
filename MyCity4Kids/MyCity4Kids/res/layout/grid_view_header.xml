@@ -18,108 +18,117 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/videosContainer"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="#0ea2e8"
+                android:background="@drawable/img_video"
+                android:gravity="bottom"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:src="@drawable/tab5_selected" />
+                    android:src="@drawable/video_grey"
+                    android:tint="@color/white" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:text="Trending"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="VIDEOS"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     app:fontName="oswald_regular.ttf" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/storyContainer"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="#0ea2e8"
+                android:background="@drawable/img_100word"
+                android:gravity="bottom"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:src="@drawable/tab5_selected" />
+                    android:src="@drawable/shortstory_grey"
+                    android:tint="@color/white" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:text="Trending"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="100 WORD STORY"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     app:fontName="oswald_regular.ttf" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/groupsContainer"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="#0ea2e8"
+                android:background="@drawable/img_support"
+                android:gravity="bottom"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:src="@drawable/tab5_selected" />
+                    android:src="@drawable/ic_group_icon"
+                    android:tint="@color/white" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:text="Trending"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="SUPPORT GROUPS"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     app:fontName="oswald_regular.ttf" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="#0ea2e8"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="8dp"-->
+            <!--android:background="#0ea2e8"-->
+            <!--android:orientation="vertical">-->
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:src="@drawable/tab5_selected" />
+            <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:padding="10dp"-->
+            <!--android:src="@drawable/tab5_selected" />-->
 
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:text="Trending"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    app:fontName="oswald_regular.ttf" />
-            </LinearLayout>
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:padding="10dp"-->
+            <!--android:text="Trending"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="14sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
+            <!--</LinearLayout>-->
 
         </LinearLayout>
     </HorizontalScrollView>
