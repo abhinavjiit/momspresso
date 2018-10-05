@@ -46,15 +46,129 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
+    <LinearLayout
+        android:id="@+id/searchHistoryAndTrendContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:orientation="vertical">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/userSearchHistory1TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_ss_comment"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="20dp"
+            android:text="Grilled house"
+            android:textColor="@color/app_light_black"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="gone"
+            android:background="@color/light_underline" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/userSearchHistory2TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_ss_comment"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="20dp"
+            android:text="Grilled house"
+            android:textColor="@color/app_light_black"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="gone"
+            android:background="@color/light_underline" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/trendingSearch1TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_recent"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="20dp"
+            android:text="Grilled house"
+            android:textColor="@color/app_light_black"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="gone"
+            android:background="@color/light_underline" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/trendingSearch2TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_recent"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="20dp"
+            android:text="Grilled house"
+            android:textColor="@color/app_light_black"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="gone"
+            android:background="@color/light_underline" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/trendingSearch3TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_recent"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="20dp"
+            android:text="Grilled house"
+            android:textColor="@color/app_light_black"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="gone"
+            android:background="@color/light_underline" />
+    </LinearLayout>
+
     <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/searchHistoryAndTrendContainer"
         android:background="@color/white"
         android:elevation="3dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:visibility="gone"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/search.tabs_indicator"
         app:tabIndicatorHeight="3dp"
