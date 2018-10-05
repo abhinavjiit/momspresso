@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Color;
@@ -13,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +38,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     static TextView Dobpicker;
     EditText AboutEditText;
     private int mYear, mMonth, mDay;
+    LinearLayout Aboutprofilemaincontainer;
 
     @Nullable
     @Override
@@ -43,6 +47,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         String[] country = {"MALE", "FEMALE"};
         Dobpicker = (TextView) view.findViewById(R.id.date_picker);
         AboutEditText = (EditText) view.findViewById(R.id.about_edittext);
+        Aboutprofilemaincontainer = (LinearLayout) view.findViewById(R.id.main_profile_About_layout);
         Spinner spin = (Spinner) view.findViewById(R.id.spinner);
         spin.setOnItemSelectedListener(this);
         ArrayAdapter aa = new ArrayAdapter(this.getActivity(), R.layout.spinner_layout, country);
@@ -66,6 +71,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         Dobpicker.setOnClickListener(this);
         return view;
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

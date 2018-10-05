@@ -6,7 +6,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="39dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="15dp"
@@ -57,11 +57,12 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/mainprofile_thin_border">
 
-        <EditText
+        <com.mycity4kids.widget.CustomFontEditText
             android:id="@+id/mail"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
@@ -84,13 +85,13 @@
             android:text="*********" />
 
         <Button
+            android:id="@+id/edit_mailid"
             android:layout_width="50sp"
             android:layout_height="30sp"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="22dp"
             android:layout_marginRight="5dp"
+            android:layout_marginTop="22dp"
             android:background="@drawable/button_round"
-
             android:text="EDIT"
             android:textSize="14sp" />
     </RelativeLayout>
@@ -101,7 +102,30 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"
-        android:text="CELL NO" />
+        android:text="CELL NO"
+        android:textColor="#d3d3d3" />
+
+    <com.mycity4kids.widget.PrefixEditText
+        android:id="@+id/profile_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/mainprofile_thin_border"
+        android:gravity="center_vertical"
+        android:inputType="number"
+        android:paddingLeft="10dp"
+        android:tag="+91-"
+        android:textColor="#000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:text="LOCATION"
+        android:textColor="#d3d3d3" />
 
     <com.mycity4kids.widget.CustomFontEditText
         android:layout_width="match_parent"
@@ -110,31 +134,11 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/mainprofile_thin_border"
-        android:hint="54644355453"
-        android:inputType="number"
+        android:hint="DELHI"
+        android:inputType="text"
         android:paddingBottom="15dp"
         android:paddingLeft="10dp"
         android:paddingTop="15dp"
         android:textColor="#000" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:text="LOCATION" />
-
-    <com.mycity4kids.widget.CustomFontEditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/mainprofile_thik_border"
-        android:hint="DELHI"
-        android:inputType="textNoSuggestions"
-        android:paddingBottom="15dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="15dp" />
 
 </LinearLayout>

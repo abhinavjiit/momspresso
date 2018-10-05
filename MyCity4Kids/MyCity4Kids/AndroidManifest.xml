@@ -517,7 +517,7 @@
         <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
 
         <activity android:name=".ui.activity.Mainprofile" />
-        <activity android:name=".MainProfile" />
+
     </application>
 
 </manifest>
