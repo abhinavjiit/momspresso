@@ -1,82 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainprofile_parent_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.activity.EditProfileNewActivity">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/id_appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:fitsSystemWindows="true">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
-
-            <View
-                android:id="@+id/view_id"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:background="@color/dark_transparent" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/id_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/transparent"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-                app:titleTextColor="#fff" />
-
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="90dp"
-                android:src="@drawable/family_xxhdpi" />
-
-            <ImageView
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:layout_marginLeft="210dp"
-                android:layout_marginTop="165dp"
-                android:background="@drawable/profile_camera_circle" />
-        </RelativeLayout>
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/id_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
-            app:tabIndicatorColor="#e00"
-            app:tabSelectedTextColor="#e00"
-            app:tabTextColor="@color/grey" />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nested"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_above="@+id/saveTextView"
+        android:fitsSystemWindows="true">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/id_viewpager"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/id_appbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </android.support.v4.widget.NestedScrollView>
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:fitsSystemWindows="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+                <View
+                    android:id="@+id/view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:background="@color/dark_transparent" />
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/id_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@color/transparent"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                    app:titleTextColor="#fff" />
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="90dp"
+                    android:src="@drawable/family_xxhdpi" />
+
+                <ImageView
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_marginLeft="210dp"
+                    android:layout_marginTop="165dp"
+                    android:background="@drawable/profile_camera_circle" />
+            </RelativeLayout>
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/id_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
+                app:tabIndicatorColor="#e00"
+                app:tabSelectedTextColor="#e00"
+                app:tabTextColor="@color/grey" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nested"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="100dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/id_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
 
     <Button
+        android:id="@+id/saveTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:background="@color/colorAccent"
         android:text="SAVE"
         android:textColor="#fff" />
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

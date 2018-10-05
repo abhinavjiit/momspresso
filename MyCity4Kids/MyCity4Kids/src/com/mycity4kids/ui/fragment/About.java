@@ -20,7 +20,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +63,6 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     private LinearLayout childInfoContainer;
     private static TextView dobTextView;
 
-    static TextView dobpicker;
     EditText aboutEditText;
     private int mYear, mMonth, mDay;
     LinearLayout aboutprofilemaincontainer;
@@ -80,7 +78,6 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_about_layout, container, false);
 
-        dobpicker = (TextView) view.findViewById(R.id.date_picker);
         aboutEditText = (EditText) view.findViewById(R.id.aboutEditText);
         aboutprofilemaincontainer = (LinearLayout) view.findViewById(R.id.main_profile_About_layout);
         childInfoContainer = (LinearLayout) view.findViewById(R.id.childInfoContainer);
@@ -96,6 +93,8 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
 
         userDetail = getArguments().getParcelable("userDetail");
         cityList = getArguments().getParcelableArrayList("cityList");
+
+        addNewKidTextView.setOnClickListener(this);
 
         aboutEditText.setText("" + userDetail.getUserBio());
 
@@ -398,12 +397,12 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            if (dobpicker != null) {
+            if (dobTextView != null) {
                 String sel_date = "" + day + "-" + (month + 1) + "-" + year;
                 if (chkTime(sel_date)) {
-                    dobpicker.setText("" + day + "-" + (month + 1) + "-" + year);
+                    dobTextView.setText("" + day + "-" + (month + 1) + "-" + year);
                 } else {
-                    dobpicker.setText("" + current_day + "-" + (current_month + 1) + "-" + curent_year);
+                    dobTextView.setText("" + current_day + "-" + (current_month + 1) + "-" + curent_year);
                 }
             }
         }

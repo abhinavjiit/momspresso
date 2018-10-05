@@ -52,7 +52,7 @@ public class EditProfileNewActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.id_viewpager);
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.id_toolbar);
-        mainprofileparentlayout = (CoordinatorLayout) findViewById(R.id.mainprofile_parent_layout);
+//        mainprofileparentlayout = (CoordinatorLayout) findViewById(R.id.mainprofile_parent_layout);
         tabLayout = (TabLayout) findViewById(R.id.id_tabs);
         nestedScrollView = (NestedScrollView) findViewById(R.id.nested);
 
