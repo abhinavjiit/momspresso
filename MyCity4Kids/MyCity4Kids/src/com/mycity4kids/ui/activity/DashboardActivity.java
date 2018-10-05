@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -23,7 +22,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -83,7 +81,6 @@ import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
-import com.mycity4kids.ui.fragment.SheetFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.utils.AppUtils;
@@ -109,7 +106,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
     public static final String COMMON_PREF_FILE = "my_city_prefs";
-    SheetFragment fragment0;
     public boolean filter = false;
     Tracker t;
     private String deepLinkUrl;
@@ -149,9 +145,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        final LinearLayout bottomsheetview = (LinearLayout) findViewById(R.id.viewbottom);
-        final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cordinate);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         t = ((BaseApplication) getApplication()).getTracker(
                 BaseApplication.TrackerName.APP_TRACKER);
         // Enable Display Features.
@@ -230,17 +223,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         Utils.pushOpenScreenEvent(this, "DashboardScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
-        bottomsheetview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //  FragmentTransaction ft = getFragmentManager().beginTransaction();
-                android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                // ft.hide(fragment0);
-                ft.remove(fragment0);
-                ft.commit();
-                coordinatorLayout.setVisibility(View.GONE);
-            }
-        });
         downArrowImageView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
         toolbarTitleTextView.setOnClickListener(this);

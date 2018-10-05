@@ -270,7 +270,8 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_margin="6dp"
-                                android:src="@drawable/draft_red" />
+                                android:src="@drawable/draft_red"
+                                android:tint="#6194c9" />
                         </LinearLayout>
 
                         <com.mycity4kids.widget.CustomFontTextView
@@ -302,7 +303,8 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_margin="6dp"
-                                android:src="@drawable/shortstory_red" />
+                                android:src="@drawable/shortstory_red"
+                                android:tint="#41b69e" />
                         </LinearLayout>
 
                         <com.mycity4kids.widget.CustomFontTextView

@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.Mainprofile">
 
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/id_appbar"
         android:layout_width="match_parent"
@@ -24,7 +23,6 @@
                 android:id="@+id/view_id"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
-
                 android:background="@color/dark_transparent" />
 
             <android.support.v7.widget.Toolbar
@@ -58,8 +56,7 @@
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
             app:tabIndicatorColor="#e00"
             app:tabSelectedTextColor="#e00"
-            app:tabTextColor="@color/grey"
-            />
+            app:tabTextColor="@color/grey" />
 
     </android.support.design.widget.AppBarLayout>
 

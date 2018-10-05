@@ -68,6 +68,7 @@
             android:paddingRight="16dp"
             android:paddingTop="16dp"
             android:text="@string/home"
+            android:textAllCaps="true"
             app:fontName="oswald.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -105,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_below="@+id/shortStoryTextView"
-            android:drawableLeft="@drawable/ic_group_icon"
+            android:drawableLeft="@drawable/tab4_selected"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
             android:paddingBottom="16dp"
@@ -132,6 +133,7 @@
             android:layout_below="@+id/divider1"
             android:drawableLeft="@drawable/ic_bookmark"
             android:drawablePadding="20dp"
+            android:drawableTint="#d54058"
             android:paddingBottom="20dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
@@ -155,6 +157,7 @@
             android:layout_below="@+id/divider2"
             android:drawableLeft="@drawable/ic_settings"
             android:drawablePadding="20dp"
+            android:drawableTint="#d54058"
             android:paddingBottom="20dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"

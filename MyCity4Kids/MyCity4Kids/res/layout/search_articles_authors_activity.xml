@@ -57,7 +57,8 @@
             android:id="@+id/userSearchHistory1TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableRight="@drawable/ic_ss_comment"
+            android:drawableRight="@drawable/ic_recent"
+            android:drawableTint="@color/app_blue"
             android:paddingBottom="20dp"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
@@ -71,14 +72,15 @@
             android:id="@+id/underline1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:visibility="gone"
-            android:background="@color/light_underline" />
+            android:background="@color/light_underline"
+            android:visibility="gone" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/userSearchHistory2TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableRight="@drawable/ic_ss_comment"
+            android:drawableRight="@drawable/ic_recent"
+            android:drawableTint="@color/app_blue"
             android:paddingBottom="20dp"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
@@ -92,14 +94,15 @@
             android:id="@+id/underline2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:visibility="gone"
-            android:background="@color/light_underline" />
+            android:background="@color/light_underline"
+            android:visibility="gone" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/trendingSearch1TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableRight="@drawable/ic_recent"
+            android:drawableRight="@drawable/trending_grey"
+            android:drawableTint="@color/app_blue"
             android:paddingBottom="20dp"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
@@ -113,14 +116,15 @@
             android:id="@+id/underline3"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:visibility="gone"
-            android:background="@color/light_underline" />
+            android:background="@color/light_underline"
+            android:visibility="gone" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/trendingSearch2TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableRight="@drawable/ic_recent"
+            android:drawableRight="@drawable/trending_grey"
+            android:drawableTint="@color/app_blue"
             android:paddingBottom="20dp"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
@@ -134,14 +138,15 @@
             android:id="@+id/underline4"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:visibility="gone"
-            android:background="@color/light_underline" />
+            android:background="@color/light_underline"
+            android:visibility="gone" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/trendingSearch3TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableRight="@drawable/ic_recent"
+            android:drawableRight="@drawable/trending_grey"
+            android:drawableTint="@color/app_blue"
             android:paddingBottom="20dp"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
@@ -155,8 +160,8 @@
             android:id="@+id/underline5"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:visibility="gone"
-            android:background="@color/light_underline" />
+            android:background="@color/light_underline"
+            android:visibility="gone" />
     </LinearLayout>
 
     <android.support.design.widget.TabLayout

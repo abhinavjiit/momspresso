@@ -118,7 +118,7 @@
             android:layout_toRightOf="@+id/profileImageView"
             android:gravity="left"
             android:onClick="onClick"
-            android:text="John Farishon"
+            android:text=""
             android:textColor="@color/app_light_black"
             android:textSize="20sp"
             app:fontName="oswald.ttf" />
@@ -135,7 +135,7 @@
             android:drawableTint="@color/app_grey"
             android:gravity="left"
             android:onClick="onClick"
-            android:text="Gurugam"
+            android:text=""
             android:textColor="@color/app_grey"
             android:textSize="14sp"
             app:fontName="oswald.ttf" />

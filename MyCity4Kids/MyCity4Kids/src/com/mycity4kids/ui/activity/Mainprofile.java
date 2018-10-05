@@ -38,29 +38,19 @@ public class Mainprofile extends AppCompatActivity {
 
     }
 
-//    private class ViewPagerAdapter {
-//        public ViewPagerAdapter(FragmentManager supportFragmentManager) {
-//
-//        }
-//    }
-
     public class ViewPagerAdapter extends FragmentPagerAdapter {
-
         public ViewPagerAdapter(android.support.v4.app.FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
-
             switch (position) {
                 case 0:
                     return new About();
                 default:
                     return new Contactdetails();
             }
-
-
         }
 
         @Override
@@ -76,7 +66,6 @@ public class Mainprofile extends AppCompatActivity {
             } else if (position == 1) {
                 title = "Contact Detalis";
             }
-
             return title;
         }
     }

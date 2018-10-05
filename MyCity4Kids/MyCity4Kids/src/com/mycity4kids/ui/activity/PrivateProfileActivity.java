@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.share.Share;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -174,7 +175,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         rankContainer = (LinearLayout) findViewById(R.id.rankContainer);
 
         authorNameTextView.setOnClickListener(this);
-        locationTextView.setOnClickListener(this);
+//        locationTextView.setOnClickListener(this);
         authorBioTextView.setOnClickListener(this);
         imgProfile.setOnClickListener(this);
         publishedSectionTextView.setOnClickListener(this);
@@ -192,6 +193,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
 
+        locationTextView.setText("" + SharedPrefUtils.getCurrentCityModel(this).getName());
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
             Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
