@@ -22,8 +22,8 @@
         android:id="@+id/aboutEditText"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="3dp"
         android:background="@drawable/mainprofile_thin_border"
         android:gravity="top"
@@ -35,6 +35,18 @@
         android:scrollbars="vertical"
         android:textColor="@color/app_grey"
         android:textSize="16sp" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/childDetailTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:text="Child Details"
+        android:textColor="@color/app_light_black"
+        android:textSize="16sp"
+        app:fontName="oswald_regular.ttf" />
 
     <LinearLayout
         android:id="@+id/childInfoContainer"
@@ -62,7 +74,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="13dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/profe_layout">
+        android:background="@drawable/kids_container_border">
 
         <com.mycity4kids.widget.CustomFontEditText
             android:id="@+id/kidNameEditText"
@@ -105,13 +117,14 @@
         <!--android:layout_width="135dp"-->
         <!--android:layout_height="40dp"-->
         <!--android:layout_below="@id/gender"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginBottom="18dp"-->
+        <!--android:layout_marginLeft="16dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginStart="16dp"-->
         <!--android:layout_marginTop="8dp"-->
         <!--android:background="#fff" />-->
 
-        <Spinner
+        <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/genderSpinner"
             android:layout_width="135dp"
             android:layout_height="40dp"
@@ -120,7 +133,17 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:background="@drawable/mainprofile_thin_border" />
+
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_alignRight="@id/genderSpinner"
+            android:layout_alignTop="@+id/genderSpinner"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/arrowdownnew" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/date_picker"
@@ -131,19 +154,23 @@
             android:layout_marginLeft="200dp"
             android:layout_marginStart="200dp"
             android:layout_marginTop="8dp"
-            android:background="#fff"
+            android:background="@drawable/mainprofile_thin_border"
             android:gravity="center"
             android:textColor="#000" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/addNewKidTextView"
-            android:layout_width="70dp"
-            android:layout_height="42dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@id/genderSpinner"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="130dp"
             android:background="@drawable/button_round"
             android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
             android:text="ADD"
             android:textColor="@color/white" />
 

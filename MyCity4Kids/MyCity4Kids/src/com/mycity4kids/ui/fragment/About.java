@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,7 +73,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     private TextView addNewKidTextView, kidsDOBTextView;
     private EditText kidNameEditText;
     private RelativeLayout addKidContainer;
-    private Spinner genderSpinner;
+    private AppCompatSpinner genderSpinner;
 
     @Nullable
     @Override
@@ -91,7 +92,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
 //        femaleRadioButton = (RadioButton) view.findViewById(R.id.femaleRadioButton);
 //        genderRadioGroup = (RadioGroup) view.findViewById(R.id.genderRadioGroup);
         addKidContainer = (RelativeLayout) view.findViewById(R.id.addKidContainer);
-        genderSpinner = (Spinner) view.findViewById(R.id.genderSpinner);
+        genderSpinner = (AppCompatSpinner) view.findViewById(R.id.genderSpinner);
 
         userDetail = getArguments().getParcelable("userDetail");
         cityList = getArguments().getParcelableArrayList("cityList");
