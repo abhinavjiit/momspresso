@@ -3,32 +3,43 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.kelltontech.utils.DateTimeUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.city.MetroCity;
+import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.CityConfigResponse;
 import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.response.UserDetailResult;
+import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
+import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.adapter.UserProfilePagerAdapter;
+import com.mycity4kids.utils.RoundedTransformation;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -36,14 +47,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class EditProfileNewActivity extends AppCompatActivity {
+public class EditProfileNewActivity extends AppCompatActivity implements View.OnClickListener {
     ViewPager viewPager;
-    android.support.v7.widget.Toolbar toolbar;
+    Toolbar toolbar;
     TabLayout tabLayout;
     UserProfilePagerAdapter viewPagerAdapter;
-    NestedScrollView nestedScrollView;
-    CoordinatorLayout mainprofileparentlayout;
     public ArrayList<CityInfoItem> mDatalist;
+    private ImageView profileImageView;
+    private UserDetailResult userDetails;
+    private TextView saveTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +63,21 @@ public class EditProfileNewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mainprofile);
 
         viewPager = (ViewPager) findViewById(R.id.id_viewpager);
-        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.id_toolbar);
-//        mainprofileparentlayout = (CoordinatorLayout) findViewById(R.id.mainprofile_parent_layout);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.id_tabs);
-        nestedScrollView = (NestedScrollView) findViewById(R.id.nested);
+        profileImageView = (ImageView) findViewById(R.id.profileImageView);
+        saveTextView = (TextView) findViewById(R.id.saveTextView);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("profile");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        toolbar.setTitleTextColor(0xFFFFFFFF);
-        nestedScrollView.setFillViewport(true);
+        saveTextView.setOnClickListener(this);
+        try {
+            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
+                    .error(R.drawable.family_xxhdpi).into(profileImageView);
+        } catch (Exception e) {
+            profileImageView.setImageResource(R.drawable.family_xxhdpi);
+        }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
@@ -70,7 +86,6 @@ public class EditProfileNewActivity extends AppCompatActivity {
 
     }
 
-    private UserDetailResult userDetails;
     private Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
@@ -193,6 +208,68 @@ public class EditProfileNewActivity extends AppCompatActivity {
         }
     };
 
+    private void saveUserDetails() {
+        UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
+        if (viewPager.getCurrentItem() == 0) {
+            updateUserDetail.setUserBio(viewPagerAdapter.getAbout().getAboutEditText().getText().toString().trim() + "");
+        } else {
+            String[] nameArr = viewPagerAdapter.getContactdetails().getFullNameEditText().toString().split(" ");
+            updateUserDetail.setFirstName((nameArr[0]));
+            updateUserDetail.setBlogTitle(viewPagerAdapter.getContactdetails().getHandleNameEditText().getText().toString().trim() + "");
+
+            if (nameArr.length < 2 || StringUtils.isNullOrEmpty(nameArr[1].trim())) {
+                updateUserDetail.setLastName(" ");
+            } else {
+                updateUserDetail.setLastName(nameArr[1]);
+            }
+
+            if (StringUtils.isNullOrEmpty(viewPagerAdapter.getContactdetails().getPhoneEditText().getText().toString().trim())) {
+                updateUserDetail.setMobile(" ");
+            } else {
+                updateUserDetail.setMobile(viewPagerAdapter.getContactdetails().getPhoneEditText().getText().toString().trim() + "");
+            }
+
+            if (viewPagerAdapter.getContactdetails().getSelectedCityId() != 0) {
+                updateUserDetail.setCityId("" + viewPagerAdapter.getContactdetails().getSelectedCityId());
+                updateUserDetail.setCityName("" + viewPagerAdapter.getContactdetails().getCurrentCityName());
+            }
+        }
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
+        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(updateUserDetail);
+        call.enqueue(userDetailsUpdateResponseListener);
+    }
+
+    private Callback<UserDetailResponse> userDetailsUpdateResponseListener = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            if (response == null || response.body() == null) {
+//                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            UserDetailResponse responseData = response.body();
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                Toast.makeText(EditProfileNewActivity.this, getString(R.string.app_settings_edit_profile_update_success), Toast.LENGTH_SHORT).show();
+                UserInfo model = SharedPrefUtils.getUserDetailModel(EditProfileNewActivity.this);
+                String[] nameArr = viewPagerAdapter.getContactdetails().getFullNameEditText().toString().split(" ");
+                model.setFirst_name(nameArr[0]);
+                if (nameArr.length < 2 || StringUtils.isNullOrEmpty(nameArr[1].trim())) {
+                    model.setLast_name(" ");
+                } else {
+                    model.setLast_name(nameArr[1]);
+                }
+                SharedPrefUtils.setUserDetailModel(EditProfileNewActivity.this, model);
+            } else {
+//                showToast(responseData.getReason());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     @Override
     protected void onResume() {
@@ -229,4 +306,58 @@ public class EditProfileNewActivity extends AppCompatActivity {
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.saveTextView:
+                if (validateFields()) {
+                    saveUserDetails();
+//                    addCityDetails();
+                }
+                break;
+        }
+    }
+
+    private boolean validateFields() {
+
+        if (viewPager.getCurrentItem() == 0) {
+            if (TextUtils.isEmpty(viewPagerAdapter.getAbout().getAboutEditText().getText())) {
+                Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_empty), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } else {
+            if (StringUtils.isNullOrEmpty(viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().trim())) {
+                Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_fn_empty), Toast.LENGTH_SHORT).show();
+                return false;
+            } else if (StringUtils.isNullOrEmpty(viewPagerAdapter.getContactdetails().getHandleNameEditText().getText().toString().trim())) {
+                Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_blog_title_empty), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
+    }
+
+//    private void addCityDetails() {
+//        UpdateUserDetailsRequest addCityAndKidsInformationRequest = new UpdateUserDetailsRequest();
+////        addCityAndKidsInformationRequest.setKids(kidsModelArrayList);
+//
+//        if (selectedCityId != 0) {
+//            addCityAndKidsInformationRequest.setCityId("" + selectedCityId);
+//            addCityAndKidsInformationRequest.setCityName("" + currentCityName);
+//        }
+//        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+//        UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
+//        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateCityAndKids(addCityAndKidsInformationRequest);
+//        call.enqueue(addCityAndKidsResponseReceived);
+//    }
 }

@@ -1,157 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f5f5f6"
-    android:orientation="vertical">
+    android:clipToPadding="false"
+    android:paddingBottom="100dp">
 
-    <com.mycity4kids.widget.CustomFontTextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="39dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/mainprofile_thin_border"
-        android:gravity="center"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:text="HANDLE NAME"
-        android:textColor="@color/app_light_black"
-        android:textSize="14dp"
-        app:fontName="oswald_regular.ttf" />
-
-    <com.mycity4kids.widget.CustomFontTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:text="FULL NAME"
-        android:textColor="@color/app_grey"
-        android:textSize="14sp"
-        app:fontName="oswald_regular.ttf" />
-
-    <com.mycity4kids.widget.CustomFontEditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/mainprofile_thin_border"
-        android:hint="jjdbksdjhfkjd"
-        android:inputType="textNoSuggestions"
-        android:paddingBottom="15dp"
-        android:paddingLeft="14dp"
-        android:paddingTop="15dp"
-        android:textColor="@color/app_light_black"
-        android:textSize="16dp"
-        app:fontName="oswald_regular.ttf" />
-
-    <com.mycity4kids.widget.CustomFontTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:text="EMAIL AND PASSWORD"
-        android:textColor="@color/app_grey"
-        android:textSize="14sp"
-        app:fontName="oswald_regular.ttf" />
-
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/mainprofile_thin_border"
-        app:fontName="oswald_regular.ttf">
+        android:layout_height="match_parent"
+        android:background="#f5f5f6"
+        android:orientation="vertical">
 
         <com.mycity4kids.widget.CustomFontEditText
-            android:id="@+id/mail"
+            android:id="@+id/handleNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/mainprofile_thin_border"
+            android:gravity="center"
+            android:hint="HANDLE NAME"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/app_light_black"
+            android:textSize="14sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="FULL NAME"
+            android:textColor="@color/app_grey"
+            android:textSize="14sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontEditText
+            android:id="@+id/fullNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/mainprofile_thin_border"
             android:hint="jjdbksdjhfkjd"
-            android:inputType="textEmailAddress"
-            android:paddingBottom="10dp"
+            android:inputType="textNoSuggestions"
+            android:paddingBottom="15dp"
             android:paddingLeft="5dp"
-            android:paddingTop="10dp"
+            android:paddingTop="15dp"
             android:textColor="@color/app_light_black"
             android:textSize="16dp"
             app:fontName="oswald_regular.ttf" />
 
+        <com.mycity4kids.widget.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="EMAIL AND PASSWORD"
+            android:textColor="@color/app_grey"
+            android:textSize="14sp"
+            app:fontName="oswald_regular.ttf" />
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/mainprofile_thin_border">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/emailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/app_light_black"
+                android:textSize="16dp"
+                app:fontName="oswald_regular.ttf" />
+
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/passwordTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emailTextView"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="4dp"
+                android:paddingLeft="5dp"
+                android:text="*********"
+                app:fontName="oswald_regular.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/edit_mailid"
+                android:layout_width="50sp"
+                android:layout_height="30sp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/button_round"
+                android:gravity="center"
+                android:text="EDIT"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:fontName="oswald_regular.ttf" />
+        </RelativeLayout>
+
 
         <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/mail"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="4dp"
-            android:text="*********"
+            android:layout_marginTop="15dp"
+            android:text="CELL NO"
+            android:textColor="@color/app_grey"
             app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.PrefixEditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/mainprofile_thin_border"
+            android:gravity="center_vertical"
+            android:inputType="number"
+            android:paddingLeft="10dp"
+            android:tag="+91-"
+            android:textColor="@color/app_light_black" />
 
         <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/edit_mailid"
-            android:layout_width="50sp"
-            android:layout_height="30sp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="22dp"
-            android:background="@drawable/button_round"
-            android:text="EDIT"
-            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="LOCATION"
+            android:textColor="@color/app_grey"
             app:fontName="oswald_regular.ttf" />
-    </RelativeLayout>
 
+        <com.mycity4kids.widget.CustomFontEditText
+            android:id="@+id/cityEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/mainprofile_thin_border"
+            android:hint="DELHI"
+            android:inputType="text"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="15dp"
+            android:textColor="@color/app_light_black"
+            app:fontName="oswald_regular.ttf" />
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:text="CELL NO"
-        android:textColor="@color/app_grey"
-        app:fontName="oswald_regular.ttf" />
-
-    <com.mycity4kids.widget.PrefixEditText
-        android:id="@+id/profile_phone_number"
-        android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/mainprofile_thin_border"
-        android:gravity="center_vertical"
-        android:inputType="number"
-        android:paddingLeft="10dp"
-        android:tag="+91-"
-        android:textColor="@color/app_light_black" />
-
-    <com.mycity4kids.widget.CustomFontTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:text="LOCATION"
-        android:textColor="@color/app_grey"
-        app:fontName="oswald_regular.ttf" />
-
-    <com.mycity4kids.widget.CustomFontEditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/mainprofile_thin_border"
-        android:hint="DELHI"
-        android:inputType="text"
-        android:paddingBottom="15dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="15dp"
-        android:textColor="@color/app_light_black"
-        app:fontName="oswald_regular.ttf" />
-
-</LinearLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

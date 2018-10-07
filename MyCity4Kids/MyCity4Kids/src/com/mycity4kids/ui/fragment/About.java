@@ -217,10 +217,6 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
             Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date), Toast.LENGTH_SHORT).show();
             return false;
         }
-//        if (!maleRadioButton.isChecked() && !femaleRadioButton.isChecked()) {
-//            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_choose_gender), Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
         return true;
     }
 
@@ -288,6 +284,18 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
         Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(addCityAndKidsInformationRequest);
         call.enqueue(updateKidsInfoResponseListener);
+    }
+
+    public void saveEditKidInfo(KidsInfo kidsinfo) {
+        viewInEditMode.setKidName(kidsinfo.getName());
+        viewInEditMode.setKids_bdy(kidsinfo.getDate_of_birth());
+        if ("0".equals(kidsinfo.getGender())) {
+            viewInEditMode.setGenderAsMale(true);
+        } else {
+            viewInEditMode.setGenderAsFemale(true);
+        }
+        kidsInfoActionType = "EDIT";
+        saveKidsInfo();
     }
 
     public void deleteKid() {
@@ -432,6 +440,8 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         return timestamp;
     }
 
-
+    public EditText getAboutEditText() {
+        return aboutEditText;
+    }
 }
 

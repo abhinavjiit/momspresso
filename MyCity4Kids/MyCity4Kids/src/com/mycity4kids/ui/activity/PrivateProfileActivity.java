@@ -859,4 +859,14 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             mGoogleApiClient.connect();
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

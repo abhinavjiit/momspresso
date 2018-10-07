@@ -1,91 +1,120 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:id="@+id/mainprofile_parent_layout"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent">-->
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainprofile_parent_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_above="@+id/saveTextView">
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/id_appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/saveTextView"
+        android:layout_height="wrap_content"
+        android:background="#fff"
         android:fitsSystemWindows="true">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/id_appbar"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#fff"
-            android:fitsSystemWindows="true">
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-            <RelativeLayout
+            <View
+                android:id="@+id/view_id"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:background="@color/dark_transparent" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+                android:background="@color/transparent"
+                android:minHeight="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                app:theme="@style/ToolbarTheme"
+                app:titleTextAppearance="@style/ToolbarTheme.Title">
 
-                <View
-                    android:id="@+id/view_id"
+                <RelativeLayout
+                    android:id="@+id/toolbarRelativeLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:background="@color/dark_transparent" />
+                    android:layout_height="wrap_content"
+                    android:visibility="visible">
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/id_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="@color/transparent"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-                    app:titleTextColor="#fff" />
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/toolbarTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/app_settings.tabbar.edit_profile"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        app:fontName="oswald_regular.ttf" />
 
-                <com.mikhaellopez.circularimageview.CircularImageView
-                    android:layout_width="140dp"
-                    android:layout_height="140dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="90dp"
-                    android:src="@drawable/family_xxhdpi" />
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
 
-                <ImageView
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
-                    android:layout_marginLeft="210dp"
-                    android:layout_marginTop="165dp"
-                    android:background="@drawable/profile_camera_circle" />
-            </RelativeLayout>
+            <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/id_toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="?attr/actionBarSize"-->
+            <!--android:background="@color/transparent"-->
+            <!--app:layout_scrollFlags="scroll|enterAlwaysCollapsed"-->
+            <!--app:titleTextColor="#fff" />-->
 
-            <android.support.design.widget.TabLayout
-                android:id="@+id/id_tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
-                app:tabIndicatorColor="#e00"
-                app:tabSelectedTextColor="#e00"
-                app:tabTextColor="@color/grey" />
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="90dp"
+                android:src="@drawable/family_xxhdpi"
+                app:civ_border_color="@color/app_pink"
+                app:civ_border_width="2dp" />
 
-        </android.support.design.widget.AppBarLayout>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/profileImageView"
+                android:background="@drawable/profile_camera_circle"
+                android:padding="12dp"
+                android:src="@drawable/ic_camera"
+                android:tint="@color/white" />
+        </RelativeLayout>
 
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/nested"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/id_tabs"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="100dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
+            app:tabIndicatorColor="#e00"
+            app:tabSelectedTextColor="#e00"
+            app:tabTextColor="@color/grey" />
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/id_viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </android.support.v4.widget.NestedScrollView>
-    </android.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.AppBarLayout>
 
-    <Button
+    <android.support.v4.view.ViewPager
+        android:id="@+id/id_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/saveTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:background="@color/colorAccent"
-        android:text="SAVE"
-        android:textColor="#fff" />
-</RelativeLayout>
+        android:layout_marginTop="10dp"
+        android:background="@color/app_pink"
+        android:elevation="20dp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/app_settings.edit_profile.save"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        app:fontName="oswald_regular.ttf" />
+</android.support.design.widget.CoordinatorLayout>
+
+    <!--<Button--><!--android:id="@+id/saveTextView"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_alignParentBottom="true"--><!--android:layout_gravity="bottom"--><!--android:background="@color/colorAccent"--><!--android:text="SAVE"--><!--android:visibility="gone"--><!--android:textColor="#fff" />--><!--</RelativeLayout>-->

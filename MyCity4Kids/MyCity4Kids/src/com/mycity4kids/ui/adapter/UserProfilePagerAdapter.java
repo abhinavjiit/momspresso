@@ -53,4 +53,11 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
         return 2;
     }
 
+    public About getAbout() {
+        return about;
+    }
+
+    public Contactdetails getContactdetails() {
+        return contactdetails;
+    }
 }

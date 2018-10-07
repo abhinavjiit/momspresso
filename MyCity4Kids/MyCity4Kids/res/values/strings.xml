@@ -813,4 +813,7 @@
     <string name="improve_reachability">Improve the reachability by updating the bio.</string>
     <string name="profile">Profile</string>
     <string name="create_content">Every mother has a story. What\'s yours? Pour out yours like a Blog, a 100 Word Story, or a Video.</string>
+    <string name="write_about_yourself">Write about yourself</string>
+    <string name="child_details">Child Details</string>
+    <string name="add_child_details">Add Child Details</string>
 </resources>
