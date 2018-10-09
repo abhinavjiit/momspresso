@@ -816,4 +816,7 @@
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
+    <string name="contact_details">Contact Details</string>
+    <string name="discover">Discover</string>
+    <string name="create">Create</string>
 </resources>

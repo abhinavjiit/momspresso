@@ -18,12 +18,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
-        android:background="#ffffff"
+        android:background="@color/app_red"
         android:elevation="10dp"
         android:gravity="center"
-        android:padding="15dp"
+        android:padding="20dp"
         android:text="@string/suggested_topic.start_writing"
-        android:textColor="@color/suggested_topic.start_writing_label"
+        android:textColor="@color/white"
         android:textSize="17sp"
         app:fontName="oswald_regular.ttf" />
 </RelativeLayout>

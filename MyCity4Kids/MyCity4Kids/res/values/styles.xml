@@ -228,6 +228,15 @@
         <item name="colorControlNormal">@color/colorControlNormal</item>
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
     </style>
+
+    <style name="EditProfileToolbar" parent="AppTheme">
+        <item name="android:textColorSecondary">@color/colorControlNormal</item>
+        <item name="actionMenuTextColor">@color/toolbar.menu_items</item>
+        <!-- Set toolbar back arrow color -->
+        <item name="colorControlNormal">@color/white</item>
+        <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
+    </style>
+
     <style name="TabLayoutStyle" parent="Base.Widget.Design.TabLayout">
         <item name="android:textSize">18sp</item>
         <item name="android:textAllCaps">false</item>

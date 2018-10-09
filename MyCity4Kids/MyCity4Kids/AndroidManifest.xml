@@ -476,6 +476,12 @@
         <activity
             android:name=".ui.activity.PublicProfileActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ChangePasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.EditProfileNewActivity"
+            android:theme="@style/EditorTheme" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"
@@ -554,8 +560,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/blue_bg" />
-
-        <activity android:name=".ui.activity.EditProfileNewActivity" />
 
     </application>
 

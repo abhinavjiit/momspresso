@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.share.Share;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -70,6 +69,7 @@ import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.models.response.UserDetailResponse;
+import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
@@ -77,6 +77,8 @@ import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.RoundedTransformation;
+import com.mycity4kids.widget.ReadMoreTextView;
+import com.mycity4kids.widget.RoundedHorizontalProgressBar;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -123,15 +125,20 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private Uri imageUri;
 
     private ImageView imgProfile, blurImageView;
-    private ImageView settingImageView;
+    //    private ImageView settingImageView;
     private LinearLayout followerContainer, followingContainer, rankContainer;
     private TextView followingCountTextView, followerCountTextView, rankCountTextView;
     private TextView rankLanguageTextView;
-    private TextView authorNameTextView, locationTextView, authorBioTextView;
+    private TextView authorNameTextView, authorTypeTextView;
+    private ReadMoreTextView authorBioTextView;
     private TextView publishedSectionTextView, draftSectionTextView, activitySectionTextView, signoutSectionTextView;
     private View rootView;
     private ImageView backArrowImageView;
     private TextView updateProfileTextView;
+    private RoundedHorizontalProgressBar profileCompletionBar;
+    private TextView profilePercentageTextView;
+    private ImageView editProfileImageView;
+    private TextView editProfileTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,8 +164,8 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         updateProfileTextView = (TextView) findViewById(R.id.updateProfileTextView);
         backArrowImageView = (ImageView) findViewById(R.id.menuImageView);
         authorNameTextView = (TextView) findViewById(R.id.nameTextView);
-        locationTextView = (TextView) findViewById(R.id.locationTextView);
-        authorBioTextView = (TextView) findViewById(R.id.userbioTextView);
+        authorTypeTextView = (TextView) findViewById(R.id.authorTypeTextView);
+        authorBioTextView = (ReadMoreTextView) findViewById(R.id.userbioTextView);
         followingCountTextView = (TextView) findViewById(R.id.followingCountTextView);
         followerCountTextView = (TextView) findViewById(R.id.followerCountTextView);
         rankCountTextView = (TextView) findViewById(R.id.rankCountTextView);
@@ -171,10 +178,14 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
 //        settingsSectionTextView = (TextView) findViewById(R.id.settingsSectionTextView);
         signoutSectionTextView = (TextView) findViewById(R.id.signoutSectionTextView);
         imgProfile = (ImageView) findViewById(R.id.profileImageView);
-        settingImageView = (ImageView) findViewById(R.id.settingImageView);
+//        settingImageView = (ImageView) findViewById(R.id.settingImageView);
         followerContainer = (LinearLayout) findViewById(R.id.followerContainer);
         followingContainer = (LinearLayout) findViewById(R.id.followingContainer);
         rankContainer = (LinearLayout) findViewById(R.id.rankContainer);
+        profileCompletionBar = (RoundedHorizontalProgressBar) findViewById(R.id.progress_bar_1);
+        profilePercentageTextView = (TextView) findViewById(R.id.profilePercentageTextView);
+        editProfileImageView = (ImageView) findViewById(R.id.editProfileImageView);
+        editProfileTextView = (TextView) findViewById(R.id.editProfileTextView);
 
         authorNameTextView.setOnClickListener(this);
 //        locationTextView.setOnClickListener(this);
@@ -185,23 +196,24 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
 //        bookmarksSectionTextView.setOnClickListener(this);
         activitySectionTextView.setOnClickListener(this);
 //        rankingSectionTextView.setOnClickListener(this);
-        rankContainer.setOnClickListener(this);
 //        settingsSectionTextView.setOnClickListener(this);
         signoutSectionTextView.setOnClickListener(this);
-        settingImageView.setOnClickListener(this);
+//        settingImageView.setOnClickListener(this);
         followingContainer.setOnClickListener(this);
         followerContainer.setOnClickListener(this);
         backArrowImageView.setOnClickListener(this);
         updateProfileTextView.setOnClickListener(this);
+        editProfileTextView.setOnClickListener(this);
+        editProfileImageView.setOnClickListener(this);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
 
-        locationTextView.setText("" + SharedPrefUtils.getCurrentCityModel(this).getName());
+//        authorTypeTextView.setText("" + SharedPrefUtils.getCurrentCityModel(this).getName());
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
             Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
 
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).into(target);
+//            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).into(target);
 //            GaussianBlur.with(this).put(R.drawable.groups_generic, blurImageView);
         }
 
@@ -284,36 +296,29 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                     }
                     authorNameTextView.setText(responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName());
 
-//                    switch (responseData.getData().get(0).getResult().getUserType()) {
-//                        case AppConstants.USER_TYPE_BLOGGER:
-//                            authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
-//                            rankingSectionTextView.setVisibility(View.VISIBLE);
-//                            findViewById(R.id.underline_5).setVisibility(View.VISIBLE);
-//                            break;
-//                        case AppConstants.USER_TYPE_EDITOR:
-//                            rankingSectionTextView.setVisibility(View.GONE);
-//                            findViewById(R.id.underline_5).setVisibility(View.GONE);
-//                            authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
-//                            break;
-//                        case AppConstants.USER_TYPE_EDITORIAL:
-//                            rankingSectionTextView.setVisibility(View.GONE);
-//                            findViewById(R.id.underline_5).setVisibility(View.GONE);
-//                            authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
-//                            break;
-//                        case AppConstants.USER_TYPE_EXPERT:
-//                            rankingSectionTextView.setVisibility(View.GONE);
-//                            findViewById(R.id.underline_5).setVisibility(View.GONE);
-//                            authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
-//                            break;
-//                        case AppConstants.USER_TYPE_USER:
-//                            rankingSectionTextView.setVisibility(View.GONE);
-//                            findViewById(R.id.underline_5).setVisibility(View.GONE);
-//                            authorTypeTextView.setVisibility(View.GONE);
-//                            break;
-//                        default:
-//                            rankingSectionTextView.setVisibility(View.GONE);
-//                            findViewById(R.id.underline_5).setVisibility(View.GONE);
-//                    }
+                    switch (responseData.getData().get(0).getResult().getUserType()) {
+                        case AppConstants.USER_TYPE_BLOGGER:
+                            authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
+                            rankContainer.setOnClickListener(PrivateProfileActivity.this);
+                            break;
+                        case AppConstants.USER_TYPE_EDITOR:
+                            authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
+                            rankContainer.setOnClickListener(PrivateProfileActivity.this);
+                            break;
+                        case AppConstants.USER_TYPE_EDITORIAL:
+                            authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
+                            rankContainer.setOnClickListener(PrivateProfileActivity.this);
+                            break;
+                        case AppConstants.USER_TYPE_EXPERT:
+                            authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
+                            rankContainer.setOnClickListener(PrivateProfileActivity.this);
+                            break;
+                        case AppConstants.USER_TYPE_USER:
+                            authorTypeTextView.setVisibility(View.GONE);
+                            rankContainer.setOnClickListener(null);
+                            break;
+                        default:
+                    }
 
                     if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())) {
                         Picasso.with(PrivateProfileActivity.this).load(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())
@@ -324,7 +329,12 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                         authorBioTextView.setVisibility(View.GONE);
                     } else {
                         authorBioTextView.setText(responseData.getData().get(0).getResult().getUserBio());
-                        authorBioTextView.setVisibility(View.VISIBLE);
+                        authorBioTextView.setTrimCollapsedText(getString(R.string.search_show_more));
+                        authorBioTextView.setTrimLines(2);
+                        authorBioTextView.setColorClickableText(R.color.app_red);
+                        authorBioTextView.setTrimMode(0);
+                        authorBioTextView.setText();
+//                        authorBioTextView.setVisibility(View.VISIBLE);
                     }
                     if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
                         //token already expired or yet to connect using facebook
@@ -333,6 +343,9 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                         SharedPrefUtils.setFacebookConnectedFlag(PrivateProfileActivity.this,
                                 responseData.getData().get(0).getResult().getSocialTokens().getFb().getIsExpired());
                     }
+
+                    profileCompletionBar.setProgress(getProfileCompletionPecentage(responseData.getData().get(0).getResult()));
+                    profilePercentageTextView.setText(getProfileCompletionPecentage(responseData.getData().get(0).getResult()) + "%");
                 } else {
                 }
             } catch (Exception e) {
@@ -348,21 +361,55 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         }
     };
 
-    private Target target = new Target() {
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            GaussianBlur.with(PrivateProfileActivity.this).put(bitmap, blurImageView);
+    private int getProfileCompletionPecentage(UserDetailResult result) {
+        int totalProgress = 100;
+        int progress = 0;
+        if (result.getProfilePicUrl() == null || StringUtils.isNullOrEmpty(result.getProfilePicUrl().getClientApp())) {
+            progress = progress + 10;
+        }
+        if (StringUtils.isNullOrEmpty(result.getFirstName())) {
+            progress = progress + 10;
+        }
+        if (StringUtils.isNullOrEmpty(result.getLastName())) {
+            progress = progress + 10;
+        }
+        if (StringUtils.isNullOrEmpty(result.getEmail())) {
+            progress = progress + 10;
+        }
+        if (StringUtils.isNullOrEmpty(result.getPhone().getMobile())) {
+            progress = progress + 10;
+        }
+        if (StringUtils.isNullOrEmpty(result.getBlogTitle())) {
+            progress = progress + 10;
+        }
+        if (StringUtils.isNullOrEmpty(result.getUserBio())) {
+            progress = progress + 10;
+        }
+        if (result.getKids() == null || result.getKids().isEmpty()) {
+            progress = progress + 10;
+        }
+        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getCurrentCityModel(this).getName())) {
+            progress = progress + 10;
         }
 
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-            GaussianBlur.with(PrivateProfileActivity.this).put(R.drawable.groups_generic, blurImageView);
-        }
+        return totalProgress - progress;
+    }
 
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-        }
-    };
+//    private Target target = new Target() {
+//        @Override
+//        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//            GaussianBlur.with(PrivateProfileActivity.this).put(bitmap, blurImageView);
+//        }
+//
+//        @Override
+//        public void onBitmapFailed(Drawable errorDrawable) {
+//            GaussianBlur.with(PrivateProfileActivity.this).put(R.drawable.groups_generic, blurImageView);
+//        }
+//
+//        @Override
+//        public void onPrepareLoad(Drawable placeHolderDrawable) {
+//        }
+//    };
 
     @Override
     public void onStop() {
@@ -520,7 +567,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                                  Picasso.with(PrivateProfileActivity.this).load(responseModel.getData().getResult().getUrl())
                                          .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
-                                 Picasso.with(PrivateProfileActivity.this).load(SharedPrefUtils.getProfileImgUrl(PrivateProfileActivity.this)).into(target);
+//                                 Picasso.with(PrivateProfileActivity.this).load(SharedPrefUtils.getProfileImgUrl(PrivateProfileActivity.this)).into(target);
                                  SharedPrefUtils.setProfileImgUrl(PrivateProfileActivity.this, responseModel.getData().getResult().getUrl());
                              }
                          }
@@ -609,6 +656,8 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.editProfileImageView:
+            case R.id.editProfileTextView:
             case R.id.updateProfileTextView: {
                 Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
                 startActivity(intent);
@@ -688,10 +737,12 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                     Intent _intent = new Intent(this, IdTokenLoginActivity.class);
                     startActivity(_intent);
                     return;
+                } else {
+                    Intent intent = new Intent(this, RankingActivity.class);
+                    startActivity(intent);
                 }
 //                if (rankingSectionTextView.getVisibility() == View.VISIBLE) {
-//                    Intent intent = new Intent(this, RankingActivity.class);
-//                    startActivity(intent);
+
 //                }
                 break;
             case R.id.rankingSectionTextView: {

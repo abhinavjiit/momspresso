@@ -32,13 +32,13 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
         bundle.putParcelable("userDetail", userDetailResult);
         bundle.putParcelableArrayList("cityList", mDatalist);
         switch (position) {
-            case 0:
+            case 1:
                 if (about == null) {
                     about = new About();
                 }
                 about.setArguments(bundle);
                 return about;
-            case 1:
+            case 0:
                 if (contactdetails == null) {
                     contactdetails = new Contactdetails();
                 }

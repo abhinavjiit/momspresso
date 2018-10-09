@@ -43,10 +43,10 @@ public class AppSettingsActivity extends BaseActivity implements View.OnClickLis
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_edit_profile)));
+//        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_edit_profile)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_edit_prefs)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_lang_prefs)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_change_password)));
+//        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_change_password)));
         AppUtils.changeTabsFont(this, tabLayout);
         AppSettingsPagerAdapter adapter = new AppSettingsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), "");
         viewPager.setAdapter(adapter);

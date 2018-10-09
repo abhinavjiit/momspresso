@@ -140,6 +140,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private View overlayView;
     private RelativeLayout createContentContainer;
     private TextView usernameTextView, videosTextView, shortStoryTextView, groupsTextView, bookmarksTextView, settingTextView;
+    private LinearLayout drawerTopContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,11 +212,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         bookmarksTextView = (TextView) findViewById(R.id.bookmarksTextView);
         settingTextView = (TextView) findViewById(R.id.settingTextView);
         usernameTextView = (TextView) findViewById(R.id.usernameTextView);
+        drawerTopContainer = (LinearLayout) findViewById(R.id.topContainer);
 
         bottomNavigationView.enableAnimation(false);
         bottomNavigationView.enableShiftingMode(false);
         bottomNavigationView.enableItemShiftingMode(false);
-        bottomNavigationView.setTextVisibility(false);
+        bottomNavigationView.setTextVisibility(true);
         setSupportActionBar(mToolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -244,6 +246,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         secondCoachmark.setOnClickListener(this);
         viewBookmarkedArticleTextView.setOnClickListener(this);
         profileImageView.setOnClickListener(this);
+        drawerTopContainer.setOnClickListener(this);
 
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
@@ -291,7 +294,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView);
         }
-        usernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
+//        usernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
 
         if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(this))) {
             langTextView.setText(getString(R.string.language_label_english));
@@ -1093,7 +1096,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     becomeBloggerFragment.setArguments(searchBundle);
                     addFragment(becomeBloggerFragment, searchBundle, true);
                 } else {
-                    launchEditor();
+//                    launchEditor();
+                    SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
+                    Bundle mBundle0 = new Bundle();
+                    fragment0.setArguments(mBundle0);
+                    addFragment(fragment0, mBundle0, true);
                 }
                 break;
             case R.id.storyContainer:
@@ -1115,6 +1122,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.overlayView:
                 hideCreateContentView();
                 break;
+            case R.id.topContainer:
             case R.id.profileImageView:
                 Intent pIntent = new Intent(this, PrivateProfileActivity.class);
                 startActivity(pIntent);
@@ -1216,12 +1224,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.settingTextView: {
-                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-                Bundle mBundle0 = new Bundle();
-                fragment0.setArguments(mBundle0);
-                addFragment(fragment0, mBundle0, true);
-//                Intent cityIntent = new Intent(this, AllVideosListingActivity.class);
-//                startActivity(cityIntent);
+//                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+//                Bundle mBundle0 = new Bundle();
+//                fragment0.setArguments(mBundle0);
+//                addFragment(fragment0, mBundle0, true);
+                Intent cityIntent = new Intent(this, AppSettingsActivity.class);
+                startActivity(cityIntent);
             }
             break;
 //            case R.id.flot:

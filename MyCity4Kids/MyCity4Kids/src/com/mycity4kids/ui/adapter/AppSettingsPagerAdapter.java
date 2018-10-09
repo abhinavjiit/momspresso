@@ -34,33 +34,33 @@ public class AppSettingsPagerAdapter extends FragmentStatePagerAdapter {
         Bundle bundle = new Bundle();
         switch (position) {
 
+//            case 0:
+//                if (editProfileTabFragment == null) {
+//                    editProfileTabFragment = new EditProfileTabFragment();
+//                }
+//                bundle.putString(Constants.AUTHOR_ID, authorId);
+//                editProfileTabFragment.setArguments(bundle);
+//                return editProfileTabFragment;
             case 0:
-                if (editProfileTabFragment == null) {
-                    editProfileTabFragment = new EditProfileTabFragment();
-                }
-                bundle.putString(Constants.AUTHOR_ID, authorId);
-                editProfileTabFragment.setArguments(bundle);
-                return editProfileTabFragment;
-            case 1:
                 if (editPreferencesTabFragment == null) {
                     editPreferencesTabFragment = new EditPreferencesTabFragment();
                 }
                 bundle.putString(Constants.AUTHOR_ID, authorId);
                 editPreferencesTabFragment.setArguments(bundle);
                 return editPreferencesTabFragment;
-            case 2:
+            case 1:
                 if (editLangPrefsTabFragment == null) {
                     editLangPrefsTabFragment = new EditLangPrefsTabFragment();
                 }
                 editLangPrefsTabFragment.setArguments(bundle);
                 return editLangPrefsTabFragment;
-            case 3:
-                if (changePasswordTabFragment == null) {
-                    changePasswordTabFragment = new ChangePasswordTabFragment();
-                }
-                bundle.putString(Constants.AUTHOR_ID, authorId);
-                changePasswordTabFragment.setArguments(bundle);
-                return changePasswordTabFragment;
+//            case 3:
+//                if (changePasswordTabFragment == null) {
+//                    changePasswordTabFragment = new ChangePasswordTabFragment();
+//                }
+//                bundle.putString(Constants.AUTHOR_ID, authorId);
+//                changePasswordTabFragment.setArguments(bundle);
+//                return changePasswordTabFragment;
         }
 
         return null;

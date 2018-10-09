@@ -35,23 +35,24 @@
                     android:paddingBottom="10dp"
                     android:paddingRight="10dp"
                     android:paddingTop="10dp"
-                    android:src="@drawable/ic_back_arrow" />
+                    android:src="@drawable/ic_back_arrow"
+                    android:tint="@color/app_light_black" />
 
                 <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/toolbarTitle"
+                    android:id="@+id/editProfileTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/menuImageView"
+                    android:layout_toLeftOf="@+id/editProfileImageView"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
-                    android:text="@string/profile"
-                    android:textColor="@color/white"
+                    android:text="@string/app_settings.tabbar.edit_profile"
+                    android:textColor="@color/app_red"
                     android:textSize="18sp"
                     app:fontName="oswald_regular.ttf" />
 
                 <ImageView
-                    android:id="@+id/settingImageView"
+                    android:id="@+id/editProfileImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -60,7 +61,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:paddingTop="15dp"
-                    android:src="@drawable/ic_settings"
+                    android:src="@drawable/ic_red_edit"
                     android:tint="@color/red_drawer_selected"
                     android:visibility="visible" />
 
@@ -86,7 +87,7 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/groups_generic" />
+                    android:src="@color/app_nav_bg" />
 
             </RelativeLayout>
 
@@ -106,7 +107,8 @@
             app:civ_border="true"
             app:civ_border_color="@color/white"
             app:civ_border_width="2dp"
-            app:civ_shadow="true" />
+            app:civ_shadow="true"
+            app:civ_shadow_radius="4" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/nameTextView"
@@ -124,15 +126,13 @@
             app:fontName="oswald.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/locationTextView"
+            android:id="@+id/authorTypeTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/nameTextView"
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/profileImageView"
-            android:drawableLeft="@drawable/location_new"
             android:drawablePadding="10dp"
-            android:drawableTint="@color/app_grey"
             android:gravity="left"
             android:onClick="onClick"
             android:text=""
@@ -148,9 +148,11 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:textColor="@color/app_light_black"
+            app:colorClickableText="@color/app_red"
             app:fontName="oswald.ttf"
             app:trimCollapsedText="@string/search.show_more"
             app:trimLines="2"
+            android:text="@string/random_100_words"
             app:trimMode="trimModeLine" />
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -177,9 +179,9 @@
             android:indeterminate="false"
             android:maxHeight="12dp"
             android:minHeight="12dp"
-            android:progress="40"
+            android:progress="0"
             app:backgroundColor="@color/profile_progress"
-            app:progressColor="@color/red_drawer_selected" />
+            app:progressColor="@color/app_red" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/updateProfileTextView"
@@ -204,7 +206,7 @@
             android:layout_below="@+id/profileCompletionLabel"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/updateProfileTextView"
-            android:text="57.2%"
+            android:text=""
             android:textColor="@color/app_light_black"
             app:fontName="oswald_regular.ttf" />
 

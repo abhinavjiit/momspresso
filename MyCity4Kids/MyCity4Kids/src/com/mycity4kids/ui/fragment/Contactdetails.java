@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -18,44 +19,50 @@ import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.activity.ChangePasswordActivity;
 
 import java.util.ArrayList;
 
 public class Contactdetails extends Fragment implements View.OnClickListener, CityListingDialogFragment.IChangeCity {
     TextView editmail;
-    private TextView emailTextView;
-    private EditText handleNameEditText, phoneEditText, cityEditText, fullNameEditText;
+    private TextView emailTextView, cityTextView, handleNameTextView;
+    private EditText phoneEditText, fullNameEditText;
     private UserDetailResult userDetail;
     private ArrayList<CityInfoItem> cityList;
     private CityListingDialogFragment cityFragment;
     private String currentCityName;
     private String newSelectedCityId;
     private int selectedCityId;
+    private TextView changePassTextView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.contact_details_layout, container, false);
         emailTextView = (TextView) view.findViewById(R.id.emailTextView);
-        handleNameEditText = (EditText) view.findViewById(R.id.handleNameEditText);
+        handleNameTextView = (TextView) view.findViewById(R.id.handleNameTextView);
         phoneEditText = (EditText) view.findViewById(R.id.phoneEditText);
-        cityEditText = (EditText) view.findViewById(R.id.cityEditText);
+        cityTextView = (TextView) view.findViewById(R.id.cityTextView);
         fullNameEditText = (EditText) view.findViewById(R.id.fullNameEditText);
+        changePassTextView = (TextView) view.findViewById(R.id.changePasswordTextView);
 
         userDetail = getArguments().getParcelable("userDetail");
         cityList = getArguments().getParcelableArrayList("cityList");
 
+        cityTextView.setOnClickListener(this);
+        changePassTextView.setOnClickListener(this);
+
         emailTextView.setText("" + userDetail.getEmail());
-        handleNameEditText.setText("" + userDetail.getBlogTitle());
+        handleNameTextView.setText("" + userDetail.getBlogTitle());
         fullNameEditText.setText("" + userDetail.getFirstName() + " " + userDetail.getLastName());
-        phoneEditText.setText("" + userDetail.getPhoneNumber());
+        phoneEditText.setText(userDetail.getPhone().getMobile());
 
         MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(getActivity());
         for (int i = 0; i < cityList.size(); i++) {
             int cId = Integer.parseInt(cityList.get(i).getId().replace("city-", ""));
             if (currentCity.getId() == cId) {
                 cityList.get(i).setSelected(true);
-                cityEditText.setText(cityList.get(i).getCityName());
+                cityTextView.setText(cityList.get(i).getCityName());
             } else {
                 cityList.get(i).setSelected(false);
             }
@@ -67,7 +74,7 @@ public class Contactdetails extends Fragment implements View.OnClickListener, Ci
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.cityNameTextView:
+            case R.id.cityTextView:
                 cityFragment = new CityListingDialogFragment();
                 cityFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
@@ -77,12 +84,16 @@ public class Contactdetails extends Fragment implements View.OnClickListener, Ci
                 FragmentManager fm = getChildFragmentManager();
                 cityFragment.show(fm, "Replies");
                 break;
+            case R.id.changePasswordTextView:
+                Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 
     @Override
     public void onCitySelect(CityInfoItem cityItem) {
-        cityEditText.setText(cityItem.getCityName());
+        cityTextView.setText(cityItem.getCityName());
         currentCityName = cityItem.getCityName();
         selectedCityId = Integer.parseInt(cityItem.getId().replace("city-", ""));
         newSelectedCityId = cityItem.getId();
@@ -94,11 +105,11 @@ public class Contactdetails extends Fragment implements View.OnClickListener, Ci
         selectedCityId = Integer.parseInt(cityList.get(pos).getId().replace("city-", ""));
         newSelectedCityId = cityList.get(pos).getId();
         cityList.get(pos).setCityName("Others(" + cityName + ")");
-        cityEditText.setText(cityList.get(pos).getCityName());
+        cityTextView.setText(cityList.get(pos).getCityName());
     }
 
-    public EditText getHandleNameEditText() {
-        return handleNameEditText;
+    public TextView getHandleNameTextView() {
+        return handleNameTextView;
     }
 
     public EditText getPhoneEditText() {

@@ -241,7 +241,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 SelectTopic st = new SelectTopic();
                 st.setId(responseData[i].getId());
                 st.setDisplayName(responseData[i].getDisplay_name());
-                st.setBackgroundImageUrl(responseData[i].getExtraData().getCategoryBackImage().getApp());
+//                st.setBackgroundImageUrl(responseData[i].getExtraData().getCategoryBackImage().getApp());
                 ArrayList<Topics> topicLL = new ArrayList<>();
                 for (int j = 0; j < responseData[i].getChild().size(); j++) {
                     for (int k = 0; k < previouslyFollowedTopics.size(); k++) {

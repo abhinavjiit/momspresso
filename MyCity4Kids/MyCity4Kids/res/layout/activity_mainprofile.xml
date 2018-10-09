@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:id="@+id/mainprofile_parent_layout"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent">-->
-
+<?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainprofile_parent_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_above="@+id/saveTextView">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/id_appbar"
@@ -22,8 +20,8 @@
             <View
                 android:id="@+id/view_id"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:background="@color/dark_transparent" />
+                android:layout_height="140dp"
+                android:background="@color/app_nav_bg" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -47,7 +45,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="@string/app_settings.tabbar.edit_profile"
-                        android:textColor="@color/white"
+                        android:textColor="@color/app_light_black"
                         android:textSize="20sp"
                         app:fontName="oswald_regular.ttf" />
 
@@ -68,12 +66,13 @@
                 android:layout_height="140dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="90dp"
+                android:layout_marginTop="70dp"
                 android:src="@drawable/family_xxhdpi"
-                app:civ_border_color="@color/app_pink"
+                app:civ_border_color="@color/app_red"
                 app:civ_border_width="2dp" />
 
             <ImageView
+                android:id="@+id/editImageView"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
@@ -88,9 +87,11 @@
             android:id="@+id/id_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:elevation="4dp"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
-            app:tabIndicatorColor="#e00"
-            app:tabSelectedTextColor="#e00"
+            app:tabIndicatorColor="@color/app_red"
+            app:tabSelectedTextColor="@color/app_red"
             app:tabTextColor="@color/grey" />
 
     </android.support.design.widget.AppBarLayout>
@@ -107,8 +108,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginTop="10dp"
-        android:background="@color/app_pink"
-        android:elevation="20dp"
+        android:background="@color/app_red"
         android:gravity="center"
         android:padding="15dp"
         android:text="@string/app_settings.edit_profile.save"
@@ -116,5 +116,3 @@
         android:textSize="17sp"
         app:fontName="oswald_regular.ttf" />
 </android.support.design.widget.CoordinatorLayout>
-
-    <!--<Button--><!--android:id="@+id/saveTextView"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_alignParentBottom="true"--><!--android:layout_gravity="bottom"--><!--android:background="@color/colorAccent"--><!--android:text="SAVE"--><!--android:visibility="gone"--><!--android:textColor="#fff" />--><!--</RelativeLayout>-->

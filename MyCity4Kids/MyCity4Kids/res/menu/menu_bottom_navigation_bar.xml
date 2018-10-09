@@ -3,21 +3,21 @@
     <item
         android:id="@+id/action_home"
         android:icon="@drawable/selector_home_tab"
-        android:title="" />
+        android:title="@string/home" />
     <item
         android:id="@+id/action_profile"
         android:icon="@drawable/selector_profile_tab"
-        android:title="" />
+        android:title="@string/discover" />
     <item
         android:id="@+id/action_write"
         android:icon="@drawable/selector_write_blog_tab"
-        android:title="" />
+        android:title="@string/create" />
     <item
         android:id="@+id/action_notification"
         android:icon="@drawable/selector_notification_tab"
-        android:title="" />
+        android:title="@string/home_screen.notification.title" />
     <item
         android:id="@+id/action_location"
         android:icon="@drawable/selector_events_tab"
-        android:title="" />
+        android:title="@string/groups.groups" />
 </menu>
