@@ -858,8 +858,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     /*
-    * creates selected tags views from the list of selected topics.
-    * */
+     * creates selected tags views from the list of selected topics.
+     * */
     private void createSelectedTagsView() {
 //        selectedTopics
         getFollowedTopicsList();
@@ -2130,7 +2130,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
                 if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
                     ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.tick));
-                    topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.ad_tags_following_bg));
+                    topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
                     ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.white_color));
                     topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -2141,7 +2141,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 } else {
                     ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.follow_plus));
                     topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.ad_tags_follow_bg));
-                    ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.ad_tags_following_bg));
+                    ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
                     topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

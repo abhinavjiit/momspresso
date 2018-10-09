@@ -246,6 +246,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="15dp"
                         android:src="@drawable/ic_bookmark"
+                        android:tint="@color/app_red"
                         android:visibility="visible" />
 
                     <ImageView
@@ -263,6 +264,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="15dp"
                         android:src="@drawable/ic_watch"
+                        android:tint="@color/app_red"
                         android:visibility="invisible" />
                 </RelativeLayout>
 

@@ -39,7 +39,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:src="@drawable/ic_more"
-            android:tint="#507cbe"
+            android:tint="@color/app_red"
             android:visibility="invisible" />
     </RelativeLayout>
 

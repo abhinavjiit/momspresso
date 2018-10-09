@@ -237,6 +237,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="15dp"
                         android:src="@drawable/ic_bookmark"
+                        android:tint="@color/app_red"
                         android:visibility="visible" />
 
                     <ImageView
@@ -254,6 +255,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="15dp"
                         android:src="@drawable/ic_watch"
+                        android:tint="@color/app_red"
                         android:visibility="invisible" />
                 </RelativeLayout>
 
@@ -404,7 +406,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="12dp"
                     android:src="@drawable/ic_facebook"
-                    android:tint="@color/short_story.blue" />
+                    android:tint="@color/app_red" />
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/whatsappShareImageView"
@@ -419,7 +421,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="12dp"
                     android:src="@drawable/ic_whats_app"
-                    android:tint="@color/short_story.blue" />
+                    android:tint="@color/app_red" />
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/instagramShareImageView"
@@ -434,7 +436,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="12dp"
                     android:src="@drawable/ic_insta"
-                    android:tint="@color/short_story.blue" />
+                    android:tint="@color/app_red" />
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/genericShareImageView"
@@ -449,7 +451,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="12dp"
                     android:src="@drawable/ic_share_white"
-                    android:tint="@color/short_story.blue" />
+                    android:tint="@color/app_red" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -486,7 +488,8 @@
                             android:paddingLeft="5dp"
                             android:paddingRight="4dp"
                             android:paddingTop="12dp"
-                            android:src="@drawable/ic_ss_like" />
+                            android:src="@drawable/ic_ss_like"
+                            android:tint="@color/app_red" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -514,7 +517,8 @@
                             android:paddingLeft="5dp"
                             android:paddingRight="4dp"
                             android:paddingTop="12dp"
-                            android:src="@drawable/ic_ss_comment" />
+                            android:src="@drawable/ic_ss_comment"
+                            android:tint="@color/app_red" />
                     </LinearLayout>
 
                 </LinearLayout>

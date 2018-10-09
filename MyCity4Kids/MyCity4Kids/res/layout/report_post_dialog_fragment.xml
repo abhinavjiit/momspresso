@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:text="@string/report.abuse"
             android:textColor="@color/short_story.light_black_color"
-            app:buttonTint="@color/short_story.blue" />
+            app:buttonTint="@color/app_red" />
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/reason2RadioButton"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="@string/report.religious"
             android:textColor="@color/short_story.light_black_color"
-            app:buttonTint="@color/short_story.blue" />
+            app:buttonTint="@color/app_red" />
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/reason3RadioButton"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:text="@string/report.spam"
             android:textColor="@color/short_story.light_black_color"
-            app:buttonTint="@color/short_story.blue" />
+            app:buttonTint="@color/app_red" />
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/reason4RadioButton"
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:text="@string/report.inappro"
             android:textColor="@color/short_story.light_black_color"
-            app:buttonTint="@color/short_story.blue" />
+            app:buttonTint="@color/app_red" />
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/reason5RadioButton"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:text="@string/report.not_relevant"
             android:textColor="@color/short_story.light_black_color"
-            app:buttonTint="@color/short_story.blue" />
+            app:buttonTint="@color/app_red" />
     </RadioGroup>
 
 </LinearLayout>

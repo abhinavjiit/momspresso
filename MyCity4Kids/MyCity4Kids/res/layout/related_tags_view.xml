@@ -17,7 +17,7 @@
         android:hint="Add waddd"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:textColor="@color/ad.tags.text"
+        android:textColor="@color/app_red"
         android:textSize="13sp"
         app:fontName="oswald_regular.ttf" />
 
@@ -35,5 +35,5 @@
         android:layout_toRightOf="@+id/seperator"
         android:background="@color/ad.tags.follow_bg"
         android:padding="6dp"
-        android:src="@drawable/follow_plus" />
+        android:tint="@color/app_red" />
 </RelativeLayout>

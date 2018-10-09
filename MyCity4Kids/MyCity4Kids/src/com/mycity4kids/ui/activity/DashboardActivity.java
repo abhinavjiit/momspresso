@@ -6,6 +6,8 @@ import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -221,9 +223,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         setSupportActionBar(mToolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.hamburger_menu);
-
-
+        final Drawable upArrow = getResources().getDrawable(R.drawable.hamburger_menu);
+        upArrow.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        getSupportActionBar().show();
+        //    ContextCompat.getDrawable(this,R.drawable.hamburger_menu).mutate().setColorFilter(ContextCompat.getColor(this, R.color.app_red), PorterDuff.Mode.MULTIPLY);
+        //   actionbar.setHomeAsUpIndicator(ContextCompat.getDrawable(this,R.drawable.hamburger_menu));
         Utils.pushOpenScreenEvent(this, "DashboardScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         downArrowImageView.setOnClickListener(this);
