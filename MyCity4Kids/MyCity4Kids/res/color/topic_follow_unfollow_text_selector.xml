@@ -3,5 +3,5 @@
     <item android:color="@color/app_settings.edit_prefs.unfollow_topic_text" android:state_pressed="true" />
     <item android:color="@color/app_settings.edit_prefs.unfollow_topic_text" android:state_focused="true" />
     <item android:color="@color/app_settings.edit_prefs.unfollow_topic_text" android:state_selected="true" />
-    <item android:color="@color/app_settings.edit_prefs.follow_topic_text" />
+    <item android:color="@color/app_red" />
 </selector>

@@ -51,7 +51,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:tabIndicatorColor="@color/app_red"
         app:tabIndicatorHeight="2dp"
-        app:tabMode="scrollable"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="@color/home.trending.tabbar_text"
         app:tabTextAppearance="@style/CustomTabText"
         app:tabTextColor="@color/home.trending.tabbar_text" />

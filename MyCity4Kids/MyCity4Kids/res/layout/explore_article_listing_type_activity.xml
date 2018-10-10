@@ -40,7 +40,7 @@
                 android:layout_centerVertical="true"
                 android:padding="10dp"
                 android:text="@string/lang_sel.continue"
-                android:textColor="@color/publish_button_selector"
+                android:textColor="@color/app_red"
                 android:textSize="18sp"
                 android:visibility="gone"
                 app:fontName="oswald_regular.ttf" />

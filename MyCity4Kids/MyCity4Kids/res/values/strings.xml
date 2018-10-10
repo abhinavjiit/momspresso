@@ -350,7 +350,7 @@
     <string name="myprofile.following_label">FOLLOWING</string>
     <string name="myprofile.followers_label">FOLLOWERS</string>
     <string name="myprofile.section.articles_label">ARTICLES</string>
-    <string name="myprofile.section.short_story_label">#100WORDSTORY</string>
+    <string name="myprofile.section.short_story_label">100 WORD STORY</string>
     <string name="myprofile.section.videos_label">MOM VLOGS</string>
     <string name="myprofile.section.activity_label">ACTIVITY</string>
     <string name="myprofile.section.myranking_label">MY RANKING</string>
@@ -626,7 +626,7 @@
     <string name="article_listing.type.editor_label">EDITOR\'S PICKS</string>
     <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
     <string name="article_listing.type.for_you_label">FOR YOU</string>
-    <string name="article_listing.type.short_story_label">#100WORDSTORY</string>
+    <string name="article_listing.type.short_story_label">100 WORD STORY</string>
     <string name="article_listing.type.languages_label">LANGUAGES</string>
     <string name="article_listing.type.videos_label">VIDEOS</string>
     <string name="article_listing.type.recent_label">RECENT</string>

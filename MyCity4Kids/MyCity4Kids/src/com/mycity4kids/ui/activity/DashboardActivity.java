@@ -372,7 +372,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.hamburger_menu);
 
         bottomNavigationView.setItemIconTintList(null);
-        bottomNavigationView.setIconSize(28, 28);
+        bottomNavigationView.setIconSize(24, 24);
+        bottomNavigationView.setTextSize(12.0f);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -382,30 +383,30 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         switch (item.getItemId()) {
 
                             case R.id.action_profile:
+                                hideCreateContentView();
                                 if (topFragment instanceof ExploreArticleListingTypeFragment) {
                                     return true;
                                 }
-                                hideCreateContentView();
                                 ExploreArticleListingTypeFragment fragment0 = new ExploreArticleListingTypeFragment();
                                 Bundle mBundle0 = new Bundle();
                                 fragment0.setArguments(mBundle0);
                                 addFragment(fragment0, mBundle0, true);
                                 break;
                             case R.id.action_notification:
+                                hideCreateContentView();
                                 if (topFragment instanceof NotificationFragment) {
                                     return true;
                                 }
-                                hideCreateContentView();
                                 NotificationFragment fragment = new NotificationFragment();
                                 Bundle mBundle = new Bundle();
                                 fragment.setArguments(mBundle);
                                 addFragment(fragment, mBundle, true);
                                 break;
                             case R.id.action_home:
+                                hideCreateContentView();
                                 if (topFragment instanceof FragmentMC4KHomeNew) {
                                     return true;
                                 }
-
                                 FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
                                 Bundle mBundle1 = new Bundle();
                                 fragment1.setArguments(mBundle1);
@@ -420,13 +421,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                     actionItemContainer.startAnimation(slideAnim);
                                     overlayView.startAnimation(fadeAnim);
                                 }
-
                                 break;
                             case R.id.action_location:
+                                hideCreateContentView();
                                 if (topFragment instanceof GroupsFragment) {
                                     return true;
                                 }
-                                hideCreateContentView();
                                 GroupsFragment groupsFragment = new GroupsFragment();
                                 Bundle eBundle = new Bundle();
                                 groupsFragment.setArguments(eBundle);
@@ -1895,6 +1895,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         // add badge
         badge = new QBadgeView(this)
                 .setBadgeText("")
+                .setBadgeBackgroundColor(getResources().getColor(R.color.app_red))
                 .setBadgePadding(5, true)
                 .setBadgeGravity(Gravity.TOP | Gravity.END)
                 .setGravityOffset(25, 12, true)

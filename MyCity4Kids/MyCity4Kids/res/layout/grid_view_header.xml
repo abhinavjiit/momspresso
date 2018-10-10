@@ -22,15 +22,15 @@
         <RelativeLayout
             android:id="@+id/videosContainer"
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="110dp"
             android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:background="@drawable/round_border_videos">
 
             <ImageView
                 android:id="@+id/videoImageView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
@@ -47,14 +47,14 @@
                 android:paddingRight="10dp"
                 android:text="VIDEOS"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="18sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/storyContainer"
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="110dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_weight="1"
@@ -62,8 +62,8 @@
 
             <ImageView
                 android:id="@+id/storyImageView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
@@ -78,24 +78,24 @@
                 android:layout_marginBottom="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="100 WORD STORY"
+                android:text=""
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="18sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/groupsContainer"
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="110dp"
             android:layout_marginLeft="8dp"
             android:layout_weight="1"
             android:background="@drawable/round_border_groups">
 
             <ImageView
                 android:id="@+id/groupImageView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
@@ -112,7 +112,7 @@
                 android:paddingRight="10dp"
                 android:text="SUPPORT GROUPS"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="18sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 

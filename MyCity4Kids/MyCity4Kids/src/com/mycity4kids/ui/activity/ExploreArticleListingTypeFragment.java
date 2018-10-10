@@ -111,7 +111,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         searchTopicsEditText.setVisibility(View.GONE);
         guideOverLay.setOnClickListener(this);
 
-        View gridViewHeader = LayoutInflater.from(BaseApplication.getAppContext()).inflate(R.layout.grid_view_header, gridview, false);
+        final View gridViewHeader = LayoutInflater.from(BaseApplication.getAppContext()).inflate(R.layout.grid_view_header, gridview, false);
         videosContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.videosContainer);
         storyContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.storyContainer);
         groupsContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.groupsContainer);
@@ -167,6 +167,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                         ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
                         createTopicsData(res);
                         adapter = new ParentTopicsGridAdapter(fragType);
+                        gridview.addHeaderView(gridViewHeader);
                         gridview.setAdapter(adapter);
                         adapter.setDatalist(mainTopicsList);
                         guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());

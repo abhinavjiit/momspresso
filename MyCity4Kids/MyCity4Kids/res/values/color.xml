@@ -7,6 +7,7 @@
     <color name="app_blue">#507cbe</color>
     <color name="app_pink">#FF4081</color>
     <color name="app_red">#D54058</color>
+    <color name="app_trans_red">#96D54058</color>
     <color name="sign_in_out_text_red_color">#FF9BA8</color>
     <color name="app_nav_bg">#f4eded</color>
 
@@ -188,7 +189,7 @@
     <color name="search_topics.search_bg">#f3f3f3</color>
 
     <color name="common_underline">#9c9dac</color>
-    <color name="light_underline">#cccccc</color>
+    <color name="light_underline">#e5e5e5</color>
 
     <color name="home_screen.trending_list_header.bg">#f3f3f3</color>
     <color name="home_screen.trending_list_header.title">#9c9dac</color>

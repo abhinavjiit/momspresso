@@ -145,7 +145,9 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private TextView profilePercentageTextView;
     private ImageView editProfileImageView;
     private TextView editProfileTextView;
-    private RelativeLayout menuCoachmark, publishCoachmark;
+    private RelativeLayout menuCoachmark;
+    private LinearLayout publishCoachmark1, publishCoachmark2;
+    private TextView publishedSectionTextView1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +170,6 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         rootView = findViewById(R.id.rootView);
         blurImageView = (ImageView) findViewById(R.id.blurImageView);
         menuCoachmark = (RelativeLayout) findViewById(R.id.menuCoachmark);
-        publishCoachmark = (RelativeLayout) findViewById(R.id.publishCoachmark);
         updateProfileTextView = (TextView) findViewById(R.id.updateProfileTextView);
         backArrowImageView = (ImageView) findViewById(R.id.menuImageView);
         authorNameTextView = (TextView) findViewById(R.id.nameTextView);
@@ -194,6 +195,9 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         profilePercentageTextView = (TextView) findViewById(R.id.profilePercentageTextView);
         editProfileImageView = (ImageView) findViewById(R.id.editProfileImageView);
         editProfileTextView = (TextView) findViewById(R.id.editProfileTextView);
+        publishedSectionTextView1 = (TextView) findViewById(R.id.publishedSectionTextView1);
+        publishCoachmark1 = (LinearLayout) findViewById(R.id.publishCoachmark1);
+        publishCoachmark2 = (LinearLayout) findViewById(R.id.publishCoachmark2);
 
         authorNameTextView.setOnClickListener(this);
 //        locationTextView.setOnClickListener(this);
@@ -214,6 +218,9 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         editProfileTextView.setOnClickListener(this);
         editProfileImageView.setOnClickListener(this);
         menuCoachmark.setOnClickListener(this);
+        publishCoachmark1.setOnClickListener(this);
+        publishCoachmark2.setOnClickListener(this);
+        publishedSectionTextView1.setOnClickListener(this);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
 
@@ -680,11 +687,17 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         switch (view.getId()) {
             case R.id.menuCoachmark:
                 menuCoachmark.setVisibility(View.GONE);
-                publishCoachmark.setVisibility(View.VISIBLE);
+                publishCoachmark1.setVisibility(View.VISIBLE);
+                publishCoachmark2.setVisibility(View.VISIBLE);
+                publishedSectionTextView1.setVisibility(View.VISIBLE);
                 break;
-            case R.id.menuCoachmark:
-                menuCoachmark.setVisibility(View.GONE);
-                publishCoachmark.setVisibility(View.VISIBLE);
+            case R.id.publishCoachmark1:
+            case R.id.publishCoachmark2:
+            case R.id.publishedSectionTextView1:
+                publishedSectionTextView1.setVisibility(View.GONE);
+                publishCoachmark2.setVisibility(View.GONE);
+                publishCoachmark1.setVisibility(View.GONE);
+                SharedPrefUtils.setCoachmarksShownFlag(PrivateProfileActivity.this, "Profile", true);
                 break;
             case R.id.editProfileImageView:
             case R.id.editProfileTextView:

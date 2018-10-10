@@ -90,7 +90,7 @@
                     android:paddingBottom="20dp"
                     android:paddingTop="20dp"
                     android:text="@string/home_screen.trending_list_header.take_me_there"
-                    android:textColor="@color/home_screen.trending_list_header.take_me_there"
+                    android:textColor="@color/app_red"
                     android:textSize="14sp"
                     app:fontName="oswald_regular.ttf" />
             </RelativeLayout>

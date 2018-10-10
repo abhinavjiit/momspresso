@@ -695,11 +695,12 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
                     android:drawableTop="@drawable/ic_facebook"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.facebook"
-                    android:textColor="@color/app_red"
+                    android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />
 
@@ -708,11 +709,12 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
                     android:drawableTop="@drawable/ic_whats_app"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.whatsapp"
-                    android:textColor="@color/app_red"
+                    android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />
 
@@ -721,11 +723,12 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
                     android:drawableTop="@drawable/ic_share_white"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.generic_share"
-                    android:textColor="@color/app_red"
+                    android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />
 
@@ -734,11 +737,12 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
                     android:drawableTop="@drawable/ic_bookmark"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.bookmark"
-                    android:textColor="@color/app_red"
+                    android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />
 
@@ -747,11 +751,12 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
                     android:drawableTop="@drawable/ic_recommend"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.like"
-                    android:textColor="@color/app_red"
+                    android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />
 
