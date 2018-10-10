@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:background="@drawable/signin_signup">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/trans_gray" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -129,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/sign_in.sign_up_btn"
-                android:textColor="@color/sign_in.sign_up_btn"
+                android:textColor="@color/sign_in_out_text_red_color"
                 android:textSize="13sp"
                 app:fontName="open_sans.ttf" />
         </LinearLayout>

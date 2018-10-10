@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
@@ -29,12 +28,12 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private CustomFontTextView phoneLoginTextView;
     private CustomFontTextView signinTextView;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.signup_fragment, container, false);
         Utils.pushOpenScreenEvent(getActivity(), "SignUpScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         mInflator = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         lnrRoot = (RelativeLayout) view.findViewById(R.id.rootLayout);
         facebookLoginTextView = (CustomFontTextView) view.findViewById(R.id.connect_facebook);
         googleLoginTextView = (CustomFontTextView) view.findViewById(R.id.connect_googleplus);

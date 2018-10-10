@@ -182,7 +182,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
-        android:background="@color/lang_sel.continue_bg"
+        android:background="@color/app_red"
         android:elevation="4dp"
         android:gravity="center"
         android:padding="15dp"

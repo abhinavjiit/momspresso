@@ -13,7 +13,7 @@
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="6dp"
-        android:buttonTint="@color/city_picker.radio_button"
+        android:buttonTint="@color/app_red"
         android:clickable="false"
         android:paddingLeft="10dp"
         android:text="Delhi-NCR"

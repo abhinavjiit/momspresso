@@ -18,11 +18,11 @@
         android:layout_above="@+id/bottomLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        app:bpi_fillColor="@color/groups.blue_color"
-        app:bpi_marginBetweenCircles="4dp"
+        app:bpi_fillColor="@color/app_red"
+        app:bpi_marginBetweenCircles="6dp"
         app:bpi_onSurfaceCount="4"
         app:bpi_pageColor="@color/line_separator_color"
-        app:bpi_radius="5dp"
+        app:bpi_radius="4dp"
         app:bpi_risingCount="3" />
 
     <RelativeLayout
@@ -62,7 +62,7 @@
                 android:layout_centerHorizontal="true"
                 android:padding="8dp"
                 android:text="@string/onboarding.already_member"
-                android:textColor="@color/onboarding.already_member"
+                android:textColor="@color/app_grey"
                 android:textSize="14sp"
                 app:fontName="open_sans.ttf" />
 
@@ -76,7 +76,7 @@
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/onboarding.signin"
-                android:textColor="@color/onboarding.sign_in"
+                android:textColor="@color/app_red"
                 android:textSize="14sp"
                 app:fontName="open_sans.ttf" />
 
