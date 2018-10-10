@@ -82,7 +82,7 @@
             android:layout_marginLeft="45dp"
             android:layout_marginRight="45dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/unfollow_topic_author_bg"
+            android:background="@drawable/email_login_button_bg"
             android:drawablePadding="-30dp"
             android:gravity="center"
             android:paddingBottom="8dp"

@@ -7,7 +7,7 @@
     <color name="app_blue">#507cbe</color>
     <color name="app_pink">#FF4081</color>
     <color name="app_red">#D54058</color>
-    <color name="app_trans_red">#96D54058</color>
+    <color name="app_trans_red">#D54058</color>
     <color name="sign_in_out_text_red_color">#FF9BA8</color>
     <color name="app_nav_bg">#f4eded</color>
 
@@ -450,5 +450,6 @@
 
     <color name="white_opacity">#80FFFFFF</color>
     <color name="profile_progress">#f2f2f2</color>
+    <color name="kids_detail">#f9f9f9</color>
 
 </resources>

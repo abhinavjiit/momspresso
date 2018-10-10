@@ -4,14 +4,14 @@
     android:id="@+id/addTopicsLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="#f9f9f9"
     android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/headerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="#f9f9f9">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -103,7 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:background="@color/white">
+        android:background="#f9f9f9">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"

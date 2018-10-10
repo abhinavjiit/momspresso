@@ -10,20 +10,20 @@
         android:id="@+id/onboardingImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:src="@drawable/onboarding_1" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/tutorial_gradient" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/tutorial_gradient" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/txvTitle"
@@ -69,26 +69,26 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_1.blogs"
+                android:text="@string/onboarding.desc_1"
                 android:textColor="@color/onboarding.desc"
                 android:textSize="13sp"
                 app:fontName="oswald_regular.ttf" />
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_bullet" />
+            <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:src="@drawable/ic_bullet" />-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_1.videos"
-                android:textColor="@color/onboarding.desc"
-                android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/onboarding_desc_array.tutorial_1.videos"-->
+            <!--android:textColor="@color/onboarding.desc"-->
+            <!--android:textSize="13sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
 
         </LinearLayout>
 
@@ -107,86 +107,86 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_2.english"
+                android:text="@string/onboarding.desc_2"
                 android:textColor="@color/onboarding.desc"
                 android:textSize="13sp"
                 app:fontName="oswald_regular.ttf" />
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_bullet" />
+            <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:src="@drawable/ic_bullet" />-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_2.hindi"
-                android:textColor="@color/onboarding.desc"
-                android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/onboarding_desc_array.tutorial_2.hindi"-->
+            <!--android:textColor="@color/onboarding.desc"-->
+            <!--android:textSize="13sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_bullet" />
+            <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"-->
+            <!--android:src="@drawable/ic_bullet" />-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_2.bengali"
-                android:textColor="@color/onboarding.desc"
-                android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/onboarding_desc_array.tutorial_2.bengali"-->
+            <!--android:textColor="@color/onboarding.desc"-->
+            <!--android:textSize="13sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_bullet" />
+            <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"-->
+            <!--android:src="@drawable/ic_bullet" />-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_2.marathi"
-                android:textColor="@color/onboarding.desc"
-                android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/onboarding_desc_array.tutorial_2.marathi"-->
+            <!--android:textColor="@color/onboarding.desc"-->
+            <!--android:textSize="13sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_bullet" />
+            <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"-->
+            <!--android:src="@drawable/ic_bullet" />-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_2.tamil"
-                android:textColor="@color/onboarding.desc"
-                android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/onboarding_desc_array.tutorial_2.tamil"-->
+            <!--android:textColor="@color/onboarding.desc"-->
+            <!--android:textSize="13sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_bullet" />
+            <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"-->
+            <!--android:src="@drawable/ic_bullet" />-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_2.telugu"
-                android:textColor="@color/onboarding.desc"
-                android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/onboarding_desc_array.tutorial_2.telugu"-->
+            <!--android:textColor="@color/onboarding.desc"-->
+            <!--android:textSize="13sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
         </LinearLayout>
 
         <LinearLayout
@@ -204,41 +204,41 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_3.parenting"
+                android:text="@string/onboarding.desc_4"
                 android:textColor="@color/onboarding.desc"
                 android:textSize="13sp"
                 app:fontName="oswald_regular.ttf" />
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_bullet" />
+            <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:src="@drawable/ic_bullet" />-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_3.recipe"
-                android:textColor="@color/onboarding.desc"
-                android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/onboarding_desc_array.tutorial_3.recipe"-->
+            <!--android:textColor="@color/onboarding.desc"-->
+            <!--android:textSize="13sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_bullet" />
+            <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"-->
+            <!--android:src="@drawable/ic_bullet" />-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_3.expert_advice"
-                android:textColor="@color/onboarding.desc"
-                android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/onboarding_desc_array.tutorial_3.expert_advice"-->
+            <!--android:textColor="@color/onboarding.desc"-->
+            <!--android:textSize="13sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
         </LinearLayout>
 
         <LinearLayout
@@ -256,41 +256,41 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_4.editorial"
+                android:text="@string/onboarding.desc_4"
                 android:textColor="@color/onboarding.desc"
                 android:textSize="13sp"
                 app:fontName="oswald_regular.ttf" />
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_bullet" />
+            <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:src="@drawable/ic_bullet" />-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_4.events"
-                android:textColor="@color/onboarding.desc"
-                android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/onboarding_desc_array.tutorial_4.events"-->
+            <!--android:textColor="@color/onboarding.desc"-->
+            <!--android:textSize="13sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_bullet" />
+            <!--<ImageView-->
+            <!--android:layout_width="16dp"-->
+            <!--android:layout_height="16dp"-->
+            <!--android:src="@drawable/ic_bullet" />-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/onboarding_desc_array.tutorial_4.resources"
-                android:textColor="@color/onboarding.desc"
-                android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/onboarding_desc_array.tutorial_4.resources"-->
+            <!--android:textColor="@color/onboarding.desc"-->
+            <!--android:textSize="13sp"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
         </LinearLayout>
 
     </RelativeLayout>

@@ -185,9 +185,9 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 }
             });
         }
-        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics")) {
-            showGuideView();
-        }
+//        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics")) {
+//            showGuideView();
+//        }
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -243,7 +243,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
     }
 
     public void showGuideView() {
-        guideOverLay.setVisibility(View.VISIBLE);
+//        guideOverLay.setVisibility(View.VISIBLE);
     }
 
     Callback<ResponseBody> downloadFollowTopicsJSONCallback = new Callback<ResponseBody>() {

@@ -1778,8 +1778,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics")) {
-                    showToolbarAndNavigationLayer();
-                    ((ExploreArticleListingTypeFragment) topFragment).showGuideView();
+//                    showToolbarAndNavigationLayer();
+//                    ((ExploreArticleListingTypeFragment) topFragment).showGuideView();
                 }
 //                setSupportActionBar(mToolbar);
                 //getSupportActionBar().setDisplayShowHomeEnabled(true);

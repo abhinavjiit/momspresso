@@ -53,10 +53,10 @@
             android:drawableLeft="@drawable/drawer_home_red"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
-            android:paddingBottom="16dp"
+            android:paddingBottom="12dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
-            android:paddingTop="16dp"
+            android:paddingTop="12dp"
             android:text="@string/groups.sections.blogs"
             android:textAllCaps="true"
             app:fontName="oswald.ttf" />
@@ -69,10 +69,10 @@
             android:drawableLeft="@drawable/drawer_video_red"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
-            android:paddingBottom="16dp"
+            android:paddingBottom="12dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
-            android:paddingTop="16dp"
+            android:paddingTop="12dp"
             android:text="@string/all_videos.toolbar.title"
             app:fontName="oswald.ttf" />
 
@@ -84,10 +84,10 @@
             android:drawableLeft="@drawable/drawer_shortstory_red"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
-            android:paddingBottom="16dp"
+            android:paddingBottom="12dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
-            android:paddingTop="16dp"
+            android:paddingTop="12dp"
             android:text="@string/myprofile.section.short_story_label"
             app:fontName="oswald.ttf" />
 
@@ -96,13 +96,13 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_below="@+id/shortStoryTextView"
-            android:drawableLeft="@drawable/tab4_selected"
+            android:drawableLeft="@drawable/ic_bottom_group_selected"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
-            android:paddingBottom="16dp"
+            android:paddingBottom="12dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
-            android:paddingTop="16dp"
+            android:paddingTop="12dp"
             android:text="@string/groups.support_groups"
             app:fontName="oswald.ttf" />
 
@@ -113,7 +113,7 @@
             android:layout_below="@+id/groupsTextView"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:background="@color/app_nav_bg" />
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -124,10 +124,11 @@
             android:drawableLeft="@drawable/ic_bookmark"
             android:drawablePadding="20dp"
             android:drawableTint="#d54058"
-            android:paddingBottom="20dp"
+            android:gravity="center_vertical"
+            android:paddingBottom="12dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
-            android:paddingTop="20dp"
+            android:paddingTop="12dp"
             android:text="@string/user_activities.tabs.bookmark"
             app:fontName="oswald.ttf" />
 
@@ -145,13 +146,14 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_below="@+id/divider2"
-            android:drawableLeft="@drawable/ic_settings"
+            android:drawableLeft="@drawable/ic_app_settings"
             android:drawablePadding="20dp"
             android:drawableTint="#d54058"
-            android:paddingBottom="20dp"
+            android:gravity="center_vertical"
+            android:paddingBottom="12dp"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
-            android:paddingTop="20dp"
+            android:paddingTop="12dp"
             android:text="@string/app_settings"
             android:textAllCaps="true"
             app:fontName="oswald.ttf" />

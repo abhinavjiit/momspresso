@@ -224,6 +224,8 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.contact_details)));
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.about_txt)));
 
+                    AppUtils.changeTabsFont(EditProfileNewActivity.this, tabLayout);
+
                     viewPagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), userDetails, mDatalist);
                     viewPager.setAdapter(viewPagerAdapter);
 

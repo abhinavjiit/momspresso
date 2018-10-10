@@ -22,7 +22,7 @@
         <RelativeLayout
             android:id="@+id/videosContainer"
             android:layout_width="0dp"
-            android:layout_height="110dp"
+            android:layout_height="120dp"
             android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:background="@drawable/round_border_videos">
@@ -47,14 +47,14 @@
                 android:paddingRight="10dp"
                 android:text="VIDEOS"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/storyContainer"
             android:layout_width="0dp"
-            android:layout_height="110dp"
+            android:layout_height="120dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_weight="1"
@@ -78,16 +78,16 @@
                 android:layout_marginBottom="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text=""
+                android:text="@string/myprofile.section.short_story_label"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/groupsContainer"
             android:layout_width="0dp"
-            android:layout_height="110dp"
+            android:layout_height="120dp"
             android:layout_marginLeft="8dp"
             android:layout_weight="1"
             android:background="@drawable/round_border_groups">
@@ -112,7 +112,7 @@
                 android:paddingRight="10dp"
                 android:text="SUPPORT GROUPS"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 
