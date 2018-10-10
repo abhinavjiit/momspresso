@@ -100,6 +100,9 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
 
         categoryIdList = getIntent().getStringArrayListExtra("selectedTopicList");
 
+        if (categoryIdList == null) {
+            categoryIdList = new ArrayList<>();
+        }
         source = getIntent().getStringExtra("source");
 
         if ("home".equals(source)) {

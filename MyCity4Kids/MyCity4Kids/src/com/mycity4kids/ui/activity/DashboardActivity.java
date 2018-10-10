@@ -80,7 +80,6 @@ import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.GroupsFragment;
-import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
@@ -141,8 +140,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout actionItemContainer, articleContainer, videoContainer, storyContainer;
     private View overlayView;
     private RelativeLayout createContentContainer;
-    private TextView usernameTextView, videosTextView, shortStoryTextView, groupsTextView, bookmarksTextView, settingTextView;
-    private LinearLayout drawerTopContainer;
+    private TextView usernameTextView, coachUsernameTextView, videosTextView, shortStoryTextView, groupsTextView, bookmarksTextView, settingTextView;
+    private LinearLayout drawerTopContainer, drawerContainer;
+    private RelativeLayout drawerSettingsContainer;
+    private TextView homeTextView;
+    private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, drawerProfileCoachmark, drawerSettingsCoachmark, menuCoachmark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +182,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         langTextView = (TextView) findViewById(R.id.langTextView);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar0 = (Toolbar) findViewById(R.id.toolbar0);
+//        toolbar0 = (Toolbar) findViewById(R.id.toolbar0);
         toolbar1 = (Toolbar) findViewById(R.id.toolbar1);
         toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
         downArrowImageView = (ImageView) findViewById(R.id.downArrowImageView);
@@ -214,7 +216,24 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         bookmarksTextView = (TextView) findViewById(R.id.bookmarksTextView);
         settingTextView = (TextView) findViewById(R.id.settingTextView);
         usernameTextView = (TextView) findViewById(R.id.usernameTextView);
+        coachUsernameTextView = (TextView) findViewById(R.id.coachUsernameTextView);
+        homeTextView = (TextView) findViewById(R.id.homeTextView);
         drawerTopContainer = (LinearLayout) findViewById(R.id.topContainer);
+        drawerContainer = (LinearLayout) findViewById(R.id.drawerProfileContainer);
+        drawerSettingsContainer = (RelativeLayout) findViewById(R.id.drawerSettingsContainer);
+        homeCoachmark = (RelativeLayout) findViewById(R.id.homeCoachmark);
+        exploreCoachmark = (RelativeLayout) findViewById(R.id.exploreCoachmark);
+        createCoachmark = (RelativeLayout) findViewById(R.id.createCoachmark);
+        menuCoachmark = (RelativeLayout) findViewById(R.id.menuCoachmark);
+        drawerProfileCoachmark = (RelativeLayout) findViewById(R.id.drawerProfileCoachmark);
+        drawerSettingsCoachmark = (RelativeLayout) findViewById(R.id.drawerSettingsCoachmark);
+
+        homeCoachmark.setOnClickListener(this);
+        exploreCoachmark.setOnClickListener(this);
+        createCoachmark.setOnClickListener(this);
+        menuCoachmark.setOnClickListener(this);
+        drawerProfileCoachmark.setOnClickListener(this);
+        drawerSettingsCoachmark.setOnClickListener(this);
 
         bottomNavigationView.enableAnimation(false);
         bottomNavigationView.enableShiftingMode(false);
@@ -244,7 +263,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         bookmarksTextView.setOnClickListener(this);
         videosTextView.setOnClickListener(this);
         settingTextView.setOnClickListener(this);
-
+        homeTextView.setOnClickListener(this);
         langTextView.setOnClickListener(this);
         groupCoachmark.setOnClickListener(this);
         firstCoachmark.setOnClickListener(this);
@@ -288,18 +307,43 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         // close drawer when item is tapped
                         mDrawerLayout.closeDrawers();
 
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
-
                         return true;
                     }
                 });
 
+        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                if (!SharedPrefUtils.isCoachmarksShownFlag(DashboardActivity.this, "Drawer")) {
+                    drawerContainer.getLayoutParams().width = drawerView.getWidth();
+                    drawerSettingsContainer.getLayoutParams().width = drawerView.getWidth();
+                    drawerContainer.requestLayout();
+                    drawerSettingsContainer.requestLayout();
+                    drawerProfileCoachmark.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
             Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView);
         }
-//        usernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
+        usernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
+        coachUsernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
 
         if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(this))) {
             langTextView.setText(getString(R.string.language_label_english));
@@ -328,7 +372,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.hamburger_menu);
 
         bottomNavigationView.setItemIconTintList(null);
-        bottomNavigationView.setIconSize(30, 30);
+        bottomNavigationView.setIconSize(28, 28);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -450,21 +494,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
 
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        //                   set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        //                     close drawer when item is tapped
-//                        mDrawerLayout.closeDrawers();
-
-                        //                                      Add code here to update the UI based on the item selected
-//                                      For example, swap UI fragments here
-
-                        return true;
-                    }
-                });
     }
     //@Override
     //   public boolean onOptionsItemSelected(MenuItem item) {
@@ -1093,6 +1122,50 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
+            case R.id.drawerProfileCoachmark: {
+                drawerProfileCoachmark.setVisibility(View.GONE);
+                drawerSettingsCoachmark.setVisibility(View.VISIBLE);
+            }
+            break;
+            case R.id.drawerSettingsCoachmark: {
+                drawerSettingsCoachmark.setVisibility(View.GONE);
+                SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "Drawer", true);
+            }
+            break;
+            case R.id.homeCoachmark: {
+                homeCoachmark.setVisibility(View.GONE);
+                exploreCoachmark.setVisibility(View.VISIBLE);
+            }
+            break;
+            case R.id.exploreCoachmark: {
+                exploreCoachmark.setVisibility(View.GONE);
+                createCoachmark.setVisibility(View.VISIBLE);
+            }
+            break;
+            case R.id.createCoachmark: {
+                createCoachmark.setVisibility(View.GONE);
+                groupCoachmark.setVisibility(View.VISIBLE);
+            }
+            break;
+            case R.id.groupCoachmark: {
+                groupCoachmark.setVisibility(View.GONE);
+                menuCoachmark.setVisibility(View.VISIBLE);
+            }
+            break;
+            case R.id.menuCoachmark: {
+                menuCoachmark.setVisibility(View.GONE);
+                SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "HomeScreen", true);
+            }
+            break;
+            case R.id.viewBookmarkedArticleTextView: {
+                mDrawerLayout.closeDrawers();
+                Intent cityIntent = new Intent(this, UsersBookmarkListActivity.class);
+                startActivity(cityIntent);
+            }
+            break;
+            case R.id.homeTextView:
+                mDrawerLayout.closeDrawers();
+                break;
             case R.id.articleContainer:
                 hideCreateContentView();
                 if ("0".equals(SharedPrefUtils.getUserDetailModel(this).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(this)) {
@@ -1129,12 +1202,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.topContainer:
             case R.id.profileImageView:
+                mDrawerLayout.closeDrawers();
                 Intent pIntent = new Intent(this, PrivateProfileActivity.class);
                 startActivity(pIntent);
-//                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-//                Bundle mBundle0 = new Bundle();
-//                fragment0.setArguments(mBundle0);
-//                addFragment(fragment0, mBundle0, true);
                 break;
             case R.id.langTextView: {
                 ChangePreferredLanguageDialogFragment changePreferredLanguageDialogFragment = new ChangePreferredLanguageDialogFragment();
@@ -1152,22 +1222,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.downArrowImageView:
             case R.id.toolbarTitle:
-                if (topFragment instanceof TopicsListingFragment) {
-                    Utils.pushTopMenuClickEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                    onBackPressed();
-                } else if (topFragment instanceof TopicsShortStoriesContainerFragment) {
-                    Utils.pushTopMenuClickEvent(this, "TopicShortStoriesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                    onBackPressed();
-                } else {
-                    Utils.pushTopMenuClickEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-//                    ExploreArticleListingTypeFragment fragment1 = new ExploreArticleListingTypeFragment();
-//                    Bundle mBundle1 = new Bundle();
-//                    fragment1.setArguments(mBundle1);
-//                    addFragment(fragment1, mBundle1, true);
-                    Intent intent = new Intent(this, ExploreArticleListingTypeActivity.class);
-                    startActivity(intent);
-                    this.overridePendingTransition(R.anim.activity_drawer_slide_in_from_left, R.anim.activity_drawer_slide_out_to_right);
-                }
+//                if (topFragment instanceof TopicsListingFragment) {
+//                    Utils.pushTopMenuClickEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+//                    onBackPressed();
+//                } else if (topFragment instanceof TopicsShortStoriesContainerFragment) {
+//                    Utils.pushTopMenuClickEvent(this, "TopicShortStoriesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+//                    onBackPressed();
+//                } else {
+//                    Utils.pushTopMenuClickEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+//                    Intent intent = new Intent(this, ExploreArticleListingTypeActivity.class);
+//                    startActivity(intent);
+//                    this.overridePendingTransition(R.anim.activity_drawer_slide_in_from_left, R.anim.activity_drawer_slide_out_to_right);
+//                }
 
                 break;
             case R.id.searchAllImageView:
@@ -1187,15 +1253,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //                    updateUnreadNotificationCount("0");
 //                }
 //                break;
-            case R.id.groupCoachmark:
-                groupCoachmark.setVisibility(View.GONE);
-                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "home")) {
-                    firstCoachmark.setVisibility(View.VISIBLE);
-                    secondCoachmark.setVisibility(View.GONE);
-                }
-                SharedPrefUtils.setGroupTourFirstLaunch(this, false);
-                SharedPrefUtils.setCoachmarksShownFlag(this, "groups", true);
-                break;
+//            case R.id.groupCoachmark:
+//                groupCoachmark.setVisibility(View.GONE);
+//                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "home")) {
+//                    firstCoachmark.setVisibility(View.VISIBLE);
+//                    secondCoachmark.setVisibility(View.GONE);
+//                }
+//                SharedPrefUtils.setGroupTourFirstLaunch(this, false);
+//                SharedPrefUtils.setCoachmarksShownFlag(this, "groups", true);
+//                break;
             case R.id.firstCoachmark:
                 firstCoachmark.setVisibility(View.GONE);
                 secondCoachmark.setVisibility(View.VISIBLE);
@@ -1205,11 +1271,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 SharedPrefUtils.setCoachmarksShownFlag(this, "home", true);
                 break;
             case R.id.videosTextView: {
+                mDrawerLayout.closeDrawers();
                 Intent cityIntent = new Intent(this, AllVideosListingActivity.class);
                 startActivity(cityIntent);
             }
             break;
             case R.id.shortStoryTextView: {
+                mDrawerLayout.closeDrawers();
                 Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
                 startActivity(intent);
@@ -1229,18 +1297,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.settingTextView: {
-//                MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-//                Bundle mBundle0 = new Bundle();
-//                fragment0.setArguments(mBundle0);
-//                addFragment(fragment0, mBundle0, true);
+                mDrawerLayout.closeDrawers();
                 Intent cityIntent = new Intent(this, AppSettingsActivity.class);
                 startActivity(cityIntent);
             }
             break;
-//            case R.id.flot:
-//                Intent intent=new Intent(DashboardActivity.this,Samplee.class);
-//                startActivity(intent);
-//                overridePendingTransition( R.anim.slide_in_up, R.anim.slide_in_down );
             default:
                 break;
         }
@@ -1265,6 +1326,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         try {
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                return;
+            }
+            if (createContentContainer.getVisibility() == View.VISIBLE) {
+                hideCreateContentView();
+                return;
+            }
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
                 finish();
             } else {
@@ -1273,7 +1342,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -1739,9 +1807,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "groups")) {
-                    groupCoachmark.setVisibility(View.VISIBLE);
+                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "HomeScreen")) {
+                    homeCoachmark.setVisibility(View.VISIBLE);
                 }
+//                homeCoachmark.setVisibility(View.VISIBLE);
                 if (SharedPrefUtils.isTopicSelectionChanged(this)) {
                     ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
                 }
@@ -1819,7 +1888,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (badge != null) {
             badge.setBadgeText("");
             if (number.equals("0")) {
-//                badge.hide(false);
+                badge.hide(false);
             }
             return badge;
         }
@@ -1831,7 +1900,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 .setGravityOffset(25, 12, true)
                 .bindTarget(bottomNavigationView.getBottomNavigationItemView(position));
         if (number.equals("0")) {
-//            badge.hide(false);
+            badge.hide(false);
         }
 
         new QBadgeView(this)

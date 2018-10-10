@@ -2,78 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/groupsGridItemView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/groupImageView"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_centerVertical="true"
-        android:src="@drawable/family_xxhdpi"
-        app:civ_border="true"
-        app:civ_border_color="@color/line_separator_color"
-        app:civ_border_width="1dp"
-        app:civ_shadow="false" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="88dp"
-        android:orientation="vertical">
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/groupNameTextView"
-            android:layout_width="170dp"
-            android:layout_height="wrap_content"
-            android:text="TOPICSfkjnlknkjnlngjnfkj"
-            android:textColor="#000"
-            android:textSize="16sp"
-            app:fontName="oswald_regular.ttf" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
-
-
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:src="@drawable/ic_group_icon"
-
-                />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/memberCountTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
-                android:text="4 MEMBERS"
-                android:textColor="@color/grey"
-                android:textSize="11sp"
-                app:fontName="oswald.ttf" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:id="@+id/viewdivider"
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="80dp"
-        android:background="#66d3d3d3" />
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
 
     <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/arrowright" />
+        android:id="@+id/groupImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="110dp"
+        android:scaleType="center"
+        android:src="@drawable/default_article" />
 
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="110dp"
+        android:background="@color/explore_listing.topics.layer" />
 
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/groupNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="TOPICS"
+        android:textColor="@color/explore_listing.explore_categories.category_name"
+        android:textSize="18sp"
+        app:fontName="oswald_regular.ttf" />
 </RelativeLayout>

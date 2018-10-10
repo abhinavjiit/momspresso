@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:diagonal="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -39,20 +38,11 @@
                 android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:onClick="onClick"
-                android:text="John Farishon"
+                android:text=""
                 android:textColor="@color/app_light_black"
                 android:textSize="24sp"
                 app:fontName="oswald_regular.ttf" />
         </LinearLayout>
-
-        <!--<ImageView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:padding="16dp"-->
-        <!--android:src="@drawable/cross_icon_back" />-->
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/homeTextView"
@@ -67,7 +57,7 @@
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
             android:paddingTop="16dp"
-            android:text="@string/home"
+            android:text="@string/groups.sections.blogs"
             android:textAllCaps="true"
             app:fontName="oswald.ttf" />
 
@@ -162,7 +152,8 @@
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
             android:paddingTop="20dp"
-            android:text="Settings"
+            android:text="@string/app_settings"
+            android:textAllCaps="true"
             app:fontName="oswald.ttf" />
     </RelativeLayout>
 

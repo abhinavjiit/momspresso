@@ -127,4 +127,8 @@ public class Contactdetails extends Fragment implements View.OnClickListener, Ci
     public int getSelectedCityId() {
         return selectedCityId;
     }
+
+    public String getNewSelectedCityId() {
+        return newSelectedCityId;
+    }
 }

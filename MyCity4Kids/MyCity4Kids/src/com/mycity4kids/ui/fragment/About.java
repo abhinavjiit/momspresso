@@ -142,9 +142,11 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         });
 
         int position = 0;
-        for (KidsModel km : userDetail.getKids()) {
-            addKidView(km, position);
-            position++;
+        if (userDetail.getKids() != null) {
+            for (KidsModel km : userDetail.getKids()) {
+                addKidView(km, position);
+                position++;
+            }
         }
         return view;
     }
@@ -209,10 +211,10 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     }
 
     private boolean validateKidsInfo() {
-        if (kidNameEditText.getText() == null || kidNameEditText.getText().toString().isEmpty()) {
-            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_empty_name_kid), Toast.LENGTH_SHORT).show();
-            return false;
-        }
+//        if (kidNameEditText.getText() == null || kidNameEditText.getText().toString().isEmpty()) {
+//            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_empty_name_kid), Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
         if (StringUtils.isNullOrEmpty(kidsDOBTextView.getText().toString()) || !DateTimeUtils.isValidDate(kidsDOBTextView.getText().toString())) {
             Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date), Toast.LENGTH_SHORT).show();
             return false;
@@ -265,7 +267,12 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
 
         if ("ADD".equals(kidsInfoActionType)) {
             AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
-            kmodel.setName(kidNameEditText.getText().toString());
+            if (StringUtils.isNullOrEmpty(kidNameEditText.getText().toString())) {
+                kmodel.setName(" ");
+            } else {
+                kmodel.setName(kidNameEditText.getText().toString());
+            }
+
             long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(kidsDOBTextView.getText().toString());
             kmodel.setBirthDay(bdaytimestamp * 1000);
 

@@ -76,7 +76,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             forYouTextView, /*videosTextView,*/
             recentTextView;
     private TextView continueTextView;
-    private LinearLayout videosContainer, storyContainer, groupsContainer;
+    private RelativeLayout videosContainer, storyContainer, groupsContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,9 +112,9 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         guideOverLay.setOnClickListener(this);
 
         View gridViewHeader = LayoutInflater.from(BaseApplication.getAppContext()).inflate(R.layout.grid_view_header, gridview, false);
-        videosContainer = (LinearLayout) gridViewHeader.findViewById(R.id.videosContainer);
-        storyContainer = (LinearLayout) gridViewHeader.findViewById(R.id.storyContainer);
-        groupsContainer = (LinearLayout) gridViewHeader.findViewById(R.id.groupsContainer);
+        videosContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.videosContainer);
+        storyContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.storyContainer);
+        groupsContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.groupsContainer);
 
         videosContainer.setOnClickListener(this);
         storyContainer.setOnClickListener(this);

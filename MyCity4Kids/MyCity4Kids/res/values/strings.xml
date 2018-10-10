@@ -257,7 +257,7 @@
     <string name="explore_listing.explore_categories.meet_contributor">Meet Our Contributors</string>
 
     <string name="home_screen.trending.title">TRENDING</string>
-    <string name="home_screen.notification.title">NOTIFICATION</string>
+    <string name="home_screen.notification.title">NOTIFICATIONS</string>
     <string name="home_screen.group.title">JOIN A GROUP</string>
     <string name="home_screen.suggested_topic.title">SUGGESTED TOPICS</string>
     <string name="home_screen.profile.title">MY ACCOUNT</string>
@@ -623,7 +623,7 @@
     <string name="choose_mp4_file">please choose a .mp4 format file</string>
 
     <string name="article_listing.type.trending_label">TRENDING</string>
-    <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
+    <string name="article_listing.type.editor_label">EDITOR\'S PICKS</string>
     <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
     <string name="article_listing.type.for_you_label">FOR YOU</string>
     <string name="article_listing.type.short_story_label">#100WORDSTORY</string>
@@ -817,6 +817,18 @@
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
     <string name="contact_details">Contact Details</string>
-    <string name="discover">Discover</string>
-    <string name="create">Create</string>
+    <string name="navigation_bar.discover">Discover</string>
+    <string name="navigation_bar.create">Create</string>
+    <string name="navigation_bar.notifications">Notifications</string>
+    <string name="navigation_bar.groups">Groups</string>
+
+    <string name="coachmark.home">Welcome to Momspresso! You can explore the app in the language of your choice.</string>
+    <string name="coachmark.explore">What do you want to do today? Read a 100 Word Story or watch Videos. You can also explore the various categories and read blogs</string>
+    <string name="coachmark.create">Add your #100WordStory, blog post, or your videos. View/ edit your drafts too.</string>
+    <string name="coachmark.menu">Jump to your preferred section on the app instantly. View your bookmarked articles and update your app settings.</string>
+    <string name="coachmark.drawer">View your personal profile and see all your blogs, 100 word stories, and Mom Vlogs at one place.</string>
+    <string name="coachmark.edit_profile">Edit and update your profile to stay updated on blogger meets and sponsored articles.</string>
+    <string name="coachmark.app_setting">You can edit your app preferences and language preferences at one place. Subscribe to notifications and categories here.</string>
+    <string name="coachmark.publish">View your published articles, stories, and mom vlogs at one place.</string>
+
 </resources>

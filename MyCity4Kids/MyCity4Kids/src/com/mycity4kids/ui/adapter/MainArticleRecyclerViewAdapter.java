@@ -1261,6 +1261,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else if (viewHolder instanceof HeaderViewHolder) {
                                     ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                                } else if (viewHolder instanceof JoinGroupViewHolder) {
+                                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
                                     ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 }
@@ -1274,6 +1276,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 } else if (viewHolder instanceof HeaderViewHolder) {
                                     ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                                } else if (viewHolder instanceof JoinGroupViewHolder) {
+                                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
                                     ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 }
@@ -1284,6 +1288,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                                 } else if (viewHolder instanceof HeaderViewHolder) {
                                     ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                                } else if (viewHolder instanceof JoinGroupViewHolder) {
+                                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
                                     ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                                 }
@@ -1294,6 +1300,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                     ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                                 } else if (viewHolder instanceof HeaderViewHolder) {
                                     ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                                } else if (viewHolder instanceof JoinGroupViewHolder) {
+                                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
                                     ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                                 }
@@ -1315,6 +1323,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else if (viewHolder instanceof HeaderViewHolder) {
                     ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                } else if (viewHolder instanceof JoinGroupViewHolder) {
+                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
                     ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 }
@@ -1323,6 +1333,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                 } else if (viewHolder instanceof HeaderViewHolder) {
                     ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                } else if (viewHolder instanceof JoinGroupViewHolder) {
+                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
                     ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                 }
@@ -1331,6 +1343,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                 } else if (viewHolder instanceof HeaderViewHolder) {
                     ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                } else if (viewHolder instanceof JoinGroupViewHolder) {
+                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
                     ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                 }
@@ -1339,6 +1353,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                 } else if (viewHolder instanceof HeaderViewHolder) {
                     ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                } else if (viewHolder instanceof JoinGroupViewHolder) {
+                    ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
                     ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                 }

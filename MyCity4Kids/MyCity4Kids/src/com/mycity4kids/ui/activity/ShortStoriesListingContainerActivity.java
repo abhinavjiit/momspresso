@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -49,6 +50,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
     private String parentTopicId;
     private ArrayList<Topics> subTopicsList;
     private Toolbar toolbar;
+    private TextView toolbarTitleTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tablayoutLayer = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
+        toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
 
         parentTopicId = getIntent().getStringExtra("parentTopicId");
 
@@ -65,6 +68,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        toolbarTitleTextView.setText(getString(R.string.article_listing_type_short_story_label));
         try {
             shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
 

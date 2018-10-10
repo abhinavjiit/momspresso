@@ -81,6 +81,6 @@
     <string name="image_thumbnail">Image thumbnail</string>
     <string name="string_draft">Draft</string>
     <string name="string_publish">Publish</string>
-
+    <string name="app_settings">App Settings</string>
 
 </resources>

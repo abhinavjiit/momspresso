@@ -81,7 +81,7 @@ public class ReadMoreTextView extends CustomFontTextView {
         setText();
     }
 
-    public void setText() {
+    private void setText() {
         super.setText(getDisplayableText(), bufferType);
         setMovementMethod(LinkMovementMethod.getInstance());
         setHighlightColor(Color.TRANSPARENT);

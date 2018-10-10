@@ -4,7 +4,6 @@ import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -85,7 +84,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        final LinearLayoutManager gridLayoutManager = new LinearLayoutManager(this);
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerGridView.setLayoutManager(gridLayoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.groups_column_spacing);
         recyclerGridView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));

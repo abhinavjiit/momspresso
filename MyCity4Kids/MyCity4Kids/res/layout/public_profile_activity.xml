@@ -35,7 +35,8 @@
                     android:paddingBottom="10dp"
                     android:paddingRight="10dp"
                     android:paddingTop="10dp"
-                    android:src="@drawable/ic_back_arrow" />
+                    android:src="@drawable/ic_back_arrow"
+                    android:tint="@color/app_light_black" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/toolbarTitle"
@@ -45,24 +46,24 @@
                     android:layout_toRightOf="@+id/menuImageView"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
-                    android:text="@string/profile"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     app:fontName="oswald_regular.ttf" />
 
-                <ImageView
-                    android:id="@+id/settingImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="15dp"
-                    android:src="@drawable/ic_settings"
-                    android:tint="@color/red_drawer_selected"
-                    android:visibility="visible" />
+                <!--<ImageView-->
+                <!--android:id="@+id/settingImageView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:paddingBottom="15dp"-->
+                <!--android:paddingLeft="10dp"-->
+                <!--android:paddingRight="10dp"-->
+                <!--android:paddingTop="15dp"-->
+                <!--android:src="@drawable/ic_settings"-->
+                <!--android:tint="@color/red_drawer_selected"-->
+                <!--android:visibility="visible" />-->
 
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
@@ -86,7 +87,7 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/groups_generic" />
+                    android:src="@color/app_nav_bg" />
 
             </RelativeLayout>
 
@@ -114,27 +115,38 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/profileImageView"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="16dp"
             android:layout_toRightOf="@+id/profileImageView"
             android:gravity="left"
             android:onClick="onClick"
-            android:text="John Farishon"
+            android:text=""
             android:textColor="@color/app_light_black"
             android:textSize="20sp"
             app:fontName="oswald.ttf" />
 
-        <com.mycity4kids.widget.ReadMoreTextView
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/authorTypeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nameTextView"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@+id/profileImageView"
+            android:drawablePadding="10dp"
+            android:gravity="left"
+            android:onClick="onClick"
+            android:text=""
+            android:textColor="@color/app_grey"
+            android:textSize="14sp"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/userbioTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/topContainer"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:textColor="@color/app_light_black"
-            app:fontName="oswald.ttf"
-            app:trimCollapsedText="@string/search.show_more"
-            app:trimLines="2"
-            app:trimMode="trimModeLine" />
+            android:textColor="@color/app_light_black" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/followAuthorTextView"

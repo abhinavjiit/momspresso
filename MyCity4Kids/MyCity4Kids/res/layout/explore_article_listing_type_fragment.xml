@@ -83,15 +83,15 @@
                 app:fontName="oswald_regular.ttf" />
 
             <!--<com.mycity4kids.widget.CustomFontTextView-->
-                <!--android:id="@+id/shortStoryTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="5dp"-->
-                <!--android:layout_marginRight="5dp"-->
-                <!--android:background="@drawable/quick_links_btn_bg"-->
-                <!--android:text="@string/article_listing.type.short_story_label"-->
-                <!--android:textColor="@color/app_light_black"-->
-                <!--app:fontName="oswald_regular.ttf" />-->
+            <!--android:id="@+id/shortStoryTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:background="@drawable/quick_links_btn_bg"-->
+            <!--android:text="@string/article_listing.type.short_story_label"-->
+            <!--android:textColor="@color/app_light_black"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/forYouTextView"
@@ -105,14 +105,14 @@
                 app:fontName="oswald_regular.ttf" />
 
             <!--<com.mycity4kids.widget.CustomFontTextView-->
-                <!--android:id="@+id/videosTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="5dp"-->
-                <!--android:layout_marginRight="5dp"-->
-                <!--android:background="@drawable/quick_links_btn_bg"-->
-                <!--android:text="@string/article_listing.type.videos_label"-->
-                <!--app:fontName="oswald_regular.ttf" />-->
+            <!--android:id="@+id/videosTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:background="@drawable/quick_links_btn_bg"-->
+            <!--android:text="@string/article_listing.type.videos_label"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/recentTextView"
@@ -286,6 +286,7 @@
         android:layout_marginRight="16dp"
         android:horizontalSpacing="16dp"
         android:numColumns="2"
+        android:scrollbars="none"
         android:stretchMode="columnWidth"
         android:verticalSpacing="16dp"
         android:visibility="visible" />

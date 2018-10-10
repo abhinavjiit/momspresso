@@ -33,13 +33,20 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mycity4kids.interfaces.OnUIView;
+import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
+import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.CityConfigResponse;
 import com.mycity4kids.models.response.CityInfoItem;
@@ -53,6 +60,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.adapter.UserProfilePagerAdapter;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.MemoryPolicy;
@@ -304,6 +312,9 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     model.setLast_name(nameArr[1]);
                 }
                 SharedPrefUtils.setUserDetailModel(EditProfileNewActivity.this, model);
+                if (viewPagerAdapter.getContactdetails().getSelectedCityId() != 0) {
+                    updateEventsResourcesConfigForCity();
+                }
             } else {
 //                showToast(responseData.getReason());
             }
@@ -316,6 +327,40 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         }
     };
 
+    private void updateEventsResourcesConfigForCity() {
+        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(this);
+        final ConfigurationController _controller = new ConfigurationController(this, this);
+
+        MetroCity model = new MetroCity();
+
+        model.setId(viewPagerAdapter.getContactdetails().getSelectedCityId());
+        model.setName(viewPagerAdapter.getContactdetails().getCurrentCityName());
+        model.setNewCityId(viewPagerAdapter.getContactdetails().getCurrentCityName());
+
+        SharedPrefUtils.setCurrentCityModel(this, model);
+        SharedPrefUtils.setChangeCityFlag(this, true);
+
+        if (viewPagerAdapter.getContactdetails().getSelectedCityId() > 0) {
+            versionApiModel.setCityId(viewPagerAdapter.getContactdetails().getSelectedCityId());
+//            mFirebaseAnalytics.setUserProperty("CityId", cityModel.getCityId() + "");
+
+            String version = AppUtils.getAppVersion(this);
+            if (!StringUtils.isNullOrEmpty(version)) {
+                versionApiModel.setAppUpdateVersion(version);
+            }
+
+            if (!ConnectivityUtils.isNetworkEnabled(this)) {
+                ToastUtils.showToast(this, getString(R.string.error_network));
+                return;
+
+            }
+//            if (null != cityFragment) {
+//                cityFragment.dismiss();
+//            }
+            _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -324,7 +369,30 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void updateUi(Response response) {
-
+        if (response == null) {
+//            progressBar.setVisibility(View.GONE);
+            Toast.makeText(this, getResources().getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        switch (response.getDataType()) {
+            case AppConstants.CONFIGURATION_REQUEST:
+                Object responseObject = response.getResponseObject();
+                if (responseObject instanceof ConfigurationApiModel) {
+                    ConfigurationApiModel _configurationResponse = (ConfigurationApiModel) responseObject;
+                    BaseApplication.setBusinessREsponse(null);
+                    HeavyDbTask _heavyDbTask = new HeavyDbTask(this,
+                            _configurationResponse, new OnUIView() {
+                        @Override
+                        public void comeBackOnUI() {
+//                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
+                    _heavyDbTask.execute();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     public void setupUI(View view) {

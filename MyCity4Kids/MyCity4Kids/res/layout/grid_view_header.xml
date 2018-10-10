@@ -14,33 +14,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:weightSum="3">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/videosContainer"
             android:layout_width="0dp"
-            android:layout_height="116dp"
-            android:layout_margin="8dp"
+            android:layout_height="120dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
-            android:background="#f47d88"
-            android:gravity="bottom"
-            android:orientation="vertical">
+            android:background="@drawable/round_border_videos">
 
             <ImageView
+                android:id="@+id/videoImageView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:alpha="0.6"
-                android:background="@drawable/round_border"
                 android:src="@drawable/video_grey"
                 android:tint="@color/white" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/videoImageView"
                 android:layout_marginBottom="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -48,31 +49,32 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/storyContainer"
             android:layout_width="0dp"
-            android:layout_height="116dp"
-            android:layout_margin="6dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
-            android:background="#87abe8"
-            android:gravity="bottom"
-            android:orientation="vertical">
+            android:background="@drawable/round_border_story">
 
             <ImageView
+                android:id="@+id/storyImageView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:alpha="0.6"
-                android:background="@drawable/round_border"
                 android:src="@drawable/shortstory_grey"
                 android:tint="@color/white" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/storyImageView"
                 android:layout_marginBottom="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -80,31 +82,31 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/groupsContainer"
             android:layout_width="0dp"
-            android:layout_height="116dp"
-            android:layout_margin="6dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="8dp"
             android:layout_weight="1"
-            android:background="#9994da"
-            android:gravity="bottom"
-            android:orientation="vertical">
+            android:background="@drawable/round_border_groups">
 
             <ImageView
+                android:id="@+id/groupImageView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:alpha="0.6"
-                android:background="@drawable/round_border"
                 android:src="@drawable/ic_group_icon"
                 android:tint="@color/white" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/groupImageView"
                 android:layout_marginBottom="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -112,7 +114,7 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <!--<LinearLayout-->
         <!--android:layout_width="100dp"-->

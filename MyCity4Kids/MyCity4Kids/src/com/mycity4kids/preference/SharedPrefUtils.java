@@ -91,6 +91,9 @@ public class SharedPrefUtils {
     private static final String COACHMARK_TOPICS_ARTICLE = "coachmarkTopicsArticle";
     private static final String COACHMARK_ARTICLE_DETAILS = "coachmarkArticleDetails";
     private static final String COACHMARK_GROUP = "coachmarkGroups";
+    private static final String COACHMARK_DRAWER = "coachmarkDrawer";
+    private static final String COACHMARK_HOME_SCREEN = "coachmarkHomeScreen";
+    private static final String COACHMARK_PROFILE = "coachmarkProfile";
 
     private static final String CHANGE_CITY_FLAG = "changeCityFlag";
 
@@ -439,7 +442,14 @@ public class SharedPrefUtils {
             _editor.putBoolean(COACHMARK_ARTICLE_DETAILS, flag);
         } else if ("groups".equals(screenName)) {
             _editor.putBoolean(COACHMARK_GROUP, flag);
+        } else if ("Drawer".equals(screenName)) {
+            _editor.putBoolean(COACHMARK_DRAWER, flag);
+        } else if ("HomeScreen".equals(screenName)) {
+            _editor.putBoolean(COACHMARK_HOME_SCREEN, flag);
+        }else if ("Profile".equals(screenName)) {
+            _editor.putBoolean(COACHMARK_PROFILE, flag);
         }
+
 
         _editor.commit();
     }
@@ -456,6 +466,12 @@ public class SharedPrefUtils {
             return _sharedPref.getBoolean(COACHMARK_ARTICLE_DETAILS, false);
         } else if ("groups".equals(screenName)) {
             return _sharedPref.getBoolean(COACHMARK_GROUP, false);
+        } else if ("Drawer".equals(screenName)) {
+            return _sharedPref.getBoolean(COACHMARK_DRAWER, false);
+        } else if ("HomeScreen".equals(screenName)) {
+            return _sharedPref.getBoolean(COACHMARK_HOME_SCREEN, false);
+        } else if ("Profile".equals(screenName)) {
+            return _sharedPref.getBoolean(COACHMARK_PROFILE, false);
         }
         return true;
     }
