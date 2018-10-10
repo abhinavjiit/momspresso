@@ -116,7 +116,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/topics_border_bg"
+                android:background="@drawable/article_listing_item_border_bg"
                 android:orientation="vertical">
 
                 <com.mycity4kids.widget.CustomFontTextView
@@ -130,7 +130,7 @@
                     android:singleLine="false"
                     android:text="@string/title"
                     android:textColor="@color/article_listing.title"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     app:fontName="oswald_regular.ttf" />
 
                 <RelativeLayout

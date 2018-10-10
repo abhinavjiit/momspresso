@@ -268,7 +268,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         if (viewPager.getCurrentItem() == 1) {
             updateUserDetail.setUserBio(viewPagerAdapter.getAbout().getAboutEditText().getText().toString().trim() + "");
         } else {
-            String[] nameArr = viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().split("\\s+");
+            String[] nameArr = viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().trim().split("\\s+");
             updateUserDetail.setFirstName((nameArr[0]));
 //            updateUserDetail.setBlogTitle(viewPagerAdapter.getContactdetails().getHandleNameEditText().getText().toString().trim() + "");
 
@@ -306,7 +306,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 Toast.makeText(EditProfileNewActivity.this, getString(R.string.app_settings_edit_profile_update_success), Toast.LENGTH_SHORT).show();
                 UserInfo model = SharedPrefUtils.getUserDetailModel(EditProfileNewActivity.this);
-                String[] nameArr = viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().split("\\s+");
+                String[] nameArr = viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().trim().split("\\s+");
                 model.setFirst_name(nameArr[0]);
                 if (nameArr.length < 2 || StringUtils.isNullOrEmpty(nameArr[1].trim())) {
                     model.setLast_name(" ");

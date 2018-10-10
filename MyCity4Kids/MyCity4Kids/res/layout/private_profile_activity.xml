@@ -94,7 +94,7 @@
                 android:paddingLeft="9dp"
                 android:paddingRight="9dp"
                 android:paddingTop="7dp"
-                android:text="@string/coachmark.create"
+                android:text="@string/coachmark.edit_profile"
                 android:textColor="@color/black"
                 app:fontName="oswald.ttf" />
 
@@ -143,7 +143,7 @@
                         android:paddingTop="10dp"
                         android:text="@string/app_settings.tabbar.edit_profile"
                         android:textColor="@color/app_light_black"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         app:fontName="oswald_regular.ttf" />
 
                     <ImageView

@@ -269,11 +269,16 @@
     <string name="home_screen.trending_list_header.take_me_there">ओके, समजले, मला घेऊन चला </string>
 
     <string-array name="onboarding_title_array">
-        <item>आईची बुद्धी जुंपणे </item>
-        <item>सहा भाषांपैकी कुठल्याही एका भाषेत ब्लॉगिंग करा </item>
-        <item>व्हिडीओस बघा </item>
-        <item>आपल्या शहर बद्दल अजून खूप काई जाणून घ्या </item>
+        <item>ब्लॉग तयार करा</item>
+        <item>६ भाषेतून वैविद्यपूर्ण ब्लॉग तुमच्या साठी</item>
+        <item>पहा व्हिडिओ</item>
+        <item>एकटीच नाही तू आता,  सपोर्ट ग्रुप बरोबर असताना एकटेपणाची कशाला भीती</item>
     </string-array>
+
+    <string name="onboarding.desc_1">प्रत्येक आईच्या \'आईपणाची\'  ची कहाणी.  तुमचीही  आहे ना? शेअर करा लिखीत व व्हिडीओच्या माध्यमातून</string>
+    <string name="onboarding.desc_2">निवडा तुमची भाषा इंग्रजी, हिन्दी , बंगाल , मराठी, तामिळ आणि तेलगू.</string>
+    <string name="onboarding.desc_3">Momspresso TV च्या  माध्यमातून पहा   सुंदर, प्रेरणादायी, माहितीपूर्ण , मजेशीर व्हिडीओ खास तुमच्यासाठी.</string>
+    <string name="onboarding.desc_4">\'ती\' च्या  अस्तित्वाचा लढा  सशक्त करू. चला शेअर करा तुमच्या सूचना , कलपना आणि लिहित्या व्हा.</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">ब्लॉग्स </string>
     <string name="onboarding_desc_array.tutorial_1.videos">मॉम वि लॉग्स </string>
@@ -795,4 +800,19 @@
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
+    <string name="contact_details">Contact Details</string>
+    <string name="navigation_bar.discover">शोध</string>
+    <string name="navigation_bar.create">Create</string>
+    <string name="navigation_bar.notifications">सूचना</string>
+    <string name="navigation_bar.groups">Groups</string>
+
+    <string name="coachmark.home">मॉम्सप्रेसोमध्ये स्वागत आहे!  तुमचे आवडते ऍप आता तुमच्या स्वतःच्या  भाषेत उपलब्ध.</string>
+    <string name="coachmark.explore">आवडत्या चिन्हावर क्लिक करा आणि मिळवा - आज तुम्हाला काय करायचे आहे? वाचा १०० शब्दांची गोष्ट वा बघा व्हिडीओ. वेगवेगळ्या विषयांवरील वैविध्यपुर्ण  लेखहि वाचू शकता.</string>
+    <string name="coachmark.create">तसेच बनवू शकता: #१००शब्दाचीगोष्ट, लेखमाला, आणि तुमचे आवडते व्हिडीओज. तुमचे ड्रॅफ्टस हि संपादित  करू शकता</string>
+    <string name="coachmark.menu">ड्रॉवर चिन्हांदारे: पटकन पोहोचु शकता तुमच्या आवडत्या सेक्शनला. तुम्ही मार्क केलेले लेख एका क्लिकवरच वाचण्यासाठी ऍप  चे सेटिंग अपडेट करू शकता.</string>
+    <string name="coachmark.drawer">आणखी पाहू शकता: तुमची वैयक्तिक माहिती व सगळे तुमचे लेख , १०० शब्दांची गोष्ट आणि मॉम  व्हिडिओलॉग एकाच ठिकाणी .</string>
+    <string name="coachmark.edit_profile">वैयिक्तक माहिती संपादित करू शकता:  लेखकांच्या भेटीसाठी वा  व प्रायोजकांच्या अद्ययावत माहितीसाठी  संपादित व अद्ययन करा स्वतःची माहिती</string>
+    <string name="coachmark.app_setting">.ऍपचे सेटिंग्ज : तुम्ही प्राधान्य देणाऱ्या  आवडत्या विषयांवरील लेख  तुमच्याच भाषेत उपलब्ध आहेत.  आजच सदस्य व्हा, व मिळवा  सूचना व माहिती.</string>
+    <string name="coachmark.publish">तुमचे विचार  प्रसिद्ध करा: बघा व प्रकाशित करा तुमचे  लेख, गोष्टी, आणि मॉम्स व्हिडिओलॉग एकाच ठिकाणी.</string>
+    <string name="mobile">MOBILE NO</string>
 </resources>

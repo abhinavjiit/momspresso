@@ -450,7 +450,7 @@
                         <ImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
-                            android:src="@drawable/home_red"
+                            android:src="@drawable/ic_bottom_home_white"
                             android:visibility="visible" />
 
                         <TextView
@@ -458,6 +458,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Home"
+                            android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -473,8 +474,7 @@
                         <ImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
-                            android:src="@drawable/ic_bottom_discover"
-                            android:visibility="visible" />
+                            android:src="@drawable/ic_bottom_discover" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -496,8 +496,7 @@
                         <ImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
-                            android:src="@drawable/navigation_create_button"
-                            android:visibility="visible" />
+                            android:src="@drawable/navigation_create_button" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -650,6 +649,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Discover"
+                            android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -867,7 +867,7 @@
                     android:paddingLeft="9dp"
                     android:paddingRight="9dp"
                     android:paddingTop="7dp"
-                    android:text="@string/coachmark.create"
+                    android:text="@string/coachmark.menu"
                     android:textColor="@color/black"
                     app:fontName="oswald.ttf" />
 
@@ -1553,10 +1553,10 @@
                 android:drawableLeft="@drawable/drawer_home_red"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"
-                android:paddingBottom="16dp"
+                android:paddingBottom="12dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp"
+                android:paddingTop="12dp"
                 android:text="@string/groups.sections.blogs"
                 android:textAllCaps="true"
                 app:fontName="oswald.ttf" />
@@ -1569,10 +1569,10 @@
                 android:drawableLeft="@drawable/drawer_video_red"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"
-                android:paddingBottom="16dp"
+                android:paddingBottom="12dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp"
+                android:paddingTop="12dp"
                 android:text="@string/all_videos.toolbar.title"
                 app:fontName="oswald.ttf" />
 
@@ -1584,10 +1584,10 @@
                 android:drawableLeft="@drawable/drawer_shortstory_red"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"
-                android:paddingBottom="16dp"
+                android:paddingBottom="12dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp"
+                android:paddingTop="12dp"
                 android:text="@string/myprofile.section.short_story_label"
                 app:fontName="oswald.ttf" />
 
@@ -1596,13 +1596,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_below="@+id/shortStoryTextView"
-                android:drawableLeft="@drawable/tab4_selected"
+                android:drawableLeft="@drawable/ic_bottom_group_selected"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"
-                android:paddingBottom="16dp"
+                android:paddingBottom="12dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp"
+                android:paddingTop="12dp"
                 android:text="@string/groups.support_groups"
                 app:fontName="oswald.ttf" />
 
@@ -1613,9 +1613,8 @@
                 android:layout_below="@+id/groupsTextView"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/app_nav_bg"
-                android:visibility="invisible" />
+                android:layout_marginTop="16dp"
+                android:background="@color/app_nav_bg" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/bookmarksTextView"
@@ -1625,10 +1624,11 @@
                 android:drawableLeft="@drawable/ic_bookmark"
                 android:drawablePadding="20dp"
                 android:drawableTint="#d54058"
-                android:paddingBottom="20dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="12dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="16dp"
-                android:paddingTop="20dp"
+                android:paddingTop="12dp"
                 android:text="@string/user_activities.tabs.bookmark"
                 app:fontName="oswald.ttf" />
 
@@ -1639,21 +1639,21 @@
                 android:layout_below="@+id/bookmarksTextView"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:background="@color/app_nav_bg"
-                android:visibility="invisible" />
+                android:background="@color/app_nav_bg" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/settingTextView"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_below="@+id/divider2"
-                android:drawableLeft="@drawable/ic_settings"
+                android:drawableLeft="@drawable/ic_app_settings"
                 android:drawablePadding="20dp"
                 android:drawableTint="#d54058"
-                android:paddingBottom="20dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="12dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="16dp"
-                android:paddingTop="20dp"
+                android:paddingTop="12dp"
                 android:text="@string/app_settings"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
@@ -1689,7 +1689,7 @@
                 android:paddingLeft="9dp"
                 android:paddingRight="9dp"
                 android:paddingTop="7dp"
-                android:text="@string/coachmark.drawer"
+                android:text="@string/coachmark.app_setting"
                 android:textColor="@color/black"
                 app:fontName="oswald.ttf" />
         </RelativeLayout>

@@ -4,14 +4,14 @@
     android:id="@+id/addTopicsLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="#f9f9f9"
     android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/groupHeaderView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="#f9f9f9">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:background="@color/white"
+        android:background="#f9f9f9"
         android:visibility="gone">
 
         <android.support.v7.widget.CardView
@@ -107,7 +107,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/topics_border_bg"
+                android:background="@drawable/article_listing_item_border_bg"
                 android:orientation="vertical">
 
                 <com.mycity4kids.widget.CustomFontTextView

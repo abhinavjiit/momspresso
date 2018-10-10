@@ -120,12 +120,12 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getUserDetails();
-            }
-        }, 200);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                getUserDetails();
+//            }
+//        }, 200);
     }
 
     private void getUserDetails() {

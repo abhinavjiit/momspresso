@@ -269,11 +269,16 @@
     <string name="home_screen.trending_list_header.take_me_there">আচ্ছা আমি বুঝে গেছি! সেখানে আমাকে নিতে</string>
 
     <string-array name="onboarding_title_array">
-        <item>মায়েদের অভিজ্ঞাতার সমন্বয়</item>
-        <item>যে কোনো একটি ভাষায় ব্লগ লিখুন</item>
-        <item>ভিডিও দেখুন</item>
-        <item>শহরের সেরাটির সন্ধান</item>
+        <item>আপনার ব্লগ তৈরী করুন</item>
+        <item>৬টি ভাষায় আপনার লেখা পাঠাতে পারেন</item>
+        <item>আমাদের ভিডিও দেখুন</item>
+        <item>আপনি একা নন,আমাদের সাপোর্ট গ্রূপ আছে আপনার সাথে</item>
     </string-array>
+
+    <string name="onboarding.desc_1">প্রত্যেক মায়েরই কিছু গল্প আছে,আপনার গল্পটি কি? আপনি তা লিখে বা ভিডিওর মাধ্যমে পাঠাতে পারেন |</string>
+    <string name="onboarding.desc_2">ইংরেজী,হিন্দি,বাংলা, মারাঠি,তামিল এবং তেলেগু তে আমরা উপলব্ধ |</string>
+    <string name="onboarding.desc_3">মম্স্প্রেস্সো টিভি আপনাদের জন্য নিয়ে এসেছে অনুপ্রেরণাকারী,প্রয়োজনীয়,সুন্দর এবং মজাদার ভিডিও, একই মঞ্চে |</string>
+    <string name="onboarding.desc_4">আপনার যেকোনো প্রশ্নের উত্তর পাওয়ার জন্য ও অন্য একজন মা\'কে আপনার অভিজ্ঞতা দিয়ে সাহায্য করার জন্য,মায়েদের শক্তির সাথে যুক্ত হোন |</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">ব্লগ</string>
     <string name="onboarding_desc_array.tutorial_1.videos">মায়েদের ব্লগস</string>
@@ -795,4 +800,20 @@
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
+    <string name="contact_details">Contact Details</string>
+    <string name="navigation_bar.discover">আবিষ্কার</string>
+    <string name="navigation_bar.create">Create</string>
+    <string name="navigation_bar.notifications">বিজ্ঞপ্তিগুলি</string>
+    <string name="navigation_bar.groups">Groups</string>
+
+    <string name="coachmark.home">মমস্প্রেসোতে আপনাকে স্বাগত।আপনি আপনার পছন্দের ভাষায় অ্যাপ্লিকেশন ব্যবহার করতে পারেন।</string>
+    <string name="coachmark.explore">আজ আপনি কি করতে চান? একটি শত শব্দের গল্প পড়ুন অথবা ভিডিও দেখুন।আপনি বিভিন্ন বিভাগও অন্বেষণ করতে পারেন এবং ব্লগ পড়তে পারেন।</string>
+    <string name="coachmark.create">আপনার #শতশব্দেরগল্প , ব্লগ পোস্ট, অথবা আপনার ভিডিও পোস্ট করুন। আপনার ড্রাফ্ট দেখুন / এডিট করুন।</string>
+    <string name="coachmark.menu">অবিলম্বে অ্যাপ্লিকেশনে আপনার পছন্দের বিভাগে যান। আপনার বুকমার্ক করা আর্টিকেলটি দেখুন এবং আপনার অ্যাপ্লিকেশন সেটিংস আপডেট করুন।</string>
+    <string name="coachmark.drawer">अपनी पर्सनल  प्रोफ़ाइल पर  अपने सभी ब्लॉग, 100 शब्दों की  कहानियां, और मॉम वीलॉग्स को एक ही स्थान पर देखें।</string>
+    <string name="coachmark.edit_profile"> ব্লগার মিটিং এবং স্পনসর্ড আর্টিকেলগুলিতে আপডেট থাকার জন্য আপনার প্রোফাইলটি এডিট এবং আপডেট করুন।</string>
+    <string name="coachmark.app_setting">আপনি এক জায়গায় আপনার অ্যাপ্লিকেশন এবং পছন্দের ভাষা এডিট করতে পারেন। নোটিফিকেশন এবং বিভাগ দেখার জন্য এখানে সাবস্ক্রাইব করুন।</string>
+    <string name="coachmark.publish">আপনার প্রকাশিত আর্টিকেল ,গল্প, এবং মম ভ্লগস এক জায়গায় দেখুন। ডিসকভার : আবিষ্কার</string>
+    <string name="mobile">MOBILE NO</string>
+
 </resources>

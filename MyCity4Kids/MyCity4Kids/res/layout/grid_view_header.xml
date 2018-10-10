@@ -47,7 +47,7 @@
                 android:paddingRight="10dp"
                 android:text="VIDEOS"
                 android:textColor="@color/white"
-                android:textSize="17sp"
+                android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 
@@ -80,7 +80,7 @@
                 android:paddingRight="10dp"
                 android:text="@string/myprofile.section.short_story_label"
                 android:textColor="@color/white"
-                android:textSize="17sp"
+                android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 
@@ -112,7 +112,7 @@
                 android:paddingRight="10dp"
                 android:text="SUPPORT GROUPS"
                 android:textColor="@color/white"
-                android:textSize="17sp"
+                android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 

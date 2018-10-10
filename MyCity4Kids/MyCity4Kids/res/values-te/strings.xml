@@ -267,11 +267,16 @@
     <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
 
     <string-array name="onboarding_title_array">
-        <item>HARNESSING THE WISDOM OF MUMS</item>
-        <item>BLOG IN ANY ONE OF 6 LANGUAGES</item>
-        <item>WATCH VIDEOS</item>
-        <item>DISCOVER YOUR CITY\'S BEST</item>
+        <item>బ్లాగ్  క్రియేట్ చేయండి</item>
+        <item>6 భాషల్లో బ్లాగ్స్ చదవండి</item>
+        <item>వీడియోస్ చూడండి</item>
+        <item>గ్రూప్స్ ని సపోర్ట్ చేయండి  , మీరు ఒంటరిగా లేరు</item>
     </string-array>
+
+    <string name="onboarding.desc_1">ప్రతీ అమ్మకి ఒక కథ ఉంటుంది . మీ కథ ఏమిటి ?   టెక్స్ట్ లేదా వీడియో రూపంలో షేర్ చేయండి.</string>
+    <string name="onboarding.desc_2">ఇంగ్లిష్ ,హిందీ ,బంగ్లా ,మరాఠీ ,తమిళ్ ,తెలుగు లలో ఎంచుకోండి .</string>
+    <string name="onboarding.desc_3">మామ్స్‌ప్రెస్సో టీవీ మీకోసం అందమైన , ఉపయోగకరమైన , హాస్యమైన మరియు ప్రేరణ కలిగించే వీడియోస్  అందిస్తుంది  .అన్నీ ఒక దగ్గరే !</string>
+    <string name="onboarding.desc_4">మామ్స్ కమ్యూనిటీని మరింత శక్తివంతం చేయండి .మీ సందేహాలు అడగండి మరియు మిగతావారికి సహాయపడండి !</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">BLOGS</string>
     <string name="onboarding_desc_array.tutorial_1.videos">MOMVLOGS</string>
@@ -793,4 +798,19 @@
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
+    <string name="contact_details">Contact Details</string>
+    <string name="navigation_bar.discover">శోధించు</string>
+    <string name="navigation_bar.create">Create</string>
+    <string name="navigation_bar.notifications">Notifications</string>
+    <string name="navigation_bar.groups">Groups</string>
+
+    <string name="coachmark.home">హోం : మామ్స్‌ప్రెస్సోకి స్వాగతం !  ఈ యాప్ లో మీరు మీకు నచ్చిన భాషలో ఉపయోగించవచ్చు </string>
+    <string name="coachmark.explore">ను అన్వేషించండి: మీరు ఈ రోజు ఏమి చేయాలనుకుంటున్నారు? 100 వర్డ్ స్టోరీని లేదా వీడియోలను వీక్షించండి. మీరు వివిధ వర్గాలను అన్వేషించి బ్లాగ్లను చదవగలరు</string>
+    <string name="coachmark.create">సృష్టించండి: మీ #100పదాలకథలు , బ్లాగ్ పోస్ట్, లేదా మీ వీడియోలను జోడించండి. మీ డ్రాఫ్ట్స్  వీక్షించండి / సవరించండి</string>
+    <string name="coachmark.menu">డ్రావర్ ఐకాన్ : తక్షణమే మీరు మీకు నచ్చిన  విభాగానికి వెళ్ళండి   . మీ బుక్మార్క్ చేసిన కథనాలను వీక్షించండి మరియు మీ యాప్  సెట్టింగ్స్  అప్డేట్ చేయండి </string>
+    <string name="coachmark.drawer">ప్రొఫైల్: మీ వ్యక్తిగత ప్రొఫైల్ను వీక్షించండి మరియు మీ అన్ని బ్లాగులను, 100పదాల  కథలను మరియు Mom Vlogs ను ఒకే దగ్గర  చూడవచ్చు.</string>
+    <string name="coachmark.edit_profile">ప్రొఫైల్ను సవరించండి: బ్లాగర్ సమావేశాలు మరియు స్పాన్సర్డ్  వ్యాసాలను అప్డేట్ చేయడానికి  మీ ప్రొఫైల్ని సవరించండి మరియు అప్డేట్ చేయండి .</string>
+    <string name="coachmark.app_setting">యాప్  సెట్టింగ్స్ : మీరు మీ యాప్ ద్వారా  ప్రాధాన్యతలను మరియు భాష ప్రాధాన్యతలను ఒకేచోట  సవరించవచ్చు. నోటిఫికేషన్లు మరియు కేటగిరీలు కోసం ఇక్కడ సబ్‌స్క్రైబ్ చేయండి .</string>
+    <string name="coachmark.publish">ప్రచురించు (ప్రొఫైల్): మీ ప్రచురించిన కథనాలు, కథలు మరియు మామ్  వ్లాగ్స్ అన్నీ ఒకే దగ్గర  వీక్షించండి.</string>
+    <string name="mobile">MOBILE NO</string>
 </resources>

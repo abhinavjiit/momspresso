@@ -269,11 +269,16 @@
     <string name="home_screen.trending_list_header.take_me_there">समझ आ गया है, कृप्या मुझे वहाँ लेकर चले</string>
 
     <string-array name="onboarding_title_array">
-        <item>HARNESSING THE WISDOM OF MUMS</item>
-        <item>इन 6 में से किसी 1 भाषा में ब्लॉग्गिंग करें</item>
-        <item>वीडियोस देखें</item>
-        <item>अपने शहर की सबसे अच्छी चीज़ों का अनुभव करें</item>
+        <item>अपना ब्लॉग बनाएं</item>
+        <item>6 भाषाओं में से किसी भी भाषा  में ब्लॉग का आनंद लें</item>
+        <item>वीडियो देखें</item>
+        <item>सपोर्ट ग्रुप्स  के साथ, आप अकेले नहीं हैं</item>
     </string-array>
+
+    <string name="onboarding.desc_1">हर माँ की अपनी एक कहानी है। आपकी क्या है? उसे ब्लॉग पोस्ट या वीडियो के रूप में शेयर  करें।</string>
+    <string name="onboarding.desc_2">अंग्रेजी, हिंदी, बांग्ला, मराठी, तमिल और तेलुगु में से चुनें।</string>
+    <string name="onboarding.desc_3">मॉम्सप्रेस्सो टीवी में आपके लिए हैं  खूबसूरत , प्रेरणादायक, उपयोगी और मज़ेदार वीडियो । सभी वीडियो एक साथ ही मंच पर!</string>
+    <string name="onboarding.desc_4">हमारी माँओं की कम्यूनिटी को सशक्त बनायें  .  अपने सवाल साझा करें और दूसरों की मदद करें!</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">ब्लोग्स</string>
     <string name="onboarding_desc_array.tutorial_1.videos">मोमवलोग</string>
@@ -805,5 +810,20 @@
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
+    <string name="contact_details">Contact Details</string>
+    <string name="navigation_bar.discover">खोजें</string>
+    <string name="navigation_bar.create">Create</string>
+    <string name="navigation_bar.notifications">नोटिफिकेशंस</string>
+    <string name="navigation_bar.groups">ग्रुप्स</string>
+
+    <string name="coachmark.home">मॉम्सप्रेस्सो में आपका स्वागत है! आप अपनी पसंद की भाषा में ऐप का प्रयोग कर  सकते हैं।</string>
+    <string name="coachmark.explore">आज आप क्या करना चाहते हैं? 100 शब्दों की कहानी  पढ़ें या वीडियो देखें। आप विभिन्न श्रेणियों में लेख और ब्लॉग पढ़ सकते हैं</string>
+    <string name="coachmark.create">अपनी  # 100शब्दों की कहानी , ब्लॉग पोस्ट, या अपने वीडियो पोस्ट करें । अपने ड्राफ्ट को भी देखें / एडिट  करें।</string>
+    <string name="coachmark.menu">ऐप्प पर तुरंत अपने पसंदीदा विषय पर जाएं। अपने बुकमार्क किए गए लेख देखें और अपनी ऐप्प सेटिंग्स अपडेट करें।</string>
+    <string name="coachmark.drawer">अपनी पर्सनल  प्रोफ़ाइल पर  अपने सभी ब्लॉग, 100 शब्दों की  कहानियां, और मॉम वीलॉग्स को एक ही स्थान पर देखें।</string>
+    <string name="coachmark.edit_profile">ब्लॉगर मीटिंग और स्पोंसर्ड लेखों  के बारे में अपडेट रहने के लिए अपनी प्रोफाइल एडिट और अपडेट करें।</string>
+    <string name="coachmark.app_setting">आप अपनी एप्प की  वरीयताओं और भाषा प्राथमिकताओं को एक ही स्थान पर एडिट  कर सकते हैं। यहां नोटिफिकेशन और श्रेणियों की सब्सक्रिप्शन लें ।</string>
+    <string name="coachmark.publish">एक ही स्थान पर अपने प्रकाशित लेख, कहानियां, और मॉम वीलॉग्स देखें</string>
+    <string name="mobile">MOBILE NO</string>
 
 </resources>

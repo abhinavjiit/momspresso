@@ -267,11 +267,16 @@
     <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
 
     <string-array name="onboarding_title_array">
-        <item>HARNESSING THE WISDOM OF MUMS</item>
-        <item>BLOG IN ANY ONE OF 6 LANGUAGES</item>
-        <item>WATCH VIDEOS</item>
-        <item>DISCOVER YOUR CITY\'S BEST</item>
+        <item>ஒரு பிளாக் உருவாக்கவும்</item>
+        <item>6 மொழிகளில் ப்ளாக்களை படித்து மகிழுவும்</item>
+        <item>பயணத்திலும் வீடியோக்களைப் பார்க்கவும்</item>
+        <item>நீங்கள் தனியாக இல்லை, ஆதரவு குழுக்கள் உண்டு</item>
     </string-array>
+
+    <string name="onboarding.desc_1">ஒவ்வொரு அம்மாவுக்கும் ஒரு கதை உண்டு. உங்களுடையது என்ன? அதை உரை அல்லது வீடியோவில் பகிர்ந்து கொள்ளுங்கள்</string>
+    <string name="onboarding.desc_2">ஆங்கிலம், ஹிந்தி, பங்களா, மராத்தி, தமிழ், தெலுங்கு ஆகியவையில் இருந்து தேர்வு செய்யவும்.</string>
+    <string name="onboarding.desc_3">மாம்ஸ்ப்ரெஸ்ஸோ டீவி உங்களுக்கு அழகான, ஊக்கமளிக்கும், பயனுள்ள மற்றும் வேடிக்கையான வீடியோக்களை வழங்குகிறது. எல்லாம் ஒரே இடத்தில்.</string>
+    <string name="onboarding.desc_4">எங்கள் அன்னையர் சமூகத்தின் சக்தியில் சேரவும். உங்கள் கேள்விகளைப் பகிர்ந்து கொள்ளவும். மற்றவர்களுக்கு உதவவும்</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">BLOGS</string>
     <string name="onboarding_desc_array.tutorial_1.videos">MOMVLOGS</string>
@@ -791,4 +796,20 @@
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
+
+    <string name="contact_details">Contact Details</string>
+    <string name="navigation_bar.discover">கண்டுபிடி</string>
+    <string name="navigation_bar.create">Create</string>
+    <string name="navigation_bar.notifications">Notifications</string>
+    <string name="navigation_bar.groups">Groups</string>
+
+    <string name="coachmark.home">ஹோம் ஐகான் : மாம்ஸ்ப்ரெஸ்ஸோவிற்கு வரவேற்கிறோம்! நீங்கள் விரும்பிய மொழியில் இந்த ஆப்பை ஆராயலாம்.</string>
+    <string name="coachmark.explore">ஆராயும் ஐகான்: இன்று என்ன செய்ய வேண்டும்? 100 வார்த்தை கதை படிக்கவும் அல்லது வீடியோக்களை பார்க்கவும். நீங்கள் பல்வேறு வகைகளையும் ஆராயலாம் மற்றும் ப்ளாக்களை படிக்கலாம்</string>
+    <string name="coachmark.create">உருவாக்கவும்: # வார்த்தைக்கதை, ப்ளாக்கள் அல்லது உங்கள் வீடியோக்களைச் சேர்க்கவும். உங்கள் வரைவுகளைக் காணவும் / திருத்தவும்.</string>
+    <string name="coachmark.menu">ட்ராவர் ஐகான்: உடனடியாக ஆப்பில் உங்கள் விருப்பமான பகுதிக்கு செல்லவும். உங்கள் புக்மார்க்குப் பக்கங்களைக் காணலாம் மற்றும் உங்கள் ஆப் அமைப்புகளைப் அப்டேட் செய்யலாம்.</string>
+    <string name="coachmark.drawer">சுயவிவரம்: உங்கள் தனிப்பட்ட சுயவிவரத்தைப் பார்க்கவும், உங்கள் எல்லா ப்ளாக்களையும், 100 வார்த்தைக் கதைகளையும், மாம் வ்ளாக்ஸயும் ஒரே இடத்தில் பார்க்கவும்.</string>
+    <string name="coachmark.edit_profile">சுயவிவரத்தைத் திருத்தவும்: ப்ளாக்கர்கான கூட்டங்கள் நிதியுதவி பெற்ற கட்டுரைகள் பற்றிய விவரங்கள் அறிய உங்கள் சுயவிவரத்தை திருத்தவும் அப்டேட் செய்யவும்.</string>
+    <string name="coachmark.app_setting">ஆப் அமைப்புகள்: உங்கள் ஆப்பின் விருப்பத்தேர்வுகள் மற்றும் மொழி விருப்பங்களை ஒரே இடத்தில் திருத்தலாம். அறிவிப்புகளுக்கு, வகைகளுக்கு இங்கே பதிவு செய்யவும்.</string>
+    <string name="coachmark.publish">வெளியிடு (சுயவிவரம்): உங்களுடைய வெளியிடப்பட்ட கட்டுரைகள், கதைகள் மற்றும் மாம் வ்ளாக்ஸை ஒரே இடத்தில் பார்க்கலாம்.</string>
+    <string name="mobile">MOBILE NO</string>
 </resources>

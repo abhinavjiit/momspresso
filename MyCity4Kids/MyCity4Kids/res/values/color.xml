@@ -125,7 +125,7 @@
     <color name="toolbar.menu_items">#ec3b57</color>
 
 
-    <color name="article_listing.title">#515556</color>
+    <color name="article_listing.title">#333333</color>
     <color name="article_listing.author_name">#9c9dac</color>
     <color name="article_listing.stats">#9c9dac</color>
 
@@ -148,8 +148,8 @@
     <color name="topic_articles.sub_sub_topics_selected_border">#e1e2e2</color>
     <color name="topic_articles.sub_sub_topics_selected_text">#515556</color>
 
-    <color name="onboarding.title">#515556</color>
-    <color name="onboarding.desc">#515556</color>
+    <color name="onboarding.title">#333333</color>
+    <color name="onboarding.desc">#727272</color>
     <color name="onboarding.sign_in">#507cbe</color>
     <color name="onboarding.already_member">#507cbe</color>
     <color name="onboarding.get_started">#FFFFFF</color>

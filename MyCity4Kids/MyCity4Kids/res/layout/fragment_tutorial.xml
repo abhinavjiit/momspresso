@@ -35,7 +35,7 @@
             android:paddingRight="15dp"
             android:text="WATCH VIDEOS"
             android:textColor="@color/onboarding.title"
-            android:textSize="22sp"
+            android:textSize="18sp"
             app:fontName="oswald_regular.ttf" />
 
 
@@ -72,7 +72,7 @@
                 android:text="@string/onboarding.desc_1"
                 android:textColor="@color/onboarding.desc"
                 android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+                app:fontName="oswald.ttf" />
 
             <!--<ImageView-->
             <!--android:layout_width="16dp"-->
@@ -110,7 +110,7 @@
                 android:text="@string/onboarding.desc_2"
                 android:textColor="@color/onboarding.desc"
                 android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+                app:fontName="oswald.ttf" />
 
             <!--<ImageView-->
             <!--android:layout_width="16dp"-->
@@ -204,10 +204,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/onboarding.desc_4"
+                android:text="@string/onboarding.desc_3"
                 android:textColor="@color/onboarding.desc"
                 android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+                app:fontName="oswald.ttf" />
 
             <!--<ImageView-->
             <!--android:layout_width="16dp"-->
@@ -259,7 +259,7 @@
                 android:text="@string/onboarding.desc_4"
                 android:textColor="@color/onboarding.desc"
                 android:textSize="13sp"
-                app:fontName="oswald_regular.ttf" />
+                app:fontName="oswald.ttf" />
 
             <!--<ImageView-->
             <!--android:layout_width="16dp"-->
