@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
+    android:layout_width="260dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@drawable/all_draft_item_border_bg"
+    android:paddingBottom="10dp">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="top"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:gravity="top"
+        android:maxLines="1"
+        android:text=""
+        android:textColor="@color/all_drafts.title"
+        android:textSize="16sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/bodyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/titleTextView"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
+        android:ellipsize="end"
+        android:gravity="top"
+        android:maxLines="1"
+        android:text=""
+        android:textColor="@color/grey_faded"
+        android:textSize="14sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/updatedLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bodyTextView"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="15dp"
+        android:gravity="left"
+        android:singleLine="true"
+        android:text="@string/updated"
+        android:textColor="@color/grey_faded"
+        android:textSize="12sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/updatedOnTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/updatedLabelTextView"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="15dp"
+        android:gravity="left"
+        android:singleLine="true"
+        android:text="21/21/1990"
+        android:textColor="@color/grey_faded"
+        android:textSize="12sp"
+        app:fontName="oswald.ttf" />
+
+    <ImageView
+        android:id="@+id/draftTypeImageView"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_below="@+id/bodyTextView"
+        android:layout_toLeftOf="@+id/draftTypeTextView"
+        android:padding="5dp"
+        android:src="@drawable/shortstory_grey" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/draftTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/bodyTextView"
+        android:gravity="center_vertical"
+        android:paddingBottom="4dp"
+        android:paddingRight="12dp"
+        android:paddingTop="4dp"
+        android:text="@string/user_article.draft.edit"
+        android:textColor="@color/all_drafts.title"
+        android:textSize="10sp"
+        app:fontName="oswald.ttf" />
+
+</RelativeLayout>

@@ -126,7 +126,7 @@
         android:layout_alignTop="@+id/downvoteContainer"
         android:layout_below="@id/pager"
         android:layout_centerHorizontal="true"
-        app:bpi_fillColor="@color/groups.blue_color"
+        app:bpi_fillColor="@color/app_red"
         app:bpi_marginBetweenCircles="4dp"
         app:bpi_onSurfaceCount="5"
         app:bpi_pageColor="@color/line_separator_color"

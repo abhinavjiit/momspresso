@@ -29,7 +29,7 @@
                 android:layout_toLeftOf="@+id/searchLogoImageView"
                 android:background="@null"
                 android:ellipsize="end"
-                android:hint=""
+                android:hint="@string/groups.search_in"
                 android:lines="1"
                 android:maxLines="1"
                 android:singleLine="true"

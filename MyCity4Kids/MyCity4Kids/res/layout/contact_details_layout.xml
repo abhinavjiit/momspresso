@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
-            android:text="FULL NAME"
+            android:text="@string/full_name"
             android:textColor="@color/app_grey"
             android:textSize="14sp"
             app:fontName="oswald_regular.ttf" />
@@ -30,7 +30,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/mainprofile_thin_border"
-            android:hint="jjdbksdjhfkjd"
+            android:hint=""
             android:inputType="textNoSuggestions"
             android:paddingBottom="15dp"
             android:paddingLeft="5dp"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
-            android:text="EMAIL AND PASSWORD"
+            android:text="@string/email_and_password"
             android:textColor="@color/app_grey"
             android:textSize="14sp"
             app:fontName="oswald_regular.ttf" />
@@ -93,7 +93,7 @@
                 android:layout_marginTop="22dp"
                 android:background="@drawable/button_round"
                 android:gravity="center"
-                android:text="@string/edit"
+                android:text="@string/ad.comments.edit_label"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
@@ -128,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
-            android:text="LOCATION"
+            android:text="@string/location"
             android:textColor="@color/app_grey"
             app:fontName="oswald_regular.ttf" />
 

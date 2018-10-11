@@ -823,6 +823,8 @@
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
     <string name="contact_details">Contact Details</string>
+
+    <string name="navigation_bar.home">Home</string>
     <string name="navigation_bar.discover">Discover</string>
     <string name="navigation_bar.create">Create</string>
     <string name="navigation_bar.notifications">Notifications</string>
@@ -837,6 +839,14 @@
     <string name="coachmark.app_setting">You can edit your app preferences and language preferences at one place. Subscribe to notifications and categories here.</string>
     <string name="coachmark.publish">View your published articles, stories, and mom vlogs at one place.</string>
     <string name="mobile">MOBILE NO</string>
-
+    <string name="continue_writing">Continue Writing(Drafts)</string>
+    <string name="app_settings">App Settings</string>
+    <string name="create_new">Create New</string>
+    <string name="name_optional">NAME (optional)</string>
+    <string name="name">NAME</string>
+    <string name="updated">Updated :</string>
+    <string name="full_name">FULL NAME</string>
+    <string name="email_and_password">EMAIL AND PASSWORD</string>
+    <string name="location">LOCATION</string>
 
 </resources>

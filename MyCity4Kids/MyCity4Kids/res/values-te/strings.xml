@@ -278,7 +278,7 @@
     <string name="onboarding.desc_3">మామ్స్‌ప్రెస్సో టీవీ మీకోసం అందమైన , ఉపయోగకరమైన , హాస్యమైన మరియు ప్రేరణ కలిగించే వీడియోస్  అందిస్తుంది  .అన్నీ ఒక దగ్గరే !</string>
     <string name="onboarding.desc_4">మామ్స్ కమ్యూనిటీని మరింత శక్తివంతం చేయండి .మీ సందేహాలు అడగండి మరియు మిగతావారికి సహాయపడండి !</string>
 
-    <string name="onboarding_desc_array.tutorial_1.blogs">BLOGS</string>
+    <string name="onboarding_desc_array.tutorial_1.blogs">బ్లాగ్స్</string>
     <string name="onboarding_desc_array.tutorial_1.videos">MOMVLOGS</string>
     <string name="onboarding_desc_array.tutorial_2.english">ENGLISH</string>
     <string name="onboarding_desc_array.tutorial_2.hindi">HINDI</string>
@@ -295,7 +295,7 @@
 
     <string name="onboarding.signin">SIGN IN</string>
     <string name="onboarding.already_member">Already a member?</string>
-    <string name="onboarding.get_started">GET STARTED</string>
+    <string name="onboarding.get_started">మొదలుపెట్టండి</string>
     <string name="sign_in.welcome_back">WELCOME BACK</string>
     <string name="sign_in.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
     <string name="sign_in.no_account">Don\'t have an account?\u0020</string>
@@ -315,9 +315,11 @@
     <string name="signin.login_via_facebook">LOGIN USING FACEBOOK</string>
     <string name="signin.login_via_google">LOGIN USING GOOGLE</string>
     <string name="signin.login_via_email">LOGIN USING EMAIL</string>
+    <string name="signin.login_via_phone">LOGIN USING PHONE</string>
 
     <string name="signup.connect_via_facebook">CONNECT USING FACEBOOK</string>
     <string name="signup.connect_via_google">CONNECT USING GOOGLE</string>
+    <string name="signup.connect_via_phone">CONNECT USING PHONE</string>
 
     <string name="for_you.reason.why_label">Why am I seeing this?</string>
     <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
@@ -327,7 +329,7 @@
 
     <string name="lang_setting.stories_label">Stories</string>
 
-    <string name="search.article_label">ARTICLE</string>
+    <string name="search.article_label">కథనం</string>
     <string name="search.author_label">AUTHOR</string>
     <string name="search.topic_label">TOPIC</string>
     <string name="search.show_more">SHOW MORE</string>
@@ -347,7 +349,7 @@
 
     <string name="myprofile.following_label">FOLLOWING</string>
     <string name="myprofile.followers_label">FOLLOWERS</string>
-    <string name="myprofile.section.articles_label">ARTICLES</string>
+    <string name="myprofile.section.articles_label">కథనం</string>
     <string name="myprofile.section.short_story_label">100 WORD STORY</string>
     <string name="myprofile.section.videos_label">MOM VLOGS</string>
     <string name="myprofile.section.activity_label">ACTIVITY</string>
@@ -368,7 +370,7 @@
     <string name="blogger_profile.top_3_article">TOP 3 ARTICLES</string>
     <string name="blogger_profile.rank_label">RANK</string>
 
-    <string name="user_article.toolbar.title">ARTICLES</string>
+    <string name="user_article.toolbar.title">కథనం</string>
     <string name="user_article.tabbar.published_label">PUBLISHED</string>
     <string name="user_article.tabbar.draft_label">DRAFTS</string>
     <string name="user_article.draft.saved_on">Saved on</string>
@@ -484,7 +486,7 @@
     <string name="add_article_or_video.suggested_topic">SUGGESTED TOPICS</string>
     <string name="add_article_or_video.become_blogger">BECOME A BLOGGER</string>
 
-    <string name="become_blogger.get_started">LET\'S GET STARTED</string>
+    <string name="become_blogger.get_started">మొదలుపెట్టండి</string>
     <string-array name="become_blogger_title_array">
         <item>BECOME A BLOGGER</item>
         <item>HOW CAN YOU CONTRIBUTE?</item>
@@ -498,10 +500,10 @@
         <item>Whether your story is about parenthood, womanhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 5000+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
     </string-array>
 
-    <string name="upload_video.title">SHARE A MomVlog\n THAT CAPTURES #MOMLIFE</string>
-    <string name="upload_video.desc">Parenting, Work, Relationships, Fitness, Recipes, Beauty&#8230; basically anything Inspiring from day to day life.</string>
-    <string name="upload_video.desc1">Shoot the video and upload it right away from your Mobile.</string>
-    <string name="upload_video.get_started">LET\'S START</string>
+    <string name="upload_video.title">మామ్ వ్లాగ్ షేర్ చేయండి\n అది #తల్లిజీవితంకు చేరుతుంది</string>
+    <string name="upload_video.desc">పేరెంటింగ్ , ఉద్యోగం , బంధాలు , ఫిట్నెస్ , వంటలు , అందం .....</string>
+    <string name="upload_video.desc1">వీడియో షూట్ చేసి వెంటనే మీ మొబైల్ యాప్ నుండి  అప్లోడ్ చేయండి</string>
+    <string name="upload_video.get_started">మొదలుపెట్టండి</string>
 
     <string name="moderation_or_share.way_to_go">WAY TO GO!</string>
     <string name="moderation_or_share.moderation_message">Your article is up for moderation. You\'ll receive an email within 24 hours regarding the status of the blog</string>
@@ -792,17 +794,23 @@
     <string name="report.spam">It hurts religious sentiments</string>
     <string name="report.not_relevant">Any other</string>
     <string name="reply">Reply</string>
+
+    <string name="read_more">Read More</string>
+    <string name="read_less">Read Less</string>
     <string name="profile_completion">Profile Completion</string>
+    <string name="update">UPDATE</string>
     <string name="improve_reachability">Improve the reachability by updating the bio.</string>
     <string name="choose_account">Choose an account to continue</string>
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
     <string name="contact_details">Contact Details</string>
+
+    <string name="navigation_bar.home">హోమ్</string>
     <string name="navigation_bar.discover">శోధించు</string>
-    <string name="navigation_bar.create">Create</string>
-    <string name="navigation_bar.notifications">Notifications</string>
-    <string name="navigation_bar.groups">Groups</string>
+    <string name="navigation_bar.create">సృష్టించు</string>
+    <string name="navigation_bar.notifications">నోటిఫికేషన్స్</string>
+    <string name="navigation_bar.groups">గ్రూప్స్</string>
 
     <string name="coachmark.home">హోం : మామ్స్‌ప్రెస్సోకి స్వాగతం !  ఈ యాప్ లో మీరు మీకు నచ్చిన భాషలో ఉపయోగించవచ్చు </string>
     <string name="coachmark.explore">ను అన్వేషించండి: మీరు ఈ రోజు ఏమి చేయాలనుకుంటున్నారు? 100 వర్డ్ స్టోరీని లేదా వీడియోలను వీక్షించండి. మీరు వివిధ వర్గాలను అన్వేషించి బ్లాగ్లను చదవగలరు</string>
@@ -813,4 +821,13 @@
     <string name="coachmark.app_setting">యాప్  సెట్టింగ్స్ : మీరు మీ యాప్ ద్వారా  ప్రాధాన్యతలను మరియు భాష ప్రాధాన్యతలను ఒకేచోట  సవరించవచ్చు. నోటిఫికేషన్లు మరియు కేటగిరీలు కోసం ఇక్కడ సబ్‌స్క్రైబ్ చేయండి .</string>
     <string name="coachmark.publish">ప్రచురించు (ప్రొఫైల్): మీ ప్రచురించిన కథనాలు, కథలు మరియు మామ్  వ్లాగ్స్ అన్నీ ఒకే దగ్గర  వీక్షించండి.</string>
     <string name="mobile">MOBILE NO</string>
+    <string name="continue_writing">Continue Writing(Drafts)</string>
+    <string name="app_settings">App Settings</string>
+    <string name="create_new">Create New</string>
+    <string name="name_optional">NAME (optional)</string>
+    <string name="name">NAME</string>
+    <string name="updated">Updated :</string>
+    <string name="full_name">FULL NAME</string>
+    <string name="email_and_password">EMAIL AND PASSWORD</string>
+    <string name="location">LOCATION</string>
 </resources>

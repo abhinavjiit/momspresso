@@ -24,6 +24,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -41,6 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
@@ -60,17 +63,21 @@ import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.response.AllDraftsResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
+import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
+import com.mycity4kids.ui.adapter.UserAllDraftsRecyclerAdapter;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
@@ -100,7 +107,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class DashboardActivity extends BaseActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener, GroupMembershipStatus.IMembershipStatus {
+public class DashboardActivity extends BaseActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener,
+        GroupMembershipStatus.IMembershipStatus, UserAllDraftsRecyclerAdapter.DraftRecyclerViewClickListener {
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
@@ -145,6 +153,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
     private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, drawerProfileCoachmark, drawerSettingsCoachmark, menuCoachmark;
+    private RecyclerView draftsRecyclerView;
+    private ShimmerFrameLayout draftsShimmerLayout;
+    private TextView createLabelTextView, continueWritingLabelTV;
+    private ImageView createTextImageVIew;
+    private ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> allDraftsList = new ArrayList<>();
+    private UserAllDraftsRecyclerAdapter userAllDraftsRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,6 +241,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         menuCoachmark = (RelativeLayout) findViewById(R.id.menuCoachmark);
         drawerProfileCoachmark = (RelativeLayout) findViewById(R.id.drawerProfileCoachmark);
         drawerSettingsCoachmark = (RelativeLayout) findViewById(R.id.drawerSettingsCoachmark);
+        draftsRecyclerView = (RecyclerView) findViewById(R.id.draftsRecyclerView);
+        draftsShimmerLayout = (ShimmerFrameLayout) findViewById(R.id.draftsShimmerLayout);
+        createLabelTextView = (TextView) findViewById(R.id.createLabelTextView);
+        continueWritingLabelTV = (TextView) findViewById(R.id.continueWritingLabelTV);
+        createTextImageVIew = (ImageView) findViewById(R.id.createTextImageVIew);
 
         homeCoachmark.setOnClickListener(this);
         exploreCoachmark.setOnClickListener(this);
@@ -234,6 +253,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         menuCoachmark.setOnClickListener(this);
         drawerProfileCoachmark.setOnClickListener(this);
         drawerSettingsCoachmark.setOnClickListener(this);
+
+        final LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+        draftsRecyclerView.setLayoutManager(llm);
+        userAllDraftsRecyclerAdapter = new UserAllDraftsRecyclerAdapter(this, this);
 
         bottomNavigationView.enableAnimation(false);
         bottomNavigationView.enableShiftingMode(false);
@@ -413,8 +437,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 addFragment(fragment1, mBundle1, true);
                                 break;
                             case R.id.action_write:
+                                allDraftsList.clear();
+                                userAllDraftsRecyclerAdapter.notifyDataSetChanged();
                                 if (createContentContainer.getVisibility() == View.VISIBLE) {
                                 } else {
+                                    loadAllDrafts();
                                     createContentContainer.setVisibility(View.VISIBLE);
                                     actionItemContainer.setVisibility(View.VISIBLE);
                                     overlayView.setVisibility(View.VISIBLE);
@@ -493,17 +520,65 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             reteVersionModel.setAppRateVersion(-20);
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
-
     }
-    //@Override
-    //   public boolean onOptionsItemSelected(MenuItem item) {
-    //     switch (item.getItemId()) {
-    //       case R.id.menuImageView:
-    //         mDrawerLayout.openDrawer(GravityCompat.START);
-    //       return true;
-    //}
-    //return super.onOptionsItemSelected(item);
-    // }
+
+    private void loadAllDrafts() {
+        draftsShimmerLayout.setVisibility(View.VISIBLE);
+        draftsShimmerLayout.startShimmerAnimation();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ArticleDraftAPI draftAPI = retrofit.create(ArticleDraftAPI.class);
+        Call<AllDraftsResponse> call = draftAPI.getAllDrafts("0");
+        call.enqueue(draftsResponseCallback);
+    }
+
+    private Callback<AllDraftsResponse> draftsResponseCallback = new Callback<AllDraftsResponse>() {
+        @Override
+        public void onResponse(Call<AllDraftsResponse> call, retrofit2.Response<AllDraftsResponse> response) {
+            draftsShimmerLayout.stopShimmerAnimation();
+            draftsShimmerLayout.setVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                createLabelTextView.setVisibility(View.VISIBLE);
+                createTextImageVIew.setVisibility(View.VISIBLE);
+                return;
+            }
+            try {
+                AllDraftsResponse responseData = response.body();
+                allDraftsList.addAll(responseData.getData().getResult());
+                processDraftsResponse();
+            } catch (Exception e) {
+                removeProgressDialog();
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                createLabelTextView.setVisibility(View.VISIBLE);
+                createTextImageVIew.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AllDraftsResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            draftsShimmerLayout.setVisibility(View.GONE);
+            createLabelTextView.setVisibility(View.VISIBLE);
+            createTextImageVIew.setVisibility(View.VISIBLE);
+        }
+    };
+
+    private void processDraftsResponse() {
+        if (allDraftsList.size() == 0) {
+            createLabelTextView.setVisibility(View.VISIBLE);
+            createTextImageVIew.setVisibility(View.VISIBLE);
+        } else {
+            createLabelTextView.setVisibility(View.INVISIBLE);
+            createTextImageVIew.setVisibility(View.INVISIBLE);
+            userAllDraftsRecyclerAdapter.setListData(allDraftsList);
+            draftsRecyclerView.setAdapter(userAllDraftsRecyclerAdapter);
+        }
+    }
 
     //     The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -1165,6 +1240,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.homeTextView:
                 mDrawerLayout.closeDrawers();
+                hideCreateContentView();
+                if (topFragment instanceof FragmentMC4KHomeNew) {
+                    return;
+                }
+                FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
+                Bundle mBundle1 = new Bundle();
+                fragment1.setArguments(mBundle1);
+                addFragment(fragment1, mBundle1, true);
                 break;
             case R.id.articleContainer:
                 hideCreateContentView();
@@ -1971,5 +2054,50 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     public void showViews() {
 //        getSupportActionBar().show();
+    }
+
+    @Override
+    public void onDraftItemClick(View view, int position) {
+        if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(allDraftsList.get(position).getContentType())) {
+            if (Build.VERSION.SDK_INT > 15) {
+                DraftListResult draftListResult = new DraftListResult();
+                draftListResult.setArticleType(allDraftsList.get(position).getArticleType());
+                draftListResult.setId(allDraftsList.get(position).getId());
+                draftListResult.setBody(allDraftsList.get(position).getBody());
+                draftListResult.setTitle(allDraftsList.get(position).getTitle());
+                draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
+                draftListResult.setUpdatedTime(Long.parseLong(allDraftsList.get(position).getUpdatedTime()));
+
+                Intent intent = new Intent(this, AddShortStoryActivity.class);
+                intent.putExtra("draftItem", draftListResult);
+                intent.putExtra("from", "draftList");
+                startActivity(intent);
+            } else {
+                Intent viewIntent =
+                        new Intent("android.intent.action.VIEW",
+                                Uri.parse("http://www.momspresso.com/parenting/admin/setupablog"));
+                startActivity(viewIntent);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT > 15) {
+                DraftListResult draftListResult = new DraftListResult();
+                draftListResult.setArticleType(allDraftsList.get(position).getArticleType());
+                draftListResult.setId(allDraftsList.get(position).getId());
+                draftListResult.setBody(allDraftsList.get(position).getBody());
+                draftListResult.setTitle(allDraftsList.get(position).getTitle());
+                draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
+                draftListResult.setUpdatedTime(Long.parseLong(allDraftsList.get(position).getUpdatedTime()));
+
+                Intent intent = new Intent(this, EditorPostActivity.class);
+                intent.putExtra("draftItem", draftListResult);
+                intent.putExtra("from", "draftList");
+                startActivity(intent);
+            } else {
+                Intent viewIntent =
+                        new Intent("android.intent.action.VIEW",
+                                Uri.parse("http://www.momspresso.com/parenting/admin/setupablog"));
+                startActivity(viewIntent);
+            }
+        }
     }
 }

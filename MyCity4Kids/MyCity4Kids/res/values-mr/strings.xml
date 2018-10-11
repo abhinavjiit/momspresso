@@ -317,9 +317,11 @@
     <string name="signin.login_via_facebook">फेसबुक ने लॉगिन करा </string>
     <string name="signin.login_via_google">गूगल ने लॉगिन करा </string>
     <string name="signin.login_via_email">इ - मेल  ने लॉगिन करा </string>
+    <string name="signin.login_via_phone">फोन ने लॉगिन करा</string>
 
     <string name="signup.connect_via_facebook">फेसबुक ने कनेक्ट करा </string>
     <string name="signup.connect_via_google">गूगल ने कनेक्ट करा </string>
+    <string name="signup.connect_via_phone">फोन ने कनेक्ट करा</string>
 
     <string name="for_you.reason.why_label">मी हे का बघतेय ?</string>
     <string name="for_you.reason.dont_want_to_see">मला हे बघायचे नाही आहे </string>
@@ -794,6 +796,9 @@
     <string name="report.spam">स्पॅम आहे</string>
     <string name="report.not_relevant">दुसरं अन्य</string>
     <string name="reply">उत्तर द्या</string>
+
+    <string name="read_more">Read More</string>
+    <string name="read_less">Read Less</string>
     <string name="profile_completion">Profile Completion</string>
     <string name="improve_reachability">Improve the reachability by updating the bio.</string>
     <string name="choose_account">Choose an account to continue</string>
@@ -801,10 +806,12 @@
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
     <string name="contact_details">Contact Details</string>
+
+    <string name="navigation_bar.home">होम</string>
     <string name="navigation_bar.discover">शोध</string>
-    <string name="navigation_bar.create">Create</string>
-    <string name="navigation_bar.notifications">सूचना</string>
-    <string name="navigation_bar.groups">Groups</string>
+    <string name="navigation_bar.create">तयार करा</string>
+    <string name="navigation_bar.notifications">अधिसूचना</string>
+    <string name="navigation_bar.groups">गट</string>
 
     <string name="coachmark.home">मॉम्सप्रेसोमध्ये स्वागत आहे!  तुमचे आवडते ऍप आता तुमच्या स्वतःच्या  भाषेत उपलब्ध.</string>
     <string name="coachmark.explore">आवडत्या चिन्हावर क्लिक करा आणि मिळवा - आज तुम्हाला काय करायचे आहे? वाचा १०० शब्दांची गोष्ट वा बघा व्हिडीओ. वेगवेगळ्या विषयांवरील वैविध्यपुर्ण  लेखहि वाचू शकता.</string>
@@ -815,4 +822,13 @@
     <string name="coachmark.app_setting">.ऍपचे सेटिंग्ज : तुम्ही प्राधान्य देणाऱ्या  आवडत्या विषयांवरील लेख  तुमच्याच भाषेत उपलब्ध आहेत.  आजच सदस्य व्हा, व मिळवा  सूचना व माहिती.</string>
     <string name="coachmark.publish">तुमचे विचार  प्रसिद्ध करा: बघा व प्रकाशित करा तुमचे  लेख, गोष्टी, आणि मॉम्स व्हिडिओलॉग एकाच ठिकाणी.</string>
     <string name="mobile">MOBILE NO</string>
+    <string name="continue_writing">Continue Writing(Drafts)</string>
+    <string name="app_settings">App Settings</string>
+    <string name="create_new">Create New</string>
+    <string name="name_optional">NAME (optional)</string>
+    <string name="name">NAME</string>
+    <string name="updated">Updated :</string>
+    <string name="full_name">FULL NAME</string>
+    <string name="email_and_password">EMAIL AND PASSWORD</string>
+    <string name="location">LOCATION</string>
 </resources>

@@ -317,9 +317,11 @@
     <string name="signin.login_via_facebook">ফেসবুকের মাধ্যমে লগইন</string>
     <string name="signin.login_via_google">গুগলের মাধ্যমে লগইন</string>
     <string name="signin.login_via_email">ইমেল আইডির মাধ্যমে লগইন</string>
+    <string name="signin.login_via_phone">LOGIN USING PHONE</string>
 
     <string name="signup.connect_via_facebook">ফেসবুকের মাধ্যমে সাইন আপ করুন</string>
     <string name="signup.connect_via_google">গুগলের মাধ্যমে সাইন আপ করুন</string>
+    <string name="signup.connect_via_phone">CONNECT USING PHONE</string>
 
     <string name="for_you.reason.why_label">কেন আমি এটা দেখছি ?</string>
     <string name="for_you.reason.dont_want_to_see">এটা দেখতে চাইনা</string>
@@ -350,7 +352,7 @@
     <string name="myprofile.following_label">অনুসরণ</string>
     <string name="myprofile.followers_label">অনুসরণকারী</string>
     <string name="myprofile.section.articles_label">প্রবন্ধগুলি</string>
-    <string name="myprofile.section.short_story_label">#শত শব্দের গল্প</string>
+    <string name="myprofile.section.short_story_label">শত শব্দের গল্প</string>
     <string name="myprofile.section.videos_label">মায়েদের ভিডিও ব্লগস</string>
     <string name="myprofile.section.activity_label">কার্যকলাপ</string>
     <string name="myprofile.section.myranking_label">আমার র্যাংকিং</string>
@@ -622,7 +624,7 @@
     <string name="article_listing.type.editor_label">সম্পাদকের পছন্দ</string>
     <string name="article_listing.type.todays_best_label">আজকের সেরা</string>
     <string name="article_listing.type.for_you_label">আপনাদের জন্য</string>
-    <string name="article_listing.type.short_story_label">#শত শব্দের গল্প</string>
+    <string name="article_listing.type.short_story_label">শত শব্দের গল্প</string>
     <string name="article_listing.type.languages_label">LANGUAGES</string>
     <string name="article_listing.type.videos_label">ভিডিও</string>
     <string name="article_listing.type.recent_label">নতুন</string>
@@ -729,7 +731,7 @@
     <string name="groups.membership_req">MEMBERSHIP REQUEST</string>
     <string name="groups.now_member_gp">You are now member of the group</string>
     <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
-    <string name="groups.support_groups">Support Groups</string>
+    <string name="groups.support_groups">সাপোর্ট গ্ৰুপ</string>
     <string name="groups.post_helpful">Helpful</string>
     <string name="groups.post_nothelpful">Not Helpful</string>
     <string name="groups.summary">SUMMARY</string>
@@ -744,7 +746,7 @@
     <string name="groups.member_label">MEMBERS</string>
     <string name="groups.sections.about">ABOUT</string>
     <string name="groups.sections.discussions">DISCUSSION</string>
-    <string name="groups.sections.blogs">BLOGS</string>
+    <string name="groups.sections.blogs">ব্লগস</string>
     <string name="groups.sections.photos">PHOTOS</string>
     <string name="groups.sections.videos">VIDEOS</string>
     <string name="groups.sections.top_posts">TOP POSTS</string>
@@ -794,17 +796,23 @@
     <string name="report.spam">স্প্যাম</string>
     <string name="report.not_relevant">অন্য কিছু</string>
     <string name="reply">উত্তর</string>
-    <string name="profile_completion">Profile Completion</string>
-    <string name="improve_reachability">Improve the reachability by updating the bio.</string>
+
+    <string name="read_more">Read More</string>
+    <string name="read_less">Read Less</string>
+    <string name="profile_completion">প্রোফাইলটি সম্পূর্ণ হয়েছে</string>
+    <string name="update">আপডেট</string>
+    <string name="improve_reachability">আপনার প্রোফাইলের রিচ বাড়াতে বায়োডেটা আপডেট করুন</string>
     <string name="choose_account">Choose an account to continue</string>
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
     <string name="contact_details">Contact Details</string>
+
+    <string name="navigation_bar.home">হোম</string>
     <string name="navigation_bar.discover">আবিষ্কার</string>
-    <string name="navigation_bar.create">Create</string>
-    <string name="navigation_bar.notifications">বিজ্ঞপ্তিগুলি</string>
-    <string name="navigation_bar.groups">Groups</string>
+    <string name="navigation_bar.create">ক্রিয়েট</string>
+    <string name="navigation_bar.notifications">নোটিফিকেশনস</string>
+    <string name="navigation_bar.groups">গ্ৰুপ</string>
 
     <string name="coachmark.home">মমস্প্রেসোতে আপনাকে স্বাগত।আপনি আপনার পছন্দের ভাষায় অ্যাপ্লিকেশন ব্যবহার করতে পারেন।</string>
     <string name="coachmark.explore">আজ আপনি কি করতে চান? একটি শত শব্দের গল্প পড়ুন অথবা ভিডিও দেখুন।আপনি বিভিন্ন বিভাগও অন্বেষণ করতে পারেন এবং ব্লগ পড়তে পারেন।</string>
@@ -815,5 +823,13 @@
     <string name="coachmark.app_setting">আপনি এক জায়গায় আপনার অ্যাপ্লিকেশন এবং পছন্দের ভাষা এডিট করতে পারেন। নোটিফিকেশন এবং বিভাগ দেখার জন্য এখানে সাবস্ক্রাইব করুন।</string>
     <string name="coachmark.publish">আপনার প্রকাশিত আর্টিকেল ,গল্প, এবং মম ভ্লগস এক জায়গায় দেখুন। ডিসকভার : আবিষ্কার</string>
     <string name="mobile">MOBILE NO</string>
-
+    <string name="continue_writing">Continue Writing(Drafts)</string>
+    <string name="app_settings">App Settings</string>
+    <string name="create_new">Create New</string>
+    <string name="name_optional">NAME (optional)</string>
+    <string name="name">NAME</string>
+    <string name="updated">Updated :</string>
+    <string name="full_name">FULL NAME</string>
+    <string name="email_and_password">EMAIL AND PASSWORD</string>
+    <string name="location">LOCATION</string>
 </resources>

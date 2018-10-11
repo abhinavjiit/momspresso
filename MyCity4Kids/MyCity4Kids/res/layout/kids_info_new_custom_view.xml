@@ -27,7 +27,7 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:paddingTop="3dp"
-            android:text="@string/edit"
+            android:text="@string/user_article.published.edit"
             android:textColor="@color/red_drawer_selected" />
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="Name"
+            android:text="@string/name"
             android:textColor="@color/app_grey"
             app:fontName="oswald.ttf" />
 
@@ -47,7 +47,7 @@
             android:layout_marginLeft="10dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:text="Chunnu munnu"
+            android:text=""
             android:textColor="@color/app_light_black"
             app:fontName="oswald_regular.ttf" />
 
@@ -91,9 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/kidsDOBLabelTextView"
             android:layout_below="@+id/kidsDOBLabelTextView"
-            android:layout_toRightOf="@+id/separator"
             android:padding="4dp"
-            android:text="24-10-1988"
+            android:text=""
             android:textColor="@color/app_light_black"
             app:fontName="oswald_regular.ttf" />
     </RelativeLayout>

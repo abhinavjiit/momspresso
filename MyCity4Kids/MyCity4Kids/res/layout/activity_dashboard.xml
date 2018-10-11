@@ -207,11 +207,13 @@
                     android:visibility="invisible" />
 
                 <ImageView
+                    android:id="@+id/createTextImageVIew"
                     android:layout_width="140dp"
                     android:layout_height="100dp"
                     android:layout_above="@+id/createLabelTextView"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/create_icon" />
+                    android:src="@drawable/create_icon"
+                    android:visibility="invisible" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/createLabelTextView"
@@ -227,6 +229,7 @@
                     android:text="@string/create_content"
                     android:textColor="@color/white"
                     android:textSize="18sp"
+                    android:visibility="invisible"
                     app:fontName="oswald.ttf" />
 
                 <LinearLayout
@@ -240,13 +243,48 @@
                     android:visibility="invisible">
 
                     <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/continueWritingLabelTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:paddingLeft="20dp"
+                        android:text="@string/continue_writing"
+                        android:textColor="#947373"
+                        android:textSize="16sp"
+                        app:fontName="oswald.ttf" />
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/draftsShimmerLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:duration="800">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <include layout="@layout/drafts_shimmer_layout" />
+
+                            <include layout="@layout/drafts_shimmer_layout" />
+
+                        </LinearLayout>
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/draftsRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingBottom="20dp"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
                         android:paddingTop="10dp"
-                        android:text="Create New"
+                        android:text="@string/create_new"
                         android:textColor="@color/black_color"
                         android:textSize="22sp"
                         app:fontName="oswald_regular.ttf" />
@@ -284,7 +322,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="Article"
+                                android:text="@string/user_article.toolbar.title"
                                 android:textColor="@color/app_grey"
                                 android:textSize="16sp"
                                 app:fontName="oswald_regular.ttf" />
@@ -317,7 +355,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="100 Word Story"
+                                android:text="@string/myprofile.section.short_story_label"
                                 android:textColor="@color/app_grey"
                                 android:textSize="16sp"
                                 app:fontName="oswald_regular.ttf" />
@@ -349,7 +387,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="Video"
+                                android:text="@string/all_videos.toolbar.title"
                                 android:textColor="@color/app_grey"
                                 android:textSize="16sp"
                                 app:fontName="oswald_regular.ttf" />
@@ -457,54 +495,24 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Home"
+                            android:text="@string/navigation_bar.home"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/exploreSection"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="invisible">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/ic_bottom_discover" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Discover"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                        android:orientation="vertical" />
 
                     <LinearLayout
-                        android:id="@+id/createSection"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="invisible">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/navigation_create_button" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Create"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                        android:orientation="vertical" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -614,21 +622,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/home_red"
-                            android:visibility="invisible" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Home"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                        android:orientation="vertical" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -648,7 +642,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Discover"
+                            android:text="@string/navigation_bar.discover"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -658,22 +652,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="invisible">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/navigation_create_button"
-                            android:visibility="visible" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Create"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                        android:orientation="vertical" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -774,7 +753,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Create"
+                            android:text="@string/navigation_bar.create"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -1025,7 +1004,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Groups"
+                            android:text="@string/groups.groups"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>

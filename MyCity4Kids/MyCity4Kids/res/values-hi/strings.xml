@@ -317,9 +317,11 @@
     <string name="signin.login_via_facebook">फेसबुक से लॉगिन करें</string>
     <string name="signin.login_via_google">गूगल से लॉगिन करें</string>
     <string name="signin.login_via_email">ईमेल से लॉगिन करें</string>
+    <string name="signin.login_via_phone">फोन से लॉगिन करें</string>
 
     <string name="signup.connect_via_facebook">फेसबुक से कनेक्ट करें</string>
     <string name="signup.connect_via_google">गूगल से कनेक्ट करें</string>
+    <string name="signup.connect_via_phone">फोन से कनेक्ट करें</string>
 
     <string name="for_you.reason.why_label">मैं इसको क्यों देख पा रही हूँ?</string>
     <string name="for_you.reason.dont_want_to_see">क्या आप यह नहीं देखना चाहते</string>
@@ -350,7 +352,7 @@
     <string name="myprofile.following_label">फॉलोविंग</string>
     <string name="myprofile.followers_label">फॉलोवर्स</string>
     <string name="myprofile.section.articles_label">आर्टिकल्स</string>
-    <string name="myprofile.section.short_story_label">#100 शब्दों की कहानी</string>
+    <string name="myprofile.section.short_story_label">100 शब्दों की कहानी</string>
     <string name="myprofile.section.videos_label">मोम व्लॉग</string>
     <string name="myprofile.section.activity_label">एक्टिविटी</string>
     <string name="myprofile.section.myranking_label">माय रैंकिंग</string>
@@ -500,8 +502,8 @@
         <item>चाहे आपकी कहानी पेरेंटिंग, नारीत्व, रिश्ते, संघर्ष, सुख या निजी कल्याण के बारे में है, इस बारे में लिखने के लिए यह एक बेहतरीन मंच है। सलाह, राय और सिफारिशों की मांग और साझा करने में 3500+ माँओं के साथ  शामिल हों .कॉपी की गयी या \'थोड़ा संशोधित\' सामग्री प्रकाशित करने से बचें </item>
     </string-array>
 
-    <string name="upload_video.title">SHARE A MomVlog\n THAT CAPTURES #MOMLIFE</string>
-    <string name="upload_video.desc">Parenting, Work, Relationships, Fitness, Recipes, Beauty&#8230; basically anything Inspiring from day to day life.</string>
+    <string name="upload_video.title">यहां शेयर करें मॉम वी लॉग\n मॉमवी लॉग शेयर करें जो #माँओंकीज़िंदगी से जुड़े हों</string>
+    <string name="upload_video.desc">पेरेंटिंग, वर्क, रिलेशनशिप्स, फिटनेस, रेसिपीज, ब्यूटी</string>
     <string name="upload_video.desc1">वीडियो शूट करके फ़ोन से अपलोड करें</string>
     <string name="upload_video.get_started">आइये शुरुआत करें </string>
 
@@ -621,7 +623,7 @@
     <string name="article_listing.type.trending_label">ट्रेंडिंग</string>
     <string name="article_listing.type.editor_label">संपादक की पसंद</string>
     <string name="article_listing.type.todays_best_label">आज के बेस्ट</string>
-    <string name="article_listing.type.short_story_label">#100 शब्दों की कहानी</string>
+    <string name="article_listing.type.short_story_label">100 शब्दों की कहानी</string>
     <string name="article_listing.type.for_you_label">खास आपके लिए</string>
     <string name="article_listing.type.languages_label">भाषाएँ</string>
     <string name="article_listing.type.videos_label">विडियोज</string>
@@ -738,7 +740,7 @@
     <string name="groups.membership_req">सदस्यता अनुरोध</string>
     <string name="groups.now_member_gp">अब आप ग्रुप  के सदस्य हैं</string>
     <string name="groups.approval_req_sent">आपका अनुरोध स्वीकृति के लिए ग्रुप एडमिन को भेजा गया है</string>
-    <string name="groups.support_groups">सपोर्ट ग्रुप्स </string>
+    <string name="groups.support_groups">सपोर्ट ग्रुप्स</string>
     <string name="groups.post_helpful">उपयोगी </string>
     <string name="groups.post_nothelpful">अनुपयोगी </string>
     <string name="groups.summary">SUMMARY</string>
@@ -753,9 +755,9 @@
     <string name="groups.member_label">सदस्य </string>
     <string name="groups.sections.about">ABOUT</string>
     <string name="groups.sections.discussions">चर्चा </string>
-    <string name="groups.sections.blogs">BLOGS</string>
+    <string name="groups.sections.blogs">ब्लोग्स</string>
     <string name="groups.sections.photos">फोटो </string>
-    <string name="groups.sections.videos">VIDEOS</string>
+    <string name="groups.sections.videos">विडियोज</string>
     <string name="groups.sections.top_posts">TOP POSTS</string>
     <string name="groups.sections.polls">चुनाव </string>
     <string name="groups.search_in">Search</string>
@@ -804,15 +806,21 @@
     <string name="report.spam">यह स्पैम है</string>
     <string name="report.not_relevant">कोई  अन्य</string>
     <string name="reply">जवाब</string>
-    <string name="profile_completion">Profile Completion</string>
-    <string name="improve_reachability">Improve the reachability by updating the bio.</string>
+
+    <string name="read_more">Read More</string>
+    <string name="read_less">Read Less</string>
+    <string name="profile_completion">इतना प्रोफाइल पूरा हो चुका है।</string>
+    <string name="update">अपडेट</string>
+    <string name="improve_reachability">अपने  प्रोफाइल को पूरा करके ज्यादा से ज्यादा लोगों तक पहुंचे</string>
     <string name="choose_account">Choose an account to continue</string>
     <string name="write_about_yourself">Write about yourself</string>
-    <string name="child_details">Child Details</string>
-    <string name="add_child_details">Add Child Details</string>
-    <string name="contact_details">Contact Details</string>
+    <string name="child_details">बाल विवरण</string>
+    <string name="add_child_details">बाल विवरण जोड़ें</string>
+    <string name="contact_details">संपर्क विवरण</string>
+
+    <string name="navigation_bar.home">होम</string>
     <string name="navigation_bar.discover">खोजें</string>
-    <string name="navigation_bar.create">Create</string>
+    <string name="navigation_bar.create">यहां बनाएं</string>
     <string name="navigation_bar.notifications">नोटिफिकेशंस</string>
     <string name="navigation_bar.groups">ग्रुप्स</string>
 
@@ -824,6 +832,14 @@
     <string name="coachmark.edit_profile">ब्लॉगर मीटिंग और स्पोंसर्ड लेखों  के बारे में अपडेट रहने के लिए अपनी प्रोफाइल एडिट और अपडेट करें।</string>
     <string name="coachmark.app_setting">आप अपनी एप्प की  वरीयताओं और भाषा प्राथमिकताओं को एक ही स्थान पर एडिट  कर सकते हैं। यहां नोटिफिकेशन और श्रेणियों की सब्सक्रिप्शन लें ।</string>
     <string name="coachmark.publish">एक ही स्थान पर अपने प्रकाशित लेख, कहानियां, और मॉम वीलॉग्स देखें</string>
-    <string name="mobile">MOBILE NO</string>
-
+    <string name="mobile">फ़ोन नंबर</string>
+    <string name="continue_writing">लेखन जारी रखें (ड्राफ्ट)</string>
+    <string name="app_settings">एप्प सैटिंग्स</string>
+    <string name="create_new">नया बनाएं</string>
+    <string name="name_optional">नाम (optional)</string>
+    <string name="name">नाम</string>
+    <string name="updated">अपडेटेड :</string>
+    <string name="full_name">पूरा नाम</string>
+    <string name="email_and_password">ईमेल एंड पासवर्ड</string>
+    <string name="location">सिटी</string>
 </resources>

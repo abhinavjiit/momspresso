@@ -2,7 +2,10 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -75,6 +78,12 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
         recyclerGridView = (RecyclerView) findViewById(R.id.recyclerGridView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         noGroupsTextView = (TextView) findViewById(R.id.noGroupsTextView);
+
+        setSupportActionBar(toolbar);
+        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.back_arroow);
+        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.black_color), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         searchLogoImageView.setOnClickListener(this);
 

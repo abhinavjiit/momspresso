@@ -342,9 +342,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //                        }
 //                    }, 3000);
                 }
-                if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.error_network));
-                }
+
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
 
@@ -576,7 +574,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                 if (AppConstants.USER_TYPE_BLOGGER.equals(detailData.getUserType())) {
                     if (isAdded()) {
-                        author_type.setText(getString(R.string.author_type_blogger));
+                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_blogger));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
                     }
@@ -587,7 +585,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_EXPERT.equals(detailData.getUserType())) {
                     if (isAdded()) {
-                        author_type.setText(getString(R.string.author_type_expert));
+                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_expert));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
                     }
@@ -598,7 +596,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_EDITOR.equals(detailData.getUserType())) {
                     if (isAdded()) {
-                        author_type.setText(getString(R.string.author_type_editor));
+                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_editor));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
                     }
@@ -609,7 +607,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_EDITORIAL.equals(detailData.getUserType())) {
                     if (isAdded()) {
-                        author_type.setText(getString(R.string.author_type_editorial));
+                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_editorial));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
                     }
@@ -620,7 +618,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_FEATURED.equals(detailData.getUserType())) {
                     if (isAdded()) {
-                        author_type.setText(getString(R.string.author_type_featured));
+                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_featured));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
                     }
@@ -632,7 +630,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else {
                     if (isAdded()) {
-                        author_type.setText(getString(R.string.author_type_user));
+                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_user));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_USER.toUpperCase());
                     }
@@ -691,8 +689,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         videoWebView.setVisibility(View.VISIBLE);
                         cover_image.setVisibility(View.INVISIBLE);
                         bodyDesc = bodyDesc.replace(video.getKey(), "");
-                        String vUrl = "<html><head></head><body><p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl() +
-                                "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%; height: 100%;\" ></iframe></p></body></html>";
+                        String vUrl = "<html><head></head><body><p style='text-align:center'><iframe src=http:" + video.getVideoUrl() +
+                                "\" ></iframe></p></body></html>";
                         videoWebView.loadDataWithBaseURL("", vUrl, "text/html", "utf-8", "");
                     } else if (bodyDescription.contains(video.getKey())) {
                         String vURL = video.getVideoUrl().replace("http:", "").replace("https:", "");
@@ -880,7 +878,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
             bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
             bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                    getString(R.string.example_post_title_placeholder));
+                    BaseApplication.getAppContext().getString(R.string.example_post_title_placeholder));
             bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
                     getString(R.string.example_post_content_placeholder));
             bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
@@ -1097,7 +1095,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                         whatsappIntent.setType("text/plain");
                         whatsappIntent.setPackage("com.whatsapp");
-                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, AppUtils.stripHtml("" + detailData.getExcerpt()) + "\n\n" + getString(R.string.ad_share_follow_author, author) + "\n" + shareUrl);
+                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, AppUtils.stripHtml("" + detailData.getExcerpt()) + "\n\n" + BaseApplication.getAppContext().getString(R.string.ad_share_follow_author, author) + "\n" + shareUrl);
                         try {
                             startActivity(whatsappIntent);
                         } catch (android.content.ActivityNotFoundException ex) {
@@ -1108,7 +1106,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     break;
                 case R.id.emailShareTextView:
                     if (!StringUtils.isNullOrEmpty(shareUrl)) {
-                        String shareMessage = detailData.getExcerpt() + "\n\n" + getString(R.string.ad_share_follow_author, author) + "\n" + shareUrl;
+                        String shareMessage = detailData.getExcerpt() + "\n\n" + BaseApplication.getAppContext().getString(R.string.ad_share_follow_author, author) + "\n" + shareUrl;
                         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                         shareIntent.setType("text/plain");
                         shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
@@ -2326,11 +2324,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 } else {
                     if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
                         followClick.setEnabled(true);
-                        followClick.setText(getString(R.string.ad_follow_author));
+                        followClick.setText(BaseApplication.getAppContext().getString(R.string.ad_follow_author));
                         isFollowing = false;
                     } else {
                         followClick.setEnabled(true);
-                        followClick.setText(getString(R.string.ad_following_author));
+                        followClick.setText(BaseApplication.getAppContext().getString(R.string.ad_following_author));
                         isFollowing = true;
                     }
                 }
@@ -2354,7 +2352,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     return;
                 }
                 ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                ;
                 return;
             }
 
@@ -2404,7 +2401,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (response == null || null == response.body()) {
                 if (isAdded())
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                ;
                 return;
             }
             AddBookmarkResponse responseData = response.body();
@@ -2423,7 +2419,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (response == null || null == response.body()) {
                 if (isAdded())
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                ;
                 return;
             }
             ArticleRecommendationStatusResponse responseData = response.body();
@@ -2531,7 +2526,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    followClick.setText(getString(R.string.ad_follow_author));
+                    followClick.setText(BaseApplication.getAppContext().getString(R.string.ad_follow_author));
                     isFollowing = false;
                 }
             } catch (Exception e) {
@@ -2564,7 +2559,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    followClick.setText(getString(R.string.ad_following_author));
+                    followClick.setText(BaseApplication.getAppContext().getString(R.string.ad_following_author));
                     isFollowing = true;
                 }
             } catch (Exception e) {
