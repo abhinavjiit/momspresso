@@ -8,27 +8,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.accountkit.Account;
-import com.facebook.accountkit.AccountKit;
-import com.facebook.accountkit.AccountKitCallback;
-import com.facebook.accountkit.AccountKitError;
 import com.facebook.accountkit.AccountKitLoginResult;
-import com.facebook.accountkit.PhoneNumber;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
+import com.facebook.accountkit.ui.AdvancedUIManager;
 import com.facebook.accountkit.ui.LoginType;
 import com.facebook.accountkit.ui.SkinManager;
+import com.facebook.accountkit.ui.ThemeUIManager;
 import com.facebook.accountkit.ui.UIManager;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -69,7 +64,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.fragment.ChooseLoginAccountDialogFragment;
-import com.mycity4kids.ui.fragment.CityListingDialogFragment;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 import com.mycity4kids.ui.fragment.SignInFragment;
 import com.mycity4kids.ui.fragment.SignUpFragment;
@@ -82,7 +76,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -216,22 +209,32 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         final Intent intent = new Intent(this, AccountKitActivity.class);
         AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder = new AccountKitConfiguration.AccountKitConfigurationBuilder(
                 LoginType.PHONE, AccountKitActivity.ResponseType.CODE); // or .ResponseType.CODE
-        UIManager uiManager = new SkinManager(
-                SkinManager.Skin.TRANSLUCENT,
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? getResources().getColor(R.color.colorPrimary, null) : getResources().getColor(R.color.colorPrimary)),
-                R.drawable.phone_login_bg,
+
+     /*   UIManager uiManager = new SkinManager(
+                SkinManager.Skin.CLASSIC,
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? getResources().getColor(R.color.app_red, null) : getResources().getColor(R.color.app_red)),
+                R.color.transparent,
                 SkinManager.Tint.WHITE,
                 0.55
-        );
+        );*/
+
+
+        //  UIManager uiManager1 = new SkinManager(SkinManager.Skin.CLASSIC, getResources().getColor(R.color.app_red), R.color.transparent, SkinManager.Tint.WHITE, 1.0);
         /*If you want default country code*/
-//        configurationBuilder.setDefaultCountryCode("IN");
-        configurationBuilder.setUIManager(uiManager);
+        // configurationBuilder.setDefaultCountryCode("IN");
+        int themeId = R.style.AppLoginTheme;
+        final LoginType logintype = (LoginType.PHONE);
+        UIManager themeManager = new ThemeUIManager(themeId);
+        configurationBuilder.setUIManager(themeManager);
+        // configurationBuilder.setUIManager(uiManager1);
+
         intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configurationBuilder.build());
         startActivityForResult(intent, APP_REQUEST_CODE);
     }
 
     @Override
     public void onClick(View v) {
+        fbAccountKitVerification();
 
     }
 

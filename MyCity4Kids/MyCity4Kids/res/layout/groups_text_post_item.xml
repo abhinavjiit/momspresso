@@ -50,9 +50,9 @@
         android:layout_alignStart="@+id/usernameTextView"
         android:layout_below="@id/usernameTextView"
         android:layout_marginTop="2dp"
+        android:inputType="textMultiLine"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:inputType="textMultiLine"
         android:text=""
         android:textColor="@color/ad.comment.body"
         android:textSize="12sp"
@@ -69,7 +69,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:src="@drawable/ic_more"
-        android:tint="@color/groups.blue_color" />
+        android:tint="@color/app_red" />
 
     <com.mycity4kids.widget.LinkifiedTextView
         android:id="@+id/postDataTextView"
@@ -100,7 +100,8 @@
             android:id="@+id/upvoteImageVIew"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:src="@drawable/ic_upvote" />
+            android:src="@drawable/ic_upvote"
+            android:tint="@color/app_red" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/upvoteTextView"
@@ -130,7 +131,8 @@
             android:id="@+id/downvoteImageVIew"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:src="@drawable/ic_downvote" />
+            android:src="@drawable/ic_downvote"
+            android:tint="@color/app_red" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/downvoteTextView"
@@ -157,7 +159,7 @@
         android:gravity="bottom"
         android:padding="5dp"
         android:text="20 Comments"
-        android:textColor="@color/groups.blue_color"
+        android:textColor="@color/app_red"
         android:textSize="12sp"
         app:fontName="oswald.ttf" />
 
@@ -171,7 +173,7 @@
         android:layout_toLeftOf="@+id/shareTextView"
         android:padding="5dp"
         android:src="@drawable/ic_comments"
-        android:tint="@color/groups.blue_color" />
+        android:tint="@color/app_red" />
 
     <ImageView
         android:id="@+id/shareTextView"
@@ -187,6 +189,6 @@
         android:paddingRight="5dp"
         android:paddingTop="5dp"
         android:src="@drawable/ic_share_white"
-        android:tint="@color/ad.follow_following_text" />
+        android:tint="@color/app_red" />
 </RelativeLayout>
 

@@ -50,7 +50,7 @@
                 android:layout_centerVertical="true"
                 android:padding="12dp"
                 android:text="POST"
-                android:textColor="@color/editor.publish"
+                android:textColor="@color/app_red"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
@@ -140,6 +140,7 @@
         android:layout_marginBottom="50dp"
         android:drawableLeft="@drawable/follow_plus"
         android:drawablePadding="15dp"
+        android:drawableTint="@color/app_red"
         android:padding="20dp"
         android:text="Add a choice"
         android:textSize="16sp"
@@ -206,6 +207,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:button="@drawable/language_selector_checkbox"
+            android:buttonTint="@color/app_red"
             android:checked="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -214,7 +216,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="2dp"
             android:paddingTop="10dp"
-            android:textColor="@color/app_settings.edit_prefs.pref_lang_name"
+            android:textColor="@color/app_red"
             android:textSize="16sp" />
     </RelativeLayout>
 </RelativeLayout>

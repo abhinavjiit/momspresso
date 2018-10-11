@@ -21,22 +21,18 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="84dp">
+                android:layout_marginTop="?attr/actionBarSize">
 
                 <ImageView
                     android:id="@+id/groupImageView"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/default_article" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/explore_listing.topics.layer" />
 
                 <com.mycity4kids.widget.CustomFontTextView
@@ -170,9 +166,9 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:tabIndicatorHeight="0dp"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/grey"
+            app:tabSelectedTextColor="@color/app_red"
             app:tabTextAppearance="@style/CustomTabText"
-            app:tabTextColor="@color/groups.blue_color" /><!-- no flags -->
+            app:tabTextColor="@color/app_grey" /><!-- no flags -->
 
     </android.support.design.widget.AppBarLayout>
 
@@ -488,8 +484,8 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="right|bottom"
         android:visibility="visible"
-        app:fab_colorNormal="@color/groups.blue_color"
-        app:fab_colorPressed="@color/groups.blue_color"
+        app:fab_colorNormal="@color/app_red"
+        app:fab_colorPressed="@color/app_red"
         app:fab_icon="@drawable/ic_plus" />
 
     <ProgressBar

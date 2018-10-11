@@ -111,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/groups.invite_members"
-            android:textColor="@color/groups.blue_color"
+            android:textColor="@color/app_red"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />
 
@@ -149,7 +149,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/groups.disable_notification"
-            android:textColor="@color/groups.blue_color"
+            android:textColor="@color/app_red"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />
 
@@ -194,7 +194,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/groups.leave_group"
-            android:textColor="@color/groups.blue_color"
+            android:textColor="@color/app_red"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />
 

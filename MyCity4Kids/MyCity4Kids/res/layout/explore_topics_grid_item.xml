@@ -1,46 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:elevation="0dp"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="0dp">
 
-    <RelativeLayout
-        android:id="@+id/imvAuthorThumbContainer"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/tagImageView"
+        <RelativeLayout
+            android:id="@+id/imvAuthorThumbContainer"
             android:layout_width="wrap_content"
-            android:layout_height="110dp"
-            android:scaleType="center"
-            android:src="@drawable/default_article" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="110dp"
-            android:background="@color/explore_listing.topics.layer" />
+            <ImageView
+                android:id="@+id/tagImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="110dp"
+                android:scaleType="center"
+                android:src="@drawable/default_article" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/topicsNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="TOPICS"
-            android:textColor="@color/explore_listing.explore_categories.category_name"
-            android:textSize="18sp"
-            app:fontName="oswald_regular.ttf" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="110dp"
+                android:background="@color/explore_listing.topics.layer" />
 
-        <View
-            android:id="@+id/selectorView"
-            android:layout_width="wrap_content"
-            android:layout_height="110dp"
-            android:background="@color/white_opacity"
-            android:visibility="gone" />
-    </RelativeLayout>
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/topicsNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:shadowColor="#48000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="6"
+                android:text="TOPICS"
+                android:textColor="@color/explore_listing.explore_categories.category_name"
+                android:textSize="18sp"
+                app:fontName="oswald_regular.ttf" />
 
-</LinearLayout>
+            <View
+                android:id="@+id/selectorView"
+                android:layout_width="wrap_content"
+                android:layout_height="110dp"
+                android:background="@color/white_opacity"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

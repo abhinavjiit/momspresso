@@ -54,7 +54,7 @@
             android:layout_marginTop="10dp"
             android:padding="10dp"
             android:text="@string/ad.view_all_tags.text"
-            android:textColor="@color/groups.blue_color"
+            android:textColor="@color/app_red"
             android:textSize="14sp"
             android:visibility="gone"
             app:fontName="oswald_regular.ttf" />
@@ -96,7 +96,7 @@
             android:layout_marginTop="10dp"
             android:padding="10dp"
             android:text="@string/ad.view_all_tags.text"
-            android:textColor="@color/groups.blue_color"
+            android:textColor="@color/app_red"
             android:textSize="14sp"
             android:visibility="gone"
             app:fontName="oswald_regular.ttf" />

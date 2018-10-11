@@ -19,6 +19,7 @@ import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
 import com.facebook.accountkit.ui.SkinManager;
+import com.facebook.accountkit.ui.ThemeUIManager;
 import com.facebook.accountkit.ui.UIManager;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -98,16 +99,20 @@ public class FacebookPhoneLoginActivity extends BaseActivity {
         final Intent intent = new Intent(this, AccountKitActivity.class);
         AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder = new AccountKitConfiguration.AccountKitConfigurationBuilder(
                 LoginType.PHONE, AccountKitActivity.ResponseType.TOKEN); // or .ResponseType.CODE
-        UIManager uiManager = new SkinManager(
-                SkinManager.Skin.TRANSLUCENT,
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? getResources().getColor(R.color.colorPrimary, null) : getResources().getColor(R.color.colorPrimary)),
-                R.drawable._tab4,
-                SkinManager.Tint.WHITE,
-                0.55
-        );
+//        UIManager uiManager = new SkinManager(
+//                SkinManager.Skin.CLASSIC,
+//                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? getResources().getColor(R.color.app_red, null) : getResources().getColor(R.color.app_red)),
+//                R.drawable._tab4,
+//                SkinManager.Tint.WHITE,
+//                1.0
+//        );
+
         /*If you want default country code*/
         // configurationBuilder.setDefaultCountryCode("IN");
-        configurationBuilder.setUIManager(uiManager);
+        int selectedThemeId = R.style.AppLoginTheme;
+        UIManager themeManager = new ThemeUIManager(selectedThemeId);
+        configurationBuilder.setUIManager(themeManager);
+//        configurationBuilder.setUIManager(uiManager);
         intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configurationBuilder.build());
         startActivityForResult(intent, APP_REQUEST_CODE);
     }

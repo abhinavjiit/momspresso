@@ -22,12 +22,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
-        android:background="#ffffff"
+        android:background="@color/app_red"
         android:elevation="20dp"
         android:gravity="center"
         android:padding="15dp"
         android:text="@string/app_settings.edit_profile.save"
-        android:textColor="@color/app_settings.edit_profile.save"
+        android:textColor="#fff"
         android:textSize="17sp"
         app:fontName="oswald_regular.ttf" />
 </RelativeLayout>

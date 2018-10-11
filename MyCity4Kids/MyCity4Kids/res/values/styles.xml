@@ -263,7 +263,7 @@
 
 
     <style name="SwitchStyle">
-        <item name="colorControlActivated">@color/primary_blue</item>
+        <item name="colorControlActivated">@color/app_red</item>
     </style>
 
     <style name="CustomTabText" parent="TextAppearance.Design.Tab">
@@ -299,7 +299,7 @@
 
     <style name="SCBSwitch" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
-        <item name="colorControlActivated">@color/groups.blue_color</item>
+        <item name="colorControlActivated">@color/app_red</item>
 
     </style>
 
@@ -309,4 +309,18 @@
     </style>
 
 
+    <style name="AppLoginTheme" parent="Theme.AccountKit">
+        <item name="com_accountkit_primary_color">@color/app_red</item>
+
+        <!-- Button -->
+        <item name="com_accountkit_button_background_color">@color/app_red</item>
+        <item name="com_accountkit_button_border_color">@color/app_red</item>
+        <item name="com_accountkit_button_text_color">@android:color/white</item>
+        <item name="com_accountkit_button_pressed_background_color">@color/app_red</item>
+
+        <!-- input -->
+        <item name="com_accountkit_input_border_color">#96D54058</item>
+        <item name="com_accountkit_input_text_color">@color/black</item>
+        <item name="com_accountkit_input_background_color">#24D54058</item>
+    </style>
 </resources>
