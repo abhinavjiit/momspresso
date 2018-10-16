@@ -86,7 +86,7 @@
         android:paddingRight="12dp"
         android:paddingTop="4dp"
         android:text="@string/user_article.draft.edit"
-        android:textColor="@color/user_articles.draft.edit"
+        android:textColor="@color/app_red"
         android:textSize="11sp"
         app:fontName="oswald.ttf" />
 

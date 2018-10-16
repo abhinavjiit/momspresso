@@ -208,7 +208,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/ic_downvote"
-            android:tint="@color/app_red"/>
+            android:tint="@color/app_red" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/downvoteTextView"

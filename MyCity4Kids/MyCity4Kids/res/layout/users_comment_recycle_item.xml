@@ -72,7 +72,7 @@
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
         android:text="@string/user_activities.comments.edit"
-        android:textColor="@color/user_activities.comments.edit"
+        android:textColor="@color/app_red"
         android:textSize="17sp"
         app:fontName="oswald_regular.ttf" />
 

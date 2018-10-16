@@ -53,28 +53,28 @@
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/groups.light_black_color"
+            android:buttonTint="@color/app_red"
             android:text="@string/groups.leave_be_back"
             android:textColor="@color/groups.light_black_color" />
 
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/groups.light_black_color"
+            android:buttonTint="@color/app_red"
             android:text="@string/groups.spend_time"
             android:textColor="@color/groups.light_black_color" />
 
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/groups.light_black_color"
+            android:buttonTint="@color/app_red"
             android:text="@string/groups.not_useful"
             android:textColor="@color/groups.light_black_color" />
 
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/groups.light_black_color"
+            android:buttonTint="@color/app_red"
             android:text="@string/groups.how_to_use"
             android:textColor="@color/groups.light_black_color" />
     </RadioGroup>
@@ -96,7 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
-        android:background="@color/groups.blue_color"
+        android:background="@color/app_red"
         android:elevation="20dp"
         android:gravity="center"
         android:padding="15dp"

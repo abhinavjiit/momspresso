@@ -111,7 +111,7 @@
         app:rcBackgroundPadding="0dp"
         app:rcMax="100"
         app:rcProgress="0"
-        app:rcProgressColor="@color/groups.blue_color"
+        app:rcProgressColor="@color/app_red"
         app:rcRadius="0dp"
         app:rcReverse="false" />
 
@@ -165,7 +165,7 @@
         app:rcBackgroundPadding="0dp"
         app:rcMax="100"
         app:rcProgress="0"
-        app:rcProgressColor="@color/groups.blue_color"
+        app:rcProgressColor="@color/app_red"
         app:rcRadius="0dp"
         app:rcReverse="false" />
 
@@ -225,7 +225,7 @@
             app:rcBackgroundPadding="0dp"
             app:rcMax="100"
             app:rcProgress="0"
-            app:rcProgressColor="@color/groups.blue_color"
+            app:rcProgressColor="@color/app_red"
             app:rcRadius="0dp"
             app:rcReverse="false" />
 
@@ -286,7 +286,7 @@
             app:rcBackgroundPadding="0dp"
             app:rcMax="100"
             app:rcProgress="0"
-            app:rcProgressColor="@color/groups.blue_color"
+            app:rcProgressColor="@color/app_red"
             app:rcRadius="0dp"
             app:rcReverse="false" />
 

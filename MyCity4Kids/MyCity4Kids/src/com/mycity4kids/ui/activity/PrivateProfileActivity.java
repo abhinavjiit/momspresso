@@ -838,7 +838,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             }).setIcon(android.R.drawable.ic_dialog_alert);
             AlertDialog alert11 = dialog.create();
             alert11.show();
-            alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.home_light_blue));
+            alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.app_red));
             alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.canceltxt_color));
         } else {
             ToastUtils.showToast(this, getString(R.string.error_network));

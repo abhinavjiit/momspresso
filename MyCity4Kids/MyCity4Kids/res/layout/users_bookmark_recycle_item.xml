@@ -157,7 +157,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/user_activities.bookmarks.remove"
-        android:textColor="@color/user_activities.bookmarks.remove"
+        android:textColor="@color/app_red"
         android:textSize="15sp"
         app:fontName="oswald_regular.ttf" />
 

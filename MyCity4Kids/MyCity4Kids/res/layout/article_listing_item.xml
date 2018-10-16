@@ -186,7 +186,7 @@
                     android:layout_height="6dp"
                     android:src="@drawable/white_filled_bg"
                     android:tag="1"
-                    android:tint="@color/onboarding.already_member" />
+                    android:tint="@color/app_red" />
 
                 <ImageView
                     android:id="@+id/two"
@@ -196,7 +196,7 @@
                     android:layout_marginRight="5dp"
                     android:src="@drawable/white_filled_bg"
                     android:tag="2"
-                    android:tint="@color/onboarding.already_member" />
+                    android:tint="@color/app_red" />
 
                 <ImageView
                     android:id="@+id/three"
@@ -204,7 +204,7 @@
                     android:layout_height="6dp"
                     android:src="@drawable/white_filled_bg"
                     android:tag="3"
-                    android:tint="@color/onboarding.already_member" />
+                    android:tint="@color/app_red" />
             </LinearLayout>
         </RelativeLayout>
 

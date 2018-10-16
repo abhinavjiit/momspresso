@@ -71,7 +71,7 @@
         android:paddingRight="20dp"
         android:paddingTop="10dp"
         android:text="@string/for_you.reason.okay"
-        android:textColor="@color/for_you.reason.okay"
+        android:textColor="@color/app_red"
         android:textSize="16sp"
         app:fontName="oswald_regular.ttf" />
 </RelativeLayout>

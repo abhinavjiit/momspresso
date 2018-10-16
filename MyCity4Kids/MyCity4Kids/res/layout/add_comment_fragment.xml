@@ -87,7 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/ad.comment.save_bg"
+        android:background="@color/app_red"
         android:gravity="center"
         android:text="@string/ad.comments.save"
         android:textColor="@color/ad.comment.save"

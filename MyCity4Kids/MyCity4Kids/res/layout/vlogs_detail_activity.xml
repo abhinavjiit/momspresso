@@ -153,7 +153,7 @@
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="@string/ad.follow_author"
-                android:textColor="@color/ad.follow_following_text"
+                android:textColor="@color/app_red"
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
 
@@ -337,32 +337,32 @@
                 android:paddingRight="10dp"
                 android:paddingTop="12dp"
                 android:text="@string/ad.comments.view_comment"
-                android:textColor="@color/follower_following_list.following_label"
+                android:textColor="@color/app_red"
                 android:textSize="16sp"
                 app:fontName="oswald_regular.ttf" />
 
             <!--<TextView-->
-                <!--android:id="@+id/commentsHeading"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@+id/trendingArticles"-->
-                <!--android:layout_marginBottom="5dp"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:paddingLeft="10dp"-->
-                <!--android:text="COMMENTS"-->
-                <!--android:textColor="@color/primary_blue"-->
-                <!--android:textSize="@dimen/ad_comments_heading" />-->
+            <!--android:id="@+id/commentsHeading"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/trendingArticles"-->
+            <!--android:layout_marginBottom="5dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:paddingLeft="10dp"-->
+            <!--android:text="COMMENTS"-->
+            <!--android:textColor="@color/primary_blue"-->
+            <!--android:textSize="@dimen/ad_comments_heading" />-->
 
             <!--<LinearLayout-->
-                <!--android:id="@+id/commnetLout"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@+id/commentsHeading"-->
-                <!--android:minHeight="5dp"-->
-                <!--android:orientation="vertical"-->
-                <!--android:padding="5dp">-->
+            <!--android:id="@+id/commnetLout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/commentsHeading"-->
+            <!--android:minHeight="5dp"-->
+            <!--android:orientation="vertical"-->
+            <!--android:padding="5dp">-->
 
-                <!--&lt;!&ndash; <add comment dynamically> &ndash;&gt;-->
+            <!--&lt;!&ndash; <add comment dynamically> &ndash;&gt;-->
             <!--</LinearLayout>-->
 
             <TextView
@@ -373,18 +373,18 @@
     </com.mycity4kids.observablescrollview.ObservableScrollView>
 
     <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
-        <!--android:id="@+id/commentFloatingActionButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_above="@+id/bottom_Lout"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_marginBottom="12dp"-->
-        <!--android:layout_marginRight="17dp"-->
-        <!--app:fab_colorNormal="@color/ad.fab.bg"-->
-        <!--app:fab_colorPressed="@color/ad.fab.bg"-->
-        <!--app:fab_icon="@drawable/ic_add_comments"-->
-        <!--app:fab_plusIconColor="@color/white_color"-->
-        <!--app:fab_size="normal" />-->
+    <!--android:id="@+id/commentFloatingActionButton"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_above="@+id/bottom_Lout"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginBottom="12dp"-->
+    <!--android:layout_marginRight="17dp"-->
+    <!--app:fab_colorNormal="@color/ad.fab.bg"-->
+    <!--app:fab_colorPressed="@color/ad.fab.bg"-->
+    <!--app:fab_icon="@drawable/ic_add_comments"-->
+    <!--app:fab_plusIconColor="@color/white_color"-->
+    <!--app:fab_size="normal" />-->
 
     <LinearLayout
         android:id="@+id/bottom_Lout"
@@ -461,10 +461,11 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawableTint="@color/app_red"
                     android:drawableTop="@drawable/ic_facebook"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.facebook"
-                    android:textColor="@color/ad.bottom_bar.items"
+                    android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />
 
@@ -473,10 +474,11 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawableTint="@color/app_red"
                     android:drawableTop="@drawable/ic_whats_app"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.whatsapp"
-                    android:textColor="@color/ad.bottom_bar.items"
+                    android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />
 
@@ -485,10 +487,11 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawableTint="@color/app_red"
                     android:drawableTop="@drawable/ic_email"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.email"
-                    android:textColor="@color/ad.bottom_bar.items"
+                    android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />
 
@@ -497,10 +500,11 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawableTint="@color/app_red"
                     android:drawableTop="@drawable/ic_bookmark"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.bookmark"
-                    android:textColor="@color/ad.bottom_bar.items"
+                    android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />
 
@@ -509,10 +513,11 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawableTint="@color/app_red"
                     android:drawableTop="@drawable/ic_recommend"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.like"
-                    android:textColor="@color/ad.bottom_bar.items"
+                    android:textColor="@color/app_grey"
                     android:textSize="11sp"
                     app:fontName="oswald.ttf" />
 
