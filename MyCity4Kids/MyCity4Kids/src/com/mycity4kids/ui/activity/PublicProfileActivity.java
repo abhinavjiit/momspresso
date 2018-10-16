@@ -176,21 +176,11 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
                         MyCityAnimationsUtil.animate(PublicProfileActivity.this, rankContainer, multipleRankList, 0, true);
                     }
 
-                    int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
-                    if (followerCount > 999) {
-                        float singleFollowerCount = ((float) followerCount) / 1000;
-                        followerCountTextView.setText("" + singleFollowerCount + "k");
-                    } else {
-                        followerCountTextView.setText("" + followerCount);
-                    }
+                    long totalArticleViewsCount = Long.parseLong(responseData.getData().get(0).getResult().getTotalArticlesViews());
+                    followerCountTextView.setText(AppUtils.withSuffix(totalArticleViewsCount));
+                    int totalArticlesCount = Integer.parseInt(responseData.getData().get(0).getResult().getTotalArticles());
+                    followingCountTextView.setText(AppUtils.withSuffix(totalArticlesCount));
 
-                    int followingCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowingCount());
-                    if (followingCount > 999) {
-                        float singleFollowingCount = ((float) followingCount) / 1000;
-                        followingCountTextView.setText("" + singleFollowingCount + "k");
-                    } else {
-                        followingCountTextView.setText("" + followingCount);
-                    }
                     authorNameTextView.setText(responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName());
                     switch (responseData.getData().get(0).getResult().getUserType()) {
                         case AppConstants.USER_TYPE_BLOGGER:
@@ -347,19 +337,9 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
                 startActivity(settingsIntent);
                 break;
             case R.id.followingContainer: {
-                Utils.pushOpenScreenEvent(this, "FollowingListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                Intent intent = new Intent(this, FollowersAndFollowingListActivity.class);
-                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST);
-                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, authorId);
-                startActivity(intent);
             }
             break;
             case R.id.followerContainer: {
-                Utils.pushOpenScreenEvent(this, "FollowersListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                Intent intent = new Intent(this, FollowersAndFollowingListActivity.class);
-                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
-                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, authorId);
-                startActivity(intent);
             }
         }
     }

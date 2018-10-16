@@ -43,12 +43,11 @@
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
-
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="view profile"
+                android:text="@string/view_profile"
                 android:textColor="@color/app_red"
                 android:textSize="13sp"
                 app:fontName="oswald.ttf" />

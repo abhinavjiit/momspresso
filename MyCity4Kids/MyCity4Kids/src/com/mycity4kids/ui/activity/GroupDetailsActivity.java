@@ -253,7 +253,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                             if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
                                 getGroupPosts();
                             } else {
-                                hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
+                                if (groupMappedCategories != null)
+                                    hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
                             }
                         }
                     }

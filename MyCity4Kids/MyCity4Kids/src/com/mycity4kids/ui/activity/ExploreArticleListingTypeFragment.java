@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -63,6 +64,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
     private TabLayout tabLayout;
     private HeaderGridView gridview;
 
+    View gridViewHeader;
     private ParentTopicsGridAdapter adapter;
     private View view;
     private EditText searchTopicsEditText;
@@ -111,10 +113,14 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         searchTopicsEditText.setVisibility(View.GONE);
         guideOverLay.setOnClickListener(this);
 
-        final View gridViewHeader = LayoutInflater.from(BaseApplication.getAppContext()).inflate(R.layout.grid_view_header, gridview, false);
+        gridViewHeader = inflater.inflate(R.layout.grid_view_header, null, false);
         videosContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.videosContainer);
         storyContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.storyContainer);
         groupsContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.groupsContainer);
+
+//        ((TextView) gridViewHeader.findViewById(R.id.videosTextView)).setText(BaseApplication.getAppContext().getString(R.string.all_videos_toolbar_title));
+//        ((TextView) gridViewHeader.findViewById(R.id.storyTextView)).setText(BaseApplication.getAppContext().getString(R.string.myprofile_section_short_story_label));
+//        ((TextView) gridViewHeader.findViewById(R.id.groupsTextView)).setText(BaseApplication.getAppContext().getString(R.string.groups_support_groups));
 
         videosContainer.setOnClickListener(this);
         storyContainer.setOnClickListener(this);
@@ -194,6 +200,9 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 view.setSelected(true);
                 ExploreTopicsModel topic = (ExploreTopicsModel) adapterView.getAdapter().getItem(position);
+                if (topic == null) {
+                    return;
+                }
                 if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
                     Intent intent = new Intent(getActivity(), ContributorListActivity.class);
                     startActivity(intent);

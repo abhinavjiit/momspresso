@@ -26,7 +26,7 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
     private TextView signinTextView;
     private TextView getStartedTextView;
     private RelativeLayout lnrRoot;
-    private LinearLayout tutorial_desc_1, tutorial_desc_2, tutorial_desc_3, tutorial_desc_4;
+    private TextView tutorial_desc_1, tutorial_desc_2, tutorial_desc_3, tutorial_desc_4;
 //    private ImageView one, two, three, four;
 
     private int mPosition;
@@ -46,10 +46,10 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         txvTitle = (TextView) view.findViewById(R.id.txvTitle);
         onboardingImageView = (ImageView) view.findViewById(R.id.onboardingImageView);
 
-        tutorial_desc_1 = (LinearLayout) view.findViewById(R.id.tutorial_desc_1);
-        tutorial_desc_2 = (LinearLayout) view.findViewById(R.id.tutorial_desc_2);
-        tutorial_desc_3 = (LinearLayout) view.findViewById(R.id.tutorial_desc_3);
-        tutorial_desc_4 = (LinearLayout) view.findViewById(R.id.tutorial_desc_4);
+        tutorial_desc_1 = (TextView) view.findViewById(R.id.tutorial_desc_1);
+        tutorial_desc_2 = (TextView) view.findViewById(R.id.tutorial_desc_2);
+        tutorial_desc_3 = (TextView) view.findViewById(R.id.tutorial_desc_3);
+        tutorial_desc_4 = (TextView) view.findViewById(R.id.tutorial_desc_4);
 
 
 //        signinTextView.setOnClickListener(this);

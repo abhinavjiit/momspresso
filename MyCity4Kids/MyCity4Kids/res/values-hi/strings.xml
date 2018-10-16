@@ -258,7 +258,7 @@
     <string name="home_screen.notification.title">नोटिफिकेशंस</string>
     <string name="home_screen.suggested_topic.title">सुझाए गए विषय</string>
     <string name="home_screen.profile.title">माय अकाउंट</string>
-    <string name="home_screen.select_an_option.title">एक ऑप्शन चुने</string>
+    <string name="home_screen.select_an_option.title">खोजें</string>
     <string name="home_screen.trending.become_blogger">अपनी कहानी शेयर करें</string>
     <string name="home_screen.trending.first_video_upload">वीडियोस</string>
     <string name="home_screen.explore.title">एक्स्प्लोर</string>
@@ -813,6 +813,7 @@
     <string name="update">अपडेट</string>
     <string name="improve_reachability">अपने  प्रोफाइल को पूरा करके ज्यादा से ज्यादा लोगों तक पहुंचे</string>
     <string name="choose_account">Choose an account to continue</string>
+    <string name="create_content">हर मां की कोई न कोई कहानी जरुर होती है। क्या आपकी की भी कोई कहानी है? इसे ब्लॉग के माध्यम से, 100 शब्दों की कहानी या एक वीडियो के रुप में शेयर करें। </string>
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">बाल विवरण</string>
     <string name="add_child_details">बाल विवरण जोड़ें</string>
@@ -842,4 +843,7 @@
     <string name="full_name">पूरा नाम</string>
     <string name="email_and_password">ईमेल एंड पासवर्ड</string>
     <string name="location">सिटी</string>
+    <string name="search">कोई भी लेख या लेखक खोजें</string>
+    <string name="new_label">नया</string>
+    <string name="view_profile">प्रोफाइल देखिये</string>
 </resources>

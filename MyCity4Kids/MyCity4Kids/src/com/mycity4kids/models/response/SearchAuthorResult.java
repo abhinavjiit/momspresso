@@ -8,6 +8,7 @@ public class SearchAuthorResult {
     private ProfilePic profile_image;
     private String first_name;
     private String last_name;
+    private int isFollowed;
 
     public String getUserId() {
         return userId;
@@ -39,5 +40,13 @@ public class SearchAuthorResult {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
+    }
+
+    public int getIsFollowed() {
+        return isFollowed;
+    }
+
+    public void setIsFollowed(int isFollowed) {
+        this.isFollowed = isFollowed;
     }
 }

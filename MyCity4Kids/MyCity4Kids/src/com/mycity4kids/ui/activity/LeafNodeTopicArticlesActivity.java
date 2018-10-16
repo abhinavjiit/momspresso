@@ -108,7 +108,7 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
         });
         viewPager.setCurrentItem(tabPosition);
         if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article")) {
-            showGuideView();
+//            showGuideView();
         }
     }
 
@@ -198,10 +198,10 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
         Log.d("TopicListingFragment", "onDestroy");
     }
 
-    public void showGuideView() {
-        TopicsArticlesTabFragment topicsArticlesTabFragment = ((TopicsArticlesTabFragment) pagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem()));
-        topicsArticlesTabFragment.showGuideView();
-    }
+//    public void showGuideView() {
+//        TopicsArticlesTabFragment topicsArticlesTabFragment = ((TopicsArticlesTabFragment) pagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem()));
+//        topicsArticlesTabFragment.showGuideView();
+//    }
 
     public void showGuideTopLayer() {
         topLayerGuideLayout.setVisibility(View.VISIBLE);

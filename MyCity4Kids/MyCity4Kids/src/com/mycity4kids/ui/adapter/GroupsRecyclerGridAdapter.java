@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lid.lib.LabelImageView;
 import com.mycity4kids.R;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupResult;
 import com.squareup.picasso.Picasso;
 
@@ -68,17 +70,26 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
             holder.groupImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
         }
         holder.groupsNameTextView.setText(groupsDataList.get(position).getTitle());
+        if (System.currentTimeMillis() - groupsDataList.get(position).getCreatedAt() * 1000 < AppConstants.DAYS_10_TIMESTAMP) {
+//            holder.groupImageView.setLabelBackgroundAlpha(0);
+            holder.groupNewLabelImageView.setLabelVisual(true);
+        } else {
+            holder.groupNewLabelImageView.setLabelVisual(false);
+//            holder.groupImageView.setLabelBackgroundAlpha(1);
+        }
 //        holder.groupsNameTextView.setSelected(position == selectedPosition);
     }
 
     public class GroupsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView groupsNameTextView;
         ImageView groupImageView;
+        LabelImageView groupNewLabelImageView;
 
         GroupsViewHolder(View view) {
             super(view);
             groupImageView = (ImageView) view.findViewById(R.id.groupImageView);
             groupsNameTextView = (TextView) view.findViewById(R.id.groupNameTextView);
+            groupNewLabelImageView = (LabelImageView) view.findViewById(R.id.groupNewLabelImageView);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

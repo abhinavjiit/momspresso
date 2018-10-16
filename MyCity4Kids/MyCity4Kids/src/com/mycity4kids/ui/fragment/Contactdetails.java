@@ -55,8 +55,9 @@ public class Contactdetails extends Fragment implements View.OnClickListener, Ci
         emailTextView.setText("" + userDetail.getEmail());
         handleNameTextView.setText("" + userDetail.getBlogTitle());
         fullNameEditText.setText("" + userDetail.getFirstName() + " " + userDetail.getLastName());
-        phoneEditText.setText(userDetail.getPhone().getMobile());
-
+        if (userDetail.getPhone() != null) {
+            phoneEditText.setText(userDetail.getPhone().getMobile());
+        }
         MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(getActivity());
         for (int i = 0; i < cityList.size(); i++) {
             int cId = Integer.parseInt(cityList.get(i).getId().replace("city-", ""));

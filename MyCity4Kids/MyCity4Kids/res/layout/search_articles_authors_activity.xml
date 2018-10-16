@@ -27,7 +27,7 @@
                 android:layout_toStartOf="@+id/searchImageView"
                 android:background="@android:color/transparent"
                 android:ellipsize="end"
-                android:hint="Search any article or author"
+                android:hint="@string/search"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:singleLine="true"

@@ -152,9 +152,11 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     }
 
     private void getUserPublishedArticles() {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
-            return;
+        if (isAdded()) {
+            if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+                ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+                return;
+            }
         }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -389,15 +391,15 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
 //            intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
 //            startActivity(intent);
 //        } else {
-            Intent intent = new Intent(getActivity(), EditorPostActivity.class);
-            intent.putExtra("from", "publishedList");
-            intent.putExtra("title", detailData.getTitle());
-            intent.putExtra("content", content);
-            intent.putExtra("thumbnailUrl", detailData.getImageUrl().getThumbMax());
-            intent.putExtra("articleId", detailData.getId());
-            intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
-            intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
-            startActivity(intent);
+        Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+        intent.putExtra("from", "publishedList");
+        intent.putExtra("title", detailData.getTitle());
+        intent.putExtra("content", content);
+        intent.putExtra("thumbnailUrl", detailData.getImageUrl().getThumbMax());
+        intent.putExtra("articleId", detailData.getId());
+        intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
+        intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
+        startActivity(intent);
 //        }
     }
 

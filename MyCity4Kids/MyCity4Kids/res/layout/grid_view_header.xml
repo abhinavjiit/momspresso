@@ -39,13 +39,14 @@
                 android:tint="@color/white" />
 
             <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/videosTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/videoImageView"
                 android:layout_marginBottom="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="VIDEOS"
+                android:text="@string/all_videos.toolbar.title"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
@@ -72,6 +73,7 @@
                 android:tint="@color/white" />
 
             <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/storyTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/storyImageView"
@@ -104,13 +106,14 @@
                 android:tint="@color/white" />
 
             <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/groupsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/groupImageView"
                 android:layout_marginBottom="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="SUPPORT GROUPS"
+                android:text="@string/groups.support_groups"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />

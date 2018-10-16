@@ -42,11 +42,11 @@ import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
+import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
 import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.GroupsFragment;
-import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -308,10 +308,12 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "suggested_topics");
-                    SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
-                    Bundle mBundle0 = new Bundle();
-                    fragment0.setArguments(mBundle0);
-                    ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
+//                    SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
+//                    Bundle mBundle0 = new Bundle();
+//                    fragment0.setArguments(mBundle0);
+//                    ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
+                    Intent intent = new Intent(mContext, SuggestedTopicsActivity.class);
+                    mContext.startActivity(intent);
                     try {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());

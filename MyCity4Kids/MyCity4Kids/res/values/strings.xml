@@ -818,7 +818,7 @@
     <string name="update">UPDATE</string>
     <string name="improve_reachability">Improve the reachability by updating the bio.</string>
     <string name="profile">Profile</string>
-    <string name="create_content">Every mother has a story. What\'s yours? Pour out yours like a Blog, a 100 Word Story, or a Video.</string>
+    <string name="create_content">Every mother has a story. What\'s yours? Share it as a Blog, a 100 Word Story, or a Video.</string>
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">Child Details</string>
     <string name="add_child_details">Add Child Details</string>
@@ -848,5 +848,8 @@
     <string name="full_name">FULL NAME</string>
     <string name="email_and_password">EMAIL AND PASSWORD</string>
     <string name="location">LOCATION</string>
+    <string name="search">Search any article or author</string>
+    <string name="new_label">NEW</string>
+    <string name="view_profile">view profile</string>
 
 </resources>

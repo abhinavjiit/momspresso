@@ -1257,11 +1257,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     becomeBloggerFragment.setArguments(searchBundle);
                     addFragment(becomeBloggerFragment, searchBundle, true);
                 } else {
+                    Intent intent = new Intent(this, SuggestedTopicsActivity.class);
+                    startActivity(intent);
 //                    launchEditor();
-                    SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
-                    Bundle mBundle0 = new Bundle();
-                    fragment0.setArguments(mBundle0);
-                    addFragment(fragment0, mBundle0, true);
+//                    SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
+//                    Bundle mBundle0 = new Bundle();
+//                    fragment0.setArguments(mBundle0);
+//                    addFragment(fragment0, mBundle0, true);
                 }
                 break;
             case R.id.storyContainer:
@@ -1988,7 +1990,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
 
         new QBadgeView(this)
-                .setBadgeText(" New ")
+                .setBadgeText(" " + getString(R.string.new_label) + " ")
                 .setBadgeTextSize(7, true)
                 .setBadgePadding(3, true)
                 .setBadgeGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL)

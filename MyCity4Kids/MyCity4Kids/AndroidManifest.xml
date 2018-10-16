@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="111"
-    android:versionName="9.3.1">
+    android:versionCode="113"
+    android:versionName="9.3.3">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -478,6 +478,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ChangePasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SuggestedTopicsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.EditProfileNewActivity"

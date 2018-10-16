@@ -157,7 +157,7 @@
     <string name="ad.view_all_tags.text">সব দেখ</string>
     <string name="ad.tags_title.text">এই নিবন্ধটি নীচের বিভাগে পোস্ট করা হয়েছে</string>
     <string name="ad.tags_subtitle.text">অনুরূপ পোস্ট পড়তে তাদের অনুসরণ করুন</string>
-    <string name="ad.follow_author">অনুসরণ</string>
+    <string name="ad.follow_author">অনুসরণ করা</string>
     <string name="ad.following_author">অনুসরণ</string>
     <string name="ad.comments.title">মন্তব্য</string>
     <string name="ad.comments.no_comments">কোন মন্তব্য নেই</string>
@@ -258,7 +258,7 @@
     <string name="home_screen.notification.title">বিজ্ঞপ্তি</string>
     <string name="home_screen.suggested_topic.title">প্রস্তাবিত বিষয়গুলি</string>
     <string name="home_screen.profile.title">আমার অ্যাকাউন্ট</string>
-    <string name="home_screen.select_an_option.title">যেকোনো একটি নির্বাচন করুন</string>
+    <string name="home_screen.select_an_option.title">আবিষ্কার</string>
     <string name="home_screen.trending.become_blogger">আপনার গল্প শেয়ার করুন</string>
     <string name="home_screen.trending.first_video_upload">ভিডিও</string>
     <string name="home_screen.explore.title">অন্বেষণ</string>
@@ -360,7 +360,7 @@
     <string name="myprofile.section.signout_label">সাইন আউট</string>
     <string name="myprofile.rank_label">র‍্যাঙ্ক</string>
 
-    <string name="blogger_profile.follow_button">অনুসরণ</string>
+    <string name="blogger_profile.follow_button">অনুসরণ করা</string>
     <string name="blogger_profile.rank_in">র্যাঙ্ক ইন</string>
     <string name="blogger_profile.unfollow_button">অনুসরণ</string>
     <string name="blogger_profile.view_count_label">VIEWS</string>
@@ -392,7 +392,7 @@
 
     <string name="app_settings.edit_profile.hint_fn">নামের প্রথম অংশ</string>
     <string name="app_settings.edit_profile.hint_ln">নামের শেষ অংশ</string>
-    <string name="app_settings.edit_profile.hint_phone">Phone</string>
+    <string name="app_settings.edit_profile.hint_phone">ফোন</string>
     <string name="app_settings.edit_profile.describe_label">আপনার সম্পর্কে বলুন</string>
     <string name="app_settings.edit_profile.blog_title_label">Blog Heading</string>
     <string name="app_settings.edit_profile.family_detail_label">পারিবারিক তথ্য</string>
@@ -440,7 +440,7 @@
     <string name="blog_setup.get_started_label">LET\'S GET YOU STARTED FOR YOUR FIRST BLOG</string>
     <string name="blog_setup.one_time_label">Setup a blog is a one time process.</string>
     <string name="blog_setup.okay">ঠিক আছে</string>
-    <string name="blog_setup.blog_title_label">BLOG TITLE</string>
+    <string name="blog_setup.blog_title_label">ব্লগের শিরোনাম</string>
     <string name="blog_setup.blog_title_desc">This is like a title of your digital book and encompasses a description of all your blog posts that you\'ll be publishing here. Eg: Mums diary, My monologue.</string>
     <string name="blog_setup.hint_blog_title">এখানে লিখুন </string>
     <string name="blog_setup.about_yourself_label">ABOUT YOURSELF</string>
@@ -496,7 +496,7 @@
         <item>মমস্প্রেস্সো পেজে আপনি কীভাবে অবদান রাখবেন??</item>
     </string-array>
     <string-array name="become_blogger_desc_array">
-        <item>You are one click away from sharing your thoughtsকেবলমাত্র একটা ক্লিকের মাধ্যমে আপনি আপনার চিন্তাভাবনা, মতামত এবং অভিজ্ঞতাগুলি ভারতের সবচেয়ে বড় প্যারেন্টিং সম্প্রদায় "মমস্প্রেস্সো"-র সাথে ভাগ করে নিতে পারেন, যা প্রতি মাসে ৮ মিলিয়ন মায়েদের কাছে পৌছে যেতে পারে এক আশানরূপ, অনুপ্রেরণাদায়ক কন্ঠস্বর হিসাবে |</item>
+        <item>কেবলমাত্র একটা ক্লিকের মাধ্যমে আপনি আপনার চিন্তাভাবনা, মতামত এবং অভিজ্ঞতাগুলি ভারতের সবচেয়ে বড় প্যারেন্টিং সম্প্রদায় "মমস্প্রেস্সো"-র সাথে ভাগ করে নিতে পারেন, যা প্রতি মাসে ৮ মিলিয়ন মায়েদের কাছে পৌছে যেতে পারে এক আশানরূপ, অনুপ্রেরণাদায়ক কন্ঠস্বর হিসাবে |</item>
         <item>আপনার প্যারেন্টিং-এর গল্পগুলি আপনি আমাদের ওয়েবসাইট বা  iOS এবং Android অ্যাপের মাধ্যমে ভাগ করে নিতে পারেন | আপনার গল্পগুলি যে কোনো একটি ভাষায় লিখুন- বাংলা, ইংরাজি, হিন্দি,মারাঠি, তেলুগু এবং তামিল |</item>
         <item>মমস্প্রেস্সো প্রত্যেক ব্লগারকে নিজের লেখা পোস্ট প্রকাশ করার জন্য কোন অর্থ প্রদান করে না | তবে বিশেষ লেখাগুলির জন্য অর্থ প্রদান করে হয়ে থাকে যা ব্র্যান্ডের দ্বারা অনুমোদিত, এই অফারটি শুধুমাত্র ব্লগারদের লেখার মানের ভিত্তিতেই প্রদান করা হয় ।</item>
         <item>আপনার গল্প যদি পিতামাতা, নারীত্ব, জীবন সংগ্রাম, আনন্দের মুহুর্তের বা ব্যক্তিগত সম্পর্ক বিশেষ হয়ে থাকে তাহলে লেখার জন্য "মমস্প্রেস্সো" একটি আদর্শ প্ল্যাটফর্ম । যোগদান করে ৩৫০০+ মায়েদের সাথে আপনার পরামর্শ, মতামত এবং অভিজ্ঞতাগুলি ভাগ করে নিন। অনুগ্রহ করে কোনো নকল বা \'সামান্য পরিবর্তিত\' বিষয়বস্তু প্রকাশ করবেননা |</item>
@@ -527,7 +527,7 @@
     <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
     <string name="add_video_details.mute_label">MUTE SOUND</string>
     <string name="add_video_details.add_music">ADD MUSIC</string>
-    <string name="add_video_details.remove">REMOVE</string>
+    <string name="add_video_details.remove">বাতিল করুন</string>
     <string name="add_video_details.error_empty_title">Please enter the title of the video</string>
     <string name="add_video_details.save_upload">সংরক্ষিত &amp; UPLOAD</string>
     <string name="add_video_details.toolbar.title">ভিডিও উপলোড করুন</string>
@@ -551,10 +551,10 @@
     <string name="user_activities.bookmarks.by">By</string>
     <string name="user_activities.comments.saved_on">সর্বশেষ সংরক্ষিত:</string>
     <string name="user_activities.comments.edit">সম্পাদন করা</string>
-    <string name="user_activities.comments.no_comments">You have not commented on any article yet.</string>
-    <string name="user_activities.recommended.no_recommendations">You have not recommended any article yet.</string>
+    <string name="user_activities.comments.no_comments">আপনি এখনও কোন প্রবন্ধে মন্তব্য করেননি</string>
+    <string name="user_activities.recommended.no_recommendations">আপনি এখনও কোন প্রবন্ধ সুপারিশ করেননি</string>
     <string name="user_activities.bookmarks.no_bookmarks">No article has been bookmarked yet.</string>
-    <string name="user_activities.watch_later.no_watch_later">You have not saved any videos yet.</string>
+    <string name="user_activities.watch_later.no_watch_later">আপনি এখনো কোন ভিডিও সংরক্ষণ করেননি</string>
 
     <string name="explore.section.events">অনুষ্ঠান</string>
     <string name="explore.section.resources">তালিকা</string>
@@ -665,7 +665,7 @@
     <string name="author_type.editorial">সম্পাদকীয়দের টিম</string>
     <string name="author_type.expert">বিশেষজ্ঞ</string>
     <string name="author_type.featured">বিশিষ্ট লেখক</string>
-    <string name="author_type.user">USER</string>
+    <string name="author_type.user">ব্যবহারকারী</string>
 
     <string name="no_article.be_first">এই ক্যাটাগরি তে প্রথম আর্টিকেল টি আপনি লিখুন</string>
 
@@ -713,7 +713,7 @@
     <string name="groups.block_this_user">Block This User</string>
     <string name="groups.pin_post">Pin This Post To Top</string>
     <string name="groups.unpin_post">Unpin This post</string>
-    <string name="groups.all_groups">ALL GROUPS</string>
+    <string name="groups.all_groups">সকল বিভাগ</string>
     <string name="groups.groups">GROUPS</string>
     <string name="groups.reported_by">Reported By</string>
     <string name="groups.persons">Persons</string>
@@ -803,10 +803,11 @@
     <string name="update">আপডেট</string>
     <string name="improve_reachability">আপনার প্রোফাইলের রিচ বাড়াতে বায়োডেটা আপডেট করুন</string>
     <string name="choose_account">Choose an account to continue</string>
+    <string name="create_content">প্রত্যেক মায়ের জীবনে একটা গল্প আছে। আপনার জীবনেও কি এমন কোন গল্প আছে? আপনার গল্পটিকে ব্লগের মাধ্যমে, ১০০শব্দের গল্প হিসাবে বা ভিডিও হিসাবে পোস্ট করে সকলের সাথে ভাগ করে নিন |</string>
     <string name="write_about_yourself">Write about yourself</string>
-    <string name="child_details">Child Details</string>
+    <string name="child_details">বাচ্চা সংক্রান্ত তথ্য</string>
     <string name="add_child_details">Add Child Details</string>
-    <string name="contact_details">Contact Details</string>
+    <string name="contact_details">যোগাযোগের তথ্য</string>
 
     <string name="navigation_bar.home">হোম</string>
     <string name="navigation_bar.discover">আবিষ্কার</string>
@@ -823,13 +824,16 @@
     <string name="coachmark.app_setting">আপনি এক জায়গায় আপনার অ্যাপ্লিকেশন এবং পছন্দের ভাষা এডিট করতে পারেন। নোটিফিকেশন এবং বিভাগ দেখার জন্য এখানে সাবস্ক্রাইব করুন।</string>
     <string name="coachmark.publish">আপনার প্রকাশিত আর্টিকেল ,গল্প, এবং মম ভ্লগস এক জায়গায় দেখুন। ডিসকভার : আবিষ্কার</string>
     <string name="mobile">MOBILE NO</string>
-    <string name="continue_writing">Continue Writing(Drafts)</string>
-    <string name="app_settings">App Settings</string>
-    <string name="create_new">Create New</string>
+    <string name="continue_writing">লিখতে থাকুন (ড্রাফট)</string>
+    <string name="app_settings">অ্যাপ সেটিংস</string>
+    <string name="create_new">নতুন করে তৈরী করুন</string>
     <string name="name_optional">NAME (optional)</string>
     <string name="name">NAME</string>
     <string name="updated">Updated :</string>
-    <string name="full_name">FULL NAME</string>
-    <string name="email_and_password">EMAIL AND PASSWORD</string>
-    <string name="location">LOCATION</string>
+    <string name="full_name">পুরো নাম</string>
+    <string name="email_and_password">ইমেইল এবং পাসওয়ার্ড</string>
+    <string name="location">স্থান</string>
+    <string name="search">Search Any article or author</string>
+    <string name="new_label">নতুন</string>
+    <string name="view_profile">view profile</string>
 </resources>

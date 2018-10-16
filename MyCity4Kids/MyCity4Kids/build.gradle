@@ -88,6 +88,7 @@ dependencies {
     compile 'com.github.jrvansuita:GaussianBlur:+'
     compile 'com.github.irshulx:laser-native-editor:2.3.1'
     compile 'com.facebook.android:account-kit-sdk:4.+'
+    compile 'com.github.linger1216:labelview:v1.1.2'
 }
 
 //dependencies {
