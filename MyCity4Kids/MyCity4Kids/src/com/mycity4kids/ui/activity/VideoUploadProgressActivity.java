@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -14,6 +15,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -79,23 +86,41 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 //        mCircleView.setStartPositionInDegrees(ProgressStartPoint.DEFAULT);
 //        mCircleView.setLinearGradientProgress(false);
 
-        try {
-            SharedPreferences pref = getSharedPreferences("tus", 0);
-            client = new TusClient();
-            client.setUploadCreationURL(new URL(AppConstants.VIDEO_UPLOAD_URL));
-            client.enableResuming(new TusPreferencesURLStore(pref));
-        } catch (Exception e) {
-//            showError(e);
-        }
+        uploadToFirebase(contentURI);
 
-        try {
-            TusUpload upload = new TusAndroidUpload(contentURI, this);
-            uploadTask = new UploadTask(this, client, upload);
-            uploadTask.execute();
-        } catch (Exception e) {
-//            showError(e);
-        }
+    }
 
+    private void uploadToFirebase(Uri file2) {
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://avid-math-836.appspot.com");
+
+        StorageReference storageRef = storage.getReference();
+
+//        Uri file = Uri.fromFile(file2);
+        StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/" + file2.getLastPathSegment());
+        com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2);
+
+// Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.d("FirebaseUpload", "FAIL");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<com.google.firebase.storage.UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("FirebaseUpload", "FirebaseUpload");
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+            }
+        });
+
+        uploadTask.addOnProgressListener(new OnProgressListener<com.google.firebase.storage.UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
+                Log.e("Tuts+", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
+            }
+        });
     }
 
     private void setStatus(String text) {
