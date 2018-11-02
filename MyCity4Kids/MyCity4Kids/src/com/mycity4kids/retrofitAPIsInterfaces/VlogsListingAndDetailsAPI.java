@@ -13,6 +13,7 @@ import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
+import com.mycity4kids.models.response.HomeVideosListingResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
@@ -54,6 +55,11 @@ public interface VlogsListingAndDetailsAPI {
                                             @Query("sort") int sort,
                                             @Query("type") int type);
 
+    @GET("v2/videos/")
+    Call<HomeVideosListingResponse> getHomeVideos(/*@Query("start") int start,
+                                                  @Query("end") int end,
+                                                  @Query("sort") int sort,
+                                                  @Query("type") int type*/);
 
 //    For Local JSON Testing
 //    @GET("http://10.0.0.27/test/{index}.json")

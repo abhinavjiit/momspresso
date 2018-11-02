@@ -19,6 +19,7 @@ public class AppConstants {
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
 
     public static final String GROUPS_LIVE_URL = BuildConfig.GROUPS_LIVE_URL;
+    public static final String VIDEOS_URL = "http://35.200.233.99:3040/";
 
     //Enable For Testing
     //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());

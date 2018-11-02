@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "833437366968",
+    "firebase_url": "https://avid-math-836.firebaseio.com",
+    "project_id": "avid-math-836",
+    "storage_bucket": "avid-math-836.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:833437366968:android:45762af236931870",
+        "android_client_info": {
+          "package_name": "com.mycity4kids"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "833437366968-a9vshp8m3hprpks3ls46l6imo8jv1atm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhTwGOBSFHuhB26X_CAEbgIY3VV6vOzg4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

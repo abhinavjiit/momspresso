@@ -42,10 +42,10 @@ import com.mycity4kids.ui.activity.VideoTrimmerActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.adapter.MyFunnyVideosListingAdapter;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.videotrimmer.utils.FileUtils;
 
 import java.util.ArrayList;
 
-import life.knowledge4.videotrimmer.utils.FileUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;

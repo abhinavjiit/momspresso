@@ -196,11 +196,6 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
     }
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ToastUtils.showToast(getActivity(), getString(R.string.error_network));
-            return;
-        }
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 

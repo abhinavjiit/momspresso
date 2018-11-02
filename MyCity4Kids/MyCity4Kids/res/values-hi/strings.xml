@@ -846,4 +846,5 @@
     <string name="search">कोई भी लेख या लेखक खोजें</string>
     <string name="new_label">नया</string>
     <string name="view_profile">प्रोफाइल देखिये</string>
+    <string name="choose_video_category">Choose Video Category</string>
 </resources>

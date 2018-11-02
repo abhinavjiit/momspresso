@@ -5,10 +5,7 @@
     android:versionCode="113"
     android:versionName="9.3.3">
 
-    <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="26"
-        tools:overrideLibrary="life.knowledge4.videotrimmer, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer" />
+    <uses-sdk tools:overrideLibrary="com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Used to request data from the Google+ APIs in the SignInActivity -->
@@ -16,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <!-- Required if we need to invalidate access tokens -->
@@ -32,6 +30,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     !-- Maps API needs OpenGL ES 2.0. -->
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -482,6 +482,7 @@
         <activity
             android:name=".ui.activity.SuggestedTopicsActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.activity.MainActivity" />
         <activity
             android:name=".ui.activity.EditProfileNewActivity"
             android:screenOrientation="portrait"
@@ -490,6 +491,47 @@
             android:name=".ui.activity.PhoneLoginUserDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
+        <!--<activity-->
+            <!--android:name=".ui.activity.ExoPlayerTestActivity"-->
+            <!--android:screenOrientation="portrait" />-->
+        <!--<activity-->
+            <!--android:name=".ui.activity.PlayerActivity"-->
+            <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"-->
+            <!--android:label="@string/application_name"-->
+            <!--android:launchMode="singleTop"-->
+            <!--android:theme="@style/PlayerTheme">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.exoplayer.demo.action.VIEW" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+
+                <!--<data android:scheme="http" />-->
+                <!--<data android:scheme="https" />-->
+                <!--<data android:scheme="content" />-->
+                <!--<data android:scheme="asset" />-->
+                <!--<data android:scheme="file" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.exoplayer.demo.action.VIEW_LIST" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+        <activity
+            android:name=".ui.activity.ChooseVideoCategoryActivity"
+            android:screenOrientation="portrait" />
+
+        <!--<service-->
+            <!--android:name=".widget.DemoDownloadService"-->
+            <!--android:exported="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.exoplayer.downloadService.action.RESTART" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
+
+        <!--<service-->
+            <!--android:name="com.google.android.exoplayer2.scheduler.PlatformScheduler$PlatformSchedulerService"-->
+            <!--android:exported="true"-->
+            <!--android:permission="android.permission.BIND_JOB_SERVICE" />-->
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

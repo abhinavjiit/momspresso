@@ -13,10 +13,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -53,12 +59,10 @@ import retrofit2.Retrofit;
 public class VideoUploadProgressActivity extends BaseActivity implements View.OnClickListener {
 
     private Toolbar mToolbar;
-    //    private CircleProgressBar mCircleView;
     RelativeLayout uploadFinishContainer, uploadingContainer;
     private TusClient client;
     private TextView status, okayTextView;
-//    private TextView cancelTextView;
-
+    private FirebaseAuth mAuth;
     private UploadTask uploadTask;
     private Uri contentURI;
     private String title;
@@ -68,6 +72,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_upload_progress_activity);
         Utils.pushOpenScreenEvent(this, "VideoUploadScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
+        mAuth = FirebaseAuth.getInstance();
+
         contentURI = getIntent().getParcelableExtra("uri");
         title = getIntent().getStringExtra("title");
 
@@ -86,12 +93,39 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 //        mCircleView.setStartPositionInDegrees(ProgressStartPoint.DEFAULT);
 //        mCircleView.setLinearGradientProgress(false);
 
-        uploadToFirebase(contentURI);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("VideoUpload", "signInAnonymously:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            uploadToFirebase(contentURI);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
+                            Toast.makeText(VideoUploadProgressActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
+                        }
+
+                        // ...
+                    }
+                });
 
     }
 
     private void uploadToFirebase(Uri file2) {
-        FirebaseStorage storage = FirebaseStorage.getInstance("gs://avid-math-836.appspot.com");
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com");
 
         StorageReference storageRef = storage.getReference();
 
@@ -110,6 +144,13 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             @Override
             public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
                 Log.d("FirebaseUpload", "FirebaseUpload");
+                storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Uri downloadUri = uri;
+                        publishVideo(uri);
+                    }
+                });
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                 // ...
             }
@@ -121,6 +162,14 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                 Log.e("Tuts+", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
             }
         });
+    }
+
+    private void publishVideo(Uri uri) {
+        UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
+        uploadVideoRequest.setTitle(title);
+        uploadVideoRequest.setFilename(contentURI.getLastPathSegment());
+        uploadVideoRequest.setFile_location("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/");
+        uploadVideoRequest.setUploaded_url(uri.toString());
     }
 
     private void setStatus(String text) {

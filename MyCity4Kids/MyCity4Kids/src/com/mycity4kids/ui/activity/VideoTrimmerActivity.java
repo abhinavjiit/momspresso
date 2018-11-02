@@ -13,14 +13,14 @@ import com.mycity4kids.R;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.videotrimmer.K4LVideoTrimmer;
+import com.mycity4kids.videotrimmer.interfaces.OnTrimVideoListener;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 
-import life.knowledge4.videotrimmer.K4LVideoTrimmer;
-import life.knowledge4.videotrimmer.interfaces.OnTrimVideoListener;
 
 public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVideoListener {
 
@@ -70,9 +70,15 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
     }
 
     @Override
+    public void onTrimStarted() {
+
+    }
+
+    @Override
     public void getResult(final Uri uri) {
         mProgressDialog.cancel();
         if (!isActivityLaunched) {
+//           mVideoTrimmer.getTimeStampForIFrame();
             isActivityLaunched = true;
             Intent intent = new Intent(VideoTrimmerActivity.this, AddVideoDetailsActivity.class);
             if (uri.getPath().contains("/MyCity4Kids/videos/")) {
@@ -99,6 +105,11 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
         mProgressDialog.cancel();
         mVideoTrimmer.destroy();
         finish();
+    }
+
+    @Override
+    public void onError(String message) {
+
     }
 
 }

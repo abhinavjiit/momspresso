@@ -41,6 +41,9 @@ public class ArticleListingResult implements Parcelable {
     private boolean isLiked;
     private String url;
     private String is_bookmark = "0";
+    private boolean isCarouselRequestRunning = false;
+    private boolean responseReceived = false;
+    private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
 
     public ArticleListingResult() {
     }
@@ -323,6 +326,30 @@ public class ArticleListingResult implements Parcelable {
 
     public void setIs_bookmark(String is_bookmark) {
         this.is_bookmark = is_bookmark;
+    }
+
+    public boolean isCarouselRequestRunning() {
+        return isCarouselRequestRunning;
+    }
+
+    public void setCarouselRequestRunning(boolean carouselRequestRunning) {
+        isCarouselRequestRunning = carouselRequestRunning;
+    }
+
+    public boolean isResponseReceived() {
+        return responseReceived;
+    }
+
+    public void setResponseReceived(boolean responseReceived) {
+        this.responseReceived = responseReceived;
+    }
+
+    public ArrayList<VlogsListingAndDetailResult> getCarouselVideoList() {
+        return carouselVideoList;
+    }
+
+    public void setCarouselVideoList(ArrayList<VlogsListingAndDetailResult> carouselVideoList) {
+        this.carouselVideoList = carouselVideoList;
     }
 
     @Override

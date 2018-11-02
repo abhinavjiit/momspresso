@@ -24,12 +24,9 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
-import com.mycity4kids.ui.activity.UserPublishedContentActivity;
 import com.mycity4kids.utils.PermissionUtil;
-
-import java.util.ArrayList;
 
 /**
  * Created by user on 08-06-2015.
@@ -86,6 +83,8 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                             ((DashboardActivity) getActivity()).requestPermissions("camera");
                         } else if ("myfunnyvideos".equals(activity)) {
                             ((UserFunnyVideosTabFragment) getTargetFragment()).requestPermissions("camera");
+                        } else if ("video_category_activity".equals(activity)) {
+                            ((ChooseVideoCategoryActivity) getActivity()).requestPermissions("camera");
                         } else if ("vlogslisting".equals(activity)) {
                         } else if ("allvideosection".equals(activity)) {
                         }
@@ -110,6 +109,8 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                             ((DashboardActivity) getActivity()).requestPermissions("gallery");
                         } else if ("myfunnyvideos".equals(activity)) {
                             ((UserFunnyVideosTabFragment) getTargetFragment()).requestPermissions("gallery");
+                        } else if ("video_category_activity".equals(activity)) {
+                            ((ChooseVideoCategoryActivity) getActivity()).requestPermissions("gallery");
                         } else if ("vlogslisting".equals(activity)) {
                         } else if ("allvideosection".equals(activity)) {
                         }
@@ -126,62 +127,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             case R.id.cancelTextView:
                 dismiss();
                 break;
-        }
-    }
-
-    private void requestPermissions(final String imageFrom) {
-        // BEGIN_INCLUDE(contacts_permission_request)
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(rootLayout, R.string.permission_storage_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions(imageFrom);
-                        }
-                    })
-                    .show();
-        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                Manifest.permission.CAMERA)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(rootLayout, R.string.permission_camera_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions(imageFrom);
-                        }
-                    })
-                    .show();
-        } else {
-            requestUngrantedPermissions(imageFrom);
-        }
-    }
-
-    private void requestUngrantedPermissions(String imageFrom) {
-        ArrayList<String> permissionList = new ArrayList<>();
-        for (int i = 0; i < PERMISSIONS_STORAGE_CAMERA.length; i++) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE_CAMERA[i]) != PackageManager.PERMISSION_GRANTED) {
-                permissionList.add(PERMISSIONS_STORAGE_CAMERA[i]);
-            }
-        }
-        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
-        if ("gallery".equals(imageFrom)) {
-            requestPermissions(requiredPermission, REQUEST_GALLERY_PERMISSION);
-        } else if ("camera".equals(imageFrom)) {
-            requestPermissions(requiredPermission, REQUEST_CAMERA_PERMISSION);
         }
     }
 
@@ -231,6 +176,8 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                 getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("myfunnyvideos".equals(activity)) {
                 getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
+            } else if ("video_category_activity".equals(activity)) {
+                getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("vlogslisting".equals(activity)) {
                 getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("allvideosection".equals(activity)) {
@@ -250,6 +197,8 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             if ("dashboard".equals(activity)) {
                 getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("myfunnyvideos".equals(activity)) {
+                getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+            } else if ("video_category_activity".equals(activity)) {
                 getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("vlogslisting".equals(activity)) {
                 getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);

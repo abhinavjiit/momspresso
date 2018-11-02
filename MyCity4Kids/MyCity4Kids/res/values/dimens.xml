@@ -46,4 +46,8 @@
     <dimen name="item_margin_half">8dp</dimen>
 
     <dimen name="column_width">80dp</dimen>
+
+    <!-- VIDEO TRIMMER-->
+    <dimen name="progress_video_line_height">2dp</dimen>
+    <dimen name="frames_video_height">40dip</dimen>
 </resources>

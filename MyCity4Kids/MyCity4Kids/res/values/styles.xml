@@ -323,4 +323,9 @@
         <item name="com_accountkit_input_text_color">@color/black</item>
         <item name="com_accountkit_input_background_color">#24D54058</item>
     </style>
+
+    <style name="PlayerTheme" parent="android:Theme.Holo">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
 </resources>

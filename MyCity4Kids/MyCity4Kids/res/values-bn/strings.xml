@@ -836,4 +836,5 @@
     <string name="search">Search Any article or author</string>
     <string name="new_label">নতুন</string>
     <string name="view_profile">view profile</string>
+    <string name="choose_video_category">Choose Video Category</string>
 </resources>

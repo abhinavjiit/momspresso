@@ -32,7 +32,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.activity.VlogsDetailActivity;
+import com.mycity4kids.ui.activity.MainActivity;
 import com.mycity4kids.ui.adapter.VlogsListingAdapter;
 
 import java.util.ArrayList;
@@ -153,7 +153,7 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(getActivity(), VlogsDetailActivity.class);
+                Intent intent = new Intent(getActivity(), MainActivity.class);
                 if (adapterView.getAdapter() instanceof VlogsListingAdapter) {
 //                    Utils.pushEvent(VlogsListingActivity.this, GTMEventType.FOR_YOU_ARTICLE_CLICK_EVENT,
 //                            SharedPrefUtils.getUserDetailModel(VlogsListingActivity.this).getDynamoId(), "Video Listing Screen");

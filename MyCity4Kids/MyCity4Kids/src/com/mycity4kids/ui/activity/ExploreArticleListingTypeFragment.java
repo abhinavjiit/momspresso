@@ -118,10 +118,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         storyContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.storyContainer);
         groupsContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.groupsContainer);
 
-//        ((TextView) gridViewHeader.findViewById(R.id.videosTextView)).setText(BaseApplication.getAppContext().getString(R.string.all_videos_toolbar_title));
-//        ((TextView) gridViewHeader.findViewById(R.id.storyTextView)).setText(BaseApplication.getAppContext().getString(R.string.myprofile_section_short_story_label));
-//        ((TextView) gridViewHeader.findViewById(R.id.groupsTextView)).setText(BaseApplication.getAppContext().getString(R.string.groups_support_groups));
-
         videosContainer.setOnClickListener(this);
         storyContainer.setOnClickListener(this);
         groupsContainer.setOnClickListener(this);
@@ -137,23 +133,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             gridview.setAdapter(adapter);
             adapter.setDatalist(mainTopicsList);
 
-//            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-//            recyclerView.setHasFixedSize(true);
-//            final GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
-//            recyclerView.setLayoutManager(manager);
-//            int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.groups_column_spacing);
-//            recyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-//            final TopicsRecyclerGridAdapter topicsRecyclerGridAdapter = new TopicsRecyclerGridAdapter(getActivity(), this);
-//            topicsRecyclerGridAdapter.setDatalist(mainTopicsList);
-//            recyclerView.setAdapter(topicsRecyclerGridAdapter);
-
-
-//            manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//                @Override
-//                public int getSpanSize(int position) {
-//                    return topicsRecyclerGridAdapter.isHeader(position) ? manager.getSpanCount() : 1;
-//                }
-//            });
             guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());
             guideTopicTextView2.setText(mainTopicsList.get(1).getDisplay_name().toUpperCase());
         } catch (FileNotFoundException e) {

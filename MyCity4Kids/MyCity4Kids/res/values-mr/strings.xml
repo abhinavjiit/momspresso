@@ -835,4 +835,5 @@
     <string name="search">Search any article or author</string>
     <string name="new_label">NEW</string>
     <string name="view_profile">view profile</string>
+    <string name="choose_video_category">Choose Video Category</string>
 </resources>

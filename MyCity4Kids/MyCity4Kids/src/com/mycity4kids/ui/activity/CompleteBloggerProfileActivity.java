@@ -96,7 +96,6 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
                     for (KidsModel km : responseData.getData().get(0).getResult().getKids()) {
                         addKidView(km);
                     }
-
                 }
                 rangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
                     @Override

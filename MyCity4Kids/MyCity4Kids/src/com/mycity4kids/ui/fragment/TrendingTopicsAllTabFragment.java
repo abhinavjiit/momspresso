@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.fragment;
 
+import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,12 +28,16 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.VlogsListingAndDetailResult;
+import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
+import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.FeedNativeAd;
@@ -55,6 +60,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
+    private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
@@ -84,7 +90,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         String gpImageUrl = getArguments().getString("gpImageUrl");
         int groupId = getArguments().getInt("groupId");
         mshimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer1);
-       // progressBar.setVisibility(View.VISIBLE);
+        // progressBar.setVisibility(View.VISIBLE);
 
         progressBar.setVisibility(View.VISIBLE);
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
@@ -173,6 +179,65 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
 
         });
         return view;
+    }
+
+    private void getCarouselVideos() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 5, 0, 3);
+        callRecentVideoArticles.enqueue(carouselVideosResponseCallback);
+    }
+
+    private Callback<VlogsListingResponse> carouselVideosResponseCallback = new Callback<VlogsListingResponse>() {
+        @Override
+        public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+//                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                VlogsListingResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processCarouselResponse(responseData);
+                } else {
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<VlogsListingResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void processCarouselResponse(VlogsListingResponse responseData) {
+        ArrayList<VlogsListingAndDetailResult> dataList = responseData.getData().get(0).getResult();
+        if (dataList == null || dataList.size() == 0) {
+            isLastPageReached = true;
+            if (null != carouselVideoList && !carouselVideoList.isEmpty()) {
+                //No more next results for search from pagination
+            } else {
+                // No results for search
+                carouselVideoList = dataList;
+                recyclerAdapter.setCarouselVideos(carouselVideoList);
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        } else {
+            if (nextPageNumber == 1) {
+                carouselVideoList = dataList;
+            } else {
+                carouselVideoList.addAll(dataList);
+            }
+            recyclerAdapter.setCarouselVideos(carouselVideoList);
+            nextPageNumber = nextPageNumber + 1;
+            recyclerAdapter.notifyDataSetChanged();
+        }
     }
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
@@ -291,6 +356,21 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.videoContainerFL1:
+                launchVideoDetailsActivity(position, 0);
+                break;
+            case R.id.videoContainerFL2:
+                launchVideoDetailsActivity(position, 1);
+                break;
+            case R.id.videoContainerFL3:
+                launchVideoDetailsActivity(position, 2);
+                break;
+            case R.id.videoContainerFL4:
+                launchVideoDetailsActivity(position, 3);
+                break;
+            case R.id.videoContainerFL5:
+                launchVideoDetailsActivity(position, 4);
+                break;
             case R.id.closeImageView:
                 MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                 try {
@@ -354,6 +434,20 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                     startActivity(intent);
                 }
                 break;
+        }
+    }
+
+    private void launchVideoDetailsActivity(int position, int videoIndex) {
+        if (articleDataModelsNew.get(position).getCarouselVideoList() != null && !articleDataModelsNew.get(position).getCarouselVideoList().isEmpty()) {
+            VlogsListingAndDetailResult result = articleDataModelsNew.get(position).getCarouselVideoList().get(videoIndex);
+            Intent intent = new Intent(getActivity(), VlogsDetailActivity.class);
+            intent.putExtra(Constants.VIDEO_ID, result.getId());
+            intent.putExtra(Constants.AUTHOR_ID, result.getAuthor().getId());
+            intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
+            intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+            intent.putExtra(Constants.AUTHOR, result.getAuthor().getId() + "~" + result.getAuthor().getFirstName() + " " + result.getAuthor().getLastName());
+            startActivity(intent);
         }
     }
 

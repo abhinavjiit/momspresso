@@ -45,6 +45,7 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:17.1.0'
     compile 'com.google.firebase:firebase-core:16.0.1'
     compile 'com.google.firebase:firebase-storage:16.0.1'
+    compile 'com.google.firebase:firebase-auth:16.0.1'
 
     compile 'com.android.support:design:25.3.0'
     compile 'com.android.support:cardview-v7:25.3.0'
@@ -70,7 +71,7 @@ dependencies {
     compile 'com.yalantis:ucrop:2.1.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
-    compile 'life.knowledge4:k4l-video-trimmer:1.0'
+//    compile 'life.knowledge4:k4l-video-trimmer:1.0'
     compile 'io.tus.java.client:tus-java-client:0.3.1'
     compile 'io.tus.android.client:tus-android-client:0.1.4'
     compile 'com.afollestad:easyvideoplayer:0.3.0'
@@ -80,17 +81,16 @@ dependencies {
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.facebook.android:audience-network-sdk:4.27.0'
-    compile "im.ene.toro3:toro:3.4.1"
-    compile "im.ene.toro3:toro-ext-exoplayer:3.4.1"  // to get ExoPlayer support
     compile 'com.shuhart.bubblepagerindicator:bubblepagerindicator:1.0.13'
     compile 'com.mixpanel.android:mixpanel-android:5.+'
     compile 'com.facebook.fresco:fresco:1.10.0'
     compile 'com.github.stfalcon:frescoimageviewer:0.5.0'
     compile 'com.github.florent37:diagonallayout:1.0.9'
-    compile 'com.github.jrvansuita:GaussianBlur:+'
     compile 'com.github.irshulx:laser-native-editor:2.3.1'
     compile 'com.facebook.android:account-kit-sdk:4.+'
     compile 'com.github.linger1216:labelview:v1.1.2'
+    compile 'com.googlecode.mp4parser:isoparser:1.1.20'
+    compile 'com.google.android.exoplayer:exoplayer:r2.5.1'
 }
 
 //dependencies {
@@ -99,8 +99,11 @@ dependencies {
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
-
+    buildToolsVersion '28.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     useLibrary 'org.apache.http.legacy'
     sourceSets {
         main {
@@ -127,12 +130,14 @@ android {
     }
     defaultConfig {
         multiDexEnabled true
+        minSdkVersion 15
         applicationId "com.mycity4kids"
         dexOptions {
             javaMaxHeapSize "4g"
         }
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     lintOptions {
         checkReleaseBuilds false

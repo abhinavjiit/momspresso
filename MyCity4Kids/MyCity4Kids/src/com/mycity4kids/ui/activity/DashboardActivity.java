@@ -94,13 +94,13 @@ import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import life.knowledge4.videotrimmer.utils.FileUtils;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import retrofit2.Call;
@@ -1274,7 +1274,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.videoContainer:
                 hideCreateContentView();
                 if (SharedPrefUtils.getFirstVideoUploadFlag(this)) {
-                    launchAddVideoOptions();
+//                    launchAddVideoOptions();
+                    Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
+                    startActivity(intent);
                 } else {
                     UploadVideoInfoFragment uploadVideoInfoFragment = new UploadVideoInfoFragment();
                     Bundle searchBundle = new Bundle();
@@ -1292,6 +1294,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(pIntent);
                 break;
             case R.id.langTextView: {
+//                Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
+//                startActivity(intent);
                 ChangePreferredLanguageDialogFragment changePreferredLanguageDialogFragment = new ChangePreferredLanguageDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
