@@ -90,16 +90,22 @@ public class VlogsListingAdapter extends BaseAdapter {
             holder.commentCountTextView.setVisibility(View.GONE);
             holder.recommendCountTextView.setVisibility(View.GONE);
 
-            String userName = articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName();
-            if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
+            try {
+                String userName = articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName();
+                if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
+                    holder.txvAuthorName.setText("NA");
+                } else {
+                    holder.txvAuthorName.setText(userName);
+                }
+            } catch (Exception e) {
                 holder.txvAuthorName.setText("NA");
-            } else {
-                holder.txvAuthorName.setText(userName);
             }
-
-            Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURL(articleDataModelsNew.get(position).getUrl()))
-                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
-
+            try {
+                Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURL(articleDataModelsNew.get(position).getUrl()))
+                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+            } catch (Exception e) {
+                holder.articleImageView.setImageResource(R.drawable.default_article);
+            }
         } catch (Exception ex) {
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));

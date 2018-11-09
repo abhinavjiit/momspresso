@@ -78,7 +78,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             forYouTextView, /*videosTextView,*/
             recentTextView;
     private TextView continueTextView;
-    private RelativeLayout videosContainer, storyContainer, groupsContainer;
+    private RelativeLayout videosContainer, storyContainer, groupsContainer, momsTVContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -117,10 +117,12 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         videosContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.videosContainer);
         storyContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.storyContainer);
         groupsContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.groupsContainer);
+        momsTVContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.momsTVContainer);
 
         videosContainer.setOnClickListener(this);
         storyContainer.setOnClickListener(this);
         groupsContainer.setOnClickListener(this);
+        momsTVContainer.setOnClickListener(this);
         try {
             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -407,11 +409,11 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 startActivity(intent);
             }
             break;
-//            case R.id.videosTextView:
             case R.id.videosContainer: {
                 Utils.pushOpenScreenEvent(getActivity(), "VideosScreen", dynamoUserId + "");
                 Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "VideosScreen");
-                Intent cityIntent = new Intent(getActivity(), AllVideosListingActivity.class);
+                Intent cityIntent = new Intent(getActivity(), CategoryVideosListingActivity.class);
+                cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                 startActivity(cityIntent);
             }
             break;
@@ -428,6 +430,13 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 Bundle mBundle0 = new Bundle();
                 fragment0.setArguments(mBundle0);
                 ((DashboardActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+            }
+            break;
+            case R.id.momsTVContainer: {
+                Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
+                intent.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
+                intent.putExtra("displayName", "Momspresso TV");
+                startActivity(intent);
             }
             break;
 

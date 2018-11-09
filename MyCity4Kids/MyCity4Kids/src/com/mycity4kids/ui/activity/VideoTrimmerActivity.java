@@ -30,6 +30,7 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
     static final String EXTRA_VIDEO_PATH = "EXTRA_VIDEO_PATH";
     //prevent multiple instances
     boolean isActivityLaunched = false;
+    private String categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
         mHandler = new Handler();
         if (extraIntent != null) {
             path = extraIntent.getStringExtra(EXTRA_VIDEO_PATH);
+            categoryId = extraIntent.getStringExtra("categoryId");
         }
         if (path.contains(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/")) {
             Log.d("TRIM Video", "Video Picked from Mycity folder");
@@ -81,6 +83,7 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
 //           mVideoTrimmer.getTimeStampForIFrame();
             isActivityLaunched = true;
             Intent intent = new Intent(VideoTrimmerActivity.this, AddVideoDetailsActivity.class);
+            intent.putExtra("categoryId", categoryId);
             if (uri.getPath().contains("/MyCity4Kids/videos/")) {
                 intent.putExtra("uriPath", uri.getPath());
             } else {

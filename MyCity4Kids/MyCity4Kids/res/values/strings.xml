@@ -183,7 +183,7 @@
     <string name="ad.tts.toast_unplayable_article">Unable to play this article</string>
 
     <string name="vd.recent_videos_from.title">RECENT VIDEOS FROM</string>
-    <string name="vd.trending.title">TRENDING BLOGS</string>
+    <string name="vd.trending.title">TRENDING VIDEOS</string>
 
     <string-array name="improve_page_views_array">
         <item>Interlink your article to other blog posts</item>
@@ -883,4 +883,5 @@
     <string name="short_seconds">sec</string>
     <string name="megabyte">MB</string>
     <string name="kilobyte">KB</string>
+    <string name="choose_video_category">Choose Video Category</string>
 </resources>

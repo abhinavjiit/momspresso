@@ -452,6 +452,7 @@ public class AppConstants {
     public static final String MOMSPRESSO_CATEGORY_ID = "momspressoCategoryId";
     public static final String MOMSPRESSO_SLUG = "momspresso-video";
 
+    public static final String HOME_VIDEOS_CATEGORYID = "category-d4379f58f7b24846adcefc82dc22a86b";
     public static final String MOMSPRESSO_CATEGORYID = "category-ae65da4bf8bb48e4b80f13444be1e9a5";
     public static final String HINDI_CATEGORYID = "category-1515d3c9adb249988a136bdbfc8f0017";
     public static final String BANGLA_CATEGORYID = "category-5ad20fb85f7c4a84b66b8d6993dbad9f";

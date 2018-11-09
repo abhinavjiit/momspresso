@@ -42,10 +42,9 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 /**
- * Created by hemant on 8/8/17.
+ * Created by hemant on 29/5/17.
  */
-public class FunnyVideosTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
-
+public class CategoryVideosTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private VlogsListingAdapter articlesListingAdapter;
     private ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
@@ -65,13 +64,14 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
     private String fromScreen;
-    ShimmerFrameLayout funnyvideosshimmer;
+    private ShimmerFrameLayout funnyvideosshimmer;
+    private String videoCategory;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.funny_videos_tab_fragment, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        View view = getActivity().getLayoutInflater().inflate(R.layout.funny_videos_tab_fragment, container, false);
 
         rootLayout = view.findViewById(R.id.rootLayout);
         listView = (ListView) view.findViewById(R.id.vlogsListView);
@@ -85,6 +85,8 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
         fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
         funnyvideosshimmer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_funny_videos_article);
         frameLayout.getBackground().setAlpha(0);
+
+        videoCategory = getArguments().getString("video_category_id");
 
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
@@ -159,11 +161,12 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
 //                            SharedPrefUtils.getUserDetailModel(VlogsListingActivity.this).getDynamoId(), "Video Listing Screen");
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
                     intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
-//                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
+                    intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
                     intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-//                    intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
+                    intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
                     startActivity(intent);
 
                 }
@@ -171,18 +174,20 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
         });
 
         return view;
-
     }
+
 
     void hitArticleListingApi() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
             return;
         }
+
         int from = (nextPageNumber - 1) * limit;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(from, from + limit - 1, sortType, 3, null);
+        Log.d("VIDEO CATEGORY", "--" + videoCategory);
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(from, from + limit - 1, sortType, 3, videoCategory);
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
 
@@ -235,9 +240,12 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
             if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
                 //No more next results for search from pagination
             } else {
-                // No results for search
+                fabSort.setVisibility(View.GONE);
+                fabMenu.setVisibility(View.GONE);
+                popularSortFAB.setVisibility(View.GONE);
+                recentSortFAB.setVisibility(View.GONE);
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText(getString(R.string.no_articles_found));
+                noBlogsTextView.setText(getString(R.string.all_videos_funny_videos_no_videos));
                 articleDataModelsNew = dataList;
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
                 articlesListingAdapter.notifyDataSetChanged();
@@ -313,4 +321,3 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
         funnyvideosshimmer.stopShimmerAnimation();
     }
 }
-

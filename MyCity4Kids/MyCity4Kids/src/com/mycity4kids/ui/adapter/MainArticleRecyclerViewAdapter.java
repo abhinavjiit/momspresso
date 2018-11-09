@@ -1816,8 +1816,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             BufferedReader reader = null;
             try {
                 int start = (((pos + 3) / 6) * 5) - 5;
-                int end = start + 4;
-                URL url = new URL(AppConstants.BASE_URL + "v1/videos/?" + "start=" + start + "&end=" + end + "&sort=0&type=3");
+                int end = start + 5;
+                URL url = new URL("http://api.momspresso.com/" + "v2/videos/?" + "start=" + start + "&end=" + end + "&sort=0&type=3");
                 Log.d("VideoCarouselViewHolder", AppConstants.BASE_URL + "v1/videos/?" + "start=" + start + "&end=" + end + "&sort=0&type=3");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -1901,12 +1901,17 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     private void updateCarouselView(TextView textView, ImageView imageView, TextView authorTextView, VlogsListingAndDetailResult data) {
         textView.setText(data.getTitle());
-        String userName = data.getAuthor().getFirstName() + " " + data.getAuthor().getLastName();
-        if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
+        try {
+            String userName = data.getAuthor().getFirstName() + " " + data.getAuthor().getLastName();
+            if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
+                authorTextView.setText("NA");
+            } else {
+                authorTextView.setText(userName);
+            }
+        } catch (Exception e) {
             authorTextView.setText("NA");
-        } else {
-            authorTextView.setText(userName);
         }
+
         try {
             Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURL(data.getUrl()))
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageView);

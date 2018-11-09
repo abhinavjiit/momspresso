@@ -491,6 +491,9 @@
             android:name=".ui.activity.PhoneLoginUserDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
+        <activity
+            android:name=".ui.activity.CategoryVideosListingActivity"
+            android:screenOrientation="portrait" />
         <!--<activity-->
             <!--android:name=".ui.activity.ExoPlayerTestActivity"-->
             <!--android:screenOrientation="portrait" />-->

@@ -1,27 +1,51 @@
 {
   "project_info": {
-    "project_number": "833437366968",
-    "firebase_url": "https://avid-math-836.firebaseio.com",
-    "project_id": "avid-math-836",
-    "storage_bucket": "avid-math-836.appspot.com"
+    "project_number": "3577377239",
+    "firebase_url": "https://api-project-3577377239.firebaseio.com",
+    "project_id": "api-project-3577377239",
+    "storage_bucket": "api-project-3577377239.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:833437366968:android:45762af236931870",
+        "mobilesdk_app_id": "1:3577377239:android:45762af236931870",
         "android_client_info": {
           "package_name": "com.mycity4kids"
         }
       },
       "oauth_client": [
         {
-          "client_id": "833437366968-a9vshp8m3hprpks3ls46l6imo8jv1atm.apps.googleusercontent.com",
+          "client_id": "3577377239-egnqum8cofm1beck6ghrh4r2tcu895o0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycity4kids",
+            "certificate_hash": "83AD5D3669E95185FFD30ED96CAB528B04936942"
+          }
+        },
+        {
+          "client_id": "3577377239-qra9vc8sm2a80372t2ekcj66h86f0v5q.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "3577377239-7knpq48e7igmt19350orc6jsbsak5q2s.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "3577377239-7fe4a98uhhvg8hkioqk01lokd1mfom70.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "3577377239-51h1242blhsk1m0nep32ev9q8bslg8pm.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "3577377239.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAhTwGOBSFHuhB26X_CAEbgIY3VV6vOzg4"
+          "current_key": "AIzaSyATjKBk6YHXTxF0nuN6zCumLfq9JY4aBKU"
         }
       ],
       "services": {

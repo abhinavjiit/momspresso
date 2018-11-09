@@ -21,7 +21,6 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.LeafTopicsPagerAdapter;
-import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
 import com.mycity4kids.utils.AppUtils;
 
 import java.util.ArrayList;

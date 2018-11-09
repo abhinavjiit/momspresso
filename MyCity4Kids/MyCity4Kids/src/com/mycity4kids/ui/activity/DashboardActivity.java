@@ -148,7 +148,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout actionItemContainer, articleContainer, videoContainer, storyContainer;
     private View overlayView;
     private RelativeLayout createContentContainer;
-    private TextView usernameTextView, coachUsernameTextView, videosTextView, shortStoryTextView, groupsTextView, bookmarksTextView, settingTextView;
+    private TextView usernameTextView, coachUsernameTextView, videosTextView, shortStoryTextView, momspressoTextView, groupsTextView, bookmarksTextView, settingTextView;
     private LinearLayout drawerTopContainer, drawerContainer;
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
@@ -226,6 +226,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         storyContainer = (LinearLayout) findViewById(R.id.storyContainer);
         videosTextView = (TextView) findViewById(R.id.videosTextView);
         shortStoryTextView = (TextView) findViewById(R.id.shortStoryTextView);
+        momspressoTextView = (TextView) findViewById(R.id.momspressoTextView);
         groupsTextView = (TextView) findViewById(R.id.groupsTextView);
         bookmarksTextView = (TextView) findViewById(R.id.bookmarksTextView);
         settingTextView = (TextView) findViewById(R.id.settingTextView);
@@ -283,6 +284,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         storyContainer.setOnClickListener(this);
         videoContainer.setOnClickListener(this);
         shortStoryTextView.setOnClickListener(this);
+        momspressoTextView.setOnClickListener(this);
         groupsTextView.setOnClickListener(this);
         bookmarksTextView.setOnClickListener(this);
         videosTextView.setOnClickListener(this);
@@ -633,7 +635,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
-                Intent intent1 = new Intent(DashboardActivity.this, VlogsDetailActivity.class);
+                Intent intent1 = new Intent(DashboardActivity.this, MainActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.VIDEO_ID, articleId);
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
@@ -1273,17 +1275,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.videoContainer:
                 hideCreateContentView();
-                if (SharedPrefUtils.getFirstVideoUploadFlag(this)) {
+            {
+//                if (SharedPrefUtils.getFirstVideoUploadFlag(this)) {
 //                    launchAddVideoOptions();
-                    Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
-                    startActivity(intent);
-                } else {
-                    UploadVideoInfoFragment uploadVideoInfoFragment = new UploadVideoInfoFragment();
-                    Bundle searchBundle = new Bundle();
-                    uploadVideoInfoFragment.setArguments(searchBundle);
-                    addFragment(uploadVideoInfoFragment, searchBundle, true);
-                }
-                break;
+                Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
+                startActivity(intent);
+//                } else {
+//                    UploadVideoInfoFragment uploadVideoInfoFragment = new UploadVideoInfoFragment();
+//                    Bundle searchBundle = new Bundle();
+//                    uploadVideoInfoFragment.setArguments(searchBundle);
+//                    addFragment(uploadVideoInfoFragment, searchBundle, true);
+//                }
+            }
+            break;
             case R.id.overlayView:
                 hideCreateContentView();
                 break;
@@ -1361,8 +1365,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.videosTextView: {
                 mDrawerLayout.closeDrawers();
-                Intent cityIntent = new Intent(this, AllVideosListingActivity.class);
+                Intent cityIntent = new Intent(this, CategoryVideosListingActivity.class);
+                cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                 startActivity(cityIntent);
+            }
+            break;
+            case R.id.momspressoTextView: {
+                mDrawerLayout.closeDrawers();
+                Intent intent = new Intent(this, FilteredTopicsArticleListingActivity.class);
+                intent.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
+                intent.putExtra("displayName", "Momspresso TV");
+                startActivity(intent);
             }
             break;
             case R.id.shortStoryTextView: {
@@ -1706,7 +1719,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderVlogDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getId())) {
-            Intent intent = new Intent(DashboardActivity.this, VlogsDetailActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
 //            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             intent.putExtra(Constants.VIDEO_ID, data.getId());
             intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);

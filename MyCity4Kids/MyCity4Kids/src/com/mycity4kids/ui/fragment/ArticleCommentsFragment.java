@@ -72,6 +72,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     private ArticleDetailsAPI articleDetailsAPI;
     private ArticleCommentRepliesDialogFragment articleCommentRepliesDialogFragment;
     private TextView noCommentsTextView;
+    private String sourceType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,6 +104,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             titleSlug = extras.getString(Constants.TITLE_SLUG);
             blogSlug = extras.getString(Constants.BLOG_SLUG);
             userType = extras.getString("userType");
+            sourceType = extras.getString("type");
         }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -212,7 +214,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
         addEditCommentOrReplyRequest.setParent_id("0");
-        addEditCommentOrReplyRequest.setType("article");
+        if ("video".equals(sourceType)) {
+            addEditCommentOrReplyRequest.setType("video");
+        } else {
+            addEditCommentOrReplyRequest.setType("article");
+        }
         Call<CommentListResponse> call = articleDetailsAPI.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
     }
@@ -428,7 +434,11 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
         addEditCommentOrReplyRequest.setParent_id(parentCommentId);
-        addEditCommentOrReplyRequest.setType("article");
+        if ("video".equals(sourceType)) {
+            addEditCommentOrReplyRequest.setType("video");
+        } else {
+            addEditCommentOrReplyRequest.setType("article");
+        }
         Call<CommentListResponse> call = articleDetailsAPI.addCommentOrReply(addEditCommentOrReplyRequest);
         call.enqueue(addReplyResponseListener);
     }

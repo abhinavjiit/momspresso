@@ -30,13 +30,17 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
+import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.LeafNodeTopicArticlesActivity;
+import com.mycity4kids.ui.activity.MainActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.widget.FeedNativeAd;
 
@@ -328,17 +332,78 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-        Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-        intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
-        intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
-        intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
-        intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
-        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
-        intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
-        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-        intent.putParcelableArrayListExtra("pagerListData", mDatalist);
-        intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
-        startActivity(intent);
+        switch (view.getId()) {
+            case R.id.videoContainerFL1:
+                launchVideoDetailsActivity(position, 0);
+                break;
+            case R.id.videoContainerFL2:
+                launchVideoDetailsActivity(position, 1);
+                break;
+            case R.id.videoContainerFL3:
+                launchVideoDetailsActivity(position, 2);
+                break;
+            case R.id.videoContainerFL4:
+                launchVideoDetailsActivity(position, 3);
+                break;
+            case R.id.videoContainerFL5:
+                launchVideoDetailsActivity(position, 4);
+                break;
+            default:
+                if ("1".equals(mDatalist.get(position).getContentType())) {
+                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
+                    intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
+                    intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(mDatalist, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, mDatalist, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
+                    intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
+                    intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(mDatalist, AppConstants.CONTENT_TYPE_ARTICLE);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, mDatalist, AppConstants.CONTENT_TYPE_ARTICLE));
+                    startActivity(intent);
+                }
+                break;
+        }
+//        Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+//        intent.putExtra(Constants.ARTICLE_ID, mDatalist.get(position).getId());
+//        intent.putExtra(Constants.AUTHOR_ID, mDatalist.get(position).getUserId());
+//        intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
+//        intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
+//        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
+//        intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
+//        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+//        intent.putParcelableArrayListExtra("pagerListData", mDatalist);
+//        intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
+//        startActivity(intent);
+    }
+
+    private void launchVideoDetailsActivity(int position, int videoIndex) {
+        if (mDatalist.get(position).getCarouselVideoList() != null && !mDatalist.get(position).getCarouselVideoList().isEmpty()) {
+            VlogsListingAndDetailResult result = mDatalist.get(position).getCarouselVideoList().get(videoIndex);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.putExtra(Constants.VIDEO_ID, result.getId());
+            intent.putExtra(Constants.STREAM_URL, result.getUrl());
+            intent.putExtra(Constants.AUTHOR_ID, result.getAuthor().getId());
+            intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
+            intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+            intent.putExtra(Constants.AUTHOR, result.getAuthor().getId() + "~" + result.getAuthor().getFirstName() + " " + result.getAuthor().getLastName());
+            startActivity(intent);
+        }
     }
 
     @Override

@@ -36,6 +36,7 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
+import com.mycity4kids.ui.activity.MainActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.activity.UserPublishedContentActivity;
 import com.mycity4kids.ui.activity.VideoTrimmerActivity;
@@ -139,7 +140,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(getActivity(), VlogsDetailActivity.class);
+                Intent intent = new Intent(getActivity(), MainActivity.class);
                 if (adapterView.getAdapter() instanceof MyFunnyVideosListingAdapter) {
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
                     switch (parentingListData.getPublication_status()) {
@@ -161,6 +162,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                         case AppConstants.VIDEO_STATUS_PUBLISHED: {
 //                            showToast("This video is Published");
                             intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
+                            intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
                             intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
                             intent.putExtra(Constants.FROM_SCREEN, "My Funny Videos Screen");
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "My Funny Videos");

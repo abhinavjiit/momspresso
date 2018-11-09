@@ -16,9 +16,9 @@ public class UploadVideoRequest {
     private String user_id;
     private String user_agent;
     private String published_url;
-    private boolean is_popular;
+//    private boolean is_popular;
     private ArrayList<String> category_id;
-    private boolean has_special_cat;
+//    private boolean has_special_cat;
     private String thumbnail;
 
     public String getVideo_id() {
@@ -101,13 +101,13 @@ public class UploadVideoRequest {
         this.published_url = published_url;
     }
 
-    public boolean isIs_popular() {
-        return is_popular;
-    }
-
-    public void setIs_popular(boolean is_popular) {
-        this.is_popular = is_popular;
-    }
+//    public boolean isIs_popular() {
+//        return is_popular;
+//    }
+//
+//    public void setIs_popular(boolean is_popular) {
+//        this.is_popular = is_popular;
+//    }
 
     public ArrayList<String> getCategory_id() {
         return category_id;
@@ -117,13 +117,13 @@ public class UploadVideoRequest {
         this.category_id = category_id;
     }
 
-    public boolean isHas_special_cat() {
-        return has_special_cat;
-    }
-
-    public void setHas_special_cat(boolean has_special_cat) {
-        this.has_special_cat = has_special_cat;
-    }
+//    public boolean isHas_special_cat() {
+//        return has_special_cat;
+//    }
+//
+//    public void setHas_special_cat(boolean has_special_cat) {
+//        this.has_special_cat = has_special_cat;
+//    }
 
     public String getThumbnail() {
         return thumbnail;

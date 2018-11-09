@@ -28,6 +28,8 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
+import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
@@ -39,6 +41,8 @@ import com.mycity4kids.videotrimmer.utils.FileUtils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -63,6 +67,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
     private GridView gridview;
     private Toolbar toolbar;
     private View rootLayout;
+    private String categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +132,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
                 if (topic == null) {
                     return;
                 }
+                categoryId = topic.getId();
                 launchAddVideoOptions();
 //                Intent intent = new Intent(ChooseVideoCategoryActivity.this, TopicsListingActivity.class);
 //                intent.putExtra("parentTopicId", topic.getId());
@@ -139,8 +145,8 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
         try {
             mainTopicsList = new ArrayList<>();
             for (int i = 0; i < responseData.getData().size(); i++) {
-                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
-                    mainTopicsList.add(responseData.getData().get(i));
+                if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+                    mainTopicsList.addAll(responseData.getData().get(i).getChild());
                 }
             }
         } catch (Exception e) {
@@ -154,6 +160,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
         FragmentManager fm = getSupportFragmentManager();
         Bundle _args = new Bundle();
         _args.putString("activity", "video_category_activity");
+        _args.putString("categoryId", categoryId);
         chooseVideoUploadOptionDialogFragment.setArguments(_args);
         chooseVideoUploadOptionDialogFragment.setCancelable(true);
         chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
@@ -298,6 +305,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
     private void startTrimActivity(@NonNull Uri uri) {
         Intent intent = new Intent(this, VideoTrimmerActivity.class);
         String filepath = FileUtils.getPath(this, uri);
+        intent.putExtra("categoryId", categoryId);
         if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
             intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
             startActivity(intent);

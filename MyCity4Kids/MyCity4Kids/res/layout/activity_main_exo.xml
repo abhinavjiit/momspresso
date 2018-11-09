@@ -210,7 +210,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="@string/vd.recent_videos_from.title"
+                    android:text="RELATED VIDEOS"
                     android:textAllCaps="true"
                     android:textColor="@color/ad.related_article.title"
                     android:textSize="@dimen/ad_recent"
@@ -222,7 +222,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    app:articleImage="@drawable/progress_spinner"
+                    app:articleImage="@drawable/default_article"
                     app:articleTitle="" />
 
                 <View
@@ -236,7 +236,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    app:articleImage="@drawable/progress_spinner"
+                    app:articleImage="@drawable/default_article"
                     app:articleTitle="" />
 
                 <View
@@ -250,7 +250,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    app:articleImage="@drawable/progress_spinner"
+                    app:articleImage="@drawable/default_article"
                     app:articleTitle="" />
 
                 <View
@@ -274,7 +274,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="@string/vd.trending.title"
+                    android:text="POPULAR VIDEOS"
                     android:textColor="@color/ad.trending.title"
                     android:textSize="@dimen/ad_trending"
                     app:fontName="oswald_regular.ttf" />
@@ -285,7 +285,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    app:articleImage="@drawable/progress_spinner"
+                    app:articleImage="@drawable/default_article"
                     app:articleTitle="" />
 
                 <View
@@ -299,7 +299,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    app:articleImage="@drawable/progress_spinner"
+                    app:articleImage="@drawable/default_article"
                     app:articleTitle="" />
 
                 <View
@@ -313,7 +313,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
-                    app:articleImage="@drawable/progress_spinner"
+                    app:articleImage="@drawable/default_article"
                     app:articleTitle="" />
 
                 <View
@@ -334,10 +334,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/trendingArticles"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/follow_topic_author_bg"
                 android:foregroundGravity="center"

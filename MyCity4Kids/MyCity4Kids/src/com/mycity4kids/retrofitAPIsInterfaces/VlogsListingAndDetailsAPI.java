@@ -6,6 +6,7 @@ import com.mycity4kids.models.request.ArticleReadTimeRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
+import com.mycity4kids.models.request.UploadVideoRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
@@ -18,6 +19,8 @@ import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingResponse;
+
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -34,7 +37,7 @@ import retrofit2.http.Url;
  */
 public interface VlogsListingAndDetailsAPI {
 
-    @GET("/v1/videos/{videoId}")
+    @GET("/v2/videos/{videoId}")
     Call<VlogsDetailResponse> getVlogDetail(@Path("videoId") String videoId);
 
     @GET("v1/videos/{videoId}/views")
@@ -43,20 +46,27 @@ public interface VlogsListingAndDetailsAPI {
     @PUT("v1/videos/{videoId}/views/")
     Call<ResponseBody> updateViewCount(@Path("videoId") String videoId);
 
-    @GET("v1/videos/users/{userId}")
-    Call<VlogsListingResponse> getPublishedVlogs(@Path("userId") String userId,
+    @GET("v2/videos")
+    Call<VlogsListingResponse> getPublishedVlogs(@Query("user_id") String userId,
                                                  @Query("start") int start,
                                                  @Query("end") int end,
                                                  @Query("sort") int sort);
 
-    @GET("v1/videos/")
+    @GET("v2/videos/")
     Call<VlogsListingResponse> getVlogsList(@Query("start") int start,
                                             @Query("end") int end,
                                             @Query("sort") int sort,
-                                            @Query("type") int type);
+                                            @Query("type") int type,
+                                            @Query("category_id") String categoryId);
 
     @GET("v2/videos/")
     Call<HomeVideosListingResponse> getHomeVideos(/*@Query("start") int start,
+                                                  @Query("end") int end,
+                                                  @Query("sort") int sort,
+                                                  @Query("type") int type*/);
+
+    @POST("v2/videos/")
+    Call<ResponseBody> publishHomeVideo(@Body UploadVideoRequest uploadVideoRequest/*@Query("start") int start,
                                                   @Query("end") int end,
                                                   @Query("sort") int sort,
                                                   @Query("type") int type*/);

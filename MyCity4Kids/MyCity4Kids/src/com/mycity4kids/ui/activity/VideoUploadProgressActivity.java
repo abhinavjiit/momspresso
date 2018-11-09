@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.accounts.NetworkErrorException;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,17 +39,23 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.request.UploadVideoRequest;
+import com.mycity4kids.models.response.HomeVideosListingResponse;
 import com.mycity4kids.models.response.UpdateVideoDetailsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.UploadVideosAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.TusAndroidUpload;
 import com.mycity4kids.ui.TusClient;
 import com.mycity4kids.ui.TusUpload;
 import com.mycity4kids.ui.TusUploader;
 
+import org.json.JSONObject;
+
 import java.net.URL;
+import java.util.ArrayList;
 
 import io.tus.android.client.TusPreferencesURLStore;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -66,6 +73,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private UploadTask uploadTask;
     private Uri contentURI;
     private String title;
+    private String categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +85,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
         contentURI = getIntent().getParcelableExtra("uri");
         title = getIntent().getStringExtra("title");
+        categoryId = getIntent().getStringExtra("categoryId");
 
         uploadingContainer = (RelativeLayout) findViewById(R.id.uploadingContainer);
         uploadFinishContainer = (RelativeLayout) findViewById(R.id.uploadFinishContainer);
@@ -127,10 +136,10 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private void uploadToFirebase(Uri file2) {
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com");
 
-        StorageReference storageRef = storage.getReference();
+        final StorageReference storageRef = storage.getReference();
 
 //        Uri file = Uri.fromFile(file2);
-        StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/" + file2.getLastPathSegment());
+        final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/" + file2.getLastPathSegment());
         com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2);
 
 // Register observers to listen for when the download is done or if it fails
@@ -139,12 +148,14 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
                 Log.d("FirebaseUpload", "FAIL");
+                createRowForFailedAttempt();
+
             }
         }).addOnSuccessListener(new OnSuccessListener<com.google.firebase.storage.UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
                 Log.d("FirebaseUpload", "FirebaseUpload");
-                storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         Uri downloadUri = uri;
@@ -164,13 +175,65 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         });
     }
 
+    private void createRowForFailedAttempt() {
+        ArrayList<String> catList = new ArrayList<String>();
+        catList.add(categoryId);
+        UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
+        uploadVideoRequest.setTitle(title);
+        uploadVideoRequest.setCategory_id(catList);
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI api = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<ResponseBody> call = api.publishHomeVideo(uploadVideoRequest);
+        call.enqueue(publishVideoResponseCallback);
+    }
+
     private void publishVideo(Uri uri) {
+        ArrayList<String> catList = new ArrayList<String>();
+        catList.add(categoryId);
         UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
         uploadVideoRequest.setTitle(title);
         uploadVideoRequest.setFilename(contentURI.getLastPathSegment());
+        uploadVideoRequest.setCategory_id(catList);
         uploadVideoRequest.setFile_location("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/");
         uploadVideoRequest.setUploaded_url(uri.toString());
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI api = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<ResponseBody> call = api.publishHomeVideo(uploadVideoRequest);
+        call.enqueue(publishVideoResponseCallback);
     }
+
+    private Callback<ResponseBody> publishVideoResponseCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    uploadingContainer.setVisibility(View.GONE);
+                    uploadFinishContainer.setVisibility(View.VISIBLE);
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void setStatus(String text) {
         status.setText(text);

@@ -36,6 +36,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
+import com.mycity4kids.ui.activity.MainActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
@@ -184,7 +185,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     private void getCarouselVideos() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 5, 0, 3);
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 5, 0, 3, null);
         callRecentVideoArticles.enqueue(carouselVideosResponseCallback);
     }
 
@@ -440,8 +441,9 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     private void launchVideoDetailsActivity(int position, int videoIndex) {
         if (articleDataModelsNew.get(position).getCarouselVideoList() != null && !articleDataModelsNew.get(position).getCarouselVideoList().isEmpty()) {
             VlogsListingAndDetailResult result = articleDataModelsNew.get(position).getCarouselVideoList().get(videoIndex);
-            Intent intent = new Intent(getActivity(), VlogsDetailActivity.class);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.putExtra(Constants.VIDEO_ID, result.getId());
+            intent.putExtra(Constants.STREAM_URL, result.getUrl());
             intent.putExtra(Constants.AUTHOR_ID, result.getAuthor().getId());
             intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");

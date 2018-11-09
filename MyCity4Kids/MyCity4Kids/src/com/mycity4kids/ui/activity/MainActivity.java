@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -141,7 +142,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private VlogsListingAndDetailResult detailData;
     private String videoId;
-    private String youTubeId = null;
+    //    private String youTubeId = null;
     private boolean isLoading = false;
     private String commentType = "db";
     private String commentURL = "";
@@ -189,6 +190,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private int mResumeWindow;
     private long mResumePosition;
     String streamUrl = "https://www.momspresso.com/new-videos/v1/test1/playlist.m3u8";
+    private String taggedCategories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -293,7 +295,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             vlogsListingAndDetailsAPI = retro.create(VlogsListingAndDetailsAPI.class);
             hitArticleDetailsS3API();
-            getViewCountAPI();
+//            getViewCountAPI();
 //            hitRecommendedStatusAPI();
         }
 
@@ -307,8 +309,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void getViewCountAPI() {
-        Call<ViewCountResponse> call = vlogsListingAndDetailsAPI.getViewCount(videoId);
-        call.enqueue(getViewCountResponseCallback);
+//        Call<ViewCountResponse> call = vlogsListingAndDetailsAPI.getViewCount(videoId);
+//        call.enqueue(getViewCountResponseCallback);
     }
 
     private void hitBookmarkFollowingStatusAPI() {
@@ -322,11 +324,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void hitRelatedArticleAPI() {
-        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getPublishedVlogs(authorId, 0, 3, 0);
-        callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
 
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 3, 1, 3);
+        if (detailData.getCategory_id() != null && !detailData.getCategory_id().isEmpty()) {
+            taggedCategories = detailData.getCategory_id().get(0);
+        }
+
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 3, 0, 3, taggedCategories);
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
+
+        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(0, 3, 1, 3, null);
+        callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
     }
 
     private void getFollowedTopicsList() {
@@ -375,10 +382,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             try {
                 VlogsDetailResponse responseData = response.body();
                 updateUIfromResponse(responseData.getData().getResult());
-                if (StringUtils.isNullOrEmpty(authorId)) {
-                    authorId = responseData.getData().getResult().getAuthor().getId();
-                    hitBookmarkFollowingStatusAPI();
-                }
+                authorId = responseData.getData().getResult().getAuthor().getId();
+                hitBookmarkFollowingStatusAPI();
                 hitRelatedArticleAPI();
                 commentURL = responseData.getData().getResult().getCommentUri();
                 commentMainUrl = responseData.getData().getResult().getCommentUri();
@@ -406,12 +411,40 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void updateUIfromResponse(VlogsListingAndDetailResult responseData) {
         detailData = responseData;
+
+        if (StringUtils.isNullOrEmpty(streamUrl)) {
+            streamUrl = responseData.getUrl();
+            if (mExoPlayerView == null) {
+
+                mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
+                initFullscreenDialog();
+                initFullscreenButton();
+
+//            streamUrl = "https://www.momspresso.com/new-videos/v1/test1/playlist.m3u8";
+                String userAgent = Util.getUserAgent(MainActivity.this, getApplicationContext().getApplicationInfo().packageName);
+                DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
+                DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(MainActivity.this, null, httpDataSourceFactory);
+                Uri daUri = Uri.parse(streamUrl);
+
+                mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
+            }
+
+            initExoPlayer();
+
+            if (mExoPlayerFullscreen) {
+                ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
+                mFullScreenDialog.addContentView(mExoPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_fullscreen_skrink));
+                mFullScreenDialog.show();
+            }
+        }
         authorType = responseData.getAuthor().getUserType();
         author = responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName();
         article_title.setText(responseData.getTitle());
         blogSlug = responseData.getAuthor().getBlogTitleSlug();
         titleSlug = responseData.getTitleSlug();
-        youTubeId = AppUtils.extractYoutubeId(detailData.getUrl());
+        articleViewCountTextView.setText(responseData.getView_count() + " Views");
+//        youTubeId = AppUtils.extractYoutubeId(detailData.getUrl());
         try {
             if (!StringUtils.isNullOrEmpty(authorType)) {
 
@@ -476,7 +509,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
             } else {
                 // Default Author type set to Blogger
-                authorTypeTextView.setText("Blogger".toUpperCase());
+                authorTypeTextView.setText("USER".toUpperCase());
                 authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                 if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                     shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + detailData.getAuthor().getBlogTitleSlug() + "/video/" + titleSlug;
@@ -489,14 +522,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         hitUpdateViewCountAPI(detailData.getAuthor().getId());
-//        createSelectedTagsView();
         authorNameTextView.setText(author);
-        articleCreatedDateTextView.setText(DateTimeUtils.getDateFromTimestamp(Long.parseLong(responseData.getPublished_time())));
 
-        if (!StringUtils.isNullOrEmpty(responseData.getAuthor().getProfilePic().getClientApp())) {
+        try {
             Picasso.with(this).load(responseData.getAuthor().getProfilePic().getClientApp()).into(authorImageView);
+        } catch (Exception e) {
+            authorImageView.setImageResource(R.drawable.default_blogger_profile_img);
         }
-//        Picasso.with(this).load(responseData.getAuthor().getProfilePic().getClientApp()).transform(new CircleTransformation()).into(target);
+        try {
+            articleCreatedDateTextView.setText(DateTimeUtils.getDateFromTimestamp(Long.parseLong(responseData.getPublished_time())));
+        } catch (Exception e) {
+        }
+
 
     }
 
@@ -686,38 +723,38 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     if (dataList.size() == 0) {
 
                     } else {
-                        recentAuthorArticleHeading.setText(getString(R.string.vd_recent_videos_from_title) + " " + author);
+//                        recentAuthorArticleHeading.setText(getString(R.string.vd_recent_videos_from_title) + " " + author);
                         recentAuthorArticles.setVisibility(View.VISIBLE);
 
                         if (dataList.size() >= 3) {
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList.get(0));
 
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList.get(1));
 
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(2).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(2).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
                             relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             relatedArticles3.setTag(dataList.get(2));
                         } else if (dataList.size() == 2) {
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList.get(0));
 
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList.get(1));
                             relatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList.get(0));
                             relatedArticles2.setVisibility(View.GONE);
@@ -771,35 +808,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         trendingArticles.setVisibility(View.VISIBLE);
                         if (dataList.size() >= 3) {
 
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList.get(0));
 
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
                             trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             trendingRelatedArticles2.setTag(dataList.get(1));
 
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(2).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(2).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
                             trendingRelatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             trendingRelatedArticles3.setTag(dataList.get(2));
                         } else if (dataList.size() == 2) {
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList.get(0));
 
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
                             trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             trendingRelatedArticles2.setTag(dataList.get(1));
 
                             trendingRelatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
+//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList.get(0));
                             trendingRelatedArticles2.setVisibility(View.GONE);
@@ -1096,9 +1133,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
 
-
     private void initExoPlayer() {
-
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
@@ -1116,11 +1151,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mExoPlayerView.getPlayer().setPlayWhenReady(true);
     }
 
-
     @Override
     protected void onResume() {
 
         super.onResume();
+        if (streamUrl == null) {
+            return;
+        }
 
         if (mExoPlayerView == null) {
 
@@ -1128,7 +1165,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             initFullscreenDialog();
             initFullscreenButton();
 
-            streamUrl = "https://www.momspresso.com/new-videos/v1/test1/playlist.m3u8";
+//            streamUrl = "https://www.momspresso.com/new-videos/v1/test1/playlist.m3u8";
             String userAgent = Util.getUserAgent(MainActivity.this, getApplicationContext().getApplicationInfo().packageName);
             DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(MainActivity.this, null, httpDataSourceFactory);
@@ -1390,7 +1427,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void launchRelatedTrendingArticle(View v, String listingType, int index) {
 //        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
 //        trackArticleReadTime.resetTimer();
-        Intent intent = new Intent(this, VlogsDetailActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) v.getTag();
         intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
         intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
@@ -1537,6 +1574,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (drawable != null) {
                 drawable.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(this, color), PorterDuff.Mode.SRC_IN));
             }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

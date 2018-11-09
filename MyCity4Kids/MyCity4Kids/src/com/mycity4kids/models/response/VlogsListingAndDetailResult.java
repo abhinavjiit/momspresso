@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import java.util.ArrayList;
+
 /**
  * Created by hemant on 3/1/17.
  */
@@ -7,13 +9,16 @@ public class VlogsListingAndDetailResult {
 
     private String id;
     private String title;
-    private String titleSlug;
+    private String title_slug;
     private String url;
     private String published_time;
+    private String approval_time;
     private String published_status;
     private String publication_status;
     private String commentUri;
     private Author author;
+    private String view_count;
+    private ArrayList<String> category_id;
 
     public String getId() {
         return id;
@@ -32,11 +37,11 @@ public class VlogsListingAndDetailResult {
     }
 
     public String getTitleSlug() {
-        return titleSlug;
+        return title_slug;
     }
 
     public void setTitleSlug(String titleSlug) {
-        this.titleSlug = titleSlug;
+        this.title_slug = titleSlug;
     }
 
     public String getUrl() {
@@ -87,13 +92,29 @@ public class VlogsListingAndDetailResult {
         this.author = author;
     }
 
+    public String getView_count() {
+        return view_count;
+    }
+
+    public void setView_count(String view_count) {
+        this.view_count = view_count;
+    }
+
+    public ArrayList<String> getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(ArrayList<String> category_id) {
+        this.category_id = category_id;
+    }
+
     public class Author {
         private String id;
         private String firstName;
         private String lastName;
         private String blogTitleSlug;
         private String userType;
-        private ProfilePic profilePic;
+        private ProfilePic profilePicUrl;
 
         public String getId() {
             return id;
@@ -136,11 +157,11 @@ public class VlogsListingAndDetailResult {
         }
 
         public ProfilePic getProfilePic() {
-            return profilePic;
+            return profilePicUrl;
         }
 
         public void setProfilePic(ProfilePic profilePic) {
-            this.profilePic = profilePic;
+            this.profilePicUrl = profilePic;
         }
     }
 

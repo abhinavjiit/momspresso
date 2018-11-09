@@ -461,7 +461,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getPublishedVlogs(authorId, 0, 3, 0);
         callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
 
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 3, 1, 3);
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 3, 1, 3, null);
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
 
@@ -643,15 +643,12 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         hitUpdateViewCountAPI(detailData.getAuthor().getId());
-//        createSelectedTagsView();
         authorNameTextView.setText(author);
         articleCreatedDateTextView.setText(DateTimeUtils.getDateFromTimestamp(Long.parseLong(responseData.getPublished_time())));
 
         if (!StringUtils.isNullOrEmpty(responseData.getAuthor().getProfilePic().getClientApp())) {
             Picasso.with(this).load(responseData.getAuthor().getProfilePic().getClientApp()).into(authorImageView);
         }
-//        Picasso.with(this).load(responseData.getAuthor().getProfilePic().getClientApp()).transform(new CircleTransformation()).into(target);
-
     }
 
     private void createSelectedTagsView() {
