@@ -56,7 +56,11 @@ public class Contactdetails extends Fragment implements View.OnClickListener, Ci
         handleNameTextView.setText("" + userDetail.getBlogTitle());
         fullNameEditText.setText("" + userDetail.getFirstName() + " " + userDetail.getLastName());
         if (userDetail.getPhone() != null) {
-            phoneEditText.setText(userDetail.getPhone().getMobile());
+            if (userDetail.getPhone().getMobile() != null && userDetail.getPhone().getMobile().contains("+91")) {
+                phoneEditText.setText("" + userDetail.getPhone().getMobile().replace("+91", ""));
+            } else {
+                phoneEditText.setText("" + userDetail.getPhone().getMobile());
+            }
         }
         MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(getActivity());
         for (int i = 0; i < cityList.size(); i++) {

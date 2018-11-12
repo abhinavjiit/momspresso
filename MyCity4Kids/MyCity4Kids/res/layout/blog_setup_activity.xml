@@ -134,9 +134,40 @@
                 android:background="@color/blog_setup.blog_title_bg">
 
                 <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/emailLabelTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="14dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:paddingTop="20dp"
+                    android:text="@string/ad.bottom_bar.email"
+                    android:textColor="@color/blog_setup.blog_title_label"
+                    android:textSize="20sp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontEditText
+                    android:id="@+id/emailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/emailLabelTextView"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:backgroundTint="@color/blog_setup.hint_blog_title"
+                    android:hint="@string/ad.bottom_bar.email"
+                    android:inputType="textEmailAddress"
+                    android:paddingBottom="14dp"
+                    android:textColor="@color/blog_setup.hint_blog_title"
+                    android:textColorHint="@color/blog_setup.hint_blog_title"
+                    android:textSize="15sp"
+                    app:fontName="oswald.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/blogTitleLabelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/emailEditText"
                     android:gravity="center"
                     android:paddingBottom="14dp"
                     android:paddingLeft="30dp"
@@ -366,7 +397,7 @@
                     android:layout_marginRight="30dp"
                     android:background="@color/light_underline" />
 
-                <com.mycity4kids.widget.CustomFontEditText
+                <com.mycity4kids.widget.PrefixEditText
                     android:id="@+id/phoneEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -378,9 +409,10 @@
                     android:drawablePadding="10dp"
                     android:hint="@string/blog_setup.hint_phone"
                     android:inputType="phone"
-                    android:maxLength="10"
+                    android:maxLength="16"
                     android:paddingBottom="20dp"
                     android:paddingTop="20dp"
+                    android:tag="+91"
                     android:textColor="@color/blog_setup.text_city"
                     android:textColorHint="@color/blog_setup.hint_blog_title"
                     android:textSize="15sp"

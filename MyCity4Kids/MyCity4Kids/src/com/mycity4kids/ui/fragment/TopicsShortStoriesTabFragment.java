@@ -599,8 +599,14 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 //                                (endTime - startTime) / 1000));
                         if (((endTime - startTime) / 1000) >= MIN_TIME_VIEW) {
                             if (!viewedStoriesSet.contains(viewsViewed.get(trackedViewsCount))) {
-                                updateViewCount(viewsViewed.get(trackedViewsCount));
-                                viewedStoriesSet.add(viewsViewed.get(trackedViewsCount));
+                                try {
+                                    updateViewCount(viewsViewed.get(trackedViewsCount));
+                                    viewedStoriesSet.add(viewsViewed.get(trackedViewsCount));
+                                } catch (Exception e) {
+                                    Crashlytics.logException(e);
+                                    Log.d("MC4KException", Log.getStackTraceString(e));
+                                }
+
                             }
                         }
                     }
@@ -655,8 +661,13 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 //                    (endTime - startTime) / 1000));
             if (((endTime - startTime) / 1000) >= MIN_TIME_VIEW) {
                 if (!viewedStoriesSet.contains(viewsViewed.get(trackedViewsCount))) {
-                    updateViewCount(viewsViewed.get(trackedViewsCount));
-                    viewedStoriesSet.add(viewsViewed.get(trackedViewsCount));
+                    try {
+                        updateViewCount(viewsViewed.get(trackedViewsCount));
+                        viewedStoriesSet.add(viewsViewed.get(trackedViewsCount));
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4KException", Log.getStackTraceString(e));
+                    }
                 }
             }
             viewsViewed.clear();
@@ -727,7 +738,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     }
 
     private void updateViewCount(int position) {
-        Log.d("VIEW INFO", "updateViewCount -- " + mDatalist.get(position).getTitle());
         UpdateViewCountRequest updateViewCountRequest = new UpdateViewCountRequest();
         updateViewCountRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         ArrayList<Map<String, String>> tagData = mDatalist.get(position).getTags();

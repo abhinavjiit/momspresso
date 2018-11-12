@@ -851,6 +851,7 @@
     <string name="search">Search any article or author</string>
     <string name="new_label">NEW</string>
     <string name="view_profile">view profile</string>
+    <string name="enter_valid_email">Please enter valid email id</string>
 
 
     <!--<string name="application_name">ExoPlayer</string>-->

@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -64,6 +65,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
     private Toolbar toolbar;
     private View rootLayout;
     private String categoryId;
+    private String duration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
             adapter = new ParentTopicsGridAdapter(null);
             gridview.setAdapter(adapter);
             adapter.setDatalist(mainTopicsList);
+            adapter.setVideoFlag();
         } catch (FileNotFoundException e) {
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
@@ -106,6 +109,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
                         adapter = new ParentTopicsGridAdapter(null);
                         gridview.setAdapter(adapter);
                         adapter.setDatalist(mainTopicsList);
+                        adapter.setVideoFlag();
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -129,6 +133,13 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
                     return;
                 }
                 categoryId = topic.getId();
+                if (topic.getExtraData() == null || topic.getExtraData().isEmpty()) {
+                    duration = "60";
+                } else if (StringUtils.isNullOrEmpty(topic.getExtraData().get(0).getMax_duration())) {
+                    duration = "60";
+                } else {
+                    duration = topic.getExtraData().get(0).getMax_duration();
+                }
                 launchAddVideoOptions();
 //                Intent intent = new Intent(ChooseVideoCategoryActivity.this, TopicsListingActivity.class);
 //                intent.putExtra("parentTopicId", topic.getId());
@@ -143,9 +154,9 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
             for (int i = 0; i < responseData.getData().size(); i++) {
                 if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
-//                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getPublicVisibility())) {
-                        mainTopicsList.add(responseData.getData().get(i).getChild().get(j));
-//                        }
+                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getPublicVisibility())) {
+                            mainTopicsList.add(responseData.getData().get(i).getChild().get(j));
+                        }
                     }
                 }
             }
@@ -306,6 +317,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
         Intent intent = new Intent(this, VideoTrimmerActivity.class);
         String filepath = FileUtils.getPath(this, uri);
         intent.putExtra("categoryId", categoryId);
+        intent.putExtra("duration", duration);
         if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
             intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
             startActivity(intent);

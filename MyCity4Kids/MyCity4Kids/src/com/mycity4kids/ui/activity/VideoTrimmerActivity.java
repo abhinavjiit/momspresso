@@ -31,6 +31,8 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
     //prevent multiple instances
     boolean isActivityLaunched = false;
     private String categoryId;
+    private String duration;
+    private String thumbnailTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
         if (extraIntent != null) {
             path = extraIntent.getStringExtra(EXTRA_VIDEO_PATH);
             categoryId = extraIntent.getStringExtra("categoryId");
+            duration = extraIntent.getStringExtra("duration");
         }
         if (path.contains(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/")) {
             Log.d("TRIM Video", "Video Picked from Mycity folder");
@@ -58,7 +61,7 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
         mVideoTrimmer = ((K4LVideoTrimmer) findViewById(R.id.timeLine));
 
         if (mVideoTrimmer != null) {
-            mVideoTrimmer.setMaxDuration(174);
+            mVideoTrimmer.setMaxDuration(Integer.parseInt(duration));
             mVideoTrimmer.setOnTrimVideoListener(this);
 //            mVideoTrimmer.setOnK4LVideoListener(this);
             AppUtils.createDirIfNotExists("MyCity4Kids/videos");
@@ -84,6 +87,8 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
             isActivityLaunched = true;
             Intent intent = new Intent(VideoTrimmerActivity.this, AddVideoDetailsActivity.class);
             intent.putExtra("categoryId", categoryId);
+            intent.putExtra("duration", duration);
+            intent.putExtra("thumbnailTime", "" + mVideoTrimmer.getTimeStampForIFrame());
             if (uri.getPath().contains("/MyCity4Kids/videos/")) {
                 intent.putExtra("uriPath", uri.getPath());
             } else {

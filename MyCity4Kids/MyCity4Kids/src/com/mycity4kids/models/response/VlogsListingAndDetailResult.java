@@ -19,6 +19,7 @@ public class VlogsListingAndDetailResult {
     private Author author;
     private String view_count;
     private ArrayList<String> category_id;
+    private String thumbnail;
 
     public String getId() {
         return id;
@@ -106,6 +107,14 @@ public class VlogsListingAndDetailResult {
 
     public void setCategory_id(ArrayList<String> category_id) {
         this.category_id = category_id;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public class Author {

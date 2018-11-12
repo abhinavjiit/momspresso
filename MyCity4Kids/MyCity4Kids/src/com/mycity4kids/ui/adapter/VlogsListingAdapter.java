@@ -101,7 +101,7 @@ public class VlogsListingAdapter extends BaseAdapter {
                 holder.txvAuthorName.setText("NA");
             }
             try {
-                Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURL(articleDataModelsNew.get(position).getUrl()))
+                Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail())
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
             } catch (Exception e) {
                 holder.articleImageView.setImageResource(R.drawable.default_article);
@@ -122,17 +122,6 @@ public class VlogsListingAdapter extends BaseAdapter {
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView authorTypeTextView;
-        TextView rankTextView;
-        FlowLayout flowLayout;
-        TextView popularSubCatTextView1;
-        TextView popularSubCatTextView2;
-        TextView popularSubCatTextView3;
-        TextView popularSubCatTextView4;
-        LinearLayout tvParentLL1;
-        LinearLayout tvParentLL2;
-        LinearLayout tvParentLL3;
-        LinearLayout tvParentLL4;
     }
 
 }

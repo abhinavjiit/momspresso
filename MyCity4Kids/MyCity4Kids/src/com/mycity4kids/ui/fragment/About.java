@@ -230,12 +230,12 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
 
             final TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kidsDOBTextView);
             TextView kidsNameTV = (TextView) innerLayout.findViewById(R.id.nameTextView);
-            TextView genderTV = (TextView) innerLayout.findViewById(R.id.genderLabelTextView);
+            TextView genderTV = (TextView) innerLayout.findViewById(R.id.genderTextView);
 
             KidsInfo kidsInformation = new KidsInfo();
             kidsInformation.setName(kidsNameTV.getText().toString());
             kidsInformation.setDate_of_birth(dobOfKidSpn.getText().toString().trim());
-            if ("M".equals(genderTV.getText().toString())) {
+            if ("Male".equalsIgnoreCase(genderTV.getText().toString())) {
                 kidsInformation.setGender("0");
             } else {
                 kidsInformation.setGender("1");
@@ -352,7 +352,17 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
                 UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if ("DELETE".equals(kidsInfoActionType)) {
-                        childInfoContainer.removeViewAt(kidsViewPosition);
+//                        childInfoContainer.removeViewAt(kidsViewPosition);
+                        childInfoContainer.removeAllViews();
+                        int pos = 0;
+                        for (AddRemoveKidsRequest km : kidsModelArrayList) {
+                            KidsModel km1 = new KidsModel();
+                            km1.setName(km.getName());
+                            km1.setBirthDay("" + km.getBirthDay());
+                            km1.setGender(km.getGender());
+                            addKidView(km1, pos);
+                            pos++;
+                        }
                     } else if ("EDIT".equals(kidsInfoActionType)) {
 
                     } else {

@@ -114,6 +114,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     private CityListingDialogFragment cityFragment;
     private ImageView profilePicImageView, changeProfilePicImageView;
     private View mLayout;
+    TextView emailLabelTextView;
+    EditText emailEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +134,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         phoneEditText = (EditText) findViewById(R.id.phoneEditText);
         profilePicImageView = (ImageView) findViewById(R.id.profilePicImageView);
         changeProfilePicImageView = (ImageView) findViewById(R.id.changeProfilePicImageView);
+        emailEditText = (EditText) findViewById(R.id.emailEditText);
+        emailLabelTextView = (TextView) findViewById(R.id.emailLabelTextView);
 
         okayTextView.setOnClickListener(this);
         cityTextView.setOnClickListener(this);
@@ -142,6 +146,14 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
             Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profilePicImageView);
+        }
+
+        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getUserDetailModel(this).getEmail())) {
+            emailEditText.setVisibility(View.VISIBLE);
+            emailLabelTextView.setVisibility(View.VISIBLE);
+        } else {
+            emailEditText.setVisibility(View.GONE);
+            emailLabelTextView.setVisibility(View.GONE);
         }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -192,16 +204,13 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-//                gotToProfile();
                 return;
             }
             try {
                 CityConfigResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//                    mDatalist = responseData.getData().getResult().getCityData();
                     mDatalist = new ArrayList<>();
                     if (mDatalist == null) {
-//                        gotToProfile();
                         return;
                     }
                     MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(BlogSetupActivity.this);
@@ -231,7 +240,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                gotToProfile();
             }
         }
 
@@ -302,20 +310,12 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void requestCameraAndStoragePermissions() {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
 
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying stoage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -328,23 +328,13 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                     })
                     .show();
         } else {
-            // Contact permissions have not been granted yet. Request them directly.
             ActivityCompat.requestPermissions(this, PERMISSIONS_EDIT_PICTURE, REQUEST_EDIT_PICTURE);
         }
-        // END_INCLUDE(contacts_permission_request)
     }
 
     private void requestCameraPermission() {
-        Log.i("Permissions", "CAMERA permission has NOT been granted. Requesting permission.");
-
-        // BEGIN_INCLUDE(camera_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-            Log.i("Permissions",
-                    "Displaying camera permission rationale to provide additional context.");
             Snackbar.make(mLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -357,12 +347,9 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                     })
                     .show();
         } else {
-
-            // Camera permission has not been granted yet. Request it directly.
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                     REQUEST_CAMERA);
         }
-        // END_INCLUDE(camera_permission_request)
     }
 
     @Override
@@ -370,32 +357,17 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                                            @NonNull int[] grantResults) {
 
         if (requestCode == REQUEST_CAMERA) {
-            // BEGIN_INCLUDE(permission_result)
-            // Received permission result for camera permission.
-            Log.i("Permissions", "Received response for Camera permission request.");
-
-            // Check if the only required permission has been granted
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Camera permission has been granted, preview can be displayed
-                Log.i("Permissions", "CAMERA permission has now been granted. Showing preview.");
                 Snackbar.make(mLayout, R.string.permision_available_camera,
                         Snackbar.LENGTH_SHORT).show();
                 chooseImageOptionPopUp(profilePicImageView);
             } else {
-                Log.i("Permissions", "CAMERA permission was NOT granted.");
                 Snackbar.make(mLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT).show();
 
             }
-            // END_INCLUDE(permission_result)
-
         } else if (requestCode == REQUEST_EDIT_PICTURE) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
-            // We have requested multiple permissions for contacts, so all of them need to be
-            // checked.
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                // All required permissions have been granted, display contacts fragment.
                 Snackbar.make(mLayout, R.string.permision_available_storage,
                         Snackbar.LENGTH_SHORT)
                         .show();
@@ -406,7 +378,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
-
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -419,18 +390,14 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             public boolean onMenuItemClick(MenuItem item) {
                 int i = item.getItemId();
                 if (i == R.id.camera) {
-//                    mClickListener.onBtnClick(position);
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                        // Create the File where the photo should go
                         photoFile = null;
                         try {
                             photoFile = createImageFile();
                         } catch (IOException ex) {
-                            // Error occurred while creating the File
                             Log.i("TAG", "IOException");
                         }
-                        // Continue only if the File was successfully created
                         if (photoFile != null) {
                             try {
                                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, GenericFileProvider.getUriForFile(BlogSetupActivity.this, getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile()));
@@ -454,7 +421,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     }
 
     private File createImageFile() throws IOException {
-        // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
@@ -490,6 +456,11 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_max)
                     + " " + MAX_WORDS + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words), Toast.LENGTH_SHORT).show();
             return false;
+        } else if (emailEditText.getVisibility() == View.VISIBLE) {
+            if ((!StringUtils.isValidEmail(emailEditText.getText().toString()))) {
+                Toast.makeText(this, getString(R.string.enter_valid_email), Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
         return true;
     }
@@ -509,15 +480,12 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         if (null == phoneEditText.getText() || StringUtils.isNullOrEmpty(phoneEditText.getText().toString().trim())) {
             updateUserDetail.setMobile(" ");
         } else {
-            updateUserDetail.setMobile(phoneEditText.getText().toString().trim() + "");
+            updateUserDetail.setMobile(phoneEditText.getText().toString().replace("+91", "") + "");
         }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         showProgressDialog(getResources().getString(R.string.please_wait));
         UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
-//        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(updateUserDetail);
-//        call.enqueue(userDetailsUpdateResponseListener);
-
         Call<ResponseBody> call = userAttributeUpdateAPI.updateBlogProfile(updateUserDetail);
         call.enqueue(userDetailsUpdateResponseListener);
     }
@@ -552,15 +520,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
-
-//            ResponseBody responseData = response.body();
-//
-//            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//                Utils.pushBlogSetupSuccessEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
-//                saveCityData();
-//            } else {
-//                showToast(responseData.getReason());
-//            }
         }
 
         @Override
@@ -594,9 +553,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             public void nearCity(City cityModel) {
                 int cityId = cityModel.getCityId();
 
-                /**
-                 * save current city in shared preference
-                 */
                 MetroCity model = new MetroCity();
                 model.setId(cityModel.getCityId());
                 if (AppConstants.OTHERS_CITY_ID == cityModel.getCityId()) {
@@ -613,10 +569,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
                 if (cityId > 0) {
                     versionApiModel.setCityId(cityId);
-//                    mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
-                    /**
-                     * get current version code ::
-                     */
                     PackageInfo pInfo = null;
                     try {
                         pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);

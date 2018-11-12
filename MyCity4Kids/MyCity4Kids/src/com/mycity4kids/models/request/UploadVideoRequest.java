@@ -16,6 +16,7 @@ public class UploadVideoRequest {
     private String user_id;
     private String user_agent;
     private String published_url;
+    private String thumbnail_milliseconds;
 //    private boolean is_popular;
     private ArrayList<String> category_id;
 //    private boolean has_special_cat;
@@ -131,5 +132,13 @@ public class UploadVideoRequest {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getThumbnail_milliseconds() {
+        return thumbnail_milliseconds;
+    }
+
+    public void setThumbnail_milliseconds(String thumbnail_milliseconds) {
+        this.thumbnail_milliseconds = thumbnail_milliseconds;
     }
 }

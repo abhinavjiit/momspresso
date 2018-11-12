@@ -120,8 +120,9 @@
             android:gravity="center_vertical"
             android:inputType="number"
             android:paddingLeft="10dp"
-            android:tag="+91-"
-            android:textColor="@color/app_light_black" />
+            android:tag="+91"
+            android:textColor="@color/app_light_black"
+            app:fontName="oswald.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"

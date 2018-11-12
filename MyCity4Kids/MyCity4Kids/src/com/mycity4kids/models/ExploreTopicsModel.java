@@ -29,6 +29,7 @@ public class ExploreTopicsModel implements Parcelable {
     public class ExtraData {
         private String metaTitle;
         private String metaDescription;
+        private String max_duration = "60";
         private CategoryImage categoryBackImage;
 
         public String getMetaTitle() {
@@ -53,6 +54,14 @@ public class ExploreTopicsModel implements Parcelable {
 
         public void setCategoryBackImage(CategoryImage categoryBackImage) {
             this.categoryBackImage = categoryBackImage;
+        }
+
+        public String getMax_duration() {
+            return max_duration;
+        }
+
+        public void setMax_duration(String max_duration) {
+            this.max_duration = max_duration;
         }
 
         public class CategoryImage {

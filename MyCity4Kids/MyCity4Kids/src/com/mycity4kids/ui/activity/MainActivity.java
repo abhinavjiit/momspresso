@@ -329,10 +329,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             taggedCategories = detailData.getCategory_id().get(0);
         }
 
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 3, 0, 3, taggedCategories);
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 4, 0, 3, taggedCategories);
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
 
-        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(0, 3, 1, 3, null);
+        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(0, 4, 1, 3, null);
         callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
     }
 
@@ -727,34 +727,65 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         recentAuthorArticles.setVisibility(View.VISIBLE);
 
                         if (dataList.size() >= 3) {
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            } catch (Exception e) {
+                                relatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
+
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList.get(0));
 
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(1).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
+                            } catch (Exception e) {
+                                relatedArticles2.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
+
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList.get(1));
 
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(2).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(2).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
+                            } catch (Exception e) {
+                                relatedArticles3.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
+
                             relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             relatedArticles3.setTag(dataList.get(2));
                         } else if (dataList.size() == 2) {
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            } catch (Exception e) {
+                                relatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
+
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList.get(0));
 
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(1).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
+                            } catch (Exception e) {
+                                relatedArticles2.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
+
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList.get(1));
                             relatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            } catch (Exception e) {
+                                relatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
+
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             relatedArticles1.setTag(dataList.get(0));
                             relatedArticles2.setVisibility(View.GONE);
@@ -808,35 +839,62 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         trendingArticles.setVisibility(View.VISIBLE);
                         if (dataList.size() >= 3) {
 
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            } catch (Exception e) {
+                                trendingRelatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
+
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList.get(0));
 
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(1).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
+                            } catch (Exception e) {
+                                trendingRelatedArticles2.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
+
                             trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             trendingRelatedArticles2.setTag(dataList.get(1));
 
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(2).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(2).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
+                            } catch (Exception e) {
+                                trendingRelatedArticles3.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
+
                             trendingRelatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             trendingRelatedArticles3.setTag(dataList.get(2));
                         } else if (dataList.size() == 2) {
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            } catch (Exception e) {
+                                trendingRelatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList.get(0));
-
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(1).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(1).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
+                            } catch (Exception e) {
+                                trendingRelatedArticles2.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
                             trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             trendingRelatedArticles2.setTag(dataList.get(1));
 
                             trendingRelatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-//                            Picasso.with(MainActivity.this).load(AppUtils.getYoutubeThumbnailURL(dataList.get(0).getUrl())).
-//                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            try {
+                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                        placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            } catch (Exception e) {
+                                trendingRelatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
+                            }
+
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList.get(0));
                             trendingRelatedArticles2.setVisibility(View.GONE);

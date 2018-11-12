@@ -82,8 +82,6 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
-//                noDataFoundTextView.setVisibility(View.VISIBLE);
-//                showToast(getString(R.string.went_wrong));
                 return;
             }
 

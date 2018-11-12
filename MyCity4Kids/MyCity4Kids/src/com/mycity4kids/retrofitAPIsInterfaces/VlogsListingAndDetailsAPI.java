@@ -43,7 +43,7 @@ public interface VlogsListingAndDetailsAPI {
     @GET("v1/videos/{videoId}/views")
     Call<ViewCountResponse> getViewCount(@Path("videoId") String videoId);
 
-    @PUT("v1/videos/{videoId}/views/")
+    @PUT("v2/videos/{videoId}/views/")
     Call<ResponseBody> updateViewCount(@Path("videoId") String videoId);
 
     @GET("v2/videos")

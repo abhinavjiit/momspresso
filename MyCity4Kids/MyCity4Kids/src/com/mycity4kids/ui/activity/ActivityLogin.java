@@ -414,7 +414,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             if (null != userDetailResult.getKids()) {
                 saveKidsInformation(userDetailResult.getKids());
             }
-            if ("phone".equals(loginMode) && StringUtils.isNullOrEmpty(userDetailResult.getFirstName()) && StringUtils.isNullOrEmpty(userDetailResult.getLastName())) {
+            if ("phone".equals(loginMode) &&
+                    ((StringUtils.isNullOrEmpty(userDetailResult.getFirstName()) && StringUtils.isNullOrEmpty(userDetailResult.getLastName()))
+                            || userDetailResult.getFirstName().toUpperCase().contains("XXX"))) {
                 Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                 startService(intent);
                 Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);

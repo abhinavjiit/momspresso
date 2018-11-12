@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.ExploreTopicsModel;
@@ -25,6 +26,7 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
     private ArrayList<ExploreTopicsModel> arraylist;
     private LayoutInflater mInflator;
     private String source;
+    private boolean videoFlag;
 
     public ParentTopicsGridAdapter(String source) {
         mInflator = (LayoutInflater) BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -55,6 +57,8 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
             view = mInflator.inflate(R.layout.explore_topics_grid_item, null);
             holder.tagsImageView = (ImageView) view.findViewById(R.id.tagImageView);
             holder.topicsNameTextView = (TextView) view.findViewById(R.id.topicsNameTextView);
+            holder.durationImageView = (ImageView) view.findViewById(R.id.durationImageView);
+            holder.durationTextView = (TextView) view.findViewById(R.id.durationTextView);
             holder.selectorView = view.findViewById(R.id.selectorView);
             view.setTag(holder);
         } else {
@@ -72,6 +76,21 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
             } catch (Exception e) {
                 holder.tagsImageView.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.default_article));
             }
+        }
+
+        if (videoFlag) {
+            holder.durationImageView.setVisibility(View.VISIBLE);
+            holder.durationTextView.setVisibility(View.VISIBLE);
+            if (topicsList.get(position).getExtraData() == null || topicsList.get(position).getExtraData().isEmpty()) {
+                holder.durationTextView.setText("60");
+            } else if (StringUtils.isNullOrEmpty(topicsList.get(position).getExtraData().get(0).getMax_duration())) {
+                holder.durationTextView.setText("60");
+            } else {
+                holder.durationTextView.setText(topicsList.get(position).getExtraData().get(0).getMax_duration());
+            }
+        } else {
+            holder.durationImageView.setVisibility(View.GONE);
+            holder.durationTextView.setVisibility(View.GONE);
         }
 
         if ("search".equals(source)) {
@@ -93,10 +112,16 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
         this.arraylist.addAll(datalist);
     }
 
+    public void setVideoFlag() {
+        videoFlag = true;
+    }
+
     class ViewHolder {
         ImageView tagsImageView;
         TextView topicsNameTextView;
         View selectorView;
+        ImageView durationImageView;
+        TextView durationTextView;
     }
 
     // Filter Class

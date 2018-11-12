@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
-public class PrefixEditText extends AppCompatEditText {
+public class PrefixEditText extends CustomFontEditText {
     float originalLeftPadding = -1;
 
     public PrefixEditText(Context context) {

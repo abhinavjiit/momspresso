@@ -64,6 +64,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private Uri mutedUri;
     private EasyVideoPlayer player;
     private String categoryId;
+    private String duration;
+    private String thumbnailTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,9 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         getSupportActionBar().setTitle("Upload Video");
 
         categoryId = getIntent().getStringExtra("categoryId");
+        duration = getIntent().getStringExtra("duration");
+        thumbnailTime = getIntent().getStringExtra("thumbnailTime");
+
         muteSwitch.setOnClickListener(this);
 
         if (Build.VERSION.SDK_INT < 18) {
@@ -283,6 +288,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         intt.putExtra("uri", contentURI);
         intt.putExtra("title", videoTitleEditText.getText().toString());
         intt.putExtra("categoryId", categoryId);
+        intt.putExtra("duration", duration);
+        intt.putExtra("thumbnailTime", thumbnailTime);
         startActivity(intt);
     }
 

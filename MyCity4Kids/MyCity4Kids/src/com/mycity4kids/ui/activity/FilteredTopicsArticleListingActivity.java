@@ -49,6 +49,7 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.TopicsFollowingStatusResponse;
+import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
@@ -1015,20 +1016,54 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-        Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticleDetailsContainerActivity.class);
-        intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
-        intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
-        intent.putExtra(Constants.ARTICLE_COVER_IMAGE, articleDataModelsNew.get(position).getImageUrl());
-        intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
-        intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-        if (StringUtils.isNullOrEmpty(categoryName)) {
-            categoryName = displayName;
+        switch (view.getId()) {
+            case R.id.videoContainerFL1:
+                launchVideoDetailsActivity(position, 0);
+                break;
+            case R.id.videoContainerFL2:
+                launchVideoDetailsActivity(position, 1);
+                break;
+            case R.id.videoContainerFL3:
+                launchVideoDetailsActivity(position, 2);
+                break;
+            case R.id.videoContainerFL4:
+                launchVideoDetailsActivity(position, 3);
+                break;
+            case R.id.videoContainerFL5:
+                launchVideoDetailsActivity(position, 4);
+                break;
+            default:
+                Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticleDetailsContainerActivity.class);
+                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                intent.putExtra(Constants.ARTICLE_COVER_IMAGE, articleDataModelsNew.get(position).getImageUrl());
+                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                if (StringUtils.isNullOrEmpty(categoryName)) {
+                    categoryName = displayName;
+                }
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, categoryName + "~" + selectedTopics);
+                intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+                startActivity(intent);
+                break;
         }
-        intent.putExtra(Constants.ARTICLE_OPENED_FROM, categoryName + "~" + selectedTopics);
-        intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
-        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-        intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-        intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
-        startActivity(intent);
+    }
+
+    private void launchVideoDetailsActivity(int position, int videoIndex) {
+        if (articleDataModelsNew.get(position).getCarouselVideoList() != null && !articleDataModelsNew.get(position).getCarouselVideoList().isEmpty()) {
+            VlogsListingAndDetailResult result = articleDataModelsNew.get(position).getCarouselVideoList().get(videoIndex);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(Constants.VIDEO_ID, result.getId());
+            intent.putExtra(Constants.STREAM_URL, result.getUrl());
+            intent.putExtra(Constants.AUTHOR_ID, result.getAuthor().getId());
+            intent.putExtra(Constants.FROM_SCREEN, "MomspressoTV Screen");
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "MomspressoTV");
+            intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+            intent.putExtra(Constants.AUTHOR, result.getAuthor().getId() + "~" + result.getAuthor().getFirstName() + " " + result.getAuthor().getLastName());
+            startActivity(intent);
+        }
     }
 }

@@ -223,10 +223,25 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
         @Override
         public void onFailure(Call<VlogsListingResponse> call, Throwable t) {
+            isReuqestRunning = false;
+            isLastPageReached = true;
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
+            if (articleDataModelsNew == null || articleDataModelsNew.isEmpty()) {
+                fabSort.setVisibility(View.GONE);
+                fabMenu.setVisibility(View.GONE);
+                popularSortFAB.setVisibility(View.GONE);
+                recentSortFAB.setVisibility(View.GONE);
+                noBlogsTextView.setVisibility(View.VISIBLE);
+                noBlogsTextView.setText(getString(R.string.all_videos_funny_videos_no_videos));
+                articleDataModelsNew = new ArrayList<>();
+                articlesListingAdapter.setNewListData(articleDataModelsNew);
+                articlesListingAdapter.notifyDataSetChanged();
+            }
             progressBar.setVisibility(View.INVISIBLE);
+            funnyvideosshimmer.stopShimmerAnimation();
+            funnyvideosshimmer.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
 //            showToast(getString(R.string.went_wrong));

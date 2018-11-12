@@ -1920,7 +1920,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
 
         try {
-            Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURL(data.getUrl()))
+            Picasso.with(mContext).load(data.getThumbnail())
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageView);
         } catch (Exception e) {
             imageView.setImageResource(R.drawable.default_article);

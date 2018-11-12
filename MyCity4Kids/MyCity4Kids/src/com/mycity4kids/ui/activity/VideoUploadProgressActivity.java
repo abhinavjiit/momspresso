@@ -74,6 +74,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private Uri contentURI;
     private String title;
     private String categoryId;
+    private String duration;
+    private String thumbnailTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         contentURI = getIntent().getParcelableExtra("uri");
         title = getIntent().getStringExtra("title");
         categoryId = getIntent().getStringExtra("categoryId");
+        duration = getIntent().getStringExtra("duration");
+        thumbnailTime = getIntent().getStringExtra("thumbnailTime");
 
         uploadingContainer = (RelativeLayout) findViewById(R.id.uploadingContainer);
         uploadFinishContainer = (RelativeLayout) findViewById(R.id.uploadFinishContainer);
@@ -181,6 +185,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
         uploadVideoRequest.setTitle(title);
         uploadVideoRequest.setCategory_id(catList);
+//        uploadVideoRequest.setThumbnail_milliseconds(thumbnailTime);
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI api = retrofit.create(VlogsListingAndDetailsAPI.class);
@@ -197,6 +202,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         uploadVideoRequest.setCategory_id(catList);
         uploadVideoRequest.setFile_location("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/");
         uploadVideoRequest.setUploaded_url(uri.toString());
+//        uploadVideoRequest.setThumbnail_milliseconds(thumbnailTime);
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI api = retrofit.create(VlogsListingAndDetailsAPI.class);

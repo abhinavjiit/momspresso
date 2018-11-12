@@ -25,10 +25,12 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.TrendingListingResult;
+import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.MainActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -252,44 +254,67 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-//        Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-//        intent.putExtra(Constants.ARTICLE_ID, trendingTopicData.getArticleList().get(position).getId());
-//        intent.putExtra(Constants.AUTHOR_ID, trendingTopicData.getArticleList().get(position).getUserId());
-//        intent.putExtra(Constants.BLOG_SLUG, trendingTopicData.getArticleList().get(position).getBlogPageSlug());
-//        intent.putExtra(Constants.TITLE_SLUG, trendingTopicData.getArticleList().get(position).getTitleSlug());
-//        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Trending" + "~" + trendingTopicData.getDisplay_name());
-//        intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-//        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-//        intent.putParcelableArrayListExtra("pagerListData", trendingTopicData.getArticleList());
-//        intent.putExtra(Constants.AUTHOR, trendingTopicData.getArticleList().get(position).getUserId() + "~" + trendingTopicData.getArticleList().get(position).getUserName());
-//        startActivity(intent);
-        if ("1".equals(trendingTopicData.getArticleList().get(position).getContentType())) {
-            Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-            intent.putExtra(Constants.ARTICLE_ID, trendingTopicData.getArticleList().get(position).getId());
-            intent.putExtra(Constants.AUTHOR_ID, trendingTopicData.getArticleList().get(position).getUserId());
-            intent.putExtra(Constants.BLOG_SLUG, trendingTopicData.getArticleList().get(position).getBlogPageSlug());
-            intent.putExtra(Constants.TITLE_SLUG, trendingTopicData.getArticleList().get(position).getTitleSlug());
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
-            intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-            intent.putExtra(Constants.AUTHOR, trendingTopicData.getArticleList().get(position).getUserId() + "~" + trendingTopicData.getArticleList().get(position).getUserName());
+        switch (view.getId()) {
+            case R.id.videoContainerFL1:
+                launchVideoDetailsActivity(position, 0);
+                break;
+            case R.id.videoContainerFL2:
+                launchVideoDetailsActivity(position, 1);
+                break;
+            case R.id.videoContainerFL3:
+                launchVideoDetailsActivity(position, 2);
+                break;
+            case R.id.videoContainerFL4:
+                launchVideoDetailsActivity(position, 3);
+                break;
+            case R.id.videoContainerFL5:
+                launchVideoDetailsActivity(position, 4);
+                break;
+            default:
+                if ("1".equals(trendingTopicData.getArticleList().get(position).getContentType())) {
+                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, trendingTopicData.getArticleList().get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, trendingTopicData.getArticleList().get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, trendingTopicData.getArticleList().get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, trendingTopicData.getArticleList().get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
+                    intent.putExtra(Constants.AUTHOR, trendingTopicData.getArticleList().get(position).getUserId() + "~" + trendingTopicData.getArticleList().get(position).getUserName());
 
-            ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(trendingTopicData.getArticleList(), AppConstants.CONTENT_TYPE_SHORT_STORY);
-            intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-            intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, trendingTopicData.getArticleList(), AppConstants.CONTENT_TYPE_SHORT_STORY));
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-            intent.putExtra(Constants.ARTICLE_ID, trendingTopicData.getArticleList().get(position).getId());
-            intent.putExtra(Constants.AUTHOR_ID, trendingTopicData.getArticleList().get(position).getUserId());
-            intent.putExtra(Constants.BLOG_SLUG, trendingTopicData.getArticleList().get(position).getBlogPageSlug());
-            intent.putExtra(Constants.TITLE_SLUG, trendingTopicData.getArticleList().get(position).getTitleSlug());
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
-            intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-            intent.putExtra(Constants.AUTHOR, trendingTopicData.getArticleList().get(position).getUserId() + "~" + trendingTopicData.getArticleList().get(position).getUserName());
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(trendingTopicData.getArticleList(), AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, trendingTopicData.getArticleList(), AppConstants.CONTENT_TYPE_SHORT_STORY));
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, trendingTopicData.getArticleList().get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, trendingTopicData.getArticleList().get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, trendingTopicData.getArticleList().get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, trendingTopicData.getArticleList().get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
+                    intent.putExtra(Constants.AUTHOR, trendingTopicData.getArticleList().get(position).getUserId() + "~" + trendingTopicData.getArticleList().get(position).getUserName());
 
-            ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(trendingTopicData.getArticleList(), AppConstants.CONTENT_TYPE_ARTICLE);
-            intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-            intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, trendingTopicData.getArticleList(), AppConstants.CONTENT_TYPE_ARTICLE));
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(trendingTopicData.getArticleList(), AppConstants.CONTENT_TYPE_ARTICLE);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, trendingTopicData.getArticleList(), AppConstants.CONTENT_TYPE_ARTICLE));
+                    startActivity(intent);
+                }
+                break;
+        }
+    }
+
+    private void launchVideoDetailsActivity(int position, int videoIndex) {
+        if (trendingTopicData.getArticleList().get(position).getCarouselVideoList() != null && !trendingTopicData.getArticleList().get(position).getCarouselVideoList().isEmpty()) {
+            VlogsListingAndDetailResult result = trendingTopicData.getArticleList().get(position).getCarouselVideoList().get(videoIndex);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.putExtra(Constants.VIDEO_ID, result.getId());
+            intent.putExtra(Constants.STREAM_URL, result.getUrl());
+            intent.putExtra(Constants.AUTHOR_ID, result.getAuthor().getId());
+            intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
+            intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+            intent.putExtra(Constants.AUTHOR, result.getAuthor().getId() + "~" + result.getAuthor().getFirstName() + " " + result.getAuthor().getLastName());
             startActivity(intent);
         }
     }

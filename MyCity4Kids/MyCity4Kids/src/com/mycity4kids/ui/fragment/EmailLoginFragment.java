@@ -143,7 +143,7 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
 
         if (email_id.trim().length() == 0 || ((!StringUtils.isValidEmail(email_id)) && (!StringUtils.checkMobileNumber(email_id)))) {
             mEmailId.setFocusableInTouchMode(true);
-            mEmailId.setError("Please enter valid email id");
+            mEmailId.setError(getString(R.string.enter_valid_email));
             mEmailId.requestFocus();
             isLoginOk = false;
         } else if (mPassword.getText().toString().length() == 0) {
