@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -40,13 +41,16 @@ import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
-import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -100,6 +104,7 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
+import com.mycity4kids.youtube.DeveloperKey;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -124,9 +129,10 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 6/6/17.
  */
-public class ArticleDetailsFragment extends BaseFragment implements View.OnClickListener, ObservableScrollViewCallbacks, AddEditCommentReplyFragment.IAddCommentReply, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
+public class ArticleDetailsFragment extends BaseFragment implements View.OnClickListener, ObservableScrollViewCallbacks, AddEditCommentReplyFragment.IAddCommentReply, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus, YouTubePlayer.OnInitializedListener {
 
     private final static int ADD_BOOKMARK = 1;
+    private static final int RECOVERY_REQUEST = 1;
 
     private final static int REPLY_LEVEL_PARENT = 1;
     private final static int REPLY_LEVEL_CHILD = 2;
@@ -202,7 +208,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private FlowLayout tagsLayout;
     private Rect scrollBounds;
     //    private TrackArticleReadTime trackArticleReadTime;
-    private WebView videoWebView;
+//    private WebView videoWebView;
     private View fragmentView;
     private LinearLayout bottomToolbarLL;
     private TextView commentHeading;
@@ -217,6 +223,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private ImageView groupHeaderImageView;
     private TextView groupHeadingTextView, groupSubHeadingTextView;
     private int groupId;
+    private String youTubeId;
+    private YouTubePlayer youTubePlayer;
+    private YouTubePlayerView youTubePlayerView;
+    private YouTubePlayerSupportFragment mYouTubePlayerSupportFragment;
+    private FrameLayout youtubeContainer;
 
     @Nullable
     @Override
@@ -236,7 +247,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //            commentFloatingActionButton.setOnClickListener(this);
 
             mWebView = (WebView) fragmentView.findViewById(R.id.articleWebView);
-            videoWebView = (WebView) fragmentView.findViewById(R.id.videoWebView);
+            youtubeContainer = (FrameLayout) fragmentView.findViewById(R.id.youtube_fragment);
+//            videoWebView = (WebView) fragmentView.findViewById(R.id.videoWebView);
             viewAllTagsTextView = (TextView) fragmentView.findViewById(R.id.viewAllTagsTextView);
             bottomToolbarLL = (LinearLayout) fragmentView.findViewById(R.id.bottomToolbarLL);
 
@@ -248,7 +260,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             mWebChromeClient = new MyWebChromeClient();
             mWebView.setWebChromeClient(mWebChromeClient);
-            videoWebView.setWebChromeClient(mWebChromeClient);
+//            videoWebView.setWebChromeClient(mWebChromeClient);
 
             author_type = (TextView) fragmentView.findViewById(R.id.blogger_type);
 
@@ -310,6 +322,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             writeArticleTextView.setOnClickListener(this);
             groupHeaderView.setOnClickListener(this);
 
+//            YouTubePlayerSupportFragment youTubePlayerFragment =
+//                    (YouTubePlayerSupportFragment) getChildFragmentManager().findFragmentById(R.id.youtube_fragment);
+//            youTubePlayerFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
+            mYouTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
+            if (getUserVisibleHint()) {
+//                Log.d ("TAG", "Committing transaction, URL : " + getArguments().getString(KeyConstant.KEY_VIDEO_URL));
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commit();
+                mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
+            }
             mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
 
             mScrollView = (ObservableScrollView) fragmentView.findViewById(R.id.scroll_view);
@@ -364,6 +386,23 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser && youTubePlayer != null) {
+//            Log.v (TAG, "Releasing youtube player, URL : " + getArguments().getString(KeyConstant.KEY_VIDEO_URL));
+            youTubePlayer.release();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.remove(mYouTubePlayerSupportFragment).commit();
+        }
+        if (isVisibleToUser && mYouTubePlayerSupportFragment != null) {
+//            Log.v (TAG, "Initializing youtube player, URL : " + getArguments().getString(KeyConstant.KEY_VIDEO_URL));
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commit();
+            mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
+        }
+    }
+
+    @Override
     public void onResume() {
         //coming back from another activity, restart the readtime
 //        if (null != trackArticleReadTime && trackArticleReadTime.getActivityTimerStatus() == 1) {
@@ -374,7 +413,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //            mAdView.resume();
 //        }
         mWebView.onResume();
-        videoWebView.onResume();
+//        videoWebView.onResume();
     }
 
     @Override
@@ -386,7 +425,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //        }
         super.onPause();
         mWebView.onPause();
-        videoWebView.onPause();
+//        videoWebView.onPause();
     }
 
     @Override
@@ -686,12 +725,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (null != videoList && !videoList.isEmpty()) {
                 for (VideoData video : videoList) {
                     if ("1".equals(isMomspresso)) {
-                        videoWebView.setVisibility(View.VISIBLE);
+                        youtubeContainer.setVisibility(View.VISIBLE);
+                        youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
+                        if (youTubePlayer != null)
+                            youTubePlayer.cueVideo(youTubeId);
+//                        videoWebView.setVisibility(View.VISIBLE);
                         cover_image.setVisibility(View.INVISIBLE);
                         bodyDesc = bodyDesc.replace(video.getKey(), "");
-                        String vUrl = "<html><head></head><body><p style='text-align:center'><iframe src=http:" + video.getVideoUrl() +
-                                "\" ></iframe></p></body></html>";
-                        videoWebView.loadDataWithBaseURL("", vUrl, "text/html", "utf-8", "");
+//                        String vUrl = "<html><head></head><body><p style='text-align:center'><iframe src=http:" + video.getVideoUrl() +
+//                                "\" ></iframe></p></body></html>";
+//                        videoWebView.loadDataWithBaseURL("", vUrl, "text/html", "utf-8", "");
                     } else if (bodyDescription.contains(video.getKey())) {
                         String vURL = video.getVideoUrl().replace("http:", "").replace("https:", "");
                         bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + vURL + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
@@ -720,18 +763,22 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
             mWebView.getSettings().setJavaScriptEnabled(true);
 
-            videoWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            videoWebView.getSettings().setJavaScriptEnabled(true);
+//            videoWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//            videoWebView.getSettings().setJavaScriptEnabled(true);
         } else {
             if (null != videoList && !videoList.isEmpty()) {
                 for (VideoData video : videoList) {
                     if ("1".equals(isMomspresso)) {
-                        videoWebView.setVisibility(View.VISIBLE);
+                        youtubeContainer.setVisibility(View.VISIBLE);
+                        youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
+                        if (youTubePlayer != null)
+                            youTubePlayer.cueVideo(youTubeId);
+//                        videoWebView.setVisibility(View.VISIBLE);
                         cover_image.setVisibility(View.INVISIBLE);
                         bodyDesc = bodyDesc.replace(video.getKey(), "");
-                        String vUrl = "<html><head></head><body><p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl() +
-                                "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%; height: 100%;\" ></iframe></p></body></html>";
-                        videoWebView.loadDataWithBaseURL("", vUrl, "text/html", "utf-8", "");
+//                        String vUrl = "<html><head></head><body><p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl() +
+//                                "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%; height: 100%;\" ></iframe></p></body></html>";
+//                        videoWebView.loadDataWithBaseURL("", vUrl, "text/html", "utf-8", "");
                     } else if (bodyDescription.contains(video.getKey())) {
                         String vURL = video.getVideoUrl().replace("http:", "").replace("https:", "");
                         bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + vURL + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe></p>");
@@ -759,8 +806,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
             mWebView.getSettings().setJavaScriptEnabled(true);
 
-            videoWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            videoWebView.getSettings().setJavaScriptEnabled(true);
+//            videoWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//            videoWebView.getSettings().setJavaScriptEnabled(true);
         }
 
         final Target target = new Target() {
@@ -1436,6 +1483,27 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     @Override
     public void onMembershipStatusFetchFail() {
 
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+        if (!b) {
+            this.youTubePlayer = youTubePlayer;
+            youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION);
+            if (null != youTubeId) {
+                youTubePlayer.cueVideo(youTubeId);
+            }
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+        if (youTubeInitializationResult.isUserRecoverableError()) {
+            youTubeInitializationResult.getErrorDialog(getActivity(), RECOVERY_REQUEST).show();
+        } else {
+            String error = "ERROR";//String.format(getString(R.string.player_error), errorReason.toString());
+            Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -2649,4 +2717,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //        shareLikeOverlay.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RECOVERY_REQUEST) {
+            // Retry initialization if user performed a recovery action
+            getYouTubePlayerProvider().initialize(DeveloperKey.DEVELOPER_KEY, this);
+        }
+    }
+
+    protected YouTubePlayer.Provider getYouTubePlayerProvider() {
+        return youTubePlayerView;
+    }
 }

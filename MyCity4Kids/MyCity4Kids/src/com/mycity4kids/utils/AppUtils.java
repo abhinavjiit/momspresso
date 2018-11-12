@@ -16,7 +16,6 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.design.widget.TabLayout;
@@ -48,8 +47,6 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
-import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
 import com.mycity4kids.widget.Hashids;
 
 import org.json.JSONArray;
@@ -786,5 +783,10 @@ public class AppUtils {
             return -1;
         }
         return id[0];
+    }
+
+    public static String extractYoutubeIdForMomspresso(String videoUrl) {
+        String[] separated = videoUrl.split("/");
+        return separated[separated.length - 1];
     }
 }

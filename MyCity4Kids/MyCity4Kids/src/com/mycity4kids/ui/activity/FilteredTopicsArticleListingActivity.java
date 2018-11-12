@@ -132,6 +132,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
+    private TextView toolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +140,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         setContentView(R.layout.filtered_topics_articles_activity);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Topics");
@@ -225,7 +228,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                     boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
-                    Log.d("FilteredTopicsArticleListingActivity", "file download was a success? " + writtenToDisk);
+                    Log.d("FilteredTopicsArticle", "file download was a success? " + writtenToDisk);
 
                     try {
                         FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
@@ -260,9 +263,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         if (null != displayName) {
             if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
                     isLanguageListing) {
-                getSupportActionBar().setTitle(displayName.toUpperCase());
+                toolbarTitle.setText(displayName.toUpperCase());
             } else {
-                getSupportActionBar().setTitle("");
+                toolbarTitle.setText("");
             }
             titleTextView.setText(displayName);
         }
@@ -281,7 +284,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, selectedTopics + "~" + displayName);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, selectedTopics + "~" + displayName, AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ? true : false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -609,7 +612,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                         boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
-                        Log.d("FilteredTopicsArticleListingActivity", "file download was a success? " + writtenToDisk);
+                        Log.d("FilteredTopicsArticle", "file download was a success? " + writtenToDisk);
 
                         try {
                             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);

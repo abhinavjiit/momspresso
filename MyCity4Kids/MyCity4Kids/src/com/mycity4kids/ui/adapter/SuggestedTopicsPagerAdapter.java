@@ -5,9 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.mycity4kids.models.response.LanguageConfigModel;
-import com.mycity4kids.models.response.SuggestedTopicsResult;
-import com.mycity4kids.ui.fragment.LanguageSpecificArticlesTabFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsTabFragment;
 
 import java.util.ArrayList;

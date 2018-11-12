@@ -9,12 +9,29 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
-        android:elevation="5dp"
         android:minHeight="?attr/actionBarSize"
-        fab:theme="@style/FilterToobar"
-        fab:titleTextAppearance="@style/ToolbarTheme.Title" />
+        fab:theme="@style/ToolbarTheme"
+        fab:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/user_activities.toolbar.title"
+                android:textColor="@color/user_activities.toolbar.title"
+                android:textSize="20sp"
+                fab:fontName="oswald_regular.ttf" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <TextView
         android:id="@+id/titleTextView"
@@ -44,20 +61,20 @@
         android:visibility="gone" />
 
     <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/swipe_refresh_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/titleTextView">-->
+    <!--android:id="@+id/swipe_refresh_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/titleTextView">-->
 
-        <!--<ListView-->
-            <!--android:id="@+id/scroll"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_below="@+id/toolbar"-->
-            <!--android:layout_marginTop="2dp"-->
-            <!--android:background="@color/grey_light"-->
-            <!--android:divider="@color/transparent"-->
-            <!--android:drawSelectorOnTop="true" />-->
+    <!--<ListView-->
+    <!--android:id="@+id/scroll"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_below="@+id/toolbar"-->
+    <!--android:layout_marginTop="2dp"-->
+    <!--android:background="@color/grey_light"-->
+    <!--android:divider="@color/transparent"-->
+    <!--android:drawSelectorOnTop="true" />-->
     <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
     <android.support.v7.widget.RecyclerView

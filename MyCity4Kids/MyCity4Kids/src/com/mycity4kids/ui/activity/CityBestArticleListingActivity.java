@@ -155,7 +155,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
 
         feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, "City Best");
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, "City Best", false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);

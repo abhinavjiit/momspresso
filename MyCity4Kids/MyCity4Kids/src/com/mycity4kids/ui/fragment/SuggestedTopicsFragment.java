@@ -24,13 +24,11 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.SuggestedTopicsResponse;
-import com.mycity4kids.models.response.TrendingListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
-import com.mycity4kids.ui.adapter.LanguageSpecificArticlePagerAdapter;
 import com.mycity4kids.ui.adapter.SuggestedTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 

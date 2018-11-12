@@ -103,10 +103,16 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/default_article" />
 
-            <WebView
-                android:id="@+id/videoWebView"
+            <!--<WebView-->
+            <!--android:id="@+id/videoWebView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/article_details_app_bar_height"-->
+            <!--android:visibility="gone" />-->
+
+            <FrameLayout
+                android:id="@+id/youtube_fragment"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/article_details_app_bar_height"
+                android:layout_height="240dp"
                 android:visibility="gone" />
 
             <com.mikhaellopez.circularimageview.CircularImageView

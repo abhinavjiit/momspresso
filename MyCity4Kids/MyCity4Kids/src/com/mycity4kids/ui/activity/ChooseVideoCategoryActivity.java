@@ -28,8 +28,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
-import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
@@ -41,8 +39,6 @@ import com.mycity4kids.videotrimmer.utils.FileUtils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -146,7 +142,11 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
             mainTopicsList = new ArrayList<>();
             for (int i = 0; i < responseData.getData().size(); i++) {
                 if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(responseData.getData().get(i).getId())) {
-                    mainTopicsList.addAll(responseData.getData().get(i).getChild());
+                    for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
+//                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getPublicVisibility())) {
+                        mainTopicsList.add(responseData.getData().get(i).getChild().get(j));
+//                        }
+                    }
                 }
             }
         } catch (Exception e) {

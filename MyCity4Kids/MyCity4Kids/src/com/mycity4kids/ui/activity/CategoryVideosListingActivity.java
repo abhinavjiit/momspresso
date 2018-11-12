@@ -70,6 +70,7 @@ public class CategoryVideosListingActivity extends BaseActivity {
 
         parentTopicId = getIntent().getStringExtra("parentTopicId");
 
+        toolbarTitleTextView.setText(getString(R.string.myprofile_section_videos_label));
         Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         try {
 
@@ -228,8 +229,6 @@ public class CategoryVideosListingActivity extends BaseActivity {
             //Selected topic is Main Category
             if (parentTopicId.equals(allTopicsList.get(i).getId())) {
                 subTopicsList.addAll(allTopicsList.get(i).getChild());
-                toolbarTitleTextView.setText(allTopicsList.get(i).getDisplay_name());
-//                ((DashboardActivity) getActivity()).setDynamicToolbarTitle(allTopicsList.get(i).getDisplay_name());
                 Utils.pushViewTopicArticlesEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "",
                         allTopicsList.get(i).getId() + "~" + allTopicsList.get(i).getDisplay_name());
                 return;

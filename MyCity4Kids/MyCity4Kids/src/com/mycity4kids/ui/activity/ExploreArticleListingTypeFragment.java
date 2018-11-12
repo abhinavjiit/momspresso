@@ -327,7 +327,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
             //Prepare structure for multi-expandable listview.
             for (int i = 0; i < responseData.getData().size(); i++) {
-                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())
+                        && !AppConstants.HOME_VIDEOS_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     mainTopicsList.add(responseData.getData().get(i));
                 }
             }
@@ -343,10 +344,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 mainTopicsList.add(exploreSectionModel);
             }
         } catch (Exception e) {
-//            progressBar.setVisibility(View.GONE);
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
-//            showToast(getString(R.string.went_wrong));
         }
     }
 

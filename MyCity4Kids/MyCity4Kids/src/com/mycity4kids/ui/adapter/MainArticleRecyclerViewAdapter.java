@@ -92,8 +92,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private int groupId;
     private String screenName;
     private Gson gson;
+    private boolean showVideoFlag;
 
-    public MainArticleRecyclerViewAdapter(Context pContext, FeedNativeAd feedNativeAd, RecyclerViewClickListener listener, boolean topicHeaderVisibilityFlag, String screenName) {
+    public MainArticleRecyclerViewAdapter(Context pContext, FeedNativeAd feedNativeAd, RecyclerViewClickListener listener, boolean topicHeaderVisibilityFlag, String screenName, boolean showVideoFlag) {
         mContext = pContext;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
@@ -107,6 +108,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         subHeading = mContext.getString(R.string.groups_not_alone);
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         this.screenName = screenName;
+        this.showVideoFlag = showVideoFlag;
     }
 
     public void hideFollowTopicHeader() {
@@ -148,7 +150,12 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         } else if (position != 0 && position % 6 == 0) {
             return GROUPS;
         } else if (position != 0 && position % 3 == 0) {
-            return VIDEOS;
+            if (showVideoFlag) {
+                return VIDEOS;
+            } else {
+                return ARTICLE;
+            }
+
         } else {
             if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(articleDataModelsNew.get(position).getContentType())) {
                 return STORY;

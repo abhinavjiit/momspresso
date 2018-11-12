@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
-import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
 
 import java.util.ArrayList;
 

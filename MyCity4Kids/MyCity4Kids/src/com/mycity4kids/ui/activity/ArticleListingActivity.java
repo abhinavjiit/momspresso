@@ -126,7 +126,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
 
         feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, sortType);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, sortType, false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -470,9 +470,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
             intent.putExtra(Constants.FROM_SCREEN, "TodaysBestScreen");
-            intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
         }
-
+        intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
         intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
         intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
         intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());

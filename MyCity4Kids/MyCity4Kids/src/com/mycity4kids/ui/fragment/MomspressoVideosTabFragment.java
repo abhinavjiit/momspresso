@@ -123,7 +123,7 @@ public class MomspressoVideosTabFragment extends BaseFragment implements View.On
 //        listView.setAdapter(adapter);
         feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, AppConstants.MOMSPRESSO_CATEGORYID);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, AppConstants.MOMSPRESSO_CATEGORYID, true);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
