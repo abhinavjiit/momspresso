@@ -228,9 +228,12 @@ public class CategoryVideosListingActivity extends BaseActivity {
             subTopicsList = new ArrayList<>();
             //Selected topic is Main Category
             if (parentTopicId.equals(allTopicsList.get(i).getId())) {
-                subTopicsList.addAll(allTopicsList.get(i).getChild());
-                Utils.pushViewTopicArticlesEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "",
-                        allTopicsList.get(i).getId() + "~" + allTopicsList.get(i).getDisplay_name());
+//                subTopicsList.addAll(allTopicsList.get(i).getChild());
+                for (int j = 0; j < allTopicsList.get(i).getChild().size(); j++) {
+                    if ("1".equals(allTopicsList.get(i).getChild().get(j).getPublicVisibility())) {
+                        subTopicsList.add(allTopicsList.get(i).getChild().get(j));
+                    }
+                }
                 return;
             }
         }
