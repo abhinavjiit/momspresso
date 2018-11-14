@@ -1374,7 +1374,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawers();
                 Intent intent = new Intent(this, FilteredTopicsArticleListingActivity.class);
                 intent.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
-                intent.putExtra("displayName", "Momspresso TV");
+                intent.putExtra("displayName", getString(R.string.all_videos_tabbar_momspresso_label));
                 startActivity(intent);
             }
             break;

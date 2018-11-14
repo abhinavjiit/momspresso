@@ -1564,10 +1564,25 @@
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/shortStoryTextView"
+                android:id="@+id/momspressoTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/videosTextView"
+                android:drawableLeft="@drawable/drawer_video_red"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="12dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="16dp"
+                android:paddingTop="12dp"
+                android:text="@string/all_videos.tabbar.momspresso_label"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/shortStoryTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/momspressoTextView"
                 android:drawableLeft="@drawable/drawer_shortstory_red"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"

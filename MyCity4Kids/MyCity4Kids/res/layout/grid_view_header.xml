@@ -30,7 +30,7 @@
                     android:layout_width="26dp"
                     android:layout_height="26dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="24dp"
                     android:alpha="0.6"
                     android:tint="@color/white"
                     app:srcCompat="@drawable/ic_mom_vlogs_white" />
@@ -54,6 +54,7 @@
                 android:layout_width="90dp"
                 android:layout_height="100dp"
                 android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
                 android:background="@drawable/round_border_videos">
 
                 <android.support.v7.widget.AppCompatImageView
@@ -61,7 +62,7 @@
                     android:layout_width="26dp"
                     android:layout_height="26dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="24dp"
                     android:alpha="0.6"
                     android:tint="@color/white"
                     app:srcCompat="@drawable/video_grey" />
@@ -93,7 +94,7 @@
                     android:layout_width="26dp"
                     android:layout_height="26dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="24dp"
                     android:alpha="0.6"
                     android:src="@drawable/shortstory_grey"
                     android:tint="@color/white" />
@@ -125,7 +126,7 @@
                     android:layout_width="26dp"
                     android:layout_height="26dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="24dp"
                     android:alpha="0.6"
                     android:src="@drawable/ic_group_icon"
                     android:tint="@color/white" />

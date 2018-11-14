@@ -885,4 +885,8 @@
     <string name="megabyte">MB</string>
     <string name="kilobyte">KB</string>
     <string name="choose_video_category">Choose Video Category</string>
+    <string name="time_limit">(Maximum Time %1$s)</string>
+    <string name="upload_larger_video">Oops! Your video should be at least 5 seconds long.</string>
+    <string name="seconds_label">seconds</string>
+    <string name="minutes_label">minutes</string>
 </resources>

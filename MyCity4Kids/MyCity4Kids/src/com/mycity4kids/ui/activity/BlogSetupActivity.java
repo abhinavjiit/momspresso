@@ -183,7 +183,11 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
 //                    phoneEditText.setText(" ");
                 } else {
-                    phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile());
+                    if (responseData.getData().get(0).getResult().getPhone().getMobile().contains("+91")) {
+                        phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile().replace("+91", ""));
+                    } else {
+                        phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile());
+                    }
                 }
             } else {
             }
@@ -476,7 +480,9 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
         updateUserDetail.setUserBio(aboutSelfEditText.getText().toString().trim() + "");
         updateUserDetail.setBlogTitle(blogTitleEditText.getText().toString().trim() + "");
-
+        if (emailEditText.getVisibility() == View.VISIBLE) {
+            updateUserDetail.setEmail(emailEditText.getText().toString().trim() + "");
+        }
         if (null == phoneEditText.getText() || StringUtils.isNullOrEmpty(phoneEditText.getText().toString().trim())) {
             updateUserDetail.setMobile(" ");
         } else {

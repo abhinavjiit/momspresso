@@ -29,6 +29,7 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.MainActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
@@ -270,6 +271,11 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
             case R.id.videoContainerFL5:
                 launchVideoDetailsActivity(position, 4);
                 break;
+            case R.id.addVideoContainer: {
+                Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
+                startActivity(intent);
+            }
+            break;
             default:
                 if ("1".equals(trendingTopicData.getArticleList().get(position).getContentType())) {
                     Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);

@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +23,13 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 
 /**
@@ -41,6 +45,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
 
     private String activity;
     private View rootLayout;
+    private String duration;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,16 +58,25 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
         Bundle extras = getArguments();
         if (extras != null) {
             activity = extras.getString("activity");
+            duration = extras.getString("duration");
         }
 
         TextView cameraTextView = (TextView) rootView.findViewById(R.id.optionCameraTextView);
         TextView galleryTextView = (TextView) rootView.findViewById(R.id.optionGalleryTextView);
         TextView cancelTextView = (TextView) rootView.findViewById(R.id.cancelTextView);
+        TextView timeLimitTextView = (TextView) rootView.findViewById(R.id.timeLimitTextView);
+
         rootLayout = rootView.findViewById(R.id.root);
 
         cameraTextView.setOnClickListener(this);
         galleryTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
+
+        if ("video_category_activity".equals(activity)) {
+            timeLimitTextView.setVisibility(View.VISIBLE);
+            timeLimitTextView.setText(getString(R.string.time_limit, AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(R.string.minutes_label)));
+            timeLimitTextView.setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
+        }
 
         return rootView;
     }

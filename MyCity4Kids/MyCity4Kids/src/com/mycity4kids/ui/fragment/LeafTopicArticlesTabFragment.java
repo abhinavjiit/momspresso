@@ -35,6 +35,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.LeafNodeTopicArticlesActivity;
 import com.mycity4kids.ui.activity.MainActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
@@ -348,6 +349,11 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
             case R.id.videoContainerFL5:
                 launchVideoDetailsActivity(position, 4);
                 break;
+            case R.id.addVideoContainer: {
+                Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
+                startActivity(intent);
+            }
+            break;
             default:
                 if ("1".equals(mDatalist.get(position).getContentType())) {
                     Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);

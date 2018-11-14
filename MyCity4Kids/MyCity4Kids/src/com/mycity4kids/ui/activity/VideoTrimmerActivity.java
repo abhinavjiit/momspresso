@@ -8,8 +8,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.kelltontech.network.Response;
+import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
@@ -22,7 +26,7 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVideoListener {
+public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoListener {
 
     private K4LVideoTrimmer mVideoTrimmer;
     private ProgressDialog mProgressDialog;
@@ -75,6 +79,11 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
     }
 
     @Override
+    protected void updateUi(Response response) {
+
+    }
+
+    @Override
     public void onTrimStarted() {
 
     }
@@ -117,7 +126,7 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
 
     @Override
     public void onError(String message) {
-
+        Toast.makeText(this, getString(R.string.upload_larger_video), Toast.LENGTH_SHORT).show();
     }
 
 }

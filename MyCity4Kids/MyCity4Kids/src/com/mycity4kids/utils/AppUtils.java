@@ -74,6 +74,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
 
@@ -788,5 +789,18 @@ public class AppUtils {
     public static String extractYoutubeIdForMomspresso(String videoUrl) {
         String[] separated = videoUrl.split("/");
         return separated[separated.length - 1];
+    }
+
+    public static String calculateFormattedTimeLimit(long seconds) {
+        long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds) * 60);
+        return minute + " ";
+//        long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) * 60);
+//        if (minute == 0) {
+//            return second + " " + BaseApplication.getAppContext().getString(R.string.seconds_label);
+//        } else if (second == 0) {
+//            return minute + " " + BaseApplication.getAppContext().getString(R.string.minutes_label);
+//        } else {
+//            return minute + " " + BaseApplication.getAppContext().getString(R.string.minutes_label) + " " + second + " " + BaseApplication.getAppContext().getString(R.string.seconds_label);
+//        }
     }
 }

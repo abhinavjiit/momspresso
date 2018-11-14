@@ -89,7 +89,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
             adapter = new ParentTopicsGridAdapter(null);
             gridview.setAdapter(adapter);
             adapter.setDatalist(mainTopicsList);
-            adapter.setVideoFlag();
+//            adapter.setVideoFlag();
         } catch (FileNotFoundException e) {
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
@@ -109,7 +109,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
                         adapter = new ParentTopicsGridAdapter(null);
                         gridview.setAdapter(adapter);
                         adapter.setDatalist(mainTopicsList);
-                        adapter.setVideoFlag();
+//                        adapter.setVideoFlag();
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -172,6 +172,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
         Bundle _args = new Bundle();
         _args.putString("activity", "video_category_activity");
         _args.putString("categoryId", categoryId);
+        _args.putString("duration", duration);
         chooseVideoUploadOptionDialogFragment.setArguments(_args);
         chooseVideoUploadOptionDialogFragment.setCancelable(true);
         chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");

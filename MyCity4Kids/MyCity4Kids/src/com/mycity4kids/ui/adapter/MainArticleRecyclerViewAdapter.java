@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,6 +25,7 @@ import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
@@ -1325,6 +1327,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     public class VideoCarouselViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        HorizontalScrollView videoCarouselContainer;
+        FrameLayout addVideoContainer;
         FrameLayout videoContainerFL1, videoContainerFL2, videoContainerFL3, videoContainerFL4, videoContainerFL5;
         TextView txvArticleTitle1, txvArticleTitle2, txvArticleTitle3, txvArticleTitle4, txvArticleTitle5;
         TextView txvAuthorName1, txvAuthorName2, txvAuthorName3, txvAuthorName4, txvAuthorName5;
@@ -1356,6 +1360,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         VideoCarouselViewHolder(View view) {
             super(view);
+            videoCarouselContainer = (HorizontalScrollView) view.findViewById(R.id.videoCarouselContainer);
+            addVideoContainer = (FrameLayout) view.findViewById(R.id.addVideoContainer);
             videoContainerFL1 = (FrameLayout) view.findViewById(R.id.videoContainerFL1);
             videoContainerFL2 = (FrameLayout) view.findViewById(R.id.videoContainerFL2);
             videoContainerFL3 = (FrameLayout) view.findViewById(R.id.videoContainerFL3);
@@ -1409,6 +1415,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
             whatsappShareImageView.setTag(view);
 
+            addVideoContainer.setOnClickListener(this);
             videoContainerFL1.setOnClickListener(this);
             videoContainerFL2.setOnClickListener(this);
             videoContainerFL3.setOnClickListener(this);
@@ -1870,19 +1877,33 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 return;
             }
             Log.d("VideoCarouselViewHolder", "Response = " + result);
-            VlogsListingResponse responseData = gson.fromJson(result, VlogsListingResponse.class);
-            Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData.getData().get(0).getResult().size());
-            articleDataModelsNew.get(pos).setCarouselVideoList(responseData.getData().get(0).getResult());
-            Log.d("VideoCarouselViewHolder", "ASYNC");
-            populateCarouselVideos(viewHolder, responseData.getData().get(0).getResult());
-            articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
-            articleDataModelsNew.get(pos).setResponseReceived(true);
+            try {
+                VlogsListingResponse responseData = gson.fromJson(result, VlogsListingResponse.class);
+                Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData.getData().get(0).getResult().size());
+                articleDataModelsNew.get(pos).setCarouselVideoList(responseData.getData().get(0).getResult());
+                Log.d("VideoCarouselViewHolder", "ASYNC");
+                populateCarouselVideos(viewHolder, responseData.getData().get(0).getResult());
+                articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
+                articleDataModelsNew.get(pos).setResponseReceived(true);
+            } catch (JsonSyntaxException jse) {
+//                viewHolder.videoCarouselContainer.setVisibility(View.GONE);
+                articleDataModelsNew.get(pos).setCarouselVideoList(new ArrayList<>());
+                populateCarouselVideos(viewHolder, new ArrayList<>());
+                articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
+                articleDataModelsNew.get(pos).setResponseReceived(true);
+            }
         }
 
     }
 
     private void populateCarouselVideos(VideoCarouselViewHolder viewHolder, ArrayList<VlogsListingAndDetailResult> result) {
         ArrayList<VlogsListingAndDetailResult> videoList = result;
+        if (videoList.isEmpty()) {
+            viewHolder.videoCarouselContainer.setVisibility(View.GONE);
+            return;
+        } else {
+            viewHolder.videoCarouselContainer.setVisibility(View.VISIBLE);
+        }
         if (videoList.size() == 1) {
             updateCarouselView(viewHolder.txvArticleTitle1, viewHolder.articleImageView1, viewHolder.txvAuthorName1, videoList.get(0));
         } else if (videoList.size() == 2) {

@@ -39,7 +39,7 @@
         android:paddingRight="5dp"
         android:text=""
         android:textColor="@color/ad.comment.username"
-        android:textSize="12sp"
+        android:textSize="14sp"
         app:fontName="oswald_regular.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -177,7 +177,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/ic_upvote"
-            android:tint="@color/app_red"/>
+            android:tint="@color/app_red" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/upvoteTextView"

@@ -434,7 +434,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             case R.id.momsTVContainer: {
                 Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
                 intent.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
-                intent.putExtra("displayName", "Momspresso TV");
+                intent.putExtra("displayName", getString(R.string.all_videos_tabbar_momspresso_label));
                 startActivity(intent);
             }
             break;

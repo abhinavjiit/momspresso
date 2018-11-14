@@ -34,6 +34,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
 import com.mycity4kids.ui.activity.MainActivity;
@@ -372,6 +373,11 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
             case R.id.videoContainerFL5:
                 launchVideoDetailsActivity(position, 4);
                 break;
+            case R.id.addVideoContainer: {
+                Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
+                startActivity(intent);
+            }
+            break;
             case R.id.closeImageView:
                 MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                 try {

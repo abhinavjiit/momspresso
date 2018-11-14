@@ -285,7 +285,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, selectedTopics + "~" + displayName, AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ? true : false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, selectedTopics + "~" + displayName, false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -351,7 +351,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         if (StringUtils.isNullOrEmpty(filteredTopics)) {
             Call<ArticleListingResponse> filterCall;
             if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
-                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
+                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             } else if (isLanguageListing) {
                 filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
             } else {
@@ -1032,6 +1032,11 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             case R.id.videoContainerFL5:
                 launchVideoDetailsActivity(position, 4);
                 break;
+            case R.id.addVideoContainer: {
+                Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
+                startActivity(intent);
+            }
+            break;
             default:
                 Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticleDetailsContainerActivity.class);
                 intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());

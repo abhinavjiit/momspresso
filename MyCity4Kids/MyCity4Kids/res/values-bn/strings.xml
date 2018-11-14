@@ -838,4 +838,7 @@
     <string name="view_profile">view profile</string>
     <string name="choose_video_category">Choose Video Category</string>
     <string name="enter_valid_email">Please enter valid email id</string>
+    <string name="time_limit">(সর্বোচ্চ সময় %1$s)</string>
+    <string name="upload_larger_video">দুঃখিত! আপনার ভিডিওটি অন্তত 5 সেকেন্ডের বেশি হতে হবে </string>
+    <string name="minutes_label">মিনিট</string>
 </resources>

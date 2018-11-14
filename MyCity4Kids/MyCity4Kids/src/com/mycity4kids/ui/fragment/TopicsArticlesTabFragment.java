@@ -42,6 +42,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LeafNodeTopicArticlesActivity;
@@ -538,6 +539,11 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             case R.id.videoContainerFL5:
                 launchVideoDetailsActivity(position, 4);
                 break;
+            case R.id.addVideoContainer: {
+                Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
+                startActivity(intent);
+            }
+            break;
             default:
                 if ("1".equals(mDatalist.get(position).getContentType())) {
                     Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);

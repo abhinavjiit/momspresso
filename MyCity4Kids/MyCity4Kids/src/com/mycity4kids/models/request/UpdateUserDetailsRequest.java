@@ -12,6 +12,7 @@ public class UpdateUserDetailsRequest {
     private String attributeType;
     private String firstName;
     private String lastName;
+    private String email;
     private String mobile;
     private String userBio;
     private String cityId;
@@ -34,6 +35,14 @@ public class UpdateUserDetailsRequest {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getMobile() {

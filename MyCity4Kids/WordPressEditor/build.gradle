@@ -20,14 +20,14 @@ repositories {
 android {
     publishNonDefault true
 
-    compileSdkVersion 23
+    compileSdkVersion 26
     buildToolsVersion '28.0.3'
 
     defaultConfig {
         versionCode 6
         versionName "0.6"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 26
     }
     buildTypes {
         release {

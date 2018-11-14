@@ -47,6 +47,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.videotrimmer.interfaces.OnK4LVideoListener;
 import com.mycity4kids.videotrimmer.interfaces.OnProgressVideoListener;
 import com.mycity4kids.videotrimmer.interfaces.OnRangeSeekBarListener;
@@ -267,7 +268,9 @@ public class K4LVideoTrimmer extends FrameLayout {
     }
 
     private void onSaveClicked() {
-        if (mStartPosition <= 0 && mEndPosition >= mDuration) {
+        if (mEndPosition - mStartPosition < 5000) {
+            mOnTrimVideoListener.onError("galat jawab");
+        } else if (mStartPosition <= 0 && mEndPosition >= mDuration) {
             if (mOnTrimVideoListener != null)
                 mOnTrimVideoListener.getResult(mSrc);
         } else {
