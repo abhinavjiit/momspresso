@@ -37,11 +37,11 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
-import com.mycity4kids.ui.activity.MainActivity;
+import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
-import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.widget.FeedNativeAd;
 
 import org.json.JSONObject;
@@ -74,7 +74,8 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
     ShimmerFrameLayout mshimmerFrameLayout;
-//    private SwipeRefreshLayout swipe_refresh_layout;
+    //    private SwipeRefreshLayout swipe_refresh_layout;
+    private MixpanelAPI mixpanel;
 
     @Nullable
     @Override
@@ -86,13 +87,14 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mshimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer1);
 
         String gpHeading = getArguments().getString("gpHeading");
         String gpSubHeading = getArguments().getString("gpSubHeading");
         String gpImageUrl = getArguments().getString("gpImageUrl");
         int groupId = getArguments().getInt("groupId");
-        mshimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer1);
         // progressBar.setVisibility(View.VISIBLE);
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         progressBar.setVisibility(View.VISIBLE);
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
@@ -374,12 +376,13 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                 launchVideoDetailsActivity(position, 4);
                 break;
             case R.id.addVideoContainer: {
+                MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, "TrendingAll");
                 Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
                 startActivity(intent);
             }
             break;
             case R.id.closeImageView:
-                MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                 try {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
@@ -395,11 +398,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                 Intent intent1 = new Intent(getActivity(), ExploreArticleListingTypeActivity.class);
                 intent1.putExtra("fragType", "search");
                 startActivity(intent1);
-//                ExploreArticleListingTypeFragment searchTopicFrag = new ExploreArticleListingTypeFragment();
-//                Bundle searchBundle = new Bundle();
-//                searchBundle.putString("fragType", "search");
-//                searchTopicFrag.setArguments(searchBundle);
-//                ((DashboardActivity) getActivity()).addFragment(searchTopicFrag, searchBundle, true);
                 break;
 //            case R.id.groupHeaderView:
 //                GroupsFragment groupsFragment = new GroupsFragment();
@@ -445,9 +443,10 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     }
 
     private void launchVideoDetailsActivity(int position, int videoIndex) {
+        MixPanelUtils.pushMomVlogClickEvent(mixpanel, videoIndex, "TrendingAll");
         if (articleDataModelsNew.get(position).getCarouselVideoList() != null && !articleDataModelsNew.get(position).getCarouselVideoList().isEmpty()) {
             VlogsListingAndDetailResult result = articleDataModelsNew.get(position).getCarouselVideoList().get(videoIndex);
-            Intent intent = new Intent(getActivity(), MainActivity.class);
+            Intent intent = new Intent(getActivity(), MomsVlogDetailActivity.class);
             intent.putExtra(Constants.VIDEO_ID, result.getId());
             intent.putExtra(Constants.STREAM_URL, result.getUrl());
             intent.putExtra(Constants.AUTHOR_ID, result.getAuthor().getId());

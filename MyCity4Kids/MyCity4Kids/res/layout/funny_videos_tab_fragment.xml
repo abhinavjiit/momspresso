@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
@@ -11,8 +10,7 @@
         android:id="@+id/shimmer_funny_videos_article"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        app:duration="1000">
+        fab:duration="1000">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +20,6 @@
             <include layout="@layout/mainshimmer_layout" />
 
             <include layout="@layout/mainshimmer_layout" />
-
 
         </LinearLayout>
 

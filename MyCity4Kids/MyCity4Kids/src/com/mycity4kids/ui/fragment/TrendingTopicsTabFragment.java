@@ -18,6 +18,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -31,10 +32,11 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.MainActivity;
+import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
@@ -61,6 +63,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private MixpanelAPI mixpanel;
 
     @Nullable
     @Override
@@ -75,7 +78,8 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         if (getArguments() != null) {
             trendingTopicData = getArguments().getParcelable("trendingTopicsData");
         }
-        Log.d("searchName", "" + trendingTopicData.getDisplay_name());
+
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
@@ -85,6 +89,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(trendingTopicData.getArticleList());
         recyclerView.setAdapter(recyclerAdapter);
+
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -272,6 +277,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
                 launchVideoDetailsActivity(position, 4);
                 break;
             case R.id.addVideoContainer: {
+                MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, "Trending-" + trendingTopicData.getDisplay_name());
                 Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
                 startActivity(intent);
             }
@@ -311,9 +317,10 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
     }
 
     private void launchVideoDetailsActivity(int position, int videoIndex) {
+        MixPanelUtils.pushMomVlogClickEvent(mixpanel, videoIndex, "Trending-" + trendingTopicData.getDisplay_name());
         if (trendingTopicData.getArticleList().get(position).getCarouselVideoList() != null && !trendingTopicData.getArticleList().get(position).getCarouselVideoList().isEmpty()) {
             VlogsListingAndDetailResult result = trendingTopicData.getArticleList().get(position).getCarouselVideoList().get(videoIndex);
-            Intent intent = new Intent(getActivity(), MainActivity.class);
+            Intent intent = new Intent(getActivity(), MomsVlogDetailActivity.class);
             intent.putExtra(Constants.VIDEO_ID, result.getId());
             intent.putExtra(Constants.STREAM_URL, result.getUrl());
             intent.putExtra(Constants.AUTHOR_ID, result.getAuthor().getId());

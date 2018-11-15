@@ -93,6 +93,7 @@ import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
@@ -635,7 +636,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
-                Intent intent1 = new Intent(DashboardActivity.this, MainActivity.class);
+                Intent intent1 = new Intent(DashboardActivity.this, MomsVlogDetailActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.VIDEO_ID, articleId);
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
@@ -1261,11 +1262,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else {
                     Intent intent = new Intent(this, SuggestedTopicsActivity.class);
                     startActivity(intent);
-//                    launchEditor();
-//                    SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
-//                    Bundle mBundle0 = new Bundle();
-//                    fragment0.setArguments(mBundle0);
-//                    addFragment(fragment0, mBundle0, true);
                 }
                 break;
             case R.id.storyContainer:
@@ -1273,19 +1269,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent ssintent = new Intent(this, AddShortStoryActivity.class);
                 startActivity(ssintent);
                 break;
-            case R.id.videoContainer:
+            case R.id.videoContainer: {
                 hideCreateContentView();
-            {
-//                if (SharedPrefUtils.getFirstVideoUploadFlag(this)) {
-//                    launchAddVideoOptions();
                 Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
                 startActivity(intent);
-//                } else {
-//                    UploadVideoInfoFragment uploadVideoInfoFragment = new UploadVideoInfoFragment();
-//                    Bundle searchBundle = new Bundle();
-//                    uploadVideoInfoFragment.setArguments(searchBundle);
-//                    addFragment(uploadVideoInfoFragment, searchBundle, true);
-//                }
             }
             break;
             case R.id.overlayView:
@@ -1298,8 +1285,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(pIntent);
                 break;
             case R.id.langTextView: {
-//                Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
-//                startActivity(intent);
                 ChangePreferredLanguageDialogFragment changePreferredLanguageDialogFragment = new ChangePreferredLanguageDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
@@ -1315,19 +1300,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.downArrowImageView:
             case R.id.toolbarTitle:
-//                if (topFragment instanceof TopicsListingFragment) {
-//                    Utils.pushTopMenuClickEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-//                    onBackPressed();
-//                } else if (topFragment instanceof TopicsShortStoriesContainerFragment) {
-//                    Utils.pushTopMenuClickEvent(this, "TopicShortStoriesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-//                    onBackPressed();
-//                } else {
-//                    Utils.pushTopMenuClickEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-//                    Intent intent = new Intent(this, ExploreArticleListingTypeActivity.class);
-//                    startActivity(intent);
-//                    this.overridePendingTransition(R.anim.activity_drawer_slide_in_from_left, R.anim.activity_drawer_slide_out_to_right);
-//                }
-
                 break;
             case R.id.searchAllImageView:
                 if (topFragment instanceof GroupsFragment) {
@@ -1340,21 +1312,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     startActivity(searchIntent);
                 }
                 break;
-//            case R.id.readAllTextView:
-//                if (topFragment instanceof NotificationFragment) {
-//                    ((NotificationFragment) topFragment).markAllNotificationAsRead();
-//                    updateUnreadNotificationCount("0");
-//                }
-//                break;
-//            case R.id.groupCoachmark:
-//                groupCoachmark.setVisibility(View.GONE);
-//                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "home")) {
-//                    firstCoachmark.setVisibility(View.VISIBLE);
-//                    secondCoachmark.setVisibility(View.GONE);
-//                }
-//                SharedPrefUtils.setGroupTourFirstLaunch(this, false);
-//                SharedPrefUtils.setCoachmarksShownFlag(this, "groups", true);
-//                break;
             case R.id.firstCoachmark:
                 firstCoachmark.setVisibility(View.GONE);
                 secondCoachmark.setVisibility(View.VISIBLE);
@@ -1365,6 +1322,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.videosTextView: {
                 mDrawerLayout.closeDrawers();
+                MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
                 Intent cityIntent = new Intent(this, CategoryVideosListingActivity.class);
                 cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                 startActivity(cityIntent);
@@ -1719,7 +1677,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderVlogDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getId())) {
-            Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, MomsVlogDetailActivity.class);
 //            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             intent.putExtra(Constants.VIDEO_ID, data.getId());
             intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);

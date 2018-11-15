@@ -36,4 +36,47 @@ public class MixPanelUtils {
             e.printStackTrace();
         }
     }
+
+    public static void pushMomVlogsDrawerClickEvent(MixpanelAPI mixpanel) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            mixpanel.track("MomVlogsDrawerClick", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void pushVideoUploadSuccessEvent(MixpanelAPI mixpanel, String title) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("title", title);
+            mixpanel.track("MomVlogsUploadSuccess", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void pushVideoUploadFailureEvent(MixpanelAPI mixpanel, String title) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("title", title);
+            mixpanel.track("MomVlogsUploadFailure", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void pushVideoPublishSuccessEvent(MixpanelAPI mixpanel, String title) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("title", title);
+            mixpanel.track("MomVlogsPublishSuccess", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

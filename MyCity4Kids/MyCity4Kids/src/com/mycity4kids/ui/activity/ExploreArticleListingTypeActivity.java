@@ -57,24 +57,19 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
     private ArrayList<ExploreTopicsModel> mainTopicsList;
     private String fragType = "";
     private String dynamoUserId;
-
-    //    private TabLayout tabLayout;
-    private GridView gridview;
+    private String source;
 
     private ParentTopicsGridAdapter adapter;
-    //    private View view;
+
+    private GridView gridview;
     private EditText searchTopicsEditText;
     private TextView exploreCategoriesLabel;
-    //    private TabLayout guideTabLayout;
     private RelativeLayout guideOverLay;
-    private TextView guideTopicTextView1;
-    private TextView guideTopicTextView2;
     private Toolbar toolbar;
     private HorizontalScrollView quickLinkContainer;
     private TextView todaysBestTextView, editorsPickTextView, shortStoryTextView, forYouTextView, videosTextView, recentTextView;
     private TextView toolbarTitle;
     private TextView continueTextView;
-    private String source;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +84,6 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
         searchTopicsEditText = (EditText) findViewById(R.id.searchTopicsEditText);
         guideOverLay = (RelativeLayout) findViewById(R.id.guideOverlay);
-        guideTopicTextView1 = (TextView) findViewById(R.id.guideTopicTextView1);
-        guideTopicTextView2 = (TextView) findViewById(R.id.guideTopicTextView2);
         todaysBestTextView = (TextView) findViewById(R.id.todaysBestTextView);
         editorsPickTextView = (TextView) findViewById(R.id.editorsPickTextView);
         shortStoryTextView = (TextView) findViewById(R.id.shortStoryTextView);
@@ -119,7 +112,6 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
             continueTextView.setVisibility(View.VISIBLE);
             continueTextView.setEnabled(false);
             continueTextView.setOnClickListener(this);
-//            searchTopicsEditText.setVisibility(View.VISIBLE);
             exploreCategoriesLabel.setText(getString(R.string.search_topics_title));
             exploreCategoriesLabel.setVisibility(View.GONE);
             try {
@@ -131,7 +123,6 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                 adapter = new ParentTopicsGridAdapter(fragType);
                 gridview.setAdapter(adapter);
                 adapter.setDatalist(mainTopicsList);
-//                initializeTopicSearch();
             } catch (FileNotFoundException e) {
                 Crashlytics.logException(e);
                 Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -142,58 +133,6 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                 call.enqueue(downloadFollowTopicsJSONCallback);
             }
         } else {
-            searchTopicsEditText.setVisibility(View.GONE);
-            exploreCategoriesLabel.setText(getString(R.string.explore_listing_explore_categories_title));
-//            setUpTabLayout(sections);
-            guideOverLay.setOnClickListener(this);
-            try {
-                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
-                createTopicsData(res);
-                adapter = new ParentTopicsGridAdapter(fragType);
-                gridview.setAdapter(adapter);
-                adapter.setDatalist(mainTopicsList);
-                guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());
-                guideTopicTextView2.setText(mainTopicsList.get(1).getDisplay_name().toUpperCase());
-            } catch (FileNotFoundException e) {
-                Retrofit retro = BaseApplication.getInstance().getRetrofit();
-                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-                caller.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-
-                        try {
-                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                            ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
-                            createTopicsData(res);
-                            adapter = new ParentTopicsGridAdapter(fragType);
-                            gridview.setAdapter(adapter);
-                            adapter.setDatalist(mainTopicsList);
-                            guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());
-                            guideTopicTextView2.setText(mainTopicsList.get(1).getDisplay_name().toUpperCase());
-                        } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
-                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
-                        Log.d("MC4KException", Log.getStackTraceString(t));
-                    }
-                });
-            }
-            if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics")) {
-                showGuideView();
-            }
         }
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -210,21 +149,8 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                             continueTextView.setEnabled(false);
                         }
                         adapter.notifyDataSetChanged();
-//                        Intent subscribeTopicIntent = new Intent(ExploreArticleListingTypeActivity.this, SubscribeTopicsActivity.class);
-//                        subscribeTopicIntent.putExtra("tabPos", position);
-//                        startActivity(subscribeTopicIntent);
                     } else {
-                        if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
-                            Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ContributorListActivity.class);
-                            startActivity(intent);
-                        } else if (EXPLORE_SECTION_ID.equals(topic.getId())) {
-                            Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ExploreEventsResourcesActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(ExploreArticleListingTypeActivity.this, TopicsListingActivity.class);
-                            intent.putExtra("parentTopicId", topic.getId());
-                            startActivity(intent);
-                        }
+
                     }
                 }
             }
@@ -260,10 +186,6 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                                       int arg3) {
             }
         });
-    }
-
-    public void showGuideView() {
-        guideOverLay.setVisibility(View.VISIBLE);
     }
 
     Callback<ResponseBody> downloadFollowTopicsJSONCallback = new Callback<ResponseBody>() {
@@ -322,16 +244,6 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
         }
     };
 
-    private void setMargin(ViewGroup.MarginLayoutParams layoutParams, int start, int end) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            layoutParams.setMarginStart(start);
-            layoutParams.setMarginEnd(end);
-        } else {
-            layoutParams.leftMargin = start;
-            layoutParams.rightMargin = end;
-        }
-    }
-
     private void createTopicsDataForFollow(ExploreTopicsModel[] responseData) {
         try {
             mainTopicsList = new ArrayList<>();
@@ -340,33 +252,6 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
             for (int i = 0; i < responseData.length; i++) {
                 if ("1".equals(responseData[i].getShowInMenu()) && responseData[i].getChild() != null && !responseData[i].getChild().isEmpty()) {
                     mainTopicsList.add(responseData[i]);
-                }
-            }
-            if (!"search".equals(fragType)) {
-                ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
-                contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
-                contributorListModel.setId(MEET_CONTRIBUTOR_ID);
-                mainTopicsList.add(contributorListModel);
-
-                ExploreTopicsModel exploreSectionModel = new ExploreTopicsModel();
-                exploreSectionModel.setDisplay_name(getString(R.string.home_screen_explore_title));
-                exploreSectionModel.setId(EXPLORE_SECTION_ID);
-                mainTopicsList.add(exploreSectionModel);
-            }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
-    }
-
-    private void createTopicsData(ExploreTopicsResponse responseData) {
-        try {
-            mainTopicsList = new ArrayList<>();
-
-            //Prepare structure for multi-expandable listview.
-            for (int i = 0; i < responseData.getData().size(); i++) {
-                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
-                    mainTopicsList.add(responseData.getData().get(i));
                 }
             }
             if (!"search".equals(fragType)) {
@@ -408,7 +293,6 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.continueTextView: {
-//                getSelectedTopicsList();
                 Intent intent = new Intent(ExploreArticleListingTypeActivity.this, SubscribeTopicsActivity.class);
                 intent.putStringArrayListExtra("selectedTopicList", getSelectedTopicsList());
                 if (source == null) {
@@ -451,13 +335,6 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
                 Intent intent = new Intent(ExploreArticleListingTypeActivity.this, ArticleListingActivity.class);
                 intent.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
                 startActivity(intent);
-            }
-            break;
-            case R.id.videosTextView: {
-                Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "VideosScreen", dynamoUserId + "");
-                Utils.pushViewQuickLinkArticlesEvent(ExploreArticleListingTypeActivity.this, "TopicScreen", dynamoUserId + "", "VideosScreen");
-                Intent cityIntent = new Intent(ExploreArticleListingTypeActivity.this, AllVideosListingActivity.class);
-                startActivity(cityIntent);
             }
             break;
             case R.id.recentTextView: {

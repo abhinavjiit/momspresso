@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -48,6 +49,7 @@ import com.mycity4kids.ui.TusAndroidUpload;
 import com.mycity4kids.ui.TusClient;
 import com.mycity4kids.ui.TusUpload;
 import com.mycity4kids.ui.TusUploader;
+import com.mycity4kids.utils.MixPanelUtils;
 
 import org.json.JSONObject;
 
@@ -76,6 +78,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private String categoryId;
     private String duration;
     private String thumbnailTime;
+    private MixpanelAPI mixpanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +96,6 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
         uploadingContainer = (RelativeLayout) findViewById(R.id.uploadingContainer);
         uploadFinishContainer = (RelativeLayout) findViewById(R.id.uploadFinishContainer);
-//        mCircleView = (CircleProgressBar) findViewById(R.id.circleView);
-//        cancelTextView = (TextView) findViewById(R.id.cancelTextView);
         status = (TextView) findViewById(R.id.status);
         okayTextView = (TextView) findViewById(R.id.okayTextView);
 
@@ -103,10 +104,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         uploadingContainer.setVisibility(View.VISIBLE);
         uploadFinishContainer.setVisibility(View.GONE);
 
-//        mCircleView.setStartPositionInDegrees(ProgressStartPoint.DEFAULT);
-//        mCircleView.setLinearGradientProgress(false);
-
-
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
     }
 
     @Override
@@ -151,14 +149,14 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
-                Log.d("FirebaseUpload", "FAIL");
+                MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
                 createRowForFailedAttempt();
 
             }
         }).addOnSuccessListener(new OnSuccessListener<com.google.firebase.storage.UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d("FirebaseUpload", "FirebaseUpload");
+                MixPanelUtils.pushVideoUploadSuccessEvent(mixpanel, title);
                 riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -222,6 +220,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             }
             try {
                 if (response.isSuccessful()) {
+                    MixPanelUtils.pushVideoPublishSuccessEvent(mixpanel, title);
                     uploadingContainer.setVisibility(View.GONE);
                     uploadFinishContainer.setVisibility(View.VISIBLE);
                 } else {

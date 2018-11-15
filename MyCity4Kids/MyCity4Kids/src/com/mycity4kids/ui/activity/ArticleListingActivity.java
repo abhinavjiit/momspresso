@@ -87,7 +87,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        menuImageView = (ImageView) mToolbar.findViewById(R.id.menuImageView);
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
         addTopicsLayout = (LinearLayout) findViewById(R.id.addTopicsLayout);
         headerArticleCardLayout = (FrameLayout) findViewById(R.id.headerArticleView);
@@ -97,8 +96,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         mToolbar.setVisibility(View.VISIBLE);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
-
-        // progressBar.setVisibility(View.VISIBLE);
 
         sortType = getIntent().getStringExtra(Constants.SORT_TYPE);
         fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
@@ -153,36 +150,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             }
         });
 
-//        menuImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (Constants.TAB_FOR_YOU.equalsIgnoreCase(sortType)) {
-//                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "ForYouScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
-//                } else if (Constants.TAB_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
-//                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "EditorsPickScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
-//                } else if (Constants.TAB_RECENT.equalsIgnoreCase(sortType)) {
-//                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "RecentScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
-//                } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(sortType)) {
-//                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "TodaysBestScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
-//                }
-//                onBackPressed();
-//            }
-//        });
-//        toolbarTitleTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (Constants.TAB_FOR_YOU.equalsIgnoreCase(sortType)) {
-//                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "ForYouScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
-//                } else if (Constants.TAB_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
-//                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "EditorsPickScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
-//                } else if (Constants.TAB_RECENT.equalsIgnoreCase(sortType)) {
-//                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "RecentScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
-//                } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(sortType)) {
-//                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "TodaysBestScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
-//                }
-//                onBackPressed();
-//            }
-//        });
     }
 
     @Override

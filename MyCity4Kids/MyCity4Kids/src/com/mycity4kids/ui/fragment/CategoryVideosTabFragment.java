@@ -26,14 +26,17 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.activity.MainActivity;
+import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.adapter.VlogsListingAdapter;
+import com.mycity4kids.utils.MixPanelUtils;
 
 import java.util.ArrayList;
 
@@ -66,6 +69,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private String fromScreen;
     private ShimmerFrameLayout funnyvideosshimmer;
     private String videoCategory;
+    private MixpanelAPI mixpanel;
 
     @Nullable
     @Override
@@ -87,6 +91,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         frameLayout.getBackground().setAlpha(0);
 
         videoCategory = getArguments().getString("video_category_id");
+
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
@@ -155,10 +161,9 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                Intent intent = new Intent(getActivity(), MomsVlogDetailActivity.class);
                 if (adapterView.getAdapter() instanceof VlogsListingAdapter) {
-//                    Utils.pushEvent(VlogsListingActivity.this, GTMEventType.FOR_YOU_ARTICLE_CLICK_EVENT,
-//                            SharedPrefUtils.getUserDetailModel(VlogsListingActivity.this).getDynamoId(), "Video Listing Screen");
+                    MixPanelUtils.pushMomVlogClickEvent(mixpanel, i, "" + videoCategory);
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
                     intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
                     intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
@@ -168,7 +173,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
                     startActivity(intent);
-
                 }
             }
         });

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="114"
-    android:versionName="9.5">
+    android:versionCode="115"
+    android:versionName="9.5.1">
 
     <uses-sdk tools:overrideLibrary="com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -386,9 +386,6 @@
             android:name=".ui.activity.UserActivitiesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.AllVideosListingActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.LanguageSelectionActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -483,7 +480,7 @@
         <activity
             android:name=".ui.activity.SuggestedTopicsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name=".ui.activity.MomsVlogDetailActivity" />
         <activity
             android:name=".ui.activity.EditProfileNewActivity"
             android:screenOrientation="portrait"

@@ -2,7 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -18,11 +17,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -54,12 +51,12 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -70,10 +67,8 @@ import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.ArticleDetailResponse;
-import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
-import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
@@ -87,6 +82,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.fragment.ViewAllCommentsDialogFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
@@ -105,20 +101,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, ObservableScrollViewCallbacks {
+public class MomsVlogDetailActivity extends BaseActivity implements View.OnClickListener, ObservableScrollViewCallbacks {
 
     private static final int RECOVERY_REQUEST = 1;
 
-    private final static int REPLY_LEVEL_PARENT = 1;
-    private final static int REPLY_LEVEL_CHILD = 2;
-
     private RelativeLayout mLodingView;
-    private Toast toast;
-    private LinearLayout commentLayout;
-    private ProgressDialog mProgressDialog;
     private ObservableScrollView mScrollView;
-    //    private BubbleTextVew recommendSuggestion;
-    private TextView recentAuthorArticleHeading;
     private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
     private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
     private LinearLayout trendingArticles;
@@ -126,49 +114,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private FlowLayout tagsLayout;
     private TextView articleViewCountTextView;
     private Toolbar mToolbar;
-    //    private FloatingActionButton commentFloatingActionButton;
     private ImageView authorImageView;
     private TextView followClick;
-    private LinearLayout commLayout;
     private Rect scrollBounds;
     private TextView authorTypeTextView, authorNameTextView;
     private TextView article_title;
     private TextView articleCreatedDateTextView;
-    //    private LinearLayout newCommentLayout;
-    private Menu menu;
-    //    private ImageView commentBtn;
-    private View commentEditView;
-    private LinearLayout addCommentLinearLayout;
 
     private VlogsListingAndDetailResult detailData;
     private String videoId;
-    //    private String youTubeId = null;
-    private boolean isLoading = false;
-    private String commentType = "db";
     private String commentURL = "";
     private String commentMainUrl;
-    private String pagination = "";
     boolean isArticleDetailEndReached = false;
-    private boolean hasRecommendSuggestionAppeared = true;
     private String authorId;
-    private String blogSlug;
     private String titleSlug;
     private String authorType, author;
     private String shareUrl = "";
     private String deepLinkURL;
-    private int recommendStatus;
-    private String recommendationFlag = "0";
-    private String screenTitle = "Video Blogs";
-    private String TAG;
-    private String bookmarkFlag = "0";
-    private int bookmarkStatus;
-    private String bookmarkId;
     private Boolean isFollowing = false;
 
-    private Animation showRecommendAnim, hideRecommendAnim;
 
     private VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI;
-    private GoogleApiClient mClient;
 
     private CustomFontTextView facebookShareTextView, whatsappShareTextView, emailShareTextView, likeArticleTextView, bookmarkArticleTextView;
     private String userDynamoId;
@@ -191,6 +157,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private long mResumePosition;
     String streamUrl = "https://www.momspresso.com/new-videos/v1/test1/playlist.m3u8";
     private String taggedCategories;
+    private MixpanelAPI mixpanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,7 +172,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         mScrollView = (ObservableScrollView) findViewById(R.id.scroll_view);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
-        recentAuthorArticleHeading = (TextView) findViewById(R.id.recentAuthorArticleHeading);
         trendingArticles = (LinearLayout) findViewById(R.id.trendingArticles);
         recentAuthorArticles = (LinearLayout) findViewById(R.id.recentAuthorArticles);
         relatedArticles1 = (RelatedArticlesView) findViewById(R.id.relatedArticles1);
@@ -230,8 +196,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         followClick = (TextView) findViewById(R.id.follow_click);
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
-        commLayout = ((LinearLayout) findViewById(R.id.commnetLout));
-        commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
         viewCommentsTextView = ((TextView) findViewById(R.id.viewCommentsTextView));
 
         setSupportActionBar(mToolbar);
@@ -257,6 +221,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         emailShareTextView.setOnClickListener(this);
         likeArticleTextView.setOnClickListener(this);
         bookmarkArticleTextView.setOnClickListener(this);
+
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         likeArticleTextView.setEnabled(false);
         bookmarkArticleTextView.setEnabled(false);
@@ -295,8 +261,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             vlogsListingAndDetailsAPI = retro.create(VlogsListingAndDetailsAPI.class);
             hitArticleDetailsS3API();
-//            getViewCountAPI();
-//            hitRecommendedStatusAPI();
         }
 
         scrollBounds = new Rect();
@@ -306,11 +270,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void hitArticleDetailsS3API() {
         Call<VlogsDetailResponse> call = vlogsListingAndDetailsAPI.getVlogDetail(videoId);
         call.enqueue(vlogDetailResponseCallback);
-    }
-
-    private void getViewCountAPI() {
-//        Call<ViewCountResponse> call = vlogsListingAndDetailsAPI.getViewCount(videoId);
-//        call.enqueue(getViewCountResponseCallback);
     }
 
     private void hitBookmarkFollowingStatusAPI() {
@@ -334,13 +293,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(0, 4, 1, 3, null);
         callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
-    }
-
-    private void getFollowedTopicsList() {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
-        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        call.enqueue(getFollowedTopicsResponseCallback);
     }
 
     private void hitUpdateViewCountAPI(String userId) {
@@ -388,11 +340,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 commentURL = responseData.getData().getResult().getCommentUri();
                 commentMainUrl = responseData.getData().getResult().getCommentUri();
                 if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
-//                    getMoreComments();
                 } else {
-                    commentType = "fb";
                     commentURL = "http";
-//                    getMoreComments();
                 }
             } catch (Exception e) {
                 removeProgressDialog();
@@ -420,10 +369,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 initFullscreenDialog();
                 initFullscreenButton();
 
-//            streamUrl = "https://www.momspresso.com/new-videos/v1/test1/playlist.m3u8";
-                String userAgent = Util.getUserAgent(MainActivity.this, getApplicationContext().getApplicationInfo().packageName);
+                String userAgent = Util.getUserAgent(MomsVlogDetailActivity.this, getApplicationContext().getApplicationInfo().packageName);
                 DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
-                DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(MainActivity.this, null, httpDataSourceFactory);
+                DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(MomsVlogDetailActivity.this, null, httpDataSourceFactory);
                 Uri daUri = Uri.parse(streamUrl);
 
                 mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
@@ -434,17 +382,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (mExoPlayerFullscreen) {
                 ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
                 mFullScreenDialog.addContentView(mExoPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_fullscreen_skrink));
+                mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(MomsVlogDetailActivity.this, R.drawable.ic_fullscreen_skrink));
                 mFullScreenDialog.show();
             }
         }
         authorType = responseData.getAuthor().getUserType();
         author = responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName();
         article_title.setText(responseData.getTitle());
-        blogSlug = responseData.getAuthor().getBlogTitleSlug();
         titleSlug = responseData.getTitleSlug();
         articleViewCountTextView.setText(responseData.getView_count() + " Views");
-//        youTubeId = AppUtils.extractYoutubeId(detailData.getUrl());
         try {
             if (!StringUtils.isNullOrEmpty(authorType)) {
 
@@ -537,59 +483,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     }
 
-    private Callback<ViewCountResponse> getViewCountResponseCallback = new Callback<ViewCountResponse>() {
-        @Override
-        public void onResponse(Call<ViewCountResponse> call, retrofit2.Response<ViewCountResponse> response) {
-            if (response == null || response.body() == null) {
-                return;
-            }
-            try {
-                ViewCountResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    articleViewCountTextView.setText(responseData.getData().get(0).getResult() + " Views");
-                } else {
-                    articleViewCountTextView.setText(responseData.getReason());
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ViewCountResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private Callback<ArticleRecommendationStatusResponse> recommendStatusResponseCallback = new Callback<ArticleRecommendationStatusResponse>() {
-        @Override
-        public void onResponse(Call<ArticleRecommendationStatusResponse> call, retrofit2.Response<ArticleRecommendationStatusResponse> response) {
-            if (response == null || null == response.body()) {
-                showToast("Unable to fetch like status");
-                return;
-            }
-            ArticleRecommendationStatusResponse responseData = response.body();
-            recommendationFlag = responseData.getData().getStatus();
-
-            if ("0".equals(recommendationFlag)) {
-                recommendStatus = 0;
-                Drawable top = ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_recommend);
-                likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
-            } else {
-                recommendStatus = 1;
-                Drawable top = ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_recommended);
-                likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ArticleRecommendationStatusResponse> call, Throwable t) {
-            handleExceptions(t);
-        }
-    };
-
     Callback<FollowUnfollowUserResponse> followUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
         @Override
         public void onResponse(Call<FollowUnfollowUserResponse> call, retrofit2.Response<FollowUnfollowUserResponse> response) {
@@ -660,18 +553,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             ArticleDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//                bookmarkFlag = responseData.getData().getResult().getBookmarkStatus();
-//                if ("0".equals(bookmarkFlag)) {
-//                    menu.getItem(0).setEnabled(true);
-//                    menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp);
-//                    bookmarkStatus = 0;
-//                } else {
-//                    menu.getItem(0).setEnabled(true);
-//                    menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp_fill);
-//                    bookmarkStatus = 1;
-//                }
-//                bookmarkId = responseData.getData().getResult().getBookmarkId();
-                if (SharedPrefUtils.getUserDetailModel(MainActivity.this).getDynamoId().equals(authorId)) {
+                if (SharedPrefUtils.getUserDetailModel(MomsVlogDetailActivity.this).getDynamoId().equals(authorId)) {
                     followClick.setVisibility(View.INVISIBLE);
                 } else {
                     if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
@@ -721,14 +603,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         }
                     }
                     if (dataList.size() == 0) {
-
                     } else {
-//                        recentAuthorArticleHeading.setText(getString(R.string.vd_recent_videos_from_title) + " " + author);
                         recentAuthorArticles.setVisibility(View.VISIBLE);
 
                         if (dataList.size() >= 3) {
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(0).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             } catch (Exception e) {
                                 relatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -738,7 +618,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             relatedArticles1.setTag(dataList.get(0));
 
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(1).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(1).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             } catch (Exception e) {
                                 relatedArticles2.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -748,7 +628,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             relatedArticles2.setTag(dataList.get(1));
 
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(2).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(2).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
                             } catch (Exception e) {
                                 relatedArticles3.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -758,7 +638,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             relatedArticles3.setTag(dataList.get(2));
                         } else if (dataList.size() == 2) {
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(0).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             } catch (Exception e) {
                                 relatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -768,7 +648,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             relatedArticles1.setTag(dataList.get(0));
 
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(1).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(1).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             } catch (Exception e) {
                                 relatedArticles2.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -780,7 +660,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         } else if (dataList.size() == 1) {
 
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(0).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             } catch (Exception e) {
                                 relatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -840,7 +720,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         if (dataList.size() >= 3) {
 
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(0).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             } catch (Exception e) {
                                 trendingRelatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -850,7 +730,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             trendingRelatedArticles1.setTag(dataList.get(0));
 
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(1).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(1).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
                             } catch (Exception e) {
                                 trendingRelatedArticles2.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -860,7 +740,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             trendingRelatedArticles2.setTag(dataList.get(1));
 
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(2).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(2).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
                             } catch (Exception e) {
                                 trendingRelatedArticles3.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -870,7 +750,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             trendingRelatedArticles3.setTag(dataList.get(2));
                         } else if (dataList.size() == 2) {
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(0).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             } catch (Exception e) {
                                 trendingRelatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -878,7 +758,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
                             trendingRelatedArticles1.setTag(dataList.get(0));
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(1).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(1).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
                             } catch (Exception e) {
                                 trendingRelatedArticles2.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -889,7 +769,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             trendingRelatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
                             try {
-                                Picasso.with(MainActivity.this).load(dataList.get(0).getThumbnail()).
+                                Picasso.with(MomsVlogDetailActivity.this).load(dataList.get(0).getThumbnail()).
                                         placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
                             } catch (Exception e) {
                                 trendingRelatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
@@ -932,7 +812,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                     ArrayList<String> previouslyFollowedTopics = (ArrayList<String>) responseData.getData();
                     ArrayList<Map<String, String>> tagsList = new ArrayList<>();//detailData.getTags();
-                    LayoutInflater mInflater = LayoutInflater.from(MainActivity.this);
+                    LayoutInflater mInflater = LayoutInflater.from(MomsVlogDetailActivity.this);
 
                     for (int i = 0; i < tagsList.size(); i++) {
 
@@ -949,8 +829,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             topicView.getChildAt(2).setTag(key);
                             ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
                             if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
-//                                ((TextView) topicView.getChildAt(0)).setBackgroundColor(ContextCompat.getColor(ArticlesAndBlogsDetailsActivity.this, R.color.home_green));
-                                ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.tick));
+                                ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(MomsVlogDetailActivity.this, R.drawable.tick));
                                 topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -959,7 +838,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                                     }
                                 });
                             } else {
-                                ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.follow_plus));
+                                ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(MomsVlogDetailActivity.this, R.drawable.follow_plus));
                                 topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -972,10 +851,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             topicView.getChildAt(0).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-//                                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-//                                    trackArticleReadTime.resetTimer();
                                     String categoryId = (String) v.getTag();
-                                    Intent intent = new Intent(MainActivity.this, FilteredTopicsArticleListingActivity.class);
+                                    Intent intent = new Intent(MomsVlogDetailActivity.this, FilteredTopicsArticleListingActivity.class);
                                     intent.putExtra("selectedTopics", categoryId);
                                     intent.putExtra("displayName", value);
                                     startActivity(intent);
@@ -1008,28 +885,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         topicIdLList.add(selectedTopic);
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (action == 0) {
-            Log.d("GTM FOLLOW", "displayName" + selectedTopic);
             Utils.pushFollowTopicEvent(this, "DetailVideoScreen", userDynamoId, selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
-            ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.follow_plus));
+            ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(MomsVlogDetailActivity.this, R.drawable.follow_plus));
             tagView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("TOPICS ----- ", "FOLLOW");
                     followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 1);
                 }
             });
         } else {
-            Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
             Utils.pushUnfollowTopicEvent(this, "DetailVideoScreen", userDynamoId, selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
-            ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.tick));
+            ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(MomsVlogDetailActivity.this, R.drawable.tick));
             tagView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("TOPICS ----- ", "UNFOLLOW");
                     followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 0);
                 }
             });
@@ -1074,7 +947,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private Callback<ResponseBody> updateViewCountResponseCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            Log.d("View Count", "Updated Successfully");
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
@@ -1082,7 +954,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
             try {
                 String resData = new String(response.body().bytes());
-                Log.d("View Count", "Updated Successfully" + resData);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1109,11 +980,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
         outState.putInt(STATE_RESUME_WINDOW, mResumeWindow);
         outState.putLong(STATE_RESUME_POSITION, mResumePosition);
         outState.putBoolean(STATE_PLAYER_FULLSCREEN, mExoPlayerFullscreen);
-
         super.onSaveInstanceState(outState);
     }
 
@@ -1144,7 +1013,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
 
     private void initFullscreenDialog() {
-
         mFullScreenDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
             public void onBackPressed() {
                 if (mExoPlayerFullscreen)
@@ -1156,27 +1024,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
 
     private void openFullscreenDialog() {
-
         ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
         mFullScreenDialog.addContentView(mExoPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_fullscreen_skrink));
+        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(MomsVlogDetailActivity.this, R.drawable.ic_fullscreen_skrink));
         mExoPlayerFullscreen = true;
         mFullScreenDialog.show();
     }
 
 
     private void closeFullscreenDialog() {
-
         ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
         ((FrameLayout) findViewById(R.id.main_media_frame)).addView(mExoPlayerView);
         mExoPlayerFullscreen = false;
         mFullScreenDialog.dismiss();
-        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_fullscreen_expand));
+        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(MomsVlogDetailActivity.this, R.drawable.ic_fullscreen_expand));
     }
 
 
     private void initFullscreenButton() {
-
         PlaybackControlView controlView = mExoPlayerView.findViewById(R.id.exo_controller);
         mFullScreenIcon = controlView.findViewById(R.id.exo_fullscreen_icon);
         mFullScreenButton = controlView.findViewById(R.id.exo_fullscreen_button);
@@ -1211,24 +1076,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onResume() {
-
         super.onResume();
         if (streamUrl == null) {
             return;
         }
 
         if (mExoPlayerView == null) {
-
             mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
             initFullscreenDialog();
             initFullscreenButton();
-
-//            streamUrl = "https://www.momspresso.com/new-videos/v1/test1/playlist.m3u8";
-            String userAgent = Util.getUserAgent(MainActivity.this, getApplicationContext().getApplicationInfo().packageName);
+            String userAgent = Util.getUserAgent(MomsVlogDetailActivity.this, getApplicationContext().getApplicationInfo().packageName);
             DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
-            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(MainActivity.this, null, httpDataSourceFactory);
+            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(MomsVlogDetailActivity.this, null, httpDataSourceFactory);
             Uri daUri = Uri.parse(streamUrl);
-
             mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
         }
 
@@ -1237,7 +1097,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (mExoPlayerFullscreen) {
             ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
             mFullScreenDialog.addContentView(mExoPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_fullscreen_skrink));
+            mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(MomsVlogDetailActivity.this, R.drawable.ic_fullscreen_skrink));
             mFullScreenDialog.show();
         }
     }
@@ -1245,13 +1105,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onPause() {
-
         super.onPause();
-
         if (mExoPlayerView != null && mExoPlayerView.getPlayer() != null) {
             mResumeWindow = mExoPlayerView.getPlayer().getCurrentWindowIndex();
             mResumePosition = Math.max(0, mExoPlayerView.getPlayer().getContentPosition());
-
             mExoPlayerView.getPlayer().release();
         }
 
@@ -1275,8 +1132,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 case R.id.commentorImageView: {
                     CommentsData commentData = (CommentsData) ((View) view.getParent().getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
-//                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-//                        trackArticleReadTime.resetTimer();
                         if (userDynamoId.equals(commentData.getUserId())) {
                             Intent profileIntent = new Intent(this, DashboardActivity.class);
                             profileIntent.putExtra("TabType", "profile");
@@ -1296,8 +1151,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 case R.id.replierImageView: {
                     CommentsData commentData = (CommentsData) ((View) view.getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
-//                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-//                        trackArticleReadTime.resetTimer();
                         if (userDynamoId.equals(commentData.getUserId())) {
                             Intent profileIntent = new Intent(this, DashboardActivity.class);
                             profileIntent.putExtra("TabType", "profile");
@@ -1318,10 +1171,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                 case R.id.user_image:
                 case R.id.user_name:
-//                    if (null != trackArticleReadTime) {
-//                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-//                        trackArticleReadTime.resetTimer();
-//                    }
                     if (AppConstants.USER_TYPE_USER.equals(authorType)) {
                         return;
                     }
@@ -1338,40 +1187,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     }
                     break;
                 case R.id.relatedArticles1: {
-//                    Utils.pushEventRelatedArticle(MainActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 1);
-                    launchRelatedTrendingArticle(view, "videoDetailsRelated", 1);
+                    launchRelatedTrendingArticle(view, "videoDetailsPopular", 1);
                     break;
                 }
                 case R.id.relatedArticles2: {
-//                    Utils.pushEventRelatedArticle(MainActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 2);
-                    launchRelatedTrendingArticle(view, "videoDetailsRelated", 2);
+                    launchRelatedTrendingArticle(view, "videoDetailsPopular", 2);
                     break;
                 }
                 case R.id.relatedArticles3: {
-//                    Utils.pushEventRelatedArticle(MainActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 3);
-                    launchRelatedTrendingArticle(view, "videoDetailsRelated", 3);
+                    launchRelatedTrendingArticle(view, "videoDetailsPopular", 3);
                     break;
                 }
                 case R.id.trendingRelatedArticles1: {
-//                    Utils.pushEventRelatedArticle(MainActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 1);
-                    launchRelatedTrendingArticle(view, "videoDetailsTrending", 1);
+                    launchRelatedTrendingArticle(view, "videoDetailsRelated", 1);
                     break;
                 }
                 case R.id.trendingRelatedArticles2: {
-//                    Utils.pushEventRelatedArticle(MainActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 2);
-                    launchRelatedTrendingArticle(view, "videoDetailsTrending", 2);
+                    launchRelatedTrendingArticle(view, "videoDetailsRelated", 2);
                     break;
                 }
                 case R.id.trendingRelatedArticles3: {
-//                    Utils.pushEventRelatedArticle(MainActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 3);
-                    launchRelatedTrendingArticle(view, "videoDetailsTrending", 3);
+                    launchRelatedTrendingArticle(view, "videoDetailsRelated", 3);
                     break;
                 }
                 case R.layout.related_tags_view: {
-//                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-//                    trackArticleReadTime.resetTimer();
                     String categoryId = (String) view.getTag();
-                    Intent intent = new Intent(MainActivity.this, FilteredTopicsArticleListingActivity.class);
+                    Intent intent = new Intent(MomsVlogDetailActivity.this, FilteredTopicsArticleListingActivity.class);
                     intent.putExtra("selectedTopics", categoryId);
                     intent.putExtra("displayName", ((TextView) ((LinearLayout) view).getChildAt(0)).getText());
                     startActivity(intent);
@@ -1379,12 +1220,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 case R.id.txvCommentCellEdit: {
                     CommentsData cData = (CommentsData) ((View) view.getParent().getParent().getParent()).getTag();
-//                    openCommentDialog(cData, "EDIT");
                 }
                 break;
                 case R.id.txvReplyCellEdit: {
                     CommentsData cData = (CommentsData) ((View) view.getParent().getParent()).getTag();
-//                    openCommentDialog(cData, "EDIT");
                 }
                 break;
                 case R.id.likeTextView: {
@@ -1405,7 +1244,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 case R.id.whatsappShareTextView: {
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
-                        Toast.makeText(MainActivity.this, getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MomsVlogDetailActivity.this, getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
                     } else {
                         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                         whatsappIntent.setType("text/plain");
@@ -1415,7 +1254,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             startActivity(whatsappIntent);
                             Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Whatsapp");
                         } catch (android.content.ActivityNotFoundException ex) {
-                            Toast.makeText(MainActivity.this, getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MomsVlogDetailActivity.this, getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
                         }
                     }
                     break;
@@ -1451,7 +1290,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             startActivity(Intent.createChooser(i, "Send mail..."));
                             Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
                         } catch (android.content.ActivityNotFoundException ex) {
-                            Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MomsVlogDetailActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -1467,7 +1306,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void openViewCommentDialog() {
         try {
             ViewAllCommentsDialogFragment commentFrag = new ViewAllCommentsDialogFragment();
-//            commentFrag.setTargetFragment(this, 0);
             Bundle _args = new Bundle();
             _args.putString("mycityCommentURL", commentMainUrl);
             _args.putString("fbCommentURL", shareUrl);
@@ -1483,9 +1321,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void launchRelatedTrendingArticle(View v, String listingType, int index) {
-//        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-//        trackArticleReadTime.resetTimer();
-        Intent intent = new Intent(this, MainActivity.class);
+        MixPanelUtils.pushMomVlogClickEvent(mixpanel, index, listingType);
+        Intent intent = new Intent(this, MomsVlogDetailActivity.class);
         VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) v.getTag();
         intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
         intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
@@ -1497,22 +1334,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        View view = mScrollView.getChildAt(mScrollView.getChildCount() - 1);
         View tagsView = mScrollView.findViewById(R.id.recentAuthorArticles);
         Rect scrollBounds = new Rect();
         mScrollView.getHitRect(scrollBounds);
-        int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-//        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
-//            getMoreComments();
-//        }
-
         int permanentDiff = (tagsView.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
         if (permanentDiff <= 0) {
             isArticleDetailEndReached = true;
-
-//            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
-//                showFloatingActionButton();
-//            }
         } else {
             isArticleDetailEndReached = false;
         }
@@ -1536,9 +1363,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
                 hideToolbar();
             }
-//            if (!isArticleDetailEndReached && commentFloatingActionButton.getVisibility() == View.VISIBLE) {
-//                hideFloatingActionButton();
-//            }
         } else if (scrollState == ScrollState.DOWN) {
             if (!ab.isShowing()) {
                 showMainToolbar();
@@ -1546,85 +1370,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (bottomToolbarLL.getVisibility() != View.VISIBLE) {
                 showToolbar();
             }
-//            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
-//                showFloatingActionButton();
-//            }
         }
     }
 
     public void hideMainToolbar() {
-//        mToolbar.animate()
-//                .translationY(-mToolbar.getHeight())
-//                .setInterpolator(new LinearInterpolator())
-//                .setDuration(180)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(Animator animation) {
-//                        getSupportActionBar().hide();
-//                    }
-//                });
-//        backNavigationImageView.animate()
-//                .alpha(1)
-//                .setInterpolator(new LinearInterpolator())
-//                .setDuration(180)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(Animator animation) {
-//                        backNavigationImageView.setVisibility(View.VISIBLE);
-//                    }
-//                });
     }
 
     private void hideToolbar() {
-//        bottomToolbarLL.animate()
-//                .translationY(bottomToolbarLL.getHeight())
-//                .setInterpolator(new LinearInterpolator())
-//                .setDuration(180)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(Animator animation) {
-////                        getSupportActionBar().hide();
-//                        bottomToolbarLL.setVisibility(View.GONE);
-//                    }
-//                });
     }
 
     private void showToolbar() {
-//        bottomToolbarLL.animate()
-//                .translationY(0)
-//                .setInterpolator(new LinearInterpolator())
-//                .setDuration(180)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationStart(Animator animation) {
-////                        getSupportActionBar().show();
-//                        bottomToolbarLL.setVisibility(View.VISIBLE);
-//                    }
-//
-//                });
     }
 
     public void showMainToolbar() {
-//        mToolbar.animate()
-//                .translationY(0)
-//                .setInterpolator(new LinearInterpolator())
-//                .setDuration(180)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationStart(Animator animation) {
-//                        getSupportActionBar().show();
-//                    }
-//                });
-//        backNavigationImageView.animate()
-//                .alpha(0)
-//                .setInterpolator(new LinearInterpolator())
-//                .setDuration(180)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationStart(Animator animation) {
-//                        backNavigationImageView.setVisibility(View.GONE);
-//                    }
-//                });
     }
 
     private void setTextViewDrawableColor(TextView textView, int color) {
