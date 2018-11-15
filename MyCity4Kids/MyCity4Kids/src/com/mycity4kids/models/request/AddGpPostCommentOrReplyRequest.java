@@ -1,5 +1,7 @@
 package com.mycity4kids.models.request;
 
+import java.util.Map;
+
 /**
  * Created by hemant on 24/5/18.
  */
@@ -11,6 +13,8 @@ public class AddGpPostCommentOrReplyRequest {
     private String content;
     private int parentId;
     private int isAnnon;
+    private Map<String, String> mediaUrls;
+
 
     public String getUserId() {
         return userId;
@@ -26,6 +30,14 @@ public class AddGpPostCommentOrReplyRequest {
 
     public void setPostId(int postId) {
         this.postId = postId;
+    }
+
+    public Map<String, String> getMediaUrls() {
+        return mediaUrls;
+    }
+
+    public void setMediaUrls(Map<String, String> mediaUrls) {
+        this.mediaUrls = mediaUrls;
     }
 
     public int getGroupId() {

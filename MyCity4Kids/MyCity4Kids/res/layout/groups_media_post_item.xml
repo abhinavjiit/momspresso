@@ -100,7 +100,8 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_below="@+id/postDataTextView"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="8dp"
+        android:background="@color/trans_gray" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/indexTextView"
@@ -108,8 +109,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/postDataViewPager"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/gp_media_post_index"
         android:paddingBottom="3dp"
         android:paddingLeft="6dp"
@@ -119,20 +120,26 @@
         android:textColor="@color/white"
         android:textSize="14sp" />
 
-    <com.shuhart.bubblepagerindicator.BubblePageIndicator
-        android:id="@+id/dotIndicatorView"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/downvoteContainer"
-        android:layout_below="@id/pager"
+        android:layout_alignBottom="@id/postDataViewPager"
         android:layout_centerHorizontal="true"
-        app:bpi_fillColor="@color/app_red"
-        app:bpi_marginBetweenCircles="4dp"
-        app:bpi_onSurfaceCount="5"
-        app:bpi_pageColor="@color/line_separator_color"
-        app:bpi_radius="3dp"
-        app:bpi_risingCount="3" />
+        android:layout_marginBottom="4dp">
 
+        <com.shuhart.bubblepagerindicator.BubblePageIndicator
+            android:id="@+id/dotIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/postDataViewPager"
+            android:layout_centerHorizontal="true"
+            app:bpi_fillColor="@color/app_red"
+            app:bpi_marginBetweenCircles="4dp"
+            app:bpi_onSurfaceCount="5"
+            app:bpi_pageColor="@color/line_separator_color"
+            app:bpi_radius="3dp"
+            app:bpi_risingCount="3" />
+    </LinearLayout>
     <!--<com.mycity4kids.widget.CustomFontTextView-->
     <!--android:id="@+id/upvoteTextView"-->
     <!--android:layout_width="wrap_content"-->
