@@ -341,6 +341,12 @@
             android:name=".ui.activity.MyFunnyVideosListingActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.UploadVideoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BecomeBloggerActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.IdTokenLoginActivity"
             android:screenOrientation="portrait" />
         <activity

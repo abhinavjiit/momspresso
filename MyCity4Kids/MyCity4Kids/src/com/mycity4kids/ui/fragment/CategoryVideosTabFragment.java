@@ -213,15 +213,11 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                     processResponse(responseData);
                     funnyvideosshimmer.stopShimmerAnimation();
                     funnyvideosshimmer.setVisibility(View.GONE);
-//                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());
-//                    notificationCenterListAdapter.notifyDataSetChanged();
                 } else {
-//                    showToast(responseData.getReason());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -238,7 +234,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 popularSortFAB.setVisibility(View.GONE);
                 recentSortFAB.setVisibility(View.GONE);
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText(getString(R.string.all_videos_funny_videos_no_videos));
+                if (isAdded())
+                    noBlogsTextView.setText(getString(R.string.all_videos_funny_videos_no_videos));
                 articleDataModelsNew = new ArrayList<>();
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
                 articlesListingAdapter.notifyDataSetChanged();

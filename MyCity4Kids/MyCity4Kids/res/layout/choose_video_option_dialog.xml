@@ -70,6 +70,6 @@
         android:paddingRight="23dp"
         android:paddingTop="10dp"
         android:text="@string/videos.upload_option.cancel"
-        android:textColor="@color/videos.upload_option.cancel"
+        android:textColor="@color/app_red"
         app:fontName="oswald_regular.ttf" />
 </LinearLayout>

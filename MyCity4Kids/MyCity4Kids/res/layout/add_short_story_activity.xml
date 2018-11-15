@@ -41,7 +41,7 @@
                 android:layout_centerVertical="true"
                 android:padding="12dp"
                 android:text="@string/editor.publish"
-                android:textColor="@color/editor.publish"
+                android:textColor="@color/app_red"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>

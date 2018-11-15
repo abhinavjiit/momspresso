@@ -242,6 +242,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_gravity="right|bottom"
+            android:tint="@color/app_red"
             android:visibility="gone"
             app:fab_colorNormal="@color/fab.white"
             app:fab_colorPressed="@color/fab.white"

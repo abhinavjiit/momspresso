@@ -1264,7 +1264,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
                 articleDataModelsNew.get(pos).setResponseReceived(true);
             } catch (JsonSyntaxException jse) {
-//                viewHolder.videoCarouselContainer.setVisibility(View.GONE);
                 articleDataModelsNew.get(pos).setCarouselVideoList(new ArrayList<>());
                 populateCarouselVideos(viewHolder, new ArrayList<>());
                 articleDataModelsNew.get(pos).setCarouselRequestRunning(false);

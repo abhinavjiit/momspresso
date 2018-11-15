@@ -362,7 +362,7 @@
                             android:paddingBottom="10dp"
                             android:paddingLeft="20dp"
                             android:paddingRight="20dp"
-                            android:paddingTop="10dp"
+                            android:paddingTop="5dp"
                             android:text="@string/groups.join_group"
                             android:textColor="@color/white"
                             android:textSize="14sp"
