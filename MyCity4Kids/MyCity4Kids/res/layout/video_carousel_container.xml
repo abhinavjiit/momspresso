@@ -7,6 +7,41 @@
     android:background="#f9f9f9"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:background="#F1F1F5"
+        android:paddingTop="10dp">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/momVlogLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:text="@string/myprofile.section.videos_label"
+            android:textColor="@color/explore_listing.explore_categories.title"
+            android:textSize="16sp"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/addMomVlogTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/add_article_or_video.upload_video"
+            android:textColor="@color/app_red"
+            android:textSize="16sp"
+            app:fontName="oswald.ttf" />
+    </RelativeLayout>
+
     <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/videoCarouselContainer"
@@ -22,7 +57,8 @@
                 android:id="@+id/videoContainerFL1"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:background="#f9f9f9">
+                android:background="#F1F1F5"
+                android:paddingBottom="10dp">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -196,7 +232,8 @@
                 android:id="@+id/videoContainerFL2"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:background="#f9f9f9">
+                android:background="#F1F1F5"
+                android:paddingBottom="10dp">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -370,7 +407,8 @@
                 android:id="@+id/videoContainerFL3"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:background="#f9f9f9">
+                android:background="#F1F1F5"
+                android:paddingBottom="10dp">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -544,7 +582,8 @@
                 android:id="@+id/videoContainerFL4"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:background="#f9f9f9">
+                android:background="#F1F1F5"
+                android:paddingBottom="10dp">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -718,7 +757,8 @@
                 android:id="@+id/videoContainerFL5"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:background="#f9f9f9">
+                android:background="#F1F1F5"
+                android:paddingBottom="10dp">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -892,7 +932,8 @@
                 android:id="@+id/addVideoContainer"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:background="#f9f9f9">
+                android:background="#F1F1F5"
+                android:paddingBottom="10dp">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"

@@ -83,7 +83,7 @@ import retrofit2.Retrofit;
 *
 * */
 
-public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, FilterTopicsDialogFragment.OnTopicsSelectionComplete, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, FilterTopicsDialogFragment.OnTopicsSelectionComplete, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     //    private MainArticleListingAdapter articlesListingAdapter;
 //    private ListView listView;
@@ -282,8 +282,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 //        listView.setAdapter(articlesListingAdapter);
 //        articlesListingAdapter.notifyDataSetChanged();
 
-        feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-        feedNativeAd.loadAds();
+//        feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, selectedTopics + "~" + displayName, false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -1003,15 +1003,15 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         hitFilteredTopicsArticleListingApi(0);
     }
 
-    @Override
-    public void onFinishToLoadAds() {
-
-    }
-
-    @Override
-    public void onErrorToLoadAd() {
-
-    }
+//    @Override
+//    public void onFinishToLoadAds() {
+//
+//    }
+//
+//    @Override
+//    public void onErrorToLoadAd() {
+//
+//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {

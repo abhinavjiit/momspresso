@@ -200,7 +200,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         uploadVideoRequest.setCategory_id(catList);
         uploadVideoRequest.setFile_location("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/");
         uploadVideoRequest.setUploaded_url(uri.toString());
-//        uploadVideoRequest.setThumbnail_milliseconds(thumbnailTime);
+        uploadVideoRequest.setThumbnail_milliseconds(thumbnailTime);
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI api = retrofit.create(VlogsListingAndDetailsAPI.class);

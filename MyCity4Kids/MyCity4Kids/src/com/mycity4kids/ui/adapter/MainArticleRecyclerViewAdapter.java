@@ -20,9 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.ads.AdChoicesView;
-import com.facebook.ads.MediaView;
-import com.facebook.ads.NativeAd;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -88,7 +85,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private RecyclerViewClickListener mListener;
     private boolean isAdChoiceAdded = false;
     private boolean topicHeaderVisibilityFlag;
-    private List<NativeAd> adList = new ArrayList<>(10);
+    //    private List<NativeAd> adList = new ArrayList<>(10);
     private boolean isRequestRunning;
     private String heading, subHeading, gpImageUrl;
     private int groupId;
@@ -103,9 +100,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         this.feedNativeAd = feedNativeAd;
         mListener = listener;
         this.topicHeaderVisibilityFlag = topicHeaderVisibilityFlag;
-        for (int i = 0; i < 10; i++) {
-            adList.add(null);
-        }
+//        for (int i = 0; i < 10; i++) {
+//            adList.add(null);
+//        }
         heading = mContext.getString(R.string.groups_join_support_gp);
         subHeading = mContext.getString(R.string.groups_not_alone);
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
@@ -193,54 +190,54 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof AdViewHolder) {
-            try {
-                AdViewHolder viewHolder = (AdViewHolder) holder;
-                addArticleItem(viewHolder.txvArticleTitle, viewHolder.forYouInfoLL, viewHolder.viewCountTextView, viewHolder.commentCountTextView,
-                        viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView, viewHolder.videoIndicatorImageView
-                        , viewHolder.bookmarkArticleImageView, viewHolder.watchLaterImageView, articleDataModelsNew.get(position), position, viewHolder);
-                if (position <= 80 && adList.get((position / 8) - 1) == null) {
-                    NativeAd fbAd = feedNativeAd.getAd();
-                    adList.set((position / 8) - 1, fbAd);
-                }
-                NativeAd fbAd;
-                if (position < 80) {
-                    fbAd = adList.get(((position / 8) % 10) - 1);
-                } else {
-                    fbAd = adList.get(((position / 8) % 10));
-                }
-
-                if (fbAd == null) {
-                    ((AdViewHolder) holder).adContainerView.setVisibility(View.GONE);
-                    return;
-                }
-                ((AdViewHolder) holder).adContainerView.setVisibility(View.VISIBLE);
-                ((AdViewHolder) holder).nativeAdTitle.setText(fbAd.getAdTitle());
-                ((AdViewHolder) holder).nativeAdSocialContext.setText(fbAd.getAdSocialContext());
-                ((AdViewHolder) holder).nativeAdBody.setText(fbAd.getAdBody());
-                ((AdViewHolder) holder).nativeAdCallToAction.setText(fbAd.getAdCallToAction());
-
-                // Download and display the ad icon.
-                NativeAd.Image adIcon = fbAd.getAdIcon();
-                NativeAd.downloadAndDisplayImage(adIcon, ((AdViewHolder) holder).nativeAdIcon);
-
-                // Download and display the cover image.
-                ((AdViewHolder) holder).nativeAdMedia.setNativeAd(fbAd);
-
-                // Add the AdChoices icon
-                if (!isAdChoiceAdded) {
-                    AdChoicesView adChoicesView = new AdChoicesView(mContext, fbAd, true);
-                    ((AdViewHolder) holder).adChoicesContainer.addView(adChoicesView);
-                    isAdChoiceAdded = true;
-                }
-
-                // Register the Title and CTA button to listen for clicks.
-                List<View> clickableViews = new ArrayList<>();
-                clickableViews.add(((AdViewHolder) holder).nativeAdTitle);
-                clickableViews.add(((AdViewHolder) holder).nativeAdCallToAction);
-                fbAd.registerViewForInteraction(((AdViewHolder) holder).adContainerView);
-            } catch (Exception e) {
-
-            }
+//            try {
+//                AdViewHolder viewHolder = (AdViewHolder) holder;
+//                addArticleItem(viewHolder.txvArticleTitle, viewHolder.forYouInfoLL, viewHolder.viewCountTextView, viewHolder.commentCountTextView,
+//                        viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView, viewHolder.videoIndicatorImageView
+//                        , viewHolder.bookmarkArticleImageView, viewHolder.watchLaterImageView, articleDataModelsNew.get(position), position, viewHolder);
+//                if (position <= 80 && adList.get((position / 8) - 1) == null) {
+//                    NativeAd fbAd = feedNativeAd.getAd();
+//                    adList.set((position / 8) - 1, fbAd);
+//                }
+//                NativeAd fbAd;
+//                if (position < 80) {
+//                    fbAd = adList.get(((position / 8) % 10) - 1);
+//                } else {
+//                    fbAd = adList.get(((position / 8) % 10));
+//                }
+//
+//                if (fbAd == null) {
+//                    ((AdViewHolder) holder).adContainerView.setVisibility(View.GONE);
+//                    return;
+//                }
+//                ((AdViewHolder) holder).adContainerView.setVisibility(View.VISIBLE);
+//                ((AdViewHolder) holder).nativeAdTitle.setText(fbAd.getAdTitle());
+//                ((AdViewHolder) holder).nativeAdSocialContext.setText(fbAd.getAdSocialContext());
+//                ((AdViewHolder) holder).nativeAdBody.setText(fbAd.getAdBody());
+//                ((AdViewHolder) holder).nativeAdCallToAction.setText(fbAd.getAdCallToAction());
+//
+//                // Download and display the ad icon.
+//                NativeAd.Image adIcon = fbAd.getAdIcon();
+//                NativeAd.downloadAndDisplayImage(adIcon, ((AdViewHolder) holder).nativeAdIcon);
+//
+//                // Download and display the cover image.
+//                ((AdViewHolder) holder).nativeAdMedia.setNativeAd(fbAd);
+//
+//                // Add the AdChoices icon
+//                if (!isAdChoiceAdded) {
+//                    AdChoicesView adChoicesView = new AdChoicesView(mContext, fbAd, true);
+//                    ((AdViewHolder) holder).adChoicesContainer.addView(adChoicesView);
+//                    isAdChoiceAdded = true;
+//                }
+//
+//                // Register the Title and CTA button to listen for clicks.
+//                List<View> clickableViews = new ArrayList<>();
+//                clickableViews.add(((AdViewHolder) holder).nativeAdTitle);
+//                clickableViews.add(((AdViewHolder) holder).nativeAdCallToAction);
+//                fbAd.registerViewForInteraction(((AdViewHolder) holder).adContainerView);
+//            } catch (Exception e) {
+//
+//            }
         } else if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
             addArticleItem(viewHolder.txvArticleTitle, viewHolder.forYouInfoLL, viewHolder.viewCountTextView, viewHolder.commentCountTextView,
@@ -507,52 +504,52 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     public class AdViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        LinearLayout adContainerView;
-        ImageView nativeAdIcon;
-        TextView nativeAdTitle;
-        MediaView nativeAdMedia;
-        TextView nativeAdSocialContext;
-        TextView nativeAdBody;
-        Button nativeAdCallToAction;
-        LinearLayout adChoicesContainer;
-
-        FrameLayout fbAdArticleView;
-        TextView txvArticleTitle;
-        TextView txvAuthorName;
-        ImageView articleImageView;
-        ImageView videoIndicatorImageView;
-        LinearLayout forYouInfoLL;
-        TextView viewCountTextView;
-        TextView commentCountTextView;
-        TextView recommendCountTextView;
-        TextView authorTypeTextView;
-        ImageView bookmarkArticleImageView;
-        ImageView watchLaterImageView;
+//        LinearLayout adContainerView;
+//        ImageView nativeAdIcon;
+//        TextView nativeAdTitle;
+//        MediaView nativeAdMedia;
+//        TextView nativeAdSocialContext;
+//        TextView nativeAdBody;
+//        Button nativeAdCallToAction;
+//        LinearLayout adChoicesContainer;
+//
+//        FrameLayout fbAdArticleView;
+//        TextView txvArticleTitle;
+//        TextView txvAuthorName;
+//        ImageView articleImageView;
+//        ImageView videoIndicatorImageView;
+//        LinearLayout forYouInfoLL;
+//        TextView viewCountTextView;
+//        TextView commentCountTextView;
+//        TextView recommendCountTextView;
+//        TextView authorTypeTextView;
+//        ImageView bookmarkArticleImageView;
+//        ImageView watchLaterImageView;
 
         AdViewHolder(View adView) {
             super(adView);
-            adContainerView = (LinearLayout) adView.findViewById(R.id.adContainerView);
-            nativeAdIcon = (ImageView) adView.findViewById(R.id.native_ad_icon);
-            nativeAdTitle = (TextView) adView.findViewById(R.id.native_ad_title);
-            nativeAdMedia = (MediaView) adView.findViewById(R.id.native_ad_media);
-            nativeAdSocialContext = (TextView) adView.findViewById(R.id.native_ad_social_context);
-            nativeAdBody = (TextView) adView.findViewById(R.id.native_ad_body);
-            nativeAdCallToAction = (Button) adView.findViewById(R.id.native_ad_call_to_action);
-            adChoicesContainer = (LinearLayout) adView.findViewById(R.id.ad_choices_container);
-
-            fbAdArticleView = (FrameLayout) adView.findViewById(R.id.fbAdArticleView);
-            txvArticleTitle = (TextView) adView.findViewById(R.id.txvArticleTitle);
-            txvAuthorName = (TextView) adView.findViewById(R.id.txvAuthorName);
-            articleImageView = (ImageView) adView.findViewById(R.id.articleImageView);
-            videoIndicatorImageView = (ImageView) adView.findViewById(R.id.videoIndicatorImageView);
-            forYouInfoLL = (LinearLayout) adView.findViewById(R.id.forYouInfoLL);
-            viewCountTextView = (TextView) adView.findViewById(R.id.viewCountTextView);
-            commentCountTextView = (TextView) adView.findViewById(R.id.commentCountTextView);
-            recommendCountTextView = (TextView) adView.findViewById(R.id.recommendCountTextView);
-            authorTypeTextView = (TextView) adView.findViewById(R.id.authorTypeTextView);
-            bookmarkArticleImageView = (ImageView) adView.findViewById(R.id.bookmarkArticleImageView);
-            watchLaterImageView = (ImageView) adView.findViewById(R.id.watchLaterImageView);
-            fbAdArticleView.setOnClickListener(this);
+//            adContainerView = (LinearLayout) adView.findViewById(R.id.adContainerView);
+//            nativeAdIcon = (ImageView) adView.findViewById(R.id.native_ad_icon);
+//            nativeAdTitle = (TextView) adView.findViewById(R.id.native_ad_title);
+//            nativeAdMedia = (MediaView) adView.findViewById(R.id.native_ad_media);
+//            nativeAdSocialContext = (TextView) adView.findViewById(R.id.native_ad_social_context);
+//            nativeAdBody = (TextView) adView.findViewById(R.id.native_ad_body);
+//            nativeAdCallToAction = (Button) adView.findViewById(R.id.native_ad_call_to_action);
+//            adChoicesContainer = (LinearLayout) adView.findViewById(R.id.ad_choices_container);
+//
+//            fbAdArticleView = (FrameLayout) adView.findViewById(R.id.fbAdArticleView);
+//            txvArticleTitle = (TextView) adView.findViewById(R.id.txvArticleTitle);
+//            txvAuthorName = (TextView) adView.findViewById(R.id.txvAuthorName);
+//            articleImageView = (ImageView) adView.findViewById(R.id.articleImageView);
+//            videoIndicatorImageView = (ImageView) adView.findViewById(R.id.videoIndicatorImageView);
+//            forYouInfoLL = (LinearLayout) adView.findViewById(R.id.forYouInfoLL);
+//            viewCountTextView = (TextView) adView.findViewById(R.id.viewCountTextView);
+//            commentCountTextView = (TextView) adView.findViewById(R.id.commentCountTextView);
+//            recommendCountTextView = (TextView) adView.findViewById(R.id.recommendCountTextView);
+//            authorTypeTextView = (TextView) adView.findViewById(R.id.authorTypeTextView);
+//            bookmarkArticleImageView = (ImageView) adView.findViewById(R.id.bookmarkArticleImageView);
+//            watchLaterImageView = (ImageView) adView.findViewById(R.id.watchLaterImageView);
+//            fbAdArticleView.setOnClickListener(this);
         }
 
         @Override
@@ -699,6 +696,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         HorizontalScrollView videoCarouselContainer;
         FrameLayout addVideoContainer;
+        TextView addMomVlogTextView;
         FrameLayout videoContainerFL1, videoContainerFL2, videoContainerFL3, videoContainerFL4, videoContainerFL5;
         TextView txvArticleTitle1, txvArticleTitle2, txvArticleTitle3, txvArticleTitle4, txvArticleTitle5;
         TextView txvAuthorName1, txvAuthorName2, txvAuthorName3, txvAuthorName4, txvAuthorName5;
@@ -732,6 +730,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             super(view);
             videoCarouselContainer = (HorizontalScrollView) view.findViewById(R.id.videoCarouselContainer);
             addVideoContainer = (FrameLayout) view.findViewById(R.id.addVideoContainer);
+            addMomVlogTextView = (TextView) view.findViewById(R.id.addMomVlogTextView);
             videoContainerFL1 = (FrameLayout) view.findViewById(R.id.videoContainerFL1);
             videoContainerFL2 = (FrameLayout) view.findViewById(R.id.videoContainerFL2);
             videoContainerFL3 = (FrameLayout) view.findViewById(R.id.videoContainerFL3);
@@ -791,6 +790,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             videoContainerFL3.setOnClickListener(this);
             videoContainerFL4.setOnClickListener(this);
             videoContainerFL5.setOnClickListener(this);
+            addMomVlogTextView.setOnClickListener(this);
 
             headerArticleView.setOnClickListener(this);
             storyHeaderView.setOnClickListener(this);
@@ -1079,7 +1079,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
-                                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+//                                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 }
                                 if (mContext instanceof DashboardActivity) {
                                     ((DashboardActivity) mContext).showBookmarkConfirmationTooltip();
@@ -1094,7 +1094,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
-                                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+//                                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 }
                             } else if ("bookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(1);
@@ -1106,7 +1106,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
-                                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+//                                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                                 }
                             } else if ("unbookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(0);
@@ -1118,7 +1118,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
-                                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+//                                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                                 }
                             }
                         }
@@ -1143,7 +1143,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 } else if (viewHolder instanceof VideoCarouselViewHolder) {
                     ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
-                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+//                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 }
             } else if ("unbookmarkArticle".equals(type)) {
                 if (viewHolder instanceof FeedViewHolder) {
@@ -1155,7 +1155,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 } else if (viewHolder instanceof VideoCarouselViewHolder) {
                     ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
-                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+//                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                 }
             } else if ("bookmarkVideo".equals(type)) {
                 if (viewHolder instanceof FeedViewHolder) {
@@ -1167,7 +1167,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 } else if (viewHolder instanceof VideoCarouselViewHolder) {
                     ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
-                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+//                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                 }
             } else if ("unbookmarkVideo".equals(type)) {
                 if (viewHolder instanceof FeedViewHolder) {
@@ -1179,7 +1179,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 } else if (viewHolder instanceof VideoCarouselViewHolder) {
                     ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
-                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+//                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                 }
             }
         }

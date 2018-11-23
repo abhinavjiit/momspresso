@@ -67,6 +67,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private TextView anonymousTextView;
     private CheckBox anonymousCheckbox;
     private View bottombarTopline;
+    private int groupId, postId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,6 +109,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         commentOrReplyData = (GroupPostCommentResult) extras.get("parentCommentData");
         actionType = (String) extras.get("action");
         position = extras.getInt("position");
+        groupId = extras.getInt("groupId");
+        postId = extras.getInt("postId");
 
         addCommentTextView.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
@@ -122,6 +125,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         }
 
         if (commentOrReplyData == null) {
+            commentReplyEditText.setText(SharedPrefUtils.getSavedReplyData(BaseApplication.getAppContext(), groupId,
+                    postId, 0));
             headingTextView.setText(BaseApplication.getAppContext().getString(R.string.short_s_add_comment));
             relativeMainContainer.setVisibility(View.GONE);
         } else {
@@ -136,7 +141,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             } else {
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.reply));
                 relativeMainContainer.setVisibility(View.VISIBLE);
-
+                commentReplyEditText.setText(SharedPrefUtils.getSavedReplyData(BaseApplication.getAppContext(), commentOrReplyData.getGroupId(),
+                        commentOrReplyData.getPostId(), commentOrReplyData.getParentId()));
                 if (commentOrReplyData.getIsAnnon() == 1) {
                     commentorUsernameTextView.setText(BaseApplication.getAppContext().getString(R.string.groups_anonymous));
                     commentorImageView.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.ic_incognito));
@@ -168,7 +174,26 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        Dialog dialog = new Dialog(getActivity(), getTheme()) {
+            @Override
+            public void onBackPressed() {
+                super.onBackPressed();
+                if ("EDIT_COMMENT".equals(actionType)) {
+                } else if ("EDIT_REPLY".equals(actionType)) {
+                } else {
+                    if (null != commentReplyEditText.getText() && !StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString())) {
+                        if (commentOrReplyData == null) {
+                            SharedPrefUtils.setSavedReplyData(BaseApplication.getAppContext(), groupId,
+                                    postId, 0, commentReplyEditText.getText().toString());
+                        } else {
+                            SharedPrefUtils.setSavedReplyData(BaseApplication.getAppContext(), commentOrReplyData.getGroupId(),
+                                    commentOrReplyData.getPostId(), commentOrReplyData.getParentId(), commentReplyEditText.getText().toString());
+                        }
+                    }
+                }
+            }
+        };
+//        Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return dialog;
     }
@@ -203,6 +228,26 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 }
                 break;
             case R.id.closeImageView:
+                if ("EDIT_COMMENT".equals(actionType)) {
+                } else if ("EDIT_REPLY".equals(actionType)) {
+                } else {
+                    if (null != commentReplyEditText.getText() && !StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString())) {
+                        if (commentOrReplyData == null) {
+                            SharedPrefUtils.setSavedReplyData(BaseApplication.getAppContext(), groupId,
+                                    postId, 0, commentReplyEditText.getText().toString());
+                        } else {
+                            SharedPrefUtils.setSavedReplyData(BaseApplication.getAppContext(), commentOrReplyData.getGroupId(),
+                                    commentOrReplyData.getPostId(), commentOrReplyData.getParentId(), commentReplyEditText.getText().toString());
+                        }
+                    }
+                }
+//                if (null != commentReplyEditText.getText() && !StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString())) {
+//                    if (commentOrReplyData == null) {
+//
+//                    } else {
+//
+//                    }
+//                }
                 dismiss();
                 break;
             case R.id.anonymousImageView:

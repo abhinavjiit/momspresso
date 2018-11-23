@@ -5,24 +5,12 @@
     <string name="unknown_person">अझात</string>
     <string name="resend_email">ईमेल परत पाठवा</string>
 
-    <!-- <string name="facebook_app_id">1437325266589625</string>-->
-
-    <!--but now we are using client APP ID -->
-    <string name="facebook_app_id">206155642763202</string>
-    <string name="fb_login_protocol_scheme">fb206155642763202</string>
-    <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
-
     <string name="write_review_prompt">तुम्हाला कशाचे विश्लेषण करायला आवडेल ?</string>
-
-    <!-- splash screen -->
 
     <string name="loading_txt">लोडिंग&#8230;</string>
 
-    <!-- Login Screen -->
-    <!-- Registration Screen -->
     <string name="subcategoryName">सब केटेगरी</string>
     <string name="location_info">वैयत्तिक सूचना मिळण्या साठी तुमचे प्राधान्य निवडा (स्थान)</string>
-    <!-- HomeCategoryActivity -->
     <string name="hint_text">तुम्ही काय शोधत आहात ?</string>
     <string name="locality_txt">कोणत्या शहर/ गावात ?</string>
     <string name="error_network">तुमचे उपकरण नेटवर्क कव्हरेज च्या बाहेर आहे </string>
@@ -840,4 +828,6 @@
     <string name="time_limit">(जास्तीत जास्त वेळ %1$s)</string>
     <string name="upload_larger_video">Please upload a video greater than 5 seconds</string>
     <string name="minutes_label">मिनिटे</string>
+    <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
+    <string name="check_out_momvlog" >Momspresso\n\nCheck out this interesting blog post\n</string>
 </resources>

@@ -18,6 +18,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -281,6 +282,18 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onRecyclerItemClick(View view, int position, boolean isMember) {
+        if ("female".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender()) ||
+                "f".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
+        } else {
+            if (isAdded()) {
+                Toast.makeText(getActivity(), getString(R.string.women_only), Toast.LENGTH_SHORT).show();
+            }
+            if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+
+            } else {
+                return;
+            }
+        }
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         if (isMember) {
             selectedGroup = joinedGroupList.get(position);
@@ -289,7 +302,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             selectedQuestionnaire = (LinkedTreeMap<String, String>) allGroupList.get(position).getQuestionnaire();
         }
         groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-
     }
 
     @Override

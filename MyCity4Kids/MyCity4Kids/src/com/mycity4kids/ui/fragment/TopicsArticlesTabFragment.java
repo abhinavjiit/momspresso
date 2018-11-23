@@ -62,7 +62,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
+public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener,/* FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
 
     private int groupId;
     public String gpsubHeading, gpHeading, gpImageUrl;
@@ -162,8 +162,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         mDatalist = new ArrayList<>();
-        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-        feedNativeAd.loadAds();
+//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -511,15 +511,15 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         }
     }
 
-    @Override
-    public void onFinishToLoadAds() {
-
-    }
-
-    @Override
-    public void onErrorToLoadAd() {
-
-    }
+//    @Override
+//    public void onFinishToLoadAds() {
+//
+//    }
+//
+//    @Override
+//    public void onErrorToLoadAd() {
+//
+//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {

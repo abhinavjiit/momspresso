@@ -121,6 +121,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String tagsJson;
     private boolean isMaxLengthToastShown = false;
     private View mLayout;
+    private TextView topicHeading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +134,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         storyTitleEditText = (EditText) findViewById(R.id.storyTitleEditText);
         storyBodyEditText = (EditText) findViewById(R.id.storyBodyEditText);
+        topicHeading = (TextView) toolbar.findViewById(R.id.topicHeading);
 
         publishTextView.setOnClickListener(this);
 
@@ -187,6 +189,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             tagsJson = getIntent().getStringExtra("tag");
             updateTagListFromJson(tagsJson);
             recyclerView.setVisibility(View.GONE);
+            topicHeading.setVisibility(View.GONE);
         }
 
         dynamoUserId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();

@@ -103,6 +103,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_text_group_post_activity);
+
         mLayout = findViewById(R.id.rootLayout);
         postContentEditText = (EditText) findViewById(R.id.postContentEditText);
         closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
@@ -111,15 +112,12 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         anonymousCheckbox = (CheckBox) findViewById(R.id.anonymousCheckbox);
         addMediaImageView = (ImageView) findViewById(R.id.addMediaImageView);
         addMediaTextView = (TextView) findViewById(R.id.addMediaTextView);
-
         postImageView = (ImageView) findViewById(R.id.postImageView);
         publishTextView = (TextView) findViewById(R.id.publishTextView);
         chooseMediaTypeContainer = (RelativeLayout) findViewById(R.id.chooseMediaTypeContainer);
         mediaContainer = (LinearLayout) findViewById(R.id.mediaContainer);
         imageCameraTextView = (TextView) findViewById(R.id.imageCameraTextView);
         imageGalleryTextView = (TextView) findViewById(R.id.imageGalleryTextView);
-//        videoCameraTextView = (TextView) findViewById(R.id.videoCameraTextView);
-//        videoGalleryTextView = (TextView) findViewById(R.id.videoGalleryTextView);
         cancelTextView = (TextView) findViewById(R.id.cancelTextView);
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
@@ -133,17 +131,17 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         publishTextView.setOnClickListener(this);
         imageCameraTextView.setOnClickListener(this);
         imageGalleryTextView.setOnClickListener(this);
-//        videoCameraTextView.setOnClickListener(this);
-//        videoGalleryTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
         closeEditorImageView.setOnClickListener(this);
+
+        postContentEditText.setText(SharedPrefUtils.getSavedPostData(this, selectedGroup.getId()));
 
         if (SharedPrefUtils.isUserAnonymous(this)) {
             anonymousCheckbox.setChecked(true);
         } else {
             anonymousCheckbox.setChecked(false);
         }
-  }
+    }
 
     @Override
     protected void updateUi(Response response) {
@@ -206,18 +204,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 } else {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
-
-//                ChooseAnonymousDialogFragment chooseAnonymousDialogFragment = new ChooseAnonymousDialogFragment();
-//                FragmentManager fm = getSupportFragmentManager();
-//                Bundle _args = new Bundle();
-//                chooseAnonymousDialogFragment.setArguments(_args);
-//                chooseAnonymousDialogFragment.setCancelable(true);
-//                chooseAnonymousDialogFragment.show(fm, "Go Anonymous");
                 break;
             case R.id.publishTextView:
                 if (!isRequestRunning && validateParams()) {
-                 //   String str=postContentEditText.getText().toString();
-                   // Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
                     isRequestRunning = true;
                     publishPost();
                 }
@@ -240,7 +229,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
         AddGroupPostRequest addGroupPostRequest = new AddGroupPostRequest();
         addGroupPostRequest.setContent(postContentEditText.getText().toString());
-     //   String str=postContentEditText.getText().toString();
+        //   String str=postContentEditText.getText().toString();
         addGroupPostRequest.setType("0");
         addGroupPostRequest.setGroupId(selectedGroup.getId());
         if (SharedPrefUtils.isUserAnonymous(this)) {
@@ -276,10 +265,10 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             }
             try {
                 if (response.isSuccessful()) {
+                    SharedPrefUtils.clearSavedPostData(AddTextOrMediaGroupPostActivity.this, selectedGroup.getId());
                     AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
                     onBackPressed();
-//                    processGroupListingResponse(responseModel);
                 } else {
 
                 }
@@ -287,7 +276,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -595,6 +583,14 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (null != postContentEditText.getText() && !StringUtils.isNullOrEmpty(postContentEditText.getText().toString())) {
+            SharedPrefUtils.setSavedPostData(AddTextOrMediaGroupPostActivity.this, selectedGroup.getId(), postContentEditText.getText().toString());
         }
     }
 }

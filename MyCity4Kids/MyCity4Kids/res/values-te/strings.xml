@@ -5,24 +5,12 @@
     <string name="unknown_person">తెలియనివి</string>
     <string name="resend_email">ఇమెయిల్ మళ్ళీ పంపండి</string>
 
-    <!-- <string name="facebook_app_id">1437325266589625</string>-->
-
-    <!--but now we are using client APP ID -->
-    <string name="facebook_app_id">206155642763202</string>
-    <string name="fb_login_protocol_scheme">fb206155642763202</string>
-    <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
-
     <string name="write_review_prompt">మీరు ఏమి సమీక్షిద్దామనుకుంటున్నారు?</string>
-
-    <!-- splash screen -->
 
     <string name="loading_txt">లోడ్ అవుతోంది&#8230;</string>
 
-    <!-- Login Screen -->
-    <!-- Registration Screen -->
     <string name="subcategoryName">subCategory</string>
     <string name="location_info">వ్యక్తిగతీకరించిన సిఫార్సులు రావడానికి, మీ లొకేషన్ ప్రాధాన్యత తెలుపండి</string>
-    <!-- HomeCategoryActivity -->
     <string name="hint_text">మీరు దేని కోసం చూస్తున్నారు ?</string>
     <string name="locality_txt">ఏ ప్రాతం లో</string>
     <string name="error_network">పరికరం నెట్వర్క్ కవరేజ్ లో లేదు</string>
@@ -156,7 +144,7 @@
     <string name="ad.tags_title.text">ఈ ఆర్టికల్ కింద విభాగాల్లో పోస్ట్ చేయబడింది       </string>
     <string name="ad.tags_subtitle.text">ఇలాంటి పోస్టులు చదవటానికి ఫాలో అవ్వండి</string>
     <string name="ad.follow_author">ఫాలో</string>
-    <string name="ad.following_author">பின்தொடர்கிறீர்</string>
+    <string name="ad.following_author">ఫాలో అవుతున్నారు</string>
     <string name="ad.comments.title">కామెంట్లు</string>
     <string name="ad.comments.no_comments">కామెంట్లు జోడించలేదు</string>
     <string name="ad.comments.view_comment">కామెంట్లు</string>
@@ -175,7 +163,7 @@
     <string name="ad.recent_logs_from.title">రచయిత నించి మరి కొన్ని</string>
     <string name="ad.share.follow_author">ఫాలో %1$s</string>
     <string name="ad.trending.title">ట్రెండ్ అవుతున్న బ్లాగ్స్ </string>
-    <string name="ad.write_blog">WRITE A BLOG</string>
+    <string name="ad.write_blog">బ్లాగ్ రాయండి</string>
     <string name="ad.tts.toast_unplayable_article">Uఈ ఆర్టికల్ ను ఆడించలేకపోతున్నాం</string>
 
     <string name="vd.recent_videos_from.title">Rఇటీవల వీడియోలు</string>
@@ -839,4 +827,6 @@
     <string name="time_limit">(గరిష్ట సమయం %1$s)</string>
     <string name="upload_larger_video">అయ్యో ! మీ వీడియో కనీయం 5 క్షణాలు ఉండాలి </string>
     <string name="minutes_label">నిమిషాల</string>
+    <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
+    <string name="check_out_momvlog" >Momspresso\n\nCheck out this interesting blog post\n</string>
 </resources>

@@ -2,15 +2,9 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_name">Momspresso</string>
-
-    <string name="home">Home</string>
-
     <string name="unknown_person">Unknown</string>
     <string name="resend_email">Resend Email</string>
 
-    <!-- <string name="facebook_app_id">1437325266589625</string>-->
-
-    <!--but now we are using client APP ID -->
     <string name="facebook_app_id">206155642763202</string>
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
     <string name="ACCOUNT_KIT_CLIENT_TOKEN">089d77e1898bf3ef59048cc2fe58408b</string>
@@ -18,15 +12,10 @@
 
     <string name="write_review_prompt">What would you like to review?</string>
 
-    <!-- splash screen -->
-
     <string name="loading_txt">Loading&#8230;</string>
 
-    <!-- Login Screen -->
-    <!-- Registration Screen -->
     <string name="subcategoryName">subCategory</string>
     <string name="location_info">To get personalized recommendations, Please select your preferred location</string>
-    <!-- HomeCategoryActivity -->
     <string name="hint_text">What are you looking for ?</string>
     <string name="locality_txt">In which location?</string>
     <string name="error_network">Device is out of network coverage.</string>
@@ -889,4 +878,6 @@
     <string name="upload_larger_video">Oops! Your video should be at least 5 seconds long.</string>
     <string name="seconds_label">seconds</string>
     <string name="minutes_label">minutes</string>
+    <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
+    <string name="check_out_momvlog" >Momspresso\n\nCheck out this interesting blog post\n</string>
 </resources>

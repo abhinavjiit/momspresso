@@ -24,7 +24,6 @@ import android.view.animation.LinearInterpolator;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,12 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdChoicesView;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdListener;
-import com.facebook.ads.MediaView;
-import com.facebook.ads.NativeAd;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -118,7 +111,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -216,7 +208,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     //    private AdView mAdView;
     private TextView viewCommentsTextView;
     private LayoutInflater mInflater;
-    private NativeAd nativeAd;
+//    private NativeAd nativeAd;
     private LinearLayout nativeAdContainer;
     private LinearLayout adView;
     private RelativeLayout groupHeaderView;
@@ -513,80 +505,80 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void showNativeAd() {
-        nativeAd = new NativeAd(getActivity(), AppConstants.FB_AD_PLACEMENT_ARTICLE_DETAILS);
-        nativeAd.setAdListener(new AdListener() {
-
-            @Override
-            public void onError(Ad ad, AdError error) {
-                // Ad error callback
-                Log.d("FacebookAd", "onError");
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                if (nativeAd != null) {
-                    nativeAd.unregisterView();
-                }
-
-                if (isAdded()) {
-                    // Add the Ad view into the ad container.
-                    nativeAdContainer = (LinearLayout) fragmentView.findViewById(R.id.native_ad_container);
-                    // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-                    adView = (LinearLayout) mInflater.inflate(R.layout.facebook_ad_unit, nativeAdContainer, false);
-                    nativeAdContainer.addView(adView);
-
-                    // Create native UI using the ad metadata.
-                    ImageView nativeAdIcon = (ImageView) adView.findViewById(R.id.native_ad_icon);
-                    TextView nativeAdTitle = (TextView) adView.findViewById(R.id.native_ad_title);
-                    MediaView nativeAdMedia = (MediaView) adView.findViewById(R.id.native_ad_media);
-                    TextView nativeAdSocialContext = (TextView) adView.findViewById(R.id.native_ad_social_context);
-                    TextView nativeAdBody = (TextView) adView.findViewById(R.id.native_ad_body);
-                    Button nativeAdCallToAction = (Button) adView.findViewById(R.id.native_ad_call_to_action);
-
-                    // Set the Text.
-                    nativeAdTitle.setText(nativeAd.getAdTitle());
-                    nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
-                    nativeAdBody.setText(nativeAd.getAdBody());
-                    nativeAdCallToAction.setText(nativeAd.getAdCallToAction());
-
-                    // Download and display the ad icon.
-                    NativeAd.Image adIcon = nativeAd.getAdIcon();
-                    NativeAd.downloadAndDisplayImage(adIcon, nativeAdIcon);
-
-                    // Download and display the cover image.
-                    nativeAdMedia.setNativeAd(nativeAd);
-
-                    // Add the AdChoices icon
-                    LinearLayout adChoicesContainer = (LinearLayout) fragmentView.findViewById(R.id.ad_choices_container);
-                    AdChoicesView adChoicesView = new AdChoicesView(getActivity(), nativeAd, true);
-                    adChoicesContainer.addView(adChoicesView);
-
-                    // Register the Title and CTA button to listen for clicks.
-                    List<View> clickableViews = new ArrayList<>();
-                    clickableViews.add(nativeAdTitle);
-                    clickableViews.add(nativeAdCallToAction);
-                    clickableViews.add(nativeAdIcon);
-                    clickableViews.add(nativeAdSocialContext);
-                    clickableViews.add(nativeAdBody);
-                    nativeAd.registerViewForInteraction(nativeAdContainer, clickableViews);
-                }
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                // Ad clicked callback
-                Log.d("FacebookAd", "onAdClicked");
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-                // Ad impression logged callback
-                Log.d("FacebookAd", "onLoggingImpression");
-            }
-        });
-
-        // Request an ad
-        nativeAd.loadAd();
+//        nativeAd = new NativeAd(getActivity(), AppConstants.FB_AD_PLACEMENT_ARTICLE_DETAILS);
+//        nativeAd.setAdListener(new AdListener() {
+//
+//            @Override
+//            public void onError(Ad ad, AdError error) {
+//                // Ad error callback
+//                Log.d("FacebookAd", "onError");
+//            }
+//
+//            @Override
+//            public void onAdLoaded(Ad ad) {
+//                if (nativeAd != null) {
+//                    nativeAd.unregisterView();
+//                }
+//
+//                if (isAdded()) {
+//                    // Add the Ad view into the ad container.
+//                    nativeAdContainer = (LinearLayout) fragmentView.findViewById(R.id.native_ad_container);
+//                    // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
+//                    adView = (LinearLayout) mInflater.inflate(R.layout.facebook_ad_unit, nativeAdContainer, false);
+//                    nativeAdContainer.addView(adView);
+//
+//                    // Create native UI using the ad metadata.
+//                    ImageView nativeAdIcon = (ImageView) adView.findViewById(R.id.native_ad_icon);
+//                    TextView nativeAdTitle = (TextView) adView.findViewById(R.id.native_ad_title);
+//                    MediaView nativeAdMedia = (MediaView) adView.findViewById(R.id.native_ad_media);
+//                    TextView nativeAdSocialContext = (TextView) adView.findViewById(R.id.native_ad_social_context);
+//                    TextView nativeAdBody = (TextView) adView.findViewById(R.id.native_ad_body);
+//                    Button nativeAdCallToAction = (Button) adView.findViewById(R.id.native_ad_call_to_action);
+//
+//                    // Set the Text.
+//                    nativeAdTitle.setText(nativeAd.getAdTitle());
+//                    nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
+//                    nativeAdBody.setText(nativeAd.getAdBody());
+//                    nativeAdCallToAction.setText(nativeAd.getAdCallToAction());
+//
+//                    // Download and display the ad icon.
+//                    NativeAd.Image adIcon = nativeAd.getAdIcon();
+//                    NativeAd.downloadAndDisplayImage(adIcon, nativeAdIcon);
+//
+//                    // Download and display the cover image.
+//                    nativeAdMedia.setNativeAd(nativeAd);
+//
+//                    // Add the AdChoices icon
+//                    LinearLayout adChoicesContainer = (LinearLayout) fragmentView.findViewById(R.id.ad_choices_container);
+//                    AdChoicesView adChoicesView = new AdChoicesView(getActivity(), nativeAd, true);
+//                    adChoicesContainer.addView(adChoicesView);
+//
+//                    // Register the Title and CTA button to listen for clicks.
+//                    List<View> clickableViews = new ArrayList<>();
+//                    clickableViews.add(nativeAdTitle);
+//                    clickableViews.add(nativeAdCallToAction);
+//                    clickableViews.add(nativeAdIcon);
+//                    clickableViews.add(nativeAdSocialContext);
+//                    clickableViews.add(nativeAdBody);
+//                    nativeAd.registerViewForInteraction(nativeAdContainer, clickableViews);
+//                }
+//            }
+//
+//            @Override
+//            public void onAdClicked(Ad ad) {
+//                // Ad clicked callback
+//                Log.d("FacebookAd", "onAdClicked");
+//            }
+//
+//            @Override
+//            public void onLoggingImpression(Ad ad) {
+//                // Ad impression logged callback
+//                Log.d("FacebookAd", "onLoggingImpression");
+//            }
+//        });
+//
+//        // Request an ad
+//        nativeAd.loadAd();
     }
 
     private void getResponseUpdateUi(ArticleDetailResult detailsResponse) {

@@ -771,6 +771,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
+                _args.putInt("groupId", groupId);
+                _args.putInt("postId", postId);
                 addGpPostCommentReplyDialogFragment.setArguments(_args);
                 addGpPostCommentReplyDialogFragment.setCancelable(true);
                 addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
@@ -1178,7 +1180,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
                     UserDetailResult userDetailResult = new UserDetailResult();
                     if (groupPostResponse.getData().getResult().isAnnon() == 1) {
-//                        groupPostCommentResult.setUserId(groupPostResponse.getData().getResult().getUserId());
                     } else {
                         groupPostCommentResult.setUserId(groupPostResponse.getData().getResult().getUserId());
                         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);
@@ -1190,7 +1191,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(GroupPostDetailActivity.this));
                         userDetailResult.setProfilePicUrl(profilePic);
                     }
-
+                    SharedPrefUtils.clearSavedReplyData(GroupPostDetailActivity.this, groupId, postId, groupPostResponse.getData().getResult().getParentId());
                     groupPostCommentResult.setUserInfo(userDetailResult);
                     completeResponseList.add(groupPostCommentResult);
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
@@ -1303,7 +1304,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
                     UserDetailResult userDetailResult = new UserDetailResult();
                     if (responseData.getData().getResult().isAnnon() == 1) {
-//                        commentListData.setUserId(responseData.getData().getResult().getUserId());
                     } else {
                         commentListData.setUserId(responseData.getData().getResult().getUserId());
                         UserInfo sharedPrefUser = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);
@@ -1317,7 +1317,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     }
 
                     commentListData.setUserInfo(userDetailResult);
-
+                    SharedPrefUtils.clearSavedReplyData(GroupPostDetailActivity.this, groupId, postId, responseData.getData().getResult().getParentId());
                     for (int i = 0; i < completeResponseList.size(); i++) {
                         if (completeResponseList.get(i).getId() == responseData.getData().getResult().getParentId()) {
                             completeResponseList.get(i).getChildData().add(commentListData);

@@ -74,6 +74,7 @@ public class SharedPrefUtils {
     private static final String USER_LANG_SELECTION = "userLangSelection";
     private static final String SUBSCRIPTION_EMAIL = "subscriptionEmail";
     private static final String USER_TYPE = "userType";
+    private static final String GENDER = "gender";
 
     public static final String APPOINTMENT_TIMESTAMP = "appointment_timestamp";
     private static final String DEVICE_TOKEN = "device_token";
@@ -229,9 +230,9 @@ public class SharedPrefUtils {
         _editor.putString(USER_LANG_SELECTION, pModel.getIsLangSelection());
         _editor.putString(SUBSCRIPTION_EMAIL, pModel.getSubscriptionEmail());
         _editor.putString(USER_TYPE, pModel.getUserType());
+        _editor.putString(GENDER, pModel.getGender());
         _editor.commit();
     }
-
 
     public static UserInfo getUserDetailModel(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
@@ -256,9 +257,9 @@ public class SharedPrefUtils {
         user.setIsLangSelection(_sharedPref.getString(USER_LANG_SELECTION, "0"));
         user.setSubscriptionEmail(_sharedPref.getString(SUBSCRIPTION_EMAIL, _sharedPref.getString(EMAIL, "")));
         user.setUserType(_sharedPref.getString(USER_TYPE, "0"));
+        user.setGender(_sharedPref.getString(GENDER, "0"));
         return user;
     }
-
 
     public static long getAppointmentTimeSatmp(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
@@ -446,7 +447,7 @@ public class SharedPrefUtils {
             _editor.putBoolean(COACHMARK_DRAWER, flag);
         } else if ("HomeScreen".equals(screenName)) {
             _editor.putBoolean(COACHMARK_HOME_SCREEN, flag);
-        }else if ("Profile".equals(screenName)) {
+        } else if ("Profile".equals(screenName)) {
             _editor.putBoolean(COACHMARK_PROFILE, flag);
         }
 
@@ -713,6 +714,44 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
         _editor.putBoolean(HAS_TOPIC_SELECTION_CHANGED, flag);
+        _editor.commit();
+    }
+
+    public static String getSavedPostData(Context pContext, int groupId) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (_sharedPref.getString("groupId-" + groupId, ""));
+    }
+
+    public static void setSavedPostData(Context pContext, int groupId, String content) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString("groupId-" + groupId, content);
+        _editor.commit();
+    }
+
+    public static void clearSavedPostData(Context pContext, int groupId) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.remove("groupId-" + groupId);
+        _editor.commit();
+    }
+
+    public static String getSavedReplyData(Context pContext, int groupId, int postId, int parentId) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (_sharedPref.getString("groupId-" + groupId + "~" + "postId-" + postId + "~" + "commentId" + parentId, ""));
+    }
+
+    public static void setSavedReplyData(Context pContext, int groupId, int postId, int parentId, String content) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString("groupId-" + groupId + "~" + "postId-" + postId + "~" + "commentId" + parentId, content);
+        _editor.commit();
+    }
+
+    public static void clearSavedReplyData(Context pContext, int groupId, int postId, int parentId) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.remove("groupId-" + groupId + "~" + "postId-" + postId + "~" + "commentId" + parentId);
         _editor.commit();
     }
 }

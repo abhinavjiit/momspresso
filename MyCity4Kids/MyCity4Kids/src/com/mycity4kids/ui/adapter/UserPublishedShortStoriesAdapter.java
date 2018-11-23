@@ -11,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.ads.AdChoicesView;
-import com.facebook.ads.NativeAd;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -23,7 +21,6 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -40,7 +37,7 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
     private boolean isPrivateProfile;
     private final FeedNativeAd feedNativeAd;
     private boolean isAdChoiceAdded = false;
-    private List<NativeAd> adList = new ArrayList<>(10);
+//    private List<NativeAd> adList = new ArrayList<>(10);
 
     public UserPublishedShortStoriesAdapter(Context pContext, SSRecyclerViewClickListener listener, boolean isPrivateProfile, FeedNativeAd feedNativeAd) {
 
@@ -49,9 +46,9 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
         this.mListener = listener;
         this.isPrivateProfile = isPrivateProfile;
         this.feedNativeAd = feedNativeAd;
-        for (int i = 0; i < 10; i++) {
-            adList.add(null);
-        }
+//        for (int i = 0; i < 10; i++) {
+//            adList.add(null);
+//        }
     }
 
     public void setListData(ArrayList<ArticleListingResult> mParentingLists) {
@@ -84,46 +81,46 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof AdViewHolder) {
-            addArticleItem((AdViewHolder) holder, position);
-            if (position <= 80 && adList.get((position / 8) - 1) == null) {
-                NativeAd fbAd = feedNativeAd.getAd();
-                adList.set((position / 8) - 1, fbAd);
-            }
-            NativeAd fbAd;
-            if (position < 80) {
-                fbAd = adList.get(((position / 8) % 10) - 1);
-            } else {
-                fbAd = adList.get(((position / 8) % 10));
-            }
-            if (fbAd == null) {
-                ((AdViewHolder) holder).adContainerView.setVisibility(View.GONE);
-                return;
-            }
-            ((AdViewHolder) holder).adContainerView.setVisibility(View.VISIBLE);
-            ((AdViewHolder) holder).nativeAdTitle.setText(fbAd.getAdTitle());
-            ((AdViewHolder) holder).nativeAdSocialContext.setText(fbAd.getAdSocialContext());
-            ((AdViewHolder) holder).nativeAdBody.setText(fbAd.getAdBody());
-            ((AdViewHolder) holder).nativeAdCallToAction.setText(fbAd.getAdCallToAction());
-
-            // Download and display the ad icon.
-            NativeAd.Image adIcon = fbAd.getAdIcon();
-            NativeAd.downloadAndDisplayImage(adIcon, ((AdViewHolder) holder).nativeAdIcon);
-
-            // Download and display the cover image.
-//            ((AdViewHolder) holder).nativeAdMedia.setNativeAd(feedNativeAd.getAd());
-
-            // Add the AdChoices icon
-            if (!isAdChoiceAdded) {
-                AdChoicesView adChoicesView = new AdChoicesView(mContext, fbAd, true);
-                ((AdViewHolder) holder).adChoicesContainer.addView(adChoicesView);
-                isAdChoiceAdded = true;
-            }
-
-            // Register the Title and CTA button to listen for clicks.
-            List<View> clickableViews = new ArrayList<>();
-            clickableViews.add(((AdViewHolder) holder).nativeAdTitle);
-            clickableViews.add(((AdViewHolder) holder).nativeAdCallToAction);
-            fbAd.registerViewForInteraction(((AdViewHolder) holder).adContainerView);
+//            addArticleItem((AdViewHolder) holder, position);
+//            if (position <= 80 && adList.get((position / 8) - 1) == null) {
+//                NativeAd fbAd = feedNativeAd.getAd();
+//                adList.set((position / 8) - 1, fbAd);
+//            }
+//            NativeAd fbAd;
+//            if (position < 80) {
+//                fbAd = adList.get(((position / 8) % 10) - 1);
+//            } else {
+//                fbAd = adList.get(((position / 8) % 10));
+//            }
+//            if (fbAd == null) {
+//                ((AdViewHolder) holder).adContainerView.setVisibility(View.GONE);
+//                return;
+//            }
+//            ((AdViewHolder) holder).adContainerView.setVisibility(View.VISIBLE);
+//            ((AdViewHolder) holder).nativeAdTitle.setText(fbAd.getAdTitle());
+//            ((AdViewHolder) holder).nativeAdSocialContext.setText(fbAd.getAdSocialContext());
+//            ((AdViewHolder) holder).nativeAdBody.setText(fbAd.getAdBody());
+//            ((AdViewHolder) holder).nativeAdCallToAction.setText(fbAd.getAdCallToAction());
+//
+//            // Download and display the ad icon.
+//            NativeAd.Image adIcon = fbAd.getAdIcon();
+//            NativeAd.downloadAndDisplayImage(adIcon, ((AdViewHolder) holder).nativeAdIcon);
+//
+//            // Download and display the cover image.
+////            ((AdViewHolder) holder).nativeAdMedia.setNativeAd(feedNativeAd.getAd());
+//
+//            // Add the AdChoices icon
+//            if (!isAdChoiceAdded) {
+//                AdChoicesView adChoicesView = new AdChoicesView(mContext, fbAd, true);
+//                ((AdViewHolder) holder).adChoicesContainer.addView(adChoicesView);
+//                isAdChoiceAdded = true;
+//            }
+//
+//            // Register the Title and CTA button to listen for clicks.
+//            List<View> clickableViews = new ArrayList<>();
+//            clickableViews.add(((AdViewHolder) holder).nativeAdTitle);
+//            clickableViews.add(((AdViewHolder) holder).nativeAdCallToAction);
+//            fbAd.registerViewForInteraction(((AdViewHolder) holder).adContainerView);
 
         } else {
 

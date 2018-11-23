@@ -48,7 +48,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TrendingTopicsTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class TrendingTopicsTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 2;
     private int limit = 10;
@@ -81,8 +81,8 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
-        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-        feedNativeAd.loadAds();
+//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, "Trending-" + trendingTopicData.getDisplay_name(), true);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -248,15 +248,15 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         hitFilteredTopicsArticleListingApi(0);
     }
 
-    @Override
-    public void onFinishToLoadAds() {
-
-    }
-
-    @Override
-    public void onErrorToLoadAd() {
-
-    }
+//    @Override
+//    public void onFinishToLoadAds() {
+//
+//    }
+//
+//    @Override
+//    public void onErrorToLoadAd() {
+//
+//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
@@ -276,6 +276,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
             case R.id.videoContainerFL5:
                 launchVideoDetailsActivity(position, 4);
                 break;
+            case R.id.addMomVlogTextView:
             case R.id.addVideoContainer: {
                 MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, "Trending-" + trendingTopicData.getDisplay_name());
                 Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);

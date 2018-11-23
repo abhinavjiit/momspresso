@@ -24,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -160,6 +161,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ImageView createTextImageVIew;
     private ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> allDraftsList = new ArrayList<>();
     private UserAllDraftsRecyclerAdapter userAllDraftsRecyclerAdapter;
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -478,10 +483,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             fragment.setArguments(mBundle);
             replaceFragment(fragment, mBundle, true);
         } else if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
-//            MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-//            Bundle mBundle0 = new Bundle();
-//            fragment0.setArguments(mBundle0);
-//            addFragment(fragment0, mBundle0, true);
             Intent pIntent = new Intent(this, PrivateProfileActivity.class);
             startActivity(pIntent);
         } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
@@ -898,7 +899,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     startActivity(ssIntent);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
                     final String draftId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
-                    Intent ssIntent = new Intent(this, UserPublishedAndDraftsActivity.class);
+                    Intent ssIntent = new Intent(this, UserPublishedContentActivity.class);
                     ssIntent.putExtra("isPrivateProfile", true);
                     ssIntent.putExtra("contentType", "shortStory");
                     ssIntent.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -1271,6 +1272,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.videoContainer: {
                 hideCreateContentView();
+                MixPanelUtils.pushAddMomVlogClickEvent(mMixpanel, "BottomSheet");
                 Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
                 startActivity(intent);
             }

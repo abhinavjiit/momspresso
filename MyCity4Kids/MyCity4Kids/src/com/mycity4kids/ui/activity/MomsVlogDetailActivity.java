@@ -265,6 +265,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
 
         scrollBounds = new Rect();
         mScrollView.getHitRect(scrollBounds);
+        mixpanel.timeEvent("Player_Start_" + videoId);
     }
 
     private void hitArticleDetailsS3API() {
@@ -1249,7 +1250,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                         whatsappIntent.setType("text/plain");
                         whatsappIntent.setPackage("com.whatsapp");
-                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + shareUrl);
+                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_momvlog) + shareUrl);
                         try {
                             startActivity(whatsappIntent);
                             Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Whatsapp");
@@ -1275,7 +1276,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         intent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
                     }
                     intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Momspresso");
-                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml(getString(R.string.check_out_blog) + shareUrl));
+                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml(getString(R.string.check_out_momvlog) + shareUrl));
 
                     try {
                         startActivity(intent);
@@ -1285,7 +1286,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         i.setType("plain/text");
                         i.putExtra(Intent.EXTRA_EMAIL, new String[]{});
                         i.putExtra(Intent.EXTRA_SUBJECT, "");
-                        i.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + shareUrl);
+                        i.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_momvlog) + shareUrl);
                         try {
                             startActivity(Intent.createChooser(i, "Send mail..."));
                             Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
@@ -1401,5 +1402,11 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mixpanel.track("Player_Start_" + videoId);
     }
 }

@@ -52,7 +52,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant.parmar on 21-04-2016.
  */
-public class UserPublishedArticleTabFragment extends BaseFragment implements View.OnClickListener, UserPublishedArticleAdapter.RecyclerViewClickListener, FeedNativeAd.AdLoadingListener,
+public class UserPublishedArticleTabFragment extends BaseFragment implements View.OnClickListener, UserPublishedArticleAdapter.RecyclerViewClickListener, /*FeedNativeAd.AdLoadingListener,*/
         UserPublishedShortStoriesAdapter.SSRecyclerViewClickListener {
 
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -93,8 +93,8 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         recyclerView.setLayoutManager(llm);
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
 
-        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_USER_ARTICLE);
-        feedNativeAd.loadAds();
+//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_USER_ARTICLE);
+//        feedNativeAd.loadAds();
 
         nextPageNumber = 0;
         if ("shortStory".equals(contentType)) {
@@ -403,15 +403,15 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
 //        }
     }
 
-    @Override
-    public void onFinishToLoadAds() {
-
-    }
-
-    @Override
-    public void onErrorToLoadAd() {
-
-    }
+//    @Override
+//    public void onFinishToLoadAds() {
+//
+//    }
+//
+//    @Override
+//    public void onErrorToLoadAd() {
+//
+//    }
 
     @Override
     public void onShortStoryClick(View view, int position) {
