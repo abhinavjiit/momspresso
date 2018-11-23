@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Momspresso</string>
-    <string name="unknown_person">Unknown</string>
-    <string name="resend_email">Resend Email</string>
+    <string name="app_name">மாம்ஸ்ப்ரெஸ்ஸோ</string>
+    <string name="unknown_person">தெரியாத</string>
+    <string name="resend_email">ஈ-மெயிலை மீண்டும் அனுப்பவும்</string>
 
-    <string name="write_review_prompt">What would you like to review?</string>
+    <string name="write_review_prompt">நீங்கள் எதை விமர்சனம் செய்ய விரும்புகிறீர்கள்?</string>
 
     <string name="loading_txt">Loading&#8230;</string>
 
     <string name="subcategoryName">subCategory</string>
-    <string name="location_info">To get personalized recommendations, Please select your preferred location</string>
-    <string name="hint_text">What are you looking for ?</string>
-    <string name="locality_txt">In which location?</string>
-    <string name="error_network">Device is out of network coverage.</string>
-    <string name="please_wait">Please Wait...</string>
-    <string name="no_result_txt">No result found.</string>
-    <string name="went_wrong">Something went wrong.</string>
-    <string name="server_went_wrong">Something went wrong at the server.</string>
-    <string name="no_data">Data not found.</string>
-    <string name="toast_network_error">Device is out of network coverage.</string>
-    <string name="toast_response_error">Some error occurred, please try again later!</string>
-    <string name="toast_server_error">Server error </string>
-    <string name="fetching_data">Fetching data&#8230;</string>
-    <string name="please_select">Please select at least one value</string>
+
+    <string name="location_info">தனிப்பட்ட பரிந்துரைகள் கிடைக்க உங்களுக்கு விருப்பமான இடத்தைத் தேர்ந்தெடுங்கள்</string>
+    <string name="hint_text">என்ன தேடுகிறீர்கள்?</string>
+    <string name="locality_txt">எந்த இடத்தில்?</string>
+    <string name="error_network">கருவி நெட்வொர்க் கவரேஜிற்கு வெளியே உள்ளது</string>
+    <string name="please_wait">கொஞ்சம் பொறுத்திருங்கள்...</string>
+    <string name="no_result_txt">முடிவு ஒன்றும் கிடைக்கவில்லை</string>
+    <string name="went_wrong">ஏதோ தவறு நடந்துவிட்டது</string>
+    <string name="server_went_wrong">ஸர்வரில் ஏதோ தவறு நடந்துவிட்டது</string>
+    <string name="no_data">தகவல் ஒன்றும் கிடைக்கவில்லை</string>
+    <string name="toast_network_error">கருவி நெட்வொர்க் கவரேஜிற்கு வெளியே உள்ளது</string>
+    <string name="toast_response_error">ஏதோ தவறு நடந்துவிட்டது, பிறகு முயற்சி செய்யுங்கள் </string>
+    <string name="toast_server_error">ஸர்வரின் பிழை</string>
+    <string name="fetching_data">தகவல்களை எடுக்கிறது&#8230;</string>
+    <string name="please_select">ஏதேனும் ஒன்றைத் தேர்ந்தெடுங்கள்</string>
+
     <!-- slidingDrawer -->
-    <string name="no_query">Please enter a search query.</string>
+    <string name="no_query">நீங்கள் தேடும் விஷயத்தை இங்கே உள்ளிடுக</string>
 
     <!-- Filter/sort Screen -->
-    <string name="no_age_group">There is no age group to filter.</string>
-    <string name="no_category_group">There is no category group to filter.</string>
-    <string name="ageGroup">Age Group</string>
+    <string name="no_age_group">தேர்வு செய்ய வயது-பாகுபாடு இல்லை</string>
+    <string name="no_category_group">தேர்வு செய்ய வகை-பாகுபாடு இல்லை</string>
+    <string name="ageGroup">வயது வரம்பு</string>
 
     <!-- Add Listing Screen -->
 
@@ -38,52 +40,53 @@
 
     <!-- Details Screen -->
 
-    <string name="age_grout_txt">Age Group</string>
-    <string name="event_dates_txt">Event Dates</string>
-    <string name="description_txt">Description</string>
-    <string name="contact_txt">Contact</string>
-    <string name="about_txt">About</string>
-    <string name="event_list">There are no listings found.</string>
-    <string name="additional_info">Additional Information</string>
-    <string name="address_txt">Address</string>
-    <string name="sub_address_txt">Address</string>
-    <string name="address_locality_txt">Address</string>
+    <string name="age_grout_txt">வயது வரம்பு</string>
+    <string name="event_dates_txt">நிகழ்வு தேதிகள்</string>
+    <string name="description_txt">விளக்கம்</string>
+    <string name="contact_txt">தொடர்பு கொள்ள</string>
+    <string name="about_txt">பற்றி</string>
+    <string name="event_list">லிஸ்டிங்குகள் ஒன்றும் காணப்படவில்லை
+    </string>
+    <string name="additional_info">கூடுதல் தகவல்</string>
+    <string name="address_txt">முகவரி </string>
+    <string name="sub_address_txt">முகவரி </string>
+    <string name="address_locality_txt">முகவரி </string>
 
     <!-- Top Picks Screen -->
-    <string name="top_picks">Top Picks</string>
-    <string name="author_img">Author Image</string>
-    <string name="title">Article Title</string>
-    <string name="author_name">Author Name</string>
-    <string name="article_publish_date">Article Publish Date</string>
-    <string name="progress_spinner">Progress Spinner</string>
+    <string name="top_picks">உயர்ந்த தேர்வு பெற்றவை </string>
+    <string name="author_img">ஆசிரியரின் படம்</string>
+    <string name="title">கட்டுரை தலைப்பு</string>
+    <string name="author_name">ஆசிரியரின் பெயர்</string>
+    <string name="article_publish_date">கட்டுரை வெளியீட்டு தேதி</string>
+    <string name="progress_spinner">பணி-முன்னேற்றம் காட்டும் சின்னம்</string>
 
     <!-- article details -->
-    <string name="submit">SUBMIT</string>
-    <string name="add_reply">Type here</string>
+    <string name="submit">சமர்ப்பிக்கவும்</string>
+    <string name="add_reply">இங்கே டைப் செய்யவும்</string>
 
     <!-- Top Picks Detail Screen -->
-    <string name="organised_by">Organized By</string>
+    <string name="organised_by">ஏற்பாடு செய்தது</string>
 
     <!-- Report An Error Screen -->
-    <string name="please_select_an_error">Please select at least one option</string>
+    <string name="please_select_an_error">குறைந்தது ஒரு விருப்பத்தை தேர்ந்தெடுக்கவும்</string>
 
     <!-- View Edit Profile Screen -->
 
     <!-- alert text for first time if gps off -->
 
-    <string name="gps_enabled_alert">It seems that location detection is disabled on your phone.Click OK to go to location settings.</string>
+    <string name="gps_enabled_alert">உங்கள் போனில் லொகேஷன் கண்டறிதல் முடக்கப்பட்டுள்ளது. லொகேஷன் செட்டிங்கிற்கு செல்ல OK பட்டனை அழுத்தவும்     </string>
 
-    <string name="netwrok_error">Network error</string>
-    <string name="transit">TRANSIT</string>
-    <string name="write_review">WRITE A REVIEW</string>
-    <string name="direction">DIRECTIONS</string>
-    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+    <string name="netwrok_error">நெட்வொர்க் பிழை</string>
+    <string name="transit">போக்குவரத்து</string>
+    <string name="write_review">ஒரு விமர்சனம் எழுதுங்கள்</string>
+    <string name="direction">வழிமுறைகள்</string>
+    <string name="error_player">யூட்யூப் ப்ளேயரை துவங்குவதில் ஏதோ தவறு நேர்ந்துள்ளது (%1$s)</string>
 
     <!-- Facebook Comments -->
-    <string name="ok">OK</string>
-    <string name="error">Error</string>
+    <string name="ok">சரி</string>
+    <string name="error">தவறு</string>
     <!-- <string name="app_id">1497460137141503</string> -->
-    <string name="post_title">Momspresso</string>
+    <string name="post_title">மாம்ஸப்ரெஸ்ஸோ</string>
 
     <!--temp data-->
 
@@ -92,167 +95,168 @@
 
     <!--// string color codess-->
 
-    <string name="empty_directory">Empty Directory</string>
-    <string name="storage_removed">Storage was removed or unmounted.</string>
-    <string name="choose_file">Select a file</string>
-    <string name="error_selecting_file">Error selecting File</string>
-    <string name="internal_storage">Internal storage</string>
+    <string name="empty_directory">வெற்று கோப்பகம்</string>
+    <string name="storage_removed">சேமிப்பு அகற்றப்பட்டது அல்லது இணைக்கப்படவில்லை</string>
+    <string name="choose_file">ஒரு கோப்பைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="error_selecting_file">கோப்பு தேர்ந்தெடுப்பதில் பிழை</string>
+    <string name="internal_storage">உள் சேமிப்பு</string>
 
-    <string name="saving_image">Saving image</string>
-    <string name="preparing_card">Preparing card</string>
-    <string name="no_storage_card">No storage card</string>
-    <string name="not_enough_space">Not enough space</string>
-    <string name="server_error">Some error occurred, please try again later!</string>
-
-
-    <string name="logout_msg">Are you sure you want to logout?</string>
-    <string name="reminder_selected">You cannot select this</string>
-    <string name="activities_txt">Activities</string>
-    <string name="duration_txt">duration</string>
-    <string name="cost_txt">Cost</string>
-
-    <string name="event_added">Event has been added</string>
+    <string name="saving_image">படம் சேமிக்கப்படுகிறது</string>
+    <string name="preparing_card">கார்டு தயாரிக்கப்படுகிறது</string>
+    <string name="no_storage_card">சேமிப்பு கார்டு இல்லை</string>
+    <string name="not_enough_space">போதுமான இடம் இல்லை</string>
+    <string name="server_error">ஏதோ பிழை ஏற்பட்டுள்ளது, தயவு செய்து மீண்டும் முயற்சி செய்க!</string>
 
 
-    <string name="new_yes">YES</string>
-    <string name="new_cancel">CANCEL</string>
-    <string name="load_error">Failed to load container</string>
-    <string name="example_post_title_placeholder">Article Title</string>
-    <string name="example_post_content_placeholder">Share your story here…</string>
+    <string name="logout_msg">நிச்சயமாக வெளியேற வேண்டுமா? </string>
+    <string name="reminder_selected">இதை நீங்கள் தேர்ந்தெடுக்க முடியாது</string>
+    <string name="activities_txt">நடவடிக்கைகள்</string>
+    <string name="duration_txt">கால அளவு</string>
+    <string name="cost_txt">செலவு</string>
 
-    <string name="select_image">Select an image</string>
-    <string name="select_image_fail">Select an image (failure demo)</string>
-    <string name="select_video">Select a video</string>
-    <string name="select_video_fail">Select a video (failure demo)</string>
-    <string name="camera_pick">Take Picture From Camera</string>
+    <string name="event_added">நிகழ்வு சேர்க்கப்பட்டுள்ளது</string>
 
-    <string name="analytics.popup.last30days">Last 30 days</string>
-    <string name="analytics.popup.customdates">Custom</string>
-    <string name="analytics.popup.improve_page_views">How can I improve my page views?</string>
-    <string name="analytics.popup.increase_followers">How can I increase my followers?</string>
-    <string name="analytics.popup.rank_calculation">How is this calculated?</string>
-    <string name="analytics.popup.improve_rank">How can I improve my rank?</string>
-    <string name="analytics.popup.improve_social">How can I improve my social share?</string>
 
-    <string name="videos.dialog.title">Choose a video to upload</string>
-    <string name="videos.upload_option.camera">Take video</string>
-    <string name="videos.upload_option.gallery">Choose from gallery</string>
-    <string name="videos.upload_option.cancel">CANCEL</string>
+    <string name="new_yes">ஆம்</string>
+    <string name="new_cancel">கான்செல்</string>
+    <string name="load_error">கண்டெய்னரை ஏற்ற முடியவில்லை</string>
+    <string name="example_post_title_placeholder">கட்டுரை தலைப்பு</string>
+    <string name="example_post_content_placeholder">இங்கே உங்கள் கதையை பகிர்ந்து கொள்க...  </string>
 
-    <string name="ad.swipe_tootip_text">SWIPE LEFT TO READ NEXT ARTICLE</string>
-    <string name="ad.view_all_tags.text">VIEW ALL</string>
-    <string name="ad.tags_title.text">This article was posted in the below categories</string>
-    <string name="ad.tags_subtitle.text">Follow them to read similar posts</string>
-    <string name="ad.follow_author">FOLLOW</string>
-    <string name="ad.following_author">FOLLOWING</string>
-    <string name="ad.comments.title">COMMENTS</string>
-    <string name="ad.comments.no_comments">NO COMMENTS ADDED</string>
-    <string name="ad.comments.view_comment">COMMENTS</string>
-    <string name="ad.comments.fb_comment">FACEBOOK COMMENT</string>
-    <string name="ad.comments.edit_label">Edit</string>
-    <string name="ad.comments.save">SAVE</string>
-    <string name="ad.comments.toast_empty_comment">Please enter some valid text.</string>
-    <string name="ad.comments.toolbar.title">COMMENTS</string>
-    <string name="ad.comments.replying_to">You are replying to %1$s</string>
-    <string name="ad.bottom_bar.facebook">FACEBOOK</string>
-    <string name="ad.bottom_bar.whatsapp">WHATSAPP</string>
-    <string name="ad.bottom_bar.email">EMAIL</string>
-    <string name="ad.bottom_bar.generic_share">SHARE</string>
-    <string name="ad.bottom_bar.bookmark">BOOKMARK</string>
-    <string name="ad.bottom_bar.like">LIKE</string>
-    <string name="ad.recent_logs_from.title">MORE FROM AUTHOR</string>
-    <string name="ad.share.follow_author">FOLLOW %1$s</string>
-    <string name="ad.trending.title">TRENDING BLOGS</string>
-    <string name="ad.write_blog">WRITE A BLOG</string>
-    <string name="ad.tts.toast_unplayable_article">Unable to play this article</string>
+    <string name="select_image">ஒரு படத்தைத் தேர்ந்தெடுக்கவும்
+    </string>
+    <string name="select_image_fail">ஒரு படத்தைத் தேர்ந்தெடு (தோல்வி டெமோ)</string>
+    <string name="select_video">வீடியோவைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="select_video_fail">வீடியோவைத் தேர்ந்தெடுக்கவும் (தோல்வி டெமோ)</string>
+    <string name="camera_pick">கேமராவிலிருந்து படம் எடுக்கவும்</string>
 
-    <string name="vd.recent_videos_from.title">RECENT VIDEOS FROM</string>
-    <string name="vd.trending.title">TRENDING BLOGS</string>
+    <string name="analytics.popup.last30days">கடந்த 30 நாட்கள்</string>
+    <string name="analytics.popup.customdates">விருப்பம் </string>
+    <string name="analytics.popup.improve_page_views">எனது பக்கப்  பார்வைகளை எவ்வாறு மேம்படுத்த முடியும்?</string>
+    <string name="analytics.popup.increase_followers">நான் எப்படி என்னை பின்தொடர்பவர்களை அதிகரிக்க முடியும்?</string>
+    <string name="analytics.popup.rank_calculation">இது எப்படி கணக்கிடப்படுகிறது?</string>
+    <string name="analytics.popup.improve_rank">நான் எப்படி என் பதவியை மேம்படுத்த முடியும்?</string>
+    <string name="analytics.popup.improve_social">எனது சமூக பங்குகளை எவ்வாறு மேம்படுத்தலாம்?</string>
+
+    <string name="videos.dialog.title">பதிவேற்ற வீடியோவைத் தேர்வுசெய்யவும்</string>
+    <string name="videos.upload_option.camera">வீடியோ எடுக்கவும்</string>
+    <string name="videos.upload_option.gallery">கேலரியில் இருந்து தேர்வு செய்யவும்</string>
+    <string name="videos.upload_option.cancel">ரத்து</string>
+
+    <string name="ad.swipe_tootip_text">அடுத்த கட்டுரை படிக்க இடது பக்கம் ஸ்வைப் செய்க</string>
+    <string name="ad.view_all_tags.text">அனைத்தையும் காட்டு</string>
+    <string name="ad.tags_title.text">இந்த கட்டுரை கீழே உள்ள பிரிவுகளில் வெளியிடப்பட்டது</string>
+    <string name="ad.tags_subtitle.text">இதேபோன்ற போஸ்டுகளைப் படிக்க அவர்களைப் பின்தொடரவும்</string>
+    <string name="ad.follow_author">பின்தொடரவும்</string>
+    <string name="ad.following_author">பின்தொடர்கிறீர்</string>
+    <string name="ad.comments.title">கருத்துகள்</string>
+    <string name="ad.comments.no_comments">கருத்துகள் சேர்க்கப்படவில்லை</string>
+    <string name="ad.comments.view_comment">கருத்துகள்</string>
+    <string name="ad.comments.fb_comment">ஃபேஸ்புக் கருத்து</string>
+    <string name="ad.comments.edit_label">திருத்தவும்</string>
+    <string name="ad.comments.save">சேமிக்க</string>
+    <string name="ad.comments.toast_empty_comment">சில சரியான உரைகளை உள்ளிடுக</string>
+    <string name="ad.comments.toolbar.title">கருத்துகள்</string>
+    <string name="ad.comments.replying_to">நீங்கள் பதிலளிப்பது %1$s</string>
+    <string name="ad.bottom_bar.facebook">ஃபேஸ்புக்</string>
+    <string name="ad.bottom_bar.whatsapp">வாட்ஸப் </string>
+    <string name="ad.bottom_bar.email">ஈமெயில்</string>
+    <string name="ad.bottom_bar.generic_share">பகிர்</string>
+    <string name="ad.bottom_bar.bookmark">அடையாளக்குறிப்பு செய்க</string>
+    <string name="ad.bottom_bar.like">லைக் செய்</string>
+    <string name="ad.recent_logs_from.title">ஆசிரியரிடமிருந்து மேலும்</string>
+    <string name="ad.share.follow_author">பின்தொடரவும் %1$s</string>
+    <string name="ad.trending.title">டிரெண்டிங் ப்ளாகுகள்</string>
+    <string name="ad.write_blog">ஒரு ப்ளாகை எழுதுங்கள்</string>
+    <string name="ad.tts.toast_unplayable_article">இந்த கட்டுரையை இயக்க முடியவில்லை</string>
+
+    <string name="vd.recent_videos_from.title">சமீபத்திய வீடியோக்கள்</string>
+    <string name="vd.trending.title">டிரெண்டிங் ப்ளாகுகள்</string>
 
     <string-array name="improve_page_views_array">
-        <item>Interlink your article to other blog posts</item>
-        <item>Be consistent and write weekly</item>
-        <item>Make a point in every blog post that you publish</item>
-        <item>Use catchy titles</item>
-        <item>Spell check and double check your blog posts for any errors</item>
-        <item>Focus on the tone and the words that you use</item>
-        <item>Respond to blog comments</item>
+        <item>பிற கட்டுரைகளுடன் உங்கள் கட்டுரையை இணைக்க</item>
+        <item>சீராக ஒவ்வொரு வாரமும் எழுதுங்கள்</item>
+        <item>நீங்கள் வெளியிடும் ஒவ்வொரு பிளாக் போஸ்டிலும் ஒரு கருத்து தெரிவியுங்கள்</item>
+        <item>கவனத்தைக் கவரும் தலைப்புகள் பயன்படுத்தவும்</item>
+        <item>எழுத்துப்பிழை சரிபார்ப்பு செய்து உங்கள் பிளாக் போஸ்டுகளில் இதர பிழைகளை இருமுறை சரிபார்க்கவும்</item>
+        <item>தொனி மற்றும் நீங்கள் பயன்படுத்தும் சொற்களில் கவனம் செலுத்துங்கள்</item>
+        <item>பிளாக் கருத்துகளுக்கு பதிலளிக்கவும்</item>
     </string-array>
 
     <string-array name="rank_calculation_array">
-        <item>Your rank is calculated by a state-of-the-art algorithm which takes in the number of views your article has got, the number of times it has been shared on social media, number of comments it has got on different platforms and the number of articles you have written in the past week.</item>
+        <item>உங்கள் கட்டுரைக்கு கிடைத்துள்ள பக்கப்  பார்வைகள் எண்ணிக்கை, சமூக ஊடகங்களில் ஷேர் செய்யப்பட்ட எண்ணிக்கை, பல்வேறு தளங்களில் கிடைத்த கருத்துகளின் எண்ணிக்கை மற்றும் கடந்த வாரம் நீங்கள் எழுதிய கட்டுரைகளின் எண்ணிக்கை ஆகியவற்றை வைத்து, ஸ்டேட்-ஆப்-த-ஆர்ட் அல்காரிதம் மூலம் உங்கள் ரேங்க் கணக்கிடப்படுகிறது.</item>
     </string-array>
 
     <string-array name="improve_rank_array">
-        <item>Be consistent in your blogging - post a blog weekly</item>
-        <item>Promote your blog post on all the Facebook groups that you are part of</item>
-        <item>Seek an opinion from peers and edit the blog post accordingly</item>
+        <item>பிளாக் போஸ்ட் செய்வதில் சீராக இருங்கள் - வாரம் ஒருமுறை பிளாக் போஸ்ட் செய்யுங்கள் </item>
+        <item>நீங்கள் இணைந்துள்ள அனைத்து பேஸ்புக் குழுக்களிலும் உங்கள் பிளாக் போஸ்டை விளம்பரப்படுத்தவும்</item>
+        <item>சக எழுத்தாளர்களிடம் கருத்துக் கேட்டு அதற்கேற்ப உங்கள் பிளாக் போஸ்டை திருத்தவும்</item>
     </string-array>
 
     <string-array name="improve_social_share_array">
-        <item>Share blog posts using the buttons for social sharing in your blog post</item>
-        <item>Add Social Plugins to your profile e.g. www.twitter.com/bloggername</item>
-        <item>Try to edit and focus on the content while sharing your blog post</item>
-        <item>Use appropriate hashtags</item>
+        <item>உங்கள் ப்ளாக் போஸ்டில், சமூக பகிர்வுக்கான பொத்தான்களைப் பயன்படுத்தி ப்ளாக் போஸ்டுகளை பகிர்ந்து கொள்ளுங்கள்</item>
+        <item>சமூக சுயவிவரங்களை உங்கள் சுயவிவரத்தில் சேர்க்கலாம், எ.கா. www.twitter.com/bloggername</item>
+        <item>உங்கள் பிளாக் போஸ்டை பகிரும்போது, அதன் உள்ளடக்கத்தில் கவனம் செலுத்தி அதை சுருக்க முயற்சிக்கவும்</item>
+        <item>பொருத்தமான ஹாஷ்டேகுகளை பயன்படுத்தவும்</item>
     </string-array>
 
     <string-array name="increase_followers_array">
-        <item>Add a line urging readers to follow you at the end of every blog, if they enjoyed reading it</item>
-        <item>Ask readers who frequently engage with your blog through comments, to follow you</item>
-        <item>Share your blog across all networks you are a part of, such as Facebook, Whatsapp and so on</item>
+        <item>ஒவ்வொரு வலைப்பதிவின் முடிவிலும், வாசகர்களுக்கு அது பிடித்திருந்தால் உங்களை பின்தொடரக் கோரி ஒரு வரி எழுதுங்கள்.</item>
+        <item>உங்கள் பிளாகுகளைத் தொடர்ந்து படித்து கருத்துகள் எழுதும் வாசகர்களிடம் உங்களை பின்தொடரக் கோருங்கள் </item>
+        <item>நீங்கள் உறுப்பினராக உள்ள பேஸ்புக், வாட்ஸப் போன்ற அனைத்து நெட்வொர்க்குகளிலும் உங்கள் ப்ளாகைப் பகிரவும்</item>
     </string-array>
 
-    <string name="confirmation_dialog.delete_draft.message">Are you sure you want to delete your draft?</string>
-    <string name="confirmation_dialog.no">NO</string>
-    <string name="confirmation_dialog.yes">YES</string>
+    <string name="confirmation_dialog.delete_draft.message">உங்கள் மாதிரி வரைவினை நிச்சயமாக நீக்க வேண்டுமா? </string>
+    <string name="confirmation_dialog.no">இல்லை</string>
+    <string name="confirmation_dialog.yes">ஆம்</string>
 
-    <string name="editor.spell_check.title">Spellcheck</string>
-    <string name="editor.spell_check.message">Are you sure you have completed the spellcheck?</string>
-    <string name="editor.spell_check.no">NO</string>
-    <string name="editor.spell_check.continue">YES CONTINUE PUBLISHING</string>
-    <string name="editor.banner.message">Blog in a language of your choice</string>
-    <string name="editor.last_saved_at">Last saved at %1$s</string>
-    <string name="editor.last_saved_on">Last saved on %1$s</string>
+    <string name="editor.spell_check.title">பிழைதிருத்தும்</string>
+    <string name="editor.spell_check.message">நீங்கள் எழுத்துப்பிழை சரிபார்த்திருக்கிறீர்களா?</string>
+    <string name="editor.spell_check.no">இல்லை</string>
+    <string name="editor.spell_check.continue">ஆம், வெளியிடுவதை தொடர்க</string>
+    <string name="editor.banner.message">உங்கள் விருப்பப்படி ஒரு மொழியில் பிளாக் செய்யுங்கள் </string>
+    <string name="editor.last_saved_at">கடைசியாக சேமிக்கப்பட்டது %1$s</string>
+    <string name="editor.last_saved_on">கடைசியாக சேமிக்கப்பட்ட தேதி %1$s</string>
 
-    <string name="dob">Date of Birth</string>
+    <string name="dob">பிறந்த தேதி</string>
 
-    <string name="label_select_video">Select Video</string>
-    <string name="toast_cannot_retrieve_selected_video">Cannot retrieve selected video</string>
-    <string name="trimming_progress">Trimming your video...</string>
+    <string name="label_select_video">வீடியோவைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="toast_cannot_retrieve_selected_video">தேர்ந்தெடுத்த வீடியோவை மீட்டெடுக்க முடியவில்லை</string>
+    <string name="trimming_progress">உங்கள் வீடியோ தணிக்கை செய்யப்படுகிறது..</string>
 
-    <string name="publish_article.upload_image.change_photo">Change Image</string>
-    <string name="publish_article.upload_image.please_upload_or_choose_image">Please upload a picture or choose from the images shown below to continue</string>
+    <string name="publish_article.upload_image.change_photo">படத்தை மாற்றவும்</string>
+    <string name="publish_article.upload_image.please_upload_or_choose_image">தயவு செய்து ஒரு படத்தைப் பதிவேற்றவும் அல்லது கீழே காட்டப்பட்டுள்ள படங்களிலிருந்து தேர்வு செய்யவும்</string>
 
-    <string name="change_city.fetch_available_cities">Please wait while we fetch the list of available cities</string>
+    <string name="change_city.fetch_available_cities">கிடைத்துள்ள  நகரங்களின் பட்டியலைக் காண்பிக்கும் வரை காத்திருங்கள்</string>
 
-    <string name="permision_available_storage">Storage Permission has been granted.</string>
-    <string name="permision_available_camera">Camera Permission has been granted. Preview can now be opened.</string>
-    <string name="permissions_not_granted">Required permissions were not granted.</string>
-    <string name="permission_camera_rationale">Camera permission is needed to show the camera preview.</string>
-    <string name="permission_storage_rationale">Storage permission is needed to pick files.</string>
-    <string name="permission_location_rationale">Location permission is required to show relevant events and articles.</string>
+    <string name="permision_available_storage">சேமிப்பு அனுமதி வழங்கப்பட்டுள்ளது</string>
+    <string name="permision_available_camera">கேமரா அனுமதி வழங்கப்பட்டுள்ளது. முன்னோட்டம் இப்போது திறக்கப்படலாம்.</string>
+    <string name="permissions_not_granted">தேவையான அனுமதிகள் வழங்கப்படவில்லை.</string>
+    <string name="permission_camera_rationale">கேமரா முன்னோட்டத்தை காண்பிக்க கேமரா அனுமதி தேவை.</string>
+    <string name="permission_storage_rationale">கோப்புகளைத் தேர்ந்தெடுப்பதற்கு சேமிப்பக அனுமதி தேவை.</string>
+    <string name="permission_location_rationale">தொடர்புடைய நிகழ்வுகள் மற்றும் கட்டுரைகளைக் காண்பிப்பதற்கு, இருப்பிட அனுமதி தேவை.</string>
     <string name="permission_phone_state_rationale">Phone state permission is required to keep you updated with latest content via notifications.</string>
-    <string name="permision_available_init">All required permissions have been granted.</string>
-    <string name="permission_calendar_rationale">Calendar permission is needed to add a reminder.</string>
+    <string name="permision_available_init">தேவையான அனைத்து அனுமதியும் வழங்கப்பட்டுள்ளது.</string>
+    <string name="permission_calendar_rationale">நினைவூட்டல் சேர்க்க காலெண்டர் அனுமதி தேவை.</string>
     <string name="permission_storage_story">Storage permission is required for publishing story.</string>
 
-    <string name="home.toolbar.title">TRENDING</string>
-    <string name="explore_listing.explore_categories.title">YOU COULD ALSO EXPLORE THE CATEGORIES</string>
-    <string name="explore_listing.explore_categories.meet_contributor">Meet Our Contributors</string>
+    <string name="home.toolbar.title">டிரெண்டிங்</string>
+    <string name="explore_listing.explore_categories.title">இருக்கும் வகைகளை நீங்கள் ஆராயலாம்</string>
+    <string name="explore_listing.explore_categories.meet_contributor">எங்கள் பங்களிப்பாளர்களை சந்தியுங்கள்</string>
 
-    <string name="home_screen.trending.title">TRENDING</string>
-    <string name="home_screen.notification.title">NOTIFICATION</string>
-    <string name="home_screen.suggested_topic.title">SUGGESTED TOPICS</string>
-    <string name="home_screen.profile.title">MY ACCOUNT</string>
+    <string name="home_screen.trending.title">டிரெண்டிங்</string>
+    <string name="home_screen.notification.title">அறிவிப்பு</string>
+    <string name="home_screen.suggested_topic.title">பரிந்துரைக்கப்பட்ட தலைப்பு</string>
+    <string name="home_screen.profile.title">என் அக்கௌன்ட்</string>
     <string name="home_screen.select_an_option.title">கண்டுபிடி</string>
-    <string name="home_screen.trending.become_blogger">SHARE YOUR STORY</string>
-    <string name="home_screen.trending.first_video_upload">VIDEOS</string>
-    <string name="home_screen.explore.title">EXPLORE</string>
-    <string name="home_screen.upcoming_events.title">UPCOMING EVENTS</string>
-    <string name="home_screen.kids_res.title">KIDS RESOURCES</string>
-    <string name="home_screen.trending_list_header.title">CHOOSE THE TOPICS THAT YOU ARE INTERESTED IN LIKE</string>
-    <string name="home_screen.trending_list_header.topics_label">GETTING PREGNANT, POST PARTUM DEPRESSION ETC.</string>
-    <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
+    <string name="home_screen.trending.become_blogger">உங்கள் கதையைப்  பகிர்ந்துகொள்ளுங்கள்</string>
+    <string name="home_screen.trending.first_video_upload">வீடியோக்கள்</string>
+    <string name="home_screen.explore.title">ஆராய்ந்து</string>
+    <string name="home_screen.upcoming_events.title">எதிர்வரும் நிகழ்வுகள்</string>
+    <string name="home_screen.kids_res.title">குழந்தைகளுக்கு வேண்டியன கிடைக்குமிடம்</string>
+    <string name="home_screen.trending_list_header.title">நீங்கள் விரும்பிய விஷயங்களைத் தேர்ந்தெடுங்கள்</string>
+    <string name="home_screen.trending_list_header.topics_label">கர்ப்பம் தரித்தல், பிரசவத்திற்குப் பின் ஏற்படும் மனச்சோர்வு, முதலியன</string>
+    <string name="home_screen.trending_list_header.take_me_there">சரி சரி! என்னை அங்கு கொண்டுசெல்க</string>
 
     <string-array name="onboarding_title_array">
         <item>ஒரு பிளாக் உருவாக்கவும்</item>
@@ -267,225 +271,225 @@
     <string name="onboarding.desc_4">எங்கள் அன்னையர் சமூகத்தின் சக்தியில் சேரவும். உங்கள் கேள்விகளைப் பகிர்ந்து கொள்ளவும். மற்றவர்களுக்கு உதவவும்</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">பதிவுகள்</string>
-    <string name="onboarding_desc_array.tutorial_1.videos">MOMVLOGS</string>
-    <string name="onboarding_desc_array.tutorial_2.english">ENGLISH</string>
-    <string name="onboarding_desc_array.tutorial_2.hindi">HINDI</string>
-    <string name="onboarding_desc_array.tutorial_2.bengali">BENGALI</string>
-    <string name="onboarding_desc_array.tutorial_2.marathi">MARATHI</string>
-    <string name="onboarding_desc_array.tutorial_2.tamil">TAMIL</string>
-    <string name="onboarding_desc_array.tutorial_2.telugu">TELUGU</string>
-    <string name="onboarding_desc_array.tutorial_3.parenting">MUMS LIFE</string>
-    <string name="onboarding_desc_array.tutorial_3.recipe">RECIPES</string>
-    <string name="onboarding_desc_array.tutorial_3.expert_advice">EXPERT ADVICE</string>
-    <string name="onboarding_desc_array.tutorial_4.editorial">CURATED LISTS</string>
-    <string name="onboarding_desc_array.tutorial_4.events">EVENTS</string>
-    <string name="onboarding_desc_array.tutorial_4.resources">RESOURCES</string>
+    <string name="onboarding_desc_array.tutorial_1.videos">மாம்விலாக்ஸ்</string>
+    <string name="onboarding_desc_array.tutorial_2.english">ஆங்கிலம்</string>
+    <string name="onboarding_desc_array.tutorial_2.hindi">ஹிந்தி</string>
+    <string name="onboarding_desc_array.tutorial_2.bengali">பெங்காலி </string>
+    <string name="onboarding_desc_array.tutorial_2.marathi">மராத்தி</string>
+    <string name="onboarding_desc_array.tutorial_2.tamil">தமிழ்</string>
+    <string name="onboarding_desc_array.tutorial_2.telugu">தெலுங்கு</string>
+    <string name="onboarding_desc_array.tutorial_3.parenting">அம்மாவின் வாழ்க்கை</string>
+    <string name="onboarding_desc_array.tutorial_3.recipe">சமையல் குறிப்புகள் </string>
+    <string name="onboarding_desc_array.tutorial_3.expert_advice">வல்லுநர் அறிவுரை</string>
+    <string name="onboarding_desc_array.tutorial_4.editorial">குணப்படுத்திய பட்டியல்கள்</string>
+    <string name="onboarding_desc_array.tutorial_4.events">நிகழ்வுகள்</string>
+    <string name="onboarding_desc_array.tutorial_4.resources">ஆதாரங்கள்</string>
 
-    <string name="onboarding.signin">SIGN IN</string>
-    <string name="onboarding.already_member">Already a member?</string>
+    <string name="onboarding.signin">உள் நுழைவு</string>
+    <string name="onboarding.already_member">ஏற்கனவே ஒரு உறுப்பினர்?</string>
     <string name="onboarding.get_started">தொடங்கு</string>
-    <string name="sign_in.welcome_back">WELCOME BACK</string>
-    <string name="sign_in.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
-    <string name="sign_in.no_account">Don\'t have an account?\u0020</string>
-    <string name="sign_in.sign_up_btn">SIGNUP</string>
+    <string name="sign_in.welcome_back">மீண்டும் வருக</string>
+    <string name="sign_in.desc">தாய்மையின் மகிழ்ச்சியைக் கண்டறிக. \ N எங்கள் அன்னையர் சமூகத்தில் சேர்ந்து உத்வேகமும் amp; நம்பிக்கையும் பெறுங்கள்.</string>
+    <string name="sign_in.no_account">ஒரு அக்கௌன்ட் இல்லையா? \ u0020</string>
+    <string name="sign_in.sign_up_btn">பதிவு செய்க</string>
 
-    <string name="sign_up.welcome_back">SIGN UP</string>
-    <string name="sign_up.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
-    <string name="sign_up.already_account">Already have an account?\u0020</string>
-    <string name="sign_up.sign_in_btn">SIGNIN</string>
+    <string name="sign_up.welcome_back">பதிவு செய்க</string>
+    <string name="sign_up.desc">தாய்மையின் மகிழ்ச்சியைக் கண்டறிக. \ N எங்கள் அன்னையர் சமூகத்தில் சேர்ந்து உத்வேகமும் amp; நம்பிக்கையும் பெறுங்கள்.      </string>
+    <string name="sign_up.already_account">ஏற்கனவே அக்கௌன்ட் இருக்கிறதா? \ U0020</string>
+    <string name="sign_up.sign_in_btn">உள் நுழைவு</string>
 
-    <string name="login_email.login">LOGIN</string>
-    <string name="login_email.forgot_password">Forgot Password?</string>
-    <string name="login_email.username_hint">Email</string>
-    <string name="login_email.password_hint">Password</string>
+    <string name="login_email.login">உள்நுழைக</string>
+    <string name="login_email.forgot_password">பாஸ்வேர்ட் மறந்துவிட்டீர்களா?</string>
+    <string name="login_email.username_hint">ஈமெயில்</string>
+    <string name="login_email.password_hint">பாஸ்வேர்ட்</string>
 
 
-    <string name="signin.login_via_facebook">LOGIN USING FACEBOOK</string>
-    <string name="signin.login_via_google">LOGIN USING GOOGLE</string>
-    <string name="signin.login_via_email">LOGIN USING EMAIL</string>
-    <string name="signin.login_via_phone">LOGIN USING PHONE</string>
+    <string name="signin.login_via_facebook">ஃபேஸ்புக் பயன்படுத்தி உள்நுழைய</string>
+    <string name="signin.login_via_google">கூகிள் பயன்படுத்தி உள்நுழைக</string>
+    <string name="signin.login_via_email">ஈமெயில் பயன்படுத்தி உள்நுழைக </string>
+    <string name="signin.login_via_phone">தொலைபேசி மூலம் லாக் இன்</string>
 
-    <string name="signup.connect_via_facebook">CONNECT USING FACEBOOK</string>
-    <string name="signup.connect_via_google">CONNECT USING GOOGLE</string>
-    <string name="signup.connect_via_phone">CONNECT USING PHONE</string>
+    <string name="signup.connect_via_facebook">ஃபேஸ்புக் பயன்படுத்தி இணைக</string>
+    <string name="signup.connect_via_google">கூகிள் பயன்படுத்தி இணைக</string>
+    <string name="signup.connect_via_phone">தொலைபேசி மூலம் லாக் இன்</string>
 
-    <string name="for_you.reason.why_label">Why am I seeing this?</string>
-    <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
-    <string name="for_you.reason.okay">OKAY</string>
+    <string name="for_you.reason.why_label">நான் ஏன் இதை பார்க்கிறேன்?</string>
+    <string name="for_you.reason.dont_want_to_see">இதை பார்க்க வேண்டாம்</string>
+    <string name="for_you.reason.okay">சரி</string>
 
-    <string name="lang_specific.toolbar.title">LANGUAGES</string>
+    <string name="lang_specific.toolbar.title">மொழிகள் </string>
 
-    <string name="lang_setting.stories_label">Stories</string>
+    <string name="lang_setting.stories_label">கதைகள்</string>
 
     <string name="search.article_label">கட்டுரை</string>
-    <string name="search.author_label">AUTHOR</string>
-    <string name="search.topic_label">TOPIC</string>
-    <string name="search.show_more">SHOW MORE</string>
-    <string name="search.article_topic_tab_label">ARTICLES &amp; TOPICS</string>
-    <string name="search.author_tab_label">AUTHORS</string>
-    <string name="search.article_no_result">No articles or topics found.</string>
-    <string name="search.author_no_result">No authors found.</string>
+    <string name="search.author_label">ஆசிரியர்</string>
+    <string name="search.topic_label">தலைப்பு</string>
+    <string name="search.show_more">மேலும் விவரங்களைக் காண்பி</string>
+    <string name="search.article_topic_tab_label">தலைப்புகள்</string>
+    <string name="search.author_tab_label">ஆசிரியர்கள்</string>
+    <string name="search.article_no_result">கட்டுரைகள் அல்லது தலைப்புகள் காணப்படவில்லை</string>
+    <string name="search.author_no_result">ஆசிரியர்கள் இல்லை.</string>
 
-    <string name="search_topics.toolbar_title">SELECT CATEGORIES</string>
-    <string name="search_topics.hint">Search with Topics</string>
-    <string name="search_topics.title">CATEGORIES</string>
+    <string name="search_topics.toolbar_title">வகைகளை தேர்ந்தெடுங்கள்</string>
+    <string name="search_topics.hint">தலைப்புகள் மூலம் தேடலாம்</string>
+    <string name="search_topics.title">பிரிவுகள்</string>
 
-    <string name="subscribe_topics.toolbar.title">SELECT CATEGORIES</string>
-    <string name="subscribe_topics.cancel">CANCEL</string>
-    <string name="subscribe_topics.save">SAVE</string>
-    <string name="subscribe_topics.toast_topic_updated">Successfully updated the list of followed topics.</string>
+    <string name="subscribe_topics.toolbar.title">வகைகளை தேர்ந்தெடுங்கள்</string>
+    <string name="subscribe_topics.cancel">ரத்து</string>
+    <string name="subscribe_topics.save">சேமிக்க</string>
+    <string name="subscribe_topics.toast_topic_updated">பின்வரும் தலைப்புகளின் பட்டியலை வெற்றிகரமாக புதுப்பிக்கப்பட்டது </string>
 
-    <string name="myprofile.following_label">FOLLOWING</string>
-    <string name="myprofile.followers_label">FOLLOWERS</string>
+    <string name="myprofile.following_label">பின்தொடர்கிறீர்</string>
+    <string name="myprofile.followers_label">பின்தொடர்பவர்கள்</string>
     <string name="myprofile.section.articles_label">கட்டுரை</string>
     <string name="myprofile.section.short_story_label">100 வார்த்தை கதை</string>
-    <string name="myprofile.section.videos_label">MOM VLOGS</string>
-    <string name="myprofile.section.activity_label">ACTIVITY</string>
-    <string name="myprofile.section.myranking_label">MY RANKING</string>
-    <string name="myprofile.section.settings_label">SETTINGS</string>
-    <string name="myprofile.section.signout_label">SIGNOUT</string>
-    <string name="myprofile.rank_label">RANK</string>
+    <string name="myprofile.section.videos_label">மாம் விலாக்ஸ்</string>
+    <string name="myprofile.section.activity_label">நடவடிக்கை</string>
+    <string name="myprofile.section.myranking_label">என் ரேங்கிங்</string>
+    <string name="myprofile.section.settings_label">அமைப்புகள்</string>
+    <string name="myprofile.section.signout_label">வெளியேறு</string>
+    <string name="myprofile.rank_label">ரேங்க்</string>
 
-    <string name="blogger_profile.follow_button">FOLLOW</string>
-    <string name="blogger_profile.rank_in">RANK IN</string>
-    <string name="blogger_profile.unfollow_button">FOLLOWING</string>
-    <string name="blogger_profile.view_count_label">VIEWS</string>
-    <string name="blogger_profile.article_count_label">POSTS</string>
-    <string name="blogger_profile.section.articles_label">ARTICLES</string>
-    <string name="blogger_profile.section.videos_label">MOM VLOGS</string>
-    <string name="blogger_profile.section.activity_label">ACTIVITY</string>
-    <string name="blogger_profile.section.myranking_label">MY RANKING</string>
-    <string name="blogger_profile.top_3_article">TOP 3 ARTICLES</string>
-    <string name="blogger_profile.rank_label">RANK</string>
+    <string name="blogger_profile.follow_button">பின்தொடர்</string>
+    <string name="blogger_profile.rank_in">ரேங்க்</string>
+    <string name="blogger_profile.unfollow_button">பின்தொடர்கிறீர்</string>
+    <string name="blogger_profile.view_count_label">பக்கப்  பார்வைகள்</string>
+    <string name="blogger_profile.article_count_label">போஸ்டுகள் </string>
+    <string name="blogger_profile.section.articles_label">கட்டுரைகள்</string>
+    <string name="blogger_profile.section.videos_label">மாம்விலாக்ஸ்</string>
+    <string name="blogger_profile.section.activity_label">நடவடிக்கை</string>
+    <string name="blogger_profile.section.myranking_label">என் ரேங்கிங்</string>
+    <string name="blogger_profile.top_3_article">முதன்மையான மூன்று கட்டுரைகள்</string>
+    <string name="blogger_profile.rank_label">ரேங்க்</string>
 
     <string name="user_article.toolbar.title">கட்டுரை</string>
-    <string name="user_article.tabbar.published_label">PUBLISHED</string>
-    <string name="user_article.tabbar.draft_label">DRAFTS</string>
-    <string name="user_article.draft.saved_on">Saved on</string>
-    <string name="user_article.draft.edit">EDIT DRAFT</string>
-    <string name="user_article.draft.untitled_draft">Untitled Draft</string>
-    <string name="user_article.published.edit">EDIT</string>
-    <string name="user_article.published.no_published_article">You have not published any article yet.</string>
-    <string name="user_article.draft.status_pending_approval">PENDING FOR APPROVAL</string>
-    <string name="user_article.draft.status_unapproved">UNAPPROVED</string>
-    <string name="user_article.draft.status_unpublished">UNPUBLISHED</string>
+    <string name="user_article.tabbar.published_label">வெளியிடப்பட்டது</string>
+    <string name="user_article.tabbar.draft_label">மாதிரி வரைவு</string>
+    <string name="user_article.draft.saved_on">சேமித்த தேதி</string>
+    <string name="user_article.draft.edit">மாதிரி வரைவை திருத்தவும்</string>
+    <string name="user_article.draft.untitled_draft">பெயரிடப்படாத வரைவு</string>
+    <string name="user_article.published.edit">திருத்து</string>
+    <string name="user_article.published.no_published_article">நீங்கள் இதுவரை எந்த கட்டுரையும் வெளியிடவில்லை</string>
+    <string name="user_article.draft.status_pending_approval">ஒப்புதலுக்காக நிலுவையில் உள்ளது</string>
+    <string name="user_article.draft.status_unapproved">அங்கீகரிக்கப்படாதது</string>
+    <string name="user_article.draft.status_unpublished">வெளியிடப்படாதது</string>
 
-    <string name="app_settings.toolbar.title">SETTINGS</string>
-    <string name="app_settings.tabbar.edit_prefs">EDIT PREFERENCES</string>
+    <string name="app_settings.toolbar.title">அமைப்புகள்</string>
+    <string name="app_settings.tabbar.edit_prefs">விருப்பங்களை திருத்தவும்</string>
     <string name="app_settings.tabbar.lang_prefs">LANGUAGE PREFERENCES</string>
-    <string name="app_settings.tabbar.change_password">CHANGE PASSWORD</string>
-    <string name="app_settings.tabbar.edit_profile">EDIT PROFILE</string>
+    <string name="app_settings.tabbar.change_password">கடவுச்சொல்லை மாற்று</string>
+    <string name="app_settings.tabbar.edit_profile">சுயவிவரத்தை திருத்தவும்</string>
 
-    <string name="app_settings.edit_profile.hint_fn">First Name</string>
-    <string name="app_settings.edit_profile.hint_ln">Last Name</string>
-    <string name="app_settings.edit_profile.hint_phone">Phone</string>
-    <string name="app_settings.edit_profile.describe_label">Describe yourself</string>
-    <string name="app_settings.edit_profile.blog_title_label">Blog Heading</string>
-    <string name="app_settings.edit_profile.family_detail_label">Family Details</string>
-    <string name="app_settings.edit_profile.family_detail_desc">This is just to serve you better and provide you what really suits you. This info would just remain in our records.</string>
-    <string name="app_settings.edit_profile.how_many_child">How many children do you have?</string>
-    <string name="app_settings.edit_profile.gender">Gender</string>
-    <string name="app_settings.edit_profile.dob">Date of Birth</string>
-    <string name="app_settings.edit_profile.save">SAVE</string>
-    <string name="app_settings.edit_profile.update_success">User profile updated successfully</string>
-    <string name="app_settings.edit_profile.toast_fn_empty">First Name cannot be empty</string>
-    <string name="app_settings.edit_profile.toast_blog_title_empty">Blog Title cannot be empty</string>
-    <string name="app_settings.edit_profile.toast_user_bio_empty">Tell us ABOUT YOURSELF</string>
-    <string name="app_settings.edit_profile.toast_user_bio_max">Maximum limit for bio is</string>
-    <string name="app_settings.edit_profile.toast_user_bio_words">words</string>
-    <string name="app_settings.edit_profile.toast_incorrect_date">Please enter a valid date for kids birthday</string>
+    <string name="app_settings.edit_profile.hint_fn">முதல் பெயர்</string>
+    <string name="app_settings.edit_profile.hint_ln">கடைசி பெயர்</string>
+    <string name="app_settings.edit_profile.hint_phone">தொலைபேசி</string>
+    <string name="app_settings.edit_profile.describe_label">உங்களைப்பற்றி விவரிக்கவும்</string>
+    <string name="app_settings.edit_profile.blog_title_label">ப்ளாக் தலைப்பு</string>
+    <string name="app_settings.edit_profile.family_detail_label">குடும்ப விவரங்கள்</string>
+    <string name="app_settings.edit_profile.family_detail_desc">இது உங்களுக்கு சிறந்த சேவையை அளிக்கவும், உங்களுக்கு மிகவும் பொருத்தமானதை வழங்கவும் தான்.. இந்த தகவல் எங்கள் பதிவுகளில் இருக்கும். </string>
+    <string name="app_settings.edit_profile.how_many_child">உங்களுக்கு எத்தனை குழந்தைகள்? </string>
+    <string name="app_settings.edit_profile.gender">பாலினம்</string>
+    <string name="app_settings.edit_profile.dob">பிறந்த தேதி</string>
+    <string name="app_settings.edit_profile.save">சேமிக்க</string>
+    <string name="app_settings.edit_profile.update_success">பயனர் சுயவிவரம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது</string>
+    <string name="app_settings.edit_profile.toast_fn_empty">முதல் பெயர் காலியாக இருக்க முடியாது</string>
+    <string name="app_settings.edit_profile.toast_blog_title_empty">ப்ளாக் தலைப்பு காலியாக இருக்க முடியாது</string>
+    <string name="app_settings.edit_profile.toast_user_bio_empty">உங்களை பற்றி சொல்லுங்கள்</string>
+    <string name="app_settings.edit_profile.toast_user_bio_max">சுயவிவரத்திற்கான அதிகபட்ச வரம்பு  </string>
+    <string name="app_settings.edit_profile.toast_user_bio_words">வார்த்தைகள்</string>
+    <string name="app_settings.edit_profile.toast_incorrect_date">குழந்தையின் பிறந்த நாளின் சரியான தேதி உள்ளிடுக</string>
 
-    <string name="app_settings.edit_prefs.notifications">NOTIFICATIONS</string>
-    <string name="app_settings.edit_prefs.subscriptions">SUBSCRIPTIONS</string>
-    <string name="app_settings.edit_prefs.add_account">ADD ACCOUNTS</string>
-    <string name="app_settings.edit_prefs.facebook">FACEBOOK</string>
-    <string name="app_settings.edit_prefs.twitter">TWITTER</string>
-    <string name="app_settings.edit_prefs.google">GOOGLE</string>
-    <string name="app_settings.edit_prefs.add">ADD</string>
-    <string name="app_settings.edit_prefs.connected">CONNECTED</string>
-    <string name="app_settings.edit_prefs.topics_interested">TOPICS OF INTEREST</string>
-    <string name="app_settings.edit_prefs.add_topics">ADD TOPICS</string>
-    <string name="app_settings.edit_prefs.more_topics">MORE...</string>
-    <string name="app_settings.edit_prefs.pref_lang">PREFERRED LANGUAGES</string>
-    <string name="app_settings.edit_prefs.subscribe_top_reads">Subscribe to the Top Reads Of The Month</string>
-    <string name="app_settings.edit_prefs.subscribe_trending_blog">Subscribe to the Trending Blog Of The Day</string>
-    <string name="app_settings.edit_prefs.subscribe_momspresso">Subscribe to the Momspresso TV</string>
-    <string name="app_settings.edit_prefs.subscribe_city_best">Subscribe to the Best In Your City</string>
+    <string name="app_settings.edit_prefs.notifications">அறிவிப்புகள்</string>
+    <string name="app_settings.edit_prefs.subscriptions">சந்தாக்கள்</string>
+    <string name="app_settings.edit_prefs.add_account">அக்கௌன்ட்கள் சேர்க்கவும்</string>
+    <string name="app_settings.edit_prefs.facebook">ஃபேஸ்புக்</string>
+    <string name="app_settings.edit_prefs.twitter">ட்விட்டர்</string>
+    <string name="app_settings.edit_prefs.google">கூகிள்</string>
+    <string name="app_settings.edit_prefs.add">சேர்க்கவும்</string>
+    <string name="app_settings.edit_prefs.connected">இணைக்கப்பட்டுவிட்டது</string>
+    <string name="app_settings.edit_prefs.topics_interested">சுவாரசியமான விஷயங்கள்</string>
+    <string name="app_settings.edit_prefs.add_topics">தலைப்புக்கள் சேர்க்கவும்</string>
+    <string name="app_settings.edit_prefs.more_topics">மேலும் ...</string>
+    <string name="app_settings.edit_prefs.pref_lang">விருப்பமான மொழிகள்</string>
+    <string name="app_settings.edit_prefs.subscribe_top_reads">மாதத்தின் சிறந்த வாசிப்புகளுக்காக பதிவு செய்யவும்</string>
+    <string name="app_settings.edit_prefs.subscribe_trending_blog">ஒரு தினத்தின் டிரெண்டிங் பிளாகுக்காக பதிவு செய்யவும் </string>
+    <string name="app_settings.edit_prefs.subscribe_momspresso">மாம்ஸ்ப்ரெஸ்ஸோ டீவிக்காக பதிவு செய்யவும்</string>
+    <string name="app_settings.edit_prefs.subscribe_city_best">உங்கள் நகரத்தின் சிறந்ததற்கு பதிவு செய்யவும் </string>
 
-    <string name="app_settings.change_pass.hint_current_pass">Current Password</string>
-    <string name="app_settings.change_pass.hint_new_pass">New Password</string>
-    <string name="app_settings.change_pass.hint_confirm_pass">Confirm Password</string>
-    <string name="app_settings.change_pass.save">SAVE</string>
-    <string name="app_settings.change_pass.toast_current_pass_empty">Current password cannot be empty</string>
-    <string name="app_settings.change_pass.toast_new_pass_empty">New password cannot be empty</string>
-    <string name="app_settings.change_pass.toast_confirm_pass_match">New passwords do not match</string>
-    <string name="app_settings.change_pass.pass_update_fail">Current password is incorrect</string>
-    <string name="app_settings.change_pass.pass_update_success">Password updated successfully</string>
+    <string name="app_settings.change_pass.hint_current_pass">தற்போதைய பாஸ்வேர்ட்</string>
+    <string name="app_settings.change_pass.hint_new_pass">புதிய பாஸ்வேர்ட்</string>
+    <string name="app_settings.change_pass.hint_confirm_pass">பாஸ்வேர்ட் உறுதி செய்க</string>
+    <string name="app_settings.change_pass.save">சேமிக்க</string>
+    <string name="app_settings.change_pass.toast_current_pass_empty">தற்போதைய பாஸ்வேர்ட் காலியாக இருக்கக்கூடாது</string>
+    <string name="app_settings.change_pass.toast_new_pass_empty">புதிய பாஸ்வேர்ட் காலியாக இருக்கக்கூடாது</string>
+    <string name="app_settings.change_pass.toast_confirm_pass_match">புதிய பாஸ்வேர்ட்டுகள்  பொருந்தவில்லை</string>
+    <string name="app_settings.change_pass.pass_update_fail">தற்போதைய பாஸ்வேர்ட் தவறானது</string>
+    <string name="app_settings.change_pass.pass_update_success">பாஸ்வேர்ட் வெற்றிகரமாக புதுப்பிக்கப்பட்டது  </string>
 
-    <string name="blog_setup.toolbar.title">SETUP A BLOG</string>
-    <string name="blog_setup.get_started_label">LET\'S GET YOU STARTED FOR YOUR FIRST BLOG</string>
-    <string name="blog_setup.one_time_label">Setup a blog is a one time process.</string>
-    <string name="blog_setup.okay">OKAY</string>
-    <string name="blog_setup.blog_title_label">BLOG TITLE</string>
-    <string name="blog_setup.blog_title_desc">This is like a title of your digital book and encompasses a description of all your blog posts that you\'ll be publishing here. Eg: Mums diary, My monologue.</string>
+    <string name="blog_setup.toolbar.title">ஒரு ப்ளாகை அமைக்கவும்</string>
+    <string name="blog_setup.get_started_label">உங்கள் முதல் ப்ளாகைத் தொடங்கலாம்</string>
+    <string name="blog_setup.one_time_label">ஒரு ப்ளாகை அமைப்பது என்பது, ஒருமுறை செயல்பாடு</string>
+    <string name="blog_setup.okay">சரி </string>
+    <string name="blog_setup.blog_title_label">ப்ளாக் தலைப்பு</string>
+    <string name="blog_setup.blog_title_desc">இது உங்கள் டிஜிட்டல் புத்தகத்தின் தலைப்பைப் போன்றது, நீங்கள் இங்கே வெளியிடும் அனைத்து ப்ளாகுகளையும் விவரிப்பது.. எ. கா: ஒரு தாயின் டயரி, எனது குரல்</string>
     <string name="blog_setup.hint_blog_title">Type here </string>
-    <string name="blog_setup.about_yourself_label">ABOUT YOURSELF</string>
-    <string name="blog_setup.about_desc">Tell the readers about yourself.</string>
-    <string name="blog_setup.profile_pic_label">PROFILE PICTURE</string>
-    <string name="blog_setup.profile_pic_desc">This is visible to your readers and helps them associate with your writing.</string>
-    <string name="blog_setup.your_details">YOUR DETAILS</string>
-    <string name="blog_setup.hint_phone">Phone Number</string>
-    <string name="blog_setup.save_publish">SAVE &amp; PUBLISH</string>
+    <string name="blog_setup.about_yourself_label">உங்களை பற்றி</string>
+    <string name="blog_setup.about_desc">உங்களைப் பற்றி வாசகர்களிடம் சொல்க </string>
+    <string name="blog_setup.profile_pic_label">சுயவிவர படம்</string>
+    <string name="blog_setup.profile_pic_desc">இது உங்கள் வாசகர்கள் பார்வைக்கு வரும்.மேலும்  உங்கள் எழுத்துடன் தொடர்பு கொள்ளவும் உதவும்.  </string>
+    <string name="blog_setup.your_details">உங்களை பற்றி</string>
+    <string name="blog_setup.hint_phone">தொலைபேசி எண்</string>
+    <string name="blog_setup.save_publish">சேமி &amp; வெளியிடு</string>
 
-    <string name="ranking.toolbar.title">MY RANKING</string>
-    <string name="ranking.improve_view.title">ABOUT</string>
-    <string name="ranking.tabs_your_rank_label">YOUR RANK</string>
-    <string name="ranking.tabs_page_views_label">YOUR PAGE VIEWS</string>
-    <string name="ranking.views_label">BLOG PAGE VIEWS</string>
-    <string name="ranking.menu_30_days_label">30 DAYS VIEW</string>
-    <string name="ranking.menu_custom_label">CUSTOM</string>
-    <string name="ranking.improve_views_label">How can I improve my Page views?</string>
-    <string name="ranking.improve_social_share">How can I improve my Social Share?</string>
-    <string name="ranking.page_views_label">PAGE VIEWS: </string>
-    <string name="ranking.engagement">ENGAGEMENTS</string>
-    <string name="ranking.stats_like">LIKES</string>
-    <string name="ranking.stats_shares">SHARES</string>
-    <string name="ranking.stats_comments">COMMENTS</string>
-    <string name="ranking.how_calculated">How is this calculated?</string>
-    <string name="ranking.top_bloggers">TOP BLOGGERS IN</string>
-    <string name="ranking.followers_label">FOLLOWERS</string>
-    <string name="ranking.in">IN</string>
-    <string name="ranking.toast_start_end_date">Start date must be less than end date</string>
+    <string name="ranking.toolbar.title">என் ரேங்கிங்</string>
+    <string name="ranking.improve_view.title">பற்றி</string>
+    <string name="ranking.tabs_your_rank_label">உங்கள் ரேங்க்</string>
+    <string name="ranking.tabs_page_views_label">என் பக்கப்  பார்வைகள்</string>
+    <string name="ranking.views_label">பிளாக் பக்கப்  பார்வைகள்</string>
+    <string name="ranking.menu_30_days_label">30 நாட்கள் பார்வை</string>
+    <string name="ranking.menu_custom_label">விருப்பம் போல் </string>
+    <string name="ranking.improve_views_label">எனது பக்க பார்வைகள் எவ்வாறு மேம்படுத்த முடியும்?</string>
+    <string name="ranking.improve_social_share">எனது சமூக பங்குகளை எவ்வாறு மேம்படுத்தலாம்?</string>
+    <string name="ranking.page_views_label">பக்கப்  பார்வைகள் </string>
+    <string name="ranking.engagement">சந்திப்புகள்</string>
+    <string name="ranking.stats_like">லைக்குகள்</string>
+    <string name="ranking.stats_shares">பகிர்வுகள் </string>
+    <string name="ranking.stats_comments">கருத்துகள்</string>
+    <string name="ranking.how_calculated">இது எப்படி கணக்கிடப்படுகிறது?</string>
+    <string name="ranking.top_bloggers">சிறந்த ப்ளாகர்கள்</string>
+    <string name="ranking.followers_label">பின்தொடர்பவர்கள்</string>
+    <string name="ranking.in">உள்ளே </string>
+    <string name="ranking.toast_start_end_date">தொடக்க தேதி முடிவு தேதிக்கு குறைவாக இருக்க வேண்டும்</string>
 
-    <string name="editor.publish">PUBLISH</string>
+    <string name="editor.publish">வெளியிட</string>
 
-    <string name="add_article_topics.toolbar.title">CHOOSE TOPICS</string>
-    <string name="add_article_topics.clear_all">CLEAR ALL</string>
-    <string name="add_article_topics.min_topics">Please select atleast one topic to continue</string>
-    <string name="add_article_topics.max_topics">You can choose a maximum of 8 topics</string>
-    <string name="add_article_topics.apply">APPLY</string>
+    <string name="add_article_topics.toolbar.title">தலைப்புகள் தேர்ந்தெடுக்கவும்</string>
+    <string name="add_article_topics.clear_all">அனைத்தையும் அழி</string>
+    <string name="add_article_topics.min_topics">தொடர்வதற்கு ஒரு தலைப்பையேனும் தேர்ந்தெடுக்கவும்</string>
+    <string name="add_article_topics.max_topics">நீங்கள் அதிகபட்சம் 8 தலைப்புகளை தேர்வு செய்யலாம்</string>
+    <string name="add_article_topics.apply">உபயோகி</string>
 
-    <string name="choose_article_image.toolbar.title">CHOOSE IMAGE</string>
-    <string name="choose_article_image.upload_photo">CLICK TO UPLOAD PHOTO</string>
-    <string name="choose_article_image.publish">PUBLISH</string>
+    <string name="choose_article_image.toolbar.title">படத்தை தேர்வு செய்யவும்</string>
+    <string name="choose_article_image.upload_photo">புகைப்படத்தை பதிவேற்ற கிளிக் செய்க</string>
+    <string name="choose_article_image.publish">வெளியிட</string>
 
-    <string name="add_article_or_video.upload_video">ADD VIDEO</string>
-    <string name="add_article_or_video.write_article">WRITE AN ARTICLE</string>
-    <string name="add_article_or_video.suggested_topic">SUGGESTED TOPICS</string>
-    <string name="add_article_or_video.become_blogger">BECOME A BLOGGER</string>
+    <string name="add_article_or_video.upload_video">வீடியோ சேர்க்கவும்</string>
+    <string name="add_article_or_video.write_article">கட்டுரை எழுதுக</string>
+    <string name="add_article_or_video.suggested_topic">பரிந்துரைக்கப்பட்ட தலைப்புகள் </string>
+    <string name="add_article_or_video.become_blogger">ஒரு ப்ளாகர் ஆகுங்கள்</string>
 
     <string name="become_blogger.get_started">தொடங்கு</string>
     <string-array name="become_blogger_title_array">
-        <item>BECOME A BLOGGER</item>
-        <item>HOW CAN YOU CONTRIBUTE?</item>
-        <item>DO YOU GET PAID FOR YOUR CONTRIBUTION?</item>
-        <item>WHO CAN CONTRIBUTE?</item>
+        <item>ஒரு ப்ளாகர் ஆகுங்கள்</item>
+        <item>நீங்கள் எப்படி பங்கு கொள்ளலாம்?</item>
+        <item>உங்களுடைய பங்களிப்புக்கு பணம் கிடைக்குமா?</item>
+        <item>யார் பங்கு கொள்ள முடியும்?  </item>
     </string-array>
     <string-array name="become_blogger_desc_array">
-        <item>You are one click away from sharing your thoughts, opinions, and stories on India\'s largest parenting community, in the language of your choice. With a reach of over 8 million Mums per month, your voice can be the source of hope, inspiration, comfort and knowledge.</item>
-        <item>You can share your parenting stories via the website or our iOS and Android app. Express yourself in the language of your choice - English, Hindi, Bengali, Marathi, Telugu or Tamil.</item>
-        <item>Momspresso does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
-        <item>Whether your story is about parenthood, womanhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 5000+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
+        <item>இந்தியாவின் மிகப்பெரிய பெற்றோர்கள் சமூகத்தில் உங்களுடைய எண்ணங்கள், கருத்துகள் மற்றும் கதைகளை, நீங்கள் விரும்பும் மொழியில் பகிர்ந்து கொள்ள, ஒரே ஒரு கிளிக்கின் தூரத்தில் உள்ளீர்கள். மாதத்திற்கு 8 மில்லியனுக்கும் அதிகமான தாய்மார்களை சென்றடையும் உங்கள் குரல், அவர்களுக்கு நம்பிக்கை, ஊக்கம், ஆறுதல் மற்றும் அறிவின் ஆதாரமாக இருக்கக் கூடும்.</item>
+        <item>வலைத்தளத்தின் வழியாக அல்லது எங்கள் iOS மற்றும் ஆண்டிராய்டு பயன்பாட்டின் மூலம் உங்கள் குழந்தை வளர்ப்புக் கதைகளை பகிர்ந்து கொள்ளலாம். ஆங்கிலம், ஹிந்தி, பெங்காலி, மராத்தி, தெலுங்கு அல்லது தமிழ் - இவற்றில் நீங்கள் விரும்பும் மொழியில் உங்களை வெளிப்படுத்துங்கள்.</item>
+        <item>மெம்ஸ்ப்ரெஸ்ஸோ, ஒரு ப்ளாகருக்கும் அவரவர் ப்ளாகுகளை வெளியிட பணம் கொடுப்பதில்லை. இருப்பினும்  பிரபல பிராண்டுகள் வழங்கிவரும் எழுத்துப் பணிகளுக்கு பணம் கொடுக்கிறோம். இப்பணிகள், ப்ளாகர்கள்  வெளியிடும் பிளாகின் தரத்தின் அடிப்படையில், அவர்களுக்கு வழங்கப்படுகிறது.</item>
+        <item>உங்கள் கதை, குழந்தை வளர்ப்பு, பெண்ணியம், உறவுகள், போராட்டங்கள், சந்தோஷங்கள் அல்லது தனிப்பட்ட நல்வாழ்வைப் பற்றியதாயின், அவை பற்றி எழுதுவதற்கான தளம் இதுதான்.  ஆலோசனை, கருத்துகள் மற்றும் பரிந்துரைகளை தேடவும், வழங்கவும், இங்குள்ள 5000ம் மேற்பட்ட தாய்மார்களுடன் சேர்த்துக்கொள்ளுங்கள். நகல் அல்லது சற்றே மாற்றியமைக்கப்பட்ட உள்ளடக்கத்தை தயவு செய்து வெளியிட வேண்டாம்.</item>
     </string-array>
 
     <string name="upload_video.title">மாம்வ்ளாக் பகிர்\n #தாயின்வாழ்க்கையை பிடிக்கிறது</string>
@@ -493,142 +497,142 @@
     <string name="upload_video.desc1">வீடியோ பிடித்து மொபைலில் இருந்து உடனடியாக அப்லோட் செய்</string>
     <string name="upload_video.get_started">ஆரம்பிக்கலாம்</string>
 
-    <string name="moderation_or_share.way_to_go">WAY TO GO!</string>
-    <string name="moderation_or_share.moderation_message">Your article is up for moderation. You\'ll receive an email within 24 hours regarding the status of the blog</string>
-    <string name="moderation_or_share.publish_message">Congrats! Your blog has been published.\n Share it with your friends and family.</string>
-    <string name="moderation_or_share.later">MAYBE LATER</string>
-    <string name="moderation_or_share.okay">OKAY</string>
-    <string name="moderation_or_share.gplus_fail">Unable to share with google plus.</string>
-    <string name="moderation_or_share.whatsapp_fail">Unable to share with whatsapp.</string>
+    <string name="moderation_or_share.way_to_go">செல்ல வழி!</string>
+    <string name="moderation_or_share.moderation_message">உங்கள் கட்டுரை தணிக்கையில் உள்ளது. பிளாகின் நிலை குறித்து 24 மணி நேரத்திற்குள் உங்களுக்கு ஈமெயில் அனுப்பப்படும்</string>
+    <string name="moderation_or_share.publish_message">வாழ்த்துக்கள்! உங்கள் பிளாக் வெளியிடப்பட்டது. \ N உங்கள் நண்பர்களுடனும் குடும்பத்தினருடனும் பகிர்ந்து கொள்ளுங்கள்.</string>
+    <string name="moderation_or_share.later">ஒருவேளை பிறகு</string>
+    <string name="moderation_or_share.okay">சரி</string>
+    <string name="moderation_or_share.gplus_fail">Google plus உடன் பகிர முடியவில்லை.</string>
+    <string name="moderation_or_share.whatsapp_fail">வாட்ஸப் உடன் பகிர முடியவில்லை.</string>
     <string name="moderation_or_share.facebook_fail">Unable to share with facebook.</string>
     <string name="moderation_or_share.insta_fail">Unable to share with instagram.</string>
-    <string name="moderation_or_share.whatsapp_not_installed">Whatsapp has not been installed.</string>
+    <string name="moderation_or_share.whatsapp_not_installed">வாட்ஸப் நிறுவப்படவில்லை.</string>
     <string name="moderation_or_share.insta_not_installed">Instagram has not been installed.</string>
-    <string name="moderation_or_share.twitter_fail">Unable to share with twitter.</string>
+    <string name="moderation_or_share.twitter_fail">ட்விட்டர் மூலம் பகிர முடியவில்லை </string>
 
-    <string name="complete_blogger_profile.complete_label">COMPLETE YOUR BLOGGERS PROFILE</string>
-    <string name="complete_blogger_profile.paid_eligibility">Be eligible for paid writing assignments.\n All this information is safe with us.</string>
-    <string name="complete_blogger_profile.save">SAVE</string>
-    <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
+    <string name="complete_blogger_profile.complete_label">உங்கள் ப்ளாகர் விவரத்தை நிறைவு செய்க</string>
+    <string name="complete_blogger_profile.paid_eligibility">பணம் வழங்கப்படும் எழுத்து வேலைகள் செய்யும் தகுதிபெறுங்கள்.இந்த தகவல்கள் எங்களிடம் பாதுகாப்பாக உள்ளது.</string>
+    <string name="complete_blogger_profile.save">சேமிக்க</string>
+    <string name="complete_blogger_profile.incorrect_date">சரியாக பிறந்த தேதியைத் தேர்வு செய்யவும். </string>
 
-    <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
-    <string name="add_video_details.mute_label">MUTE SOUND</string>
-    <string name="add_video_details.add_music">ADD MUSIC</string>
-    <string name="add_video_details.remove">REMOVE</string>
-    <string name="add_video_details.error_empty_title">Please enter the title of the video</string>
-    <string name="add_video_details.save_upload">SAVE &amp; UPLOAD</string>
-    <string name="add_video_details.toolbar.title">UPLOAD A VIDEO</string>
-    <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
+    <string name="add_video_details.title_hint">வீடியோவுக்கு ஒரு தலைப்பு சேர்க்கவும்</string>
+    <string name="add_video_details.mute_label">ஒலியை இல்லாமை செய்</string>
+    <string name="add_video_details.add_music">இசை சேர்க்கவும்</string>
+    <string name="add_video_details.remove">நீக்க</string>
+    <string name="add_video_details.error_empty_title">வீடியோவின் தலைப்பை உள்ளிடவும்</string>
+    <string name="add_video_details.save_upload">சேமித்து பதிவேற்று</string>
+    <string name="add_video_details.toolbar.title">ஒரு வீடியோவை பதிவேற்றுக</string>
+    <string name="add_video_details.audio_picker.title">இசை சேர்க்கவும்</string>
 
-    <string name="video_progress.uploading_label">UPLOADING ...</string>
-    <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically. You can use the app while uploading.</string>
-    <string name="video_progress.way_to_go">WAY TO GO!</string>
-    <string name="video_progress.success_msg">Video has been successfully uploaded and sent for moderation. We will notify you once moderated.</string>
-    <string name="video_progress.okay">OKAY</string>
-    <string name="video_progress.uploading_failed">Uploading Failed.</string>
-    <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
-    <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
+    <string name="video_progress.uploading_label">பதிவேற்றுகிறது ...</string>
+    <string name="video_progress.uploading_msg">App ஐ விட்டு வெளியேறவோ அல்லது அழிக்கவோ வேண்டாம், அது தானாக பதிவேற்றத்தை ரத்து செய்யும். பதிவேற்றும் போது App ஐ பயன்படுத்தலாம்.</string>
+    <string name="video_progress.way_to_go">மிக நன்று</string>
+    <string name="video_progress.success_msg">வீடியோ வெற்றிகரமாக பதிவேற்றப்பட்டு, தணிக்கைக்கு அனுப்பப்பட்டது. தணிக்கை முடிந்ததும் உங்களை அறிவிப்போம். </string>
+    <string name="video_progress.okay">சரி</string>
+    <string name="video_progress.uploading_failed">பதிவேற்றம் தோல்வியடைந்தது.</string>
+    <string name="video_progress.uploading_error">உங்கள் வீடியோவை பதிவேற்றும்போது பிழை ஏற்பட்டது. தயவு செய்து மீண்டும் முயற்சிக்கவும்.</string>
+    <string name="video_progress.progress_lost_msg">உங்கள் பதிவேற்ற முன்னேற்றம் இழக்கப்படும். நிச்சயமாக நீங்கள் வெளியேற வேண்டுமா?</string>
 
-    <string name="user_activities.toolbar.title">ACTIVITY</string>
-    <string name="user_activities.tabs.recommended">LIKED</string>
-    <string name="user_activities.tabs.bookmark">BOOKMARKS</string>
-    <string name="user_activities.tabs.watch_later">WATCH LATER</string>
-    <string name="user_activities.tabs.comment">COMMENTS</string>
-    <string name="user_activities.bookmarks.remove">REMOVE</string>
-    <string name="user_activities.bookmarks.by">By</string>
-    <string name="user_activities.comments.saved_on">Saved on:</string>
-    <string name="user_activities.comments.edit">EDIT</string>
-    <string name="user_activities.comments.no_comments">You have not commented on any article yet.</string>
-    <string name="user_activities.recommended.no_recommendations">You have not recommended any article yet.</string>
-    <string name="user_activities.bookmarks.no_bookmarks">No article has been bookmarked yet.</string>
-    <string name="user_activities.watch_later.no_watch_later">You have not saved any videos yet.</string>
+    <string name="user_activities.toolbar.title">நடவடிக்கை</string>
+    <string name="user_activities.tabs.recommended">லைக் செய்யப்பட்டது </string>
+    <string name="user_activities.tabs.bookmark">அடையாளக்குறிப்புகள்</string>
+    <string name="user_activities.tabs.watch_later">பின்னர் காண்க</string>
+    <string name="user_activities.tabs.comment">கருத்துகள்</string>
+    <string name="user_activities.bookmarks.remove">நீக்க</string>
+    <string name="user_activities.bookmarks.by">எழுதியது</string>
+    <string name="user_activities.comments.saved_on">சேமித்த தேதி</string>
+    <string name="user_activities.comments.edit">திருத்தவும்</string>
+    <string name="user_activities.comments.no_comments">இன்னும் எந்த கட்டுரையிலும் நீங்கள் கருத்து தெரிவிக்கவில்லை.</string>
+    <string name="user_activities.recommended.no_recommendations">நீங்கள் இன்னும் எந்த கட்டுரையும் பரிந்துரைக்கவில்லை.  </string>
+    <string name="user_activities.bookmarks.no_bookmarks">ஒரு கட்டுரையும் அடையாளக்குறிப்பு செய்யப்படவில்லை</string>
+    <string name="user_activities.watch_later.no_watch_later">இதுவரை எந்த வீடியோக்களையும் நீங்கள் சேமிக்கவில்லை.</string>
 
-    <string name="explore.section.events">EVENTS</string>
-    <string name="explore.section.resources">RESOURCES</string>
-    <string name="explore.section.top_things">TOP THINGS TO DO</string>
-    <string name="explore.section.no_resources">We do not have any events or resources for your city at present.</string>
-    <string name="explore.events.trending_lbl">TRENDING EVENTS</string>
-    <string name="explore.events.featured_lbl">FEATURED EVENTS</string>
-    <string name="explore.events.upcoming_lbl">UPCOMING EVENTS</string>
+    <string name="explore.section.events">நிகழ்வுகள்</string>
+    <string name="explore.section.resources">ஆதாரங்கள்</string>
+    <string name="explore.section.top_things">செய்ய வேண்டிய விஷயங்கள்</string>
+    <string name="explore.section.no_resources">தற்போது உங்களுடைய நகரத்திற்கு நிகழ்வுகள் அல்லது ஆதாரங்கள் எங்களிடம் இல்லை.</string>
+    <string name="explore.events.trending_lbl">டிரெண்டிங் நிகழ்வுகள்</string>
+    <string name="explore.events.featured_lbl">சிறப்பு நிகழ்வுகள்</string>
+    <string name="explore.events.upcoming_lbl">எதிர்வரும் நிகழ்வுகள்</string>
 
-    <string name="all_videos.toolbar.title">VIDEOS</string>
-    <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO TV</string>
-    <string name="all_videos.tabbar.funny_label">MOM VLOGS</string>
-    <string name="all_videos.funny_videos.no_videos">No mom vlogs added.</string>
+    <string name="all_videos.toolbar.title">வீடியோக்கள்</string>
+    <string name="all_videos.tabbar.momspresso_label">மாம்ஸ்ப்ரெஸ்ஸோ TV  </string>
+    <string name="all_videos.tabbar.funny_label">மாம்விலாக்ஸ்</string>
+    <string name="all_videos.funny_videos.no_videos">ஒரு மாம்-விலாக்ஸும் சேர்க்கப்படவில்லை.</string>
 
-    <string name="notification.read_all">Read All</string>
-    <string name="notification.no_notification">No notifications</string>
+    <string name="notification.read_all">அனைத்தையும் படிக்கவும்</string>
+    <string name="notification.no_notification">அறிவிப்புகள் இல்லை</string>
 
-    <string name="user_funny_video.toolbar.title">MOM VLOGS</string>
-    <string name="user_funny_video.published_on">Published on: %1$s</string>
+    <string name="user_funny_video.toolbar.title">மாம்விலாக்ஸ்</string>
+    <string name="user_funny_video.published_on">வெளியிடப்பட்டது: %1$s</string>
 
-    <string name="article_listing.toolbar.title_recent">RECENT</string>
-    <string name="article_listing.toolbar.title_popular">POPULAR</string>
-    <string name="article_listing.toolbar.title_trending">TRENDING</string>
-    <string name="article_listing.toolbar.title_for_you">FOR YOU</string>
+    <string name="article_listing.toolbar.title_recent">அண்மையில்</string>
+    <string name="article_listing.toolbar.title_popular">பிரபலமான</string>
+    <string name="article_listing.toolbar.title_trending">டிரெண்டிங்</string>
+    <string name="article_listing.toolbar.title_for_you">உங்களுக்காக</string>
     <string name="article_listing.toolbar.title_todays_best">TODAY\'S BEST</string>
-    <string name="article_listing.toolbar.title_editor_picks">EDITOR\'S PICKS</string>
+    <string name="article_listing.toolbar.title_editor_picks">ஆசிரியரின் தேர்வு </string>
 
-    <string name="sort.recent">RECENT</string>
-    <string name="sort.popular">POPULAR</string>
+    <string name="sort.recent">அண்மையில்</string>
+    <string name="sort.popular">பிரபலமான</string>
 
-    <string name="city_picker.toolbar.title">Choose City</string>
+    <string name="city_picker.toolbar.title">நகரத்தைத் தேர்வுசெய்க</string>
 
-    <string name="rate_now">RATE NOW</string>
-    <string name="rate_us.dialog.title">RATE OUR APP?</string>
-    <string name="rate_us.dialog.not_now">NOT NOW</string>
+    <string name="rate_now">மதிப்பிடு</string>
+    <string name="rate_us.dialog.title">எங்கள் APP ஐ மதிப்பிடுகிறீர்களா?</string>
+    <string name="rate_us.dialog.not_now">இப்போது இல்லை</string>
     <string name="rate_us.dialog.message1">If you enjoy using the Momspresso app, please take a moment to rate it.</string>
-    <string name="rate_us.dialog.message2">Thank you for your support !!!</string>
+    <string name="rate_us.dialog.message2">உங்கள் ஆதரவுக்கு நன்றி !!!</string>
 
-    <string name="suggested_topic.start_writing">START WRITING</string>
+    <string name="suggested_topic.start_writing">எழுதத் தொடங்குங்கள்</string>
 
-    <string name="no_articles_found">No articles found</string>
+    <string name="no_articles_found">கட்டுரைகள் எதுவும் இல்லை</string>
     <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
     <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
-    <string name="contributors">Contributors</string>
-    <string name="contributor_in">Contributors in</string>
-    <string name="recent_article">RELATED ARTICLES</string>
-    <string name="upload_bigger_image">Please upload bigger image</string>
-    <string name="upload_min_width">Please upload image with minimum width of 720 pixels</string>
-    <string name="image_upload_wait">Please wait while image is being uploaded</string>
-    <string name="editor_title_empty">Title can\'t be empty</string>
-    <string name="editor_body_empty">Body can\'t be empty</string>
-    <string name="editor_title_char_limit">Unable to publish. Title should smaller than 150 characters</string>
-    <string name="editor_body_min_words">Please write atleast 300 words to publish</string>
-    <string name="draft_oops">Oops!</string>
-    <string name="draft_not_saved">Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?</string>
-    <string name="draft_save_success">Draft Successfully saved</string>
-    <string name="verify_email">Mail sent to email address. Please click and verify</string>
-    <string name="video_upload_fail">Unable to upload the video. Please try again later.</string>
-    <string name="connectivity_unavailable">No connectivity available</string>
-    <string name="unable_to_load_comment">Unable to load comments</string>
-    <string name="connection_timeout">connection timed out</string>
-    <string name="image_upload_success">Image successfully uploaded!</string>
-    <string name="image_upload_fail">unable to upload image, please try again later</string>
-    <string name="android_version_unsupported">This version of android is no more supported.</string>
-    <string name="choose_mp4_file">please choose a .mp4 format file</string>
+    <string name="contributors">பங்களிப்பாளர்கள்</string>
+    <string name="contributor_in">பங்களிப்பாளர்கள்</string>
+    <string name="recent_article">தொடர்புடைய கட்டுரைகள்</string>
+    <string name="upload_bigger_image">இதனினும் பெரிய படத்தை பதிவேற்றவும்</string>
+    <string name="upload_min_width">குறைந்தபட்சம் 720 பிக்செல் அகலம் உள்ள படத்தைப் பதிவேற்றவும்</string>
+    <string name="image_upload_wait">படத்தை பதிவேற்றும்போது காத்திருக்கவும்</string>
+    <string name="editor_title_empty">தலைப்பு காலியாக இருக்க முடியாது</string>
+    <string name="editor_body_empty">கட்டுரையின் உடல் காலியாக இருக்க முடியாது</string>
+    <string name="editor_title_char_limit">வெளியிட முடியவில்லை. தலைப்பு 150 எழுத்துகளுக்கு குறைவாக இருக்க வேண்டும்</string>
+    <string name="editor_body_min_words">வெளியிட குறைந்தது 300 வார்த்தைகள் எழுதவும்</string>
+    <string name="draft_oops">அச்சச்சோ!</string>
+    <string name="draft_not_saved">வரைவு சேமிக்கப்படவில்லை, நீங்கள் வெளியேறினால் உங்கள் தற்போதைய மாற்றங்கள் இழக்கப்படும். வெளியேற விரும்புகிறீர்களா?</string>
+    <string name="draft_save_success">மாதிரிவரைவு வெற்றிகரமாக சேமிக்கப்பட்டது</string>
+    <string name="verify_email">ஈமெயில் முகவரிக்கு அஞ்சல் அனுப்பப்பட்டது. கிளிக் செய்து சரிபார்க்கவும்</string>
+    <string name="video_upload_fail">வீடியோவை பதிவேற்ற முடியவில்லை. தயவு செய்து மீண்டும் முயற்சிக்கவும்.</string>
+    <string name="connectivity_unavailable">இணைப்பு இல்லை</string>
+    <string name="unable_to_load_comment">கருத்துகளை ஏற்ற முடியவில்லை</string>
+    <string name="connection_timeout">இணைப்பின் நேரம் முடிந்தது</string>
+    <string name="image_upload_success">படம் வெற்றிகரமாக பதிவேற்றப்பட்டது!</string>
+    <string name="image_upload_fail">படத்தை பதிவேற்ற முடியவில்லை, தயவுசெய்து பின்னர் முயற்சிக்கவும்</string>
+    <string name="android_version_unsupported">படத்தை பதிவேற்ற முடியவில்லை, தயவுசெய்து பின்னர் முயற்சிக்கவும்</string>
+    <string name="choose_mp4_file">தயவுசெய்து ஒரு .mp4 வடிவமைப்பு கோப்பை தேர்வு செய்யவும்</string>
 
-    <string name="article_listing.type.trending_label">TRENDING</string>
+    <string name="article_listing.type.trending_label">ட்ரென்டிங்</string>
     <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
     <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
-    <string name="article_listing.type.for_you_label">FOR YOU</string>
+    <string name="article_listing.type.for_you_label">உங்களுக்காக</string>
     <string name="article_listing.type.short_story_label">100 வார்த்தை கதை</string>
-    <string name="article_listing.type.languages_label">LANGUAGES</string>
-    <string name="article_listing.type.videos_label">VIDEOS</string>
-    <string name="article_listing.type.recent_label">RECENT</string>
+    <string name="article_listing.type.languages_label">உங்களுக்காக</string>
+    <string name="article_listing.type.videos_label">வீடியோக்கள்</string>
+    <string name="article_listing.type.recent_label">அண்மையில்</string>
 
     <string name="lang_sel.welcome_msg">WELCOME TO MOMSPRESSO</string>
     <string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>
     <string name="lang_sel.curr_lang">Current Language</string>
     <string name="lang_sel.app_lang_desc">You are using english as current language. Would you like to view this application in the same language?</string>
-    <string name="lang_sel.yes">YES</string>
+    <string name="lang_sel.yes">ஆம்</string>
     <string name="lang_sel.select_more">SELECT MORE</string>
-    <string name="lang_sel.continue">CONTINUE</string>
+    <string name="lang_sel.continue">தொடர்க</string>
     <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
 
-    <string name="all_categories_label">ALL</string>
+    <string name="all_categories_label">அனைத்தும்</string>
 
-    <string name="language_label.english">English</string>
+    <string name="language_label.english">ஆங்கிலம்</string>
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
@@ -636,7 +640,7 @@
     <string name="language_label.telegu">తెలుగు</string>
 
     <string name="choose_pref_lang">Choose your preferred language</string>
-    <string name="choose_pref_lang.cancel">CANCEL</string>
+    <string name="choose_pref_lang.cancel">ரத்து</string>
 
     <string name="guide.language_tour">You can view this app in any \nlanguage of your choice</string>
     <string name="guide.settings_tour">Manage the languages you want to read the \narticles in</string>
@@ -648,12 +652,12 @@
     <string name="guide.listen_tour">Click here to listen to this blog</string>
     <string name="guide.groups_tour">Join Support Groups. Ask questions (even anonymously) \nand get answers from the community.</string>
 
-    <string name="author_type.blogger">BLOGGER</string>
-    <string name="author_type.editor">EDITOR</string>
-    <string name="author_type.editorial">EDITORIAL TEAM</string>
-    <string name="author_type.expert">EXPERT</string>
-    <string name="author_type.featured">FEATURED AUTHOR</string>
-    <string name="author_type.user">USER</string>
+    <string name="author_type.blogger">பதிவர்</string>
+    <string name="author_type.editor">ஆசிரியர்</string>
+    <string name="author_type.editorial">ஆசிரியர் குழு</string>
+    <string name="author_type.expert">நிபுணர்</string>
+    <string name="author_type.featured">சிறப்பு எழுத்தாளர்</string>
+    <string name="author_type.user">பயனர்</string>
 
     <string name="no_article.be_first">Be the first one to write articles in this category!</string>
 
@@ -732,19 +736,19 @@
     <string name="groups.invitation_only_gp">அழைப்பு மூலம் மட்டுமே சேரக்கூடிய குரூப்</string>
     <string name="groups.created">Created</string>
     <string name="groups.member_label">உறுப்பினர்கள்</string>
-    <string name="groups.sections.about">ABOUT</string>
+    <string name="groups.sections.about">பற்றி</string>
     <string name="groups.sections.discussions">விவாதம்</string>
-    <string name="groups.sections.blogs">BLOGS</string>
+    <string name="groups.sections.blogs">ப்ளாகுகள்</string>
     <string name="groups.sections.photos">படங்கள்</string>
     <string name="groups.sections.videos">வீடியோ</string>
-    <string name="groups.sections.top_posts">TOP POSTS</string>
+    <string name="groups.sections.top_posts">சிறந்த பதிவுகள்</string>
     <string name="groups.sections.polls">வாக்கெடுப்பு</string>
-    <string name="groups.search_in">Search</string>
+    <string name="groups.search_in">தேடுக</string>
     <string name="groups.join_form">JOINING FORM</string>
     <string name="groups.membership_pending">உறுப்பினர் உரிமை முடிவுசெய்யப்படவில்லை</string>
-    <string name="groups.why_leave">Please let us know why you are leaving.</string>
+    <string name="groups.why_leave">நீங்கள் ஏன் செல்கிறீர்கள் என்பதை தயவுசெய்து எங்களுக்கு தெரியப்படுத்துங்கள்.</string>
     <string name="groups.leave_be_back">This is temporary. I\'ll be back.</string>
-    <string name="groups.spend_time">I spend too much time using Momspresso.</string>
+    <string name="groups.spend_time">நான் மாம்ஸ்ப்ரெஸ்ஸோவில் அதிக நேரம் செலவிடுகிறேன்.</string>
     <string name="groups.not_useful">I don\'t find Momspresso useful.</string>
     <string name="groups.how_to_use">I don\'t understand how to use Momspresso</string>
     <string name="groups.user_blocked_msg">இந்த குரூப்பிலிருந்து நீங்கள் ப்லாக் செய்யப்பட்டு இருக்கிறீர்கள்</string>
@@ -759,15 +763,15 @@
     <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="short_s.add_story">Write a 100 word story</string>
-    <string name="short_s.add_comment">ADD A COMMENT</string>
+    <string name="short_s.add_comment">ஒரு கமென்ட்டை சேர்க்கவும்</string>
     <string name="short_s.add.title_hint">Write an exciting title that suits your story. Character limit is 60.</string>
     <string name="short_s.add.body_hint">Write your amazing story or poem in 100 words or less.</string>
     <string name="short_s.publish_message">Congrats! Your story has been published.\n Share it with your friends and family.</string>
     <string name="short_s.max_word">Your story can have maximum 100 words.</string>
     <string name="short_s.choose_genre">CHOOSE THE GENRE OF YOUR STORY</string>
     <string name="short_s.choose_one_genre">Choose the genre that best describes the content of your story. You can choose only 1 genre.</string>
-    <string name="short_s.no_drafts">No short story drafted as yet</string>
-    <string name="short_s.no_published">No short story published as yet</string>
+    <string name="short_s.no_drafts">-இது வரை சிறுகதை எழுதப்படவில்லை </string>
+    <string name="short_s.no_published">-இது வரை சிறுகதை பிரசுரிக்கப்படவில்லை</string>
     <string name="short_s.view_replies">View replies</string>
     <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
@@ -781,10 +785,10 @@
     <string name="report.abuse">Its abusive</string>
     <string name="report.spam">It hurts religious sentiments</string>
     <string name="report.not_relevant">Any other</string>
-    <string name="reply">Reply</string>
+    <string name="reply">பதில்</string>
 
-    <string name="read_more">Read More</string>
-    <string name="read_less">Read Less</string>
+    <string name="read_more">மேலும் வாசிக்க</string>
+    <string name="read_less">மேலும் குறைவாக</string>
     <string name="profile_completion">Profile Completion</string>
     <string name="update">UPDATE</string>
     <string name="improve_reachability">Improve the reachability by updating the bio.</string>
