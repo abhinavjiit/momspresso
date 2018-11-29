@@ -1,5 +1,6 @@
 package com.mycity4kids.utils;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -19,6 +20,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
@@ -802,5 +804,13 @@ public class AppUtils {
 //        } else {
 //            return minute + " " + BaseApplication.getAppContext().getString(R.string.minutes_label) + " " + second + " " + BaseApplication.getAppContext().getString(R.string.seconds_label);
 //        }
+    }
+
+    public static String getString(Activity activity, int stringId) {
+        if (activity == null) {
+            return BaseApplication.getAppContext().getString(stringId);
+        } else {
+            return activity.getString(stringId);
+        }
     }
 }

@@ -484,11 +484,11 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <ImageView
+                        <android.support.v7.widget.AppCompatImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
-                            android:src="@drawable/ic_bottom_home_white"
-                            android:visibility="visible" />
+                            android:visibility="visible"
+                            app:srcCompat="@drawable/ic_bottom_home_white" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -631,10 +631,10 @@
                         android:orientation="vertical"
                         android:visibility="visible">
 
-                        <ImageView
+                        <android.support.v7.widget.AppCompatImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
-                            android:src="@drawable/ic_bottom_discover"
+                            app:srcCompat="@drawable/ic_bottom_discover"
                             android:visibility="visible" />
 
                         <TextView
@@ -1553,7 +1553,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/homeTextView"
-                android:drawableLeft="@drawable/ic_mom_vlogs"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"
                 android:paddingBottom="12dp"
@@ -1598,7 +1597,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_below="@+id/shortStoryTextView"
-                android:drawableLeft="@drawable/ic_bottom_group_selected"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"
                 android:paddingBottom="12dp"
@@ -1648,7 +1646,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_below="@+id/divider2"
-                android:drawableLeft="@drawable/ic_app_settings"
                 android:drawablePadding="20dp"
                 android:drawableTint="#d54058"
                 android:gravity="center_vertical"

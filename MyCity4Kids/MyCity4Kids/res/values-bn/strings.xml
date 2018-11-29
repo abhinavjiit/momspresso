@@ -351,8 +351,8 @@
     <string name="blogger_profile.follow_button">অনুসরণ করা</string>
     <string name="blogger_profile.rank_in">র্যাঙ্ক ইন</string>
     <string name="blogger_profile.unfollow_button">অনুসরণ</string>
-    <string name="blogger_profile.view_count_label">VIEWS</string>
-    <string name="blogger_profile.article_count_label">POSTS</string>
+    <string name="blogger_profile.view_count_label">দৃশ্য সংখ্যা</string>
+    <string name="blogger_profile.article_count_label">গল্প</string>
     <string name="blogger_profile.section.articles_label">প্রবন্ধগুলো</string>
     <string name="blogger_profile.section.videos_label">মায়েদের ভিডিও ব্লগস</string>
     <string name="blogger_profile.section.activity_label">কার্যকলাপ</string>
@@ -830,5 +830,5 @@
     <string name="upload_larger_video">দুঃখিত! আপনার ভিডিওটি অন্তত 5 সেকেন্ডের বেশি হতে হবে </string>
     <string name="minutes_label">মিনিট</string>
     <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
-    <string name="check_out_momvlog" >Momspresso\n\nCheck out this interesting blog post\n</string>
+    <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting blog post\n</string>
 </resources>

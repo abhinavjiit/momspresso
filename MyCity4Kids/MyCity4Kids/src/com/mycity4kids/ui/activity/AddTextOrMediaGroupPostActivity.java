@@ -268,6 +268,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                     SharedPrefUtils.clearSavedPostData(AddTextOrMediaGroupPostActivity.this, selectedGroup.getId());
                     AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
+                    postContentEditText.setText("");
                     onBackPressed();
                 } else {
 

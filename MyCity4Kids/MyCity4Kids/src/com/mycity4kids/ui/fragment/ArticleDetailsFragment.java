@@ -47,6 +47,7 @@ import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -208,7 +209,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     //    private AdView mAdView;
     private TextView viewCommentsTextView;
     private LayoutInflater mInflater;
-//    private NativeAd nativeAd;
+    //    private NativeAd nativeAd;
     private LinearLayout nativeAdContainer;
     private LinearLayout adView;
     private RelativeLayout groupHeaderView;
@@ -605,7 +606,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                 if (AppConstants.USER_TYPE_BLOGGER.equals(detailData.getUserType())) {
                     if (isAdded()) {
-                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_blogger));
+//                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_blogger));
+                        author_type.setText(AppUtils.getString(getActivity(), R.string.author_type_blogger));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
                     }
@@ -616,7 +618,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_EXPERT.equals(detailData.getUserType())) {
                     if (isAdded()) {
-                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_expert));
+//                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_expert));
+                        author_type.setText(AppUtils.getString(getActivity(), R.string.author_type_expert));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
                     }
@@ -627,7 +630,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_EDITOR.equals(detailData.getUserType())) {
                     if (isAdded()) {
-                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_editor));
+//                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_editor));
+                        author_type.setText(AppUtils.getString(getActivity(), R.string.author_type_editor));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
                     }
@@ -638,7 +642,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_EDITORIAL.equals(detailData.getUserType())) {
                     if (isAdded()) {
-                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_editorial));
+//                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_editorial));
+                        author_type.setText(AppUtils.getString(getActivity(), R.string.author_type_editorial));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
                     }
@@ -649,7 +654,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else if (AppConstants.USER_TYPE_FEATURED.equals(detailData.getUserType())) {
                     if (isAdded()) {
-                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_featured));
+//                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_featured));
+                        author_type.setText(AppUtils.getString(getActivity(), R.string.author_type_featured));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
                     }
@@ -661,7 +667,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 } else {
                     if (isAdded()) {
-                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_user));
+//                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_user));
+                        author_type.setText(AppUtils.getString(getActivity(), R.string.author_type_user));
                     } else {
                         author_type.setText(AppConstants.AUTHOR_TYPE_USER.toUpperCase());
                     }
@@ -674,7 +681,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 // Default Author type set to Blogger
                 if (isAdded()) {
-                    author_type.setText(getString(R.string.author_type_blogger));
+//                    author_type.setText(getString(R.string.author_type_blogger));
+                    author_type.setText(AppUtils.getString(getActivity(), R.string.author_type_blogger));
                 } else {
                     author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
                 }
@@ -1442,6 +1450,22 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
                 } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
                     userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+                }
+            }
+
+            if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(userType)) {
+                if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender()) ||
+                        "m".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
+                    if (isAdded()) {
+                        Toast.makeText(getActivity(), getString(R.string.women_only), Toast.LENGTH_SHORT).show();
+                    }
+                    if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+
+                    } else {
+                        return;
+                    }
+                } else {
+
                 }
             }
 
@@ -2384,11 +2408,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 } else {
                     if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
                         followClick.setEnabled(true);
-                        followClick.setText(BaseApplication.getAppContext().getString(R.string.ad_follow_author));
+//                        followClick.setText(BaseApplication.getAppContext().getString(R.string.ad_follow_author));
+                        followClick.setText(AppUtils.getString(getActivity(), R.string.ad_follow_author));
                         isFollowing = false;
                     } else {
                         followClick.setEnabled(true);
-                        followClick.setText(BaseApplication.getAppContext().getString(R.string.ad_following_author));
+//                        followClick.setText(BaseApplication.getAppContext().getString(R.string.ad_following_author));
+                        followClick.setText(AppUtils.getString(getActivity(), R.string.ad_following_author));
                         isFollowing = true;
                     }
                 }

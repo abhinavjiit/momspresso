@@ -268,7 +268,7 @@
 
     <string name="onboarding_desc_array.tutorial_1.blogs">బ్లాగ్స్</string>
     <string name="onboarding_desc_array.tutorial_1.videos">మామ్ వ్లోగ్స్</string>
-    <string name="onboarding_desc_array.tutorial_2.english">ఆంగ్లం ఇంగ్లీష్</string>
+    <string name="onboarding_desc_array.tutorial_2.english">English</string>
     <string name="onboarding_desc_array.tutorial_2.hindi">హిందీ</string>
     <string name="onboarding_desc_array.tutorial_2.bengali">బెంగాలీ</string>
     <string name="onboarding_desc_array.tutorial_2.marathi">మరాఠీ</string>
@@ -628,7 +628,7 @@
 
     <string name="all_categories_label">అన్ని</string>
 
-    <string name="language_label.english">ఆంగ్లం</string>
+    <string name="language_label.english">English</string>
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>

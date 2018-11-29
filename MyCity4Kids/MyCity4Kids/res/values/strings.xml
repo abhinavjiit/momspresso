@@ -879,5 +879,5 @@
     <string name="seconds_label">seconds</string>
     <string name="minutes_label">minutes</string>
     <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
-    <string name="check_out_momvlog" >Momspresso\n\nCheck out this interesting blog post\n</string>
+    <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting video\n</string>
 </resources>
