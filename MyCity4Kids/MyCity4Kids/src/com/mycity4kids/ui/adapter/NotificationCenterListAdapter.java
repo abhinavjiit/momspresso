@@ -45,6 +45,7 @@ import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
 import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
+import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.GroupsFragment;
@@ -483,9 +484,11 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "postDetails");
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    Intent intent = new Intent(mContext, ViewGroupPostCommentsRepliesActivity.class);
                     intent.putExtra("postId", notificationList.get(position).getPostId());
                     intent.putExtra("groupId", notificationList.get(position).getGroupId());
+                    intent.putExtra("responseId", notificationList.get(position).getResponseId());
+                    intent.putExtra("action", "commentReply");
                     mContext.startActivity(intent);
                     try {
                         JSONObject jsonObject = new JSONObject();

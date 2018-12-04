@@ -688,9 +688,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("group_new_reply")) {
-                Intent gpPostIntent = new Intent(this, GroupPostDetailActivity.class);
+                Intent gpPostIntent = new Intent(this, ViewGroupPostCommentsRepliesActivity.class);
                 gpPostIntent.putExtra("postId", Integer.parseInt(notificationExtras.getString("postId")));
                 gpPostIntent.putExtra("groupId", Integer.parseInt(notificationExtras.getString("groupId")));
+                gpPostIntent.putExtra("responseId", Integer.parseInt(notificationExtras.getString("responseId")));
                 startActivity(gpPostIntent);
                 try {
                     JSONObject jsonObject = new JSONObject();

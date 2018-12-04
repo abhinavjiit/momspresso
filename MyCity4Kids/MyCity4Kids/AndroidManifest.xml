@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="116"
-    android:versionName="9.5.2">
+    android:versionCode="117"
+    android:versionName="9.5.3">
 
     <uses-sdk tools:overrideLibrary="com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -442,6 +442,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.GroupsEditPostActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ViewGroupPostCommentsRepliesActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ExploreArticleListingTypeActivity"

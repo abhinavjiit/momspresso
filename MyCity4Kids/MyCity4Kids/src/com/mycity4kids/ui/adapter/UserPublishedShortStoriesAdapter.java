@@ -55,32 +55,32 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
         articleDataModelsNew = mParentingLists;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (position != 0 && position % 8 == 0) {
-            return AD;
-        } else {
-            return ARTICLE;
-        }
-    }
+//    @Override
+//    public int getItemViewType(int position) {
+//        if (position != 0 && position % 8 == 0) {
+//            return ARTICLE;
+//        } else {
+//            return ARTICLE;
+//        }
+//    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == AD) {
-            View v0 = mInflator.inflate(R.layout.user_published_fb_ad_list_item, parent, false);
-            return new AdViewHolder(v0);
-        } else {
-            UserPublishedArticleViewHolder viewHolder = null;
-            View v0 = mInflator.inflate(R.layout.user_published_short_stories_list_item, parent, false);
-            viewHolder = new UserPublishedArticleViewHolder(v0, mListener);
-            return viewHolder;
-        }
+//        if (viewType == AD) {
+//            View v0 = mInflator.inflate(R.layout.user_published_fb_ad_list_item, parent, false);
+//            return new AdViewHolder(v0);
+//        } else {
+        UserPublishedArticleViewHolder viewHolder = null;
+        View v0 = mInflator.inflate(R.layout.user_published_short_stories_list_item, parent, false);
+        viewHolder = new UserPublishedArticleViewHolder(v0, mListener);
+        return viewHolder;
+//        }
 
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof AdViewHolder) {
+//        if (holder instanceof AdViewHolder) {
 //            addArticleItem((AdViewHolder) holder, position);
 //            if (position <= 80 && adList.get((position / 8) - 1) == null) {
 //                NativeAd fbAd = feedNativeAd.getAd();
@@ -122,46 +122,46 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
 //            clickableViews.add(((AdViewHolder) holder).nativeAdCallToAction);
 //            fbAd.registerViewForInteraction(((AdViewHolder) holder).adContainerView);
 
+//        } else {
+
+        ((UserPublishedArticleViewHolder) holder).txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
+
+        ((UserPublishedArticleViewHolder) holder).commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
+        if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getCommentsCount()) || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
+            ((UserPublishedArticleViewHolder) holder).commentCountTextView.setVisibility(View.GONE);
+            ((UserPublishedArticleViewHolder) holder).separatorView2.setVisibility(View.GONE);
         } else {
-
-            ((UserPublishedArticleViewHolder) holder).txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
-
-            ((UserPublishedArticleViewHolder) holder).commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
-            if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getCommentsCount()) || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
-                ((UserPublishedArticleViewHolder) holder).commentCountTextView.setVisibility(View.GONE);
-                ((UserPublishedArticleViewHolder) holder).separatorView2.setVisibility(View.GONE);
-            } else {
-                ((UserPublishedArticleViewHolder) holder).commentCountTextView.setVisibility(View.VISIBLE);
-                ((UserPublishedArticleViewHolder) holder).separatorView2.setVisibility(View.VISIBLE);
-            }
-            ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
-            if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getLikesCount()) || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
-                ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setVisibility(View.INVISIBLE);
-            } else {
-                ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setVisibility(View.VISIBLE);
-            }
-            if (isPrivateProfile) {
-                ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.VISIBLE);
-            } else {
-                ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
-            }
-
-            try {
-                Calendar calendar1 = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-                SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm", Locale.US);
-                calendar1.setTimeInMillis(articleDataModelsNew.get(position).getCreatedTime() * 1000);
-
-                Long diff = System.currentTimeMillis() - articleDataModelsNew.get(position).getCreatedTime() * 1000;
-                if (diff / (1000 * 60 * 60) > 24 && !sdf.format(System.currentTimeMillis()).equals(sdf.format((articleDataModelsNew.get(position).getCreatedTime() * 1000)))) {
-                    ((UserPublishedArticleViewHolder) holder).txvPublishDate.setText(DateTimeUtils.getDateFromTimestamp(articleDataModelsNew.get(position).getCreatedTime()));
-                } else {
-                    ((UserPublishedArticleViewHolder) holder).txvPublishDate.setText(sdf1.format(calendar1.getTime()));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            ((UserPublishedArticleViewHolder) holder).commentCountTextView.setVisibility(View.VISIBLE);
+            ((UserPublishedArticleViewHolder) holder).separatorView2.setVisibility(View.VISIBLE);
         }
+        ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
+        if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getLikesCount()) || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
+            ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setVisibility(View.INVISIBLE);
+        } else {
+            ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setVisibility(View.VISIBLE);
+        }
+        if (isPrivateProfile) {
+            ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.VISIBLE);
+        } else {
+            ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
+        }
+
+        try {
+            Calendar calendar1 = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+            SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm", Locale.US);
+            calendar1.setTimeInMillis(articleDataModelsNew.get(position).getCreatedTime() * 1000);
+
+            Long diff = System.currentTimeMillis() - articleDataModelsNew.get(position).getCreatedTime() * 1000;
+            if (diff / (1000 * 60 * 60) > 24 && !sdf.format(System.currentTimeMillis()).equals(sdf.format((articleDataModelsNew.get(position).getCreatedTime() * 1000)))) {
+                ((UserPublishedArticleViewHolder) holder).txvPublishDate.setText(DateTimeUtils.getDateFromTimestamp(articleDataModelsNew.get(position).getCreatedTime()));
+            } else {
+                ((UserPublishedArticleViewHolder) holder).txvPublishDate.setText(sdf1.format(calendar1.getTime()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        }
     }
 
     private void addArticleItem(AdViewHolder holder, int position) {

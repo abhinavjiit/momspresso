@@ -27,10 +27,8 @@ import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.TopicsListingActivity;
@@ -49,7 +47,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 29/5/17.
  */
 public class LeafTopicArticlesTabFragment extends BaseFragment implements View.OnClickListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener
-        , GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
+        , GroupIdCategoryMap.GroupCategoryInterface {
 
     private int groupId;
     public String gpsubHeading, gpHeading, gpImageUrl;
@@ -358,15 +356,5 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onMembershipStatusFetchSuccess(GroupsMembershipResponse body, int groupId) {
-
-    }
-
-    @Override
-    public void onMembershipStatusFetchFail() {
-
     }
 }

@@ -127,6 +127,10 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.searchLogoImageView:
+                groupList.clear();
+                skip = 0;
+                limit = 10;
+                adapter.notifyDataSetChanged();
                 getSearchResults();
                 break;
         }

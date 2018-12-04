@@ -40,6 +40,7 @@ import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
+import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -214,14 +215,26 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             case R.id.postCommentReplyTextView:
                 if (isValid()) {
                     if ("EDIT_COMMENT".equals(actionType)) {
-                        ((GroupPostDetailActivity) getActivity()).editComment(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), position);
+                        if (getActivity() instanceof GroupPostDetailActivity)
+                            ((GroupPostDetailActivity) getActivity()).editComment(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), position);
+                        else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                            ((ViewGroupPostCommentsRepliesActivity) getActivity()).editComment(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), position);
+                        }
                     } else if ("EDIT_REPLY".equals(actionType)) {
-                        ((GroupPostDetailActivity) getActivity()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentId(), commentOrReplyData.getId());
+                        if (getActivity() instanceof GroupPostDetailActivity)
+                            ((GroupPostDetailActivity) getActivity()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentId(), commentOrReplyData.getId());
+                        else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                            ((ViewGroupPostCommentsRepliesActivity) getActivity()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentId(), commentOrReplyData.getId());
+                        }
                     } else {
                         if (commentOrReplyData == null) {
-                            ((GroupPostDetailActivity) getActivity()).addComment(commentReplyEditText.getText().toString());
+                            if (getActivity() instanceof GroupPostDetailActivity)
+                                ((GroupPostDetailActivity) getActivity()).addComment(commentReplyEditText.getText().toString());
                         } else {
-                            ((GroupPostDetailActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString());
+                            if (getActivity() instanceof GroupPostDetailActivity)
+                                ((GroupPostDetailActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString());
+                            else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity)
+                                ((ViewGroupPostCommentsRepliesActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString());
                         }
                     }
                     dismiss();
