@@ -134,7 +134,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         storyTitleEditText = (EditText) findViewById(R.id.storyTitleEditText);
         storyBodyEditText = (EditText) findViewById(R.id.storyBodyEditText);
-        topicHeading = (TextView) toolbar.findViewById(R.id.topicHeading);
+        topicHeading = (TextView) findViewById(R.id.topicHeading);
 
         publishTextView.setOnClickListener(this);
 
