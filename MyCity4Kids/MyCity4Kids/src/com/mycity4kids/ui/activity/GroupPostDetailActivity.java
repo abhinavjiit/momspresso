@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -67,6 +68,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -118,6 +120,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private int deleteReplyPos;
     private String memberType;
     private int responseId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -402,14 +405,17 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 commentOptionsDialogFragment.show(fm, "Comment Options");
             }
             break;
-            case R.id.replyCommentTextView: {
+            case R.id.replyCommentTextView:
+            case R.id.replyCommentTextViewmedia: {
                 if (commentDisableFlag) {
                 } else {
                     openAddCommentReplyDialog(completeResponseList.get(position));
                 }
             }
+
             break;
             case R.id.replyCountTextView:
+            case R.id.replyCountTextViewmedia:
                 viewGroupPostCommentsRepliesDialogFragment = new ViewGroupPostCommentsRepliesDialogFragment();
                 Bundle _args = new Bundle();
                 _args.putParcelable("commentReplies", completeResponseList.get(position));
@@ -1122,7 +1128,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
     };
 
-    public void addComment(String content) {
+    public void addComment(String content, Map<String, String> image) {
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         try {
             JSONObject jsonObject = new JSONObject();
@@ -1144,6 +1150,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
         addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         addGpPostCommentOrReplyRequest.setContent(content);
+        addGpPostCommentOrReplyRequest.setMediaUrls(image);
         Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
     }
@@ -1169,7 +1176,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostCommentResult.setParentId(groupPostResponse.getData().getResult().getParentId());
                     groupPostCommentResult.setGroupId(groupPostResponse.getData().getResult().getGroupId());
                     groupPostCommentResult.setPostId(groupPostResponse.getData().getResult().getPostId());
-
+                    groupPostCommentResult.setMediaUrls(groupPostResponse.getData().getResult().getMediaUrls());
                     groupPostCommentResult.setIsActive(groupPostResponse.getData().getResult().isActive());
                     groupPostCommentResult.setIsAnnon(groupPostResponse.getData().getResult().isAnnon());
                     groupPostCommentResult.setModerationStatus(groupPostResponse.getData().getResult().getModerationStatus());
@@ -1264,7 +1271,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
     };
 
-    public void addReply(int parentId, String content) {
+    public void addReply(int parentId, String content, Map<String, String> image) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();
@@ -1276,6 +1283,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
         addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         addGpPostCommentOrReplyRequest.setContent(content);
+        addGpPostCommentOrReplyRequest.setMediaUrls(image);
         Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
         call.enqueue(addReplyResponseListener);
     }
@@ -1303,6 +1311,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     commentListData.setParentId(responseData.getData().getResult().getParentId());
                     commentListData.setUserId(responseData.getData().getResult().getUserId());
                     commentListData.setIsAnnon(responseData.getData().getResult().isAnnon());
+                    commentListData.setMediaUrls(responseData.getData().getResult().getMediaUrls());
 
                     UserDetailResult userDetailResult = new UserDetailResult();
                     if (responseData.getData().getResult().isAnnon() == 1) {

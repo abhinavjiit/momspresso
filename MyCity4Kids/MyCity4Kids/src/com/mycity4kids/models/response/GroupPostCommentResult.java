@@ -18,6 +18,7 @@ public class GroupPostCommentResult implements Parcelable {
     private int postId;
     private String userId;
     private int isActive;
+    private Object mediaUrls;
     private int isAnnon;
     private String moderationStatus;
     private String moderatedBy;
@@ -29,6 +30,7 @@ public class GroupPostCommentResult implements Parcelable {
     private int isLastConversation = 0;
     private int childCount;
     private UserDetailResult userInfo;
+
 
     public GroupPostCommentResult() {
 
@@ -96,6 +98,13 @@ public class GroupPostCommentResult implements Parcelable {
 
     public void setParentId(int parentId) {
         this.parentId = parentId;
+    }
+    public Object getMediaUrls() {
+        return mediaUrls;
+    }
+
+    public void setMediaUrls(Object mediaUrls) {
+        this.mediaUrls = mediaUrls;
     }
 
     public int getGroupId() {

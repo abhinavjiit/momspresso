@@ -33,6 +33,7 @@ public class AddGpPostCommentReplyResponse extends BaseResponse {
             private int id;
             private String content;
             private String sentiment;
+            private Object mediaUrls;
             private int parentId;
             private int groupId;
             private int postId;
@@ -51,6 +52,14 @@ public class AddGpPostCommentReplyResponse extends BaseResponse {
 
             public AddGpPostCommentReplyResult() {
 
+            }
+
+            public Object getMediaUrls() {
+                return mediaUrls;
+            }
+
+            public void setMediaUrls(Object mediaUrls) {
+                this.mediaUrls = mediaUrls;
             }
 
             public int getId() {

@@ -305,6 +305,31 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (postCommentsList.get(position).getIsAnnon() == 1) {
                 rootCommentViewHolder.commentorUsernameTextView.setText(mContext.getString(R.string.groups_anonymous));
                 rootCommentViewHolder.commentorImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
+                ArrayList<String> mediaList = new ArrayList<>();
+                Map<String, String> map = (Map<String, String>) postCommentsList.get(position).getMediaUrls();
+                if (map != null && !map.isEmpty()) {
+                    for (String entry : map.values()) {
+                        mediaList.add(entry);
+                    }
+                    rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
+                    rootCommentViewHolder.replyCommentTextView.setVisibility(View.GONE);
+                    rootCommentViewHolder.commentDateTextView.setVisibility(View.GONE);
+                    rootCommentViewHolder.media.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.replyCommentTextViewmedia.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.commentdatetextviewmedia.setVisibility(View.VISIBLE);
+                    Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(rootCommentViewHolder.media);
+                } else {
+                    rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.replyCommentTextView.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.media.setVisibility(View.GONE);
+                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.GONE);
+                    rootCommentViewHolder.replyCommentTextViewmedia.setVisibility(View.GONE);
+                    rootCommentViewHolder.commentdatetextviewmedia.setVisibility(View.GONE);
+                }
+
+
             } else {
                 rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
                         + " " + postCommentsList.get(position).getUserInfo().getLastName());
@@ -313,6 +338,29 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                             .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(rootCommentViewHolder.commentorImageView);
                 } catch (Exception e) {
                     rootCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
+                }
+                ArrayList<String> mediaList = new ArrayList<>();
+                Map<String, String> map = (Map<String, String>) postCommentsList.get(position).getMediaUrls();
+                if (map != null && !map.isEmpty()) {
+                    for (String entry : map.values()) {
+                        mediaList.add(entry);
+                    }
+                    rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
+                    rootCommentViewHolder.replyCommentTextView.setVisibility(View.GONE);
+                    rootCommentViewHolder.commentDateTextView.setVisibility(View.GONE);
+                    rootCommentViewHolder.media.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.replyCommentTextViewmedia.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.commentdatetextviewmedia.setVisibility(View.VISIBLE);
+                    Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(rootCommentViewHolder.media);
+                } else {
+                    rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.replyCommentTextView.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.media.setVisibility(View.GONE);
+                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.GONE);
+                    rootCommentViewHolder.replyCommentTextViewmedia.setVisibility(View.GONE);
+                    rootCommentViewHolder.commentdatetextviewmedia.setVisibility(View.GONE);
                 }
             }
 //            AppUtils.fromHtml(postCommentsList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />"))
@@ -323,11 +371,21 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             addLinkHandler(rootCommentViewHolder.commentDataTextView);
 
             rootCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getCreatedAt()));
-            if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
-                rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
+            rootCommentViewHolder.commentdatetextviewmedia.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getCreatedAt()));
+            if (rootCommentViewHolder.media.getVisibility() == View.GONE) {
+                if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
+                    rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
+                } else {
+                    rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
+                }
             } else {
-                rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-                rootCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
+                if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
+                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.GONE);
+                } else {
+                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.VISIBLE);
+                    rootCommentViewHolder.replyCountTextViewmedia.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
+                }
             }
         }
     }
@@ -708,15 +766,23 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     public class RootCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         ImageView commentorImageView;
+        ImageView media;
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
         TextView replyCommentTextView;
+        TextView replyCommentTextViewmedia;
         TextView commentDateTextView;
         TextView replyCountTextView;
+        TextView replyCountTextViewmedia;
+        TextView commentdatetextviewmedia;
         View underlineView;
 
         RootCommentViewHolder(View view) {
             super(view);
+            replyCountTextViewmedia = (TextView) view.findViewById(R.id.replyCountTextViewmedia);
+            media = (ImageView) view.findViewById(R.id.media);
+            replyCommentTextViewmedia = (TextView) view.findViewById(R.id.replyCommentTextViewmedia);
+            commentdatetextviewmedia = (TextView) view.findViewById(R.id.commentDateTextViewmedia);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
@@ -728,6 +794,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             view.setOnLongClickListener(this);
             replyCommentTextView.setOnClickListener(this);
             replyCountTextView.setOnClickListener(this);
+            replyCountTextViewmedia.setOnClickListener(this);
+            replyCommentTextViewmedia.setOnClickListener(this);
 
             underlineView = view.findViewById(R.id.underlineView);
         }

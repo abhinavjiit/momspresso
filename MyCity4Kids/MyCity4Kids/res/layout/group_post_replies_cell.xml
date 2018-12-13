@@ -66,6 +66,38 @@
             android:textSize="16sp"
             app:fontName="open_sans.ttf" />
 
+        <ImageView
+            android:id="@+id/media"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@id/commentDataTextView"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="20dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/dateContainermedia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/media"
+            android:orientation="horizontal">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/commentDateImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:padding="5dp"
+                android:text="Date"
+                android:textColor="@color/ad.comment.date"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:fontName="oswald.ttf" />
+        </LinearLayout>
+
+
         <LinearLayout
             android:id="@+id/dateContainer"
             android:layout_width="wrap_content"
