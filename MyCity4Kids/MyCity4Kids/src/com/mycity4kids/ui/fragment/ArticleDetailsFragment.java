@@ -395,12 +395,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //            Log.v (TAG, "Releasing youtube player, URL : " + getArguments().getString(KeyConstant.KEY_VIDEO_URL));
             youTubePlayer.release();
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.remove(mYouTubePlayerSupportFragment).commit();
+            transaction.remove(mYouTubePlayerSupportFragment).commitAllowingStateLoss();
         }
         if (isVisibleToUser && mYouTubePlayerSupportFragment != null) {
 //            Log.v (TAG, "Initializing youtube player, URL : " + getArguments().getString(KeyConstant.KEY_VIDEO_URL));
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commit();
+            transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commitAllowingStateLoss();
             mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
         }
     }
@@ -516,7 +516,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void showNativeAd() {
-        nativeAd = new NativeAd(getActivity(), "PLACEMENT_ID");
+        nativeAd = new NativeAd(getActivity(), AppConstants.FB_AD_PLACEMENT_ARTICLE_DETAILS);
         nativeAd.setAdListener(new NativeAdListener() {
 
             @Override

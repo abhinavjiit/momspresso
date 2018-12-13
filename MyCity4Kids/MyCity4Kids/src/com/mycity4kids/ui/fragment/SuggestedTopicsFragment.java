@@ -28,7 +28,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.SuggestedTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
@@ -107,7 +106,7 @@ public class SuggestedTopicsFragment extends BaseFragment {
 
     private void getUserPublishedArticles() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+            ((DashboardActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
 

@@ -32,7 +32,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
-import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
+import com.mycity4kids.ui.activity.UserActivitiesActivity;
 import com.mycity4kids.ui.adapter.UsersBookmarksRecycleAdapter;
 import com.mycity4kids.utils.AppUtils;
 
@@ -109,7 +109,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
 
     private void getUsersBookmarks() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+            ((UserActivitiesActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
 

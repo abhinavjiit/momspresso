@@ -19,7 +19,6 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
@@ -35,7 +34,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
-import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
+import com.mycity4kids.ui.activity.UserPublishedContentActivity;
 import com.mycity4kids.ui.adapter.UserPublishedArticleAdapter;
 import com.mycity4kids.ui.adapter.UserPublishedShortStoriesAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -140,7 +139,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
 
     private void getUserPublishedShortStories() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+            ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
 
@@ -154,7 +153,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     private void getUserPublishedArticles() {
         if (isAdded()) {
             if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-                ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+                ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
                 return;
             }
         }
