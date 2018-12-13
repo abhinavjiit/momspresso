@@ -29,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.accountkit.AccessToken;
+import com.facebook.accountkit.AccountKit;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.exoplayer2.C;
@@ -88,6 +90,7 @@ import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
 
 import org.apmem.tools.layouts.FlowLayout;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -265,7 +268,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
 
         scrollBounds = new Rect();
         mScrollView.getHitRect(scrollBounds);
-        mixpanel.timeEvent("Player_Start_" + videoId);
+        mixpanel.timeEvent("Player_Start");
     }
 
     private void hitArticleDetailsS3API() {
@@ -1407,6 +1410,14 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mixpanel.track("Player_Start_" + videoId);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("videoId", videoId);
+            jsonObject.put("videoTitle", article_title);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mixpanel.track("Player_Start", jsonObject);
     }
 }

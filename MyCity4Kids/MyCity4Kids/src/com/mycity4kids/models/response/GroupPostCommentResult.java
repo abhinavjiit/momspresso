@@ -30,7 +30,8 @@ public class GroupPostCommentResult implements Parcelable {
     private int isLastConversation = 0;
     private int childCount;
     private UserDetailResult userInfo;
-
+    private int notHelpfullCount;
+    private int helpfullCount;
 
     public GroupPostCommentResult() {
 
@@ -230,6 +231,22 @@ public class GroupPostCommentResult implements Parcelable {
 
     public void setUserInfo(UserDetailResult userInfo) {
         this.userInfo = userInfo;
+    }
+
+    public int getNotHelpfullCount() {
+        return notHelpfullCount;
+    }
+
+    public void setNotHelpfullCount(int notHelpfullCount) {
+        this.notHelpfullCount = notHelpfullCount;
+    }
+
+    public int getHelpfullCount() {
+        return helpfullCount;
+    }
+
+    public void setHelpfullCount(int helpfullCount) {
+        this.helpfullCount = helpfullCount;
     }
 
     @Override

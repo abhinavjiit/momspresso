@@ -832,7 +832,7 @@
     <string name="app_settings">App Settings</string>
     <string name="create_new">Create New</string>
     <string name="name_optional">NAME (optional)</string>
-    <string name="name">NAME</string>
+    <string name="name">Name</string>
     <string name="updated">Updated :</string>
     <string name="full_name">FULL NAME</string>
     <string name="email_and_password">EMAIL AND PASSWORD</string>

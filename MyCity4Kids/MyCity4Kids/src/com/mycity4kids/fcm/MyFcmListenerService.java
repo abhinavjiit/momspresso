@@ -28,9 +28,9 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
+import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
-import com.mycity4kids.ui.activity.VlogsDetailActivity;
 
 import java.util.Map;
 
@@ -171,19 +171,19 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     } else {
-                        intent = new Intent(getApplicationContext(), VlogsDetailActivity.class);
+                        intent = new Intent(getApplicationContext(), MomsVlogDetailActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("fromNotification", true);
                         intent.putExtra(Constants.VIDEO_ID, "" + pushNotificationModel.getId());
+                        intent.putExtra(Constants.STREAM_URL, pushNotificationModel.getUrl());
                         intent.putExtra(Constants.AUTHOR_ID, "" + pushNotificationModel.getUser_id());
                         intent.putExtra(Constants.FROM_SCREEN, "Notification");
                         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
                         intent.putExtra(Constants.ARTICLE_INDEX, "-1");
-                        intent.putExtra(Constants.AUTHOR, pushNotificationModel.getUser_id() + "~");
 
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack
-                        stackBuilder.addParentStack(VlogsDetailActivity.class);
+                        stackBuilder.addParentStack(MomsVlogDetailActivity.class);
                         // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(intent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

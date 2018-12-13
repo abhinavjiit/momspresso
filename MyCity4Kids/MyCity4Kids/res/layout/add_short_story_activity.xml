@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -54,63 +53,85 @@
         android:layout_below="@+id/toolbar"
         android:background="@color/light_underline" />
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/topicHeading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbarUnderline"
-        android:padding="10dp"
-        android:text="@string/short_s.choose_genre"
-        android:textSize="16sp"
-        app:fontName="georgia.ttf" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/topicHeading"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:scrollbars="horizontal"
-        android:visibility="visible" />
-
-    <com.mycity4kids.widget.CustomFontEditText
-        android:id="@+id/storyTitleEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/recyclerView"
-        android:background="@null"
-        android:hint="@string/short_s.add.title_hint"
-        android:maxLength="60"
-        android:maxLines="2"
-        android:paddingBottom="15dp"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        android:paddingTop="15dp"
-        android:textColor="@color/short_story.light_black_color"
-        android:textSize="17sp"
-        app:fontName="georgia.ttf" />
-
-    <View
-        android:id="@+id/underline"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/storyTitleEditText"
-        android:background="@color/light_underline" />
-
-    <com.mycity4kids.widget.CustomFontEditText
-        android:id="@+id/storyBodyEditText"
+    <ScrollView
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/underline"
-        android:background="@null"
-        android:gravity="top|left"
-        android:hint="@string/short_s.add.body_hint"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        android:paddingTop="15dp"
-        android:textColor="@color/short_story.light_black_color"
-        android:textSize="16sp"
-        app:fontName="georgia.ttf" />
+        android:layout_below="@+id/toolbarUnderline">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/topicHeading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/short_s.choose_genre"
+                android:textSize="16sp"
+                app:fontName="georgia.ttf" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/topicHeading"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:scrollbars="horizontal"
+                android:visibility="visible" />
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/storyTitleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/recyclerView"
+                android:background="@null"
+                android:hint="@string/short_s.add.title_hint"
+                android:maxLength="60"
+                android:maxLines="2"
+                android:paddingBottom="15dp"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="15dp"
+                android:textColor="@color/short_story.light_black_color"
+                android:textSize="17sp"
+                app:fontName="georgia.ttf" />
+
+            <View
+                android:id="@+id/underline"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/storyTitleEditText"
+                android:background="@color/light_underline" />
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/storyBodyEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/underline"
+                android:background="@null"
+                android:gravity="top|left"
+                android:hint="@string/short_s.add.body_hint"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="15dp"
+                android:textColor="@color/short_story.light_black_color"
+                android:textSize="16sp"
+                app:fontName="georgia.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/wordCounterTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/storyBodyEditText"
+                android:layout_alignTop="@+id/storyBodyEditText"
+                android:padding="5dp"
+                android:text=""
+                android:textColor="@color/app_grey"
+                android:textSize="12sp"
+                app:fontName="oswald.ttf" />
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

@@ -128,7 +128,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
-        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
+//        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
         recyclerView.setAdapter(recyclerAdapter);
 
         hitFilteredTopicsArticleListingApi(0);

@@ -66,6 +66,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.LocaleManager;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.location.GPSTracker;
@@ -73,6 +74,7 @@ import com.mycity4kids.utils.location.GPSTracker;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -366,6 +368,7 @@ public class SplashActivity extends BaseActivity {
             try {
                 JSONObject prop = new JSONObject();
                 prop.put("userId", SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+                prop.put("lang", Locale.getDefault().getLanguage());
                 mixpanel.registerSuperProperties(prop);
             } catch (Exception e) {
 

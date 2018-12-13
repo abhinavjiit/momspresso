@@ -931,7 +931,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                         jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                         jsonObject.put("screenName", "" + screenName);
                         jsonObject.put("Topic", "" + screenName);
-//                        Log.d("JoinSupportGroupBannerClick", jsonObject.toString());
                         mixpanel.track("JoinSupportGroupBannerClick", jsonObject);
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -40,13 +40,13 @@ import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
+import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
 import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
-import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.squareup.picasso.Picasso;
@@ -188,10 +188,17 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "video_details");
-                    Intent intent = new Intent(mContext, VlogsDetailActivity.class);
-                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getId());
+//                    Intent intent = new Intent(mContext, VlogsDetailActivity.class);
+//                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getId());
+//                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+//                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getAuthorId() + "~");
+//                    mContext.startActivity(intent);
+                    Intent intent = new Intent(mContext, MomsVlogDetailActivity.class);
+                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
+                    intent.putExtra(Constants.STREAM_URL, notificationList.get(position).getUrl());
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
-                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getAuthorId() + "~");
+                    intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
                     mContext.startActivity(intent);
                     try {
                         JSONObject jsonObject = new JSONObject();
@@ -258,7 +265,6 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                         jsonObject.put("type", "2");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
                         mixpanel.track("NotificationCenterClick", jsonObject);
                     } catch (Exception e) {
                         e.printStackTrace();

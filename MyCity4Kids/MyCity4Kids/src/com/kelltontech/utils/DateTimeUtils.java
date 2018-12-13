@@ -1,6 +1,10 @@
 package com.kelltontech.utils;
 
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
+import android.util.Log;
+
+import com.mycity4kids.application.BaseApplication;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -239,7 +243,6 @@ public class DateTimeUtils {
     }
 
     public static String getDateFromNanoMilliTimestamp(long timeStampStr) {
-
         try {
             java.text.DateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
             Date netDate;
@@ -249,6 +252,28 @@ public class DateTimeUtils {
                 netDate = new Date(timeStampStr * 1000);
             }
             return sdf.format(netDate);
+        } catch (Exception ex) {
+            return "xx";
+        }
+    }
+
+    public static String getFormattedDateGroups(long timeStampStr) {
+        try {
+            java.text.DateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+            Date netDate;
+            if (timeStampStr > 1000000000000l) {
+                netDate = new Date(timeStampStr);
+            } else {
+                netDate = new Date(timeStampStr * 1000);
+            }
+
+            String ss = "" + DateUtils.getRelativeTimeSpanString(netDate.getTime(),
+                    System.currentTimeMillis(),
+                    DateUtils.SECOND_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_RELATIVE);
+//            String ss = "" + DateUtils.getRelativeDateTimeString(BaseApplication.getAppContext(), netDate.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE);
+            Log.d("DATE = ", "***********" + ss);
+            return ss;
         } catch (Exception ex) {
             return "xx";
         }

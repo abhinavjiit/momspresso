@@ -20,6 +20,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/about_txt"
+            android:textAllCaps="true"
             android:textColor="@color/app_light_black"
             android:textSize="18sp"
             app:fontName="oswald_regular.ttf" />
@@ -51,6 +52,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/child_details"
+            android:textAllCaps="true"
             android:textColor="@color/app_light_black"
             android:textSize="16sp"
             app:fontName="oswald_regular.ttf" />
@@ -69,6 +71,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="25dp"
             android:text="@string/add_child_details"
+            android:textAllCaps="true"
             android:textColor="@color/app_light_black"
             android:textSize="16sp"
             app:fontName="oswald_regular.ttf" />

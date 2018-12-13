@@ -122,6 +122,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private boolean isMaxLengthToastShown = false;
     private View mLayout;
     private TextView topicHeading;
+    private TextView wordCounterTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +136,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         storyTitleEditText = (EditText) findViewById(R.id.storyTitleEditText);
         storyBodyEditText = (EditText) findViewById(R.id.storyBodyEditText);
         topicHeading = (TextView) findViewById(R.id.topicHeading);
-
+        wordCounterTextView = (TextView) findViewById(R.id.wordCounterTextView);
         publishTextView.setOnClickListener(this);
 
         setSupportActionBar(toolbar);
@@ -147,7 +148,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 try {
                     int wordsLength = countWords(s.toString());// words.length;
-                    // count == 0 means a new word is going to start
+
                     if (count == 0 && wordsLength >= MAX_WORDS) {
                         setCharLimit(storyBodyEditText, storyBodyEditText.getText().length());
                         if (!isMaxLengthToastShown) {
@@ -170,7 +171,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                int wordsLength = countWords(s.toString());
+                wordCounterTextView.setText(wordsLength + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words));
             }
         });
 

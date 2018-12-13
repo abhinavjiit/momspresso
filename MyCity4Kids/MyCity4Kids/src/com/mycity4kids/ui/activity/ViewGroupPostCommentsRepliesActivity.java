@@ -43,6 +43,7 @@ import com.mycity4kids.ui.fragment.GpPostCommentOptionsDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -513,7 +514,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
         }
     };
 
-    public void addReply(int parentId, String content) {
+    public void addReply(int parentId, String content, Map<String, String> image) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();
@@ -525,6 +526,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
         }
         addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         addGpPostCommentOrReplyRequest.setContent(content);
+        addGpPostCommentOrReplyRequest.setMediaUrls(image);
         Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
         call.enqueue(addReplyResponseListener);
     }
