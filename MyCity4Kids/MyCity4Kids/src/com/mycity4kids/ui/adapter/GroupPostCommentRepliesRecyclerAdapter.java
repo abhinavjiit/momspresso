@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kelltontech.utils.DateTimeUtils;
@@ -42,11 +43,14 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
     private final LayoutInflater mInflator;
     private ArrayList<GroupPostCommentResult> repliesList;
     private RecyclerViewClickListener mListener;
+    private final String localizedNotHelpful, localizedHelpful;
 
     public GroupPostCommentRepliesRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
         mContext = pContext;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mListener = listener;
+        localizedHelpful = mContext.getString(R.string.groups_post_helpful);
+        localizedNotHelpful = mContext.getString(R.string.groups_post_nothelpful);
     }
 
     public void setData(ArrayList<GroupPostCommentResult> repliesList) {
@@ -93,12 +97,10 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                     commentsViewHolder.commentDateTextView.setVisibility(View.GONE);
                     commentsViewHolder.media.setVisibility(View.VISIBLE);
-//                    commentsViewHolder.commentdatetextviewmedia.setVisibility(View.VISIBLE);
                     Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(commentsViewHolder.media);
                 } else {
                     commentsViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     commentsViewHolder.media.setVisibility(View.GONE);
-//                    commentsViewHolder.commentdatetextviewmedia.setVisibility(View.GONE);
                 }
             } else {
                 commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserInfo().getFirstName()
@@ -117,21 +119,19 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                     commentsViewHolder.commentDateTextView.setVisibility(View.GONE);
                     commentsViewHolder.media.setVisibility(View.VISIBLE);
-//                    commentsViewHolder.commentdatetextviewmedia.setVisibility(View.VISIBLE);
                     Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(commentsViewHolder.media);
                 } else {
                     commentsViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     commentsViewHolder.media.setVisibility(View.GONE);
-//                    commentsViewHolder.commentdatetextviewmedia.setVisibility(View.GONE);
                 }
             }
-
+            commentsViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            commentsViewHolder.downvoteCommentCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(commentsViewHolder.commentDataTextView, Linkify.WEB_URLS);
             commentsViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             commentsViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(commentsViewHolder.commentDataTextView);
-//            commentsViewHolder.commentdatetextviewmedia.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
             commentsViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
         } else {
             RepliesViewHolder repliesViewHolder = (RepliesViewHolder) holder;
@@ -144,15 +144,11 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     for (String entry : map.values()) {
                         mediaList.add(entry);
                     }
-                    //   Picasso.with(mContext).load(repliesList.get(position).getMediaUrls())
-                    //         .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into((ImageView) repliesViewHolder.mediaview);
                     repliesViewHolder.commentDateTextView.setVisibility(View.GONE);
                     repliesViewHolder.mediaview.setVisibility(View.VISIBLE);
-//                    repliesViewHolder.commentDateImage.setVisibility(View.VISIBLE);
                     Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(repliesViewHolder.mediaview);
                 } else {
                     repliesViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
-//                    repliesViewHolder.commentDateImage.setVisibility(View.GONE);
                     repliesViewHolder.mediaview.setVisibility(View.GONE);
                 }
             } else {
@@ -170,27 +166,22 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     for (String entry : map.values()) {
                         mediaList.add(entry);
                     }
-                    //   Picasso.with(mContext).load(repliesList.get(position).getMediaUrls())
-                    //         .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into((ImageView) repliesViewHolder.mediaview);
                     repliesViewHolder.commentDateTextView.setVisibility(View.GONE);
                     repliesViewHolder.mediaview.setVisibility(View.VISIBLE);
-//                    repliesViewHolder.commentDateImage.setVisibility(View.VISIBLE);
                     Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(repliesViewHolder.mediaview);
                 } else {
                     repliesViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
-//                    repliesViewHolder.commentDateImage.setVisibility(View.GONE);
                     repliesViewHolder.mediaview.setVisibility(View.GONE);
                 }
             }
-//            repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
+            repliesViewHolder.upvoteReplyCountTextView.setText(repliesList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            repliesViewHolder.downvoteReplyCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
-            //  repliesViewHolder.mediaview.
             Linkify.addLinks(repliesViewHolder.commentDataTextView, Linkify.WEB_URLS);
             repliesViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             repliesViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(repliesViewHolder.commentDataTextView);
             repliesViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
-//            repliesViewHolder.commentDateImage.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
         }
     }
 
@@ -202,9 +193,8 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
         TextView commentDateTextView;
         TextView replyCountTextView;
         ImageView media;
-//        TextView replyCountTextViewmedia;
-//        TextView commentdatetextviewmedia;
-//        TextView replyCommentTextViewmedia;
+        TextView upvoteCommentCountTextView, downvoteCommentCountTextView;
+        LinearLayout upvoteCommentContainer, downvoteCommentContainer;
 
         CommentsViewHolder(View view) {
             super(view);
@@ -214,10 +204,15 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
             replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
-//            commentdatetextviewmedia = (TextView) view.findViewById(R.id.commentDateTextViewmedia);
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
+            upvoteCommentCountTextView = (TextView) view.findViewById(R.id.upvoteCommentTextView);
+            downvoteCommentCountTextView = (TextView) view.findViewById(R.id.downvoteCommentTextView);
+            upvoteCommentContainer = (LinearLayout) view.findViewById(R.id.upvoteCommentContainer);
+            downvoteCommentContainer = (LinearLayout) view.findViewById(R.id.downvoteCommentContainer);
             replyCommentTextView.setVisibility(View.GONE);
 
+            downvoteCommentContainer.setOnClickListener(this);
+            upvoteCommentContainer.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
 
@@ -239,7 +234,8 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
         TextView commentDataTextView;
         TextView commentDateTextView;
         ImageView mediaview;
-//        TextView commentDateImage;
+        TextView upvoteReplyCountTextView, downvoteReplyCountTextView;
+        LinearLayout upvoteReplyContainer, downvoteReplyContainer;
 
         RepliesViewHolder(View view) {
             super(view);
@@ -248,7 +244,13 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
-//            commentDateImage = (TextView) view.findViewById(R.id.commentDateImage);
+            upvoteReplyCountTextView = (TextView) view.findViewById(R.id.upvoteReplyTextView);
+            downvoteReplyCountTextView = (TextView) view.findViewById(R.id.downvoteReplyTextView);
+            upvoteReplyContainer = (LinearLayout) view.findViewById(R.id.upvoteReplyContainer);
+            downvoteReplyContainer = (LinearLayout) view.findViewById(R.id.downvoteReplyContainer);
+
+            downvoteReplyContainer.setOnClickListener(this);
+            upvoteReplyContainer.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
 

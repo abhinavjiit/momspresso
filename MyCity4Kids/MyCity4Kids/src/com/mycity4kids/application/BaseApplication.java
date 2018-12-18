@@ -19,19 +19,6 @@ import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.drawee.backends.pipeline.Fresco;
-//import com.google.android.exoplayer2.offline.DownloadManager;
-//import com.google.android.exoplayer2.offline.DownloaderConstructorHelper;
-//import com.google.android.exoplayer2.upstream.DataSource;
-//import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-//import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-//import com.google.android.exoplayer2.upstream.FileDataSourceFactory;
-//import com.google.android.exoplayer2.upstream.HttpDataSource;
-//import com.google.android.exoplayer2.upstream.cache.Cache;
-//import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-//import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
-//import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
-//import com.google.android.exoplayer2.upstream.cache.SimpleCache;
-//import com.google.android.exoplayer2.util.Util;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
@@ -49,9 +36,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.LocaleManager;
-import com.mycity4kids.widget.DownloadTracker;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +52,6 @@ import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 
 /**
  * This class holds some application-global instances.

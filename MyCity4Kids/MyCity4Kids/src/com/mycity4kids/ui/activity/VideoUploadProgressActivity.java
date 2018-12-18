@@ -79,6 +79,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private String duration;
     private String thumbnailTime;
     private MixpanelAPI mixpanel;
+    private long suffixName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,8 +141,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
         final StorageReference storageRef = storage.getReference();
 
+        suffixName = System.currentTimeMillis();
 //        Uri file = Uri.fromFile(file2);
-        final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/" + file2.getLastPathSegment());
+        final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/" + file2.getLastPathSegment() + "_" + suffixName);
         com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2);
 
 // Register observers to listen for when the download is done or if it fails
@@ -150,7 +152,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
                 MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
-                createRowForFailedAttempt();
+                createRowForFailedAttempt(exception.getMessage());
 
             }
         }).addOnSuccessListener(new OnSuccessListener<com.google.firebase.storage.UploadTask.TaskSnapshot>() {
@@ -177,7 +179,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         });
     }
 
-    private void createRowForFailedAttempt() {
+    private void createRowForFailedAttempt(String message) {
         ArrayList<String> catList = new ArrayList<String>();
         catList.add(categoryId);
         UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
@@ -196,7 +198,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         catList.add(categoryId);
         UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
         uploadVideoRequest.setTitle(title);
-        uploadVideoRequest.setFilename(contentURI.getLastPathSegment());
+        uploadVideoRequest.setFilename(contentURI.getLastPathSegment() + "_" + suffixName);
         uploadVideoRequest.setCategory_id(catList);
         uploadVideoRequest.setFile_location("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/");
         uploadVideoRequest.setUploaded_url(uri.toString());

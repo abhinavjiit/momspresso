@@ -90,7 +90,7 @@
             android:visibility="gone" />
 
         <LinearLayout
-            android:id="@+id/upvoteContainer"
+            android:id="@+id/upvoteReplyContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/commentorUsernameTextView"
@@ -102,50 +102,50 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/upvoteImageVIew"
+                android:id="@+id/upvoteReplyImageVIew"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_upvote"
                 android:tint="@color/app_red" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/upvoteTextView"
+                android:id="@+id/upvoteReplyTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
-                android:text="20 Helpful"
+                android:text=""
                 android:textColor="@color/groups.grey"
                 android:textSize="12sp"
                 app:fontName="oswald.ttf" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/downvoteContainer"
+            android:id="@+id/downvoteReplyContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/media"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="16dp"
-            android:layout_toRightOf="@+id/upvoteContainer"
+            android:layout_toRightOf="@+id/upvoteReplyContainer"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/downvoteImageVIew"
+                android:id="@+id/downvoteReplyImageVIew"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_downvote"
                 android:tint="@color/app_red" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/downvoteTextView"
+                android:id="@+id/downvoteReplyTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
-                android:text="20 Helpful"
+                android:text=""
                 android:textColor="@color/groups.grey"
                 android:textSize="12sp"
                 app:fontName="oswald.ttf" />

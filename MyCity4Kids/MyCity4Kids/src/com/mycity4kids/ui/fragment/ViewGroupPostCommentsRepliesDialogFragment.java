@@ -31,6 +31,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
+import com.mycity4kids.models.request.GroupCommentActionsRequest;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupsActionResponse;
@@ -134,7 +135,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
         } else {
             isLastPageReached = true;
         }
-
+        formatCommentData(repliesList);
         groupPostCommentRepliesRecyclerAdapter = new GroupPostCommentRepliesRecyclerAdapter(getActivity(), this);
         groupPostCommentRepliesRecyclerAdapter.setData(repliesList);
         repliesRecyclerView.setAdapter(groupPostCommentRepliesRecyclerAdapter);
@@ -183,8 +184,6 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                 if (response.isSuccessful()) {
                     GroupPostCommentResponse groupPostResponse = response.body();
                     processRepliesListingResponse(groupPostResponse);
-//                    rearrangePostComment(commentsList);
-//                    processPostListingResponse(groupPostResponse);
                 } else {
 
                 }
@@ -218,6 +217,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             }
         } else {
 //            noPostsTextView.setVisibility(View.GONE);
+            formatCommentData(dataList);
             repliesList.addAll(dataList);
 //            groupsGenericPostRecyclerAdapter.setHeaderData(selectedGroup);
             groupPostCommentRepliesRecyclerAdapter.setData(repliesList);
@@ -226,6 +226,23 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                 isLastPageReached = true;
             }
             groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void formatCommentData(ArrayList<GroupPostCommentResult> dataList) {
+        for (int j = 0; j < dataList.size(); j++) {
+            if (dataList.get(j).getCounts() != null) {
+                for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
+                    switch (dataList.get(j).getCounts().get(i).getName()) {
+                        case "helpfullCount":
+                            dataList.get(j).setHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                        case "notHelpfullCount":
+                            dataList.get(j).setNotHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                    }
+                }
+            }
         }
     }
 
@@ -311,10 +328,12 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                 commentOptionsDialogFragment.show(fm, "Comment Options");
             }
             break;
-            case R.id.upvoteContainer:
+            case R.id.upvoteCommentContainer:
+            case R.id.upvoteReplyContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
                 break;
-            case R.id.downvoteContainer:
+            case R.id.downvoteCommentContainer:
+            case R.id.downvoteReplyContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
         }
@@ -324,12 +343,13 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
     private void markAsHelpfulOrUnhelpful(String markType, int position) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
+        GroupCommentActionsRequest groupActionsRequest = new GroupCommentActionsRequest();
         groupActionsRequest.setGroupId(repliesList.get(position).getGroupId());
         groupActionsRequest.setPostId(repliesList.get(position).getPostId());
+        groupActionsRequest.setResponseId(repliesList.get(position).getId());
         groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
-        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+        Call<GroupsActionResponse> call = groupsAPI.addCommentAction(groupActionsRequest);
         call.enqueue(groupActionResponseCallback);
     }
 
@@ -387,8 +407,6 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                         }
                     }
                     groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
-//                    groupPostResult.setVoted(true);
-//                    notifyDataSetChanged();
                 } else {
 
                 }
@@ -443,8 +461,6 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                         }
                     }
                     groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
-//                    groupPostResult.setVoted(true);
-//                    notifyDataSetChanged();
                 } else {
 
                 }

@@ -3,7 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -36,6 +34,7 @@ import com.mycity4kids.models.request.DeleteGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.EditGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
+import com.mycity4kids.models.request.GroupCommentActionsRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdatePostSettingsRequest;
@@ -68,7 +67,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -373,6 +371,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
         } else {
 //            noPostsTextView.setVisibility(View.GONE);
+            formatCommentData(dataList);
             completeResponseList.addAll(dataList);
 //            groupsGenericPostRecyclerAdapter.setHeaderData(selectedGroup);
             groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
@@ -381,6 +380,23 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 isLastPageReached = true;
             }
             groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void formatCommentData(ArrayList<GroupPostCommentResult> dataList) {
+        for (int j = 0; j < dataList.size(); j++) {
+            if (dataList.get(j).getCounts() != null) {
+                for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
+                    switch (dataList.get(j).getCounts().get(i).getName()) {
+                        case "helpfullCount":
+                            dataList.get(j).setHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                        case "notHelpfullCount":
+                            dataList.get(j).setNotHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                    }
+                }
+            }
         }
     }
 
@@ -446,10 +462,16 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 overlayView.setVisibility(View.VISIBLE);
                 break;
             case R.id.upvoteContainer:
-                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "post", 0);
                 break;
             case R.id.downvoteContainer:
-                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY);
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, "post", 0);
+                break;
+            case R.id.upvoteCommentContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "comment", position);
+                break;
+            case R.id.downvoteCommentContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, "comment", position);
                 break;
             case R.id.shareTextView:
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -514,16 +536,28 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
     }
 
-    private void markAsHelpfulOrUnhelpful(String markType) {
+    private void markAsHelpfulOrUnhelpful(String markType, String contentType, int position) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
-        groupActionsRequest.setGroupId(postData.getGroupId());
-        groupActionsRequest.setPostId(postData.getId());
-        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
-        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
-        call.enqueue(groupActionResponseCallback);
+        if ("post".equals(contentType)) {
+            GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
+            groupActionsRequest.setGroupId(postData.getGroupId());
+            groupActionsRequest.setPostId(postData.getId());
+            groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
+            Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+            call.enqueue(groupActionResponseCallback);
+        } else {
+            GroupCommentActionsRequest groupCommentActionsRequest = new GroupCommentActionsRequest();
+            groupCommentActionsRequest.setGroupId(postData.getGroupId());
+            groupCommentActionsRequest.setPostId(postData.getId());
+            groupCommentActionsRequest.setResponseId(completeResponseList.get(position).getId());
+            groupCommentActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            groupCommentActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
+            Call<GroupsActionResponse> call = groupsAPI.addCommentAction(groupCommentActionsRequest);
+            call.enqueue(groupActionResponseCallback);
+        }
+
     }
 
 
@@ -571,12 +605,31 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 if (response.isSuccessful()) {
                     GroupsActionResponse groupsActionResponse = response.body();
                     if (groupsActionResponse.getData().getResult().size() == 1) {
-                        if (postData.getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
-                            if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
-                                postData.setHelpfullCount(postData.getHelpfullCount() + 1);
-                            } else {
-                                postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
+                        if (groupsActionResponse.getData().getResult().get(0).getResponseId() == 0) {
+                            if (postData.getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
+                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                    postData.setHelpfullCount(postData.getHelpfullCount() + 1);
+                                } else {
+                                    postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
+                                }
                             }
+                        } else {
+                            for (int i = 0; i < completeResponseList.size(); i++) {
+                                if (completeResponseList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getResponseId()) {
+                                    if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                        completeResponseList.get(i).setHelpfullCount(completeResponseList.get(i).getHelpfullCount() + 1);
+                                    } else {
+                                        completeResponseList.get(i).setNotHelpfullCount(completeResponseList.get(i).getNotHelpfullCount() + 1);
+                                    }
+                                }
+                            }
+//                            if (postData.getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
+//                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+//                                    postData.setHelpfullCount(postData.getHelpfullCount() + 1);
+//                                } else {
+//                                    postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
+//                                }
+//                            }
                         }
                     }
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
@@ -623,13 +676,27 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 if (response.isSuccessful()) {
                     GroupsActionResponse groupsActionResponse = response.body();
                     if (groupsActionResponse.getData().getResult().size() == 1) {
-                        if (postData.getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
-                            if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
-                                postData.setHelpfullCount(postData.getHelpfullCount() + 1);
-                                postData.setNotHelpfullCount(postData.getNotHelpfullCount() - 1);
-                            } else {
-                                postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
-                                postData.setHelpfullCount(postData.getHelpfullCount() - 1);
+                        if (groupsActionResponse.getData().getResult().get(0).getResponseId() == 0) {
+                            if (postData.getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
+                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                    postData.setHelpfullCount(postData.getHelpfullCount() + 1);
+                                    postData.setNotHelpfullCount(postData.getNotHelpfullCount() - 1);
+                                } else {
+                                    postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
+                                    postData.setHelpfullCount(postData.getHelpfullCount() - 1);
+                                }
+                            }
+                        } else {
+                            for (int i = 0; i < completeResponseList.size(); i++) {
+                                if (completeResponseList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getResponseId()) {
+                                    if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                        completeResponseList.get(i).setHelpfullCount(completeResponseList.get(i).getHelpfullCount() + 1);
+                                        completeResponseList.get(i).setNotHelpfullCount(completeResponseList.get(i).getNotHelpfullCount() - 1);
+                                    } else {
+                                        completeResponseList.get(i).setNotHelpfullCount(completeResponseList.get(i).getNotHelpfullCount() + 1);
+                                        completeResponseList.get(i).setHelpfullCount(completeResponseList.get(i).getHelpfullCount() - 1);
+                                    }
+                                }
                             }
                         }
                     }

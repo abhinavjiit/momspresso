@@ -25,11 +25,14 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.DeleteGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.EditGpPostCommentOrReplyRequest;
+import com.mycity4kids.models.request.GroupActionsPatchRequest;
+import com.mycity4kids.models.request.GroupCommentActionsRequest;
 import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
+import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.ProfilePic;
 import com.mycity4kids.models.response.UserDetailResult;
@@ -42,6 +45,11 @@ import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GpPostCommentOptionsDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -194,6 +202,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
             } else {
             }
         } else {
+            formatCommentData(dataList);
             repliesList.addAll(dataList);
         }
 
@@ -211,6 +220,23 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
             isLastPageReached = true;
         }
         groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
+    }
+
+    private void formatCommentData(ArrayList<GroupPostCommentResult> dataList) {
+        for (int j = 0; j < dataList.size(); j++) {
+            if (dataList.get(j).getCounts() != null) {
+                for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
+                    switch (dataList.get(j).getCounts().get(i).getName()) {
+                        case "helpfullCount":
+                            dataList.get(j).setHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                        case "notHelpfullCount":
+                            dataList.get(j).setNotHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     private void getCommentReplies() {
@@ -318,8 +344,153 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                 commentOptionsDialogFragment.show(fm, "Comment Options");
             }
             break;
+            case R.id.upvoteCommentContainer:
+            case R.id.upvoteReplyContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+                break;
+            case R.id.downvoteCommentContainer:
+            case R.id.downvoteReplyContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+                break;
         }
     }
+
+    private void markAsHelpfulOrUnhelpful(String markType, int position) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupCommentActionsRequest groupActionsRequest = new GroupCommentActionsRequest();
+        groupActionsRequest.setGroupId(repliesList.get(position).getGroupId());
+        groupActionsRequest.setPostId(repliesList.get(position).getPostId());
+        groupActionsRequest.setResponseId(repliesList.get(position).getId());
+        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
+        Call<GroupsActionResponse> call = groupsAPI.addCommentAction(groupActionsRequest);
+        call.enqueue(groupActionResponseCallback);
+    }
+
+    private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
+        @Override
+        public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    if (response.code() == 400) {
+                        try {
+                            int patchActionId = 0;
+                            String patchActionType = null;
+
+                            String errorBody = new String(response.errorBody().bytes());
+                            JSONObject jObject = new JSONObject(errorBody);
+                            JSONArray dataArray = jObject.optJSONArray("data");
+                            if (dataArray.getJSONObject(0).get("type").equals(dataArray.getJSONObject(1).get("type"))) {
+                                //Same Action Event
+                                if ("0".equals(dataArray.getJSONObject(0).get("type"))) {
+                                    Toast.makeText(BaseApplication.getAppContext(), "already marked unhelpful", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(BaseApplication.getAppContext(), "already marked helpful", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                if (dataArray.getJSONObject(0).has("id") && !dataArray.getJSONObject(0).isNull("id")) {
+                                    patchActionId = dataArray.getJSONObject(0).getInt("id");
+                                    patchActionType = dataArray.getJSONObject(1).getString("type");
+                                } else {
+                                    patchActionType = dataArray.getJSONObject(0).getString("type");
+                                    patchActionId = dataArray.getJSONObject(1).getInt("id");
+                                }
+                                sendUpvoteDownvotePatchRequest(patchActionId, patchActionType);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsActionResponse groupsActionResponse = response.body();
+                    if (groupsActionResponse.getData().getResult().size() == 1) {
+                        for (int i = 0; i < repliesList.size(); i++) {
+                            if (repliesList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getResponseId()) {
+                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                    repliesList.get(i).setHelpfullCount(repliesList.get(i).getHelpfullCount() + 1);
+                                } else {
+                                    repliesList.get(i).setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() + 1);
+                                }
+                            }
+                        }
+                    }
+                    groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void sendUpvoteDownvotePatchRequest(int patchActionId, String patchActionType) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        GroupActionsPatchRequest groupActionsRequest = new GroupActionsPatchRequest();
+        groupActionsRequest.setType(patchActionType);
+
+        Call<GroupsActionResponse> call = groupsAPI.patchAction(patchActionId, groupActionsRequest);
+        call.enqueue(patchActionResponseCallback);
+    }
+
+    private Callback<GroupsActionResponse> patchActionResponseCallback = new Callback<GroupsActionResponse>() {
+        @Override
+        public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsActionResponse groupsActionResponse = response.body();
+                    if (groupsActionResponse.getData().getResult().size() == 1) {
+                        for (int i = 0; i < repliesList.size(); i++) {
+                            if (repliesList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getResponseId()) {
+                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                    repliesList.get(i).setHelpfullCount(repliesList.get(i).getHelpfullCount() + 1);
+                                    repliesList.get(i).setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() - 1);
+                                } else {
+                                    repliesList.get(i).setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() + 1);
+                                    repliesList.get(i).setHelpfullCount(repliesList.get(i).getHelpfullCount() - 1);
+                                }
+                            }
+                        }
+                    }
+                    groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
+
+        }
+    };
+
 
     @Override
     public void onClick(View v) {
