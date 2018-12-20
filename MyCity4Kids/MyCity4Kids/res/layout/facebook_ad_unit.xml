@@ -14,7 +14,7 @@
         android:paddingBottom="10dp"
         android:paddingTop="10dp">
 
-        <ImageView
+        <com.facebook.ads.AdIconView
             android:id="@+id/native_ad_icon"
             android:layout_width="35dp"
             android:layout_height="35dp"

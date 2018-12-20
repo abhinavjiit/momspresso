@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.facebook.ads.AudienceNetworkAds;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -259,6 +260,7 @@ public class BaseApplication extends Application {
         // startService(new Intent(this,ReplicationService.class))
         // For Google Analytics initialization.
 //        userAgent = Util.getUserAgent(this, "ExoPlayerDemo");
+        AudienceNetworkAds.initialize(this);
 
         PackageInfo pInfo = null;
         try {

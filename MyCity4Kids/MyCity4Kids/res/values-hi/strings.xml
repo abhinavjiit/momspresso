@@ -839,6 +839,6 @@
     <string name="time_limit">(अधिकतम समय %1$s)</string>
     <string name="upload_larger_video">ओह ! आपका वीडियो कम से कम 5 सेकेंड लंबा होना चाहिए।</string>
     <string name="minutes_label">मिनट</string>
-    <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
-    <string name="check_out_momvlog" >Momspresso\n\nCheck out this interesting blog post\n</string>
+    <string name="women_only">ओह हो\! यह सेक्शन केवल महिलाओं के लिए है। हालांकि, आप हमारा कांटेंट पढ़ना जारी रख सकते हैं।</string>
+    <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting blog post\n</string>
 </resources>

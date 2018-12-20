@@ -104,8 +104,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 //        for (int i = 0; i < 10; i++) {
 //            adList.add(null);
 //        }
-        heading = mContext.getString(R.string.groups_join_support_gp);
-        subHeading = mContext.getString(R.string.groups_not_alone);
+//        heading = mContext.getString(R.string.groups_join_support_gp);
+//        subHeading = mContext.getString(R.string.groups_not_alone);
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         this.screenName = screenName;
         this.showVideoFlag = showVideoFlag;
@@ -251,8 +251,16 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView, viewHolder.videoIndicatorImageView
                     , viewHolder.bookmarkArticleImageView, viewHolder.watchLaterImageView, articleDataModelsNew.get(position), position, viewHolder);
         } else if (holder instanceof JoinGroupViewHolder) {
-            ((JoinGroupViewHolder) holder).groupHeadingTextView.setText(heading);
-            ((JoinGroupViewHolder) holder).groupSubHeadingTextView.setText(subHeading);
+            if (StringUtils.isNullOrEmpty(heading) || StringUtils.isNullOrEmpty(subHeading)) {
+                ((JoinGroupViewHolder) holder).groupHeadingTextView.setText("");
+                ((JoinGroupViewHolder) holder).groupSubHeadingTextView.setText("");
+                ((JoinGroupViewHolder) holder).joinGroupTextView.setVisibility(View.GONE);
+            } else {
+                ((JoinGroupViewHolder) holder).groupHeadingTextView.setText(heading);
+                ((JoinGroupViewHolder) holder).groupSubHeadingTextView.setText(subHeading);
+                ((JoinGroupViewHolder) holder).joinGroupTextView.setVisibility(View.VISIBLE);
+            }
+
             try {
                 Picasso.with(mContext).load(gpImageUrl).placeholder(R.drawable.groups_generic)
                         .error(R.drawable.groups_generic).into(((JoinGroupViewHolder) holder).groupHeaderImageView);

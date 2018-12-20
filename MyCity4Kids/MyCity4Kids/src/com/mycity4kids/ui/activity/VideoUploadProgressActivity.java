@@ -185,6 +185,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
         uploadVideoRequest.setTitle(title);
         uploadVideoRequest.setCategory_id(catList);
+        uploadVideoRequest.setReason("" + message);
 //        uploadVideoRequest.setThumbnail_milliseconds(thumbnailTime);
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
