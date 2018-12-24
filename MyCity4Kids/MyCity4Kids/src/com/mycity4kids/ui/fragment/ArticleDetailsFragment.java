@@ -415,7 +415,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     return;
                 }
                 // Inflate Native Banner Ad into Container
-                inflateAd(nativeBannerAd);
+                if (isAdded())
+                    inflateAd(nativeBannerAd);
             }
 
             @Override
