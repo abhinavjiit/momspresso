@@ -445,7 +445,11 @@ public class K4LVideoTrimmer extends FrameLayout {
     }
 
     public int getTimeStampForIFrame() {
-        return iFrameTimeStamp - mStartPosition;
+        if (iFrameTimeStamp - mStartPosition > 0) {
+            return iFrameTimeStamp - mStartPosition;
+        } else {
+            return 0;
+        }
     }
 
     private void onSeekThumbs(int index, float value) {

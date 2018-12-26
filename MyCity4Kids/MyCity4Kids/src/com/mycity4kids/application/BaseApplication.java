@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -261,6 +262,10 @@ public class BaseApplication extends Application {
         // For Google Analytics initialization.
 //        userAgent = Util.getUserAgent(this, "ExoPlayerDemo");
         AudienceNetworkAds.initialize(this);
+// Branch logging for debugging
+        Branch.enableLogging();
+        // Branch object initialization
+        Branch.getAutoInstance(this);
 
         PackageInfo pInfo = null;
         try {

@@ -1315,25 +1315,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     }
 
-    private void openViewCommentDialogV2() {
-        try {
-            MyCityCommentsFragment commentFrag = new MyCityCommentsFragment();
-            commentFrag.setTargetFragment(this, 0);
-            Bundle _args = new Bundle();
-            _args.putString("commentURL", commentMainUrl);
-            _args.putString(Constants.ARTICLE_ID, articleId);
-            _args.putString(Constants.AUTHOR, authorId + "~" + author);
-            commentFrag.setArguments(_args);
-            ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
-            ((ArticleDetailsContainerActivity) getActivity()).addFragment(commentFrag, null, true, "topToBottom");
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-            if (isAdded())
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.unable_to_load_comment));
-        }
-    }
-
     private void launchRelatedTrendingArticle(View v, String listingType, int index) {
 //        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
 //        trackArticleReadTime.resetTimer();

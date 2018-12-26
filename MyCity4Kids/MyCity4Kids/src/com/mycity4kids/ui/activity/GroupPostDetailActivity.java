@@ -612,6 +612,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                                 } else {
                                     postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
                                 }
+                                Intent intent = new Intent();
+                                intent.putExtra("postDatas", postData);
+                                setResult(RESULT_OK, intent);
                             }
                         } else {
                             for (int i = 0; i < completeResponseList.size(); i++) {

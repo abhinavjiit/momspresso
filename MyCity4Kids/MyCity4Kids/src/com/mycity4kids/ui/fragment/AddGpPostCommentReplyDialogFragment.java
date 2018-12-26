@@ -222,7 +222,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 anonymousCheckbox.setVisibility(View.GONE);
                 bottombarTopline.setVisibility(View.GONE);
                 addMediaImageView.setVisibility(View.GONE);
-                addCommentTextView.setVisibility(View.GONE);
+                addMediaTextView.setVisibility(View.GONE);
             } else {
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.reply));
                 relativeMainContainer.setVisibility(View.VISIBLE);
@@ -246,8 +246,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         media.setVisibility(View.GONE);
                         commentdatetextviewmedia.setVisibility(View.GONE);
                     }
-
-
                 } else {
                     try {
                         Picasso.with(getActivity()).load(commentOrReplyData.getUserInfo().getProfilePicUrl().getClientApp())
@@ -274,8 +272,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         media.setVisibility(View.GONE);
                         commentdatetextviewmedia.setVisibility(View.GONE);
                     }
-
-
                 }
 
                 commentDataTextView.setText(commentOrReplyData.getContent());
@@ -287,8 +283,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 commentdatetextviewmedia.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(commentOrReplyData.getCreatedAt()));
             }
         }
-
-
         return rootView;
     }
 
@@ -356,7 +350,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         }
                     } else {
                         if (commentOrReplyData == null) {
-//<<<<<<<HEAD
                             if (getActivity() instanceof GroupPostDetailActivity)
                                 ((GroupPostDetailActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap);
                         } else {
@@ -364,14 +357,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                                 ((GroupPostDetailActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), mediaMap);
                             else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity)
                                 ((ViewGroupPostCommentsRepliesActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), mediaMap);
-//=======
-//
-//                            ((GroupPostDetailActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap);
-//                        } else{
-//
-//
-//                            ((GroupPostDetailActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), mediaMap);
-//>>>>>>>7880 b8f2d7ccc81a3b70f7a2db6ed25354aa1b47
                         }
                     }
                     dismiss();
@@ -391,13 +376,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         }
                     }
                 }
-//                if (null != commentReplyEditText.getText() && !StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString())) {
-//                    if (commentOrReplyData == null) {
-//
-//                    } else {
-//
-//                    }
-//                }
                 dismiss();
                 break;
             case R.id.cancelTextView:

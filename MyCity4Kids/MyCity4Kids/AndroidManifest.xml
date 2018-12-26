@@ -5,7 +5,7 @@
     android:versionCode="120"
     android:versionName="9.5.6">
 
-    <uses-sdk tools:overrideLibrary="com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
+    <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Used to request data from the Google+ APIs in the SignInActivity -->
@@ -94,6 +94,39 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
+
+
+        <!--<activity-->
+            <!--android:name=".LauncherActivity"-->
+            <!--android:label="@string/app_name"-->
+            <!--android:launchMode="singleTask"-->
+            <!--android:theme="@style/AppTheme.NoActionBar">-->
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+
+            <!--&lt;!&ndash; Branch URI Scheme &ndash;&gt;-->
+            <!--<intent-filter>-->
+                <!--<data android:scheme="androidexample" />-->
+                <!--<action android:name="android.intent.action.VIEW" />-->
+
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+            <!--</intent-filter>-->
+
+            <!--&lt;!&ndash; Branch App Links (optional) &ndash;&gt;-->
+            <!--<intent-filter android:autoVerify="true">-->
+                <!--<action android:name="android.intent.action.VIEW" />-->
+
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+
+
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
         <activity
             android:name=".ui.activity.SplashActivity"
             android:icon="@drawable/myicon"
@@ -139,6 +172,12 @@
                 <data
                     android:host="*.momspresso.com"
                     android:scheme="https" />
+                <data
+                    android:host="mycity4kids.app.link"
+                    android:scheme="https" />
+                <data
+                    android:host="mycity4kids-alternate.app.link"
+                    android:scheme="https" />
 
                 <action android:name="android.intent.action.VIEW" />
 
@@ -146,6 +185,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+
         <!-- Login Activity for facebook & app id -->
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -341,9 +382,6 @@
             android:name=".ui.activity.MyFunnyVideosListingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.BecomeBloggerActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.IdTokenLoginActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -354,9 +392,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.SubscribeTopicsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.BloggerProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.AppSettingsActivity"
@@ -469,9 +504,6 @@
             android:theme="@style/EditorTheme" />
         <activity android:name="com.facebook.accountkit.ui.AccountKitActivity" />
         <activity
-            android:name=".ui.activity.FacebookPhoneLoginActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.UsersBookmarkListActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -495,47 +527,31 @@
         <activity
             android:name=".ui.activity.CategoryVideosListingActivity"
             android:screenOrientation="portrait" />
-        <!--<activity-->
-        <!--android:name=".ui.activity.ExoPlayerTestActivity"-->
-        <!--android:screenOrientation="portrait" />-->
-        <!--<activity-->
-        <!--android:name=".ui.activity.PlayerActivity"-->
-        <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"-->
-        <!--android:label="@string/application_name"-->
-        <!--android:launchMode="singleTop"-->
-        <!--android:theme="@style/PlayerTheme">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="com.google.android.exoplayer.demo.action.VIEW" />-->
-        <!--<category android:name="android.intent.category.DEFAULT" />-->
 
-        <!--<data android:scheme="http" />-->
-        <!--<data android:scheme="https" />-->
-        <!--<data android:scheme="content" />-->
-        <!--<data android:scheme="asset" />-->
-        <!--<data android:scheme="file" />-->
-        <!--</intent-filter>-->
-        <!--<intent-filter>-->
-        <!--<action android:name="com.google.android.exoplayer.demo.action.VIEW_LIST" />-->
-        <!--<category android:name="android.intent.category.DEFAULT" />-->
-        <!--</intent-filter>-->
-        <!--</activity>-->
         <activity
             android:name=".ui.activity.ChooseVideoCategoryActivity"
             android:screenOrientation="portrait" />
 
-        <!--<service-->
-        <!--android:name=".widget.DemoDownloadService"-->
-        <!--android:exported="false">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="com.google.android.exoplayer.downloadService.action.RESTART" />-->
-        <!--<category android:name="android.intent.category.DEFAULT" />-->
-        <!--</intent-filter>-->
-        <!--</service>-->
 
-        <!--<service-->
-        <!--android:name="com.google.android.exoplayer2.scheduler.PlatformScheduler$PlatformSchedulerService"-->
-        <!--android:exported="true"-->
-        <!--android:permission="android.permission.BIND_JOB_SERVICE" />-->
+        <meta-data
+            android:name="io.branch.sdk.BranchKey"
+            android:value="key_live_kdGnDu8Q4xxqJJoBNp8prlpeAAndQfuJ" />
+        <meta-data
+            android:name="io.branch.sdk.BranchKey.test"
+            android:value="secret_live_CyBjdCPAJs7GDqcbXx7sYg6fGmcNIRS6" />
+        <meta-data
+            android:name="io.branch.sdk.TestMode"
+            android:value="false" /> <!-- Set to true to use Branch_Test_Key -->
+
+        <!-- Branch install referrer tracking (optional) -->
+        <receiver
+            android:name="io.branch.referral.InstallListener"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

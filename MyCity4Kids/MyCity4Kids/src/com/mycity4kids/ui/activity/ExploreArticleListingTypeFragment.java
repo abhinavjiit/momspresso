@@ -172,9 +172,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 }
             });
         }
-//        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics")) {
-//            showGuideView();
-//        }
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -199,126 +196,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         });
 
         return view;
-    }
-
-    private int getSelectedTopicCount() {
-        int selectedTopic = 0;
-        for (int i = 0; i < mainTopicsList.size(); i++) {
-            if (mainTopicsList.get(i).isSelected()) {
-                selectedTopic++;
-            }
-        }
-        return selectedTopic;
-    }
-
-    private void initializeTopicSearch() {
-        searchTopicsEditText.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                String text = searchTopicsEditText.getText().toString().toLowerCase();
-                adapter.filter(text);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1,
-                                          int arg2, int arg3) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-                                      int arg3) {
-            }
-        });
-    }
-
-    public void showGuideView() {
-//        guideOverLay.setVisibility(View.VISIBLE);
-    }
-
-    Callback<ResponseBody> downloadFollowTopicsJSONCallback = new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            if (response == null || response.body() == null) {
-                return;
-            }
-            try {
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-
-                Retrofit retro = BaseApplication.getInstance().getRetrofit();
-                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("popularLocation");
-                Call<ResponseBody> caller = topicsAPI.downloadTopicsListForFollowUnfollow(popularURL);
-
-                caller.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
-                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
-                        try {
-                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
-                            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                            ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
-                            createTopicsDataForFollow(res);
-                            adapter = new ParentTopicsGridAdapter(fragType);
-                            gridview.setAdapter(adapter);
-                            adapter.setDatalist(mainTopicsList);
-                            initializeTopicSearch();
-                        } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
-                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
-                        Log.d("MC4KException", Log.getStackTraceString(t));
-                    }
-                });
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-        }
-    };
-
-    private void createTopicsDataForFollow(ExploreTopicsModel[] responseData) {
-        try {
-            mainTopicsList = new ArrayList<>();
-
-            //Prepare structure for multi-expandable listview.
-            for (int i = 0; i < responseData.length; i++) {
-                if ("1".equals(responseData[i].getShowInMenu())) {
-                    mainTopicsList.add(responseData[i]);
-                }
-            }
-            if (!"search".equals(fragType)) {
-                ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
-                contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
-                contributorListModel.setId(MEET_CONTRIBUTOR_ID);
-                mainTopicsList.add(contributorListModel);
-
-                ExploreTopicsModel exploreSectionModel = new ExploreTopicsModel();
-                exploreSectionModel.setDisplay_name(getString(R.string.home_screen_explore_title));
-                exploreSectionModel.setId(EXPLORE_SECTION_ID);
-                mainTopicsList.add(exploreSectionModel);
-            }
-        } catch (Exception e) {
-//            progressBar.setVisibility(View.GONE);
-            Crashlytics.logException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-//            showToast(getString(R.string.went_wrong));
-        }
     }
 
     private void createTopicsData(ExploreTopicsResponse responseData) {
