@@ -20,9 +20,6 @@ import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
-import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
-
-import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;

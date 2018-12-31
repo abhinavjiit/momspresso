@@ -373,6 +373,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                             bundle.putParcelable("uri", imageUri);
                             mTaskFragment.setArguments(bundle);
                             fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+                        } else {
+                            mTaskFragment.launchNewTask(imageUri);
                         }
 //                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
@@ -616,11 +618,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         showProgressDialog(getString(R.string.please_wait));
     }
 
-//    @Override
-//    public void onProgressUpdate(int percent) {
-//
-//    }
-
     @Override
     public void onCancelled() {
 
@@ -632,6 +629,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         Uri imageUriTemp = Uri.parse(path);
         File file2 = FileUtils.getFile(this, imageUriTemp);
         sendUploadProfileImageRequest(file2);
+        mTaskFragment = null;
     }
 
 }

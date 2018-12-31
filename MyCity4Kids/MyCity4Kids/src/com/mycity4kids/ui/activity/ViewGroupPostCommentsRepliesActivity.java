@@ -3,7 +3,10 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +25,7 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.DeleteGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.EditGpPostCommentOrReplyRequest;
@@ -44,11 +48,13 @@ import com.mycity4kids.ui.adapter.GroupPostCommentRepliesRecyclerAdapter;
 import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GpPostCommentOptionsDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
+import com.mycity4kids.ui.fragment.TaskFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -61,7 +67,10 @@ import retrofit2.Retrofit;
 /**
  * Created by user on 08-06-2015.
  */
-public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implements OnClickListener, GroupPostCommentRepliesRecyclerAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
+public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implements OnClickListener, GroupPostCommentRepliesRecyclerAdapter.RecyclerViewClickListener,
+        GroupMembershipStatus.IMembershipStatus, TaskFragment.TaskCallbacks {
+
+    private static final String TAG_TASK_FRAGMENT = "task_fragment";
 
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private boolean isReuqestRunning = false;
@@ -96,6 +105,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
     private int editReplyParentCommentId;
     private int deleteCommentPos;
     private int deleteReplyPos;
+    private TaskFragment mTaskFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -491,7 +501,6 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
         }
     };
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -504,7 +513,6 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                 intent.putExtra("groupId", groupId);
                 startActivity(intent);
                 break;
-
         }
     }
 
@@ -982,5 +990,41 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
         }
     }
 
+    public void processImage(Uri imageUri) {
+        android.app.FragmentManager fm = getFragmentManager();
+        mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+        if (mTaskFragment == null) {
+            mTaskFragment = new TaskFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("uri", imageUri);
+            mTaskFragment.setArguments(bundle);
+            fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+        } else {
+            showToast("You can add only 1 image in comments");
+        }
+    }
 
+    @Override
+    public void onPreExecute() {
+        showProgressDialog(getString(R.string.please_wait));
+    }
+
+    @Override
+    public void onCancelled() {
+        removeProgressDialog();
+    }
+
+    @Override
+    public void onPostExecute(Bitmap image) {
+        android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("Add Comment");
+        if (prev == null) {
+
+        } else {
+            String path = MediaStore.Images.Media.insertImage(getContentResolver(), image, "Title", null);
+            Uri imageUriTemp = Uri.parse(path);
+            File file2 = FileUtils.getFile(this, imageUriTemp);
+            removeProgressDialog();
+            ((AddGpPostCommentReplyDialogFragment) prev).sendUploadProfileImageRequest(file2);
+        }
+    }
 }

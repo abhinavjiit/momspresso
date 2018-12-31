@@ -2,7 +2,10 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +31,7 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.DeleteGpPostCommentOrReplyRequest;
@@ -58,12 +62,14 @@ import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
 import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GpPostCommentOptionsDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
+import com.mycity4kids.ui.fragment.TaskFragment;
 import com.mycity4kids.ui.fragment.ViewGroupPostCommentsRepliesDialogFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,8 +84,10 @@ import retrofit2.Retrofit;
  * Created by hemant on 19/4/18.
  */
 
-public class GroupPostDetailActivity extends BaseActivity implements View.OnClickListener, GroupPostDetailsAndCommentsRecyclerAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
+public class GroupPostDetailActivity extends BaseActivity implements View.OnClickListener, GroupPostDetailsAndCommentsRecyclerAdapter.RecyclerViewClickListener,
+        GroupMembershipStatus.IMembershipStatus, TaskFragment.TaskCallbacks {
 
+    private static final String TAG_TASK_FRAGMENT = "task_fragment";
     private static final int EDIT_POST_REQUEST_CODE = 1010;
 
     private GroupPostDetailsAndCommentsRecyclerAdapter groupPostDetailsAndCommentsRecyclerAdapter;
@@ -119,6 +127,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private int deleteReplyPos;
     private String memberType;
     private int responseId;
+    private TaskFragment mTaskFragment;
 
 
     @Override
@@ -385,6 +394,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     private void formatCommentData(ArrayList<GroupPostCommentResult> dataList) {
         for (int j = 0; j < dataList.size(); j++) {
+//            if (dataList.get(j).getMediaUrls() != null && !((Map<String, String>) dataList.get(j).getMediaUrls()).isEmpty()) {
+//                if (((Map<String, String>) dataList.get(j).getMediaUrls()).get("audio") != null) {
+//                    dataList.get(j).setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
+//                }
+//            }
             if (dataList.get(j).getCounts() != null) {
                 for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
                     switch (dataList.get(j).getCounts().get(i).getName()) {
@@ -1664,7 +1678,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         _args.putParcelable("parentCommentData", data);
         addGroupCommentReplyDialogFragment.setArguments(_args);
         addGroupCommentReplyDialogFragment.setCancelable(true);
-        addGroupCommentReplyDialogFragment.show(fm, "Add Replies");
+        addGroupCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 
     @Override
@@ -1738,5 +1752,44 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    public void processImage(Uri imageUri) {
+        android.app.FragmentManager fm = getFragmentManager();
+        mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+        if (mTaskFragment == null) {
+            mTaskFragment = new TaskFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("uri", imageUri);
+            mTaskFragment.setArguments(bundle);
+            fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+        } else {
+            showToast("You can add only 1 image in comments");
+        }
+    }
+
+    @Override
+    public void onPreExecute() {
+        showProgressDialog(getString(R.string.please_wait));
+    }
+
+    @Override
+    public void onCancelled() {
+        removeProgressDialog();
+    }
+
+    @Override
+    public void onPostExecute(Bitmap image) {
+        android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("Add Comment");
+        if (prev == null) {
+
+        } else {
+            String path = MediaStore.Images.Media.insertImage(getContentResolver(), image, "Title", null);
+            Uri imageUriTemp = Uri.parse(path);
+            File file2 = FileUtils.getFile(this, imageUriTemp);
+            removeProgressDialog();
+            ((AddGpPostCommentReplyDialogFragment) prev).sendUploadProfileImageRequest(file2);
+        }
+
     }
 }

@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.fragment;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,7 +19,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -54,11 +52,9 @@ import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
-import com.mycity4kids.ui.activity.AddTextOrMediaGroupPostActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
-import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.Picasso;
@@ -81,19 +77,20 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 import static android.app.Activity.RESULT_OK;
-import static com.mycity4kids.ui.adapter.BusinessListingAdapterevent.PERMISSIONS_INIT;
-import static com.mycity4kids.ui.adapter.BusinessListingAdapterevent.REQUEST_INIT_PERMISSION;
-import static com.mycity4kids.ui.fragment.ChoosePostMediaDialogFragment.ADD_IMAGE_CAMERA_ACTIVITY_REQUEST_CODE;
-import static com.mycity4kids.ui.fragment.ChoosePostMediaDialogFragment.ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE;
 
 /**
  * Created by user on 08-06-2015.
  */
-public class AddGpPostCommentReplyDialogFragment extends DialogFragment implements OnClickListener {
+public class AddGpPostCommentReplyDialogFragment extends DialogFragment implements OnClickListener, TaskFragment.TaskCallbacks {
 
+    private static final String TAG_TASK_FRAGMENT = "task_fragment";
     private ProgressDialog mProgressDialog;
+//    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+//    private static String PERMISSION_AUDIO_RECORD = Manifest.permission.RECORD_AUDIO;
+//    private boolean permissionToRecordAccepted = false;
 
 //    private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
 
@@ -135,6 +132,15 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private int groupId, postId;
     private TextView addMediaTextView;
     private View mLayout;
+    private TaskFragment mTaskFragment;
+//    private RecordView record_view;
+//    private RecordButton record_button;
+//    private MediaRecorder mRecorder;
+//    private String mFileName;
+//    private FirebaseAuth mAuth;
+//    private Uri originalUri;
+//    private Uri contentURI;
+//    private long suffixName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,7 +150,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 false);
         media = (ImageView) rootView.findViewById(R.id.media);
         commentdatetextviewmedia = (TextView) rootView.findViewById(R.id.commentDateTextViewmedia);
-        mLayout = rootView.findViewById(R.id.rootLayout);
+        mLayout = rootView.findViewById(R.id.root);
         addMediaImageView = (ImageView) rootView.findViewById(R.id.addMediaImageView);
         addMediaTextView = (TextView) rootView.findViewById(R.id.addMediaTextView);
         closeImageView = (ImageView) rootView.findViewById(R.id.closeImageView);
@@ -166,6 +172,16 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         imageGalleryTextView = (TextView) rootView.findViewById(R.id.imageGalleryTextView);
         postImageView = (ImageView) rootView.findViewById(R.id.postImageView);
         cancelTextView = (TextView) rootView.findViewById(R.id.cancelTextView);
+//        record_view = (RecordView) rootView.findViewById(R.id.record_view);
+//        record_button = (RecordButton) rootView.findViewById(R.id.record_button);
+//
+//        record_button.setRecordView(record_view);
+//
+//        mAuth = FirebaseAuth.getInstance();
+//
+//        mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
+//        mFileName += "/audiorecordtest.3gp";
+
         commentReplyEditText.setOnTouchListener(new View.OnTouchListener() {
 
             public boolean onTouch(View v, MotionEvent event) {
@@ -180,6 +196,48 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 return false;
             }
         });
+
+//        record_view.setOnRecordListener(new OnRecordListener() {
+//            @Override
+//            public void onStart() {
+//                //Start Recording..
+//                if (Build.VERSION.SDK_INT >= 23) {
+//                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+//                        requestAudioRecordPermission();
+//                    } else {
+//                        startRecording();
+//                    }
+//                } else {
+//                    startRecording();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                //On Swipe To Cancel
+//                Log.d("RecordView", "onCancel");
+//
+//            }
+//
+//            @Override
+//            public void onFinish(long recordTime) {
+//                //Stop Recording..
+////                String time = getHumanTimeText(recordTime);
+//                Log.d("RecordView", "onFinish");
+//                stopRecording();
+//                originalUri = Uri.parse(mFileName);
+//                contentURI = AppUtils.exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(), getActivity());
+//                contentURI = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver());
+//                uploadAudio(contentURI);
+//                Log.d("RecordTime", "" + recordTime);
+//            }
+//
+//            @Override
+//            public void onLessThanSecond() {
+//                //When the record time is less than One Second
+//                Log.d("RecordView", "onLessThanSecond");
+//            }
+//        });
 
         Bundle extras = getArguments();
         commentOrReplyData = (GroupPostCommentResult) extras.get("parentCommentData");
@@ -335,6 +393,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         i++;
                     }
                 }
+//                mediaMap.put("audio", "https://firebasestorage.googleapis.com/v0/b/api-project-3577377239.appspot.com/o/user%2F6f57d7cb01fa46c89bf85e3d2ade7de3%2Faudio%2F381688_1546001128185?alt=media&token=3417b1b6-5a55-4d62-b143-ad7b1116d0a6");
                 if (isValid(mediaMap)) {
                     if ("EDIT_COMMENT".equals(actionType)) {
                         if (getActivity() instanceof GroupPostDetailActivity)
@@ -421,7 +480,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 }
                 break;
         }
-
     }
 
     private void loadImageFromCamera() {
@@ -516,8 +574,31 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         }
     }
 
-    private class CustomerTextClick extends ClickableSpan {
+    @Override
+    public void onPreExecute() {
+        if (isAdded())
+            showProgressDialog(getString(R.string.please_wait));
+    }
 
+    @Override
+    public void onCancelled() {
+
+    }
+
+    @Override
+    public void onPostExecute(Bitmap image) {
+        if (isAdded()) {
+            String path = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), image, "Title", null);
+            Uri imageUriTemp = Uri.parse(path);
+            File file2 = FileUtils.getFile(getActivity(), imageUriTemp);
+            sendUploadProfileImageRequest(file2);
+        } else {
+            Toast.makeText(BaseApplication.getAppContext(), R.string.went_wrong, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private class CustomerTextClick extends ClickableSpan {
         private String mUrl;
 
         CustomerTextClick(String url) {
@@ -575,6 +656,33 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         }
     }
 
+
+//    private void requestAudioRecordPermission() {
+//        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+//                Manifest.permission.RECORD_AUDIO)) {
+//
+//            // Display a SnackBar with an explanation and a button to trigger the request.
+//            Snackbar.make(mLayout, "record permission",
+//                    Snackbar.LENGTH_INDEFINITE)
+//                    .setAction(R.string.ok, new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            requestUngrantedAudioRecordingPermissions();
+//                        }
+//                    })
+//                    .show();
+//        }
+//    }
+//
+//    private void requestUngrantedAudioRecordingPermissions() {
+//        ArrayList<String> permissionList = new ArrayList<>();
+//        if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSION_AUDIO_RECORD) != PackageManager.PERMISSION_GRANTED) {
+//            permissionList.add(PERMISSION_AUDIO_RECORD);
+//        }
+//        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+//        ActivityCompat.requestPermissions(getActivity(), requiredPermission, REQUEST_RECORD_AUDIO_PERMISSION);
+//    }
+
     private void requestUngrantedPermissions() {
         ArrayList<String> permissionList = new ArrayList<>();
         for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
@@ -591,23 +699,29 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                                            @NonNull int[] grantResults) {
 
         if (requestCode == REQUEST_INIT_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
-            // We have requested multiple permissions for contacts, so all of them need to be
-            // checked.
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                // All required permissions have been granted, display contacts fragment.
                 Snackbar.make(mLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
                 openMediaChooserDialog();
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(mLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
-        } else {
+        }
+//        else if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+//            if (PermissionUtil.verifyPermissions(grantResults)) {
+//                Snackbar.make(mLayout, R.string.permision_available_init,
+//                        Snackbar.LENGTH_SHORT)
+//                        .show();
+//            } else {
+//                Snackbar.make(mLayout, R.string.permissions_not_granted,
+//                        Snackbar.LENGTH_SHORT)
+//                        .show();
+//            }
+//        }
+        else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
@@ -627,13 +741,28 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 imageUri = data.getData();
                 if (resultCode == RESULT_OK) {
                     try {
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-                        String path = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), imageBitmap, "Title", null);
-                        Uri imageUriTemp = Uri.parse(path);
-                        File file2 = FileUtils.getFile(getActivity(), imageUriTemp);
-                        sendUploadProfileImageRequest(file2);
+                        if (getActivity() instanceof GroupPostDetailActivity) {
+                            ((GroupPostDetailActivity) getActivity()).processImage(imageUri);
+                        } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+//                            ((ViewGroupPostCommentsRepliesActivity) getActivity()).processImage();
+                        }
+
+                        android.app.FragmentManager fm = getActivity().getFragmentManager();
+                        mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                        if (mTaskFragment == null) {
+                            mTaskFragment = new TaskFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable("uri", imageUri);
+                            mTaskFragment.setArguments(bundle);
+                            fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+                        }
+//                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
+//                        String path = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), imageBitmap, "Title", null);
+//                        Uri imageUriTemp = Uri.parse(path);
+//                        File file2 = FileUtils.getFile(getActivity(), imageUriTemp);
+//                        sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         e.printStackTrace();
@@ -693,6 +822,75 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             }
         }
     }
+
+//    public void uploadAudio(Uri file) {
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//
+//        mAuth.signInAnonymously()
+//                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            Log.d("VideoUpload", "signInAnonymously:success");
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//                            uploadAudioToFirebase(contentURI);
+//                        } else {
+//                            // If sign in fails, display a message to the user.
+//                            Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
+//                            Toast.makeText(getActivity(), "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
+////                            updateUI(null);
+//                        }
+//
+//                        // ...
+//                    }
+//                });
+//    }
+//
+//    private void uploadAudioToFirebase(Uri file2) {
+//        FirebaseStorage storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com");
+//
+//        final StorageReference storageRef = storage.getReference();
+//
+//        suffixName = System.currentTimeMillis();
+////        Uri file = Uri.fromFile(file2);
+//        final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+//                + "/audio/" + file2.getLastPathSegment() + "_" + suffixName);
+//        com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2);
+//
+//// Register observers to listen for when the download is done or if it fails
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Handle unsuccessful uploads
+////                MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
+////                createRowForFailedAttempt(exception.getMessage());
+//
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
+////                MixPanelUtils.pushVideoUploadSuccessEvent(mixpanel, title);
+//                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                    @Override
+//                    public void onSuccess(Uri uri) {
+//                        Uri downloadUri = uri;
+////                        publishVideo(uri);
+//                    }
+//                });
+//                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+//                // ...
+//            }
+//        });
+//
+//        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onProgress(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
+//                Log.e("Tuts+", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
+//            }
+//        });
+//    }
 
     public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
@@ -770,4 +968,36 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             }
         });
     }
+
+//    private void startRecording() {
+//        mRecorder = new MediaRecorder();
+//        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+//        mRecorder.setOutputFile(mFileName);
+//        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+//
+//        try {
+//            mRecorder.prepare();
+//        } catch (IOException e) {
+//            Log.e("LOG_TAG", "prepare() failed");
+//        }
+//
+//        mRecorder.start();
+//    }
+//
+//    private void stopRecording() {
+//        mRecorder.stop();
+//        mRecorder.release();
+//        mRecorder = null;
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        if (mRecorder != null) {
+//            mRecorder.release();
+//            mRecorder = null;
+//        }
+//    }
+
 }
