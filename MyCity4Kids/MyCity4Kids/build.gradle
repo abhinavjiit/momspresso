@@ -93,6 +93,7 @@ dependencies {
     compile 'com.googlecode.mp4parser:isoparser:1.1.20'
     compile 'com.google.android.exoplayer:exoplayer:r2.5.1'
     compile 'io.branch.sdk.android:library:3.+'
+    compile 'com.devlomi.record-view:record-view:2.0.1'
 }
 
 //dependencies {

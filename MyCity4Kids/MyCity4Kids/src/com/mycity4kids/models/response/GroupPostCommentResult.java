@@ -33,6 +33,7 @@ public class GroupPostCommentResult implements Parcelable {
     private int notHelpfullCount;
     private int helpfullCount;
     private ArrayList<GroupPostCounts> counts;
+    private int commentType;
 
     public GroupPostCommentResult() {
 
@@ -58,6 +59,7 @@ public class GroupPostCommentResult implements Parcelable {
         isLastConversation = in.readInt();
         counts = new ArrayList<>();
         in.readTypedList(counts, GroupPostCounts.CREATOR);
+        commentType = in.readInt();
     }
 
     public static final Creator<GroupPostCommentResult> CREATOR = new Creator<GroupPostCommentResult>() {
@@ -261,6 +263,14 @@ public class GroupPostCommentResult implements Parcelable {
         this.counts = counts;
     }
 
+    public int getCommentType() {
+        return commentType;
+    }
+
+    public void setCommentType(int commentType) {
+        this.commentType = commentType;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
@@ -281,5 +291,8 @@ public class GroupPostCommentResult implements Parcelable {
         dest.writeTypedList(childData);
         dest.writeInt(isLastConversation);
         dest.writeTypedList(counts);
+        dest.writeInt(commentType);
     }
+
+
 }

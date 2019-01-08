@@ -61,6 +61,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public static final int HEADER = -1;
     public static final int COMMENT_LEVEL_ROOT = 0;
+    public static final int COMMENT_AUDIO = 1;
     private final String localizedNotHelpful, localizedHelpful, localizedComment;
 
     private final Context mContext;
@@ -95,10 +96,11 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     public int getItemViewType(int position) {
         if (position == 0) {
             return HEADER;
+        } else if (postCommentsList.get(position).getCommentType() == AppConstants.COMMENT_TYPE_AUDIO) {
+            return COMMENT_AUDIO;
         } else {
             return COMMENT_LEVEL_ROOT;
         }
-
     }
 
     @Override
@@ -118,8 +120,14 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 return new ImagePollPostViewHolder(v0);
             }
         } else {
-            View v0 = mInflator.inflate(R.layout.group_post_comment_cell_test, parent, false);
-            return new RootCommentViewHolder(v0);
+            if (COMMENT_AUDIO == viewType) {
+                View v0 = mInflator.inflate(R.layout.group_post_audio_comment_cell, parent, false);
+                return new RootCommentViewHolder(v0);
+            } else {
+                View v0 = mInflator.inflate(R.layout.group_post_comment_cell_test, parent, false);
+                return new RootCommentViewHolder(v0);
+            }
+
         }
     }
 
@@ -322,8 +330,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     rootCommentViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     rootCommentViewHolder.media.setVisibility(View.GONE);
                 }
-
-
             } else {
                 rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
                         + " " + postCommentsList.get(position).getUserInfo().getLastName());

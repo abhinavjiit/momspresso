@@ -625,4 +625,5 @@ public class AppConstants {
 
     public static final String ANDROID_NEW_EDITOR = "android_new_editor";
     public static final String ANDROID_OLD_EDITOR = "android_old_editor";
+    public static final int COMMENT_TYPE_AUDIO = 2;
 }
