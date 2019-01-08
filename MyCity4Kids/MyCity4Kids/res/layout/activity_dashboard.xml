@@ -44,7 +44,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/viewBookmarkedArticleTextView"
                     android:layout_toRightOf="@+id/bookmarkImageView"
-                    android:text="Your article is successfully bookmarked."
+                    android:text="@string/your_article_is_successfully_bookmarked"
                     android:textColor="@color/white"
                     app:fontName="oswald_regular.ttf" />
 

@@ -50,9 +50,9 @@ public class UserPublishedContentActivity extends BaseActivity implements View.O
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Article"));
-        tabLayout.addTab(tabLayout.newTab().setText("Story"));
-        tabLayout.addTab(tabLayout.newTab().setText("Mom Vlog"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.search_article_topic_tab_label)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.lang_setting_stories_label)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.myprofile_section_videos_label)));
         AppUtils.changeTabsFont(this, tabLayout);
 //        toolbarTitleTextView.setText(getString(R.string.myprofile_section_short_story_label));
         UserPublishedContentPagerAdapter adapter = new UserPublishedContentPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);

@@ -613,7 +613,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
                             UserDetailResponse responseData = response.body();
                             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                                Toast.makeText(BlogSetupActivity.this, "Successfully updated!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BlogSetupActivity.this, R.string.successfully_updated, Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(BlogSetupActivity.this, PushTokenService.class);
                                 startService(intent);
                                 finish();

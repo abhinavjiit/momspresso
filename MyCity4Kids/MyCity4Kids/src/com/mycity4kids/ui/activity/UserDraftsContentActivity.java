@@ -50,8 +50,8 @@ public class UserDraftsContentActivity extends BaseActivity implements View.OnCl
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Article"));
-        tabLayout.addTab(tabLayout.newTab().setText("Story"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.search_article_topic_tab_label)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.lang_setting_stories_label)));
         AppUtils.changeTabsFont(this, tabLayout);
 //        toolbarTitleTextView.setText(getString(R.string.myprofile_section_short_story_label));
         UserDraftsContentPagerAdapter adapter = new UserDraftsContentPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);

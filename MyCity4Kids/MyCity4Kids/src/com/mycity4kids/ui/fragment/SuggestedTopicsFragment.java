@@ -68,7 +68,7 @@ public class SuggestedTopicsFragment extends BaseFragment {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI suggestedTopicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
-        Call<SuggestedTopicsResponse> suggestedTopicsCAll = suggestedTopicsAPI.getSuggestedTopics("0,1,2,3,4,5,6");
+        Call<SuggestedTopicsResponse> suggestedTopicsCAll = suggestedTopicsAPI.getSuggestedTopics("0,1,2,3,4,5,6,7,8");
         suggestedTopicsCAll.enqueue(suggestedTopicsResponseCallback);
     }
 

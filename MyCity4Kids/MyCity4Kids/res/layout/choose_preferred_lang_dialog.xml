@@ -104,6 +104,34 @@
         app:fontName="oswald.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/kannadaTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="23dp"
+        android:paddingRight="23dp"
+        android:paddingTop="8dp"
+        android:text="@string/language_label.kannada"
+        android:textColor="@color/videos.upload_option.gallery"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/malayalamTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="23dp"
+        android:paddingRight="23dp"
+        android:paddingTop="8dp"
+        android:text="@string/language_label.malayalam"
+        android:textColor="@color/videos.upload_option.gallery"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/cancelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -50,6 +50,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -69,6 +70,8 @@ import com.mycity4kids.models.response.AllDraftsResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
+import com.mycity4kids.models.response.DraftListData;
+import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
@@ -100,10 +103,14 @@ import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 import retrofit2.Call;
@@ -400,6 +407,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
             langTextView.setText(getString(R.string.language_label_telegu));
             selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
+        } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(this))) {
+            langTextView.setText(getString(R.string.language_label_kannada));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
+        } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(this))) {
+            langTextView.setText(getString(R.string.language_label_malayalam));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
         } else {
             langTextView.setText(getString(R.string.language_label_english));
             selectedlangGuideTextView.setText(getString(R.string.language_label_english));

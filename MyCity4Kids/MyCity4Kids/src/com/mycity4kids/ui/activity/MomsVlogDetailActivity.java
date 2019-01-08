@@ -399,7 +399,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
             if (!StringUtils.isNullOrEmpty(authorType)) {
 
                 if (AppConstants.USER_TYPE_BLOGGER.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_blogger));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         String bSlug = detailData.getAuthor().getBlogTitleSlug();
@@ -412,7 +412,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EXPERT.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_expert));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_expert));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
@@ -420,7 +420,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EDITOR.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_editor));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editor));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
@@ -428,7 +428,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EDITORIAL.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_editorial));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editorial));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
@@ -436,7 +436,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_FEATURED.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_featured));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_featured));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
@@ -444,7 +444,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_USER.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_USER.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_user));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         String bSlug = detailData.getAuthor().getBlogTitleSlug();
@@ -459,7 +459,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                 }
             } else {
                 // Default Author type set to Blogger
-                authorTypeTextView.setText("USER".toUpperCase());
+                authorTypeTextView.setText(getString(R.string.author_type_user));
                 authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                 if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                     shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + detailData.getAuthor().getBlogTitleSlug() + "/video/" + titleSlug;

@@ -26,7 +26,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 public class ChangePreferredLanguageDialogFragment extends DialogFragment implements OnClickListener {
 
-    private TextView englishTextView, hindiTextView, marathiTextView, bengaliTextView, tamilTextView, teleguTextView;
+    private TextView englishTextView, hindiTextView, marathiTextView, bengaliTextView, tamilTextView,
+            teleguTextView, malayalamTextView, kannadaTextView;
     private String selectedLang = "";
     private TextView cancelTextView;
     private String userId = "";
@@ -49,6 +50,8 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
         bengaliTextView = (TextView) rootView.findViewById(R.id.bengaliTextView);
         teleguTextView = (TextView) rootView.findViewById(R.id.teluguTextView);
         tamilTextView = (TextView) rootView.findViewById(R.id.tamilTextView);
+        kannadaTextView = (TextView) rootView.findViewById(R.id.kannadaTextView);
+        malayalamTextView = (TextView) rootView.findViewById(R.id.malayalamTextView);
         cancelTextView = (TextView) rootView.findViewById(R.id.cancelTextView);
 
         englishTextView.setOnClickListener(this);
@@ -57,6 +60,8 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
         bengaliTextView.setOnClickListener(this);
         teleguTextView.setOnClickListener(this);
         tamilTextView.setOnClickListener(this);
+        kannadaTextView.setOnClickListener(this);
+        malayalamTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
 
         return rootView;
@@ -76,6 +81,8 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 bengaliTextView.setSelected(false);
                 tamilTextView.setSelected(false);
                 teleguTextView.setSelected(false);
+                kannadaTextView.setSelected(false);
+                malayalamTextView.setSelected(false);
                 setNewLocale(selectedLang, false);
                 break;
             case R.id.hindiTextView:
@@ -89,6 +96,8 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 bengaliTextView.setSelected(false);
                 tamilTextView.setSelected(false);
                 teleguTextView.setSelected(false);
+                kannadaTextView.setSelected(false);
+                malayalamTextView.setSelected(false);
                 setNewLocale(selectedLang, false);
                 break;
             case R.id.marathiTextView:
@@ -102,6 +111,8 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 bengaliTextView.setSelected(false);
                 tamilTextView.setSelected(false);
                 teleguTextView.setSelected(false);
+                kannadaTextView.setSelected(false);
+                malayalamTextView.setSelected(false);
                 setNewLocale(selectedLang, false);
                 break;
             case R.id.bengaliTextView:
@@ -115,6 +126,8 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 bengaliTextView.setSelected(true);
                 tamilTextView.setSelected(false);
                 teleguTextView.setSelected(false);
+                kannadaTextView.setSelected(false);
+                malayalamTextView.setSelected(false);
                 setNewLocale(selectedLang, false);
                 break;
             case R.id.tamilTextView:
@@ -128,6 +141,8 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 bengaliTextView.setSelected(false);
                 tamilTextView.setSelected(true);
                 teleguTextView.setSelected(false);
+                kannadaTextView.setSelected(false);
+                malayalamTextView.setSelected(false);
                 setNewLocale(selectedLang, false);
                 break;
             case R.id.teluguTextView:
@@ -141,6 +156,38 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 bengaliTextView.setSelected(false);
                 tamilTextView.setSelected(false);
                 teleguTextView.setSelected(true);
+                kannadaTextView.setSelected(false);
+                malayalamTextView.setSelected(false);
+                setNewLocale(selectedLang, false);
+                break;
+            case R.id.kannadaTextView:
+                if (isAdded()) {
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_kannada));
+                }
+                selectedLang = AppConstants.LOCALE_KANNADA;
+                englishTextView.setSelected(false);
+                hindiTextView.setSelected(false);
+                marathiTextView.setSelected(false);
+                bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(false);
+                teleguTextView.setSelected(false);
+                kannadaTextView.setSelected(true);
+                malayalamTextView.setSelected(false);
+                setNewLocale(selectedLang, false);
+                break;
+            case R.id.malayalamTextView:
+                if (isAdded()) {
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_malayalam));
+                }
+                selectedLang = AppConstants.LOCALE_MALAYALAM;
+                englishTextView.setSelected(false);
+                hindiTextView.setSelected(false);
+                marathiTextView.setSelected(false);
+                bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(false);
+                teleguTextView.setSelected(false);
+                kannadaTextView.setSelected(false);
+                malayalamTextView.setSelected(true);
                 setNewLocale(selectedLang, false);
                 break;
             case R.id.cancelTextView:

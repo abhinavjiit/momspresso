@@ -446,7 +446,16 @@ public class K4LVideoTrimmer extends FrameLayout {
 
     public int getTimeStampForIFrame() {
         if (iFrameTimeStamp - mStartPosition > 0) {
-            return iFrameTimeStamp - mStartPosition;
+            if (mEndPosition - iFrameTimeStamp < 1000) {
+                if (iFrameTimeStamp - mStartPosition - 1000 > 0) {
+                    return iFrameTimeStamp - mStartPosition - 1000;
+                } else {
+                    return iFrameTimeStamp - mStartPosition;
+                }
+            } else {
+                return iFrameTimeStamp - mStartPosition;
+            }
+
         } else {
             return 0;
         }

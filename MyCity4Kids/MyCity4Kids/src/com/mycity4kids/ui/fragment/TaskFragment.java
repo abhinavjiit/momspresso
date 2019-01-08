@@ -71,6 +71,23 @@ public class TaskFragment extends Fragment {
         mTask.execute(imageBitmap);
     }
 
+    public void launchNewTask(Uri imageUri) {
+        Bitmap imageBitmap = null;
+        try {
+            if (getActivity() != null) {
+                imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+            } else {
+                imageBitmap = MediaStore.Images.Media.getBitmap(BaseApplication.getAppContext().getContentResolver(), imageUri);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Create and execute the background task.
+        mTask = new DummyTask();
+        mTask.execute(imageBitmap);
+    }
+
     /**
      * Set the callback to null so we don't accidentally leak the
      * Activity instance.

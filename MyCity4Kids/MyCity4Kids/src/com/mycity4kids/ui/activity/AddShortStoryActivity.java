@@ -371,7 +371,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
             }
             if (!isTopicSelected) {
-                Toast.makeText(this, "Please choose atleast one topic to continue", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.select_atleast_one_topic, Toast.LENGTH_SHORT).show();
                 return false;
             }
         }

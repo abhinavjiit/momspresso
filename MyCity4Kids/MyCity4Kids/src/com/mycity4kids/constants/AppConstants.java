@@ -567,6 +567,8 @@ public class AppConstants {
     public static final String LOCALE_BENGALI = "bn";
     public static final String LOCALE_TAMIL = "ta";
     public static final String LOCALE_TELUGU = "te";
+    public static final String LOCALE_KANNADA = "kn";
+    public static final String LOCALE_MALAYALAM = "ml";
 
     public static final String GROUP_SECTION_ABOUT = "ABOUT";
     public static final String GROUP_SECTION_DISCUSSION = "DISCUSSION";

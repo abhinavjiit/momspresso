@@ -3,9 +3,9 @@
     <item
         android:id="@+id/camera"
         android:actionMenuTextColor="@color/black_color"
-        android:title="Take picture from camera" />
+        android:title="@string/take_picture_from_camera" />
 
     <item
         android:actionMenuTextColor="@color/black_color"
-        android:title="Select an image" />
+        android:title="@string/select_an_image" />
 </menu>
