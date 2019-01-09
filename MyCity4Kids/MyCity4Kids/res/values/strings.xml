@@ -889,4 +889,16 @@
     <string name="upload_larger_video">Oops! Your video should be at least 5 seconds long.</string>
     <string name="seconds_label">seconds</string>
     <string name="minutes_label">minutes</string>
+
+    <string name="choose_option_genre">Choose The Genre Of Your Story</string>
+    <string name="submit_story_text">SUBMIT YOUR STORY </string>
+    <string name="this_week_challenge">This Week\s Challenge</string>
+    <string name="previous_week_challenge">Previous Week\s Challenges</string>
+    <string name="what_is_your_story">WHAT\S YOUR 100 WORD STORY</string>
+    <string name="use_picture_word_to_write_one">Use The Picture ,Word, Phrase Or video Given Blow To Write One</string>
+    <string name="challenge_write_story_for_this_picture">Write Your Story Around This Picture</string>
+    <string name="challenge_write_story_using_picture">Write your story around this picture</string>
+    <string name="choose_story_label">WRITE A 100 WORD STORY</string>
+    <string name="choose_challenge_label">TAKE A CHALLENGE</string>
+    <string name="challenge.listing.title">#100WORDSTORY</string>
 </resources>

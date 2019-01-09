@@ -12,6 +12,17 @@ public class DraftListResult implements Serializable {
     String articleType;
     Long updatedTime;
     String createdTime;
+    private String contentType;
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+
     String body;
     String title;
     //    ImageURL imageUrl;

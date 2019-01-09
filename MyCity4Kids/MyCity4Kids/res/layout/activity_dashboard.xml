@@ -1698,4 +1698,15 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/choose_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <include layout="@layout/choose_challenge_story_layout" />
+
+
+    </RelativeLayout>
+
 </FrameLayout>

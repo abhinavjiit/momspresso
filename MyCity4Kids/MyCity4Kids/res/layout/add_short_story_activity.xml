@@ -54,32 +54,85 @@
         android:layout_below="@+id/toolbar"
         android:background="@color/light_underline" />
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/topicHeading"
+    <RelativeLayout
+        android:id="@+id/topicHeadinglayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbarUnderline"
-        android:padding="10dp"
-        android:text="@string/short_s.choose_genre"
-        android:textSize="16sp"
-        app:fontName="georgia.ttf" />
+        android:layout_below="@+id/toolbarUnderline">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/topicHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/short_s.choose_genre"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:fontName="georgia.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/challenge_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/challenge_write_story_for_this_picture"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:fontName="georgia.ttf" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topicHeading"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:scrollbars="horizontal"
-        android:visibility="visible" />
+        android:layout_below="@+id/topicHeadinglayout"
+        android:layout_marginTop="5dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:scrollbars="horizontal"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/challenge_header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:gravity="center"
+            android:visibility="gone">
+
+
+            <ImageView
+                android:id="@+id/image_challenge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/groups_generic"
+                android:visibility="gone" />
+
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/challenge_topic_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Gift"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:visibility="gone" />
+
+
+        </RelativeLayout>
+    </RelativeLayout>
 
     <com.mycity4kids.widget.CustomFontEditText
         android:id="@+id/storyTitleEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recyclerView"
+        android:layout_below="@+id/main_layout"
         android:background="@null"
+        android:focusableInTouchMode="true"
         android:hint="@string/short_s.add.title_hint"
         android:maxLength="60"
         android:maxLines="2"
@@ -104,6 +157,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/underline"
         android:background="@null"
+        android:focusableInTouchMode="true"
         android:gravity="top|left"
         android:hint="@string/short_s.add.body_hint"
         android:paddingLeft="14dp"
@@ -112,5 +166,17 @@
         android:textColor="@color/short_story.light_black_color"
         android:textSize="16sp"
         app:fontName="georgia.ttf" />
+
+    <RelativeLayout
+        android:id="@+id/choose_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <include layout="@layout/choose_option_challeneg" />
+
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

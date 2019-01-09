@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_choose_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="invisible">
+
+
+    <View
+        android:id="@+id/overlayView_choose_story_challenge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:alpha="0.75"
+        android:background="#121212"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/choose_option_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/write_story"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="9dp"
+            android:paddingLeft="14dp"
+            android:paddingTop="18dp"
+            android:text="@string/choose_story_label"
+            android:textColor="@color/app_grey"
+            android:textSize="18sp"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/write_challenge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="18dp"
+            android:paddingLeft="14dp"
+            android:paddingTop="9dp"
+            android:text="@string/choose_challenge_label"
+            android:textColor="@color/app_grey"
+            android:textSize="18sp"
+            app:fontName="oswald.ttf" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
@@ -24,6 +25,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsShortStoriesPagerAdapter;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -75,7 +77,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
             if (shortStoriesTopicList == null) {
                 FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
                 createTopicsData(res);
             }
             getCurrentParentTopicCategoriesAndSubCategories();
@@ -95,7 +98,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
                     try {
                         FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
                         createTopicsData(res);
                         getCurrentParentTopicCategoriesAndSubCategories();
                         initializeTabsAndPager();
@@ -190,14 +194,13 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
 
             ArrayList<Topics> aa = new ArrayList<Topics>();
             aa.add(childTopic);
-
             mainTopic.setChild(aa);
             subTopicsList.add(mainTopic);
         }
         for (int i = 0; i < subTopicsList.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
         }
-
+        //  tabLayout.addTab(tabLayout.newTab().setText("Challenges"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         AppUtils.changeTabsFont(this, tabLayout);
 
@@ -252,7 +255,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
 
                         //DO NOT REMOVE below commented check -- showInMenu 0 from backend --might be used to show/hide in future
-                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())) {
+                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu()) || "category-743892a865774baf9c20cbcc5c01d35f".equals(responseData.getData().get(i).getChild().get(k).getId())) {
                             //Adding All subcategories
                             responseData.getData().get(i).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());
