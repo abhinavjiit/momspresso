@@ -130,6 +130,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         anonymousTextView.setOnClickListener(this);
         anonymousCheckbox.setOnClickListener(this);
 
+        pollQuestionEditText.setText(SharedPrefUtils.getSavedPostData(this, selectedGroup.getId()));
+
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.groups_column_spacing);
         recyclerGridView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
 
@@ -461,6 +463,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                 if (response.isSuccessful()) {
                     AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
+                    pollQuestionEditText.setText("");
                     onBackPressed();
                 } else {
 
@@ -546,6 +549,14 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                     startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (null != pollQuestionEditText.getText() && !StringUtils.isNullOrEmpty(pollQuestionEditText.getText().toString())) {
+            SharedPrefUtils.setSavedPostData(AddPollGroupPostActivity.this, selectedGroup.getId(), pollQuestionEditText.getText().toString());
         }
     }
 }

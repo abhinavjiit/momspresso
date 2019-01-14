@@ -37,6 +37,7 @@
         android:layout_toEndOf="@+id/notificationImageView"
         android:layout_toRightOf="@+id/notificationImageView"
         android:ellipsize="end"
+        android:maxLines="3"
         android:text="Review Title"
         android:textColor="@color/notification_center.body"
         android:textSize="14sp"

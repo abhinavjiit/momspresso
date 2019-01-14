@@ -16,6 +16,7 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.AllCommentsPagerAdapter;
@@ -78,8 +79,8 @@ public class ViewAllCommentsDialogFragment extends DialogFragment implements Vie
     private void addCommentTabs() {
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Momspresso"));
-        tabLayout.addTab(tabLayout.newTab().setText("Facebook"));
+        tabLayout.addTab(tabLayout.newTab().setText(BaseApplication.getAppContext().getString(R.string.app_name)));
+        tabLayout.addTab(tabLayout.newTab().setText(BaseApplication.getAppContext().getString(R.string.ad_bottom_bar_facebook)));
 
         AppUtils.changeTabsFont(getActivity(), tabLayout);
 //        wrapTabIndicatorToTitle(tabLayout, 25, 25);

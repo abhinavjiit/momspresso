@@ -16,6 +16,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
+import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 
 /**
  * Created by user on 08-06-2015.
@@ -73,23 +74,29 @@ public class GpPostCommentOptionsDialogFragment extends DialogFragment implement
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.deleteCommentTextView: {
-                ((GroupPostDetailActivity) getActivity()).onResponseDelete(commentPosition, position, responseType);
-//                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getTargetFragment();
-//                iCommentOptionAction.onResponseDelete(position, responseType);
+                if (getActivity() instanceof GroupPostDetailActivity)
+                    ((GroupPostDetailActivity) getActivity()).onResponseDelete(commentPosition, position, responseType);
+                else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                    ((ViewGroupPostCommentsRepliesActivity) getActivity()).onResponseDelete(commentPosition, position, responseType);
+                }
                 dismiss();
             }
             break;
             case R.id.editCommentTextView: {
-                ((GroupPostDetailActivity) getActivity()).onResponseEdit(commentPosition, position, responseType);
-//                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getTargetFragment();
-//                iCommentOptionAction.onResponseEdit(position, responseType);
+                if (getActivity() instanceof GroupPostDetailActivity)
+                    ((GroupPostDetailActivity) getActivity()).onResponseEdit(commentPosition, position, responseType);
+                else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                    ((ViewGroupPostCommentsRepliesActivity) getActivity()).onResponseEdit(commentPosition, position, responseType);
+                }
                 dismiss();
             }
             break;
             case R.id.reportCommentTextView: {
-                ((GroupPostDetailActivity) getActivity()).onResponseReport(commentPosition, position, responseType);
-//                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getTargetFragment();
-//                iCommentOptionAction.onResponseReport(position, responseType);
+                if (getActivity() instanceof GroupPostDetailActivity)
+                    ((GroupPostDetailActivity) getActivity()).onResponseReport(commentPosition, position, responseType);
+                else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                    ((ViewGroupPostCommentsRepliesActivity) getActivity()).onResponseReport(commentPosition, position, responseType);
+                }
                 dismiss();
             }
             break;

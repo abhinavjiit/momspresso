@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="12dp"
-        android:text="DELETE COMMENT"
+        android:text="@string/delete_comment"
         android:textColor="@color/spell_check.black"
         android:textSize="17sp"
         app:fontName="oswald.ttf" />
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="12dp"
-        android:text="EDIT COMMENT"
+        android:text="@string/edit_comment"
         android:textColor="@color/spell_check.black"
         android:textSize="18sp"
         app:fontName="oswald.ttf" />
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="12dp"
-        android:text="REPORT"
+        android:text="@string/report"
         android:textColor="@color/spell_check.black"
         android:textSize="16sp"
         app:fontName="oswald.ttf" />

@@ -18,6 +18,7 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -39,12 +40,13 @@ import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
+import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.SuggestedTopicsActivity;
 import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
-import com.mycity4kids.ui.activity.VlogsDetailActivity;
+import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.squareup.picasso.Picasso;
@@ -186,10 +188,17 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "video_details");
-                    Intent intent = new Intent(mContext, VlogsDetailActivity.class);
-                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getId());
+//                    Intent intent = new Intent(mContext, VlogsDetailActivity.class);
+//                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getId());
+//                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+//                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getAuthorId() + "~");
+//                    mContext.startActivity(intent);
+                    Intent intent = new Intent(mContext, MomsVlogDetailActivity.class);
+                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
+                    intent.putExtra(Constants.STREAM_URL, notificationList.get(position).getUrl());
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
-                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getAuthorId() + "~");
+                    intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
                     mContext.startActivity(intent);
                     try {
                         JSONObject jsonObject = new JSONObject();
@@ -256,7 +265,6 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                         jsonObject.put("type", "2");
-                        //Log.d("NotificationCenterClick", jsonObject.toString());
                         mixpanel.track("NotificationCenterClick", jsonObject);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -482,9 +490,11 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "postDetails");
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    Intent intent = new Intent(mContext, ViewGroupPostCommentsRepliesActivity.class);
                     intent.putExtra("postId", notificationList.get(position).getPostId());
                     intent.putExtra("groupId", notificationList.get(position).getGroupId());
+                    intent.putExtra("responseId", notificationList.get(position).getResponseId());
+                    intent.putExtra("action", "commentReply");
                     mContext.startActivity(intent);
                     try {
                         JSONObject jsonObject = new JSONObject();
@@ -638,6 +648,20 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                 userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
             } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
                 userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+            }
+        }
+
+        if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(userType)) {
+            if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender()) ||
+                    "m".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
+                Toast.makeText(mContext, mContext.getString(R.string.women_only), Toast.LENGTH_SHORT).show();
+                if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+
+                } else {
+                    return;
+                }
+            } else {
+
             }
         }
 

@@ -30,7 +30,9 @@ public class GroupPostCommentResult implements Parcelable {
     private int isLastConversation = 0;
     private int childCount;
     private UserDetailResult userInfo;
-
+    private int notHelpfullCount;
+    private int helpfullCount;
+    private ArrayList<GroupPostCounts> counts;
 
     public GroupPostCommentResult() {
 
@@ -54,6 +56,8 @@ public class GroupPostCommentResult implements Parcelable {
         updatedAt = in.readLong();
         childData = in.createTypedArrayList(GroupPostCommentResult.CREATOR);
         isLastConversation = in.readInt();
+        counts = new ArrayList<>();
+        in.readTypedList(counts, GroupPostCounts.CREATOR);
     }
 
     public static final Creator<GroupPostCommentResult> CREATOR = new Creator<GroupPostCommentResult>() {
@@ -99,6 +103,7 @@ public class GroupPostCommentResult implements Parcelable {
     public void setParentId(int parentId) {
         this.parentId = parentId;
     }
+
     public Object getMediaUrls() {
         return mediaUrls;
     }
@@ -232,6 +237,30 @@ public class GroupPostCommentResult implements Parcelable {
         this.userInfo = userInfo;
     }
 
+    public int getNotHelpfullCount() {
+        return notHelpfullCount;
+    }
+
+    public void setNotHelpfullCount(int notHelpfullCount) {
+        this.notHelpfullCount = notHelpfullCount;
+    }
+
+    public int getHelpfullCount() {
+        return helpfullCount;
+    }
+
+    public void setHelpfullCount(int helpfullCount) {
+        this.helpfullCount = helpfullCount;
+    }
+
+    public ArrayList<GroupPostCounts> getCounts() {
+        return counts;
+    }
+
+    public void setCounts(ArrayList<GroupPostCounts> counts) {
+        this.counts = counts;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
@@ -251,5 +280,6 @@ public class GroupPostCommentResult implements Parcelable {
         dest.writeLong(updatedAt);
         dest.writeTypedList(childData);
         dest.writeInt(isLastConversation);
+        dest.writeTypedList(counts);
     }
 }

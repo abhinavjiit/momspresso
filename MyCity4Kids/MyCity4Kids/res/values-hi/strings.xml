@@ -5,24 +5,12 @@
     <string name="unknown_person">अपरिचित</string>
     <string name="resend_email">रीसेंड ईमेल</string>
 
-    <!-- <string name="facebook_app_id">1437325266589625</string>-->
-
-    <!--but now we are using client APP ID -->
-    <string name="facebook_app_id">206155642763202</string>
-    <string name="fb_login_protocol_scheme">fb206155642763202</string>
-    <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
-
     <string name="write_review_prompt">आप क्या रिव्यू करना चाहते हैं?</string>
-
-    <!-- splash screen -->
 
     <string name="loading_txt">लोडिंग&#8230;</string>
 
-    <!-- Login Screen -->
-    <!-- Registration Screen -->
     <string name="subcategoryName">सब केटेगरी</string>
     <string name="location_info">व्यक्तिगत परिणाम के लिए, अपनी लोकेशन चुने</string>
-    <!-- HomeCategoryActivity -->
     <string name="hint_text">आप क्या देखना चाह रहे हैं?</string>
     <string name="locality_txt">किस जगह पर?</string>
     <string name="error_network">यह उपकरण नेटवर्क क्षेत्र से बाहर है</string>
@@ -654,6 +642,8 @@
     <string name="language_label.bengali">বাংলা</string>
     <string name="language_label.tamil">தமிழ்</string>
     <string name="language_label.telegu">తెలుగు</string>
+    <string name="language_label.kannada">ಕನ್ನಡ</string>
+    <string name="language_label.malayalam">മലയാളം</string>
 
     <string name="choose_pref_lang">अपनी पसंदीदा भाषा चुनें</string>
     <string name="choose_pref_lang.cancel">कैंसिल</string>
@@ -753,7 +743,7 @@
     <string name="groups.invitation_only_gp">आमंत्रण केवल समूह</string>
     <string name="groups.created">Created</string>
     <string name="groups.member_label">सदस्य </string>
-    <string name="groups.sections.about">ABOUT</string>
+    <string name="groups.sections.about">बारे में</string>
     <string name="groups.sections.discussions">चर्चा </string>
     <string name="groups.sections.blogs">ब्लोग्स</string>
     <string name="groups.sections.photos">फोटो </string>
@@ -851,4 +841,25 @@
     <string name="time_limit">(अधिकतम समय %1$s)</string>
     <string name="upload_larger_video">ओह ! आपका वीडियो कम से कम 5 सेकेंड लंबा होना चाहिए।</string>
     <string name="minutes_label">मिनट</string>
+    <string name="women_only">ओह हो\! यह सेक्शन केवल महिलाओं के लिए है। हालांकि, आप हमारा कांटेंट पढ़ना जारी रख सकते हैं।</string>
+    <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting blog post\n</string>
+    <string name="take_picture_from_camera">Take picture from camera</string>
+    <string name="select_an_image">Select an image</string>
+    <string name="related_videos">RELATED VIDEOS</string>
+    <string name="popular_videos">POPULAR VIDEOS</string>
+    <string name="delete_comment">DELETE COMMENT</string>
+    <string name="edit_comment">EDIT COMMENT</string>
+    <string name="report">REPORT</string>
+    <string name="select_atleast_one_topic">कम से कम एक केटेगरी का चुनाव अवश्य करें</string>
+    <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
+    <string name="successfully_updated">Successfully updated!</string>
+
+    <string name="submit_story_text">अपनी कहानी को प्रस्तुत करें</string>
+    <string name="this_week_challenge">इस सप्ताह का चैलेंज</string>
+    <string name="previous_week_challenge">पिछले सप्ताहों के चैलेंज</string>
+    <string name="what_is_your_story">आपकी 100 शब्दों की कहानी क्या है ?</string>
+    <string name="use_picture_word_to_write_one">कहानी लिखने के लिए चित्र , शब्द ,वाक्य या वीडियो का प्रयोग करें</string>
+    <string name="challenge_write_story_for_this_picture">इस तस्वीर के अनुसार अपनी कहानी लिखें</string>
+    <string name="choose_challenge_label">चैलेंज का हिस्सा बनें</string>
+    <string name="start_writing">लिखना शुरू करें</string>
 </resources>

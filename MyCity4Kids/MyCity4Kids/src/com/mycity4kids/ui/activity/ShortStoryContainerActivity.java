@@ -126,9 +126,6 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
             playTtsTextView.setVisibility(View.GONE);
         }
-
-        Intent readArticleIntent = new Intent(this, ReadArticleService.class);
-        startService(readArticleIntent);
     }
 
     @Override

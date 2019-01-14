@@ -66,6 +66,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.LocaleManager;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.location.GPSTracker;
@@ -73,8 +74,11 @@ import com.mycity4kids.utils.location.GPSTracker;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -340,6 +344,21 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
+
+        // Branch init
+        Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    Log.i("BRANCH SDK", referringParams.toString());
+                    // Retrieve deeplink keys from 'referringParams' and evaluate the values to determine where to route the user
+                    // Check '+clicked_branch_link' before deciding whether to use your Branch routing logic
+                } else {
+                    Log.i("BRANCH SDK", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
+
         mClient.connect();
         if (!BuildConfig.DEBUG)
             AppIndex.AppIndexApi.start(mClient, getAction());
@@ -366,6 +385,7 @@ public class SplashActivity extends BaseActivity {
             try {
                 JSONObject prop = new JSONObject();
                 prop.put("userId", SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+                prop.put("lang", Locale.getDefault().getLanguage());
                 mixpanel.registerSuperProperties(prop);
             } catch (Exception e) {
 

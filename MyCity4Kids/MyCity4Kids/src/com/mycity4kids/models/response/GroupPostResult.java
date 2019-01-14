@@ -74,6 +74,8 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         counts = new ArrayList<>();
         in.readTypedList(counts, GroupPostCounts.CREATOR);
         userInfo = in.readParcelable(UserInfo.class.getClassLoader());
+        helpfullCount = in.readInt();
+        notHelpfullCount = in.readInt();
     }
 
     public static final Creator<GroupPostResult> CREATOR = new Creator<GroupPostResult>() {
@@ -380,6 +382,8 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         dest.writeString(pollType);
         dest.writeTypedList(counts);
         dest.writeParcelable(userInfo, flags);
+        dest.writeInt(helpfullCount);
+        dest.writeInt(notHelpfullCount);
     }
 }
 

@@ -7,6 +7,7 @@ import com.mycity4kids.models.request.DeleteGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.EditGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
+import com.mycity4kids.models.request.GroupCommentActionsRequest;
 import com.mycity4kids.models.request.GroupNotificationToggleRequest;
 import com.mycity4kids.models.request.GroupReportContentRequest;
 import com.mycity4kids.models.request.GroupsCategoryUpdateRequest;
@@ -231,6 +232,10 @@ public interface GroupsAPI {
     //Group Action Items
     @POST("/api/v1/groups/action")
     Call<GroupsActionResponse> addAction(@Body GroupActionsRequest groupActionsRequest);
+
+    //Group Action Items
+    @POST("/api/v1/groups/action")
+    Call<GroupsActionResponse> addCommentAction(@Body GroupCommentActionsRequest groupActionsRequest);
 
     @POST("/api/v1/groups/action-vote")
     Call<GroupsActionVoteResponse> addActionVote(@Body GroupActionsRequest groupActionsRequest);

@@ -17,10 +17,17 @@
             android:layout_height="match_parent"
             android:descendantFocusability="blocksDescendants">
 
+            <com.facebook.ads.NativeAdLayout
+                android:id="@+id/native_banner_ad_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true" />
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/article_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/native_banner_ad_container"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
@@ -290,11 +297,19 @@
                 android:layout_below="@+id/tagsLayoutContainer"
                 android:background="@color/light_underline" />
 
+            <com.facebook.ads.NativeAdLayout
+                android:id="@+id/native_ad_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/adViewSeparator"
+                android:orientation="vertical"
+                android:visibility="visible" />
+
             <RelativeLayout
                 android:id="@+id/groupHeaderView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/adViewSeparator"
+                android:layout_below="@+id/native_ad_container"
                 android:background="@color/white">
 
                 <android.support.v7.widget.CardView
@@ -370,14 +385,6 @@
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
             </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/native_ad_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/adViewSeparator"
-                android:orientation="vertical"
-                android:visibility="gone" />
 
             <View
                 android:layout_width="match_parent"

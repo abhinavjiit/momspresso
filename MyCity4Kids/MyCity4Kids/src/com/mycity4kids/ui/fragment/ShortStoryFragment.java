@@ -32,7 +32,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
@@ -74,7 +73,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 6/6/17.
  */
-public class ShortStoryFragment extends BaseFragment implements View.OnClickListener, AddEditCommentReplyFragment.IAddCommentReply, ShortStoriesDetailRecyclerAdapter.RecyclerViewClickListener,
+public class ShortStoryFragment extends BaseFragment implements View.OnClickListener, ShortStoriesDetailRecyclerAdapter.RecyclerViewClickListener,
         CommentOptionsDialogFragment.ICommentOptionAction {
 
     private final static int ADD_BOOKMARK = 1;
@@ -285,22 +284,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
-
-    @Override
-    public void onCommentAddition(CommentsData cd) {
-
-    }
-
-    @Override
-    public void onCommentReplyEditSuccess(CommentsData cd) {
-
-    }
-
-    @Override
-    public void onReplyAddition(CommentsData cd) {
-
-    }
-
 
     private void addRemoveBookmark() {
 

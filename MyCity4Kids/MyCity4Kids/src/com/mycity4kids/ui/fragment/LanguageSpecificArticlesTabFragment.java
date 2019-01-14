@@ -44,7 +44,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class LanguageSpecificArticlesTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class LanguageSpecificArticlesTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 1;
     private int limit = 15;
@@ -138,8 +138,8 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(sortType);
 
-        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-        feedNativeAd.loadAds();
+//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, trendingTopicData.getDisplay_name(), false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -347,15 +347,15 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
         hitFilteredTopicsArticleListingApi(0);
     }
 
-    @Override
-    public void onFinishToLoadAds() {
-
-    }
-
-    @Override
-    public void onErrorToLoadAd() {
-
-    }
+//    @Override
+//    public void onFinishToLoadAds() {
+//
+//    }
+//
+//    @Override
+//    public void onErrorToLoadAd() {
+//
+//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {

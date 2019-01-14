@@ -270,7 +270,6 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         } else {
             String[] nameArr = viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().trim().split("\\s+");
             updateUserDetail.setFirstName((nameArr[0]));
-//            updateUserDetail.setBlogTitle(viewPagerAdapter.getContactdetails().getHandleNameEditText().getText().toString().trim() + "");
 
             if (nameArr.length < 2 || StringUtils.isNullOrEmpty(nameArr[1].trim())) {
                 updateUserDetail.setLastName(" ");

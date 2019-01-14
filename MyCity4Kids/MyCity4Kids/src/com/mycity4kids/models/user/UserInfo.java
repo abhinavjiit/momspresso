@@ -26,6 +26,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
     private String cityId;
     private String isLangSelection;
     private String subscriptionEmail;
+    private String gender;
 
     public UserInfo() {
         super();
@@ -191,6 +192,14 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         this.subscriptionEmail = subscriptionEmail;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     protected UserInfo(Parcel in) {
         id = in.readString();
         dynamoId = in.readString();
@@ -212,6 +221,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         cityId = in.readString();
         isLangSelection = in.readString();
         subscriptionEmail = in.readString();
+        gender = in.readString();
     }
 
     @Override
@@ -236,6 +246,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         dest.writeString(cityId);
         dest.writeString(isLangSelection);
         dest.writeString(subscriptionEmail);
+        dest.writeString(gender);
     }
 
     @Override

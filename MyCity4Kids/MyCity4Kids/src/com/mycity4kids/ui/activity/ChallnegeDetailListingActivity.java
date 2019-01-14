@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -30,24 +34,33 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.ExploreTopicsModel;
+import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter;
 import com.mycity4kids.ui.fragment.ReportContentDialogFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.FeedNativeAd;
 
 import org.apmem.tools.layouts.FlowLayout;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import okhttp3.internal.io.RealConnection;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -57,7 +70,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     private LinearLayoutManager llm;
     private ChallengeListingRecycleAdapter challengeListingRecycleAdapter;
     private Toolbar mToolbar;
-
+    private ArrayList<ExploreTopicsModel> ssTopicsList;
     private int pos;
     private String ActiveUrl;
     private ArrayList<String> challengeId;
@@ -145,11 +158,8 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
         recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
         fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
         RadioGroup chooseoptionradioButton = (RadioGroup) findViewById(R.id.reportReasonRadioGroup);
-        final AppCompatRadioButton option1RadioButton = (AppCompatRadioButton) findViewById(R.id.reason1RadioButton);
-        final AppCompatRadioButton option2RadioButton = (AppCompatRadioButton) findViewById(R.id.reason2RadioButton);
-        final AppCompatRadioButton option3RadioButton = (AppCompatRadioButton) findViewById(R.id.reason3RadioButton);
-        final AppCompatRadioButton option4RadioButton = (AppCompatRadioButton) findViewById(R.id.reason4RadioButton);
-        final AppCompatRadioButton option5RadioButton = (AppCompatRadioButton) findViewById(R.id.reason5RadioButton);
+        RadioGroup.LayoutParams rprms;
+        ssTopicsList = new ArrayList<>();
         guideOverlay.setOnClickListener(this);
         writeArticleCell.setOnClickListener(this);
         frameLayout.setVisibility(View.VISIBLE);
@@ -158,28 +168,6 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
         recentSortFAB.setOnClickListener(this);
         overlayLayout.setOnClickListener(this);
         startWriting.setOnClickListener(this);
-
-        chooseoptionradioButton.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (option1RadioButton.isChecked()) {
-                    ssTopicsText = option1RadioButton.getText().toString();
-                }
-                if (option2RadioButton.isChecked()) {
-                    ssTopicsText = option2RadioButton.getText().toString();
-                }
-                if (option3RadioButton.isChecked()) {
-                    ssTopicsText = option3RadioButton.getText().toString();
-                }
-                if (option4RadioButton.isChecked()) {
-                    ssTopicsText = option4RadioButton.getText().toString();
-                }
-                if (option5RadioButton.isChecked()) {
-                    ssTopicsText = option5RadioButton.getText().toString();
-                }
-
-            }
-        });
         fabSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,6 +202,9 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
         mDatalist = new ArrayList<>();
 
         Intent intent = getIntent();
+        challengeId = new ArrayList<>();
+        Display_Name = new ArrayList<>();
+        activeUrl = new ArrayList<>();
         //      articledatamodal=intent.getParcelableExtra("Data");
         pos = intent.getIntExtra("position", 0);
         challengeId = intent.getStringArrayListExtra("challenge");
@@ -265,6 +256,102 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
                 }
             }
         });
+
+
+        try {
+            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+            ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
+            createTopicsData(res);
+            addShortStoryCategories(chooseoptionradioButton);
+        } catch (FileNotFoundException e) {
+            Retrofit retr = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retr.create(TopicsCategoryAPI.class);
+
+            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+
+            caller.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+
+                    try {
+                        FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
+                        createTopicsData(res);
+                        addShortStoryCategories(chooseoptionradioButton);
+                    } catch (FileNotFoundException e) {
+                        Crashlytics.logException(e);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    }
+                }
+
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            });
+        }
+
+
+        chooseoptionradioButton.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                ssTopicsText = ssTopicsList.get(i).getDisplay_name();
+            }
+        });
+
+    }
+
+    private void addShortStoryCategories(RadioGroup chooseoptionradioButton) {
+        RadioGroup.LayoutParams rprms = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+        for (int i = 0; i < ssTopicsList.size(); i++) {
+            AppCompatRadioButton rbn = new AppCompatRadioButton(this);
+            rbn.setId(i);
+            rbn.setTextColor(getResources().getColor(R.color.short_story_light_black_color));
+            rbn.setText(ssTopicsList.get(i).getDisplay_name());
+            chooseoptionradioButton.addView(rbn, rprms);
+            rbn.setPadding(10, 0, 0, 0);
+            if (Build.VERSION.SDK_INT >= 21) {
+                ColorStateList colorStateList = new ColorStateList(
+                        new int[][]{
+                                new int[]{-android.R.attr.state_enabled}, //disabled
+                                new int[]{android.R.attr.state_enabled} //enabled
+                        },
+                        new int[]{
+                                getResources().getColor(R.color.app_red)//// disabled
+                                , getResources().getColor(R.color.app_red) //enabled
+                        }
+                );
+                rbn.setButtonTintList(colorStateList);//set the color tint list
+                // radio.invalidate(); //could not be necessary
+            }
+        }
+    }
+
+
+    private void createTopicsData(ExploreTopicsResponse responseData) {
+        try {
+            for (int i = 0; i < responseData.getData().size(); i++) {
+                if (AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+                    for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
+                        //DO NOT REMOVE below commented check -- showInMenu 0 from backend --might be used to show/hide in future
+                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getPublicVisibility())) {
+                            ssTopicsList.add(responseData.getData().get(i).getChild().get(j));
+                        }
+                    }
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
     }
 
     @Override
@@ -276,26 +363,9 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.writeArticleCell:
-                //if (isAdded()) {
                 chooseLayout.setVisibility(View.VISIBLE);
-               /* Intent intent = new Intent(this, AddShortStoryActivity.class);
-                intent.putExtra("selectedrequest", challenge);
-                intent.putExtra("challengeId", selectedId);
-                intent.putExtra("challengeName", selected_Name);
-                intent.putExtra("Url", selectedActiveUrl);
-                intent.putExtra("selectedCategory", ssTopicsText);
-                startActivity(intent);*/
-                //}
                 break;
-            //  case R.id.guideOverlay:
-            //    guideOverlay.setVisibility(View.GONE);
-            //  TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
-            // frag.hideTabLayer();
-            // if (isAdded()) {
-//                    ((ShortStoriesListingContainerActivity) getActivity()).hideToolbarAndNavigationLayer();
-            //SharedPrefUtils.setCoachmarksShownFlag(this, "topics_article", true);
-            //}
-            // break;
+
             case R.id.recentSortFAB:
                 fabMenu.collapse();
                 mDatalist.clear();
@@ -323,7 +393,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
                     intentt.putExtra("selectedCategory", ssTopicsText);
                     startActivity(intentt);
                 } else {
-                    ToastUtils.showToast(this, "Choose Atleast One Category");
+                    ToastUtils.showToast(this, String.valueOf(R.string.short_s_choose_topic));
                 }
                 break;
             case R.id.overlayView_choose_story_challenge:
@@ -463,11 +533,11 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
                     if (mDatalist.get(position).isLiked()) {
                         likeStatus = "0";
                         currentShortStoryPosition = position;
-                        //  recommendUnrecommentArticleAPI("0", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                        recommendUnrecommentArticleAPI("0", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
                     } else {
                         likeStatus = "1";
                         currentShortStoryPosition = position;
-                        //   recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                        recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
                     }
                 }
                 break;
@@ -542,6 +612,84 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
                 startActivity(intent1);*/
         }
     }
+
+    private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId, String author) {
+        Utils.pushLikeStoryEvent(this, "ShortStoryListingScreen", userDynamoId + "", articleId, authorId + "~" + author);
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+
+        isRecommendRequestRunning = true;
+        RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
+        recommendUnrecommendArticleRequest.setArticleId(articleId);
+        recommendUnrecommendArticleRequest.setStatus(likeStatus);
+        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
+        recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
+    }
+
+    private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback = new Callback<RecommendUnrecommendArticleResponse>() {
+        @Override
+        public void onResponse(Call<RecommendUnrecommendArticleResponse> call, retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
+            isRecommendRequestRunning = false;
+            if (response == null || null == response.body()) {
+              /*  if (!isAdded()) {
+                    return;
+                }*/
+                showToast(getString(R.string.server_went_wrong));
+                return;
+            }
+
+            try {
+                RecommendUnrecommendArticleResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+//                    if (!responseData.getData().isEmpty()) {
+//                        for (int i = 0; i < mDatalist.size(); i++) {
+//                            if (responseData.getData().get(0).equals(mDatalist.get(i).getId())) {
+//                                mDatalist.get(i).setLikesCount("" + (Integer.parseInt(mDatalist.get(i).getLikesCount()) + 1));
+//                                mDatalist.get(i).setLiked(true);
+//                                recyclerAdapter.notifyDataSetChanged();
+//                            }
+//                        }
+//                    }
+                    if (likeStatus.equals("1")) {
+                        if (!responseData.getData().isEmpty()) {
+                            mDatalist.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount()) + 1));
+                        }
+                        mDatalist.get(currentShortStoryPosition).setLiked(true);
+                    } else {
+                        if (!responseData.getData().isEmpty()) {
+                            mDatalist.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount()) - 1));
+                        }
+                        mDatalist.get(currentShortStoryPosition).setLiked(false);
+                    }
+                    challengeListingRecycleAdapter.notifyDataSetChanged();
+                   /* if (isAdded()) {
+                        ((ShortStoriesListingContainerActivity) getActivity()).showToast("" + responseData.getReason());
+                    }
+*/
+                    showToast("" + responseData.getReason());
+                } else {
+                    /*if (isAdded())
+                        ((ShortStoriesListingContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                */
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.server_went_wrong));
+                /*if (isAdded())
+                    ((ShortStoriesListingContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            */
+            }
+        }
+
+        @Override
+        public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
+            isRecommendRequestRunning = false;
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -60,7 +60,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         trendingArraylist = new ArrayList<>();
-        getGroupIdForCurrentCategory();
+//        getGroupIdForCurrentCategory();
+        hitTrendingDataAPI();
         return view;
     }
 

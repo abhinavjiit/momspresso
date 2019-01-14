@@ -558,6 +558,7 @@ public class AppConstants {
     public static final String FB_AD_PLACEMENT_ARTICLE_LISTING = "206155642763202_1712332575478827";
     public static final String FB_AD_PLACEMENT_USER_ARTICLE = "206155642763202_1712333168812101";
     public static final String FB_AD_PLACEMENT_ARTICLE_DETAILS = "206155642763202_1699568463421905";
+    public static final String FB_AD_PLACEMENT_ARTICLE_DETAILS_TOP = "206155642763202_2172163799495700";
     public static final long MYCITY_TO_MOMSPRESSO_SWITCH_TIME = 1515936600;
 
     public static final String LOCALE_ENGLISH = "en";
@@ -566,6 +567,8 @@ public class AppConstants {
     public static final String LOCALE_BENGALI = "bn";
     public static final String LOCALE_TAMIL = "ta";
     public static final String LOCALE_TELUGU = "te";
+    public static final String LOCALE_KANNADA = "kn";
+    public static final String LOCALE_MALAYALAM = "ml";
 
     public static final String GROUP_SECTION_ABOUT = "ABOUT";
     public static final String GROUP_SECTION_DISCUSSION = "DISCUSSION";
@@ -622,4 +625,6 @@ public class AppConstants {
 
     public static final String ANDROID_NEW_EDITOR = "android_new_editor";
     public static final String ANDROID_OLD_EDITOR = "android_old_editor";
+
+    public static final String SHORT_STORY_CHALLENGE_ID = "category-743892a865774baf9c20cbcc5c01d35f";
 }

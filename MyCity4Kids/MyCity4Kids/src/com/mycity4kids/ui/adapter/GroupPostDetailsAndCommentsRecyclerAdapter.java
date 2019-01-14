@@ -315,18 +315,12 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     rootCommentViewHolder.replyCommentTextView.setVisibility(View.GONE);
                     rootCommentViewHolder.commentDateTextView.setVisibility(View.GONE);
                     rootCommentViewHolder.media.setVisibility(View.VISIBLE);
-                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.VISIBLE);
-                    rootCommentViewHolder.replyCommentTextViewmedia.setVisibility(View.VISIBLE);
-                    rootCommentViewHolder.commentdatetextviewmedia.setVisibility(View.VISIBLE);
                     Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(rootCommentViewHolder.media);
                 } else {
                     rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
                     rootCommentViewHolder.replyCommentTextView.setVisibility(View.VISIBLE);
                     rootCommentViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     rootCommentViewHolder.media.setVisibility(View.GONE);
-                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.GONE);
-                    rootCommentViewHolder.replyCommentTextViewmedia.setVisibility(View.GONE);
-                    rootCommentViewHolder.commentdatetextviewmedia.setVisibility(View.GONE);
                 }
 
 
@@ -349,44 +343,29 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     rootCommentViewHolder.replyCommentTextView.setVisibility(View.GONE);
                     rootCommentViewHolder.commentDateTextView.setVisibility(View.GONE);
                     rootCommentViewHolder.media.setVisibility(View.VISIBLE);
-                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.VISIBLE);
-                    rootCommentViewHolder.replyCommentTextViewmedia.setVisibility(View.VISIBLE);
-                    rootCommentViewHolder.commentdatetextviewmedia.setVisibility(View.VISIBLE);
                     Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(rootCommentViewHolder.media);
                 } else {
                     rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
                     rootCommentViewHolder.replyCommentTextView.setVisibility(View.VISIBLE);
                     rootCommentViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     rootCommentViewHolder.media.setVisibility(View.GONE);
-                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.GONE);
-                    rootCommentViewHolder.replyCommentTextViewmedia.setVisibility(View.GONE);
-                    rootCommentViewHolder.commentdatetextviewmedia.setVisibility(View.GONE);
                 }
             }
-//            AppUtils.fromHtml(postCommentsList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />"))
             rootCommentViewHolder.commentDataTextView.setText(postCommentsList.get(position).getContent());
             Linkify.addLinks(rootCommentViewHolder.commentDataTextView, Linkify.WEB_URLS);
             rootCommentViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             rootCommentViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(rootCommentViewHolder.commentDataTextView);
 
-            rootCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getCreatedAt()));
-            rootCommentViewHolder.commentdatetextviewmedia.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getCreatedAt()));
-            if (rootCommentViewHolder.media.getVisibility() == View.GONE) {
-                if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
-                    rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
-                } else {
-                    rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-                    rootCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
-                }
+            rootCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getFormattedDateGroups(postCommentsList.get(position).getCreatedAt()));
+            if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
+                rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
             } else {
-                if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
-                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.GONE);
-                } else {
-                    rootCommentViewHolder.replyCountTextViewmedia.setVisibility(View.VISIBLE);
-                    rootCommentViewHolder.replyCountTextViewmedia.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
-                }
+                rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
+                rootCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
             }
+            rootCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            rootCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
         }
     }
 
@@ -770,32 +749,32 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
         TextView replyCommentTextView;
-        TextView replyCommentTextViewmedia;
         TextView commentDateTextView;
         TextView replyCountTextView;
-        TextView replyCountTextViewmedia;
-        TextView commentdatetextviewmedia;
         View underlineView;
+        TextView upvoteCommentCountTextView, downvoteCommentCountTextView;
+        LinearLayout upvoteCommentContainer, downvoteCommentContainer;
 
         RootCommentViewHolder(View view) {
             super(view);
-            replyCountTextViewmedia = (TextView) view.findViewById(R.id.replyCountTextViewmedia);
             media = (ImageView) view.findViewById(R.id.media);
-            replyCommentTextViewmedia = (TextView) view.findViewById(R.id.replyCommentTextViewmedia);
-            commentdatetextviewmedia = (TextView) view.findViewById(R.id.commentDateTextViewmedia);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
             replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
             commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
             replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
+            upvoteCommentCountTextView = (TextView) view.findViewById(R.id.upvoteCommentTextView);
+            downvoteCommentCountTextView = (TextView) view.findViewById(R.id.downvoteCommentTextView);
+            upvoteCommentContainer = (LinearLayout) view.findViewById(R.id.upvoteCommentContainer);
+            downvoteCommentContainer = (LinearLayout) view.findViewById(R.id.downvoteCommentContainer);
 
             commentDataTextView.setOnLongClickListener(this);
             view.setOnLongClickListener(this);
             replyCommentTextView.setOnClickListener(this);
             replyCountTextView.setOnClickListener(this);
-            replyCountTextViewmedia.setOnClickListener(this);
-            replyCommentTextViewmedia.setOnClickListener(this);
+            downvoteCommentContainer.setOnClickListener(this);
+            upvoteCommentContainer.setOnClickListener(this);
 
             underlineView = view.findViewById(R.id.underlineView);
         }

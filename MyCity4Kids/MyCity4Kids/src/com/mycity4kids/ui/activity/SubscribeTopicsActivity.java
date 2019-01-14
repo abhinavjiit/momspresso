@@ -40,6 +40,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import okhttp3.ResponseBody;
@@ -345,7 +346,6 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     jsonObject.put("ScreenName", screen);
-                    Log.d("SaveTopicSelection", jsonObject.toString());
                     mixpanel.track("SaveTopicSelection", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -392,7 +392,6 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     jsonObject.put("ScreenName", screen);
-                    Log.d("CancelTopicSelection", jsonObject.toString());
                     mixpanel.track("CancelTopicSelection", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();

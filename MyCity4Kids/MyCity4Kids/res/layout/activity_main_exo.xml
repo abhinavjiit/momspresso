@@ -209,7 +209,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="RELATED VIDEOS"
+                    android:text="@string/related_videos"
                     android:textColor="@color/ad.trending.title"
                     android:textSize="@dimen/ad_trending"
                     app:fontName="oswald_regular.ttf" />
@@ -274,7 +274,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="POPULAR VIDEOS"
+                    android:text="@string/popular_videos"
                     android:textAllCaps="true"
                     android:textColor="@color/ad.related_article.title"
                     android:textSize="@dimen/ad_recent"

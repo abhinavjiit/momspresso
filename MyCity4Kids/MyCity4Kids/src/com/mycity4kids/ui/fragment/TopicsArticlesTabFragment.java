@@ -28,6 +28,7 @@ import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -62,7 +63,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
+public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener,/* FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
 
     private int groupId;
     public String gpsubHeading, gpHeading, gpImageUrl;
@@ -162,8 +163,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         mDatalist = new ArrayList<>();
-        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-        feedNativeAd.loadAds();
+//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -511,15 +512,15 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         }
     }
 
-    @Override
-    public void onFinishToLoadAds() {
-
-    }
-
-    @Override
-    public void onErrorToLoadAd() {
-
-    }
+//    @Override
+//    public void onFinishToLoadAds() {
+//
+//    }
+//
+//    @Override
+//    public void onErrorToLoadAd() {
+//
+//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
@@ -570,6 +571,22 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                     userType = AppConstants.GROUP_MEMBER_TYPE_ADMIN;
                 } else if (body.getData().getResult().get(0).getIsModerator() == 1) {
                     userType = AppConstants.GROUP_MEMBER_TYPE_MODERATOR;
+                }
+            }
+
+            if (!AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(userType) && !AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(userType)) {
+                if ("male".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender()) ||
+                        "m".equalsIgnoreCase(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getGender())) {
+                    if (isAdded()) {
+                        Toast.makeText(getActivity(), getString(R.string.women_only), Toast.LENGTH_SHORT).show();
+                    }
+                    if (BuildConfig.DEBUG || AppConstants.DEBUGGING_USER_ID.contains(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
+
+                    } else {
+                        return;
+                    }
+                } else {
+
                 }
             }
 

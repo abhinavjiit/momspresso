@@ -35,7 +35,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
-import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
+import com.mycity4kids.ui.activity.UserPublishedContentActivity;
 import com.mycity4kids.ui.adapter.UserDraftArticleAdapter;
 import com.mycity4kids.ui.adapter.UserDraftShortStoriesAdapter;
 
@@ -107,7 +107,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 
     private void getUserDraftStories() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+            ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
         if (isAdded()) {
@@ -122,7 +122,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 
     private void getUserDraftArticles() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+            ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
         if (isAdded()) {

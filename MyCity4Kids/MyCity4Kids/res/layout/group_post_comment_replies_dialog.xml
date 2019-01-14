@@ -32,6 +32,20 @@
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/viewPostTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="10dp"
+                android:text="View Post"
+                android:textColor="@color/app_red"
+                android:textSize="20sp"
+                android:visibility="invisible"
+                app:fontName="oswald_regular.ttf" />
+
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 

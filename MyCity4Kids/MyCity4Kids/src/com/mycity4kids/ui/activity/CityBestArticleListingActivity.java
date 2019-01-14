@@ -27,7 +27,6 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
@@ -47,7 +46,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 4/8/16.
  */
-public class CityBestArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class CityBestArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     //    MainArticleListingAdapter articlesListingAdapter;
     private MainArticleRecyclerViewAdapter recyclerAdapter;
@@ -153,8 +152,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
 //        listView.setAdapter(articlesListingAdapter);
 //        articlesListingAdapter.notifyDataSetChanged();
 
-        feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-        feedNativeAd.loadAds();
+//        feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, "City Best", false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -429,15 +428,15 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         }
     }
 
-    @Override
-    public void onFinishToLoadAds() {
-
-    }
-
-    @Override
-    public void onErrorToLoadAd() {
-
-    }
+//    @Override
+//    public void onFinishToLoadAds() {
+//
+//    }
+//
+//    @Override
+//    public void onErrorToLoadAd() {
+//
+//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {

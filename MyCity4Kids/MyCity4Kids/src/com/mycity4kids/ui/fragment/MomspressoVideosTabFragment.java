@@ -43,7 +43,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 8/8/17.
  */
-public class MomspressoVideosTabFragment extends BaseFragment implements View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class MomspressoVideosTabFragment extends BaseFragment implements View.OnClickListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 1;
     private int limit = 15;
@@ -121,8 +121,8 @@ public class MomspressoVideosTabFragment extends BaseFragment implements View.On
 //        adapter = new MainArticleListingAdapter(getActivity());
 //        adapter.setNewListData(mDatalist);
 //        listView.setAdapter(adapter);
-        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-        feedNativeAd.loadAds();
+//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, AppConstants.MOMSPRESSO_CATEGORYID, true);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -324,15 +324,15 @@ public class MomspressoVideosTabFragment extends BaseFragment implements View.On
         }
     }
 
-    @Override
-    public void onFinishToLoadAds() {
-
-    }
-
-    @Override
-    public void onErrorToLoadAd() {
-
-    }
+//    @Override
+//    public void onFinishToLoadAds() {
+//
+//    }
+//
+//    @Override
+//    public void onErrorToLoadAd() {
+//
+//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {

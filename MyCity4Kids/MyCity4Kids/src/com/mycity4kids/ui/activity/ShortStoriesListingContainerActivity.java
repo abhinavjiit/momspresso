@@ -118,65 +118,6 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         }
     }
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        view = inflater.inflate(R.layout.topic_listing_activity, container, false);
-//
-//        tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-//        tablayoutLayer = (FrameLayout) view.findViewById(R.id.tablayoutLayer);
-//
-//        parentTopicId = getArguments().getString("parentTopicId");
-//        try {
-//            shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
-//
-//            if (shortStoriesTopicList == null) {
-//                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-//                String fileContent = AppUtils.convertStreamToString(fileInputStream);
-//                TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-//                createTopicsData(res);
-//            }
-//            getCurrentParentTopicCategoriesAndSubCategories();
-//            initializeTabsAndPager();
-//        } catch (FileNotFoundException e) {
-//            Crashlytics.logException(e);
-//            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-//            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-//            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-//
-////            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-////            call.enqueue(downloadCategoriesJSONCallback);
-//            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-//            caller.enqueue(new Callback<ResponseBody>() {
-//                @Override
-//                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-//                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-//                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-//
-//                    try {
-//
-//                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-//                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
-//                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-//                        createTopicsData(res);
-//                        getCurrentParentTopicCategoriesAndSubCategories();
-//                        initializeTabsAndPager();
-//                    } catch (FileNotFoundException e) {
-//                        Crashlytics.logException(e);
-//                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                    Crashlytics.logException(t);
-//                    Log.d("MC4KException", Log.getStackTraceString(t));
-//                }
-//            });
-//        }
-//
-//        return view;
-//    }
-
     private void initializeTabsAndPager() {
         if (subTopicsList.size() == 0) {
             Topics mainTopic = new Topics();
@@ -254,8 +195,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
 
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
 
-                        //DO NOT REMOVE below commented check -- showInMenu 0 from backend --might be used to show/hide in future
-                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu()) || "category-743892a865774baf9c20cbcc5c01d35f".equals(responseData.getData().get(i).getChild().get(k).getId())) {
+                        //DO NOT REMOVE below commented check -- showInMenu 00 from backend --might be used to show/hide in future
+                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu()) || AppConstants.SHORT_STORY_CHALLENGE_ID.equals(responseData.getData().get(i).getChild().get(k).getId())) {
                             //Adding All subcategories
                             responseData.getData().get(i).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());

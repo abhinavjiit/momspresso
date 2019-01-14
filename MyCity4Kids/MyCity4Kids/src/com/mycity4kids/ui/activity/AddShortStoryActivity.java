@@ -4,6 +4,7 @@ import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -92,10 +93,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private boolean flag = false;
-    private String value;
-    private String valuee;
-    private String keyy;
-    private String key;
+    private String draftChallengeName;
+    private String publishedChallengeName;
+    private String publishedChallengeId;
+    private String draftChallengeId;
     private String ImageUrl;
     private TextView startWriting;
 
@@ -133,10 +134,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String runningrequest;
     private RelativeLayout challengeHeader, topicheaderlayout, chooseLayout;
     private TextView challenegActiveText, challengeheadertext, shortstoryheadertext;
-    private String currentActiveChalleneg;
+    private String currentActiveChallenge;
     private String currentActiveChallengeId;
     private View overlayLayout;
     private String ssTopicsText;
+    private TextView topicHeading;
+    private TextView wordCounterTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,14 +162,22 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         chooseLayout = (RelativeLayout) findViewById(R.id.choose_layout);
         overlayLayout = (View) findViewById(R.id.overlayView_choose_story_challenge);
         RadioGroup chooseoptionradioButton = (RadioGroup) findViewById(R.id.reportReasonRadioGroup);
-        final AppCompatRadioButton option1RadioButton = (AppCompatRadioButton) findViewById(R.id.reason1RadioButton);
-        final AppCompatRadioButton option2RadioButton = (AppCompatRadioButton) findViewById(R.id.reason2RadioButton);
-        final AppCompatRadioButton option3RadioButton = (AppCompatRadioButton) findViewById(R.id.reason3RadioButton);
-        final AppCompatRadioButton option4RadioButton = (AppCompatRadioButton) findViewById(R.id.reason4RadioButton);
-        final AppCompatRadioButton option5RadioButton = (AppCompatRadioButton) findViewById(R.id.reason5RadioButton);
+        RadioGroup.LayoutParams rprms;
+        topicHeading = (TextView) findViewById(R.id.topicHeading);
+        wordCounterTextView = (TextView) findViewById(R.id.wordCounterTextView);
         publishTextView.setOnClickListener(this);
         overlayLayout.setOnClickListener(this);
         startWriting.setOnClickListener(this);
+        chooseoptionradioButton.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+
+
+                ssTopicsText = ssTopicsList.get(i).getDisplay_name();
+
+
+            }
+        });
 
 
         setSupportActionBar(toolbar);
@@ -188,11 +199,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 for (Map.Entry<String, String> mapEntry : map.entrySet()) {
                     String key = mapEntry.getKey();
                     String value = mapEntry.getValue();
-                    if (key.equals(currentActiveChallengeId) && value.equals(currentActiveChalleneg)) {
-                        flag = true;
+                    if (key.equals(currentActiveChallengeId) && value.equals(currentActiveChallenge)) {
+                        flag = true;//draft is Active Challenge
                         break;
                     } else {
-                        flag = false;
+                        flag = false;//not a active challenge ,simple draft
                     }
 
                 }
@@ -218,9 +229,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             }
         }
         if (runningrequest.equals("challenge") || ("draftList".equals(source) && (!listDraft.isEmpty()))) {
-
-            //  chooseLayout.setVisibility(View.VISIBLE);
-
             if (runningrequest.equals("challenge")) {
                 ImageUrl = intent.getStringExtra("Url");
                 challengeId = intent.getStringExtra("challengeId");
@@ -242,64 +250,53 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
             }
             if (("draftList".equals(source) && (!listDraft.isEmpty()))) {
+                getCategoryTopicsList();
+
+                for (int i = 0; i < ssTopicsList.size(); i++) {
+                    AppCompatRadioButton rbn = new AppCompatRadioButton(this);
+                    rbn.setId(i);
+                    rbn.setTextColor(getResources().getColor(R.color.short_story_light_black_color));
+                    rbn.setText(ssTopicsList.get(i).getDisplay_name());
+                    rprms = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+                    chooseoptionradioButton.addView(rbn, rprms);
+                    rbn.setPadding(10, 0, 0, 0);
+                    if (Build.VERSION.SDK_INT >= 21) {
+
+                        ColorStateList colorStateList = new ColorStateList(
+                                new int[][]{
+
+                                        new int[]{-android.R.attr.state_enabled}, //disabled
+                                        new int[]{android.R.attr.state_enabled} //enabled
+                                },
+                                new int[]{
+
+                                        getResources().getColor(R.color.app_red)//// disabled
+                                        , getResources().getColor(R.color.app_red) //enabled
+                                }
+                        );
+
+
+                        rbn.setButtonTintList(colorStateList);//set the color tint list
+                        // radio.invalidate(); //could not be necessary
+                    }
+
+                }
                 chooseLayout.setVisibility(View.VISIBLE);
                 for (Map<String, String> map : listDraft) {
                     for (Map.Entry<String, String> mapEntry : map.entrySet()) {
-                        key = mapEntry.getKey();
-                        value = mapEntry.getValue();
+                        draftChallengeId = mapEntry.getKey();
+                        draftChallengeName = mapEntry.getValue();
                         break;
                     }
                     break;
                 }
-                getImageUrlShow(key, value);
-                // challenegActiveText.setVisibility(View.VISIBLE);
-                // challenegActiveText.setText(value);
+                getImageUrlShow(draftChallengeId, draftChallengeName);
             }
             shortstoryheadertext.setVisibility(View.GONE);
-//            recyclerView.setVisibility(View.GONE);
-//            shortstoryheadertext.setVisibility(View.VISIBLE);
-            //    recyclerView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
             challengeHeader.setVisibility(View.VISIBLE);
-            //  challenegActiveText.setVisibility(View.VISIBLE);
             challengeheadertext.setVisibility(View.VISIBLE);
-//
-            chooseoptionradioButton.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                    if (option1RadioButton.isChecked()) {
-                        ssTopicsText = option1RadioButton.getText().toString();
-                    }
-                    if (option2RadioButton.isChecked()) {
-                        ssTopicsText = option2RadioButton.getText().toString();
-                    }
-                    if (option3RadioButton.isChecked()) {
-                        ssTopicsText = option3RadioButton.getText().toString();
-                    }
-                    if (option4RadioButton.isChecked()) {
-                        ssTopicsText = option4RadioButton.getText().toString();
-                    }
-                    if (option5RadioButton.isChecked()) {
-                        ssTopicsText = option5RadioButton.getText().toString();
-                    }
-
-                }
-            });
-        }
-
-   /*        OptionSelectionFragment optionSelectionFragment = new OptionSelectionFragment();
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            optionSelectionFragment.show(fm, "choose_genre_ShortStory");
-            fragmentTransaction.commit();*/
-        // else if (runningrequest.equals("ShortStory")) {
-//            shortstoryheadertext.setVisibility(View.VISIBLE);
-//            recyclerView.setVisibility(View.VISIBLE);
-//            challenegActiveText.setVisibility(View.GONE);
-//            challengeHeader.setVisibility(View.GONE);
-//            challengeheadertext.setVisibility(View.GONE);
-        // }
-        else {
+        } else {
 
             if ("publishedList".equals(source)) {
                 recyclerView.setVisibility(View.GONE);
@@ -327,7 +324,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 try {
                     int wordsLength = countWords(s.toString());// words.length;
-                    // count == 0 means a new word is going to start
+
                     if (count == 0 && wordsLength >= MAX_WORDS) {
                         setCharLimit(storyBodyEditText, storyBodyEditText.getText().length());
                         if (!isMaxLengthToastShown) {
@@ -350,10 +347,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                int wordsLength = countWords(s.toString());
+                wordCounterTextView.setText(wordsLength + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words));
             }
         });
-
 
         dynamoUserId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
 
@@ -367,14 +364,62 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
         recyclerView.setLayoutManager(llm1);
 
+        if (("draftList".equals(source) && (!listDraft.isEmpty()))) {
+        } else {
+            try {
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
+                createTopicsData(res);
+                recyclerView.setAdapter(adapter);
+                adapter.setListData(ssTopicsList);
+            } catch (FileNotFoundException e) {
+                Retrofit retro = BaseApplication.getInstance().getRetrofit();
+                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+
+                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+
+                caller.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                        AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+
+                        try {
+                            FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                            ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
+                            createTopicsData(res);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setListData(ssTopicsList);
+                        } catch (FileNotFoundException e) {
+                            Crashlytics.logException(e);
+                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Crashlytics.logException(t);
+                        Log.d("MC4KException", Log.getStackTraceString(t));
+                    }
+                });
+            }
+
+
+        }
+    }
+
+    private void getCategoryTopicsList() {
         try {
             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
             ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
             createTopicsData(res);
-            recyclerView.setAdapter(adapter);
-            adapter.setListData(ssTopicsList);
+            // recyclerView.setAdapter(adapter);
+            //    adapter.setListData(ssTopicsList);
         } catch (FileNotFoundException e) {
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
@@ -392,8 +437,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                         ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
                         createTopicsData(res);
-                        recyclerView.setAdapter(adapter);
-                        adapter.setListData(ssTopicsList);
+                        // recyclerView.setAdapter(adapter);
+                        //   adapter.setListData(ssTopicsList);
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -420,7 +465,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 if (key.equals(selectedTopic.getChild().get(j).getId())) {
                     if (value.equals(selectedTopic.getChild().get(j).getDisplay_name())) {
                         ImageUrl = selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl();
-                        //   if (ImageUrl != null) {
                         try {
                             challengeheadertext.setVisibility(View.VISIBLE);
                             challengeHeader.setVisibility(View.VISIBLE);
@@ -432,11 +476,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                             challengeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_article));
                         }
                         break;
-                        // }
-                        // else {
-//                            challengeImage.setVisibility(View.GONE);
-//                            challenegActiveText.setVisibility(View.VISIBLE);
-//                            challenegActiveText.setText(value);
+
                     }
 
 
@@ -477,43 +517,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 if ("1".equals(selectedTopic.getChild().get(j).getPublicVisibility())) {
                     if ("1".equals(selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
                         currentActiveChallengeId = selectedTopic.getChild().get(j).getId();
-                        currentActiveChalleneg = selectedTopic.getChild().get(j).getDisplay_name();
+                        currentActiveChallenge = selectedTopic.getChild().get(j).getDisplay_name();
                         break;
                     }
                 }
             }
-
-            /*    for (int i = 0; i < shortStoriesTopicList.size(); i++) {
-                    if (shortStoriesTopicList.get(0).getChild().get(i).getId().equals("category-743892a865774baf9c20cbcc5c01d35f"))
-
-                    {
-                        subTopicsList.add(shortStoriesTopicList.get(0).getChild().get(i));
-
-                    }
-                    for (int j = subTopicsList.get(0).getChild().size() - 1; j >= 0; j--) {
-                        if (subTopicsList.get(0).getChild().get(j).getPublicVisibility().equals("1")) {
-                            if (subTopicsList.get(0).getChild().get(j).getExtraData().get(0).getChallenge().getActive().equals("1")) {
-                                currentActiveChallengeId = subTopicsList.get(0).getChild().get(j).getId();
-                                currentActiveChalleneg = subTopicsList.get(0).getChild().get(j).getDisplay_name();
-                            }
-                        }
-                    }
-*/
-        /*    for (Map<String, String> map : listDraft) {
-                for (Map.Entry<String, String> mapEntry : map.entrySet()) {
-                    String key = mapEntry.getKey();
-                    String value = mapEntry.getValue();
-                    if (key.equals(currentActiveChallengeId) && value.equals(currentActiveChalleneg)) {
-                        flag = true;
-                        break;
-                    } else {
-                        flag = false;
-                    }
-
-                }
-                break;
-            }*/
-
 
         } catch (
                 FileNotFoundException e)
@@ -541,38 +549,21 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                                 shortStoriesTopicList.add(res.getData().get(i));
                             }
                         }
-
-
                         for (int i = 0; i < shortStoriesTopicList.size(); i++) {
                             if ("category-ce8bdcadbe0548a9982eec4e425a0851".equals(shortStoriesTopicList.get(i).getId())) {
                                 subTopicsList.addAll(shortStoriesTopicList.get(i).getChild());
                             }
                         }
-
                         selectedTopic = subTopicsList.get(subTopicsList.size() - 1);
                         for (int j = selectedTopic.getChild().size() - 1; j >= 0; j--) {
                             if ("1".equals(selectedTopic.getChild().get(j).getPublicVisibility())) {
                                 if ("1".equals(selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
                                     currentActiveChallengeId = selectedTopic.getChild().get(j).getId();
-                                    currentActiveChalleneg = selectedTopic.getChild().get(j).getDisplay_name();
+                                    currentActiveChallenge = selectedTopic.getChild().get(j).getDisplay_name();
                                 }
                             }
                         }
 
-
-                    /*    for (Map<String, String> map : listDraft) {
-                            for (Map.Entry<String, String> mapEntry : map.entrySet()) {
-                                String key = mapEntry.getKey();
-                                String value = mapEntry.getValue();
-                                if (key.equals(currentActiveChallengeId) && value.equals(currentActiveChalleneg)) {
-                                    flag = true;
-                                    break;
-                                } else {
-                                    flag = false;
-                                }
-
-                            }
-                        }*/
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -626,19 +617,19 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             for (int i = 0; i < jsonArray.length(); i++) {
                 if (count == 0) {
                     HashMap<String, String> map = new HashMap<>();
-                    keyy = jsonArray.getJSONObject(i).keys().next();
-                    valuee = jsonArray.getJSONObject(i).getString(keyy);
-                    map.put(keyy, valuee);
-                    if (!"ignore".equals(keyy)) {
+                    publishedChallengeId = jsonArray.getJSONObject(i).keys().next();
+                    publishedChallengeName = jsonArray.getJSONObject(i).getString(publishedChallengeId);
+                    map.put(publishedChallengeId, publishedChallengeName);
+                    if (!"ignore".equals(publishedChallengeId)) {
                         tagsList1.add(map);
                         count++;
                     }
                 } else {
                     HashMap<String, String> map = new HashMap<>();
-                    keyy = jsonArray.getJSONObject(i).keys().next();
-                    valuee = jsonArray.getJSONObject(i).getString(keyy);
-                    map.put(keyy, valuee);
-                    if (!"ignore".equals(keyy)) {
+                    publishedChallengeId = jsonArray.getJSONObject(i).keys().next();
+                    publishedChallengeName = jsonArray.getJSONObject(i).getString(publishedChallengeId);
+                    map.put(publishedChallengeId, publishedChallengeName);
+                    if (!"ignore".equals(publishedChallengeId)) {
                         tagsList2.add(map);
 
                     }
@@ -660,11 +651,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             jsonArray = new JSONArray(tagsJson);
             for (int i = 0; i < jsonArray.length(); i++) {
                 HashMap<String, String> map = new HashMap<>();
-                keyy = jsonArray.getJSONObject(i).keys().next();
-                valuee = jsonArray.getJSONObject(i).getString(keyy);
-                map.put(keyy, valuee);
+                publishedChallengeId = jsonArray.getJSONObject(i).keys().next();
+                publishedChallengeName = jsonArray.getJSONObject(i).getString(publishedChallengeId);
+                map.put(publishedChallengeId, publishedChallengeName);
                 checkTagIsActive();
-                getImageUrlShow(keyy, valuee);
+                getImageUrlShow(publishedChallengeId, publishedChallengeName);
             /*    if (!"ignore".equals(keyy)) {
                     tagsList.add(map);
                 }*/
@@ -746,7 +737,9 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 break;
 
             case R.id.start_writing:
-                chooseLayout.setVisibility(View.INVISIBLE);
+                if (ssTopicsText != null) {
+                    chooseLayout.setVisibility(View.INVISIBLE);
+                }
         }
     }
 
@@ -775,7 +768,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
             }
             if (!isTopicSelected) {
-                Toast.makeText(this, "Please choose atleast one topic to continue", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.select_atleast_one_topic, Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
@@ -1080,38 +1073,23 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         if (runningrequest.equals("challenge")) {
             ArrayList<Map<String, String>> list2 = new ArrayList<>();
             Map map1 = new HashMap();
-
             map1.put(challengeId, challengeName);
-
-            //  Map<String, String> map2 = new HashMap<>();
-            // map2.put(challengeId, challengeName);
-            //list.add(map2);
             list2.add(map1);
-
             shortStoryDraftOrPublishRequest.setTags(list2);
         } else if ("draftList".equals(source)) {
             if (!flag) {
                 ArrayList<Map<String, String>> list2 = new ArrayList<>();
                 if ((!listDraft.isEmpty())) {
                     Map map1 = new HashMap();
-                    map1.put(key, value);
+                    map1.put(draftChallengeId, draftChallengeName);
                     list2.add(map1);
                 }
-                // ArrayList<Map<String, String>> list2 = new ArrayList<>();
-                // Map map1 = new HashMap();
-                //   map1.put(challengeId, challengeName);
                 shortStoryDraftOrPublishRequest.setTags(list2);
             } else {
                 ArrayList<Map<String, String>> list2 = new ArrayList<>();
                 Map map1 = new HashMap();
-
-                map1.put(currentActiveChallengeId, currentActiveChalleneg);
-
-                //  Map<String, String> map2 = new HashMap<>();
-                // map2.put(challengeId, challengeName);
-                //list.add(map2);
+                map1.put(currentActiveChallengeId, currentActiveChallenge);
                 list2.add(map1);
-
                 shortStoryDraftOrPublishRequest.setTags(list2);
             }
         }
@@ -1196,7 +1174,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             draftId = articleId;
             shortStoryDraftOrPublishRequest.setTags(tagsList);
         } else {
-
             if (ssTopicsText != null) {
                 for (int i = 0; i < ssTopicsList.size(); i++) {
                     if (ssTopicsList.get(i).getDisplay_name().equals(ssTopicsText)) {
@@ -1204,9 +1181,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     }
                 }
             }
-
             for (int i = 0; i < ssTopicsList.size(); i++) {
-
                 if (ssTopicsList.get(i).isSelected()) {
                     HashMap<String, String> map1 = new HashMap<>();
                     ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
@@ -1216,29 +1191,20 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     map.put(ssTopicsList.get(i).getId(), ssTopicsList.get(i).getDisplay_name());
                     list.add(map);
                     if (runningrequest.equals("challenge")) {
-                        // HashMap<String, String> map1 = new HashMap<>();
                         map1.put(challengeId, challengeName);
                         list1.add(map1);
                     } else if ("draftList".equals(source)) {
                         if (!flag) {
-                            //ArrayList<Map<String, String>> list = new ArrayList<>();
                             if ((!listDraft.isEmpty())) {
-                                // Map map1 = new HashMap();
-                                map1.put(key, value);
+                                map1.put(draftChallengeId, draftChallengeName);
                                 list1.add(map1);
                             } else {
                             }
-
                         } else {
-                            map1.put(currentActiveChallengeId, currentActiveChalleneg);
+                            map1.put(currentActiveChallengeId, currentActiveChallenge);
                             list1.add(map1);
                         }
-
                     }
-                    //  Map<String, String> map2 = new HashMap<>();
-                    // map2.put(challengeId, challengeName);
-                    //list.add(map2);
-
                     list2.addAll(list1);
                     list2.addAll(list);
                     shortStoryDraftOrPublishRequest.setTags(list2);

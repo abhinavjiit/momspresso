@@ -36,6 +36,7 @@ public class UserDetailResult implements Parcelable {
     private Map<String, String> langSubscription;
     private String totalArticles;
     private String totalArticlesViews;
+    private String gender;
 
     public UserDetailResult() {
 
@@ -63,6 +64,7 @@ public class UserDetailResult implements Parcelable {
         subscriptionEmail = in.readString();
         totalArticles = in.readString();
         totalArticlesViews = in.readString();
+        gender = in.readString();
     }
 
     public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
@@ -285,6 +287,14 @@ public class UserDetailResult implements Parcelable {
         this.totalArticlesViews = totalArticlesViews;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -313,6 +323,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(subscriptionEmail);
         parcel.writeString(totalArticles);
         parcel.writeString(totalArticlesViews);
+        parcel.writeString(gender);
     }
 
     public class SocialTokens {

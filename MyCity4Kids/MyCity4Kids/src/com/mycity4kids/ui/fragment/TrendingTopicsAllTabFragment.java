@@ -55,7 +55,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TrendingTopicsAllTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class TrendingTopicsAllTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 1;
     private int limit = 10;
@@ -121,14 +121,14 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
 //        } else {
 //            isHeaderVisible = false;
 //        }
-        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-        feedNativeAd.loadAds();
+//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, isHeaderVisible, "TrendingAll", true);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
-        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
+//        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
         recyclerView.setAdapter(recyclerAdapter);
 
         hitFilteredTopicsArticleListingApi(0);
@@ -347,15 +347,15 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         hitFilteredTopicsArticleListingApi(0);
     }
 
-    @Override
-    public void onFinishToLoadAds() {
-
-    }
-
-    @Override
-    public void onErrorToLoadAd() {
-
-    }
+//    @Override
+//    public void onFinishToLoadAds() {
+//
+//    }
+//
+//    @Override
+//    public void onErrorToLoadAd() {
+//
+//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
@@ -375,7 +375,8 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
             case R.id.videoContainerFL5:
                 launchVideoDetailsActivity(position, 4);
                 break;
-            case R.id.addVideoContainer: {
+            case R.id.addVideoContainer:
+            case R.id.addMomVlogTextView: {
                 MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, "TrendingAll");
                 Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
                 startActivity(intent);

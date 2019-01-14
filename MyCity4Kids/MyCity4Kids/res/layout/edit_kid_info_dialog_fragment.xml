@@ -57,25 +57,25 @@
             android:paddingBottom="5dp"
             android:paddingTop="5dp">
 
-            <RadioButton
+            <android.support.v7.widget.AppCompatRadioButton
                 android:id="@+id/maleRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/app_blue"
                 android:checked="true"
-                android:layoutDirection="rtl"
                 android:padding="4dp"
-                android:text="Male" />
+                android:text="Male"
+                app:buttonTint="@color/app_red"
+                app:layoutDirection="rtl" />
 
-            <RadioButton
+            <android.support.v7.widget.AppCompatRadioButton
                 android:id="@+id/femaleRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:buttonTint="@color/app_blue"
-                android:layoutDirection="rtl"
                 android:padding="4dp"
-                android:text="Female" />
+                android:text="Female"
+                app:buttonTint="@color/app_red"
+                app:layoutDirection="rtl" />
         </RadioGroup>
     </RelativeLayout>
 
@@ -89,7 +89,7 @@
         android:layout_gravity="center"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="12dp"
-        android:background="@color/lang_sel.continue_bg"
+        android:background="@drawable/unfollow_topic_author_bg"
         android:gravity="center"
         android:paddingBottom="10dp"
         android:paddingLeft="20dp"
@@ -108,7 +108,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="12dp"
         android:layout_toLeftOf="@+id/saveKidInfoTextView"
-        android:background="@color/app_grey"
+        android:background="@drawable/delete_kid_bg"
         android:gravity="center"
         android:paddingBottom="10dp"
         android:paddingLeft="20dp"

@@ -3,12 +3,14 @@ package com.mycity4kids.ui.activity;
 import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -42,6 +43,7 @@ import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.ui.fragment.TaskFragment;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.Picasso;
@@ -67,7 +69,9 @@ import retrofit2.Retrofit;
  * Created by hemant on 24/4/18.
  */
 
-public class AddTextOrMediaGroupPostActivity extends BaseActivity implements View.OnClickListener {
+public class AddTextOrMediaGroupPostActivity extends BaseActivity implements View.OnClickListener, TaskFragment.TaskCallbacks {
+
+    private static final String TAG_TASK_FRAGMENT = "task_fragment";
 
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
@@ -79,6 +83,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     public static final int ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_IMAGE_CAMERA_ACTIVITY_REQUEST_CODE = 1112;
 
+    private TaskFragment mTaskFragment;
     private GroupResult selectedGroup;
     private HashMap<ImageView, String> imageUrlHashMap = new HashMap<>();
     private Uri imageUri;
@@ -103,6 +108,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_text_group_post_activity);
+
         mLayout = findViewById(R.id.rootLayout);
         postContentEditText = (EditText) findViewById(R.id.postContentEditText);
         closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
@@ -111,15 +117,12 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         anonymousCheckbox = (CheckBox) findViewById(R.id.anonymousCheckbox);
         addMediaImageView = (ImageView) findViewById(R.id.addMediaImageView);
         addMediaTextView = (TextView) findViewById(R.id.addMediaTextView);
-
         postImageView = (ImageView) findViewById(R.id.postImageView);
         publishTextView = (TextView) findViewById(R.id.publishTextView);
         chooseMediaTypeContainer = (RelativeLayout) findViewById(R.id.chooseMediaTypeContainer);
         mediaContainer = (LinearLayout) findViewById(R.id.mediaContainer);
         imageCameraTextView = (TextView) findViewById(R.id.imageCameraTextView);
         imageGalleryTextView = (TextView) findViewById(R.id.imageGalleryTextView);
-//        videoCameraTextView = (TextView) findViewById(R.id.videoCameraTextView);
-//        videoGalleryTextView = (TextView) findViewById(R.id.videoGalleryTextView);
         cancelTextView = (TextView) findViewById(R.id.cancelTextView);
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
@@ -133,17 +136,17 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         publishTextView.setOnClickListener(this);
         imageCameraTextView.setOnClickListener(this);
         imageGalleryTextView.setOnClickListener(this);
-//        videoCameraTextView.setOnClickListener(this);
-//        videoGalleryTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
         closeEditorImageView.setOnClickListener(this);
+
+        postContentEditText.setText(SharedPrefUtils.getSavedPostData(this, selectedGroup.getId()));
 
         if (SharedPrefUtils.isUserAnonymous(this)) {
             anonymousCheckbox.setChecked(true);
         } else {
             anonymousCheckbox.setChecked(false);
         }
-  }
+    }
 
     @Override
     protected void updateUi(Response response) {
@@ -206,18 +209,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 } else {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
-
-//                ChooseAnonymousDialogFragment chooseAnonymousDialogFragment = new ChooseAnonymousDialogFragment();
-//                FragmentManager fm = getSupportFragmentManager();
-//                Bundle _args = new Bundle();
-//                chooseAnonymousDialogFragment.setArguments(_args);
-//                chooseAnonymousDialogFragment.setCancelable(true);
-//                chooseAnonymousDialogFragment.show(fm, "Go Anonymous");
                 break;
             case R.id.publishTextView:
                 if (!isRequestRunning && validateParams()) {
-                 //   String str=postContentEditText.getText().toString();
-                   // Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
                     isRequestRunning = true;
                     publishPost();
                 }
@@ -240,7 +234,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
         AddGroupPostRequest addGroupPostRequest = new AddGroupPostRequest();
         addGroupPostRequest.setContent(postContentEditText.getText().toString());
-     //   String str=postContentEditText.getText().toString();
+        //   String str=postContentEditText.getText().toString();
         addGroupPostRequest.setType("0");
         addGroupPostRequest.setGroupId(selectedGroup.getId());
         if (SharedPrefUtils.isUserAnonymous(this)) {
@@ -276,10 +270,11 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             }
             try {
                 if (response.isSuccessful()) {
+                    SharedPrefUtils.clearSavedPostData(AddTextOrMediaGroupPostActivity.this, selectedGroup.getId());
                     AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
+                    postContentEditText.setText("");
                     onBackPressed();
-//                    processGroupListingResponse(responseModel);
                 } else {
 
                 }
@@ -287,7 +282,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -368,13 +362,26 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 imageUri = data.getData();
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(AddTextOrMediaGroupPostActivity.this.getContentResolver(), imageUri);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-                        String path = MediaStore.Images.Media.insertImage(AddTextOrMediaGroupPostActivity.this.getContentResolver(), imageBitmap, "Title", null);
-                        Uri imageUriTemp = Uri.parse(path);
-                        File file2 = FileUtils.getFile(this, imageUriTemp);
-                        sendUploadProfileImageRequest(file2);
+//                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(AddTextOrMediaGroupPostActivity.this.getContentResolver(), imageUri);
+                        // If the Fragment is non-null, then it is currently being
+                        // retained across a configuration change.
+                        FragmentManager fm = getFragmentManager();
+                        mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                        if (mTaskFragment == null) {
+                            mTaskFragment = new TaskFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable("uri", imageUri);
+                            mTaskFragment.setArguments(bundle);
+                            fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+                        } else {
+                            mTaskFragment.launchNewTask(imageUri);
+                        }
+//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
+//                        String path = MediaStore.Images.Media.insertImage(AddTextOrMediaGroupPostActivity.this.getContentResolver(), imageBitmap, "Title", null);
+//                        Uri imageUriTemp = Uri.parse(path);
+//                        File file2 = FileUtils.getFile(this, imageUriTemp);
+//                        sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         e.printStackTrace();
@@ -597,4 +604,32 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (null != postContentEditText.getText() && !StringUtils.isNullOrEmpty(postContentEditText.getText().toString())) {
+            SharedPrefUtils.setSavedPostData(AddTextOrMediaGroupPostActivity.this, selectedGroup.getId(), postContentEditText.getText().toString());
+        }
+    }
+
+    @Override
+    public void onPreExecute() {
+        showProgressDialog(getString(R.string.please_wait));
+    }
+
+    @Override
+    public void onCancelled() {
+
+    }
+
+    @Override
+    public void onPostExecute(Bitmap image) {
+        String path = MediaStore.Images.Media.insertImage(AddTextOrMediaGroupPostActivity.this.getContentResolver(), image, "Title", null);
+        Uri imageUriTemp = Uri.parse(path);
+        File file2 = FileUtils.getFile(this, imageUriTemp);
+        sendUploadProfileImageRequest(file2);
+        mTaskFragment = null;
+    }
+
 }

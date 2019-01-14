@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.fragment.UserDraftArticleTabFragment;
-import com.mycity4kids.ui.fragment.UserFunnyVideosTabFragment;
-import com.mycity4kids.ui.fragment.UserPublishedArticleTabFragment;
 
 /**
  * Created by hemant on 24/5/17.

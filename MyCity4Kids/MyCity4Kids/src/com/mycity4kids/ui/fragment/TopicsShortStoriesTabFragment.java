@@ -691,7 +691,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             // to the threshold provided. If it falls under the desired limit,
             // add it to the tracking data.
             if (viewPosition >= 0) {
-                if (getVisibleHeightPercentage(itemView) >= minimumVisibleHeightThreshold) {
+                    if (getVisibleHeightPercentage(itemView) >= minimumVisibleHeightThreshold) {
                     viewsViewed.add(viewPosition);
                 }
             }

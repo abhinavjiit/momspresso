@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -72,6 +73,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.TimerTask;
 
 import okhttp3.ResponseBody;
@@ -1609,27 +1611,38 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 1111) {
+                if (data != null && data.getParcelableExtra("postDatas") != null) {
+                    GroupPostResult currentPost = data.getParcelableExtra("postDatas");
+                    for (int i = 0; i < postList.size(); i++) {
+                        if (postList.get(i).getId() == currentPost.getId()) {
+                            postList.get(i).setHelpfullCount(currentPost.getHelpfullCount());
+                            postList.get(i).setNotHelpfullCount(currentPost.getNotHelpfullCount());
+                            groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                } else {
+                    MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("groupId", "" + groupId);
+                        mixpanel.track("GroupPostCreation", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("groupId", "" + groupId);
-                    mixpanel.track("GroupPostCreation", jsonObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    if (addPostContainer.getVisibility() == View.VISIBLE) {
+                        addPostContainer.setVisibility(View.GONE);
+                    }
+                    isLastPageReached = false;
+                    skip = 0;
+                    limit = 10;
+                    postList.clear();
+                    groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                    TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
+                    tab.select();
                 }
-
-                if (addPostContainer.getVisibility() == View.VISIBLE) {
-                    addPostContainer.setVisibility(View.GONE);
-                }
-                isLastPageReached = false;
-                skip = 0;
-                limit = 10;
-                postList.clear();
-                groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
-                TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
-                tab.select();
             } else if (requestCode == EDIT_POST_REQUEST_CODE) {
                 if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
                     postSettingsContainerMain.setVisibility(View.GONE);

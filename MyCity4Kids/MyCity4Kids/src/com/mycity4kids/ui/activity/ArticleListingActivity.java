@@ -49,7 +49,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 4/8/16.
  */
-public class ArticleListingActivity extends BaseActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class ArticleListingActivity extends BaseActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -121,8 +121,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
 
-        feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-        feedNativeAd.loadAds();
+//        feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, sortType, false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -412,15 +412,15 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         }
     }
 
-    @Override
-    public void onFinishToLoadAds() {
-
-    }
-
-    @Override
-    public void onErrorToLoadAd() {
-
-    }
+//    @Override
+//    public void onFinishToLoadAds() {
+//
+//    }
+//
+//    @Override
+//    public void onErrorToLoadAd() {
+//
+//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {

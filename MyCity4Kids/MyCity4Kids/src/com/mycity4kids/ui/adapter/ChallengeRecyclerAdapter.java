@@ -15,16 +15,15 @@ import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 
 public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecyclerAdapter.ChallengeViewHolder> {
     int count = 0;
     private RecyclerViewClickListener recyclerViewClickListener;
-    private int n = 2;
     private Context mcontext;
+    private int n = 1;
+    private int m;
     private final float density;
     private LayoutInflater mInflator;
     private Topics articleDataModelsNew;
@@ -56,98 +55,63 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
         articleDataModelsNew = mParentingLists;
         for (int i = 0; i < articleDataModelsNew.getChild().size(); i++) {
             if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
-                if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
-                    count++;
+                // if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
+                count++;
 
-                }
+                //}
             }
         }
     }
 
     @Override
     public void onBindViewHolder(ChallengeViewHolder holder, int position) {
-
-        //  for (int i = articleDataModelsNew.getChild().size()-1; i >= 0; i--) {
-
         switch (position) {
             case 0:
                 holder.useThePictureTextView.setVisibility(View.VISIBLE);
                 holder.StorytextViewLayout.setVisibility(View.VISIBLE);
                 holder.yourStoryTextView.setVisibility(View.VISIBLE);
                 holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
-                holder.previousAndThisWeekTextView.setText(" This Week's Challenge");
-                int i = articleDataModelsNew.getChild().size() - 1;
-                if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
-                    if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
-                        challengeId.add(articleDataModelsNew.getChild().get(i).getId());
-                        holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
-                        Display_Name.add(articleDataModelsNew.getChild().get(i).getDisplay_name());
-                        holder.storyTitleTextView.setVisibility(View.GONE);
-                        holder.titleTextUnderLine.setVisibility(View.GONE);
-                        if (2 == (articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getType())) {
-                            holder.imageBody.setVisibility(View.VISIBLE);
-
-                            try {
-                                Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                                        .fit().into(holder.imageBody);
-                                activeImageUrl.add(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl());
-                            } catch (Exception e) {
-                                holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
-                            }
-                        }
-                    }
-                }
-                break;
-        /*    case 1:
-                holder.previousAndThisWeekTextView.setVisibility(View.GONE);
-                for (int j = articleDataModelsNew.getChild().size() - n; j >= 0; j--) {
-                    if ("1".equals(articleDataModelsNew.getChild().get(j).getPublicVisibility())) {
-                        if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
-                            challengeId.add(articleDataModelsNew.getChild().get(j).getId());
-                            Display_Name.add(articleDataModelsNew.getChild().get(j).getDisplay_name());
-                            holder.storyTitleTextView.setText("Previous Week's Challenges");
-                            //   if (position != 1) {
-                            holder.storyTitleTextView.setVisibility(View.GONE);
-                            holder.titleTextUnderLine.setVisibility(View.GONE);
-                            //}
-                            holder.storytitle.setText(articleDataModelsNew.getChild().get(j).getDisplay_name());
-                            if (2 == (articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getType())) {
-                                holder.imageBody.setVisibility(View.VISIBLE);
-                                try {
-                                    Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                                            .fit().into(holder.imageBody);
-                                    activeImageUrl.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl());
-
-                                } catch (Exception e) {
-                                    holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
+                holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
+                for (int i = articleDataModelsNew.getChild().size() - 1; i >= 0; i--) {
+                    if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
+                        if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
+                            if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
+                                challengeId.add(articleDataModelsNew.getChild().get(i).getId());
+                                // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
+                                Display_Name.add(articleDataModelsNew.getChild().get(i).getDisplay_name());
+                                holder.storyTitleTextView.setVisibility(View.GONE);
+                                holder.titleTextUnderLine.setVisibility(View.GONE);
+                                if (2 == (articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getType())) {
+                                    holder.imageBody.setVisibility(View.VISIBLE);
+                                    try {
+                                        Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                                                .fit().into(holder.imageBody);
+                                        activeImageUrl.add(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl());
+                                    } catch (Exception e) {
+                                        holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
+                                    }
+                                    m = i;
                                 }
-                                n++;
                                 break;
                             }
                         }
                     }
-
                 }
                 break;
-
-            case 2:
-                holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
-                holder.previousAndThisWeekTextView.setText("Previous Week's Challenges");*/
-
             default:
-                for (int j = articleDataModelsNew.getChild().size() - n; j >= 0; j--) {
+                for (int j = m - n; j >= 0; j--) {
                     if ("1".equals(articleDataModelsNew.getChild().get(j).getPublicVisibility())) {
-                        if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
+                        if (articleDataModelsNew.getChild().get(j).getExtraData() != null) {
+                            //if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
                             if (position != 1) {
                                 holder.previousAndThisWeekTextView.setVisibility(View.GONE);
                             } else {
                                 holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
-                                holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
+                                holder.previousAndThisWeekTextView.setText(R.string.previous_week_challenge);
                             }
-
                             challengeId.add(articleDataModelsNew.getChild().get(j).getId());
                             Display_Name.add(articleDataModelsNew.getChild().get(j).getDisplay_name());
-                            holder.storyTitleTextView.setText(R.string.previous_week_challenge);
+                            // holder.storyTitleTextView.setText(R.string.previous_week_challenge);
                             holder.storyTitleTextView.setVisibility(View.GONE);
                             holder.titleTextUnderLine.setVisibility(View.GONE);
                             holder.storytitle.setText(articleDataModelsNew.getChild().get(j).getDisplay_name());
@@ -170,9 +134,7 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                 }
                 break;
         }
-
     }
-    //}
 
     @Override
     public int getItemCount() {

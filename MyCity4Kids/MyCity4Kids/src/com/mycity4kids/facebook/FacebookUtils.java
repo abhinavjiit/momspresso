@@ -112,7 +112,7 @@ public final class FacebookUtils {
                     }
                 });
 
-        LoginManager.getInstance().logInWithReadPermissions(context, Arrays.asList("public_profile", "email"));
+        LoginManager.getInstance().logInWithReadPermissions(context, Arrays.asList("public_profile", "email", "user_gender"));
 
 
 //        Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);

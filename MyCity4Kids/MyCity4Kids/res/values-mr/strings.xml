@@ -5,24 +5,12 @@
     <string name="unknown_person">अझात</string>
     <string name="resend_email">ईमेल परत पाठवा</string>
 
-    <!-- <string name="facebook_app_id">1437325266589625</string>-->
-
-    <!--but now we are using client APP ID -->
-    <string name="facebook_app_id">206155642763202</string>
-    <string name="fb_login_protocol_scheme">fb206155642763202</string>
-    <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
-
     <string name="write_review_prompt">तुम्हाला कशाचे विश्लेषण करायला आवडेल ?</string>
-
-    <!-- splash screen -->
 
     <string name="loading_txt">लोडिंग&#8230;</string>
 
-    <!-- Login Screen -->
-    <!-- Registration Screen -->
     <string name="subcategoryName">सब केटेगरी</string>
     <string name="location_info">वैयत्तिक सूचना मिळण्या साठी तुमचे प्राधान्य निवडा (स्थान)</string>
-    <!-- HomeCategoryActivity -->
     <string name="hint_text">तुम्ही काय शोधत आहात ?</string>
     <string name="locality_txt">कोणत्या शहर/ गावात ?</string>
     <string name="error_network">तुमचे उपकरण नेटवर्क कव्हरेज च्या बाहेर आहे </string>
@@ -646,6 +634,8 @@
     <string name="language_label.bengali">বাংলা</string>
     <string name="language_label.tamil">தமிழ்</string>
     <string name="language_label.telegu">తెలుగు</string>
+    <string name="language_label.kannada">ಕನ್ನಡ</string>
+    <string name="language_label.malayalam">മലയാളം</string>
 
     <string name="choose_pref_lang">तुमची प्राधान्य भाषा निवडा</string>
     <string name="choose_pref_lang.cancel">कॅन्सल</string>
@@ -766,14 +756,14 @@
     <string name="groups.post_label">POST</string>
     <string name="groups.edit_post">EDIT POST</string>
 
-    <string name="no_story.be_first">Be the first one to write stories in this category!</string>
+    <string name="no_story.be_first">सर्वप्रथम या विषयश्रेणीमध्ये तुम्ही कथा लिहा</string>
 
     <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="short_s.add_story">100 शब्दात गोष्ट लिहा</string>
     <string name="short_s.add_comment">टिप्पणी लिहा</string>
-    <string name="short_s.add.title_hint">Write an exciting title that suits your story. Character limit is 60.</string>
-    <string name="short_s.add.body_hint">Write your amazing story or poem in 100 words or less.</string>
+    <string name="short_s.add.title_hint">आपल्या कथेला योग्य शीर्षक द्या.वर्णमर्यादा ६०.</string>
+    <string name="short_s.add.body_hint">आपली कथा व कविता १०० व त्यापेक्षा कमी शब्दातच लिहा.</string>
     <string name="short_s.publish_message">अभिनंदन. तुमचा ब्लॉग प्रकाशित झाला आहे. आता तुम्ही तो मित्र आणि परिवारामध्ये शेअर करू शकता</string>
     <string name="short_s.max_word">तुमचे कथा कमाल 100 शब्दापर्यंत असावी.</string>
     <string name="short_s.choose_genre">तुमच्या कथेची शैली निवडा</string>
@@ -840,4 +830,25 @@
     <string name="time_limit">(जास्तीत जास्त वेळ %1$s)</string>
     <string name="upload_larger_video">Please upload a video greater than 5 seconds</string>
     <string name="minutes_label">मिनिटे</string>
+    <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
+    <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting blog post\n</string>
+    <string name="take_picture_from_camera">Take picture from camera</string>
+    <string name="select_an_image">Select an image</string>
+    <string name="related_videos">RELATED VIDEOS</string>
+    <string name="popular_videos">POPULAR VIDEOS</string>
+    <string name="delete_comment">DELETE COMMENT</string>
+    <string name="edit_comment">EDIT COMMENT</string>
+    <string name="report">REPORT</string>
+    <string name="select_atleast_one_topic">किमान एक श्रेणी निवडा</string>
+    <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
+    <string name="successfully_updated">Successfully updated!</string>
+
+    <string name="submit_story_text">SUBMIT YOUR STORY </string>
+    <string name="this_week_challenge">या आठवड्याचे चॅलेंज</string>
+    <string name="previous_week_challenge">मागच्या आठवड्याचे चॅलेंज</string>
+    <string name="what_is_your_story">काय आहे तुमची १०० शब्दाची गोष्ट</string>
+    <string name="use_picture_word_to_write_one">चित्राचा, शब्दाचा, वाक्प्रचारांचा वा व्हिडीओचा लेखनासाठी वापर करा</string>
+    <string name="challenge_write_story_for_this_picture">आपली कथा उपरोक्त चित्रावरून लिहा </string>
+    <string name="choose_challenge_label">आव्हान स्वीकारा </string>
+    <string name="start_writing">लिहायला सुरवात करा</string>
 </resources>

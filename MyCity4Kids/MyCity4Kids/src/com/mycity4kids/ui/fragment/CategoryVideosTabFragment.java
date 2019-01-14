@@ -31,6 +31,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
@@ -91,6 +92,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         frameLayout.getBackground().setAlpha(0);
 
         videoCategory = getArguments().getString("video_category_id");
+        Topics topic = getArguments().getParcelable("currentSubTopic");
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
@@ -134,7 +136,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         nextPageNumber = 1;
         hitArticleListingApi();
 
-        articlesListingAdapter = new VlogsListingAdapter(getActivity());
+        articlesListingAdapter = new VlogsListingAdapter(getActivity(), topic);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -179,7 +181,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
         return view;
     }
-
 
     void hitArticleListingApi() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {

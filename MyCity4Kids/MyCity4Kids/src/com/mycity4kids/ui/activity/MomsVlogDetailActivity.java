@@ -29,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.accountkit.AccessToken;
+import com.facebook.accountkit.AccountKit;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.exoplayer2.C;
@@ -88,6 +90,7 @@ import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
 
 import org.apmem.tools.layouts.FlowLayout;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -265,6 +268,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
 
         scrollBounds = new Rect();
         mScrollView.getHitRect(scrollBounds);
+        mixpanel.timeEvent("Player_Start");
     }
 
     private void hitArticleDetailsS3API() {
@@ -395,7 +399,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
             if (!StringUtils.isNullOrEmpty(authorType)) {
 
                 if (AppConstants.USER_TYPE_BLOGGER.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_blogger));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         String bSlug = detailData.getAuthor().getBlogTitleSlug();
@@ -408,7 +412,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EXPERT.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_expert));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_expert));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
@@ -416,7 +420,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EDITOR.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_editor));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editor));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
@@ -424,7 +428,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EDITORIAL.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_editorial));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editorial));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
@@ -432,7 +436,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_FEATURED.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_featured));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_featured));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
@@ -440,7 +444,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_USER.equals(authorType)) {
-                    authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_USER.toUpperCase());
+                    authorTypeTextView.setText(getString(R.string.author_type_user));
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         String bSlug = detailData.getAuthor().getBlogTitleSlug();
@@ -455,7 +459,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                 }
             } else {
                 // Default Author type set to Blogger
-                authorTypeTextView.setText("USER".toUpperCase());
+                authorTypeTextView.setText(getString(R.string.author_type_user));
                 authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                 if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                     shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + detailData.getAuthor().getBlogTitleSlug() + "/video/" + titleSlug;
@@ -1249,7 +1253,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                         whatsappIntent.setType("text/plain");
                         whatsappIntent.setPackage("com.whatsapp");
-                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + shareUrl);
+                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_momvlog) + shareUrl);
                         try {
                             startActivity(whatsappIntent);
                             Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Whatsapp");
@@ -1275,7 +1279,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         intent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
                     }
                     intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Momspresso");
-                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml(getString(R.string.check_out_blog) + shareUrl));
+                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml(getString(R.string.check_out_momvlog) + shareUrl));
 
                     try {
                         startActivity(intent);
@@ -1285,7 +1289,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
                         i.setType("plain/text");
                         i.putExtra(Intent.EXTRA_EMAIL, new String[]{});
                         i.putExtra(Intent.EXTRA_SUBJECT, "");
-                        i.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + shareUrl);
+                        i.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_momvlog) + shareUrl);
                         try {
                             startActivity(Intent.createChooser(i, "Send mail..."));
                             Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
@@ -1401,5 +1405,19 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("videoId", videoId);
+            jsonObject.put("videoTitle", article_title);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mixpanel.track("Player_Start", jsonObject);
     }
 }
