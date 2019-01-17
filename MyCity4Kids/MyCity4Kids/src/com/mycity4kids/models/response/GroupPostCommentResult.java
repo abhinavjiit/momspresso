@@ -34,6 +34,7 @@ public class GroupPostCommentResult implements Parcelable {
     private int helpfullCount;
     private ArrayList<GroupPostCounts> counts;
     private int commentType;
+    private String tag;
 
     public GroupPostCommentResult() {
 
@@ -73,6 +74,14 @@ public class GroupPostCommentResult implements Parcelable {
             return new GroupPostCommentResult[size];
         }
     };
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
     public int getId() {
         return id;

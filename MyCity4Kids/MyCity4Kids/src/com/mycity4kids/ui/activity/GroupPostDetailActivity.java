@@ -3,9 +3,12 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +27,10 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -128,6 +135,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private String memberType;
     private int responseId;
     private TaskFragment mTaskFragment;
+    private MediaPlayer mMediaplayer;
 
 
     @Override
@@ -394,11 +402,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     private void formatCommentData(ArrayList<GroupPostCommentResult> dataList) {
         for (int j = 0; j < dataList.size(); j++) {
-//            if (dataList.get(j).getMediaUrls() != null && !((Map<String, String>) dataList.get(j).getMediaUrls()).isEmpty()) {
-//                if (((Map<String, String>) dataList.get(j).getMediaUrls()).get("audio") != null) {
-//                    dataList.get(j).setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
-//                }
-//            }
+            if (dataList.get(j).getMediaUrls() != null && !((Map<String, String>) dataList.get(j).getMediaUrls()).isEmpty()) {
+                if (((Map<String, String>) dataList.get(j).getMediaUrls()).get("audio") != null) {
+                    dataList.get(j).setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
+                }
+            }
             if (dataList.get(j).getCounts() != null) {
                 for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
                     switch (dataList.get(j).getCounts().get(i).getName()) {
@@ -475,6 +483,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 postSettingsContainer.setVisibility(View.VISIBLE);
                 overlayView.setVisibility(View.VISIBLE);
                 break;
+            case R.id.playAudioImageView:
+                mMediaplayer = new MediaPlayer();
+                if (mMediaplayer.isPlaying())
+                    mMediaplayer.stop();
+                Map<String, String> map = (Map<String, String>) completeResponseList.get(position).getMediaUrls();
+                for (String entry : map.values()) {
+                    fetchAudioUrlFromFirebase(entry);
+                }
             case R.id.upvoteContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "post", 0);
                 break;
@@ -507,6 +523,43 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         Call<GroupPostResponse> call = groupsAPI.getSinglePost(selectedPost.getId());
         call.enqueue(postAdminDetailsResponseCallback);
+    }
+
+
+    private void fetchAudioUrlFromFirebase(String url) {
+        final FirebaseStorage storage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app
+
+        mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        StorageReference storageRef = storage.getReferenceFromUrl(url);
+        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                try {
+                    // Download url of file
+                    final String url = uri.toString();
+                    mMediaplayer.setDataSource(url);
+                    // wait for media player to get prepare
+                    mMediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            mMediaplayer.start();
+                        }
+                    });
+                    mMediaplayer.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i("TAG", e.getMessage());
+                    }
+                });
+
     }
 
     private Callback<GroupPostResponse> postAdminDetailsResponseCallback = new Callback<GroupPostResponse>() {
@@ -1791,5 +1844,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             ((AddGpPostCommentReplyDialogFragment) prev).sendUploadProfileImageRequest(file2);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
     }
 }

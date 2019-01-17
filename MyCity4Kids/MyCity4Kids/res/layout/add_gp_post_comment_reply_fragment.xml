@@ -25,9 +25,9 @@
                 android:id="@+id/closeImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="20dp"
-                android:paddingRight="20dp"
                 android:paddingTop="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="20dp"
                 android:src="@drawable/cross_icon_back" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -63,6 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottombarTopline"
+        android:fillViewport="true"
         android:layout_below="@+id/toolbar">
 
         <RelativeLayout
@@ -75,18 +76,18 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:background="@drawable/topics_border_bg"
-                android:paddingBottom="4dp"
                 android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:paddingTop="8dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="4dp"
                 android:visibility="gone">
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/commentorImageView"
                     android:layout_width="@dimen/ad_comments_profile_pic_width"
                     android:layout_height="@dimen/ad_comments_profile_pic_width"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:contentDescription="@string/author_img"
                     android:src="@drawable/default_commentor_img"
@@ -102,8 +103,8 @@
                     android:id="@+id/commentorUsernameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
                     android:layout_marginStart="3dp"
+                    android:layout_marginLeft="3dp"
                     android:layout_toEndOf="@+id/commentorImageView"
                     android:layout_toRightOf="@+id/commentorImageView"
                     android:ellipsize="end"
@@ -120,9 +121,9 @@
                     android:id="@+id/commentDataTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/commentorUsernameTextView"
-                    android:layout_alignStart="@+id/commentorUsernameTextView"
                     android:layout_below="@id/commentorUsernameTextView"
+                    android:layout_alignStart="@+id/commentorUsernameTextView"
+                    android:layout_alignLeft="@+id/commentorUsernameTextView"
                     android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:paddingLeft="5dp"
@@ -183,9 +184,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/dateContainermedia"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="5dp"
                     android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:text="View All Replies"
                     android:visibility="gone" />
 
@@ -194,9 +195,9 @@
                     android:id="@+id/dateContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/commentorUsernameTextView"
-                    android:layout_alignStart="@+id/commentorUsernameTextView"
                     android:layout_below="@+id/commentDataTextView"
+                    android:layout_alignStart="@+id/commentorUsernameTextView"
+                    android:layout_alignLeft="@+id/commentorUsernameTextView"
                     android:orientation="horizontal">
 
                     <com.mycity4kids.widget.CustomFontTextView
@@ -215,11 +216,11 @@
                     android:id="@+id/replyCountTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/dateContainer"
                     android:layout_below="@id/dateContainer"
-                    android:paddingBottom="10dp"
+                    android:layout_alignLeft="@+id/dateContainer"
                     android:paddingLeft="5dp"
                     android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:text=""
                     android:visibility="gone" />
             </RelativeLayout>
@@ -268,38 +269,6 @@
         </RelativeLayout>
     </ScrollView>
 
-    <RelativeLayout
-        android:id="@+id/parent_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottombarTopline">
-
-        <com.devlomi.record_view.RecordView
-            android:id="@+id/record_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/record_button"
-            app:counter_time_color="#ff0000"
-            app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
-            app:slide_to_cancel_arrow_color="#000000"
-            app:slide_to_cancel_bounds="8dp"
-            app:slide_to_cancel_margin_right="10dp"
-            app:slide_to_cancel_text="Slide To Cancel" />
-
-        <com.devlomi.record_view.RecordButton
-            android:id="@+id/record_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/recv_bg_mic"
-            android:scaleType="centerInside"
-            app:mic_icon="@drawable/recv_ic_mic_white" />
-
-
-    </RelativeLayout>
-
     <View
         android:id="@+id/bottombarTopline"
         android:layout_width="match_parent"
@@ -311,9 +280,9 @@
         android:id="@+id/addMediaImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:padding="10dp"
         android:src="@drawable/ic_add_image" />
 
@@ -321,14 +290,23 @@
         android:id="@+id/addMediaTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/addMediaImageView"
         android:layout_alignBottom="@+id/addMediaImageView"
         android:layout_alignParentBottom="true"
-        android:layout_alignTop="@+id/addMediaImageView"
         android:layout_toEndOf="@+id/addMediaImageView"
         android:layout_toRightOf="@+id/addMediaImageView"
         android:gravity="center_vertical"
         android:paddingRight="10dp"
         android:text="@string/groups.add_image" />
+
+    <ImageView
+        android:id="@+id/addAudioImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/addMediaTextView"
+        android:padding="10dp"
+        android:src="@drawable/ic_add_image" />
 
 
     <ImageView
@@ -344,9 +322,9 @@
         android:id="@+id/anonymousTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/anonymousImageView"
         android:layout_alignBottom="@+id/anonymousImageView"
         android:layout_alignParentBottom="true"
-        android:layout_alignTop="@+id/anonymousImageView"
         android:layout_toLeftOf="@+id/anonymousCheckbox"
         android:gravity="center_vertical"
         android:paddingRight="10dp"
@@ -356,9 +334,9 @@
         android:id="@+id/anonymousCheckbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerVertical="true"
         android:button="@drawable/language_selector_checkbox"
         android:buttonTint="@color/app_red"
@@ -366,12 +344,63 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:gravity="center_vertical"
-        android:paddingBottom="10dp"
         android:paddingLeft="10dp"
-        android:paddingRight="2dp"
         android:paddingTop="10dp"
+        android:paddingRight="2dp"
+        android:paddingBottom="10dp"
         android:textColor="@color/app_red"
         android:textSize="16sp" />
+
+    <RelativeLayout
+        android:id="@+id/bottomsheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/overlayView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:alpha="0.75"
+            android:background="#121212" />
+
+        <RelativeLayout
+            android:id="@+id/actionItemContainer"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/overlay"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/bottomSheetCross"
+                android:layout_width="@dimen/space_20"
+                android:layout_height="@dimen/space_20"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/cross_icon_back"/>
+
+            <ImageView
+                android:id="@+id/record_button_red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/pause"
+                android:visibility="gone"/>
+
+            <com.mycity4kids.utils.AudioRecordView
+                android:id="@+id/recordingView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/chooseMediaTypeContainer"
@@ -397,8 +426,8 @@
                 android:id="@+id/headerLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="23dp"
                 android:layout_marginTop="23dp"
+                android:layout_marginBottom="23dp"
                 android:paddingLeft="23dp"
                 android:paddingRight="23dp"
                 android:text="@string/choose_article_image.toolbar.title"
@@ -410,10 +439,10 @@
                 android:id="@+id/imageCameraTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
                 android:paddingLeft="23dp"
-                android:paddingRight="23dp"
                 android:paddingTop="10dp"
+                android:paddingRight="23dp"
+                android:paddingBottom="10dp"
                 android:text="Capture image from camera"
                 android:textColor="@color/videos.upload_option.camera"
                 android:textSize="18sp"
@@ -423,10 +452,10 @@
                 android:id="@+id/imageGalleryTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
                 android:paddingLeft="23dp"
-                android:paddingRight="23dp"
                 android:paddingTop="10dp"
+                android:paddingRight="23dp"
+                android:paddingBottom="10dp"
                 android:text="Choose image from gallery"
                 android:textColor="@color/videos.upload_option.camera"
                 android:textSize="18sp"
@@ -463,12 +492,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginBottom="15dp"
                 android:layout_marginTop="10dp"
-                android:paddingBottom="10dp"
+                android:layout_marginBottom="15dp"
                 android:paddingLeft="23dp"
-                android:paddingRight="23dp"
                 android:paddingTop="10dp"
+                android:paddingRight="23dp"
+                android:paddingBottom="10dp"
                 android:text="@string/videos.upload_option.cancel"
                 android:textColor="@color/videos.upload_option.cancel"
                 app:fontName="oswald_regular.ttf" />

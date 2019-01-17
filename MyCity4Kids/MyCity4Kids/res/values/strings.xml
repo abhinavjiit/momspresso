@@ -892,4 +892,5 @@
     <string name="select_atleast_one_topic">Please choose atleast one topic to continue</string>
     <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
     <string name="successfully_updated">Successfully updated!</string>
+    <string name="slide_to_cancel">Slide to cancel</string>
 </resources>

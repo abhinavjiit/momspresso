@@ -1,7 +1,13 @@
 package com.mycity4kids.ui.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -15,13 +21,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -57,12 +69,13 @@ import retrofit2.Retrofit;
  * Created by hemant on 4/12/17.
  */
 
-public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
 
     public static final int HEADER = -1;
     public static final int COMMENT_LEVEL_ROOT = 0;
     public static final int COMMENT_AUDIO = 1;
     private final String localizedNotHelpful, localizedHelpful, localizedComment;
+    private MediaPlayer mMediaplayer;
 
     private final Context mContext;
     private final LayoutInflater mInflator;
@@ -71,6 +84,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     private String postType;
     private int currentPagerPos = 0;
     private GroupPostResult groupPostResult;
+    private Handler mHandler = new Handler();
+    private SeekBar audioSeekBarUpdate;
+    private long totalDuration, currentDuration;
+    private int pos, prevPos = -1;;
+    private AudioCommentViewHolder viewHolder;
+    private ProgressDialog mProgressDialog;
+    private boolean isPlayed = false;
 
     public GroupPostDetailsAndCommentsRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, String postType) {
         mContext = pContext;
@@ -122,7 +142,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         } else {
             if (COMMENT_AUDIO == viewType) {
                 View v0 = mInflator.inflate(R.layout.group_post_audio_comment_cell, parent, false);
-                return new RootCommentViewHolder(v0);
+                return new AudioCommentViewHolder(v0);
             } else {
                 View v0 = mInflator.inflate(R.layout.group_post_comment_cell_test, parent, false);
                 return new RootCommentViewHolder(v0);
@@ -308,6 +328,118 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else {
                 hideImagePollVotingData(imageHolder);
             }
+        } else if (holder instanceof AudioCommentViewHolder) {
+            AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
+            postCommentsList.get(position).setTag("0");
+            if (postCommentsList.get(position).getIsAnnon() == 1) {
+                audioCommentViewHolder.commentorUsernameTextView.setText(mContext.getString(R.string.groups_anonymous));
+                audioCommentViewHolder.commentorImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
+                ArrayList<String> mediaList = new ArrayList<>();
+                Map<String, String> map = (Map<String, String>) postCommentsList.get(position).getMediaUrls();
+                if (map != null && !map.isEmpty()) {
+                    for (String entry : map.values()) {
+                        mediaList.add(entry);
+                    }
+                    audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
+                    audioCommentViewHolder.replyCommentTextView.setVisibility(View.GONE);
+                    audioCommentViewHolder.commentDateTextView.setVisibility(View.GONE);
+                    audioCommentViewHolder.media.setVisibility(View.GONE);
+//                    Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(audioCommentViewHolder.media);
+                } else {
+                    audioCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
+                    audioCommentViewHolder.replyCommentTextView.setVisibility(View.VISIBLE);
+                    audioCommentViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
+                    audioCommentViewHolder.media.setVisibility(View.GONE);
+                }
+            } else {
+                audioCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
+                        + " " + postCommentsList.get(position).getUserInfo().getLastName());
+                try {
+                    Picasso.with(mContext).load(postCommentsList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.commentorImageView);
+                } catch (Exception e) {
+                    audioCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
+                }
+                ArrayList<String> mediaList = new ArrayList<>();
+                Map<String, String> map = (Map<String, String>) postCommentsList.get(position).getMediaUrls();
+                if (map != null && !map.isEmpty()) {
+                    for (String entry : map.values()) {
+                        mediaList.add(entry);
+                    }
+                    audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
+                    audioCommentViewHolder.replyCommentTextView.setVisibility(View.GONE);
+                    audioCommentViewHolder.commentDateTextView.setVisibility(View.GONE);
+                    audioCommentViewHolder.media.setVisibility(View.GONE);
+//                    Picasso.with(mContext).load(mediaList.get(0)).error(R.drawable.default_article).into(audioCommentViewHolder.media);
+                } else {
+                    audioCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
+                    audioCommentViewHolder.replyCommentTextView.setVisibility(View.VISIBLE);
+                    audioCommentViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
+                    audioCommentViewHolder.media.setVisibility(View.GONE);
+                }
+            }
+            if (!StringUtils.isNullOrEmpty(postCommentsList.get(position).getContent())) {
+                audioCommentViewHolder.commentDataTextView.setVisibility(View.VISIBLE);
+                audioCommentViewHolder.commentDataTextView.setText(postCommentsList.get(position).getContent());
+                Linkify.addLinks(audioCommentViewHolder.commentDataTextView, Linkify.WEB_URLS);
+                audioCommentViewHolder.commentDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                audioCommentViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
+                addLinkHandler(audioCommentViewHolder.commentDataTextView);
+            } else {
+                audioCommentViewHolder.commentDataTextView.setVisibility(View.GONE);
+            }
+
+            audioCommentViewHolder.playAudioImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    isPlayed = false;
+                    showProgressDialog(mContext.getString(R.string.please_wait));
+                    audioCommentViewHolder.audioSeekBar.setProgress(0);
+                    audioCommentViewHolder.audioSeekBar.setMax(100);
+                    if (prevPos != -1){
+                        postCommentsList.get(prevPos).setTag("0");
+                        changeIcon(audioCommentViewHolder, prevPos);
+                    }else{
+
+                    }
+                    pos = position;
+                    prevPos = position;
+                    viewHolder = audioCommentViewHolder;
+                    audioSeekBarUpdate = audioCommentViewHolder.audioSeekBar;
+                    postCommentsList.get(position).setTag("1");
+                    changeIcon(audioCommentViewHolder, position);
+                    if (mMediaplayer != null && mMediaplayer.isPlaying()) {
+                        mMediaplayer.release();
+                    }
+                    mMediaplayer = new MediaPlayer();
+                    Map<String, String> map = (Map<String, String>) postCommentsList.get(position).getMediaUrls();
+                    for (String entry : map.values()) {
+                        fetchAudioUrlFromFirebase(entry, audioCommentViewHolder.audioSeekBar);
+                    }
+                }
+            });
+
+
+            audioCommentViewHolder.pauseAudioImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mMediaplayer.pause();
+                    postCommentsList.get(position).setTag("0");
+                    pos = position;
+                    viewHolder = audioCommentViewHolder;
+                    changeIcon(audioCommentViewHolder, position);
+                }
+            });
+
+            audioCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getFormattedDateGroups(postCommentsList.get(position).getCreatedAt()));
+            if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
+                audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
+            } else {
+                audioCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
+                audioCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
+            }
+            audioCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            audioCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
         } else {
             RootCommentViewHolder rootCommentViewHolder = (RootCommentViewHolder) holder;
             if (postCommentsList.get(position).getIsAnnon() == 1) {
@@ -373,6 +505,23 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             rootCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + " " + localizedHelpful);
             rootCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
         }
+    }
+
+    private void changeIcon(AudioCommentViewHolder audioCommentViewHolder, int position) {
+        if (postCommentsList.get(position).getTag().equals("1")) {
+            audioCommentViewHolder.playAudioImageView.setVisibility(View.GONE);
+            audioCommentViewHolder.pauseAudioImageView.setVisibility(View.VISIBLE);
+            audioCommentViewHolder.audioTimeElapsed.setVisibility(View.VISIBLE);
+//            audioCommentViewHolder.audioTimeElapsed.setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
+        } else {
+            audioCommentViewHolder.pauseAudioImageView.setVisibility(View.GONE);
+            audioCommentViewHolder.playAudioImageView.setVisibility(View.VISIBLE);
+            audioCommentViewHolder.audioTimeElapsed.setVisibility(View.GONE);
+            audioCommentViewHolder.audioSeekBar.setProgress(0);
+            audioCommentViewHolder.audioSeekBar.setMax(100);
+        }
+        notifyItemChanged(position);
+        notifyDataSetChanged();
     }
 
     private void showVotingData(TextPollPostViewHolder textPollPostViewHolder, GroupPostResult postResult) {
@@ -748,6 +897,61 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         }
     }
 
+    public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+
+        ImageView commentorImageView, playAudioImageView, pauseAudioImageView;
+        ImageView media;
+        TextView commentorUsernameTextView, audioTimeElapsed;
+        TextView commentDataTextView;
+        TextView replyCommentTextView;
+        TextView commentDateTextView;
+        TextView replyCountTextView;
+        View underlineView;
+        SeekBar audioSeekBar;
+        TextView upvoteCommentCountTextView, downvoteCommentCountTextView;
+        LinearLayout upvoteCommentContainer, downvoteCommentContainer;
+
+        public AudioCommentViewHolder(View view) {
+            super(view);
+            media = (ImageView) view.findViewById(R.id.media);
+            commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
+            commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
+            commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
+            replyCommentTextView = (TextView) view.findViewById(R.id.replyCommentTextView);
+            commentDateTextView = (TextView) view.findViewById(R.id.commentDateTextView);
+            replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
+            upvoteCommentCountTextView = (TextView) view.findViewById(R.id.upvoteCommentTextView);
+            downvoteCommentCountTextView = (TextView) view.findViewById(R.id.downvoteCommentTextView);
+            upvoteCommentContainer = (LinearLayout) view.findViewById(R.id.upvoteCommentContainer);
+            downvoteCommentContainer = (LinearLayout) view.findViewById(R.id.downvoteCommentContainer);
+            playAudioImageView = (ImageView) view.findViewById(R.id.playAudioImageView);
+            pauseAudioImageView = (ImageView) view.findViewById(R.id.pauseAudioImageView);
+            audioSeekBar = (SeekBar) view.findViewById(R.id.audioSeekBar);
+            audioTimeElapsed = (TextView) view.findViewById(R.id.audioTimeElapsed);
+
+            commentDataTextView.setOnLongClickListener(this);
+            view.setOnLongClickListener(this);
+            replyCommentTextView.setOnClickListener(this);
+            replyCountTextView.setOnClickListener(this);
+            downvoteCommentContainer.setOnClickListener(this);
+            upvoteCommentContainer.setOnClickListener(this);
+//            playAudioImageView.setOnClickListener(this);
+
+            underlineView = view.findViewById(R.id.underlineView);
+        }
+
+        @Override
+        public void onClick(View view) {
+            mListener.onRecyclerItemClick(view, getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            mListener.onRecyclerItemClick(view, getAdapterPosition());
+            return true;
+        }
+    }
+
     public class RootCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         ImageView commentorImageView;
@@ -925,4 +1129,207 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             mContext.startActivity(intent);
         }
     }
+
+
+    private void fetchAudioUrlFromFirebase(String url, SeekBar audioSeekBar) {
+        final FirebaseStorage storage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app
+
+        mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        StorageReference storageRef = storage.getReferenceFromUrl(url);
+        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                try {
+                    // Download url of file
+                    final String url = uri.toString();
+                    mMediaplayer.setDataSource(url);
+                    // wait for media player to get prepare
+                    mMediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            removeProgressDialog();
+                            mMediaplayer.start();
+                            updateProgressBar();
+                        }
+                    });
+                    mMediaplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mediaPlayer) {
+                            if (isPlayed) {
+                                postCommentsList.get(pos).setTag("0");
+                                changeIcon(viewHolder, pos);
+                                isPlayed = false;
+                            }
+                        }
+                    });
+                    mMediaplayer.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i("TAG", e.getMessage());
+                    }
+                });
+
+    }
+
+    public void updateProgressBar() {
+        mHandler.postDelayed(mUpdateTimeTask, 100);
+        isPlayed = true;
+    }
+
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            if (mMediaplayer != null) {
+                totalDuration = mMediaplayer.getDuration();
+                currentDuration = mMediaplayer.getCurrentPosition();
+
+                // Displaying Total Duration time
+//            songTotalDurationLabel.setText("" + milliSecondsToTimer(totalDuration));
+                // Displaying time completed playing
+//            songCurrentDurationLabel.setText("" + milliSecondsToTimer(currentDuration));
+                viewHolder.audioTimeElapsed.setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
+
+                // Updating progress bar
+                int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+                //Log.d("Progress", ""+progress);
+                audioSeekBarUpdate.setProgress(progress);
+
+
+                // Running this thread after 100 milliseconds
+                mHandler.postDelayed(this, 100);
+            }
+        }
+    };
+
+    /**
+     *
+     * */
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
+
+    }
+
+    /**
+     * When user starts moving the progress handler
+     */
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        // remove message Handler from updating progress bar
+        mHandler.removeCallbacks(mUpdateTimeTask);
+    }
+
+    /**
+     * When user stops moving the progress hanlder
+     */
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        mHandler.removeCallbacks(mUpdateTimeTask);
+        int totalDuration = mMediaplayer.getDuration();
+        int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
+
+        // forward or backward to certain seconds
+        mMediaplayer.seekTo(currentPosition);
+
+        // update timer progress again
+        updateProgressBar();
+    }
+
+    /**
+     * On Song Playing completed
+     * if repeat is ON play same song again
+     * if shuffle is ON play random song
+     */
+    @Override
+    public void onCompletion(MediaPlayer arg0) {
+
+    }
+
+    public int progressToTimer(int progress, int totalDuration) {
+        int currentDuration = 0;
+        totalDuration = (int) (totalDuration / 1000);
+        currentDuration = (int) ((((double) progress) / 100) * totalDuration);
+
+        // return current duration in milliseconds
+        return currentDuration * 1000;
+    }
+
+    public String milliSecondsToTimer(long milliseconds) {
+        String finalTimerString = "";
+        String secondsString = "";
+
+        // Convert total duration into time
+        int hours = (int) (milliseconds / (1000 * 60 * 60));
+        int minutes = (int) (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
+        int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
+        // Add hours if there
+        if (hours > 0) {
+            finalTimerString = hours + ":";
+        }
+
+        // Prepending 0 to seconds if it is one digit
+        if (seconds < 10) {
+            secondsString = "0" + seconds;
+        } else {
+            secondsString = "" + seconds;
+        }
+
+        finalTimerString = finalTimerString + minutes + ":" + secondsString;
+
+        // return timer string
+        return finalTimerString;
+    }
+
+    public int getProgressPercentage(long currentDuration, long totalDuration) {
+        Double percentage = (double) 0;
+
+        long currentSeconds = (int) (currentDuration / 1000);
+        long totalSeconds = (int) (totalDuration / 1000);
+
+        // calculating percentage
+        percentage = (((double) currentSeconds) / totalSeconds) * 100;
+
+        // return percentage
+        return percentage.intValue();
+    }
+
+    public void releasePlayer() {
+        if (mMediaplayer != null) {
+            mMediaplayer.stop();
+            mMediaplayer.release();
+            mMediaplayer = null;
+        }
+    }
+
+    public void showProgressDialog(String bodyText) {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(mContext);
+            mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mProgressDialog.setCancelable(false);
+        }
+
+        mProgressDialog.setMessage(bodyText);
+
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+    }
+
+    public void removeProgressDialog() {
+        try {
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
