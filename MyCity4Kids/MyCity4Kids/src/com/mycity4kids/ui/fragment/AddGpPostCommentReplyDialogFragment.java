@@ -925,13 +925,15 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
-                                 }
+                                     addImageToContainer(responseModel.getData().getResult().getUrl());
+                                     Toast.makeText(getActivity(), "image_upload_success", Toast.LENGTH_SHORT).show();
 
-                                 addImageToContainer(responseModel.getData().getResult().getUrl());
+                                 } else {
+                                     Toast.makeText(getActivity(), "please try again later", Toast.LENGTH_SHORT).show();
+                                 }
 //                                 Picasso.with(AddTextOrMediaGroupPostActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(postImageView);
 //                                 postImageView.setVisibility(View.VISIBLE);
                                  //showToast(getString(R.string.image_upload_success));
-                                 Toast.makeText(getActivity(), "image_upload_success", Toast.LENGTH_SHORT).show();
                              }
                          }
 

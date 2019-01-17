@@ -337,7 +337,7 @@
     <string name="search_topics.hint">Search with Topics</string>
     <string name="search_topics.title">CATEGORIES</string>
 
-    <string name="subscribe_topics.toolbar.title">SELECT CATEGORIES</string>
+    <string name="subscribe_topics.toolbar.title">ವರ್ಗಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
     <string name="subscribe_topics.cancel">ರದ್ದುಮಾಡಿ</string>
     <string name="subscribe_topics.save">ಉಳಿಸಿ</string>
     <string name="subscribe_topics.toast_topic_updated">Successfully updated the list of followed topics.</string>
@@ -515,8 +515,8 @@
     <string name="moderation_or_share.insta_not_installed">Instagram has not been installed.</string>
     <string name="moderation_or_share.twitter_fail">Unable to share with twitter.</string>
 
-    <string name="complete_blogger_profile.complete_label">COMPLETE YOUR BLOGGERS PROFILE</string>
-    <string name="complete_blogger_profile.paid_eligibility">Be eligible for paid writing assignments.\n All this information is safe with us.</string>
+    <string name="complete_blogger_profile.complete_label">ನಿಮ್ಮ ಬ್ಲಾಗಿಗರು ಪ್ರೊಫೈಲ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ</string>
+    <string name="complete_blogger_profile.paid_eligibility">ಪಾವತಿಸಿದ ಬರವಣಿಗೆಯ ಕಾರ್ಯಯೋಜನೆಗಳಿಗಾಗಿ ಅರ್ಹರಾಗಿರಿ</string>
     <string name="complete_blogger_profile.save">ಉಳಿಸಿ</string>
     <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
 
@@ -901,4 +901,10 @@
     <string name="challenge_write_story_for_this_picture">ಈ ಚಿತ್ರದ ಸುತ್ತ ನಿಮ್ಮ ಕಥೆಯನ್ನು ಬರೆಯಿರಿ.</string>
     <string name="choose_challenge_label">ಸವಾಲನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ</string>
     <string name="start_writing">ಬರವಣಿಗೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ</string>
+
+    <string name="male">ಪುರುಷ</string>
+    <string name="female">ಸ್ತ್ರೀ</string>
+    <string name="DOB">ಹುಟ್ಟಿದ ದಿನ</string>
+
+
 </resources>

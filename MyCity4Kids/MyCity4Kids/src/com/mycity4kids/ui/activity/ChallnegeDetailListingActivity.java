@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -73,9 +74,9 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     private ArrayList<ExploreTopicsModel> ssTopicsList;
     private int pos;
     private String ActiveUrl;
-    private ArrayList<String> challengeId;
-    private ArrayList<String> activeUrl;
-    private ArrayList<String> Display_Name;
+    private ArrayList<String> challengeId = new ArrayList<>();
+    private ArrayList<String> activeUrl = new ArrayList<>();
+    private ArrayList<String> Display_Name = new ArrayList<>();
     private String challenge = "challenge";
     private Topics articledatamodal;
     private String parentName, parentId;
@@ -127,6 +128,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     private View overlayLayout;
     private String ssTopicsText;
     private TextView startWriting;
+    private String challengeComingFrom;
 
 
     @Override
@@ -200,31 +202,44 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
         });
 
         mDatalist = new ArrayList<>();
-
         Intent intent = getIntent();
-        challengeId = new ArrayList<>();
-        Display_Name = new ArrayList<>();
-        activeUrl = new ArrayList<>();
-        //      articledatamodal=intent.getParcelableExtra("Data");
         pos = intent.getIntExtra("position", 0);
         challengeId = intent.getStringArrayListExtra("challenge");
         Display_Name = intent.getStringArrayListExtra("Display_Name");
         activeUrl = intent.getStringArrayListExtra("StringUrl");
-        //articledatamodal = intent.getParcelableExtra("topics");
         parentId = intent.getStringExtra("parentId");
         parentName = intent.getStringExtra("topics");
-        array = challengeId.toArray(new String[challengeId.size()]);
-        selectedId = array[pos];
-        url = activeUrl.toArray(new String[activeUrl.size()]);
-        selectedActiveUrl = url[pos];
-        array_Name = Display_Name.toArray(new String[Display_Name.size()]);
-        selected_Name = array_Name[pos];
+        challengeComingFrom = intent.getStringExtra("selectedrequest");
+        if (challengeComingFrom == null) {
+            challengeComingFrom = "challenge";
+        }
+        if ("FromDeepLink".equals(challengeComingFrom)) {
+            challengeId = intent.getStringArrayListExtra("challenge");
+            Display_Name = intent.getStringArrayListExtra("Display_Name");
+            activeUrl = intent.getStringArrayListExtra("StringUrl");
+            chooseLayout.setVisibility(View.VISIBLE);
+        } else {
+            chooseLayout.setVisibility(View.INVISIBLE);
+        }
+        if (challengeId != null && challengeId.size() != 0) {
+            selectedId = challengeId.get(pos);
+        } else {
+            ToastUtils.showToast(this, "server problem,please refresh your app");
+        }
+        if (activeUrl != null && activeUrl.size() != 0) {
+            selectedActiveUrl = activeUrl.get(pos);
+        } else {
+            ToastUtils.showToast(this, "server problem,please refresh your app");
+        }
+        if (Display_Name != null && Display_Name.size() != 0) {
+            selected_Name = Display_Name.get(pos);
+        } else {
+            ToastUtils.showToast(this, "server problem,please refresh your app");
+        }
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        // challengeListingRecycleAdapter = new ChallengeListingRecycleAdapter(this, this, pos);
-        // recyclerView.setAdapter(challengeListingRecycleAdapter);
         setSupportActionBar(mToolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -392,8 +407,9 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
                     intentt.putExtra("Url", selectedActiveUrl);
                     intentt.putExtra("selectedCategory", ssTopicsText);
                     startActivity(intentt);
+                    //    chooseLayout.setVisibility(View.INVISIBLE);
                 } else {
-                    ToastUtils.showToast(this, String.valueOf(R.string.short_s_choose_topic));
+                    Toast.makeText(this, R.string.select_atleast_one_topic, Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.overlayView_choose_story_challenge:
@@ -488,7 +504,8 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
 
 
     @Override
-    public void onClick(View view, final int position, String ActiveUrl) {
+    public void
+    onClick(View view, final int position, String ActiveUrl) {
         switch (view.getId()) {
             case R.id.storyOptionImageView: {
                 relative_frame.setVisibility(View.VISIBLE);
@@ -501,18 +518,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
                 reportContentDialogFragment.setArguments(_args);
                 reportContentDialogFragment.setCancelable(true);
                 reportContentDialogFragment.show(fm, "report_dialog");
-                // fragmentTransaction.replace(R.id.framelayout_relative, reportContentDialogFragment);
                 fragmentTransaction.commit();
-
-                //
-//   android.app.FragmentManager fm = getFragmentManager();
-//                Bundle _args1 = new Bundle();
-//                _args.putString("postId", mDatalist.get(position).getId());
-//                _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
-//                reportContentDialogFragment.setArguments(_args);
-//                reportContentDialogFragment.setCancelable(true);
-//                reportContentDialogFragment.setTargetFragment(this, 0);
-                //reportContentDialogFragment.show(fm, "Report Content");
             }
             break;
             case R.id.mainView:
@@ -704,6 +710,12 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     @Override
     protected void onResume() {
         super.onResume();
+        //chooseLayout.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
         chooseLayout.setVisibility(View.INVISIBLE);
     }
 }

@@ -851,4 +851,8 @@
     <string name="challenge_write_story_for_this_picture">आपली कथा उपरोक्त चित्रावरून लिहा </string>
     <string name="choose_challenge_label">आव्हान स्वीकारा </string>
     <string name="start_writing">लिहायला सुरवात करा</string>
+
+    <string name="male">पुरुष</string>
+    <string name="female">महिला</string>
+    <string name="DOB">जन्म तिथि</string>
 </resources>

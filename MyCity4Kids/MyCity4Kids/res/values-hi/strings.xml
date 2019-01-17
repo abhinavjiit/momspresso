@@ -862,4 +862,8 @@
     <string name="challenge_write_story_for_this_picture">इस तस्वीर के अनुसार अपनी कहानी लिखें</string>
     <string name="choose_challenge_label">चैलेंज का हिस्सा बनें</string>
     <string name="start_writing">लिखना शुरू करें</string>
+
+    <string name="male">पुरुष</string>
+    <string name="female">महिला</string>
+    <string name="DOB">जन्म तिथि</string>
 </resources>

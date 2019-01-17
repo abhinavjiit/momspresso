@@ -735,10 +735,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     }
                 }
                 break;
-
             case R.id.start_writing:
                 if (ssTopicsText != null) {
                     chooseLayout.setVisibility(View.INVISIBLE);
+                } else {
+                    Toast.makeText(this, R.string.select_atleast_one_topic, Toast.LENGTH_SHORT).show();
+
                 }
         }
     }

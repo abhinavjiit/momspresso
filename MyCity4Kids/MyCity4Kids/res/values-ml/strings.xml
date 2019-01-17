@@ -337,7 +337,7 @@
     <string name="search_topics.hint">Search with Topics</string>
     <string name="search_topics.title">CATEGORIES</string>
 
-    <string name="subscribe_topics.toolbar.title">SELECT CATEGORIES</string>
+    <string name="subscribe_topics.toolbar.title">വിഭാഗങ്ങൾ തെരഞ്ഞെടുക്കുക</string>
     <string name="subscribe_topics.cancel">ക്യാൻസൽ</string>
     <string name="subscribe_topics.save">സേവ്</string>
     <string name="subscribe_topics.toast_topic_updated">Successfully updated the list of followed topics.</string>
@@ -515,8 +515,8 @@
     <string name="moderation_or_share.insta_not_installed">Instagram has not been installed.</string>
     <string name="moderation_or_share.twitter_fail">Unable to share with twitter.</string>
 
-    <string name="complete_blogger_profile.complete_label">COMPLETE YOUR BLOGGERS PROFILE</string>
-    <string name="complete_blogger_profile.paid_eligibility">Be eligible for paid writing assignments.\n All this information is safe with us.</string>
+    <string name="complete_blogger_profile.complete_label">താങ്കളുടെ ബ്ലോഗർ പ്രൊഫൈൽ പൂർത്തിയാക്കൂ</string>
+    <string name="complete_blogger_profile.paid_eligibility">പ്രതിഫലം തന്നുള്ള എഴുത്തുജോലികൾക്ക് യോഗ്യത നേടൂ</string>
     <string name="complete_blogger_profile.save">സേവ്</string>
     <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
 
@@ -901,4 +901,7 @@
     <string name="challenge_write_story_for_this_picture">ഈ ചിത്രത്തെ ആസ്പദമാക്കി താങ്കളുടെ സ്റ്റോറിയെഴുതൂ</string>
     <string name="choose_challenge_label">വെല്ലുവിളി ഏറ്റെടുക്കൂ</string>
     <string name="start_writing">എഴുതാൻ തുടങ്ങൂ</string>
+    <string name="male">പുരുഷൻ</string>
+    <string name="female">സ്ത്രീ</string>
+    <string name="DOB">ജനനത്തീയതി</string>
 </resources>

@@ -136,7 +136,7 @@ public class SplashActivity extends BaseActivity {
         }
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-       /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
+        /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         // mUrl = Uri.parse("http://www.mycity4kids.com/parenting/kalpana---without-boundaries/article/From-the-Bicycle-to-the-Recycle-days...");
         mUrl = Uri.parse("android-app://com.mycity4kids/http/momspresso.com");
@@ -146,7 +146,7 @@ public class SplashActivity extends BaseActivity {
 
             setContentView(R.layout.splash_activity);
             mLayout = findViewById(R.id.rootLayout);
-           /* AnalyticsHelper.logEvent("Application Launch...");*/
+            /* AnalyticsHelper.logEvent("Application Launch...");*/
 
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;

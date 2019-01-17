@@ -128,6 +128,8 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                                 n++;
                                 break;
                             }
+                        } else if (articleDataModelsNew.getChild().get(j).getExtraData() == null) {
+                            n++;
                         }
                     }
 

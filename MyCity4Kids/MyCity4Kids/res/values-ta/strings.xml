@@ -339,7 +339,7 @@
     <string name="subscribe_topics.save">சேமிக்க</string>
     <string name="subscribe_topics.toast_topic_updated">பின்வரும் தலைப்புகளின் பட்டியலை வெற்றிகரமாக புதுப்பிக்கப்பட்டது </string>
 
-    <string name="myprofile.following_label">பின்தொடர்கிறீர்</string>
+    <string name="myprofile.following_label">பின்தொடர்கிறீர்</string>st
     <string name="myprofile.followers_label">பின்தொடர்பவர்கள்</string>
     <string name="myprofile.section.articles_label">கட்டுரை</string>
     <string name="myprofile.section.short_story_label">100 வார்த்தை கதை</string>
@@ -764,13 +764,13 @@
 
     <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
-    <string name="short_s.add_story">Write a 100 word story</string>
+    <string name="short_s.add_story">ஒரு 100 வார்த்தை கதை எழுதவும்</string>
     <string name="short_s.add_comment">ஒரு கமென்ட்டை சேர்க்கவும்</string>
     <string name="short_s.add.title_hint">உங்கள் கதைக்கு பொருத்தமான தலைப்பைக் கொடுக்கவும்.வரம்பு 60 எழுத்துக்கள்</string>
     <string name="short_s.add.body_hint">100 அல்லது அதற்கும் குறைவான வார்த்தைகளில் அற்புதமான கதை அல்லது கவிதை எழுதவும்.</string>
     <string name="short_s.publish_message">Congrats! Your story has been published.\n Share it with your friends and family.</string>
     <string name="short_s.max_word">Your story can have maximum 100 words.</string>
-    <string name="short_s.choose_genre">CHOOSE THE GENRE OF YOUR STORY</string>
+    <string name="short_s.choose_genre">உங்கள் கதையின் வகையை தேர்வு செய்யவும் </string>
     <string name="short_s.choose_one_genre">Choose the genre that best describes the content of your story. You can choose only 1 genre.</string>
     <string name="short_s.no_drafts">-இது வரை சிறுகதை எழுதப்படவில்லை </string>
     <string name="short_s.no_published">-இது வரை சிறுகதை பிரசுரிக்கப்படவில்லை</string>
@@ -855,4 +855,8 @@
     <string name="challenge_write_story_for_this_picture">இந்த படத்தை சுற்றி உங்கள் கதையை எழுதவும் </string>
     <string name="choose_challenge_label">சவாலை ஏற்றுக்கொள்ளவும் </string>
     <string name="start_writing">எழுதத் தொடங்கவும் </string>
+
+    <string name="male">ஆண் </string>
+    <string name="female">பெண் </string>
+    <string name="DOB">பிறந்த தேதி</string>
 </resources>
