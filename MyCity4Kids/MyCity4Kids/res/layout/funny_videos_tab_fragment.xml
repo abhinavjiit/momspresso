@@ -142,5 +142,5 @@
         android:layout_gravity="right|bottom"
         fab:fab_colorNormal="@color/fab.white"
         fab:fab_colorPressed="@color/fab.white"
-        fab:fab_icon="@drawable/ic_flip" />
+        fab:fab_icon="@drawable/navigation_create_button" />
 </RelativeLayout>
