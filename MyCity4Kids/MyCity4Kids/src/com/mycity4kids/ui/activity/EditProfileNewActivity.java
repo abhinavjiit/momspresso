@@ -87,12 +87,9 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
     private static final int REQUEST_EDIT_PICTURE = 1;
     private static String[] PERMISSIONS_EDIT_PICTURE = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113;
-
     private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
-
     ViewPager viewPager;
     Toolbar toolbar;
     TabLayout tabLayout;
@@ -136,7 +133,6 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
         Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(getUserDetailsResponseCallback);
-
     }
 
     private Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
