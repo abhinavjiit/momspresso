@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
@@ -28,6 +29,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.AddArticleTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -124,8 +126,8 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         try {
             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
-
-            TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+            TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
             createTopicsData(res);
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
