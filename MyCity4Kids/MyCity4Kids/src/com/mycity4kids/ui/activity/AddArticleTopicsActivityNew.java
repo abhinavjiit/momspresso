@@ -124,6 +124,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         try {
             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
+
             TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
             createTopicsData(res);
         } catch (FileNotFoundException e) {
