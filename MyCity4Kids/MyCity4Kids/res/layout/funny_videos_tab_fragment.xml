@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
@@ -100,7 +101,8 @@
             android:id="@+id/fab_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="right|bottom"
+            android:layout_gravity="right|top"
+            android:visibility="gone"
             fab:fab_addButtonColorNormal="@color/transparent"
             fab:fab_addButtonColorPressed="@color/transparent"
             fab:fab_addButtonPlusIconColor="@color/transparent"
@@ -132,15 +134,43 @@
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </FrameLayout>
 
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabSort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- <com.getbase.floatingactionbutton.FloatingActionButton
+         android:id="@+id/fabSort"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true"
+         android:layout_alignParentEnd="true"
+         android:layout_alignParentRight="true"
+         android:layout_gravity="right|bottom"
+         fab:fab_colorNormal="@color/fab.white"
+         fab:fab_colorPressed="@color/fab.white"
+         fab:fab_icon="@drawable/navigation_create_button" />
+
+ -->
+
+    <ImageView
+        android:id="@+id/addVideoImageView1"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="right|bottom"
-        fab:fab_colorNormal="@color/fab.white"
-        fab:fab_colorPressed="@color/fab.white"
-        fab:fab_icon="@drawable/navigation_create_button" />
+        android:layout_margin="12dp"
+        android:background="@drawable/profile_camera_circle"
+        android:padding="12dp"
+        android:src="@drawable/ic_plus"
+        android:tint="@color/white" />
+
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right|top"
+        android:visibility="gone"
+        app:fab_colorNormal="@color/app_red"
+        app:fab_colorPressed="@color/app_red"
+        app:fab_icon="@drawable/ic_plus" />
 </RelativeLayout>
