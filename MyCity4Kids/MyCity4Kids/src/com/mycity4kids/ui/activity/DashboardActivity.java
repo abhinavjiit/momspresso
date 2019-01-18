@@ -128,6 +128,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public static final String COMMON_PREF_FILE = "my_city_prefs";
     public boolean filter = false;
     Tracker t;
+    private String TAG = "PhoneDetails";
     private String deepLinkUrl;
     private String mToolbarTitle = "";
     private String fragmentToLoad = "";
@@ -277,7 +278,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         draftsRecyclerView.setLayoutManager(llm);
         userAllDraftsRecyclerAdapter = new UserAllDraftsRecyclerAdapter(this, this);
-
         bottomNavigationView.enableAnimation(false);
         bottomNavigationView.enableShiftingMode(false);
         bottomNavigationView.enableItemShiftingMode(false);
@@ -360,6 +360,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             public void onDrawerSlide(View drawerView, float slideOffset) {
 
             }
+
 
             @Override
             public void onDrawerOpened(View drawerView) {

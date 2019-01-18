@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class VideoTopicsPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
     private ArrayList<Topics> subTopicsList;
-
     public VideoTopicsPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<Topics> subTopicsList) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;

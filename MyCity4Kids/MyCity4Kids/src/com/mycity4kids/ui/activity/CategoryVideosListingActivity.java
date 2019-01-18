@@ -139,7 +139,6 @@ public class CategoryVideosListingActivity extends BaseActivity {
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
         }
         AppUtils.changeTabsFont(this, tabLayout);
-
         pagerAdapter = new VideoTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -230,7 +229,7 @@ public class CategoryVideosListingActivity extends BaseActivity {
             if (parentTopicId.equals(allTopicsList.get(i).getId())) {
 //                subTopicsList.addAll(allTopicsList.get(i).getChild());
                 for (int j = 0; j < allTopicsList.get(i).getChild().size(); j++) {
-                    if ("1".equals(allTopicsList.get(i).getChild().get(j).getPublicVisibility())) {
+                    if ("1".equals(allTopicsList.get(i).getChild().get(j).getPublicVisibility()) || "category-ee7ea82543bd4bc0a8dad288561f2beb".equals(allTopicsList.get(i).getChild().get(j).getId())) {
                         subTopicsList.add(allTopicsList.get(i).getChild().get(j));
                     }
                 }
