@@ -62,7 +62,7 @@ public class AudioRecordView extends FrameLayout {
 
     private View imageViewAudio, imageViewLockArrow, imageViewLock, imageViewMic, dustin, dustin_cover, imageViewStop;
     private View layoutDustin;
-    private View layoutSlideCancel, layoutLock;
+    private View layoutSlideCancel, layoutLock,layoutRecording;
     private TextView timeText;
 
     private ImageView stop, audio;
@@ -117,6 +117,7 @@ public class AudioRecordView extends FrameLayout {
         layoutDustin = view.findViewById(R.id.layoutDustin);
         timeText = view.findViewById(R.id.textViewTime);
         layoutSlideCancel = view.findViewById(R.id.layoutSlideCancel);
+        layoutRecording = view.findViewById(R.id.recording);
         layoutLock = view.findViewById(R.id.layoutLock);
         imageViewMic = view.findViewById(R.id.imageViewMic);
         dustin = view.findViewById(R.id.dustin);
@@ -313,7 +314,7 @@ public class AudioRecordView extends FrameLayout {
         imageViewAudio.animate().scaleX(1f).scaleY(1f).translationX(0).translationY(0).setDuration(100).setInterpolator(new LinearInterpolator()).start();
         layoutSlideCancel.setTranslationX(0);
         layoutSlideCancel.setVisibility(View.GONE);
-
+        layoutRecording.setVisibility(GONE);
         layoutLock.setVisibility(View.GONE);
         layoutLock.setTranslationY(0);
         imageViewLockArrow.clearAnimation();
@@ -352,17 +353,21 @@ public class AudioRecordView extends FrameLayout {
             if (recordingListener != null)
                 recordingListener.onRecordingCompleted();
         }
+        audio.setImageResource(R.drawable.ic_add_image);
     }
 
     private void startRecord() {
-        if (recordingListener != null)
+        if (recordingListener != null) {
+            audio.setImageResource(R.drawable.record_audio_ic);
             recordingListener.onRecordingStarted();
+        }
 
         stopTrackingAction = false;
         imageViewAudio.animate().scaleXBy(1f).scaleYBy(1f).setDuration(200).setInterpolator(new OvershootInterpolator()).start();
         timeText.setVisibility(View.VISIBLE);
         layoutLock.setVisibility(View.VISIBLE);
         layoutSlideCancel.setVisibility(View.VISIBLE);
+        layoutRecording.setVisibility(VISIBLE);
         imageViewMic.setVisibility(View.VISIBLE);
         timeText.startAnimation(animBlink);
         imageViewLockArrow.clearAnimation();

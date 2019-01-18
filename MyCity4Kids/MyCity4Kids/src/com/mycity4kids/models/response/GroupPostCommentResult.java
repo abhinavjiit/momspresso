@@ -76,6 +76,9 @@ public class GroupPostCommentResult implements Parcelable {
     };
 
     public String getTag() {
+        if (tag == null) {
+            tag = "0";
+        }
         return tag;
     }
 

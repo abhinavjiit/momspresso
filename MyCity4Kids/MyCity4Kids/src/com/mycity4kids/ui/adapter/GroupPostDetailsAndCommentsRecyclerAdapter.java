@@ -87,7 +87,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     private Handler mHandler = new Handler();
     private SeekBar audioSeekBarUpdate;
     private long totalDuration, currentDuration;
-    private int pos, prevPos = -1;;
+    private int pos, prevPos = -1;
+    ;
     private AudioCommentViewHolder viewHolder;
     private ProgressDialog mProgressDialog;
     private boolean isPlayed = false;
@@ -330,7 +331,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             }
         } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
-            postCommentsList.get(position).setTag("0");
+            if (prevPos != -1)
+                changeIcon(audioCommentViewHolder, position);
             if (postCommentsList.get(position).getIsAnnon() == 1) {
                 audioCommentViewHolder.commentorUsernameTextView.setText(mContext.getString(R.string.groups_anonymous));
                 audioCommentViewHolder.commentorImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
@@ -396,18 +398,17 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     showProgressDialog(mContext.getString(R.string.please_wait));
                     audioCommentViewHolder.audioSeekBar.setProgress(0);
                     audioCommentViewHolder.audioSeekBar.setMax(100);
-                    if (prevPos != -1){
+                    /*if (prevPos != -1) {
                         postCommentsList.get(prevPos).setTag("0");
                         changeIcon(audioCommentViewHolder, prevPos);
-                    }else{
-
-                    }
+                    }*/
                     pos = position;
                     prevPos = position;
                     viewHolder = audioCommentViewHolder;
                     audioSeekBarUpdate = audioCommentViewHolder.audioSeekBar;
                     postCommentsList.get(position).setTag("1");
                     changeIcon(audioCommentViewHolder, position);
+
                     if (mMediaplayer != null && mMediaplayer.isPlaying()) {
                         mMediaplayer.release();
                     }
@@ -416,6 +417,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     for (String entry : map.values()) {
                         fetchAudioUrlFromFirebase(entry, audioCommentViewHolder.audioSeekBar);
                     }
+                    notifyDataSetChanged();
                 }
             });
 
@@ -423,11 +425,12 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             audioCommentViewHolder.pauseAudioImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mMediaplayer.pause();
+                    mMediaplayer.stop();
                     postCommentsList.get(position).setTag("0");
                     pos = position;
                     viewHolder = audioCommentViewHolder;
                     changeIcon(audioCommentViewHolder, position);
+                    notifyDataSetChanged();
                 }
             });
 
@@ -511,17 +514,12 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         if (postCommentsList.get(position).getTag().equals("1")) {
             audioCommentViewHolder.playAudioImageView.setVisibility(View.GONE);
             audioCommentViewHolder.pauseAudioImageView.setVisibility(View.VISIBLE);
-            audioCommentViewHolder.audioTimeElapsed.setVisibility(View.VISIBLE);
-//            audioCommentViewHolder.audioTimeElapsed.setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
         } else {
             audioCommentViewHolder.pauseAudioImageView.setVisibility(View.GONE);
             audioCommentViewHolder.playAudioImageView.setVisibility(View.VISIBLE);
-            audioCommentViewHolder.audioTimeElapsed.setVisibility(View.GONE);
             audioCommentViewHolder.audioSeekBar.setProgress(0);
             audioCommentViewHolder.audioSeekBar.setMax(100);
         }
-        notifyItemChanged(position);
-        notifyDataSetChanged();
     }
 
     private void showVotingData(TextPollPostViewHolder textPollPostViewHolder, GroupPostResult postResult) {

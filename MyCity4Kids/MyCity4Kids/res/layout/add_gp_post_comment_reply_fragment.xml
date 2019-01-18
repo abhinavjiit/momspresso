@@ -63,8 +63,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottombarTopline"
-        android:fillViewport="true"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/toolbar"
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -273,40 +273,8 @@
         android:id="@+id/bottombarTopline"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_above="@+id/anonymousImageView"
+        android:layout_above="@+id/recordingView"
         android:background="@color/light_underline" />
-
-    <ImageView
-        android:id="@+id/addMediaImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:padding="10dp"
-        android:src="@drawable/ic_add_image" />
-
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/addMediaTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/addMediaImageView"
-        android:layout_alignBottom="@+id/addMediaImageView"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/addMediaImageView"
-        android:layout_toRightOf="@+id/addMediaImageView"
-        android:gravity="center_vertical"
-        android:paddingRight="10dp"
-        android:text="@string/groups.add_image" />
-
-    <ImageView
-        android:id="@+id/addAudioImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/addMediaTextView"
-        android:padding="10dp"
-        android:src="@drawable/ic_add_image" />
 
 
     <ImageView
@@ -314,7 +282,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/anonymousTextView"
+        android:layout_toRightOf="@+id/anonymousTextView"
         android:padding="10dp"
         android:src="@drawable/ic_incognito" />
 
@@ -325,7 +293,7 @@
         android:layout_alignTop="@+id/anonymousImageView"
         android:layout_alignBottom="@+id/anonymousImageView"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/anonymousCheckbox"
+        android:layout_toRightOf="@+id/anonymousCheckbox"
         android:gravity="center_vertical"
         android:paddingRight="10dp"
         android:text="@string/groups.anonymous" />
@@ -334,10 +302,11 @@
         android:id="@+id/anonymousCheckbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="2dp"
         android:button="@drawable/language_selector_checkbox"
         android:buttonTint="@color/app_red"
         android:checked="false"
@@ -350,6 +319,48 @@
         android:paddingBottom="10dp"
         android:textColor="@color/app_red"
         android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/addMediaImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/recordingView"
+        android:padding="10dp"
+        android:src="@drawable/ic_add_image" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/addMediaTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/addMediaImageView"
+        android:layout_alignBottom="@+id/addMediaImageView"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/addMediaImageView"
+        android:gravity="center_vertical"
+        android:paddingRight="10dp"
+        android:text="@string/groups.add_image"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/addAudioImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:src="@drawable/ic_add_image" />
+
+    <com.mycity4kids.utils.AudioRecordView
+        android:id="@+id/recordingView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-5dp" />
 
     <RelativeLayout
         android:id="@+id/bottomsheet"
@@ -370,8 +381,8 @@
             android:id="@+id/actionItemContainer"
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:layout_alignParentBottom="true"
             android:layout_below="@+id/overlay"
+            android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:orientation="vertical"
             android:padding="10dp">
@@ -380,25 +391,25 @@
                 android:id="@+id/bottomSheetCross"
                 android:layout_width="@dimen/space_20"
                 android:layout_height="@dimen/space_20"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:src="@drawable/cross_icon_back"/>
+                android:layout_alignParentRight="true"
+                android:src="@drawable/cross_icon_back" />
 
             <ImageView
                 android:id="@+id/record_button_red"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
                 android:src="@drawable/pause"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <com.mycity4kids.utils.AudioRecordView
-                android:id="@+id/recordingView"
+                android:id="@+id/recordingView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignParentBottom="true" />
         </RelativeLayout>
     </RelativeLayout>
 

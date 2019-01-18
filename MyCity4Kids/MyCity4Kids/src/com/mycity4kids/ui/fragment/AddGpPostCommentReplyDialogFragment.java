@@ -253,7 +253,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         addMediaTextView.setOnClickListener(this);
         imageCameraTextView.setOnClickListener(this);
         imageGalleryTextView.setOnClickListener(this);
-        addAudioImageView.setOnClickListener(this);
+//        addAudioImageView.setOnClickListener(this);
         mImgRecordCross.setOnClickListener(this);
         mImgRecordButton.setOnClickListener(this);
 //        videoCameraTextView.setOnClickListener(this);
@@ -276,13 +276,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.ad_comments_edit_label));
                 relativeMainContainer.setVisibility(View.GONE);
                 commentReplyEditText.setText(commentOrReplyData.getContent());
-                anonymousImageView.setVisibility(View.GONE);
-                anonymousTextView.setVisibility(View.GONE);
-                anonymousCheckbox.setVisibility(View.GONE);
-                bottombarTopline.setVisibility(View.GONE);
-                addMediaImageView.setVisibility(View.GONE);
-                addAudioImageView.setVisibility(View.GONE);
-                addMediaTextView.setVisibility(View.GONE);
             } else {
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.reply));
                 relativeMainContainer.setVisibility(View.VISIBLE);
@@ -466,6 +459,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         }
                     }
                     dismiss();
+                    commentReplyEditText.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.closeImageView:
@@ -508,13 +502,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 }
                 break;
 
-            case R.id.addAudioImageView:
-                mLinearBottomSheet.setVisibility(View.VISIBLE);
-                mLinearBottomSheet.startAnimation(slideAnim);
-                addAudioImageView.setEnabled(false);
-                addMediaImageView.setEnabled(false);
-                addMediaTextView.setEnabled(false);
-                break;
             case R.id.bottomSheetCross:
                 mLinearBottomSheet.startAnimation(slideDownAnim);
                 slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -1119,8 +1106,13 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         removeIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mMediaplayer !=null) {
+                    mMediaplayer.stop();
+                    mMediaplayer.release();
+                }
                 audioUrlHashMap.remove(removeIV);
                 mediaContainer.removeView((View) removeIV.getParent());
+                commentReplyEditText.setVisibility(View.VISIBLE);
                 addAudioImageView.setEnabled(true);
                 addMediaImageView.setEnabled(true);
                 addMediaTextView.setEnabled(true);
@@ -1130,6 +1122,12 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
     private void startRecording() {
         mRecorder = new MediaRecorder();
+        commentReplyEditText.setVisibility(View.GONE);
+        addAudioImageView.setVisibility(View.GONE);
+        addMediaImageView.setVisibility(View.GONE);
+        anonymousCheckbox.setVisibility(View.GONE);
+        anonymousImageView.setVisibility(View.GONE);
+        anonymousTextView.setVisibility(View.GONE);
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setOutputFile(mFileName);
@@ -1147,6 +1145,10 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         if (mRecorder != null) {
             try {
                 mRecorder.stop();
+                addMediaImageView.setVisibility(View.VISIBLE);
+                anonymousCheckbox.setVisibility(View.VISIBLE);
+                anonymousImageView.setVisibility(View.VISIBLE);
+                anonymousTextView.setVisibility(View.VISIBLE);
             } catch (RuntimeException e) {
 
             } finally {
