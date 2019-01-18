@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -69,7 +71,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 4/12/17.
  */
 
-public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
+public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener, Handler.Callback {
 
     public static final int HEADER = -1;
     public static final int COMMENT_LEVEL_ROOT = 0;
@@ -84,7 +86,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     private String postType;
     private int currentPagerPos = 0;
     private GroupPostResult groupPostResult;
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
     private SeekBar audioSeekBarUpdate;
     private long totalDuration, currentDuration;
     private int pos, prevPos = -1;
@@ -92,15 +94,19 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     private AudioCommentViewHolder viewHolder;
     private ProgressDialog mProgressDialog;
     private boolean isPlayed = false;
+    private static final int MSG_UPDATE_SEEK_BAR = 1845;
+    private SeekBarUpdater seekBarUpdater;
 
     public GroupPostDetailsAndCommentsRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, String postType) {
         mContext = pContext;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mListener = listener;
         this.postType = postType;
+        mHandler = new Handler();
         localizedComment = mContext.getString(R.string.ad_comments_title);
         localizedHelpful = mContext.getString(R.string.groups_post_helpful);
         localizedNotHelpful = mContext.getString(R.string.groups_post_nothelpful);
+        seekBarUpdater = new SeekBarUpdater();
     }
 
     public void setData(GroupPostResult groupPostResult, ArrayList<GroupPostCommentResult> postCommentsList) {
@@ -398,14 +404,15 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     showProgressDialog(mContext.getString(R.string.please_wait));
                     audioCommentViewHolder.audioSeekBar.setProgress(0);
                     audioCommentViewHolder.audioSeekBar.setMax(100);
-                    /*if (prevPos != -1) {
+                    if (prevPos != -1) {
                         postCommentsList.get(prevPos).setTag("0");
-                        changeIcon(audioCommentViewHolder, prevPos);
-                    }*/
+//                        changeIcon(audioCommentViewHolder, prevPos);
+                    }
                     pos = position;
                     prevPos = position;
                     viewHolder = audioCommentViewHolder;
                     audioSeekBarUpdate = audioCommentViewHolder.audioSeekBar;
+                    audioSeekBarUpdate.setTag(position);
                     postCommentsList.get(position).setTag("1");
                     changeIcon(audioCommentViewHolder, position);
 
@@ -514,11 +521,35 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         if (postCommentsList.get(position).getTag().equals("1")) {
             audioCommentViewHolder.playAudioImageView.setVisibility(View.GONE);
             audioCommentViewHolder.pauseAudioImageView.setVisibility(View.VISIBLE);
+
         } else {
             audioCommentViewHolder.pauseAudioImageView.setVisibility(View.GONE);
             audioCommentViewHolder.playAudioImageView.setVisibility(View.VISIBLE);
             audioCommentViewHolder.audioSeekBar.setProgress(0);
             audioCommentViewHolder.audioSeekBar.setMax(100);
+        }
+    }
+
+    private void updateNonPlayingView(AudioCommentViewHolder holder) {
+        holder.audioSeekBar.removeCallbacks(seekBarUpdater);
+        holder.audioSeekBar.setEnabled(false);
+        holder.audioSeekBar.setProgress(0);
+    }
+
+    /**
+     * Changes the view to playing state
+     * - icon is changed to pause
+     * - seek bar enabled
+     * - start seek bar updater, if needed
+     */
+    private void updatePlayingView() {
+        viewHolder.audioSeekBar.setMax(mMediaplayer.getDuration());
+        viewHolder.audioSeekBar.setProgress(mMediaplayer.getCurrentPosition());
+        viewHolder.audioSeekBar.setEnabled(true);
+        if (mMediaplayer.isPlaying()) {
+            viewHolder.audioSeekBar.postDelayed(seekBarUpdater, 100);
+        } else {
+            viewHolder.audioSeekBar.removeCallbacks(seekBarUpdater);
         }
     }
 
@@ -608,6 +639,18 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         }
         holder.postDataViewPager.setCurrentItem(currentPagerPos);
         holder.indexTextView.setText((holder.postDataViewPager.getCurrentItem() + 1) + "/" + mediaList.size());
+    }
+
+    @Override
+    public boolean handleMessage(Message message) {
+        switch (message.what) {
+            case MSG_UPDATE_SEEK_BAR: {
+                viewHolder.audioSeekBar.setProgress(mMediaplayer.getCurrentPosition());
+                mHandler.sendEmptyMessageDelayed(MSG_UPDATE_SEEK_BAR, 100);
+                return true;
+            }
+        }
+        return false;
     }
 
     public class TextPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -895,7 +938,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         }
     }
 
-    public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
         ImageView commentorImageView, playAudioImageView, pauseAudioImageView;
         ImageView media;
@@ -933,6 +976,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             replyCountTextView.setOnClickListener(this);
             downvoteCommentContainer.setOnClickListener(this);
             upvoteCommentContainer.setOnClickListener(this);
+            audioSeekBar.setOnSeekBarChangeListener(this);
 //            playAudioImageView.setOnClickListener(this);
 
             underlineView = view.findViewById(R.id.underlineView);
@@ -947,6 +991,23 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         public boolean onLongClick(View view) {
             mListener.onRecyclerItemClick(view, getAdapterPosition());
             return true;
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            if (b) {
+                mMediaplayer.seekTo(i);
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
         }
     }
 
@@ -1148,6 +1209,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                         public void onPrepared(MediaPlayer mediaPlayer) {
                             removeProgressDialog();
                             mMediaplayer.start();
+//                            updatePlayingView();
                             updateProgressBar();
                         }
                     });
@@ -1182,6 +1244,17 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         isPlayed = true;
     }
 
+
+    private class SeekBarUpdater implements Runnable {
+        @Override
+        public void run() {
+            if (null != viewHolder) {
+                viewHolder.audioSeekBar.setProgress(mMediaplayer.getCurrentPosition());
+                viewHolder.audioSeekBar.postDelayed(this, 100);
+            }
+        }
+    }
+
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             if (mMediaplayer != null) {
@@ -1197,7 +1270,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 // Updating progress bar
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 //Log.d("Progress", ""+progress);
-                audioSeekBarUpdate.setProgress(progress);
+                if (pos == (int) audioSeekBarUpdate.getTag())
+                    audioSeekBarUpdate.setProgress(progress);
 
 
                 // Running this thread after 100 milliseconds
@@ -1235,6 +1309,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         // forward or backward to certain seconds
         mMediaplayer.seekTo(currentPosition);
 
+//        updateNonPlayingView(viewHolder);
         // update timer progress again
         updateProgressBar();
     }
