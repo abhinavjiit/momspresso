@@ -900,4 +900,9 @@
     <string name="working">Working</string>
     <string name="save_continue"><![CDATA[SAVE & CONTINUE]]></string>
     <string name="rewards_header_title">MOMSPRESSO REWARDS</string>
+    <string name="momspresso_rewards">MOMSPRESSO REWARDS</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_website">ADD WEBSITE</string>
 </resources>
