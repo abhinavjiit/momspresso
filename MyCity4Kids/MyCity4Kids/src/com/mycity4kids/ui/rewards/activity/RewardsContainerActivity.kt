@@ -4,16 +4,21 @@ import android.app.Activity
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
+import com.kelltontech.network.Response
+import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsFamilyInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
 
-class RewardsContainerActivity : AppCompatActivity(),
+class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
         RewardsSocialInfoFragment.SubmitListener,
         RewardsFamilyInfoFragment.SubmitListener {
+
+    override fun updateUi(response: Response?) {
+    }
 
     override fun FamilyOnSubmit() {
         addSocialFragment()

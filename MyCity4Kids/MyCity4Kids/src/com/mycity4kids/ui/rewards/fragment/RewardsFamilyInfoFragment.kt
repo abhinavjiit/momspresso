@@ -4,13 +4,11 @@ package com.mycity4kids.ui.rewards.fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.AppCompatSpinner
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.RadioGroup
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 
 import com.mycity4kids.R
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
@@ -31,6 +29,10 @@ class RewardsFamilyInfoFragment : Fragment() {
     private lateinit var layoutExptectedDate: RelativeLayout
     private lateinit var textAreYouExpecting: TextView
     private lateinit var layoutMotherExptectedDate: TextView
+    private lateinit var editExpectedDate : EditText
+    private lateinit var editnumberOfKids : EditText
+    private lateinit var editMotherExpectedDate : EditText
+    private lateinit var genderSpinner : AppCompatSpinner
 
     companion object {
         @JvmStatic
@@ -54,12 +56,14 @@ class RewardsFamilyInfoFragment : Fragment() {
     }
 
     private fun initializeXMLComponents() {
+        editExpectedDate = containerView.findViewById(R.id.editExpectedDate)
+        editnumberOfKids = containerView.findViewById(R.id.editnumberOfKids)
+        editMotherExpectedDate = containerView.findViewById(R.id.editMotherExpectedDate)
+        genderSpinner = containerView.findViewById(R.id.genderSpinner)
         layoutNumberOfKids = containerView.findViewById(R.id.layoutNumberOfKids)
         layoutExptectedDate = containerView.findViewById(R.id.layoutExptectedDate)
         layoutMotherExptectedDate = containerView.findViewById(R.id.layoutMotherExptectedDate)
-
         textAreYouExpecting = containerView.findViewById(R.id.textAreYouExpecting)
-
         containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
             submitListener.FamilyOnSubmit()
         }

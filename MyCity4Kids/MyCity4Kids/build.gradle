@@ -65,8 +65,9 @@ dependencies {
 
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.squareup.retrofit2:retrofit:2.0.1'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.3.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.3.0'
 
@@ -74,7 +75,7 @@ dependencies {
     compile 'com.yalantis:ucrop:2.1.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
-//    compile 'life.knowledge4:k4l-video-trimmer:1.0'
+//  compile 'life.knowledge4:k4l-video-trimmer:1.0'
     compile 'io.tus.java.client:tus-java-client:0.3.1'
     compile 'io.tus.android.client:tus-android-client:0.1.4'
     compile 'com.afollestad:easyvideoplayer:0.3.0'
@@ -95,7 +96,9 @@ dependencies {
     compile 'com.googlecode.mp4parser:isoparser:1.1.20'
     compile 'com.google.android.exoplayer:exoplayer:r2.5.1'
     compile 'io.branch.sdk.android:library:3.+'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compile 'io.reactivex.rxjava2:rxjava:2.2.0'
+    compile 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 //dependencies {

@@ -192,7 +192,6 @@ public class BaseApplication extends Application {
     public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
 
-
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             Tracker t = (trackerId == TrackerName.APP_TRACKER) ?
                     analytics.newTracker(R.xml.app_tracker)
@@ -388,9 +387,16 @@ public class BaseApplication extends Application {
                     .build();
         }
 
+//        retrofit = new Retrofit.Builder()
+//                .baseUrl(base_url)
+//                .addConverterFactory(buildGsonConverter())
+//                .client(client)
+//                .build();
+
         retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
-                .addConverterFactory(buildGsonConverter())
+                .baseUrl("https://35.200.209.192:5000/rewards/")
+                //.addConverterFactory(buildGsonConverter())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build();
         return retrofit;

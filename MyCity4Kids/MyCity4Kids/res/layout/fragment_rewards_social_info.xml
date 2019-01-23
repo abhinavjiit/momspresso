@@ -189,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="15dp"
                     android:background="@drawable/mainprofile_thin_border"
                     android:hint="@string/add_website"
                     android:inputType="textNoSuggestions"
@@ -222,7 +222,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="15dp"
                 android:background="@drawable/mainprofile_thin_border"
                 android:hint="Select"
                 android:inputType="textNoSuggestions"
@@ -237,6 +237,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="15dp">
 
                 <com.mycity4kids.widget.CustomFontTextView
@@ -259,6 +260,7 @@
                     android:background="@drawable/shape_red_border"
                     android:gravity="center"
                     android:text="EDIT"
+                    android:visibility="gone"
                     android:textColor="@color/app_red"
                     android:textSize="14sp"
                     app:fontName="oswald_regular.ttf" />
@@ -270,7 +272,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="15dp"
                 android:background="@drawable/mainprofile_thin_border"
                 android:hint="Select"
                 android:inputType="textNoSuggestions"

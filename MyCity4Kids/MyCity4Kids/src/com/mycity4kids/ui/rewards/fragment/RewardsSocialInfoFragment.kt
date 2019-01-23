@@ -7,9 +7,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.mycity4kids.R
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
+import kotlinx.android.synthetic.main.event_details_activity.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,8 +24,14 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class RewardsSocialInfoFragment : Fragment() {
-    private lateinit var containerView : View
+    private lateinit var containerView: View
     private lateinit var submitListener: SubmitListener
+    private lateinit var layoutInstagram: LinearLayout
+    private lateinit var layoutFacebook: LinearLayout
+    private lateinit var layoutTwitter: LinearLayout
+    private lateinit var layoutYoutube: LinearLayout
+    private lateinit var editFirstName: EditText
+    private lateinit var editInterest: EditText
 
     companion object {
         fun newInstance() = RewardsSocialInfoFragment().apply {
@@ -35,7 +44,7 @@ class RewardsSocialInfoFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        containerView= inflater.inflate(R.layout.fragment_rewards_social_info, container, false)
+        containerView = inflater.inflate(R.layout.fragment_rewards_social_info, container, false)
 
         /*initialize XML components*/
         initializeXMLComponents()
@@ -43,7 +52,13 @@ class RewardsSocialInfoFragment : Fragment() {
         return containerView
     }
 
-    private fun initializeXMLComponents(){
+    private fun initializeXMLComponents() {
+        layoutInstagram = containerView.findViewById(R.id.layoutInstagram)
+        layoutFacebook = containerView.findViewById(R.id.layoutFacebook)
+        layoutYoutube = containerView.findViewById(R.id.layoutYoutube)
+        layoutTwitter = containerView.findViewById(R.id.layoutTwitter)
+        editFirstName = containerView.findViewById(R.id.editFirstName)
+        editInterest = containerView.findViewById(R.id.editInterest)
         containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
             submitListener.socialOnSubmitListener()
         }
@@ -51,13 +66,13 @@ class RewardsSocialInfoFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if(context is RewardsContainerActivity){
+        if (context is RewardsContainerActivity) {
             submitListener = context
         }
     }
 
 
-    interface SubmitListener{
+    interface SubmitListener {
         fun socialOnSubmitListener()
     }
 
