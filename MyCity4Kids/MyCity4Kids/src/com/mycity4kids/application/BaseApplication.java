@@ -53,6 +53,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -276,6 +277,7 @@ public class BaseApplication extends Application {
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+
     }
 
     /**
@@ -346,8 +348,10 @@ public class BaseApplication extends Application {
                 Request.Builder requestBuilder = original.newBuilder();
 
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder.addHeader("id", "a66ac4980fb54dec85dccb3b894d793a");
+                //requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("mc4kToken", "e93e10906909e6c67fc236adbca297c2");
+                //requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
@@ -394,8 +398,8 @@ public class BaseApplication extends Application {
 //                .build();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://35.200.209.192:5000/rewards/")
-                //.addConverterFactory(buildGsonConverter())
+                .baseUrl("http://35.200.209.192:5000/")
+                .addConverterFactory(buildGsonConverter())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build();

@@ -125,7 +125,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/button_round"
-                    android:gravity="center_vertical|end"
+                    android:gravity="center"
                     android:text="VERIFY"
                     android:textColor="@color/white"
                     android:textSize="14sp"
@@ -184,7 +184,7 @@
                     android:text="@string/dob"
                     android:textColor="@color/app_grey"
                     app:fontName="oswald_regular.ttf"
-                    app:layout_constraintLeft_toLeftOf="@+id/kidsDOBTextView"
+                    app:layout_constraintLeft_toLeftOf="@+id/textDOB"
                     app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -286,34 +286,34 @@
                     android:id="@+id/radioGroupWorkingStatus"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_below="@+id/textWorkingStatus"
                     android:layout_marginTop="5dp"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_below="@+id/textWorkingStatus">
+                    android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/radiokWorking"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_below="@id/textWorkingStatus"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginLeft="0dp"
-                    android:buttonTint="@color/app_red"
-                    android:text="@string/working"
-                    android:textColor="@color/app_light_black" />
+                    <android.support.v7.widget.AppCompatRadioButton
+                        android:id="@+id/radiokWorking"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_below="@id/textWorkingStatus"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginLeft="0dp"
+                        android:buttonTint="@color/app_red"
+                        android:text="@string/working"
+                        android:textColor="@color/app_light_black" />
 
-                <android.support.v7.widget.AppCompatRadioButton
-                    android:id="@+id/radioNotWorking"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_below="@id/textWorkingStatus"
-                    android:layout_marginRight="8dp"
-                    android:buttonTint="@color/app_red"
-                    android:text="@string/not_working"
-                    android:textColor="@color/app_light_black" />
+                    <android.support.v7.widget.AppCompatRadioButton
+                        android:id="@+id/radioNotWorking"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_below="@id/textWorkingStatus"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="8dp"
+                        android:buttonTint="@color/app_red"
+                        android:text="@string/not_working"
+                        android:textColor="@color/app_light_black" />
                 </RadioGroup>
             </RelativeLayout>
 
@@ -367,13 +367,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:background="@color/app_red"
-                android:paddingBottom="15dp"
-                android:paddingLeft="35dp"
-                android:paddingRight="35dp"
-                android:paddingTop="15dp"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
+                android:background="@color/app_red"
+                android:gravity="center"
+                android:paddingLeft="35dp"
+                android:paddingTop="15dp"
+                android:paddingRight="35dp"
+                android:paddingBottom="15dp"
                 android:text="@string/save_continue"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
