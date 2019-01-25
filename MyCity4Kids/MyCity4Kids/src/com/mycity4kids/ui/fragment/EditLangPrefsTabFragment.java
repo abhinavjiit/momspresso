@@ -82,7 +82,6 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
         return view;
     }
 
-
     private void checkLanguageSubscriptionStatus() {
         showProgressDialog("Please wait ...");
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();

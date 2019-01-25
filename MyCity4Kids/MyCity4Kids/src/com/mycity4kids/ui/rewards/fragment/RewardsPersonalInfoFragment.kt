@@ -93,7 +93,7 @@ class RewardsPersonalInfoFragment : BaseFragment() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData("a66ac4980fb54dec85dccb3b894d793a", 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData("8ffb68f436724516850cdfdb5d064d69", 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -164,7 +164,7 @@ class RewardsPersonalInfoFragment : BaseFragment() {
         genderSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapter: AdapterView<*>, v: View,
                                         position: Int, id: Long) {
-                genderSpinner.selectedItemId =
+                genderSpinner.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
