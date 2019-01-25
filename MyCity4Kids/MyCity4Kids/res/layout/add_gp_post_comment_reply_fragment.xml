@@ -64,6 +64,9 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottombarTopline"
         android:layout_below="@+id/toolbar"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="-2dp"
+        android:layout_marginBottom="2dp"
         android:fillViewport="true">
 
         <RelativeLayout
@@ -359,8 +362,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-5dp" />
+        android:layout_alignParentBottom="true" />
 
     <RelativeLayout
         android:id="@+id/bottomsheet"

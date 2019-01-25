@@ -4,8 +4,6 @@ import android.animation.Animator;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -15,7 +13,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,10 +26,7 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Created by Varun John on 4 Dec, 2018
- * Github : https://github.com/varunjohn
- */
+
 public class AudioRecordView extends FrameLayout {
 
     public enum UserBehaviour {
@@ -353,7 +347,7 @@ public class AudioRecordView extends FrameLayout {
             if (recordingListener != null)
                 recordingListener.onRecordingCompleted();
         }
-        audio.setImageResource(R.drawable.ic_add_image);
+        audio.setImageResource(R.drawable.ic_audio_record);
     }
 
     private void startRecord() {

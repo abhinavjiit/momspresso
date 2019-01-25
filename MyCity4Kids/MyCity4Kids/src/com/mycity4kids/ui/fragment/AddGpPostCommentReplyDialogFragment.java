@@ -1106,7 +1106,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         removeIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mMediaplayer !=null) {
+                if (mMediaplayer != null) {
                     mMediaplayer.stop();
                     mMediaplayer.release();
                 }
@@ -1121,6 +1121,9 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     }
 
     private void startRecording() {
+        if (mRecorder != null) {
+            mRecorder.release();
+        }
         mRecorder = new MediaRecorder();
         commentReplyEditText.setVisibility(View.GONE);
         addAudioImageView.setVisibility(View.GONE);
