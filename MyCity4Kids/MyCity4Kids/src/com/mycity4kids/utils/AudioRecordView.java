@@ -4,6 +4,9 @@ import android.animation.Animator;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -13,9 +16,11 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 
 import com.mycity4kids.R;
 
@@ -54,12 +59,14 @@ public class AudioRecordView extends FrameLayout {
 
     }
 
-    private View imageViewAudio, imageViewLockArrow, imageViewLock, imageViewMic, dustin, dustin_cover, imageViewStop;
-    private View layoutDustin;
-    private View layoutSlideCancel, layoutLock,layoutRecording;
-    private TextView timeText;
+    private View imageViewAudio, imageViewLockArrow, imageViewLock, imageViewMic, dustin, dustin_cover, imageViewStop, imageViewSend;
+    private View layoutDustin, imageViewAttachment,layoutRecording,layoutOne,layoutTwo;
+    private View layoutSlideCancel, layoutLock;
+    private EditText editTextMessage;
+    private TextView timeText,cancelStop;
+    private CardView baseCardView;
 
-    private ImageView stop, audio;
+    private ImageView stop, audio, send;
 
     private Animation animBlink, animJump, animJumpFast;
 
@@ -101,21 +108,30 @@ public class AudioRecordView extends FrameLayout {
         View view = inflate(getContext(), R.layout.recording_layout, null);
         addView(view);
 
+        imageViewAttachment = view.findViewById(R.id.imageViewAttachment);
+        editTextMessage = view.findViewById(R.id.editTextMessage);
+
+        send = view.findViewById(R.id.imageSend);
         stop = view.findViewById(R.id.imageStop);
         audio = view.findViewById(R.id.imageAudio);
 
         imageViewAudio = view.findViewById(R.id.imageViewAudio);
         imageViewStop = view.findViewById(R.id.imageViewStop);
+        imageViewSend = view.findViewById(R.id.imageViewSend);
         imageViewLock = view.findViewById(R.id.imageViewLock);
         imageViewLockArrow = view.findViewById(R.id.imageViewLockArrow);
         layoutDustin = view.findViewById(R.id.layoutDustin);
         timeText = view.findViewById(R.id.textViewTime);
+        cancelStop = view.findViewById(R.id.cancelStop);
         layoutSlideCancel = view.findViewById(R.id.layoutSlideCancel);
-        layoutRecording = view.findViewById(R.id.recording);
         layoutLock = view.findViewById(R.id.layoutLock);
         imageViewMic = view.findViewById(R.id.imageViewMic);
         dustin = view.findViewById(R.id.dustin);
         dustin_cover = view.findViewById(R.id.dustin_cover);
+        baseCardView = view.findViewById(R.id.base_card);
+        layoutRecording = view.findViewById(R.id.recording);
+        layoutOne = view.findViewById(R.id.linear_one);
+        layoutTwo = view.findViewById(R.id.linear_two);
 
         handler = new Handler(Looper.getMainLooper());
 
@@ -139,6 +155,10 @@ public class AudioRecordView extends FrameLayout {
         stop.setImageResource(imageResource);
     }
 
+    public void setSendButtonImage(int imageResource) {
+        send.setImageResource(imageResource);
+    }
+
     public RecordingListener getRecordingListener() {
         return recordingListener;
     }
@@ -147,10 +167,48 @@ public class AudioRecordView extends FrameLayout {
         this.recordingListener = recordingListener;
     }
 
+    public View getSendView() {
+        return imageViewSend;
+    }
+
+    public View getAttachmentView() {
+        return imageViewAttachment;
+    }
+
+    public EditText getMessageView() {
+        return editTextMessage;
+    }
 
     private void setupRecording() {
 
-        imageViewAudio.setOnTouchListener(new OnTouchListener() {
+        imageViewSend.animate().scaleX(0f).scaleY(0f).setDuration(100).setInterpolator(new LinearInterpolator()).start();
+
+        editTextMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()) {
+                    if (imageViewSend.getVisibility() != View.GONE) {
+                        imageViewSend.setVisibility(View.GONE);
+                        imageViewSend.animate().scaleX(0f).scaleY(0f).setDuration(100).setInterpolator(new LinearInterpolator()).start();
+                    }
+                } else {
+                    if (imageViewSend.getVisibility() != View.VISIBLE && !isLocked) {
+                        imageViewSend.setVisibility(View.VISIBLE);
+                        imageViewSend.animate().scaleX(1f).scaleY(1f).setDuration(100).setInterpolator(new LinearInterpolator()).start();
+                    }
+                }
+            }
+        });
+
+        imageViewAudio.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
 
@@ -234,11 +292,21 @@ public class AudioRecordView extends FrameLayout {
             }
         });
 
-        imageViewStop.setOnClickListener(new OnClickListener() {
+        imageViewStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isLocked = false;
-                stopRecording(RecordingBehaviour.LOCK_DONE);
+                stopRecording(RecordingBehaviour.RELEASED);
+            }
+        });
+
+        cancelStop.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isLocked = false;
+                canceled();
+                imageViewAudio.setTranslationX(0);
+                layoutSlideCancel.setTranslationX(0);
             }
         });
     }
@@ -308,7 +376,8 @@ public class AudioRecordView extends FrameLayout {
         imageViewAudio.animate().scaleX(1f).scaleY(1f).translationX(0).translationY(0).setDuration(100).setInterpolator(new LinearInterpolator()).start();
         layoutSlideCancel.setTranslationX(0);
         layoutSlideCancel.setVisibility(View.GONE);
-        layoutRecording.setVisibility(GONE);
+        baseCardView.setVisibility(View.GONE);
+
         layoutLock.setVisibility(View.GONE);
         layoutLock.setTranslationY(0);
         imageViewLockArrow.clearAnimation();
@@ -317,9 +386,11 @@ public class AudioRecordView extends FrameLayout {
         if (isLocked) {
             return;
         }
+        audio.setImageResource(R.drawable.ic_audio_record);
 
         if (recordingBehaviour == RecordingBehaviour.LOCKED) {
             imageViewStop.setVisibility(View.VISIBLE);
+            cancelStop.setVisibility(View.VISIBLE);
 
             if (recordingListener != null)
                 recordingListener.onRecordingLocked();
@@ -327,6 +398,7 @@ public class AudioRecordView extends FrameLayout {
         } else if (recordingBehaviour == RecordingBehaviour.CANCELED) {
             timeText.clearAnimation();
             timeText.setVisibility(View.INVISIBLE);
+            cancelStop.setVisibility(View.GONE);
             imageViewMic.setVisibility(View.INVISIBLE);
             imageViewStop.setVisibility(View.GONE);
 
@@ -339,35 +411,43 @@ public class AudioRecordView extends FrameLayout {
         } else if (recordingBehaviour == RecordingBehaviour.RELEASED || recordingBehaviour == RecordingBehaviour.LOCK_DONE) {
             timeText.clearAnimation();
             timeText.setVisibility(View.INVISIBLE);
+            cancelStop.setVisibility(View.GONE);
             imageViewMic.setVisibility(View.INVISIBLE);
+            imageViewAttachment.setVisibility(View.VISIBLE);
             imageViewStop.setVisibility(View.GONE);
+            layoutRecording.setVisibility(View.GONE);
+            baseCardView.setVisibility(View.GONE);
+            layoutOne.setVisibility(View.GONE);
+            layoutTwo.setVisibility(View.GONE);
 
             timerTask.cancel();
 
             if (recordingListener != null)
                 recordingListener.onRecordingCompleted();
         }
-        audio.setImageResource(R.drawable.ic_audio_record);
     }
 
     private void startRecord() {
-        if (recordingListener != null) {
-            audio.setImageResource(R.drawable.record_audio_ic);
+        if (recordingListener != null)
             recordingListener.onRecordingStarted();
-        }
 
         stopTrackingAction = false;
+        imageViewAttachment.setVisibility(View.INVISIBLE);
         imageViewAudio.animate().scaleXBy(1f).scaleYBy(1f).setDuration(200).setInterpolator(new OvershootInterpolator()).start();
         timeText.setVisibility(View.VISIBLE);
         layoutLock.setVisibility(View.VISIBLE);
         layoutSlideCancel.setVisibility(View.VISIBLE);
-        layoutRecording.setVisibility(VISIBLE);
+        layoutRecording.setVisibility(View.VISIBLE);
+        layoutOne.setVisibility(View.VISIBLE);
+        layoutTwo.setVisibility(View.VISIBLE);
+        baseCardView.setVisibility(View.VISIBLE);
         imageViewMic.setVisibility(View.VISIBLE);
         timeText.startAnimation(animBlink);
         imageViewLockArrow.clearAnimation();
         imageViewLock.clearAnimation();
         imageViewLockArrow.startAnimation(animJumpFast);
         imageViewLock.startAnimation(animJump);
+        audio.setImageResource(R.drawable.record_audio_ic);
 
         if (audioTimer == null) {
             audioTimer = new Timer();
@@ -402,6 +482,7 @@ public class AudioRecordView extends FrameLayout {
             public void run() {
                 isDeleting = false;
                 imageViewAudio.setEnabled(true);
+                imageViewAttachment.setVisibility(View.VISIBLE);
             }
         }, 1250);
 
