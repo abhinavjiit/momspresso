@@ -22,7 +22,7 @@ data class RewardsDetailsResultResonse(
         val email: String? = null,
         @SerializedName("family_type")
         @Expose
-        val familyType: Any? = null,
+        val familyType: Int? = null,
         @SerializedName("first_name")
         @Expose
         val firstName: String? = null,
@@ -40,7 +40,7 @@ data class RewardsDetailsResultResonse(
         val interest: Any? = null,
         @SerializedName("is_mother")
         @Expose
-        val isMother: Any? = null,
+        val isMother: Int? = null,
         @SerializedName("kids_info")
         @Expose
         val kidsInfo: List<Any>? = null,

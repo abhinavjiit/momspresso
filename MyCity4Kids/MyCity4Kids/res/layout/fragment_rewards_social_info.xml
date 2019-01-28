@@ -184,7 +184,7 @@
                 android:paddingBottom="20dp">
 
                 <com.mycity4kids.widget.CustomFontEditText
-                    android:id="@+id/editFirstName"
+                    android:id="@+id/editWebsite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -236,17 +236,17 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="15dp">
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="15dp"
                     android:text="DURABLES"
-                    android:layout_centerVertical="true"
                     android:textColor="@color/app_grey"
                     app:fontName="oswald_regular.ttf" />
 
@@ -260,9 +260,9 @@
                     android:background="@drawable/shape_red_border"
                     android:gravity="center"
                     android:text="EDIT"
-                    android:visibility="gone"
                     android:textColor="@color/app_red"
                     android:textSize="14sp"
+                    android:visibility="gone"
                     app:fontName="oswald_regular.ttf" />
             </RelativeLayout>
 

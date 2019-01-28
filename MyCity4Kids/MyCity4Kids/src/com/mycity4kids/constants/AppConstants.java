@@ -8,8 +8,6 @@ import com.mycity4kids.BuildConfig;
  * @author Hemant Parmar
  */
 public class AppConstants {
-
-
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.220.87.141/";
 
@@ -625,4 +623,8 @@ public class AppConstants {
 
     public static final String ANDROID_NEW_EDITOR = "android_new_editor";
     public static final String ANDROID_OLD_EDITOR = "android_old_editor";
+
+    enum SocialPlatformName{
+
+    }
 }

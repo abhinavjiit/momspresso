@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -32,7 +33,6 @@
                     android:text="FAMILY TYPE"
                     android:textColor="@color/app_grey"
                     app:fontName="oswald_regular.ttf" />
-
 
                 <RadioGroup
                     android:id="@+id/radioGroupFamilyType"
@@ -116,6 +116,7 @@
                     android:layout_toRightOf="@+id/radioYes"
                     android:buttonTint="@color/app_red"
                     android:text="Expecting"
+                    android:visibility="gone"
                     android:textColor="@color/app_light_black" />
 
                 <android.support.v7.widget.AppCompatRadioButton
