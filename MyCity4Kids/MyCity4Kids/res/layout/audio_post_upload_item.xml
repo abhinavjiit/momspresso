@@ -9,10 +9,10 @@
         android:id="@+id/audioLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/removeItemImageView"
         android:layout_above="@+id/audioTimeElapsed"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/removeItemImageView"
         android:orientation="horizontal">
 
         <ImageView
@@ -51,10 +51,24 @@
         android:id="@+id/removeItemImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_above="@+id/audioTimeElapsed"
+        android:layout_alignParentRight="true"
         android:padding="10dp"
         android:src="@drawable/cross_icon_back" />
+
+    <ImageView
+        android:id="@+id/mic_img"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="76dp"
+        android:layout_marginLeft="76dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:layout_marginBottom="9dp"
+        android:src="@drawable/ic_audio_record" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/audioTimeElapsed"
@@ -63,8 +77,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="9dp"
         android:textColor="@color/groups.grey"

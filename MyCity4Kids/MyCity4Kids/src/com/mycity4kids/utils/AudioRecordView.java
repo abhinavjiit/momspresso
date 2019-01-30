@@ -1,13 +1,20 @@
 package com.mycity4kids.utils;
 
+import android.Manifest;
 import android.animation.Animator;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,9 +27,10 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,13 +65,17 @@ public class AudioRecordView extends FrameLayout {
 
         void onRecordingCanceled();
 
+        void onReset();
+
+        void setPermission();
+
     }
 
     private View imageViewAudio, imageViewLockArrow, imageViewLock, imageViewMic, dustin, dustin_cover, imageViewStop, imageViewSend;
-    private View layoutDustin, imageViewAttachment,layoutRecording,layoutOne,layoutTwo;
+    private View layoutDustin, imageViewAttachment, layoutRecording, layoutOne, layoutTwo;
     private View layoutSlideCancel, layoutLock;
     private EditText editTextMessage;
-    private TextView timeText,cancelStop;
+    private TextView timeText, cancelStop;
     private CardView baseCardView;
 
     private ImageView stop, audio, send;
@@ -81,6 +93,7 @@ public class AudioRecordView extends FrameLayout {
 
     private float lastX, lastY;
     private float firstX, firstY;
+    private Context context;
 
     private float directionOffset, cancelOffset, lockOffset;
     private float dp = 0;
@@ -88,6 +101,7 @@ public class AudioRecordView extends FrameLayout {
 
     private UserBehaviour userBehaviour = UserBehaviour.NONE;
     private RecordingListener recordingListener;
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
 
     public AudioRecordView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -107,7 +121,7 @@ public class AudioRecordView extends FrameLayout {
     private void initView() {
         View view = inflate(getContext(), R.layout.recording_layout, null);
         addView(view);
-
+        context = BaseApplication.getAppContext();
         imageViewAttachment = view.findViewById(R.id.imageViewAttachment);
         editTextMessage = view.findViewById(R.id.editTextMessage);
 
@@ -179,6 +193,9 @@ public class AudioRecordView extends FrameLayout {
         return editTextMessage;
     }
 
+    public void disableClick(boolean clickStatus){
+        imageViewAudio.setEnabled(clickStatus);
+    }
     private void setupRecording() {
 
         imageViewSend.animate().scaleX(0f).scaleY(0f).setDuration(100).setInterpolator(new LinearInterpolator()).start();
@@ -211,7 +228,10 @@ public class AudioRecordView extends FrameLayout {
         imageViewAudio.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                    recordingListener.setPermission();
+                    return true;
+                }
                 if (isDeleting) {
                     return true;
                 }
@@ -233,6 +253,7 @@ public class AudioRecordView extends FrameLayout {
 
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP
                         || motionEvent.getAction() == MotionEvent.ACTION_CANCEL) {
+                    Log.d("time--", "" + audioTotalTime);
 
                     if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                         stopRecording(RecordingBehaviour.RELEASED);
@@ -240,6 +261,7 @@ public class AudioRecordView extends FrameLayout {
 
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
 
+                    Log.d("time--", "" + audioTotalTime);
                     if (stopTrackingAction) {
                         return true;
                     }
@@ -249,20 +271,18 @@ public class AudioRecordView extends FrameLayout {
                     float motionX = Math.abs(firstX - motionEvent.getRawX());
                     float motionY = Math.abs(firstY - motionEvent.getRawY());
 
-                    if (motionX > directionOffset &&
-                            motionX > directionOffset &&
-                            lastX < firstX && lastY < firstY) {
+                    if (motionX > directionOffset && motionX > directionOffset && lastX < firstX && lastY < firstY) {
 
-                        if (motionX > motionY && lastX < firstX) {
+                        if (motionX > motionY && lastX < (firstX - 160) && layoutLock.getVisibility() == View.VISIBLE) {
                             direction = UserBehaviour.CANCELING;
 
-                        } else if (motionY > motionX && lastY < firstY) {
+                        } else if (motionY > motionX && lastY < (firstY-160) && layoutLock.getVisibility() == View.VISIBLE) {
                             direction = UserBehaviour.LOCKING;
                         }
 
-                    } else if (motionX > motionY && motionX > directionOffset && lastX < firstX) {
+                    } else if ((motionX + motionX / 2) > (motionY + motionY / 2) && motionX > directionOffset && lastX < (firstX - 160) && layoutLock.getVisibility() == View.VISIBLE) {
                         direction = UserBehaviour.CANCELING;
-                    } else if (motionY > motionX && motionY > directionOffset && lastY < firstY) {
+                    } else if ((motionY + motionY / 2) > (motionX + motionX / 2) && motionY > directionOffset && lastY < (firstY-160) && layoutLock.getVisibility() == View.VISIBLE) {
                         direction = UserBehaviour.LOCKING;
                     }
 
@@ -296,7 +316,7 @@ public class AudioRecordView extends FrameLayout {
             @Override
             public void onClick(View v) {
                 isLocked = false;
-                stopRecording(RecordingBehaviour.RELEASED);
+                stopRecording(RecordingBehaviour.LOCK_DONE);
             }
         });
 
@@ -309,6 +329,10 @@ public class AudioRecordView extends FrameLayout {
                 layoutSlideCancel.setTranslationX(0);
             }
         });
+    }
+
+    private void setTouch() {
+
     }
 
     private void translateY(float y) {
@@ -376,7 +400,7 @@ public class AudioRecordView extends FrameLayout {
         imageViewAudio.animate().scaleX(1f).scaleY(1f).translationX(0).translationY(0).setDuration(100).setInterpolator(new LinearInterpolator()).start();
         layoutSlideCancel.setTranslationX(0);
         layoutSlideCancel.setVisibility(View.GONE);
-        baseCardView.setVisibility(View.GONE);
+//        baseCardView.setVisibility(View.GONE);
 
         layoutLock.setVisibility(View.GONE);
         layoutLock.setTranslationY(0);
@@ -397,11 +421,11 @@ public class AudioRecordView extends FrameLayout {
 
         } else if (recordingBehaviour == RecordingBehaviour.CANCELED) {
             timeText.clearAnimation();
-            timeText.setVisibility(View.INVISIBLE);
+            timeText.setVisibility(View.GONE);
             cancelStop.setVisibility(View.GONE);
-            imageViewMic.setVisibility(View.INVISIBLE);
+            imageViewMic.setVisibility(View.GONE);
             imageViewStop.setVisibility(View.GONE);
-
+            baseCardView.setVisibility(View.GONE);
             timerTask.cancel();
             delete();
 
@@ -410,9 +434,9 @@ public class AudioRecordView extends FrameLayout {
 
         } else if (recordingBehaviour == RecordingBehaviour.RELEASED || recordingBehaviour == RecordingBehaviour.LOCK_DONE) {
             timeText.clearAnimation();
-            timeText.setVisibility(View.INVISIBLE);
+            timeText.setVisibility(View.GONE);
             cancelStop.setVisibility(View.GONE);
-            imageViewMic.setVisibility(View.INVISIBLE);
+            imageViewMic.setVisibility(View.GONE);
             imageViewAttachment.setVisibility(View.VISIBLE);
             imageViewStop.setVisibility(View.GONE);
             layoutRecording.setVisibility(View.GONE);
@@ -432,10 +456,8 @@ public class AudioRecordView extends FrameLayout {
             recordingListener.onRecordingStarted();
 
         stopTrackingAction = false;
-        imageViewAttachment.setVisibility(View.INVISIBLE);
-        imageViewAudio.animate().scaleXBy(1f).scaleYBy(1f).setDuration(200).setInterpolator(new OvershootInterpolator()).start();
+        imageViewAttachment.setVisibility(View.GONE);
         timeText.setVisibility(View.VISIBLE);
-        layoutLock.setVisibility(View.VISIBLE);
         layoutSlideCancel.setVisibility(View.VISIBLE);
         layoutRecording.setVisibility(View.VISIBLE);
         layoutOne.setVisibility(View.VISIBLE);
@@ -462,6 +484,10 @@ public class AudioRecordView extends FrameLayout {
                     public void run() {
                         timeText.setText(timeFormatter.format(new Date(audioTotalTime * 1000)));
                         audioTotalTime++;
+                        if (audioTotalTime ==4){
+                            layoutLock.setVisibility(View.VISIBLE);
+                            imageViewAudio.animate().scaleXBy(1f).scaleYBy(1f).setDuration(200).setInterpolator(new OvershootInterpolator()).start();
+                        }
                     }
                 });
             }
@@ -543,6 +569,10 @@ public class AudioRecordView extends FrameLayout {
 
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
+                                        recordingListener.onReset();
+                                        imageViewAudio.setEnabled(false);
+                                        layoutOne.setVisibility(View.GONE);
+                                        layoutTwo.setVisibility(View.GONE);
                                     }
 
                                     @Override

@@ -31,6 +31,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -917,6 +918,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
+                groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
                 _args.putInt("groupId", groupId);
                 _args.putInt("postId", postId);
                 addGpPostCommentReplyDialogFragment.setArguments(_args);
@@ -1324,6 +1326,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostCommentResult.setCreatedAt(groupPostResponse.getData().getResult().getCreatedAt());
                     groupPostCommentResult.setUpdatedAt(groupPostResponse.getData().getResult().getUpdatedAt());
                     groupPostCommentResult.setChildData(new ArrayList<GroupPostCommentResult>());
+
+                    if (((LinkedTreeMap) groupPostResponse.getData().getResult().getMediaUrls()).containsKey("audio")){
+                        groupPostCommentResult.setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
+                    }
 
                     UserDetailResult userDetailResult = new UserDetailResult();
                     if (groupPostResponse.getData().getResult().isAnnon() == 1) {
@@ -1849,6 +1855,18 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
     }
 }

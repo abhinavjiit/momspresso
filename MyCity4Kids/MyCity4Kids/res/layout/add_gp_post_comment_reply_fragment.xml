@@ -52,8 +52,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:padding="10dp"
-                android:text="@string/editor.publish"
-                android:textColor="@color/ad.comments.toolbar.title"
+                android:text="@string/ad.comments.save"
+                android:textColor="@color/app_red"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
@@ -276,7 +276,8 @@
         android:id="@+id/bottombarTopline"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_above="@+id/recordingView"
+        android:layout_above="@+id/anonymousCheckbox"
+        android:layout_marginBottom="@dimen/space_10"
         android:background="@color/light_underline" />
 
 
