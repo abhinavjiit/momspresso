@@ -349,8 +349,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     for (String entry : map.values()) {
                         mediaList.add(entry);
                     }
-                    audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
-                    audioCommentViewHolder.replyCommentTextView.setVisibility(View.GONE);
+                    audioCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
+                    audioCommentViewHolder.replyCommentTextView.setVisibility(View.VISIBLE);
                     audioCommentViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     audioCommentViewHolder.media.setVisibility(View.GONE);
                 } else {
@@ -374,8 +374,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     for (String entry : map.values()) {
                         mediaList.add(entry);
                     }
-                    audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
-                    audioCommentViewHolder.replyCommentTextView.setVisibility(View.GONE);
+                    audioCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
+                    audioCommentViewHolder.replyCommentTextView.setVisibility(View.VISIBLE);
                     audioCommentViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     audioCommentViewHolder.media.setVisibility(View.GONE);
                 } else {

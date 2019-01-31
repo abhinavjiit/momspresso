@@ -149,6 +149,69 @@
                     android:scaleType="centerCrop"
                     android:visibility="gone" />
 
+
+                <LinearLayout
+                    android:id="@+id/playAudioLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/commentDataTextView"
+                    android:layout_toEndOf="@+id/commentorImageView"
+                    android:layout_toRightOf="@+id/commentorImageView"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/playAudioImageView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/play" />
+
+                    <ImageView
+                        android:id="@+id/pauseAudioImageView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/pause"
+                        android:visibility="gone" />
+
+                    <SeekBar
+                        android:id="@+id/audioSeekBar"
+                        android:layout_width="0dp"
+                        android:layout_height="4dp"
+                        android:layout_below="@+id/commentDateTextView"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@+id/playAudioImageView"
+                        android:layout_weight="0.8"
+                        android:progressDrawable="@drawable/progress"
+                        android:thumb="@color/app_red" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/timerLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/playAudioLayout"
+                    android:layout_alignStart="@+id/commentorUsernameTextView"
+                    android:layout_alignLeft="@+id/commentorUsernameTextView"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    android:background="?attr/selectableItemBackgroundBorderless">
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/audioTimeElapsed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="25dp"
+                        android:gravity="center"
+                        android:textColor="@color/groups.grey"
+                        android:textSize="12sp"
+                        app:fontName="oswald.ttf" />
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/dateContainermedia"
                     android:layout_width="wrap_content"
