@@ -1,3 +1,4 @@
+/*
 package com.mycity4kids.ui.rewards.fragment
 
 
@@ -19,10 +20,12 @@ import kotlinx.android.synthetic.main.event_details_activity.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+*/
 /**
  * A simple [Fragment] subclass.
  *
- */
+ *//*
+
 class RewardsSocialInfoFragment : Fragment() {
     private lateinit var containerView: View
     private lateinit var submitListener: SubmitListener
@@ -46,7 +49,9 @@ class RewardsSocialInfoFragment : Fragment() {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_social_info, container, false)
 
-        /*initialize XML components*/
+        */
+/*initialize XML components*//*
+
         initializeXMLComponents()
 
         return containerView
@@ -77,3 +82,4 @@ class RewardsSocialInfoFragment : Fragment() {
     }
 
 }
+*/

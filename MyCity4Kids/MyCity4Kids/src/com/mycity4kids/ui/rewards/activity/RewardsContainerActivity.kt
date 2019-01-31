@@ -1,3 +1,4 @@
+/*
 package com.mycity4kids.ui.rewards.activity
 
 import android.os.Bundle
@@ -33,10 +34,14 @@ class RewardsContainerActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rewards_container)
 
-        /*initialize XML components*/
+        */
+/*initialize XML components*//*
+
         initializeXMLComponents()
 
-        /*add fragement to container*/
+        */
+/*add fragement to container*//*
+
         addProfileFragment()
     }
 
@@ -74,3 +79,4 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
 }
+*/

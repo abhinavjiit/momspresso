@@ -1,3 +1,4 @@
+/*
 package com.mycity4kids.ui.rewards.fragment
 
 
@@ -18,10 +19,12 @@ import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+*/
 /**
  * A simple [Fragment] subclass.
  *
- */
+ *//*
+
 class RewardsFamilyInfoFragment : Fragment() {
     private lateinit var containerView: View
     private lateinit var submitListener: SubmitListener
@@ -49,7 +52,9 @@ class RewardsFamilyInfoFragment : Fragment() {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_family_info, container, false)
 
-        /*initialize XML components*/
+        */
+/*initialize XML components*//*
+
         initializeXMLComponents()
 
         return containerView
@@ -121,3 +126,4 @@ class RewardsFamilyInfoFragment : Fragment() {
     }
 
 }
+*/

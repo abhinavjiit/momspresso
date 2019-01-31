@@ -1,3 +1,4 @@
+/*
 package com.mycity4kids.ui.rewards.fragment
 
 
@@ -38,10 +39,12 @@ import kotlinx.android.synthetic.main.group_about_item.*
 import org.jsoup.Connection
 import java.util.*
 
+*/
 /**
  * A simple [Fragment] subclass.
  *
- */
+ *//*
+
 class RewardsPersonalInfoFragment : BaseFragment() {
     override fun updateUi(response: Response?) {
     }
@@ -79,16 +82,22 @@ class RewardsPersonalInfoFragment : BaseFragment() {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_personal_info, container, false)
 
-        /*initialize XML components with clicks*/
+        */
+/*initialize XML components with clicks*//*
+
         initializeXMLComponents()
 
-        /*fetch data from server*/
+        */
+/*fetch data from server*//*
+
         fetchRewardsData()
 
         return containerView
     }
 
-    /*fetch data from server*/
+    */
+/*fetch data from server*//*
+
     private fun fetchRewardsData() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         if (userId != null) {
@@ -106,7 +115,9 @@ class RewardsPersonalInfoFragment : BaseFragment() {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
                         apiGetResponse = response.data!!.result
 
-                        /*setting values to components*/
+                        */
+/*setting values to components*//*
+
                         setValuesToComponents()
                     } else {
 
@@ -120,7 +131,9 @@ class RewardsPersonalInfoFragment : BaseFragment() {
         }
     }
 
-    /*setting values to components*/
+    */
+/*setting values to components*//*
+
     private fun setValuesToComponents() {
         if (!apiGetResponse.firstName.isNullOrBlank()) editFirstName.setText(apiGetResponse.firstName)
         if (!apiGetResponse.lastName.isNullOrBlank()) editLastName.setText(apiGetResponse.lastName)
@@ -138,7 +151,9 @@ class RewardsPersonalInfoFragment : BaseFragment() {
         }
     }
 
-    /*initialize XML components with clicks*/
+    */
+/*initialize XML components with clicks*//*
+
     private fun initializeXMLComponents() {
         editFirstName = containerView.findViewById(R.id.editFirstName)
         editLastName = containerView.findViewById(R.id.editLastName)
@@ -187,3 +202,4 @@ class RewardsPersonalInfoFragment : BaseFragment() {
 
 }
 
+*/
