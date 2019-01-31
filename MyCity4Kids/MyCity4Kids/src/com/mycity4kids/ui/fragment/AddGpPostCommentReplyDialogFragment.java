@@ -184,6 +184,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private LinearLayout playAudioLayout, timerLayout, dateContainermedia;
     private ImageView playAudioImageView, pauseAudioImageView, micImg;
     private ArrayList<String> audioCommentList;
+    private boolean isLocked = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -474,7 +475,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
     @Override
     public void onRecordingLocked() {
-
+        isLocked = true;
     }
 
     @Override
@@ -482,6 +483,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 //Stop Recording..
 //                String time = getHumanTimeText(recordTime);
         Log.d("RecordView", "onFinish");
+        isLocked = false;
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
         if (recordTime < 1) {
             resetIcons();
@@ -854,9 +856,14 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private boolean isValid(Map<String, String> image) {
 
         if (StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString()) && image.isEmpty()) {
-            if (isAdded())
-                Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();
-            return false;
+            if (isAdded()){
+                if (isLocked){
+                    Toast.makeText(getActivity(), "First stop recording then save", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();
+                }
+                return false;
+            }
         }
         return true;
     }
