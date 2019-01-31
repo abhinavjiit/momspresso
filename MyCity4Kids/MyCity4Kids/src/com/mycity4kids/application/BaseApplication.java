@@ -347,12 +347,12 @@ public class BaseApplication extends Application {
                 Request.Builder requestBuilder = original.newBuilder();
 
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-               // requestBuilder.addHeader("mc4kToken", "EAAC7f1na98IBAL6IM6FZAaZAdU03rlt6anfXVHRCqJY4BVhEg4uw4ltXjjRhQgpZBJWCCNE1KqxWI7y7emHtGdGkm7DwPyrt3iHmiTYwnIKOBXclskr1gEmzbnUZAeGMhSsxZA9uPQkEXHCdcrucYiv57BHEByKIG9T7yd7ZA07W8DQesIFq2nFJeZC3ObF5bAqLr2ZCfhTZBawZDZD");
-               // requestBuilder.addHeader("id", "8ffb68f436724516850cdfdb5d064d69");
+//                requestBuilder.addHeader("mc4kToken", "EAAC7f1na98IBAL6IM6FZAaZAdU03rlt6anfXVHRCqJY4BVhEg4uw4ltXjjRhQgpZBJWCCNE1KqxWI7y7emHtGdGkm7DwPyrt3iHmiTYwnIKOBXclskr1gEmzbnUZAeGMhSsxZA9uPQkEXHCdcrucYiv57BHEByKIG9T7yd7ZA07W8DQesIFq2nFJeZC3ObF5bAqLr2ZCfhTZBawZDZD");
+//                requestBuilder.addHeader("id", "8ffb68f436724516850cdfdb5d064d69");
 
                 //requestBuilder.addHeader("id", "a66ac4980fb54dec85dccb3b894d793a");
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-               // requestBuilder.addHeader("mc4kToken", "e93e10906909e6c67fc236adbca297c2");
+                //requestBuilder.addHeader("mc4kToken", "e93e10906909e6c67fc236adbca297c2");
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
@@ -396,15 +396,10 @@ public class BaseApplication extends Application {
         retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .addConverterFactory(buildGsonConverter())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build();
 
-       /* retrofit = new Retrofit.Builder()
-                .baseUrl("http://35.200.209.192:5000/")
-                .addConverterFactory(buildGsonConverter())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(client)
-                .build();*/
         return retrofit;
     }
 
