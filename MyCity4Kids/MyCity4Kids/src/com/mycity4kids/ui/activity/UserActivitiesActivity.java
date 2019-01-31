@@ -42,7 +42,7 @@ public class UserActivitiesActivity extends BaseActivity {
         if (authorId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
 //            isPrivateProfile = true;
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_recommended)));
-            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_bookmark)));
+           // tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_bookmark)));
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_watch_later)));
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_comment)));
             adapter = new UserActivitiesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, true);

@@ -925,13 +925,15 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
-                                 }
+                                     addImageToContainer(responseModel.getData().getResult().getUrl());
+                                     Toast.makeText(getActivity(), "image_upload_success", Toast.LENGTH_SHORT).show();
 
-                                 addImageToContainer(responseModel.getData().getResult().getUrl());
+                                 } else {
+                                     Toast.makeText(getActivity(), "please try again later", Toast.LENGTH_SHORT).show();
+                                 }
 //                                 Picasso.with(AddTextOrMediaGroupPostActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(postImageView);
 //                                 postImageView.setVisibility(View.VISIBLE);
                                  //showToast(getString(R.string.image_upload_success));
-                                 Toast.makeText(getActivity(), "image_upload_success", Toast.LENGTH_SHORT).show();
                              }
                          }
 
@@ -967,37 +969,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 mediaContainer.removeView((View) removeIV.getParent());
             }
         });
-    }
 
-//    private void startRecording() {
-//        mRecorder = new MediaRecorder();
-//        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-//        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-//        mRecorder.setOutputFile(mFileName);
-//        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-//
-//        try {
-//            mRecorder.prepare();
-//        } catch (IOException e) {
-//            Log.e("LOG_TAG", "prepare() failed");
-//        }
-//
-//        mRecorder.start();
-//    }
-//
-//    private void stopRecording() {
-//        mRecorder.stop();
-//        mRecorder.release();
-//        mRecorder = null;
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        if (mRecorder != null) {
-//            mRecorder.release();
-//            mRecorder = null;
-//        }
-//    }
+    }
 
 }

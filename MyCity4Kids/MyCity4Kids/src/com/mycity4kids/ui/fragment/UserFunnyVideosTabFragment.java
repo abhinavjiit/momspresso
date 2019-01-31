@@ -238,16 +238,20 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             progressBar.setVisibility(View.INVISIBLE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
-            if (isAdded())
-                ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.went_wrong));
+          /*  if (isAdded())
+                if (!isLastPageReached && !isReuqestRunning) {
+                    ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.went_wrong));
+
+                }*/
         }
     };
 
     private void processResponse(VlogsListingResponse responseData) {
         ArrayList<VlogsListingAndDetailResult> dataList = responseData.getData().get(0).getResult();
         if (dataList == null || dataList.size() == 0) {
-            isLastPageReached = true;
+            isLastPageReached = false;
             if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                isLastPageReached = true;
                 //No more next results for search from pagination
             } else {
                 // No results for search

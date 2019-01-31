@@ -9,7 +9,6 @@ import com.mycity4kids.BuildConfig;
  */
 public class AppConstants {
 
-
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.220.87.141/";
 
@@ -625,4 +624,6 @@ public class AppConstants {
 
     public static final String ANDROID_NEW_EDITOR = "android_new_editor";
     public static final String ANDROID_OLD_EDITOR = "android_old_editor";
+
+    public static final String SHORT_STORY_CHALLENGE_ID = "category-743892a865774baf9c20cbcc5c01d35f";
 }

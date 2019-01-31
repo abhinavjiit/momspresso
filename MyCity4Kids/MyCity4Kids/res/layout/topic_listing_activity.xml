@@ -31,6 +31,7 @@
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
+
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -72,4 +73,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/tabContainer" />
+    <!--
+        <RelativeLayout
+            android:id="@+id/chooseRecentPopularContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible">
+
+            <include layout="@layout/recent_popular_popup_momvlog_layout" />
+
+
+        </RelativeLayout>-->
+
+
 </RelativeLayout>

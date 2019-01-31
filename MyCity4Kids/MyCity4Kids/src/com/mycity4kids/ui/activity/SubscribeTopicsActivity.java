@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -32,6 +33,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.SubscribeTopicsPagerAdapter;
 import com.mycity4kids.ui.adapter.SubscribeTopicsTabAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 
 import org.json.JSONObject;
 
@@ -164,7 +166,8 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
         try {
             FileInputStream fileInputStream = this.openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
-            FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
+            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+            FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
             createTopicsData(res);
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
@@ -205,7 +208,8 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                         try {
                             FileInputStream fileInputStream = openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                            FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
+                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                            FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
                             createTopicsData(res);
                         } catch (FileNotFoundException e) {
                             Crashlytics.logException(e);
@@ -350,7 +354,13 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ArrayList<Topics> topicsList = new ArrayList<Topics>(BaseApplication.getSelectedTopicsMap().values());
+                ArrayList<Topics> topicsList = new ArrayList<>();
+                if (BaseApplication.getSelectedTopicsMap().values() != null && BaseApplication.getSelectedTopicsMap().values().size() != 0) {
+                    topicsList.addAll(BaseApplication.getSelectedTopicsMap().values());
+                } else {
+                    populateTopicsList();
+                    topicsList.addAll(BaseApplication.getSelectedTopicsMap().values());
+                }
 
                 Set<String> updateSet = new HashSet<>();
                 Set<String> followCategories = new HashSet<>();

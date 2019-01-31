@@ -147,6 +147,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private MixpanelAPI mixpanel;
     private ArticleDetailResult detailData;
     private Bitmap defaultBloggerBitmap;
+    private Bitmap resized;
     private ArticleDetailsAPI articleDetailsAPI;
     private ArrayList<ImageData> imageList;
     private ArrayList<VideoData> videoList;
@@ -300,8 +301,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             density = getResources().getDisplayMetrics().density;
             width = getResources().getDisplayMetrics().widthPixels;
 
+          /*  Bitmap yourBitmap;
+            Bitmap resized = Bitmap.createScaledBitmap(yourBitmap, newWidth, newHeight, true);
+          */
             defaultBloggerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_blogger_profile_img);
-            floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), defaultBloggerBitmap));
+            //resizing image because of crash .image size is large.
+            resized = Bitmap.createScaledBitmap(defaultBloggerBitmap, 96, 96, true);
+            floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), resized));
             swipeNextTextView = (TextView) fragmentView.findViewById(R.id.swipeNextTextView);
 
             commentLayout = ((LinearLayout) fragmentView.findViewById(R.id.commnetLout));
@@ -376,7 +382,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-
                 hitArticleDetailsRedisAPI();
                 getViewCountAPI();
                 hitRecommendedStatusAPI();
@@ -1597,10 +1602,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
         if (youTubeInitializationResult.isUserRecoverableError()) {
             youTubeInitializationResult.getErrorDialog(getActivity(), RECOVERY_REQUEST).show();
-        } else {
-            String error = "ERROR";//String.format(getString(R.string.player_error), errorReason.toString());
-            Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
         }
+
+        // Retry initialization if user performed a recovery action
+        // getYouTubePlayerProvider().initialize(DeveloperKey.DEVELOPER_KEY, this);
+
+          /*  String error = "ERROR";//String.format(getString(R.string.player_error), errorReason.toString());
+            Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();*/
+
     }
 
 
@@ -2249,7 +2258,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void createSponsporedTagsList(ArrayList<String> sponsoredList) throws FileNotFoundException {
         FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
         String fileContent = AppUtils.convertStreamToString(fileInputStream);
-        TopicsResponse tRes = new Gson().fromJson(fileContent, TopicsResponse.class);
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+        TopicsResponse tRes = gson.fromJson(fileContent, TopicsResponse.class);
         for (int i = 0; i < tRes.getData().size(); i++) {
             if (AppConstants.SPONSORED_CATEGORYID.equals(tRes.getData().get(i).getId())) {
                 for (int j = 0; j < tRes.getData().get(i).getChild().size(); j++) {

@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
@@ -24,6 +25,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsShortStoriesPagerAdapter;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -65,7 +67,8 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
             if (shortStoriesTopicList == null) {
                 FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
                 createTopicsData(res);
             }
             getCurrentParentTopicCategoriesAndSubCategories();
@@ -89,7 +92,8 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
 
                         FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
                         createTopicsData(res);
                         getCurrentParentTopicCategoriesAndSubCategories();
                         initializeTabsAndPager();

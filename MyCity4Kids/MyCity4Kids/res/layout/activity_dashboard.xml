@@ -634,8 +634,8 @@
                         <android.support.v7.widget.AppCompatImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
-                            app:srcCompat="@drawable/ic_bottom_discover"
-                            android:visibility="visible" />
+                            android:visibility="visible"
+                            app:srcCompat="@drawable/ic_bottom_discover" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -1692,6 +1692,28 @@
                 android:textColor="@color/black"
                 app:fontName="oswald.ttf" />
         </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/choose_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <include layout="@layout/choose_challenge_story_layout" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/choose_layout_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <include layout="@layout/video_container_choose_option_challenge" />
+
 
     </RelativeLayout>
 

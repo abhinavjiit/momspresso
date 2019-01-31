@@ -766,7 +766,7 @@
 
     <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
-    <string name="short_s.add_story">Write a 100 word story</string>
+    <string name="short_s.add_story">WRITE A 100 WORD STORY</string>
     <string name="short_s.add_comment">ADD A COMMENT</string>
     <string name="short_s.add.title_hint">Write an exciting title that suits your story. Character limit is 60.</string>
     <string name="short_s.add.body_hint">Write your amazing story or poem in 100 words or less.</string>
@@ -880,6 +880,7 @@
     <string name="upload_larger_video">Oops! Your video should be at least 5 seconds long.</string>
     <string name="seconds_label">seconds</string>
     <string name="minutes_label">minutes</string>
+
     <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
     <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting video\n</string>
     <string name="take_picture_from_camera">Take picture from camera</string>
@@ -892,4 +893,26 @@
     <string name="select_atleast_one_topic">Please choose atleast one topic to continue</string>
     <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
     <string name="successfully_updated">Successfully updated!</string>
+
+    <string name="submit_story_text">SUBMIT YOUR STORY </string>
+    <string name="this_week_challenge">This Week\'s Challenge</string>
+    <string name="previous_week_challenge">Previous Week\'s Challenges</string>
+    <string name="what_is_your_story">WHAT\'S YOUR 100 WORD STORY</string>
+    <string name="use_picture_word_to_write_one">Use The Picture ,Word, Phrase Or Video Given Below To Write One</string>
+    <string name="challenge_write_story_for_this_picture">Write Your Story Around This Picture</string>
+    <string name="choose_challenge_label">TAKE THE CHALLENGE</string>
+    <string name="start_writing">Start Writing </string>
+
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="DOB">Date Of Birth</string>
+
+    <!--video challenges-->
+
+    <string name="submit_video_text">SUBMIT YOUR VIDEO </string>
+    <string name="no_video.be_first">Be the first one to upload videos in this category!</string>
+    <string name="your_mom_vlog">WHAT\'S YOUR MOMVLOG</string>
+    <string name="use_picture_word_to_upload_one">Use The Picture ,Word, Phrase Or Video Given Below To Upload One</string>
+
+
 </resources>

@@ -1,11 +1,13 @@
 package com.mycity4kids.sync;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -33,6 +35,13 @@ public class PushTokenService extends IntentService implements UpdateListener {
     public PushTokenService() {
         super(TAG);
     }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        startForeground(1, new Notification());
+    }
+
 
     @Override
     protected void onHandleIntent(Intent intent) {

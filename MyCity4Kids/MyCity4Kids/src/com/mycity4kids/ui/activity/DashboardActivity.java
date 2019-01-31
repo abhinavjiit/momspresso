@@ -50,12 +50,14 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.kelltontech.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -66,12 +68,12 @@ import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.AllDraftsResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
-import com.mycity4kids.models.response.DraftListData;
-import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
@@ -81,6 +83,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.adapter.UserAllDraftsRecyclerAdapter;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
@@ -98,14 +101,19 @@ import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -119,13 +127,27 @@ import retrofit2.Retrofit;
 
 public class DashboardActivity extends BaseActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener,
         GroupMembershipStatus.IMembershipStatus, UserAllDraftsRecyclerAdapter.DraftRecyclerViewClickListener {
-
+    private int num_of_challeneges;
+    private Topics datamodal;
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-
+    private String selectedrequest = "default";
+    private String shortstory = "ShortStory";
+    private String challenge = "ChallengeTake";
+    private String FromDeepLink = "FromDeepLink";
     public static final String COMMON_PREF_FILE = "my_city_prefs";
+    private ArrayList<String> challengeId, videoChallengeId;
+    ArrayList<String> Display_Name, videoDisplay_Name;
+    private ArrayList<String> ImageUrl, videoImageUrl, videoStreamUrl;
+    private ArrayList<String> deepLinkchallengeId;
+    private ArrayList<String> deepLinkDisplayName;
+    private ArrayList<String> deepLinkImageUrl;
+    private ArrayList<Topics> shortStoriesTopicList;
+    private ArrayList<Topics> videoTopicList;
+    private String parentTopicId;
+    private ArrayList<Topics> subTopicsList;
     public boolean filter = false;
     Tracker t;
     private String TAG = "PhoneDetails";
@@ -153,6 +175,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView selectedlangGuideTextView;
     private MixpanelAPI mMixpanel;
     private RelativeLayout bookmarkInfoView;
+    private RelativeLayout chooseStoryChallengeLayout;
     private TextView viewBookmarkedArticleTextView;
     private ImageView profileImageView;
     private Animation slideAnim, fadeAnim;
@@ -170,6 +193,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ImageView createTextImageVIew;
     private ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> allDraftsList = new ArrayList<>();
     private UserAllDraftsRecyclerAdapter userAllDraftsRecyclerAdapter;
+    private RelativeLayout rootChooseLayout;
+    private View overLayViewChooseStory;
+    private LinearLayout chooseOptionLayout;
+    private TextView writeStoryText, TakeChallengetext, uploadVideo, uploadChallenge;
+    private TopicsResponse res;
+    private int num_of_categorys;
+    private RelativeLayout chooseLayout;
+    private RelativeLayout chooseLayoutVideo;
+    private View overLayChooseVideo;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -209,12 +241,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
+        chooseLayoutVideo = (RelativeLayout) findViewById(R.id.choose_layout_video);
+        overLayChooseVideo = (View) findViewById(R.id.overlayView_choose_video_challenge);
+        uploadChallenge = (TextView) findViewById(R.id.upload_challenge);
+        uploadVideo = (TextView) findViewById(R.id.upload_video);
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         langTextView = (TextView) findViewById(R.id.langTextView);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 //        toolbar0 = (Toolbar) findViewById(R.id.toolbar0);
         toolbar1 = (Toolbar) findViewById(R.id.toolbar1);
         toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
+        chooseLayout = (RelativeLayout) findViewById(R.id.choose_layout);
+        rootChooseLayout = (RelativeLayout) findViewById(R.id.root_choose_layout);
+        overLayViewChooseStory = (View) findViewById(R.id.overlayView_choose_story_challenge);
+        chooseOptionLayout = (LinearLayout) findViewById(R.id.choose_option_layout);
         downArrowImageView = (ImageView) findViewById(R.id.downArrowImageView);
         toolbarUnderline = findViewById(R.id.toolbarUnderline);
         bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.navigation);
@@ -263,13 +303,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         createLabelTextView = (TextView) findViewById(R.id.createLabelTextView);
         continueWritingLabelTV = (TextView) findViewById(R.id.continueWritingLabelTV);
         createTextImageVIew = (ImageView) findViewById(R.id.createTextImageVIew);
-
+        chooseStoryChallengeLayout = (RelativeLayout) findViewById(R.id.choose_layout);
+        writeStoryText = (TextView) findViewById(R.id.write_story);
+        TakeChallengetext = (TextView) findViewById(R.id.write_challenge);
         homeCoachmark.setOnClickListener(this);
         exploreCoachmark.setOnClickListener(this);
         createCoachmark.setOnClickListener(this);
         menuCoachmark.setOnClickListener(this);
         drawerProfileCoachmark.setOnClickListener(this);
         drawerSettingsCoachmark.setOnClickListener(this);
+        chooseStoryChallengeLayout.setOnClickListener(this);
+        overLayViewChooseStory.setOnClickListener(this);
+        writeStoryText.setOnClickListener(this);
+        TakeChallengetext.setOnClickListener(this);
+
 
         settingTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_app_settings), null, null, null);
         videosTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_mom_vlogs), null, null, null);
@@ -315,6 +362,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         viewBookmarkedArticleTextView.setOnClickListener(this);
         profileImageView.setOnClickListener(this);
         drawerTopContainer.setOnClickListener(this);
+        uploadVideo.setOnClickListener(this);
+        uploadChallenge.setOnClickListener(this);
+        overLayChooseVideo.setOnClickListener(this);
 
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
@@ -464,10 +514,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 addFragment(fragment1, mBundle1, true);
                                 break;
                             case R.id.action_write:
-                                allDraftsList.clear();
                                 userAllDraftsRecyclerAdapter.notifyDataSetChanged();
                                 if (createContentContainer.getVisibility() == View.VISIBLE) {
+
                                 } else {
+                                    allDraftsList.clear();
                                     loadAllDrafts();
                                     createContentContainer.setVisibility(View.VISIBLE);
                                     actionItemContainer.setVisibility(View.VISIBLE);
@@ -491,6 +542,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         return true;
                     }
                 });
+
 
         if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(fragmentToLoad)) {
             setTitle("Upcoming Events");
@@ -543,6 +595,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             reteVersionModel.setAppRateVersion(-20);
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
+        findActiveChallenge();
+        findActiveVideoChallenge();
     }
 
     private void loadAllDrafts() {
@@ -550,13 +604,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         draftsShimmerLayout.startShimmerAnimation();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         ArticleDraftAPI draftAPI = retrofit.create(ArticleDraftAPI.class);
-        Call<AllDraftsResponse> call = draftAPI.getAllDrafts("0");
+        Call<ResponseBody> call = draftAPI.getAllDrafts("0");
+        //  Call<ResponseBody> call = draftAPI.getAllDrafts("0");
         call.enqueue(draftsResponseCallback);
     }
 
-    private Callback<AllDraftsResponse> draftsResponseCallback = new Callback<AllDraftsResponse>() {
+    private Callback<ResponseBody> draftsResponseCallback = new Callback<ResponseBody>() {
         @Override
-        public void onResponse(Call<AllDraftsResponse> call, retrofit2.Response<AllDraftsResponse> response) {
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             draftsShimmerLayout.stopShimmerAnimation();
             draftsShimmerLayout.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
@@ -569,20 +624,90 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
             try {
-                AllDraftsResponse responseData = response.body();
-                allDraftsList.addAll(responseData.getData().getResult());
-                processDraftsResponse();
-            } catch (Exception e) {
-                removeProgressDialog();
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                createLabelTextView.setVisibility(View.VISIBLE);
-                createTextImageVIew.setVisibility(View.VISIBLE);
+                String resData = new String(response.body().bytes());
+                JSONObject jObject = new JSONObject(resData);
+                int code = jObject.getInt("code");
+                String status = jObject.getString("status");
+                if (code == 200 && Constants.SUCCESS.equals(status)) {
+                    AllDraftsResponse draftListResponse = new AllDraftsResponse();
+                    AllDraftsResponse.AllDraftsData draftListData = new AllDraftsResponse.AllDraftsData();
+                    JSONArray dataObj = jObject.optJSONArray("data");
+                    if (null != dataObj) {
+                        //                     Empty Draft List Handling
+                        ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> emptyDraftList = new ArrayList<>();
+                        draftListData.setResult(emptyDraftList);
+                        draftListResponse.setData(draftListData);
+                        allDraftsList.addAll(draftListResponse.getData().getResult());
+                        processDraftsResponse();
+                        return;
+                    }
+//
+                    JSONArray resultJsonObject = jObject.getJSONObject("data").optJSONArray("result");
+                    ArrayList<AllDraftsResponse.AllDraftsData.AllDraftsResult> draftList = new ArrayList<>();
+                    ArrayList<Map<String, String>> retMap;
+                    for (int i = 0; i < resultJsonObject.length(); i++) {
+                        AllDraftsResponse.AllDraftsData.AllDraftsResult draftitem = new AllDraftsResponse.AllDraftsData.AllDraftsResult();
+                        draftitem.setId(resultJsonObject.getJSONObject(i).getString("id"));
+                        draftitem.setArticleType(resultJsonObject.getJSONObject(i).getString("articleType"));
+                        // draftitem.setContentType(resultJsonObject.getJSONObject(i).getString("contentType"));
+                        draftitem.setCreatedTime(resultJsonObject.getJSONObject(i).getString("createdTime"));
+                        draftitem.setUpdatedTime(resultJsonObject.getJSONObject(i).getLong("updatedTime"));
+                        draftitem.setBody(resultJsonObject.getJSONObject(i).getString("body"));
+                        draftitem.setTitle(resultJsonObject.getJSONObject(i).getString("title"));
+                        //if (resultJsonObject.getJSONObject(i).has("itemType")) {
+                        //  draftitem.setItemType(resultJsonObject.getJSONObject(i).getInt("itemType"));
+                        //     }
+                        //     Different formats of tags array Handling :(
+                        if (resultJsonObject.getJSONObject(i).has("contentType")) {
+                            draftitem.setContentType(resultJsonObject.getJSONObject(i).getString("contentType"));
+
+                        } else {
+                            draftitem.setContentType("0");
+                        }
+                        if (resultJsonObject.getJSONObject(i).has("tags")) {
+                            JSONArray tagsArray = resultJsonObject.getJSONObject(i).optJSONArray("tags");
+                            if (null != tagsArray) {
+                                retMap = new Gson().fromJson(tagsArray.toString(), new TypeToken<ArrayList<HashMap<String, String>>>() {
+                                }.getType());
+                                draftitem.setTags(retMap);
+                            } else {
+                                JSONArray jsArray = resultJsonObject.getJSONObject(i).getJSONObject("tags").optJSONArray("tagsArr");
+                                retMap = new Gson().fromJson(jsArray.toString(), new TypeToken<ArrayList<HashMap<String, String>>>() {
+                                }.getType());
+                                draftitem.setTags(retMap);
+                            }
+                        } else {
+                            //no tags key in the json
+                            retMap = new ArrayList<Map<String, String>>();
+                            draftitem.setTags(retMap);
+                        }
+                        draftList.add(draftitem);
+                    }
+                    draftListData.setResult(draftList);
+                    draftListResponse.setData(draftListData);
+                    allDraftsList.addAll(draftListResponse.getData().getResult());
+                    processDraftsResponse();
+                } else {
+                    showToast(jObject.getString("reason"));
+                }
+            } catch (JSONException jsonexception) {
+                Crashlytics.logException(jsonexception);
+                Log.d("JSONException", Log.getStackTraceString(jsonexception));
+                showToast("Something went wrong while parsing response from server");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            //    String responsee = response.body().toString();
+            //  Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+            // AllDraftsResponse responseData = gson.fromJson(responsee, AllDraftsResponse.class);
+            //allDraftsList.addAll(responseData.getData().getResult());
+
         }
 
+
         @Override
-        public void onFailure(Call<AllDraftsResponse> call, Throwable t) {
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             draftsShimmerLayout.setVisibility(View.GONE);
@@ -591,7 +716,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     };
 
+
     private void processDraftsResponse() {
+        //  allDraftsList = responsemodal.getData().getResult();
+
         if (allDraftsList.size() == 0) {
             createLabelTextView.setVisibility(View.VISIBLE);
             createTextImageVIew.setVisibility(View.VISIBLE);
@@ -915,11 +1043,42 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         fragmentToLoad = Constants.PROFILE_FRAGMENT;
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)) {
-                    Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
-                    startActivity(ssIntent);
+                    //String temp = tempDeepLinkURL.concat("category-8220f60fd2f6432ba4417861a50f0587");
+                    final String deepLinkChallengeId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
+                    if (deepLinkChallengeId == null || deepLinkChallengeId.isEmpty()) {
+                        Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
+                        startActivity(ssIntent);
+                    } else if (!deepLinkChallengeId.isEmpty()) {
+                        findValues(deepLinkChallengeId);
+                        if (deepLinkchallengeId != null && deepLinkDisplayName != null && deepLinkImageUrl != null && shortStoriesTopicList != null && deepLinkchallengeId.size() != 0 && deepLinkDisplayName.size() != 0 && deepLinkImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
+                            Intent deepLinkIntent = new Intent(this, ChallnegeDetailListingActivity.class);
+                            deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
+                            deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
+                            deepLinkIntent.putExtra("challenge", deepLinkchallengeId);
+                            deepLinkIntent.putExtra("position", 0);
+                            deepLinkIntent.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
+                            deepLinkIntent.putExtra("parentId", shortStoriesTopicList.get(0).getId());
+                            deepLinkIntent.putExtra("StringUrl", deepLinkImageUrl);
+                            startActivity(deepLinkIntent);
+                        } else {
+                            findValues(deepLinkChallengeId);
+                            Intent deepLinkIntent = new Intent(this, ChallnegeDetailListingActivity.class);
+                            deepLinkIntent.putExtra("selectedrequest", FromDeepLink);
+                            deepLinkIntent.putExtra("Display_Name", deepLinkDisplayName);
+                            deepLinkIntent.putExtra("challenge", deepLinkchallengeId);
+                            deepLinkIntent.putExtra("position", 0);
+                            deepLinkIntent.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
+                            deepLinkIntent.putExtra("parentId", shortStoriesTopicList.get(0).getId());
+                            deepLinkIntent.putExtra("StringUrl", deepLinkImageUrl);
+                            startActivity(deepLinkIntent);
+                            ToastUtils.showToast(this, "server problem, please try again later");
+                        }
+                    }
+
+
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
                     final String draftId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
-                    Intent ssIntent = new Intent(this, UserPublishedContentActivity.class);
+                    Intent ssIntent = new Intent(this, UserDraftsContentActivity.class);
                     ssIntent.putExtra("isPrivateProfile", true);
                     ssIntent.putExtra("contentType", "shortStory");
                     ssIntent.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -1004,6 +1163,133 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             deepLinkUrl = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
         }
     }
+
+    private void findValues(String deepLinkChallengeId) {
+        try {
+            //shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
+            if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
+                deepLinkchallengeId = new ArrayList<>();
+                deepLinkDisplayName = new ArrayList<>();
+                deepLinkImageUrl = new ArrayList<>();
+                num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                for (int j = 0; j < num_of_categorys; j++) {
+                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                        for (int k = 0; k < num_of_challeneges; k++) {
+                            if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
+                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                    //if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                    deepLinkchallengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                    deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                    deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                    break;
+                                    //}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (shortStoriesTopicList == null || shortStoriesTopicList.size() == 0) {
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                res = gson.fromJson(fileContent, TopicsResponse.class);
+                shortStoriesTopicList = new ArrayList<Topics>();
+                for (int i = 0; i < res.getData().size(); i++) {
+                    if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                        shortStoriesTopicList.add(res.getData().get(i));
+                    }
+                }
+                deepLinkchallengeId = new ArrayList<>();
+                deepLinkDisplayName = new ArrayList<>();
+                deepLinkImageUrl = new ArrayList<>();
+                num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                for (int j = 0; j < num_of_categorys; j++) {
+                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                        for (int k = 0; k < num_of_challeneges; k++) {
+                            if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
+                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                    //if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                    deepLinkchallengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                    deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                    deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                    break;
+                                    //}
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        } catch (FileNotFoundException e)
+
+        {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            caller.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+
+                    try {
+                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        res = gson.fromJson(fileContent, TopicsResponse.class);
+                        shortStoriesTopicList = new ArrayList<Topics>();
+                        for (int i = 0; i < res.getData().size(); i++) {
+                            if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                                shortStoriesTopicList.add(res.getData().get(i));
+                            }
+                        }
+                        deepLinkchallengeId = new ArrayList<>();
+                        deepLinkDisplayName = new ArrayList<>();
+                        deepLinkImageUrl = new ArrayList<>();
+                        num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                        for (int j = 0; j < num_of_categorys; j++) {
+                            if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                                num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                                for (int k = 0; k < num_of_challeneges; k++) {
+                                    if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
+                                        if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                            //if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                            deepLinkchallengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                            deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                            deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                            break;
+                                            //}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+
+                    } catch (FileNotFoundException e) {
+                        Crashlytics.logException(e);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            });
+        }
+
+
+    }
+
 
     Callback<ShortStoryDetailResult> ssDetailResponseCallback = new Callback<ShortStoryDetailResult>() {
         @Override
@@ -1113,11 +1399,26 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             refreshMenu();
             setTitle("Send Feedback");
         }
+
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        createContentContainer.setVisibility(View.INVISIBLE);
+        actionItemContainer.setVisibility(View.INVISIBLE);
+        overlayView.setVisibility(View.INVISIBLE);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        chooseStoryChallengeLayout.setVisibility(View.GONE);
+        chooseOptionLayout.setVisibility(View.GONE);
+        overLayViewChooseStory.setVisibility(View.GONE);
+        rootChooseLayout.setVisibility(View.GONE);
     }
 
     public void refreshMenu() {
@@ -1287,14 +1588,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.storyContainer:
                 hideCreateContentView();
-                Intent ssintent = new Intent(this, AddShortStoryActivity.class);
-                startActivity(ssintent);
+                chooseStoryChallengeLayout.setVisibility(View.VISIBLE);
+                overLayViewChooseStory.setVisibility(View.VISIBLE);
+                chooseOptionLayout.setVisibility(View.VISIBLE);
+                rootChooseLayout.setVisibility(View.VISIBLE);
+                //   Intent ssintent = new Intent(this, AddShortStoryActivity.class);
+                //  startActivity(ssintent);
                 break;
             case R.id.videoContainer: {
                 hideCreateContentView();
-                MixPanelUtils.pushAddMomVlogClickEvent(mMixpanel, "BottomSheet");
+                chooseLayoutVideo.setVisibility(View.VISIBLE);
+               /* MixPanelUtils.pushAddMomVlogClickEvent(mMixpanel, "BottomSheet");
                 Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
-                startActivity(intent);
+                startActivity(intent);*/
             }
             break;
             case R.id.overlayView:
@@ -1387,7 +1693,426 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             default:
                 break;
         }
+        if (v.getId() == R.id.overlayView_choose_story_challenge) {
+            chooseStoryChallengeLayout.setVisibility(View.GONE);
+            chooseOptionLayout.setVisibility(View.GONE);
+            overLayViewChooseStory.setVisibility(View.GONE);
+            rootChooseLayout.setVisibility(View.GONE);
+        }
+        if (v.getId() == R.id.overlayView_choose_video_challenge) {
+            chooseLayoutVideo.setVisibility(View.INVISIBLE);
+        }
+
+        if (v.getId() == R.id.write_story)
+
+        {
+            Intent ssintent = new Intent(this, AddShortStoryActivity.class);
+            ssintent.putExtra("selectedrequest", shortstory);
+            startActivity(ssintent);
+        }
+
+        if (v.getId() == R.id.write_challenge) {
+            if (challengeId == null || Display_Name == null || ImageUrl == null || shortStoriesTopicList == null || challengeId.size() == 0 || Display_Name.size() == 0 || ImageUrl.size() == 0 || shortStoriesTopicList.size() == 0) {
+                findActiveChallenge();
+            }
+            if (challengeId != null && Display_Name != null && ImageUrl != null && shortStoriesTopicList != null && challengeId.size() != 0 && Display_Name.size() != 0 && ImageUrl.size() != 0 && shortStoriesTopicList.size() != 0) {
+                Intent intent = new Intent(this, ChallnegeDetailListingActivity.class);
+                intent.putExtra("selectedrequest", challenge);
+                intent.putExtra("Display_Name", Display_Name);
+                intent.putExtra("challenge", challengeId);
+                intent.putExtra("position", 0);
+                intent.putExtra("topics", shortStoriesTopicList.get(0).getDisplay_name());
+                intent.putExtra("parentId", shortStoriesTopicList.get(0).getId());
+                intent.putExtra("StringUrl", ImageUrl);
+                startActivity(intent);
+            } else {
+                findActiveChallenge();
+                //ToastUtils.showToast(this, "server problem, please reopen your app");
+            }
+        }
+        if (v.getId() == R.id.upload_video) {
+            MixPanelUtils.pushAddMomVlogClickEvent(mMixpanel, "BottomSheet");
+            Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
+            startActivity(intent);
+            chooseLayoutVideo.setVisibility(View.GONE);
+        }
+        if (v.getId() == R.id.upload_challenge) {
+            if (videoChallengeId == null || videoDisplay_Name == null || videoImageUrl == null || videoStreamUrl == null || videoDisplay_Name.size() == 0 || videoImageUrl.size() == 0 || videoChallengeId.size() == 0 || videoStreamUrl.size() == 0) {
+                findActiveVideoChallenge();
+            }
+            if (videoChallengeId != null && videoDisplay_Name != null && videoImageUrl != null && videoStreamUrl != null && videoDisplay_Name.size() != 0 && videoImageUrl.size() != 0 && videoChallengeId.size() != 0 && videoStreamUrl.size() != 0) {
+                Intent intent = new Intent(this, VideoChallengeDetailListingActivity.class);
+                intent.putExtra("selectedrequest", challenge);
+                intent.putExtra("Display_Name", videoDisplay_Name);
+                intent.putExtra("challenge", videoChallengeId);
+                intent.putExtra("position", 0);
+                intent.putExtra("topics", videoTopicList.get(0).getDisplay_name());
+                intent.putExtra("parentId", videoTopicList.get(0).getId());
+                intent.putExtra("StringUrl", videoImageUrl);
+                intent.putExtra("StreamUrl", videoStreamUrl);
+                startActivity(intent);
+                chooseLayoutVideo.setVisibility(View.GONE);
+            } else {
+                findActiveVideoChallenge();
+                // ToastUtils.showToast(this, "problem at the server");
+            }
+        }
     }
+
+    private void findActiveVideoChallenge() {
+        try {
+            if (videoTopicList != null && videoTopicList.size() != 0) {
+                videoChallengeId = new ArrayList<>();
+                videoDisplay_Name = new ArrayList<>();
+                videoImageUrl = new ArrayList<>();
+                videoStreamUrl = new ArrayList<>();
+                num_of_categorys = videoTopicList.get(0).getChild().size();
+                for (int j = 0; j < num_of_categorys; j++) {
+                    if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+                        num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                            if ("0".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                    if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                        videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                        videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                        videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                        videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (videoTopicList == null || videoTopicList.size() == 0) {
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                res = gson.fromJson(fileContent, TopicsResponse.class);
+                videoTopicList = new ArrayList<Topics>();
+                for (int i = 0; i < res.getData().size(); i++) {
+                    if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
+                        videoTopicList.add(res.getData().get(i));
+                    }
+                }
+                videoChallengeId = new ArrayList<>();
+                videoDisplay_Name = new ArrayList<>();
+                videoImageUrl = new ArrayList<>();
+                videoStreamUrl = new ArrayList<>();
+                num_of_categorys = videoTopicList.get(0).getChild().size();
+                for (int j = 0; j < num_of_categorys; j++) {
+                    if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+                        num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                            if ("0".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                    if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                        videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                        videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                        videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                        videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        } catch (FileNotFoundException e)
+
+        {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            caller.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+
+                    try {
+                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        res = gson.fromJson(fileContent, TopicsResponse.class);
+                        videoTopicList = new ArrayList<Topics>();
+                        for (int i = 0; i < res.getData().size(); i++) {
+                            if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
+                                videoTopicList.add(res.getData().get(i));
+                            }
+                        }
+                        videoChallengeId = new ArrayList<>();
+                        videoDisplay_Name = new ArrayList<>();
+                        videoImageUrl = new ArrayList<>();
+                        videoStreamUrl = new ArrayList<>();
+                        num_of_categorys = videoTopicList.get(0).getChild().size();
+                        for (int j = 0; j < num_of_categorys; j++) {
+                            if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.HOME_VIDEOS_CATEGORYID)) {
+                                num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                    if ("0".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                        if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                            if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+
+                    } catch (FileNotFoundException e) {
+                        Crashlytics.logException(e);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            });
+        }
+
+
+    }
+
+    private void findActiveChallenge() {
+
+        try {
+            // shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
+            if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
+
+                challengeId = new ArrayList<>();
+                Display_Name = new ArrayList<>();
+                ImageUrl = new ArrayList<>();
+                num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                for (int j = 0; j < num_of_categorys; j++) {
+                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                            if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                    if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                        challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                        Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                        ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (shortStoriesTopicList == null || shortStoriesTopicList.size() == 0) {
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                res = gson.fromJson(fileContent, TopicsResponse.class);
+                shortStoriesTopicList = new ArrayList<Topics>();
+                for (int i = 0; i < res.getData().size(); i++) {
+                    if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                        shortStoriesTopicList.add(res.getData().get(i));
+                    }
+                }
+                challengeId = new ArrayList<>();
+                Display_Name = new ArrayList<>();
+                ImageUrl = new ArrayList<>();
+                num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                for (int j = 0; j < num_of_categorys; j++) {
+                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                            if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                    if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                        challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                        Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                        ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        } catch (FileNotFoundException e)
+
+        {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            caller.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+
+                    try {
+                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        res = gson.fromJson(fileContent, TopicsResponse.class);
+                        shortStoriesTopicList = new ArrayList<Topics>();
+                        for (int i = 0; i < res.getData().size(); i++) {
+                            if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                                shortStoriesTopicList.add(res.getData().get(i));
+                            }
+                        }
+                        challengeId = new ArrayList<>();
+                        Display_Name = new ArrayList<>();
+                        ImageUrl = new ArrayList<>();
+                        num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                        for (int j = 0; j < num_of_categorys; j++) {
+                            if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                                num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                    if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                        if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                            if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+
+                    } catch (FileNotFoundException e) {
+                        Crashlytics.logException(e);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            });
+        }
+
+
+    }
+
+   /* private void findvaluesOfActiveChallenge() {
+
+        try {
+            shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
+            if (shortStoriesTopicList == null) {
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                res = gson.fromJson(fileContent, TopicsResponse.class);
+                shortStoriesTopicList = new ArrayList<Topics>();
+                for (int i = 0; i < res.getData().size(); i++) {
+                    if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                        shortStoriesTopicList.add(res.getData().get(i));
+                    }
+                }
+                *//*challengeId = new ArrayList<>();
+                Display_Name = new ArrayList<>();
+                ImageUrl = new ArrayList<>();
+                num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                for (int j = 0; j < num_of_categorys; j++) {
+                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+
+                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                            challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                            Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                            ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                            break;
+                        }
+
+                    }
+                }*//*
+
+            }
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            caller.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+
+                    try {
+                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        res = gson.fromJson(fileContent, TopicsResponse.class);
+                        shortStoriesTopicList = new ArrayList<Topics>();
+                        for (int i = 0; i < res.getData().size(); i++) {
+                            if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                                shortStoriesTopicList.add(res.getData().get(i));
+                            }
+                        }
+                        challengeId = new ArrayList<>();
+                        Display_Name = new ArrayList<>();
+                        ImageUrl = new ArrayList<>();
+                        num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                        for (int j = 0; j < num_of_categorys; j++) {
+                            if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                                num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+
+                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                    challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                    Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                    ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                    break;
+                                }
+
+                            }
+                        }
+
+
+                    } catch (FileNotFoundException e) {
+                        Crashlytics.logException(e);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            });
+        }
+
+    }*/
 
     private void hideCreateContentView() {
         createContentContainer.setVisibility(View.INVISIBLE);
@@ -1416,6 +2141,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 hideCreateContentView();
                 return;
             }
+            if (chooseLayout.getVisibility() == View.VISIBLE) {
+                chooseLayout.setVisibility(View.INVISIBLE);
+
+                return;
+            }
+
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
                 finish();
             } else {
@@ -2079,7 +2810,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 draftListResult.setBody(allDraftsList.get(position).getBody());
                 draftListResult.setTitle(allDraftsList.get(position).getTitle());
                 draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
-                draftListResult.setUpdatedTime(Long.parseLong(allDraftsList.get(position).getUpdatedTime()));
+                draftListResult.setUpdatedTime((allDraftsList.get(position).getUpdatedTime()));
+                draftListResult.setTags(allDraftsList.get(position).getTags());
+                // draftListResult.setContentType(allDraftsList.get(position).getContentType());
+
 
                 Intent intent = new Intent(this, AddShortStoryActivity.class);
                 intent.putExtra("draftItem", draftListResult);
@@ -2099,7 +2833,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 draftListResult.setBody(allDraftsList.get(position).getBody());
                 draftListResult.setTitle(allDraftsList.get(position).getTitle());
                 draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
-                draftListResult.setUpdatedTime(Long.parseLong(allDraftsList.get(position).getUpdatedTime()));
+                draftListResult.setUpdatedTime((allDraftsList.get(position).getUpdatedTime()));
+                //      draftListResult.setTags(allDraftsList.get(position).getTags());
+
 
                 Intent intent = new Intent(this, EditorPostActivity.class);
                 intent.putExtra("draftItem", draftListResult);
@@ -2113,4 +2849,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         }
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+
 }
+

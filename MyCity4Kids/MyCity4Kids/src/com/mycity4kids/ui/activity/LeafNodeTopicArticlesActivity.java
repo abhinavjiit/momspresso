@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
@@ -43,6 +44,7 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
     private TextView toolbarTitleTextView;
     private Topics leafTopic, leafTopicParent;
     private int tabPosition;
+    private String jsonMyObject, jasonMyObject1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +55,19 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
         viewPager = (ViewPager) findViewById(R.id.pager);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        leafTopicParent = getIntent().getParcelableExtra("leafTopicParent");
-        leafTopic = getIntent().getParcelableExtra("leafTopic");
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            jsonMyObject = extras.getString("leafTopicParent");
+            jasonMyObject1 = extras.getString("leafTopic");
+        }
+        leafTopic = new Gson().fromJson(jasonMyObject1, Topics.class);
+        leafTopicParent = new Gson().fromJson(jsonMyObject, Topics.class);
+
 
         toolbarTitleTextView.setText(leafTopicParent.getDisplay_name());
 

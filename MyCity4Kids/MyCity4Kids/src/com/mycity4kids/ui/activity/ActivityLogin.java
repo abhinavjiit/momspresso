@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
@@ -135,7 +136,10 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         mLayout = findViewById(R.id.rootLayout);
 
-
+//        /*fbAccessToken = AccessToken.getCurrentAccessToken();
+//        if (fbAccessToken != null) {
+//            Toast.makeText(this, (fbAccessToken).toString(), Toast.LENGTH_LONG).show();
+//        }*/
     }
 
     public void loginWithFacebook() {

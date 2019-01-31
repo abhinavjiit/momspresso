@@ -230,9 +230,11 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, "0");
+        if (selectedTopic != null) {
+            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, "0");
 
-        filterCall.enqueue(articleListingResponseCallback);
+            filterCall.enqueue(articleListingResponseCallback);
+        }
     }
 
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
@@ -691,7 +693,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             // to the threshold provided. If it falls under the desired limit,
             // add it to the tracking data.
             if (viewPosition >= 0) {
-                    if (getVisibleHeightPercentage(itemView) >= minimumVisibleHeightThreshold) {
+                if (getVisibleHeightPercentage(itemView) >= minimumVisibleHeightThreshold) {
                     viewsViewed.add(viewPosition);
                 }
             }

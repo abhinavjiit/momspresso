@@ -495,10 +495,10 @@
     <string name="upload_video.desc1">Shoot the video and upload it right away from your Mobile.</string>
     <string name="upload_video.get_started">LET\'S START</string>
 
-    <string name="moderation_or_share.way_to_go">WAY TO GO!</string>
+    <string name="moderation_or_share.way_to_go">প্রশংসনীয়</string>
     <string name="moderation_or_share.moderation_message">Your article is up for moderation. You\'ll receive an email within 24 hours regarding the status of the blog</string>
-    <string name="moderation_or_share.publish_message">Congrats! Your blog has been published.\n Share it with your friends and family.</string>
-    <string name="moderation_or_share.later">MAYBE LATER</string>
+    <string name="moderation_or_share.publish_message">অভিনন্দন ! আপনার ব্লগ পাবলিশ হয়ে গেছে। বন্ধু ও পরিবারের সাথে এটিকে শেয়ার করে নিন</string>
+    <string name="moderation_or_share.later">হয়তো পরে</string>
     <string name="moderation_or_share.okay">ঠিক আছে</string>
     <string name="moderation_or_share.gplus_fail">Unable to share with google plus.</string>
     <string name="moderation_or_share.whatsapp_fail">Unable to share with whatsapp.</string>
@@ -507,7 +507,7 @@
     <string name="moderation_or_share.insta_not_installed">Instagram has not been installed.</string>
     <string name="moderation_or_share.twitter_fail">Unable to share with twitter.</string>
 
-    <string name="complete_blogger_profile.complete_label">COMPLETE YOUR BLOGGERS PROFILE</string>
+    <string name="complete_blogger_profile.complete_label">আপনার ব্লগার প্রোফাইলটি সম্পূর্ণরূপে ভর্তি করুন</string>
     <string name="complete_blogger_profile.paid_eligibility">বেতনমূলক লেখার উপযুক্ত হতে.\n All this information is safe with us.</string>
     <string name="complete_blogger_profile.save">সংরক্ষিত</string>
     <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
@@ -756,7 +756,7 @@
     <string name="groups.post_label">POST</string>
     <string name="groups.edit_post">EDIT POST</string>
 
-    <string name="no_story.be_first">Be the first one to write stories in this category!</string>
+    <string name="no_story.be_first">এই ক্যাটাগরির প্রথম গল্পটি আপনি লিখুন</string>
 
     <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
@@ -764,14 +764,14 @@
     <string name="short_s.add_comment">মন্তব্য করুন</string>
     <string name="short_s.add.title_hint">আপনার গল্পটির একটি আকর্ষণীয় শিরোনাম দিন। ক্যারেকটার লিমিট 60 বর্ন</string>
     <string name="short_s.add.body_hint">শত শব্দের মধ্যে আপনার অপরূপ গল্প বা কবিতা লিখুন</string>
-    <string name="short_s.publish_message">Congrats! Your story has been published.\n Share it with your friends and family.</string>
+    <string name="short_s.publish_message">অভিনন্দন ! আপনার ব্লগ পাবলিশ হয়ে গেছে। বন্ধু ও পরিবারের সাথে এটিকে শেয়ার করে নিন</string>
     <string name="short_s.max_word">আপনার গল্প টির সর্বাধিক শব্দ সংখ্যা</string>
     <string name="short_s.choose_genre">আপনার গল্পের ধারা পছন্দ করুন</string>
     <string name="short_s.choose_one_genre">আপনার গল্পটি যে ধারা বা অনুভূতি কে সবচেয়ে বেশি প্রকাশ করে,সেটি পছন্দ করুন । আপনি কেবলমাত্র একটি ধারা পছন্দ করতে পারেন ।</string>
     <string name="short_s.no_drafts">কোনো ছোট গল্প এখনও ড্রাফ্ট হয়নি</string>
     <string name="short_s.no_published">কোনো ছোট গল্প এখনও পাবলিশ হয়নি</string>
     <string name="short_s.view_replies">View replies</string>
-    <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
+    <string name="short_s.choose_topic">নূন্যতম একটি ক্যাটাগরি চয়ন করুন</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
     <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
     <string name="short_s.delete_comment_fail">Failed to delete comment. Please try again</string>
@@ -840,7 +840,20 @@
     <string name="delete_comment">DELETE COMMENT</string>
     <string name="edit_comment">EDIT COMMENT</string>
     <string name="report">REPORT</string>
-    <string name="select_atleast_one_topic">Please choose atleast one topic to continue</string>
+    <string name="select_atleast_one_topic">নূন্যতম একটি ক্যাটাগরি চয়ন করুন </string>
     <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
     <string name="successfully_updated">Successfully updated!</string>
+
+    <string name="submit_story_text">আপনার গল্প জমা দিন</string>
+    <string name="this_week_challenge">এই সপ্তাহের চ্যালেঞ্জ</string>
+    <string name="previous_week_challenge">গত সপ্তাহের চ্যালেঞ্জ</string>
+    <string name="what_is_your_story">আপনার শত শব্দের গল্পটি কি</string>
+    <string name="use_picture_word_to_write_one">নিম্নলিখিত  ছবি,শব্দ,শব্দমালা বা ভিডিওটিকে ভিত্তি করে আপনার গল্পটি লিখুন</string>
+    <string name="challenge_write_story_for_this_picture">এই ছবিটিকে কেন্দ্র করে আপনার গল্প লিখুন</string>
+    <string name="choose_challenge_label">গল্প লেখার চ্যালেঞ্জ নিন</string>
+    <string name="start_writing">লেখা শুরু করুন</string>
+
+    <string name="male">পুরুষ</string>
+    <string name="female">মহিলা</string>
+    <string name="DOB">জন্ম তারিখ</string>
 </resources>

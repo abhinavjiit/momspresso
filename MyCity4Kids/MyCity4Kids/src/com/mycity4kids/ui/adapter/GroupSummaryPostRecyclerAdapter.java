@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.google.android.gms.common.util.Strings;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -58,6 +59,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
     private RecyclerViewClickListener mListener;
     private GroupResult groupDetails;
     private final String localizedNotHelpful, localizedHelpful, localizedComment;
+    private String modeList = "";
 
     public GroupSummaryPostRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
         mContext = pContext;
@@ -140,9 +142,12 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             ((HeaderViewHolder) holder).memberCountTextView.setText(groupDetails.getMemberCount() + " " + mContext.getString(R.string.groups_member_label));
             ((HeaderViewHolder) holder).groupDescTextView.setText(groupDetails.getDescription());
             if (groupDetails.getAdminMembers().getData() != null && !groupDetails.getAdminMembers().getData().isEmpty()) {
-                String modeList = "";
+
                 for (int i = 0; i < groupDetails.getAdminMembers().getData().size(); i++) {
                     if (StringUtils.isNullOrEmpty(modeList)) {
+                        if (modeList == null) {
+                            modeList = Strings.nullToEmpty(modeList);
+                        }
                         modeList = modeList + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getFirstName() + " "
                                 + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getLastName();
                     } else {

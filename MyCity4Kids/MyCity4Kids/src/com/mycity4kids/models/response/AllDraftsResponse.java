@@ -1,6 +1,8 @@
 package com.mycity4kids.models.response;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by hemant on 11/10/18.
@@ -18,7 +20,7 @@ public class AllDraftsResponse extends BaseResponse {
         this.data = data;
     }
 
-    public class AllDraftsData {
+    public static class AllDraftsData {
 
         private ArrayList<AllDraftsResult> result;
 
@@ -30,17 +32,49 @@ public class AllDraftsResponse extends BaseResponse {
             this.result = result;
         }
 
-        public class AllDraftsResult {
+        public static class AllDraftsResult {
             private String userId;
             private String articleType;
             private String createdTime;
             private String id;
-            private String updatedTime;
+            private long updatedTime;
             private String body;
             private String title;
             private String contentType;
             private String userAgent;
             private String lang;
+            private ArrayList<Map<String,String>> tags;
+
+            public ArrayList<Map<String, String>> getTags() {
+                return tags;
+            }
+
+            public void setTags(ArrayList<Map<String, String>> tags) {
+                this.tags = tags;
+            }
+
+       /*     public Tags getTags() {
+                return tags;
+
+            }
+
+            public void setTags(Tags tags) {
+                this.tags = tags;
+            }
+
+            public class Tags {
+                private ArrayList<Map<String, String>> tagsArr;
+
+                public ArrayList<Map<String, String>> getTagsArr() {
+                    return tagsArr;
+                }
+
+                public void setTagsArr(ArrayList<Map<String, String>> tagsArr) {
+                    this.tagsArr = tagsArr;
+                }
+
+            }*/
+
 
             public String getUserId() {
                 return userId;
@@ -74,11 +108,11 @@ public class AllDraftsResponse extends BaseResponse {
                 this.id = id;
             }
 
-            public String getUpdatedTime() {
+            public long getUpdatedTime() {
                 return updatedTime;
             }
 
-            public void setUpdatedTime(String updatedTime) {
+            public void setUpdatedTime(long updatedTime) {
                 this.updatedTime = updatedTime;
             }
 

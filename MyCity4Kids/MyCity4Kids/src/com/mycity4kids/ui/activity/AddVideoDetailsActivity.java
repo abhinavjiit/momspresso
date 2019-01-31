@@ -38,7 +38,6 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.editor.ArticleImageTagUploadActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -80,6 +79,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private String duration;
     private String thumbnailTime;
     private SharedPreferences pref;
+    private String comingFrom, challengeId, challengeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +102,11 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         categoryId = getIntent().getStringExtra("categoryId");
         duration = getIntent().getStringExtra("duration");
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
+        comingFrom = getIntent().getStringExtra("comingFrom");
+        if (comingFrom.equals("Challenge")) {
+            challengeId = getIntent().getStringExtra("ChallengeId");
+            challengeName = getIntent().getStringExtra("ChallengeName");
+        }
 
         muteSwitch.setOnClickListener(this);
 
@@ -316,6 +321,14 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         intt.putExtra("categoryId", categoryId);
         intt.putExtra("duration", duration);
         intt.putExtra("thumbnailTime", thumbnailTime);
+        if (comingFrom.equals("Challenge")) {
+            intt.putExtra("ChallengeId", challengeId);
+            intt.putExtra("ChallengeName", challengeName);
+            intt.putExtra("comingFrom", "Challenge");
+
+        } else {
+            intt.putExtra("comingFrom", "notFromChallenge");
+        }
         startActivity(intt);
     }
 

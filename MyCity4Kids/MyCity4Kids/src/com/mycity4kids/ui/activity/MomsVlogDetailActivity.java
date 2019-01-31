@@ -1110,7 +1110,9 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
     @Override
     protected void onPause() {
         super.onPause();
+
         if (mExoPlayerView != null && mExoPlayerView.getPlayer() != null) {
+
             mResumeWindow = mExoPlayerView.getPlayer().getCurrentWindowIndex();
             mResumePosition = Math.max(0, mExoPlayerView.getPlayer().getContentPosition());
             mExoPlayerView.getPlayer().release();

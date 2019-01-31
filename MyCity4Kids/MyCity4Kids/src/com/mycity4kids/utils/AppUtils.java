@@ -39,6 +39,7 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -49,6 +50,7 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
+import com.mycity4kids.ui.activity.ChallnegeDetailListingActivity;
 import com.mycity4kids.widget.Hashids;
 
 import org.json.JSONArray;
@@ -754,6 +756,32 @@ public class AppUtils {
             new ShareDialog(topicsShortStoriesTabFragment).show(content);
         }
         Utils.pushShareStoryEvent(topicsShortStoriesTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
+    }
+
+    public static void shareStoryWithFBC(BaseFragment topicsChallengeTabFragment, String userType, String blogSlug, String titleSlug,
+                                        String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent content = new ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(shareUrl))
+                    .build();
+            new ShareDialog(topicsChallengeTabFragment).show(content);
+        }
+        Utils.pushShareStoryEvent(topicsChallengeTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
+    }
+
+    public static void shareStoryWithFB(Activity ChallnegeDetailListingActivity, Context mContext, String userType, String blogSlug, String titleSlug,
+                                        String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent content = new ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(shareUrl))
+                    .build();
+            new ShareDialog(ChallnegeDetailListingActivity).show(content);
+        }
+        Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
     }
 
     public static void shareStoryGeneric(Context mContext, String userType, String blogSlug, String titleSlug,
