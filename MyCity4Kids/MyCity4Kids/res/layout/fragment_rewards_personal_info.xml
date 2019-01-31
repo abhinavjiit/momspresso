@@ -350,6 +350,8 @@
                     android:paddingStart="15dp"
                     android:paddingLeft="15dp"
                     android:paddingTop="15dp"
+                    android:editable="false"
+                    android:focusable="false"
                     android:paddingBottom="15dp"
                     android:textColor="@color/app_light_black"
                     android:textSize="16dp"

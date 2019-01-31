@@ -184,6 +184,64 @@
         <item>Respond to blog comments</item>
     </string-array>
 
+    <string-array name="popup_durables_list">
+        <item>Air Conditioner</item>
+        <item>Refrigerator</item>
+        <item>Car</item>
+        <item>Two wheeler</item>
+        <item>Air Purifier</item>
+        <item>Washing Machine</item>
+        <item>TV</item>
+        <item>Music System</item>
+        <item>Water Heater</item>
+        <item>Mobile phone</item>
+        <item>Camera</item>
+        <item>Microwave Oven</item>
+        <item>Laptop</item>
+    </string-array>
+
+    <string-array name="household_income">
+        <item>Select</item>
+        <item>Less than 1 lakh</item>
+        <item>1 lakh to 2.5 lakhs</item>
+        <item>2.5 lakhs to 5 lakhs</item>
+        <item>5 lakhs to 10 lakhs</item>
+        <item>10 lakhs to 20 lakhs</item>
+        <item>Above 20 lakhs</item>
+    </string-array>
+
+    <string-array name="number_of_child">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+    <string-array name="profession">
+        <item>Select</item>
+        <item>Full-time employee</item>
+        <item>Part-time employee</item>
+        <item>Business woman/ Entrepreneur</item>
+        <item>Freelancer</item>
+    </string-array>
+
+    <string-array name="popup_interest_list">
+        <item>Beauty and personal care</item>
+        <item>Child’s education</item>
+        <item>Family matters</item>
+        <item>Finances</item>
+        <item>Food (restaurants, new recipes etc.)</item>
+        <item>Health</item>
+        <item>Home care</item>
+        <item>Hygiene</item>
+        <item>Parenting</item>
+        <item>Travel</item>
+        <item>Upcoming social events</item>
+    </string-array>
+
     <string-array name="rank_calculation_array">
         <item>Your rank is calculated by a state-of-the-art algorithm which takes in the number of views your article has got, the number of times it has been shared on social media, number of comments it has got on different platforms and the number of articles you have written in the past week.</item>
     </string-array>
@@ -905,4 +963,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_website">ADD WEBSITE</string>
+    <string name="kids_number">"KID %d DETAIL</string>
+
+    <string name="cannot_be_left_blank">cannot be left blank\u0020</string>
+    <string name="Please_enter_a_valid">Please enter a valid\u0020</string>
+    <string name="need_to_select_option">You need to select an option for\u0020</string>
+
 </resources>

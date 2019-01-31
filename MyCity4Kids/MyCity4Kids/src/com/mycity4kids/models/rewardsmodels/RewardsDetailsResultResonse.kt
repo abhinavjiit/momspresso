@@ -7,71 +7,73 @@ import com.google.gson.annotations.SerializedName
 data class RewardsDetailsResultResonse(
         @SerializedName("contact")
         @Expose
-        val contact: String? = null,
+        var contact: String? = null,
         @SerializedName("device_details")
         @Expose
-        val deviceDetails: Any? = null,
+        var deviceDetails: Any? = null,
         @SerializedName("dob")
         @Expose
-        val dob: Int? = null,
+        var dob: Long? = null,
         @SerializedName("durables")
         @Expose
-        val durables: Any? = null,
+        var durables: ArrayList<String>? = null,
         @SerializedName("email")
         @Expose
-        val email: String? = null,
+        var email: String? = null,
         @SerializedName("family_type")
         @Expose
-        val familyType: Int? = null,
+        var familyType: Int? = null,
         @SerializedName("first_name")
         @Expose
-        val firstName: String? = null,
+        var firstName: String? = null,
         @SerializedName("gender")
         @Expose
-        val gender: Int? = null,
+        var gender: Int? = null,
         @SerializedName("id")
         @Expose
-        val id: Int? = null,
+        var id: Int? = null,
         @SerializedName("income_slab")
         @Expose
-        val incomeSlab: Any? = null,
+        var incomeSlab: Any? = null,
         @SerializedName("interest")
         @Expose
-        val interest: Any? = null,
+        var interest: ArrayList<String>? = null,
         @SerializedName("is_mother")
         @Expose
-        val isMother: Int? = null,
+        var isMother: Int? = null,
         @SerializedName("kids_info")
         @Expose
-        val kidsInfo: List<Any>? = null,
+        var kidsInfo: List<Any>? = null,
         @SerializedName("last_name")
         @Expose
-        val lastName: String? = null,
+        var lastName: String? = null,
         @SerializedName("latitude")
         @Expose
-        val latitude: Double? = null,
+        var latitude: Double? = null,
         @SerializedName("location")
         @Expose
-        val location: String? = null,
+        var location: String? = null,
         @SerializedName("longitude")
         @Expose
-        val longitude: Double? = null,
+        var longitude: Double? = null,
         @SerializedName("mother_tongue")
         @Expose
-        val motherTongue: String? = null,
+        var motherTongue: String? = null,
         @SerializedName("profession_type")
         @Expose
-        val professionType: Any? = null,
+        var professionType: Any? = null,
         @SerializedName("social_accounts")
         @Expose
-        val socialAccounts: List<Any>? = null,
+        var socialAccounts: List<SocialAccountObject>? = null,
         @SerializedName("user_id")
         @Expose
-        val userId: String? = null,
+        var userId: String? = null,
         @SerializedName("work_status")
         @Expose
-        val workStatus: Int? = null
-
+        var workStatus: Int? = null,
+        @SerializedName("mobile_token")
+        @Expose
+        var mobile_token : String? = null
 )
 
 

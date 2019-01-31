@@ -364,22 +364,22 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
 
     private void updateUIfromResponse(VlogsListingAndDetailResult responseData) {
         detailData = responseData;
-
-        if (StringUtils.isNullOrEmpty(streamUrl)) {
+        //https://www.momspresso.com/parenting/expression-is-the-best-relization/video/all-hail-p-v-sindhu
+        if (!StringUtils.isNullOrEmpty(streamUrl)) {
             streamUrl = responseData.getUrl();
-            if (mExoPlayerView == null) {
+            //if (mExoPlayerView == null) {
 
-                mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
-                initFullscreenDialog();
-                initFullscreenButton();
+            mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
+            initFullscreenDialog();
+            initFullscreenButton();
 
-                String userAgent = Util.getUserAgent(MomsVlogDetailActivity.this, getApplicationContext().getApplicationInfo().packageName);
-                DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
-                DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(MomsVlogDetailActivity.this, null, httpDataSourceFactory);
-                Uri daUri = Uri.parse(streamUrl);
+            String userAgent = Util.getUserAgent(MomsVlogDetailActivity.this, getApplicationContext().getApplicationInfo().packageName);
+            DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
+            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(MomsVlogDetailActivity.this, null, httpDataSourceFactory);
+            Uri daUri = Uri.parse(streamUrl);
 
-                mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
-            }
+            mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
+            //}
 
             initExoPlayer();
 

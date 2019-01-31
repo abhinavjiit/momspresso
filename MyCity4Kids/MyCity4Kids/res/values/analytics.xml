@@ -3,12 +3,12 @@
 
     <!-- Replace placeholder ID with your tracking ID This was old id from our own account-->
     <!-- <string name="ga_trackingId">UA-50870780-1</string> -->
-    <string name="ga_trackingId">UA-20533582-2</string>
+    <string name="ga_trackingId" translatable="false">UA-20533582-2</string>
     <!-- Replace placeholder appName with your App Name -->
-    <string name="ga_appName">MC4KTest</string>
+    <string name="ga_appName" translatable="false">MC4KTest</string>
 
     <!-- Replace placeholder appVersion with your App Name -->
-    <string name="ga_appVersion">1.0</string>
+    <string name="ga_appVersion" translatable="false">1.0</string>
 
     <!-- Enable automatic activity tracking -->
     <bool name="ga_autoActivityTracking">true</bool>

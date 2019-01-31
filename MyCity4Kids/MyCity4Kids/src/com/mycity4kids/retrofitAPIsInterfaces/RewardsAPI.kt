@@ -7,7 +7,8 @@ import retrofit2.http.*
 
 interface RewardsAPI {
     @PUT("/v1/users/{userId}")
-    fun sendRewardsapiData(@Path("userId") userId: String, @Body rewardsDetailsResultResonse: RewardsDetailsResultResonse)
+    fun sendRewardsapiData(@Path("userId") userId: String, @Body rewardsDetailsResultResonse: RewardsDetailsResultResonse,
+                           @Query("fn") pageValue : Int)
             : Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
 
     //v1/users/a66ac4980fb54dec85dccb3b894d793a?fn=1

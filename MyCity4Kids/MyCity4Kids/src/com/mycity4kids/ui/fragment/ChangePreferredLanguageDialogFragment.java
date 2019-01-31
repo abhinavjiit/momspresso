@@ -1,9 +1,11 @@
 package com.mycity4kids.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +19,11 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment;
 import com.mycity4kids.utils.LocaleManager;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.facebook.FacebookSdk.isFacebookRequestCode;
 
 /**
  * Created by user on 08-06-2015.
@@ -31,6 +35,17 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
     private String selectedLang = "";
     private TextView cancelTextView;
     private String userId = "";
+    private Boolean isFromPopup = false;
+    private static OnClickDoneListener onClickDoneListener;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments()!=null){
+           Bundle bundle  = getArguments();
+           isFromPopup  = bundle.getBoolean("isFromPopup");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -196,17 +211,34 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
         }
     }
 
-    private void setNewLocale(String language, boolean restartProcess) {
-        getApplicationContext().deleteFile(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
-        getApplicationContext().deleteFile(AppConstants.CATEGORIES_JSON_FILE);
-        BaseApplication.setTopicList(null);
-        BaseApplication.setTopicsMap(null);
-        BaseApplication.setShortStoryTopicList(null);
-        LocaleManager.setNewLocale(getActivity(), language);
-        SharedPrefUtils.setConfigCategoryVersion(getActivity(), 0);
-        Intent i = new Intent(getActivity(), DashboardActivity.class);
-        startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+    public static ChangePreferredLanguageDialogFragment newInstance(RewardsPersonalInfoFragment context,Boolean isUsingAsPopup ) {
+        onClickDoneListener= context;
+        Bundle args = new Bundle();
+        args.putBoolean("isFromPopup",isUsingAsPopup);
+        ChangePreferredLanguageDialogFragment fragment = new ChangePreferredLanguageDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
+    private void setNewLocale(String language, boolean restartProcess) {
+        if(isFromPopup){
+            onClickDoneListener.onItemClick(language);
+            dismiss();
+        }else{
+            getApplicationContext().deleteFile(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+            getApplicationContext().deleteFile(AppConstants.CATEGORIES_JSON_FILE);
+            BaseApplication.setTopicList(null);
+            BaseApplication.setTopicsMap(null);
+            BaseApplication.setShortStoryTopicList(null);
+            LocaleManager.setNewLocale(getActivity(), language);
+            SharedPrefUtils.setConfigCategoryVersion(getActivity(), 0);
+            Intent i = new Intent(getActivity(), DashboardActivity.class);
+            startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+        }
+    }
+
+    public interface OnClickDoneListener {
+        void onItemClick(String language);
+    }
 
 }

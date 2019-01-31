@@ -309,4 +309,158 @@ public class Constants {
     public static String FAILURE = "failure";
     //API Success status
     public static String SUCCESS = "success";
+
+    public enum TypeOfDurables {
+        AIR_CONDITIONER(1, "Air Conditioner"), REFRIGERATOR(2, "Refrigerator"), CAR(3, "Car"), TWO_WHEELER(4, "Two wheeler"), AIR_PURIFIER(5, "Air Purifier"),
+        WASHING_MACHINE(6, "Washing Machine"), TV(7, "TV"), MUSIC_SYSTEM(8, "Music System"), WATER_HEATER(9, "Water Heater"), MOBILE_PHONE(10, "Mobile phone"),
+        CAMERA(11, "Camera"), MICROWAVE_OVEN(12, "Microwave Oven"), LAPTOP(13, "Laptop");
+        private final String name;
+        private final int id;
+
+        TypeOfDurables(int i, String name) {
+            this.name=name;
+            this.id=i;
+        }
+
+        public int getId(){
+            return this.id;
+        }
+
+        public String getName(){
+            return this.name;
+        }
+
+        public static String findById(int id) {
+            for (TypeOfDurables typeOfDurables : TypeOfDurables.values()) {
+                if (id == typeOfDurables.getId())
+                    return typeOfDurables.name;
+            }
+            return "";
+        }
+
+        public static String findByName(String name) {
+            for (TypeOfDurables typeOfDurables : TypeOfDurables.values()) {
+                if (name.toLowerCase().equalsIgnoreCase(typeOfDurables.getName()))
+                    return typeOfDurables.id + "";
+            }
+            return null;
+        }
+    }
+
+    public enum TypeOfInterest {
+        BEAUTY(0, "Beauty and personal care"), EDUCATION(1, "Child’s education"), FAMILY(2, "Family matters"), FINANCES(3, "Finances"), FOOD(4, "Food"),
+        HEALTH(5, "Health"), HAME_CARE(6, "Home care"), HYGIENE(7, "Hygiene"), PARENTING(8, "Parenting"), TRAVEL(9, "Travel"),
+        SOCIAL_EVENTS(10, "Upcoming social events");
+        private final String name;
+        private final int id;
+
+        TypeOfInterest(int i, String name) {
+            this.name=name;
+            this.id=i;
+        }
+
+        public int getId(){
+            return this.id;
+        }
+
+        public String getName(){
+            return this.name;
+        }
+
+        public static String findById(int id) {
+            for (TypeOfInterest typeOfInterest : TypeOfInterest.values()) {
+                if (id == typeOfInterest.getId())
+                    return typeOfInterest.name;
+            }
+            return "";
+        }
+
+        public static String findByName(String name) {
+            for (TypeOfInterest typeOfInterest : TypeOfInterest.values()) {
+                if (name.toLowerCase().equalsIgnoreCase(typeOfInterest.getName().toLowerCase()))
+                    return typeOfInterest.id + "";
+            }
+            return null;
+        }
+    }
+
+
+    public enum TypeOfLanguages {
+        LOCALE_ENGLISH("en", "English"), LOCALE_HINDI("hi","Hindi"), LOCALE_MARATHI("mr","Marathi"), LOCALE_BENGALI("bn","Bangali"), LOCALE_TAMIL("ta","Tamil"), LOCALE_TELUGU("te","Telgu"),
+        LOCALE_KANNADA("kn","Kannada"), LOCALE_MALAYALAM("ml","Malayalam");
+        private final String name;
+        private final String id;
+
+        TypeOfLanguages(String i, String name) {
+            this.name=name;
+            this.id=i;
+        }
+
+        public String getId(){
+            return this.id;
+        }
+
+        public String getName(){
+            return this.name;
+        }
+
+        public static String findById(String id) {
+            for (TypeOfLanguages typeOfLanguages : TypeOfLanguages.values()) {
+                if (id == typeOfLanguages.getId())
+                    return typeOfLanguages.name;
+            }
+            return "";
+        }
+
+        public static String findByName(String name) {
+            for (TypeOfLanguages typeOfLanguages : TypeOfLanguages.values()) {
+                if (name == typeOfLanguages.getName())
+                    return typeOfLanguages.id;
+            }
+            return "";
+        }
+    }
+
+    public enum TypeOfLanguagesCodes {
+        LOCALE_ENGLISH("0", "en"), LOCALE_HINDI("1","hi"), LOCALE_MARATHI("2","mr"), LOCALE_BENGALI("3","bn"), LOCALE_TAMIL("4","ta"), LOCALE_TELUGU("5","te"),
+        LOCALE_KANNADA("6","kn"), LOCALE_MALAYALAM("7","ml");
+        private final String name;
+        private final String id;
+
+        TypeOfLanguagesCodes(String i, String name) {
+            this.name=name;
+            this.id=i;
+        }
+
+        public String getId(){
+            return this.id;
+        }
+
+        public String getName(){
+            return this.name;
+        }
+
+        public static String findById(String id) {
+            for (TypeOfLanguagesCodes typeOfLanguagesCodes : TypeOfLanguagesCodes.values()) {
+                if (id == typeOfLanguagesCodes.getId())
+                    return typeOfLanguagesCodes.name;
+            }
+            return "";
+        }
+
+        public static String findByName(String name) {
+            for (TypeOfLanguagesCodes typeOfLanguagesCodes : TypeOfLanguagesCodes.values()) {
+                if (name == typeOfLanguagesCodes.getName())
+                    return typeOfLanguagesCodes.id;
+            }
+            return "";
+        }
+    }
+
+    public enum PopListRequestType {
+        INTEREST,
+        DURABLES,
+        INCOME,
+        PROFESSION
+    }
 }

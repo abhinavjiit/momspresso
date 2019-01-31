@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="20dp">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/textHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="KID1 DETAIL"
+        android:textColor="@color/app_grey"
+        app:fontName="oswald_regular.ttf"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/layoutKidsDOB"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/layoutExptectedDate"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp">
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spinnerGender"
+                android:layout_width="170dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/mainprofile_thin_border"
+                android:gravity="center_vertical"
+                android:hint="DD/MM/YYYY"
+                android:paddingLeft="10dp"
+                android:textColor="#000"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_alignTop="@+id/spinnerGender"
+                android:layout_alignRight="@id/spinnerGender"
+                android:layout_alignBottom="@+id/editExpectedDate"
+                android:layout_marginTop="14dp"
+                android:layout_marginRight="11dp"
+                android:layout_marginBottom="12dp"
+                android:src="@drawable/arrowdownnew" />
+        </RelativeLayout>
+
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/textDOB"
+            android:layout_width="170dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/layoutExptectedDate"
+            android:background="@drawable/mainprofile_thin_border"
+            android:gravity="center_vertical"
+            android:hint="DD/MM/YYYY"
+            android:paddingLeft="10dp"
+            android:textColor="#000"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </RelativeLayout>
+
+</LinearLayout>

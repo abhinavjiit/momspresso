@@ -2080,7 +2080,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 draftListResult.setTitle(allDraftsList.get(position).getTitle());
                 draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
                 draftListResult.setUpdatedTime(Long.parseLong(allDraftsList.get(position).getUpdatedTime()));
-
                 Intent intent = new Intent(this, AddShortStoryActivity.class);
                 intent.putExtra("draftItem", draftListResult);
                 intent.putExtra("from", "draftList");

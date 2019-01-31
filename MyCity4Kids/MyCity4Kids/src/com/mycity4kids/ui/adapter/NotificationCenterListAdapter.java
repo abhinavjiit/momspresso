@@ -200,6 +200,8 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
                     mContext.startActivity(intent);
+
+                    //https://www.momspresso.com/new-videos/v1/videos-91556df5-a531-412c-946b-3219dcfa30cb/playlist.m3u8
                     try {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());

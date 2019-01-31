@@ -55,7 +55,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private Toolbar mToolbar;
     private ImageView backNavigationImageView;
     private ImageView playTtsTextView;
-
     private boolean isAudioPlaying = false;
     private String authorId;
     private String articleId;
