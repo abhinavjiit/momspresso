@@ -74,7 +74,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     private ArrayList<NotificationSettingsModel> notificationSettingsList;
     private ArrayList<String> mDatalist;
     private ArrayList<Topics> followedSubSubTopicList = new ArrayList<>();
-
     private View view;
     private TextView facebookConnectTextView;
     private TextView showMoreFollowedTopicsTextView;

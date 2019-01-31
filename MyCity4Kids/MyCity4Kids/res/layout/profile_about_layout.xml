@@ -48,9 +48,9 @@
             android:id="@+id/childDetailTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/child_details"
             android:textAllCaps="true"
             android:textColor="@color/app_light_black"
@@ -120,18 +120,6 @@
                 android:text="@string/dob"
                 android:textColor="@color/app_grey"
                 android:textSize="14sp" />
-
-            <!--<FrameLayout-->
-            <!--android:id="@+id/spinner_hlp"-->
-            <!--android:layout_width="135dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:layout_below="@id/gender"-->
-            <!--android:layout_marginBottom="18dp"-->
-            <!--android:layout_marginLeft="16dp"-->
-            <!--android:layout_marginRight="8dp"-->
-            <!--android:layout_marginStart="16dp"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:background="#fff" />-->
 
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/genderSpinner"

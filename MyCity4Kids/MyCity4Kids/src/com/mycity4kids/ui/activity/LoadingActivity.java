@@ -179,12 +179,10 @@ public class LoadingActivity extends BaseActivity {
     }
 
     public void navigateToDashboard() {
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
         Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(getFollowedTopicsResponseCallback);
-
     }
 
     private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {

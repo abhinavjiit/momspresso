@@ -53,6 +53,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -192,7 +193,6 @@ public class BaseApplication extends Application {
     public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
 
-
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             Tracker t = (trackerId == TrackerName.APP_TRACKER) ?
                     analytics.newTracker(R.xml.app_tracker)
@@ -277,6 +277,7 @@ public class BaseApplication extends Application {
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+
     }
 
     /**
@@ -338,7 +339,6 @@ public class BaseApplication extends Application {
     }
 
     public Retrofit createRetrofitInstance(String base_url) {
-
         Interceptor mainInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -347,8 +347,13 @@ public class BaseApplication extends Application {
                 Request.Builder requestBuilder = original.newBuilder();
 
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder.addHeader("mc4kToken", "EAAC7f1na98IBAL6IM6FZAaZAdU03rlt6anfXVHRCqJY4BVhEg4uw4ltXjjRhQgpZBJWCCNE1KqxWI7y7emHtGdGkm7DwPyrt3iHmiTYwnIKOBXclskr1gEmzbnUZAeGMhSsxZA9uPQkEXHCdcrucYiv57BHEByKIG9T7yd7ZA07W8DQesIFq2nFJeZC3ObF5bAqLr2ZCfhTZBawZDZD");
+                requestBuilder.addHeader("id", "8ffb68f436724516850cdfdb5d064d69");
+
+                //requestBuilder.addHeader("id", "a66ac4980fb54dec85dccb3b894d793a");
+                //requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                //requestBuilder.addHeader("mc4kToken", "e93e10906909e6c67fc236adbca297c2");
+                //requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
@@ -388,9 +393,16 @@ public class BaseApplication extends Application {
                     .build();
         }
 
+//        retrofit = new Retrofit.Builder()
+//                .baseUrl(base_url)
+//                .addConverterFactory(buildGsonConverter())
+//                .client(client)
+//                .build();
+
         retrofit = new Retrofit.Builder()
-                .baseUrl(base_url)
+                .baseUrl("http://35.200.209.192:5000/")
                 .addConverterFactory(buildGsonConverter())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build();
         return retrofit;

@@ -57,12 +57,10 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     private int kidsViewPosition;
     private String kidsInfoActionType = "";
     private ArrayList<AddRemoveKidsRequest> kidsModelArrayList;
-
     private KidsInfoNewCustomView viewInEditMode;
     private EditKidInfoDialogFragment editKidInfoDialogFragment;
     private LinearLayout childInfoContainer;
     private static TextView dobTextView;
-
     EditText aboutEditText;
     private int mYear, mMonth, mDay;
     LinearLayout aboutprofilemaincontainer;

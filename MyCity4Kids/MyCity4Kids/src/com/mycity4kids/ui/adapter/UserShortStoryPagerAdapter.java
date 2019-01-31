@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.fragment.UserDraftArticleTabFragment;
 import com.mycity4kids.ui.fragment.UserPublishedArticleTabFragment;

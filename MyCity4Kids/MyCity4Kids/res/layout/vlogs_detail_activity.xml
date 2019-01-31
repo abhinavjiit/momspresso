@@ -454,7 +454,7 @@
                 <!--android:layout_width="0dp"-->
                 <!--android:layout_height="30dp"-->
                 <!--android:layout_weight="1"-->
-                <!--android:src="@drawable/ic_facebook" />-->
+                <!--android:src="@drawable/ic_facebook_svg" />-->
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/facebookShareTextView"
@@ -462,7 +462,7 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:drawableTint="@color/app_red"
-                    android:drawableTop="@drawable/ic_facebook"
+                    android:drawableTop="@drawable/ic_facebook_svg"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.facebook"
                     android:textColor="@color/app_grey"

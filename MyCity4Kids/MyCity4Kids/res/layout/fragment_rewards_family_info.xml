@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.rewards.activity.RewardsContainerActivity">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/layoutWorking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="16dp">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/textFamilyType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FAMILY TYPE"
+                    android:textColor="@color/app_grey"
+                    app:fontName="oswald_regular.ttf" />
+
+
+                <RadioGroup
+                    android:id="@+id/radioGroupFamilyType"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/textFamilyType"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatRadioButton
+                        android:id="@+id/checkNuclear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_below="@id/textWorkingStatus"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginRight="8dp"
+                        android:buttonTint="@color/app_red"
+                        android:text="Nuclear"
+                        android:textColor="@color/app_light_black" />
+
+                    <android.support.v7.widget.AppCompatRadioButton
+                        android:id="@+id/checkJoint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_below="@id/textWorkingStatus"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:buttonTint="@color/app_red"
+                        android:text="Joint"
+                        android:textColor="@color/app_light_black" />
+                </RadioGroup>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutMother"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="16dp">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/textAreMother"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ARE YOU A MOTHER?"
+                    android:textColor="@color/app_grey"
+                    app:fontName="oswald_regular.ttf" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroupAreMother"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/textAreMother"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/radioYes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/textAreMother"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:buttonTint="@color/app_red"
+                    android:text="Yes"
+                    android:textColor="@color/app_light_black" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/radioExpecting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/textAreMother"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@+id/radioYes"
+                    android:buttonTint="@color/app_red"
+                    android:text="Expecting"
+                    android:textColor="@color/app_light_black" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/radioNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/textAreMother"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@+id/radioExpecting"
+                    android:buttonTint="@color/app_red"
+                    android:text="No"
+                    android:textColor="@color/app_light_black" />
+                </RadioGroup>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutExptectedDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="16dp">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/textViewLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="EXPECTED DATE"
+                    android:textColor="@color/app_grey"
+                    app:fontName="oswald_regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontEditText
+                    android:id="@+id/editExpectedDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewLocation"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/mainprofile_thin_border"
+                    android:hint="DD/MM/YYYY"
+                    android:inputType="textNoSuggestions"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:textColor="@color/app_light_black"
+                    android:textSize="16dp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignTop="@+id/editExpectedDate"
+                    android:layout_alignRight="@id/editExpectedDate"
+                    android:layout_marginTop="21dp"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/arrowdownnew" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutNumberOfKids"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="16dp">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/textViewNumberOfKids"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NUMBER OF KIDS"
+                    android:textColor="@color/app_grey"
+                    app:fontName="oswald_regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontEditText
+                    android:id="@+id/editnumberOfKids"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewNumberOfKids"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/mainprofile_thin_border"
+                    android:inputType="textNoSuggestions"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:textColor="@color/app_light_black"
+                    android:textSize="16dp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignTop="@+id/editnumberOfKids"
+                    android:layout_alignRight="@id/editnumberOfKids"
+                    android:layout_marginTop="21dp"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/arrowdownnew" />
+            </RelativeLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutKidsDOB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="16dp">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="KID1 DETAIL"
+                    android:textColor="@color/app_grey"
+                    app:fontName="oswald_regular.ttf"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/genderSpinner"
+                    android:layout_width="170dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/mainprofile_thin_border"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/gender" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="12dp"
+                    android:src="@drawable/arrowdownnew"
+                    app:layout_constraintRight_toRightOf="@id/genderSpinner"
+                    app:layout_constraintTop_toTopOf="@+id/genderSpinner" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/kidsDOBTextView"
+                    android:layout_width="170dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="7dp"
+                    android:background="@drawable/mainprofile_thin_border"
+                    android:gravity="center_vertical"
+                    android:hint="DD/MM/YYYY"
+                    android:paddingLeft="10dp"
+                    android:textColor="#000"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/gender" />
+            </android.support.constraint.ConstraintLayout>
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/textAreYouExpecting"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/shape_red_border"
+                android:gravity="center_vertical"
+                android:paddingStart="15dp"
+                android:paddingLeft="15dp"
+                android:paddingEnd="15dp"
+                android:paddingRight="15dp"
+                android:text="ARE YOU EXPECTING?"
+                android:textColor="@color/app_red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/gender" />
+
+            <RelativeLayout
+                android:id="@+id/layoutMotherExptectedDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="16dp">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/textViewMotherExpectedDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="EXPECTED DATE"
+                    android:textColor="@color/app_grey"
+                    app:fontName="oswald_regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontEditText
+                    android:id="@+id/editMotherExpectedDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewMotherExpectedDate"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/mainprofile_thin_border"
+                    android:hint="DD/MM/YYYY"
+                    android:inputType="textNoSuggestions"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:textColor="@color/app_light_black"
+                    android:textSize="16dp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignTop="@+id/editMotherExpectedDate"
+                    android:layout_alignRight="@id/editMotherExpectedDate"
+                    android:layout_marginTop="21dp"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/arrowdownnew" />
+            </RelativeLayout>
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/textSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@color/app_red"
+                android:gravity="center"
+                android:paddingLeft="35dp"
+                android:paddingTop="15dp"
+                android:paddingRight="35dp"
+                android:paddingBottom="15dp"
+                android:text="SUBMIT"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.constraint.ConstraintLayout>
