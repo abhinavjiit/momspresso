@@ -31,6 +31,7 @@ import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -274,6 +275,47 @@ public class AppUtils {
             }
         }
     }
+
+
+    public static Uri exportAudioToGallery(String filename, ContentResolver contentResolver, Context mContext) {
+        // Save the name and description of a video in a ContentValues map.
+        final ContentValues values = new ContentValues(2);
+        values.put(MediaStore.Video.Media.MIME_TYPE, "audio/3gp");
+        values.put(MediaStore.Video.Media.DATA, filename);
+        // Add a new record (identified by uri)
+        final Uri uri = contentResolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                values);
+        mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.parse("file://" + filename)));
+        return uri;
+    }
+
+    public static final Uri getAudioUriFromMediaProvider(String videoFile, ContentResolver contentResolver) {
+        String selection = MediaStore.Video.VideoColumns.DATA + "=?";
+        String[] selectArgs = {videoFile};
+        String[] projection = {MediaStore.Audio.AudioColumns._ID};
+        Cursor c = null;
+        try {
+            c = contentResolver.query(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection, selection, selectArgs, null);
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                String id = c.getString(c
+                        .getColumnIndex(MediaStore.Audio.AudioColumns._ID));
+
+                return Uri
+                        .withAppendedPath(
+                                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                id);
+            }
+            return null;
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+    }
+
 
     public static void deleteDirectoryContent(String dirName) {
         File dir = new File(Environment.getExternalStorageDirectory() + File.separator + dirName);
@@ -840,5 +882,14 @@ public class AppUtils {
         } else {
             return activity.getString(stringId);
         }
+    }
+
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
     }
 }

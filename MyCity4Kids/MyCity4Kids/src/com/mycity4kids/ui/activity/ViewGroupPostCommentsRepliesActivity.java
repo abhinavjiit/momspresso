@@ -165,6 +165,24 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        groupPostCommentRepliesRecyclerAdapter.releasePlayer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        groupPostCommentRepliesRecyclerAdapter.releasePlayer();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        groupPostCommentRepliesRecyclerAdapter.releasePlayer();
+    }
+
     private void getSinglePostComments() {
         Retrofit retro = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retro.create(GroupsAPI.class);

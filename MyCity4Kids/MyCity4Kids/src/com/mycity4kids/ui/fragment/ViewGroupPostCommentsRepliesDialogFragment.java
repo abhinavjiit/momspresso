@@ -46,6 +46,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -231,6 +232,11 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
 
     private void formatCommentData(ArrayList<GroupPostCommentResult> dataList) {
         for (int j = 0; j < dataList.size(); j++) {
+            if (dataList.get(j).getMediaUrls() != null && !((Map<String, String>) dataList.get(j).getMediaUrls()).isEmpty()) {
+                if (((Map<String, String>) dataList.get(j).getMediaUrls()).get("audio") != null) {
+                    dataList.get(j).setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
+                }
+            }
             if (dataList.get(j).getCounts() != null) {
                 for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
                     switch (dataList.get(j).getCounts().get(i).getName()) {
@@ -502,5 +508,17 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             }
         }
         groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        groupPostCommentRepliesRecyclerAdapter.releasePlayer();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        groupPostCommentRepliesRecyclerAdapter.releasePlayer();
     }
 }
