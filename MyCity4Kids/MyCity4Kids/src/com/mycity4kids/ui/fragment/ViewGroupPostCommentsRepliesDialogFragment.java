@@ -335,10 +335,14 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             }
             break;
             case R.id.upvoteCommentContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+                break;
             case R.id.upvoteReplyContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
                 break;
             case R.id.downvoteCommentContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+                break;
             case R.id.downvoteReplyContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;

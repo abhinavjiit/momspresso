@@ -360,7 +360,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
         public AudioCommentViewHolder(View view) {
             super(view);
             media = (ImageView) view.findViewById(R.id.media);
-            audiotRootView = view.findViewById(R.id.audiotRootView);
+            audiotRootView = view.findViewById(R.id.commentRootView);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
