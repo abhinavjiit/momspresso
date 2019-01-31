@@ -152,7 +152,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         if (!apiGetResponse.lastName.isNullOrBlank()) editLastName.setText(apiGetResponse.lastName)
         if (!apiGetResponse.contact.isNullOrBlank()) editPhone.setText(apiGetResponse.contact)
         if (!apiGetResponse.email.isNullOrBlank()) editEmail.setText(apiGetResponse.email)
-        if (apiGetResponse.dob != null && apiGetResponse.dob!! > 0) textDOB.setText(DateTimeUtils.getDateFromTimestamp(apiGetResponse.dob!!.toLong()))
+        if (apiGetResponse.dob != null && apiGetResponse.dob!! > 0) RewardsPersonalInfoFragment.textDOB.setText(DateTimeUtils.getDateFromTimestamp(apiGetResponse.dob!!.toLong()))
         if (!apiGetResponse.location.isNullOrBlank()) editLocation.setText(apiGetResponse.location)
         if (apiGetResponse.motherTongue.isNullOrBlank()) editLanguage.setText(apiGetResponse.motherTongue)
         if (apiGetResponse.workStatus != null) {
@@ -184,7 +184,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             varifyNumberWithFacebookAccountKit()
         }
         (containerView.findViewById<TextView>(R.id.textSaveAndContinue)).setOnClickListener {
-            if(prepareDataForPosting()){
+            if (prepareDataForPosting()) {
                 postDataofRewardsToServer()
             }
 
@@ -248,10 +248,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             return false
         }
 
-        if (spinnerGender.selectedItem.toString().isNullOrEmpty()) {
-            if (spinnerGender.selectedItem.toString().trim().toLowerCase().equals("Male")) {
+        if (genderSpinner.selectedItem.toString().isNullOrEmpty()) {
+            if (genderSpinner.selectedItem.toString().trim().toLowerCase().equals("Male")) {
                 apiGetResponse.gender = 0
-            } else if (spinnerGender.selectedItem.toString().trim().toLowerCase().equals("Female")) {
+            } else if (genderSpinner.selectedItem.toString().trim().toLowerCase().equals("Female")) {
                 apiGetResponse.gender = 1
             }
         }
@@ -265,13 +265,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         apiGetResponse.location = editLocation.text.toString()
 
-        if(radioGroupWorkingStatus.checkedRadioButtonId == R.id.radiokWorking){
-            apiGetResponse.workStatus =1
-        }else{
+        if (radioGroupWorkingStatus.checkedRadioButtonId == R.id.radiokWorking) {
+            apiGetResponse.workStatus = 1
+        } else {
             apiGetResponse.workStatus = 0
         }
 
-        if(!editLanguage.text.isNullOrEmpty()){
+        if (!editLanguage.text.isNullOrEmpty()) {
             apiGetResponse.motherTongue = Constants.TypeOfLanguages.findByName(editLanguage.text.toString())
         }
 

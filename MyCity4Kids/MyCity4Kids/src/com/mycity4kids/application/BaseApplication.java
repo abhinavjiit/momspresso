@@ -393,18 +393,19 @@ public class BaseApplication extends Application {
                     .build();
         }
 
-//        retrofit = new Retrofit.Builder()
-//                .baseUrl(base_url)
-//                .addConverterFactory(buildGsonConverter())
-//                .client(client)
-//                .build();
-
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://35.200.209.192:5000/")
+                .baseUrl(base_url)
                 .addConverterFactory(buildGsonConverter())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build();
+
+//        retrofit = new Retrofit.Builder()
+//                .baseUrl("http://35.200.209.192:5000/")
+//                .addConverterFactory(buildGsonConverter())
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//                .client(client)
+//                .build();
         return retrofit;
     }
 
