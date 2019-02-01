@@ -84,7 +84,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                     for (int i = articleDataModelsNew.getChild().size() - 1; i >= 0; i--) {
                         if (AppConstants.PUBLIC_VISIBILITY.equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
                             if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
-                                if (AppConstants.PUBLIC_VISIBILITY.equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
+                                if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                                     holder.rootView.setVisibility(View.VISIBLE);
                                     challengeId.add(articleDataModelsNew.getChild().get(i).getId());
                                     // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
