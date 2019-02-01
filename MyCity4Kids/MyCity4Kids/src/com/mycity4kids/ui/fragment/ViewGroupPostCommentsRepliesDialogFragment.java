@@ -310,7 +310,8 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                 FragmentManager fm = getChildFragmentManager();
                 commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
-                _args.putInt("position", commentPosition);
+                _args.putInt("position", position);
+                _args.putInt("commentPosition", commentPosition);
                 _args.putInt("commentType", repliesList.get(position).getCommentType());
                 _args.putString("responseType", "COMMENT");
                 _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
