@@ -350,6 +350,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                 Bundle _args = new Bundle();
 //                _args.putInt("position", commentPosition);
                 _args.putString("responseType", "COMMENT");
+                _args.putInt("commentType", repliesList.get(position).getCommentType());
                 _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
                 _args.putString("authorId", repliesList.get(position).getUserId());
                 commentOptionsDialogFragment.setArguments(_args);
@@ -363,6 +364,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
 //                commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
+                _args.putInt("commentType", repliesList.get(position).getCommentType());
                 _args.putString("responseType", "REPLY");
 //                _args.putInt("commentPosition", commentPosition);
                 _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);

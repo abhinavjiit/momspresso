@@ -436,6 +436,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 GpPostCommentOptionsDialogFragment commentOptionsDialogFragment = new GpPostCommentOptionsDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
+                _args.putInt("commentType", completeResponseList.get(position).getCommentType());
                 _args.putInt("position", position);
                 _args.putString("authorId", completeResponseList.get(position).getUserId());
                 _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
