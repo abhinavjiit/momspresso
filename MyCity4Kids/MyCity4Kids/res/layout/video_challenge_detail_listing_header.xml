@@ -75,7 +75,6 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:ellipsize="end"
-                android:text="'asdlkjalskjdflkjasdlkjfaksdjflkjasldkfjalskjdflkjaslkdjflkasjdlfkjasl;kdjflaksjdflk;jasdlk;fjalksdjfl;kajsdflkjalsdkjflaksjdfl'kajskldsdlkjalskjdflkjasdlkjfaksdjflkjasldkfjalskjdflkjaslkdjflkasjdlfkjasl;kdjflaksjdflk;jasdlk;fjalksdjfl;kajsdflkjalsdkjflaksjdfl'kajskldfjsdlkjalskjdflkjasdlkjfaksdjflkjasldkfjalskjdflkjaslkdjflkasjdlfkjasl;kdjflaksjdflk;jasdlk;fjalksdjfl;kajsdflkjalsdkjflaksjdfl'kajskldfjfj"
                 android:layout_marginLeft="10dp"
                 android:paddingRight="10dp"
                 app:fontName="oswald.ttf" />

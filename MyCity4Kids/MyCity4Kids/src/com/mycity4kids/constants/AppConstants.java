@@ -631,5 +631,5 @@ public class AppConstants {
 
     public static final String VIDEO_CHALLENGE_ID = "category-ee7ea82543bd4bc0a8dad288561f2beb";
 
-    public static final String PUBLIC_VISIBILITY = "0";
+    public static final String PUBLIC_VISIBILITY = "1";
 }
