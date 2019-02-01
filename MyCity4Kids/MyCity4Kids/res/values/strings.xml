@@ -928,5 +928,14 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_website">ADD WEBSITE</string>
+
+    <string name="hold_to_release">Hold to record, Release to send</string>
     <string name="slide_to_cancel">Slide to cancel</string>
+    <string name="audio_permission">Please grant permissions to record audio</string>
+    <string name="please_hold_for_3_seconds">Please hold for minimum 3 seconds, to post comment</string>
+    <string name="stop_recording">First stop recording then save</string>
+    <string name="cancel_audio">Cancel</string>
+
+
+
 </resources>

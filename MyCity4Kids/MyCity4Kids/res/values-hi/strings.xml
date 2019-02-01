@@ -866,4 +866,10 @@
     <string name="male">पुरुष</string>
     <string name="female">महिला</string>
     <string name="DOB">जन्म तिथि</string>
+
+    <string name="hold_to_release">रिकॉर्ड करने के लिए पकड़ो, भेजने के लिए छोड़ दें।</string>
+    <string name="slide_to_cancel">रद्द करने के लिए स्लाइड</string>
+    <string name="stop_recording">पहले रिकॉर्डिंग बंद करो फिर सेव करो।</string>
+    <string name="cancel_audio">रद्द</string>
+
 </resources>

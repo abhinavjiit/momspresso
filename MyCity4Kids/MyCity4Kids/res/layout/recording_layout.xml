@@ -256,7 +256,7 @@
                 android:layout_height="56dp"
                 android:layout_gravity="bottom|center_horizontal"
                 android:padding="13dp"
-                android:text="Cancel"
+                android:text="@string/cancel_audio"
                 android:textSize="20sp"
                 android:textStyle="normal"
                 android:visibility="gone" />
