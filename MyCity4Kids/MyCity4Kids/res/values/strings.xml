@@ -932,14 +932,9 @@
 
     <string name="hold_to_release">Hold to record, Release to send</string>
     <string name="slide_to_cancel">Slide to cancel</string>
-
-
-    <string name="add">ADD</string>
-
     <string name="audio_permission">Please grant permissions to record audio</string>
     <string name="please_hold_for_3_seconds">Please hold for minimum 3 seconds, to post comment</string>
     <string name="stop_recording">First stop recording then save</string>
     <string name="cancel_audio">Cancel</string>
-
-
+    <string name="add">Add</string>
 </resources>

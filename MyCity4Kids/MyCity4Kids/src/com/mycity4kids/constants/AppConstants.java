@@ -630,4 +630,6 @@ public class AppConstants {
     public static final String SHORT_STORY_CHALLENGE_ID = "category-743892a865774baf9c20cbcc5c01d35f";
 
     public static final String VIDEO_CHALLENGE_ID = "category-ee7ea82543bd4bc0a8dad288561f2beb";
+
+    public static final String PUBLIC_VISIBILITY = "0";
 }

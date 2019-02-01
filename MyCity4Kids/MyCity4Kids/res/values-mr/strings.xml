@@ -855,14 +855,9 @@
     <string name="male">पुरुष</string>
     <string name="female">महिला</string>
     <string name="DOB">जन्म तिथि</string>
-
-
-
     <string name="add">जोडा</string>
     <string name="hold_to_release">रेकॉर्ड करण्यासाठी होल्ड करा, पाठविण्यासाठी रिलीझ करा.</string>
     <string name="slide_to_cancel">रद्द करण्यासाठी स्लाइड</string>
     <string name="stop_recording">प्रथम रेकॉर्डिंग थांबवा मग सेव्ह करा.</string>
     <string name="cancel_audio">रद्द</string>
-
-
 </resources>

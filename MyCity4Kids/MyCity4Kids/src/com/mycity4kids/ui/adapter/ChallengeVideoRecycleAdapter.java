@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.squareup.picasso.Picasso;
 
@@ -81,9 +82,9 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                     holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                     holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
                     for (int i = articleDataModelsNew.getChild().size() - 1; i >= 0; i--) {
-                        if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
+                        if (AppConstants.PUBLIC_VISIBILITY.equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
                             if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
-                                if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
+                                if (AppConstants.PUBLIC_VISIBILITY.equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                                     holder.rootView.setVisibility(View.VISIBLE);
                                     challengeId.add(articleDataModelsNew.getChild().get(i).getId());
                                     // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
@@ -111,7 +112,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                 default:
                     for (int j = m - n; j >= 0; j--) {
 
-                        if ("1".equals(articleDataModelsNew.getChild().get(j).getPublicVisibility())) {
+                        if (AppConstants.PUBLIC_VISIBILITY.equals(articleDataModelsNew.getChild().get(j).getPublicVisibility())) {
                             if (articleDataModelsNew.getChild().get(j).getExtraData() != null) {
                                 holder.rootView.setVisibility(View.VISIBLE);
                                 //if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
@@ -163,7 +164,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
     public void setListData(Topics mParentingLists) {
         articleDataModelsNew = mParentingLists;
         for (int i = 0; i < articleDataModelsNew.getChild().size(); i++) {
-            if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
+            if (AppConstants.PUBLIC_VISIBILITY.equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
                 // if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                 count++;
 

@@ -275,6 +275,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
             return view;
         }
+
+
     }
 
 

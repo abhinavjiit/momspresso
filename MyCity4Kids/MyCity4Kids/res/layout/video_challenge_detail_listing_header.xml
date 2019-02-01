@@ -10,28 +10,16 @@
     <RelativeLayout
         android:id="@+id/challenge_header_text"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:background="@drawable/short_story_border_bg"
         android:visibility="visible">
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/ChallengeNameText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:gravity="center"
-            android:text="ABHINAV"
-            android:textColor="@color/app_red"
-            android:textSize="25sp"
-            android:visibility="visible"
-            app:fontName="oswald.ttf" />
 
         <FrameLayout
             android:id="@+id/main_media_frame"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_below="@id/ChallengeNameText"
             android:visibility="visible"
             android:background="#000000">
 
@@ -48,7 +36,10 @@
             android:id="@+id/ChallengeNameImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+<<<<<<< HEAD
             android:layout_below="@id/ChallengeNameText"
+=======
+>>>>>>> design changes in video challenges
             android:background="@drawable/short_story_border_bg"
             android:src="@drawable/groups_generic"
             android:visibility="visible" />-->
@@ -56,9 +47,9 @@
         <ImageView
             android:id="@+id/videoIndicatorImageView"
             android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="80dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="90dp"
             android:src="@drawable/ic_videos"
             android:visibility="gone" />
 
@@ -66,29 +57,45 @@
             android:id="@+id/submit_challenge_relative_Layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@id/ChallengeNameImage"
+            android:layout_below="@+id/main_media_frame"
             android:layout_centerHorizontal="true"
             android:background="@color/white"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/ChallengeNameText"
+                android:layout_width="0dp"
+                android:layout_weight="6"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textColor="@color/app_red"
+                android:textSize="25sp"
+                android:visibility="visible"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:ellipsize="end"
+                android:text="'asdlkjalskjdflkjasdlkjfaksdjflkjasldkfjalskjdflkjaslkdjflkasjdlfkjasl;kdjflaksjdflk;jasdlk;fjalksdjfl;kajsdflkjalsdkjflaksjdfl'kajskldsdlkjalskjdflkjasdlkjfaksdjflkjasldkfjalskjdflkjaslkdjflkasjdlfkjasl;kdjflaksjdflk;jasdlk;fjalksdjfl;kajsdflkjalsdkjflaksjdfl'kajskldfjsdlkjalskjdflkjasdlkjfaksdjflkjasldkfjalskjdflkjaslkdjflkasjdlfkjasl;kdjflaksjdflk;jasdlk;fjalksdjfl;kajsdflkjalsdkjflaksjdfl'kajskldfjfj"
+                android:layout_marginLeft="10dp"
+                android:paddingRight="10dp"
+                app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/submit_story_text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:background="@drawable/update_profile_bg"
                 android:gravity="center"
-                android:paddingBottom="7dp"
                 android:paddingLeft="12dp"
-                android:paddingRight="12dp"
                 android:paddingTop="7dp"
-                android:text="@string/add_article_or_video.upload_video"
+                android:paddingRight="12dp"
+                android:paddingBottom="7dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/add"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 app:fontName="oswald_regular.ttf" />
         </LinearLayout>
-
-
     </RelativeLayout>
-
 </RelativeLayout>
