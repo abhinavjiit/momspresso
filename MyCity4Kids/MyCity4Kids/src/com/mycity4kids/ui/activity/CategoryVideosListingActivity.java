@@ -235,7 +235,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             if (parentTopicId.equals(allTopicsList.get(i).getId())) {
 //                subTopicsList.addAll(allTopicsList.get(i).getChild());
                 for (int j = 0; j < allTopicsList.get(i).getChild().size(); j++) {
-                    if ("1".equals(allTopicsList.get(i).getChild().get(j).getPublicVisibility()) || "category-ee7ea82543bd4bc0a8dad288561f2beb".equals(allTopicsList.get(i).getChild().get(j).getId())) {
+                    if ("1".equals(allTopicsList.get(i).getChild().get(j).getPublicVisibility()) || AppConstants.VIDEO_CHALLENGE_ID.equals(allTopicsList.get(i).getChild().get(j).getId())) {
                         subTopicsList.add(allTopicsList.get(i).getChild().get(j));
                     }
                 }

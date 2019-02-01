@@ -530,7 +530,7 @@
     <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
 
     <string name="video_progress.uploading_label">UPLOADING ...</string>
-    <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically. You can use the app while uploading.</string>
+    <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically.</string>
     <string name="video_progress.way_to_go">WAY TO GO!</string>
     <string name="video_progress.success_msg">Video has been successfully uploaded and sent for moderation. We will notify you once moderated.</string>
     <string name="video_progress.okay">OKAY</string>

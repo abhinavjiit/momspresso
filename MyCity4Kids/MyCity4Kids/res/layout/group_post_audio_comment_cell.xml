@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:background="@color/white_color">
 
-    //Change View hierarchy with caution. getParent method is in use in the class file
 
     <RelativeLayout
         android:id="@+id/relativeMainContainer"

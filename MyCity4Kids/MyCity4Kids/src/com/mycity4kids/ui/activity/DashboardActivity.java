@@ -1848,7 +1848,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 }
             }
-
             if (videoTopicList == null || videoTopicList.size() == 0) {
                 FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -1859,7 +1858,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     for (int i = 0; i < res.getData().size(); i++) {
                         if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
                             videoTopicList.add(res.getData().get(i));
-
                         }
                     }
                     videoChallengeId = new ArrayList<>();
@@ -1879,7 +1877,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                                 videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
                                                 videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
                                                 videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
-
                                                 break;
                                             }
                                         }
@@ -1889,7 +1886,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         }
                     }
                 }
-
             }
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
@@ -1902,7 +1898,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                     boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
                     Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
                     try {
                         FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -1933,7 +1928,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                                             videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
                                                             videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
                                                             videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
-
                                                             break;
                                                         }
                                                     }
@@ -1941,7 +1935,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                             }
                                         }
                                     }
-
                                 }
                             }
                         }
@@ -1950,7 +1943,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
                     }
                 }
-
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Crashlytics.logException(t);
@@ -1958,7 +1950,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             });
         }
-
 
     }
 

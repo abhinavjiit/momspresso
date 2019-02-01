@@ -310,7 +310,6 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         ImageView mFullScreenIcon;
         Dialog mFullScreenDialog;
 
-
     }
 
 

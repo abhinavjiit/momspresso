@@ -522,7 +522,7 @@
     <string name="add_video_details.audio_picker.title">म्यूजिक ऐड करें</string>
 
     <string name="video_progress.uploading_label">अपलोड हो रहा है ...</string>
-    <string name="video_progress.uploading_msg">कृपया ऐप से बाहर न निकलें, यह आप अपलोड को रद्द कर देगा। अपलोड करते समय आप एप्लिकेशन का उपयोग कर सकते हैं</string>
+    <string name="video_progress.uploading_msg">"कृपया ऐप से बाहर न निकलें, यह आप अपलोड को रद्द कर देगा। "</string>
     <string name="video_progress.way_to_go">आगे का मार्ग!</string>
     <string name="video_progress.success_msg">वीडियो सफलतापूर्वक अपलोड हो गया है और मॉडरेशन के लिए भेजा गया है।मॉडरेशन के बाद हम आपको सूचित  करेंगे</string>
     <string name="video_progress.okay">ठीक है</string>
