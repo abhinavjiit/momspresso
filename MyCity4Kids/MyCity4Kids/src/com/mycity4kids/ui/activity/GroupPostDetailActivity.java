@@ -1328,7 +1328,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostCommentResult.setUpdatedAt(groupPostResponse.getData().getResult().getUpdatedAt());
                     groupPostCommentResult.setChildData(new ArrayList<GroupPostCommentResult>());
 
-                    if (((LinkedTreeMap) groupPostResponse.getData().getResult().getMediaUrls()).containsKey("audio")){
+                    if (((LinkedTreeMap) groupPostResponse.getData().getResult().getMediaUrls()).containsKey("audio")) {
                         groupPostCommentResult.setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
                     }
 
@@ -1856,18 +1856,24 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+        if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
+            groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+        if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
+            groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+        if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
+            groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+        }
     }
 }

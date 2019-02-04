@@ -489,14 +489,17 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     private void updateNonPlayingView(AudioCommentViewHolder holder) {
+
         if (holder == playingHolder) {
             mHandler.removeMessages(MSG_UPDATE_SEEK_BAR);
             mHandler.removeMessages(MSG_UPDATE_TIME);
         }
-        holder.audioSeekBar.setEnabled(false);
-        holder.audioSeekBar.setProgress(0);
-        holder.playAudioImageView.setImageResource(R.drawable.play);
-        holder.audioTimeElapsed.setVisibility(View.GONE);
+        if (holder instanceof AudioCommentViewHolder) {
+            holder.audioSeekBar.setEnabled(false);
+            holder.audioSeekBar.setProgress(0);
+            holder.playAudioImageView.setImageResource(R.drawable.play);
+            holder.audioTimeElapsed.setVisibility(View.GONE);
+        }
     }
 
     private void updatePlayingView() {
