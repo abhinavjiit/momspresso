@@ -34,11 +34,15 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.response.CityConfigResponse
+import com.mycity4kids.models.response.CityInfoItem
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
+import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.activity.ActivityLogin.APP_REQUEST_CODE
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
+import com.mycity4kids.ui.fragment.CityListingDialogFragment
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -85,6 +89,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var genderSpinner: AppCompatSpinner
     private lateinit var radioGroupWorkingStatus: RadioGroup
     private lateinit var apiGetResponse: RewardsDetailsResultResonse
+    private var cityList =  ArrayList<CityInfoItem>()
 
     companion object {
         private lateinit var textDOB: TextView
@@ -121,7 +126,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData("8ffb68f436724516850cdfdb5d064d69", 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
                 override fun onComplete() {
-                    removeProgressDialog()
+                    //removeProgressDialog()
                 }
 
                 override fun onSubscribe(d: Disposable) {
@@ -131,6 +136,45 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
                         apiGetResponse = response.data!!.result
+
+                        /*getting city data from server*/
+                        fetchCityData()
+
+                        /*setting values to components*/
+                        setValuesToComponents()
+                    } else {
+
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+            })
+        }
+    }
+
+    private fun fetchCityData(){
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        if (userId != null) {
+            BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResponse>> {
+                override fun onComplete() {
+                }
+
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onNext(response: BaseResponseGeneric<CityConfigResponse>) {
+                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                        if(response!!.data!!.result!=null && response!!.data!!.result!!.data!=null &&
+                                response!!.data!!.result!!.data!!.result!=null && response!!.data!!.result!!.data!!.result!!.cityData!=null){
+
+                            cityList = response!!.data!!.result.data.result.cityData
+                        }
+
+                        /*getting city data from server*/
+                        fetchCityData()
 
                         /*setting values to components*/
                         setValuesToComponents()
@@ -174,6 +218,17 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         editLocation = containerView.findViewById(R.id.editLocation)
         editLanguage = containerView.findViewById(R.id.editLanguage)
         genderSpinner = containerView.findViewById(R.id.genderSpinner)
+
+        editLocation.setOnClickListener {
+            var cityFragment = CityListingDialogFragment()
+            cityFragment.setTargetFragment(this, 0)
+            val _args = Bundle()
+            _args.putParcelableArrayList("cityList", cityList)
+            _args.putString("fromScreen", "editProfile")
+            cityFragment.setArguments(_args)
+            val fm = childFragmentManager
+            cityFragment.show(fm, "Replies")
+        }
         RewardsPersonalInfoFragment.textDOB = containerView.findViewById(R.id.textDOB)
         RewardsPersonalInfoFragment.textDOB.setOnClickListener {
             showDatePickerDialog()

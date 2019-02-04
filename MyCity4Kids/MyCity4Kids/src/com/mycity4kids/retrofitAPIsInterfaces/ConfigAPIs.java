@@ -1,10 +1,12 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.response.BaseResponseGeneric;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.CityConfigResponse;
 import com.mycity4kids.models.response.ConfigResponse;
 import com.mycity4kids.models.response.UserTypeResponse;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
@@ -21,4 +23,7 @@ public interface ConfigAPIs {
 
     @GET("v1/utilities/config/cityType/")
     Call<CityConfigResponse> getCityConfig();
+
+    @GET("v1/utilities/config/cityType/")
+    Observable<BaseResponseGeneric<CityConfigResponse>> getCityConfigRx();
 }

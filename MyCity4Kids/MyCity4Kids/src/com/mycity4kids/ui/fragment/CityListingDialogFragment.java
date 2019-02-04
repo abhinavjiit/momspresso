@@ -3,6 +3,7 @@ package com.mycity4kids.ui.fragment;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -13,6 +14,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +25,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
@@ -48,7 +55,7 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
 
     private ArrayList<CityInfoItem> data;
     private String fromScreen;
-
+    private static final int REQUEST_SELECT_PLACE = 1000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,35 +137,35 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
     }
 
     private void showAddNewCityNameDialog(final int position) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View dialogLayout = inflater.inflate(R.layout.other_city_name_dialog, null);
-        final EditText edittext = (EditText) dialogLayout.findViewById(R.id.cityNameEditText);
-        alert.setMessage("Change City");
-        alert.setTitle("Enter Your City Name");
+        try {
+            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                    .build();
+            Intent intent = new PlaceAutocomplete.IntentBuilder
+                    (PlaceAutocomplete.MODE_FULLSCREEN)
+                    .setFilter(typeFilter)
+                    .build(getActivity());
+            startActivityForResult(intent, REQUEST_SELECT_PLACE);
+        } catch (GooglePlayServicesRepairableException |
+                GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
 
-        alert.setView(dialogLayout);
-
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String cityNameVal = edittext.getText().toString();
-                if (StringUtils.isNullOrEmpty(cityNameVal)) {
-                    ToastUtils.showToast(getActivity(), "Please enter the city name");
-                } else {
-                    updateOtherCity(position, cityNameVal);
-                    dismiss();
-                }
-            }
-        });
-
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // what ever you want to do with No option.
-            }
-        });
-
-        alert.show();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+        Log.i("", "Place:" + place.getName());
+        String cityNameVal = place.getName().toString();
+        if (StringUtils.isNullOrEmpty(cityNameVal)) {
+            ToastUtils.showToast(getActivity(), "Please enter the city name");
+        } else {
+            updateOtherCity(9, cityNameVal);
+        }
+    }
+
 
     @NonNull
     @Override
