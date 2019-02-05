@@ -37,6 +37,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.ui.activity.BlogSetupActivity;
 import com.mycity4kids.ui.adapter.ChangeCityAdapter;
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 
 import java.util.ArrayList;
 
@@ -113,6 +114,10 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
         if ("editProfile".equals(fromScreen) || "explore".equals(fromScreen)) {
             IChangeCity changeCity = (IChangeCity) getTargetFragment();
             changeCity.onCitySelect(data.get(position));
+        }else if("rewards".equalsIgnoreCase(fromScreen)){
+            IChangeCity changeCity = (IChangeCity) getTargetFragment();
+            changeCity.onCitySelect(data.get(position));
+            //((RewardsContainerActivity) getActivity()).changeCityText(data.get(position));
         } else {
             ((BlogSetupActivity) getActivity()).changeCityText(data.get(position));
         }
@@ -131,7 +136,9 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
         if ("editProfile".equals(fromScreen) || "explore".equals(fromScreen)) {
             IChangeCity changeCity = (IChangeCity) getTargetFragment();
             changeCity.onOtherCitySelect(position, otherCityName);
-        } else {
+        } else if("rewards".equalsIgnoreCase(fromScreen)){
+            ((BlogSetupActivity) getActivity()).setOtherCityName(position, otherCityName);
+        }else {
             ((BlogSetupActivity) getActivity()).setOtherCityName(position, otherCityName);
         }
     }
@@ -157,7 +164,6 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-        Log.i("", "Place:" + place.getName());
         String cityNameVal = place.getName().toString();
         if (StringUtils.isNullOrEmpty(cityNameVal)) {
             ToastUtils.showToast(getActivity(), "Please enter the city name");

@@ -32,11 +32,15 @@ import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.CityConfigResponse
 import com.mycity4kids.models.response.CityInfoItem
+import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
+import com.mycity4kids.models.rewardsmodels.CityDataResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.activity.ActivityLogin.APP_REQUEST_CODE
@@ -67,7 +71,22 @@ import java.util.*
 
 const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
 
-class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener {
+class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity {
+    override fun onCitySelect(cityItem: CityInfoItem?) {
+        editLocation.setText(cityItem!!.getCityName())
+        currentCityName = cityItem!!.getCityName()
+        selectedCityId = Integer.parseInt(cityItem!!.getId().replace("city-", ""))
+        newSelectedCityId = cityItem!!.getId()
+    }
+
+    override fun onOtherCitySelect(pos: Int, cityName: String?) {
+        cityList.get(pos).setCityName("Others($cityName)")
+        editLocation.setText(cityList.get(pos).getCityName())
+        currentCityName = cityName
+        selectedCityId = Integer.parseInt(cityList.get(pos).getId().replace("city-", ""))
+        newSelectedCityId = cityList.get(pos).getId()
+    }
+
     override fun onItemClick(language: String?) {
         editLanguage.setText(Constants.TypeOfLanguages.findById(language))
     }
@@ -89,7 +108,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var genderSpinner: AppCompatSpinner
     private lateinit var radioGroupWorkingStatus: RadioGroup
     private lateinit var apiGetResponse: RewardsDetailsResultResonse
-    private var cityList =  ArrayList<CityInfoItem>()
+    private var cityList = ArrayList<CityInfoItem>()
+    private var selectedCityId: Int = 0
+    private var newSelectedCityId: String? = null
+    private var currentCityName: String? = null
 
     companion object {
         private lateinit var textDOB: TextView
@@ -126,7 +148,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData("8ffb68f436724516850cdfdb5d064d69", 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
                 override fun onComplete() {
-                    //removeProgressDialog()
+
                 }
 
                 override fun onSubscribe(d: Disposable) {
@@ -154,30 +176,45 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
     }
 
-    private fun fetchCityData(){
+    private fun fetchCityData() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         if (userId != null) {
-            BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResponse>> {
+            BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
                 override fun onComplete() {
+                    removeProgressDialog()
                 }
 
                 override fun onSubscribe(d: Disposable) {
 
                 }
 
-                override fun onNext(response: BaseResponseGeneric<CityConfigResponse>) {
+                override fun onNext(response: BaseResponseGeneric<CityConfigResultResponse>) {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                        if(response!!.data!!.result!=null && response!!.data!!.result!!.data!=null &&
-                                response!!.data!!.result!!.data!!.result!=null && response!!.data!!.result!!.data!!.result!!.cityData!=null){
+                        if (response.data!!.result != null && response!!.data!!.result != null && response!!.data!!.result.cityData.isNotEmpty()) {
+                            val currentCity = SharedPrefUtils.getCurrentCityModel(activity)
+                            (response!!.data!!.result.cityData).forEach {
+                                if (AppConstants.ALL_CITY_NEW_ID != it.id) {
+                                    cityList.add(it)
+                                }
+                                if (AppConstants.OTHERS_NEW_CITY_ID == it.id) {
+                                    if (currentCity.name != null && "Others" != currentCity.name && currentCity.id == AppConstants.OTHERS_CITY_ID) {
+                                        cityList.get(cityList.size - 1).cityName = ("Others(" + currentCity.name + ")")
+                                    }
+                                }
+                            }
 
-                            cityList = response!!.data!!.result.data.result.cityData
+                            (cityList).forEach {
+                                val cId = Integer.parseInt(it.id!!.replace("city-", ""))
+                                it.isSelected = currentCity.id == cId
+                            }
                         }
 
-                        /*getting city data from server*/
-                        fetchCityData()
 
-                        /*setting values to components*/
-                        setValuesToComponents()
+//                        /*getting city data from server*/
+//                        //fetchCityData()
+//
+//                        /*setting values to components*/
+//                        setValuesToComponents()
                     } else {
 
                     }
@@ -224,7 +261,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             cityFragment.setTargetFragment(this, 0)
             val _args = Bundle()
             _args.putParcelableArrayList("cityList", cityList)
-            _args.putString("fromScreen", "editProfile")
+            _args.putString("fromScreen", "rewards")
             cityFragment.setArguments(_args)
             val fm = childFragmentManager
             cityFragment.show(fm, "Replies")

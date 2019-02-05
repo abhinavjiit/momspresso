@@ -5,6 +5,7 @@ import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.CityConfigResponse;
 import com.mycity4kids.models.response.ConfigResponse;
 import com.mycity4kids.models.response.UserTypeResponse;
+import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
@@ -25,5 +26,5 @@ public interface ConfigAPIs {
     Call<CityConfigResponse> getCityConfig();
 
     @GET("v1/utilities/config/cityType/")
-    Observable<BaseResponseGeneric<CityConfigResponse>> getCityConfigRx();
+    Observable<BaseResponseGeneric<CityConfigResultResponse>> getCityConfigRx();
 }

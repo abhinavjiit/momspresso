@@ -183,13 +183,6 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                 if (resultCode == Activity.RESULT_OK) {
                     try {
                         Log.e("inImagePick", "test");
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(AddPollGroupPostActivity.this.getContentResolver(), imageUri);
-                        float actualHeight = imageBitmap.getHeight();
-                        float actualWidth = imageBitmap.getWidth();
-                        if (actualHeight < 450 || actualWidth < 720) {
-                            showToast(getString(R.string.upload_bigger_image));
-                            return;
-                        }
                         startCropActivity(imageUri);
                     } catch (Exception e) {
                         e.printStackTrace();
