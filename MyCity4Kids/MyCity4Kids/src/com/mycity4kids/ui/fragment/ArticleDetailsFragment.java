@@ -34,12 +34,9 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.ads.Ad;
-import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdIconView;
-import com.facebook.ads.AdListener;
 import com.facebook.ads.AdOptionsView;
-import com.facebook.ads.AdSettings;
 import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdLayout;
@@ -271,8 +268,25 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             mWebChromeClient = new MyWebChromeClient();
             mWebView.setWebChromeClient(mWebChromeClient);
-//            videoWebView.setWebChromeClient(mWebChromeClient);
 
+            if ((AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(getActivity())))) {
+                mWebView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return false;
+                    }
+                });
+            } else {
+
+                mWebView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return true;
+                    }
+                });
+                mWebView.setLongClickable(false);}
+//            videoWebView.setWebChromeClient(mWebChromeClient);
+            
             author_type = (TextView) fragmentView.findViewById(R.id.blogger_type);
 
             followClick = (TextView) fragmentView.findViewById(R.id.follow_click);

@@ -25,6 +25,7 @@ import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.coremedia.iso.boxes.Container;
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
@@ -316,7 +317,9 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
     private void launchUploadActivity() {
         Intent intt = new Intent(this, VideoUploadProgressActivity.class);
-        intt.putExtra("uri", contentURI);
+        if (contentURI != null) {
+            intt.putExtra("uri", new Gson().toJson(contentURI));
+        }
         intt.putExtra("title", videoTitleEditText.getText().toString());
         intt.putExtra("categoryId", categoryId);
         intt.putExtra("duration", duration);

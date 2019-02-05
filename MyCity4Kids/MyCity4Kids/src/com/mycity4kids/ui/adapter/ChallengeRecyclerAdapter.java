@@ -11,9 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -40,6 +40,7 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
         mInflator = (LayoutInflater) mcontext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.recyclerViewClickListener = recyclerViewClickListener;
         this.mcontext = mcontext;
+        setHasStableIds(true);
     }
 
     @Override
@@ -50,6 +51,17 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
         return viewHolder;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+
+
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     public void setListData(Topics mParentingLists) {
         articleDataModelsNew = mParentingLists;
@@ -65,34 +77,43 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
 
     @Override
     public void onBindViewHolder(ChallengeViewHolder holder, int position) {
+        //   holder.setIsRecyclable(false);
         switch (position) {
             case 0:
                 // holder.rootView.setVisibility(View.VISIBLE);
-                holder.useThePictureTextView.setVisibility(View.VISIBLE);
-                holder.StorytextViewLayout.setVisibility(View.VISIBLE);
-                holder.yourStoryTextView.setVisibility(View.VISIBLE);
-                holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
+
                 holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
                 for (int i = articleDataModelsNew.getChild().size() - 1; i >= 0; i--) {
                     if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
                         if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
                             if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                                 challengeId.add(articleDataModelsNew.getChild().get(i).getId());
-                                holder.rootView.setVisibility(View.VISIBLE);
                                 // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
                                 Display_Name.add(articleDataModelsNew.getChild().get(i).getDisplay_name());
-                                holder.storyTitleTextView.setVisibility(View.GONE);
-                                holder.titleTextUnderLine.setVisibility(View.GONE);
+                                //    holder.storyTitleTextView.setVisibility(View.GONE);
+                                //  holder.titleTextUnderLine.setVisibility(View.GONE);
                                 if (2 == (articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getType())) {
                                     holder.imageBody.setVisibility(View.VISIBLE);
+                                    holder.rootView.setVisibility(View.VISIBLE);
+                                    holder.useThePictureTextView.setVisibility(View.VISIBLE);
+                                    holder.StorytextViewLayout.setVisibility(View.VISIBLE);
+                                    holder.yourStoryTextView.setVisibility(View.VISIBLE);
+                                    holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                                     try {
-                                        Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                                                .fit().into(holder.imageBody);
+                                        Glide.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
+
                                         activeImageUrl.add(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl());
                                     } catch (Exception e) {
                                         holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
                                     }
                                     m = i;
+                                } else {
+                                    holder.imageBody.setVisibility(View.GONE);
+                                    holder.rootView.setVisibility(View.GONE);
+                                    holder.useThePictureTextView.setVisibility(View.GONE);
+                                    holder.StorytextViewLayout.setVisibility(View.GONE);
+                                    holder.yourStoryTextView.setVisibility(View.GONE);
+                                    holder.previousAndThisWeekTextView.setVisibility(View.GONE);
                                 }
                                 break;
                             }
@@ -103,33 +124,40 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
 
 
             default:
-                holder.useThePictureTextView.setVisibility(View.GONE);
+               /* holder.useThePictureTextView.setVisibility(View.GONE);
                 holder.StorytextViewLayout.setVisibility(View.GONE);
-                holder.yourStoryTextView.setVisibility(View.GONE);
+                holder.yourStoryTextView.setVisibility(View.GONE);*/
                 // holder.rootView.setVisibility(View.VISIBLE);
                 for (int j = m - n; j >= 0; j--) {
-                    holder.previousAndThisWeekTextView.setVisibility(View.GONE);
                     if ("1".equals(articleDataModelsNew.getChild().get(j).getPublicVisibility())) {
                         if (articleDataModelsNew.getChild().get(j).getExtraData() != null) {
                             holder.rootView.setVisibility(View.VISIBLE);
                             //if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
                             if (position != 1) {
                                 holder.previousAndThisWeekTextView.setVisibility(View.GONE);
-                            } else if (position == 1) {
+                            } else {
+                                holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
+
+                            }
+                            if (position == 1) {
                                 holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                                 holder.previousAndThisWeekTextView.setText(R.string.previous_week_challenge);
+                            } else {
+                                holder.previousAndThisWeekTextView.setVisibility(View.GONE);
                             }
                             challengeId.add(articleDataModelsNew.getChild().get(j).getId());
                             Display_Name.add(articleDataModelsNew.getChild().get(j).getDisplay_name());
-                            // holder.storyTitleTextView.setText(R.string.previous_week_challenge);
                             holder.storyTitleTextView.setVisibility(View.GONE);
                             holder.titleTextUnderLine.setVisibility(View.GONE);
                             holder.storytitle.setText(articleDataModelsNew.getChild().get(j).getDisplay_name());
                             if (2 == (articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getType())) {
                                 holder.imageBody.setVisibility(View.VISIBLE);
                                 try {
-                                    Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                                            .fit().into(holder.imageBody);
+                                   /* Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                                            .fit().into(holder.imageBody);*/
+
+                                    Glide.with(mcontext).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
+
                                     activeImageUrl.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl());
 
                                 } catch (Exception e) {
@@ -137,6 +165,9 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                                 }
                                 n++;
                                 break;
+                            } else {
+                                holder.imageBody.setVisibility(View.VISIBLE);
+
                             }
                         } else if (articleDataModelsNew.getChild().get(j).getExtraData() == null) {
                             n++;

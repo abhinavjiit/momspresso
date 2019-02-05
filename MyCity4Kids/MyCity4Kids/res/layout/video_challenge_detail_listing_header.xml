@@ -10,31 +10,41 @@
     <RelativeLayout
         android:id="@+id/challenge_header_text"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="300dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/short_story_border_bg"
         android:visibility="visible">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/ChallengeNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="ABHINAV"
+            android:textColor="@color/app_red"
+            android:textSize="25sp"
+            android:visibility="visible"
+            app:fontName="oswald.ttf" />
 
         <ImageView
 
             android:id="@+id/ChallengeNameImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:layout_below="@id/ChallengeNameText"
             android:background="@drawable/short_story_border_bg"
             android:src="@drawable/groups_generic"
             android:visibility="visible" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/ChallengeNameText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:gravity="center"
-            android:text="ABHINAV"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            android:visibility="gone"
-            app:fontName="oswald.ttf" />
+        <ImageView
+            android:id="@+id/videoIndicatorImageView"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90dp"
+            android:src="@drawable/ic_videos"
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/submit_challenge_relative_Layout"

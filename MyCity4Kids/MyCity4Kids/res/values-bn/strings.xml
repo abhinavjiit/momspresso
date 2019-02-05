@@ -856,4 +856,6 @@
     <string name="male">পুরুষ</string>
     <string name="female">মহিলা</string>
     <string name="DOB">জন্ম তারিখ</string>
+
+    <string name="add">যোগ</string>
 </resources>

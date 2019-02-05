@@ -57,7 +57,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
                 challengeName = extraIntent.getStringExtra("ChallengeName");
             }
         }
-        if (path.contains(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/")) {
+        if (path != null && path.contains(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/")) {
             Log.d("TRIM Video", "Video Picked from Mycity folder");
         } else {
             AppUtils.deleteDirectoryContent("MyCity4Kids/videos");

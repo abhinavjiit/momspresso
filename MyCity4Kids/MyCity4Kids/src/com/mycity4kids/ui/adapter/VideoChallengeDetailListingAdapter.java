@@ -96,6 +96,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             if (view == null) {
                 videoChallengeHeaderView = new VideoChallengeHeaderView();
                 view = mInflator.inflate(R.layout.video_challenge_detail_listing_header, null);
+                videoChallengeHeaderView.challengeNameText = (TextView) view.findViewById(R.id.ChallengeNameText);
                 videoChallengeHeaderView.rootChallengeHeaderContainer = (RelativeLayout) view.findViewById(R.id.rootChallengeHeaderContainer);
                 videoChallengeHeaderView.challengeHeaderImageView = (ImageView) view.findViewById(R.id.ChallengeNameImage);
                 videoChallengeHeaderView.submitButtonVideoChallenge = (TextView) view.findViewById(R.id.submit_story_text);
@@ -109,6 +110,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             } catch (Exception e) {
                 videoChallengeHeaderView.challengeHeaderImageView.setImageResource(R.drawable.default_article);
             }
+            videoChallengeHeaderView.challengeNameText.setText(selected_Name);
             videoChallengeHeaderView.challengeHeaderImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -261,6 +263,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         ImageView challengeHeaderImageView;
         RelativeLayout rootChallengeHeaderContainer;
         TextView submitButtonVideoChallenge;
+        TextView challengeNameText;
 
 
     }

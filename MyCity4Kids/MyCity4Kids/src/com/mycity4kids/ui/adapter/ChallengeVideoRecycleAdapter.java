@@ -55,9 +55,12 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
         if (count == 0) {
             holder.rootView.setVisibility(View.GONE);
             holder.noChallengeAddedText.setVisibility(View.GONE);
+            // holder.previousAndThisWeekTextView.setVisibility(View.GONE);
         } else {
             switch (position) {
                 case 0:
+                    //  holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE
+                    //  );
                     holder.noChallengeAddedText.setVisibility(View.GONE);
                     holder.useThePictureTextView.setVisibility(View.VISIBLE);
                     holder.useThePictureTextView.setText(R.string.use_picture_word_to_upload_one);
@@ -67,7 +70,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                     holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                     holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
                     for (int i = articleDataModelsNew.getChild().size() - 1; i >= 0; i--) {
-                        if ("0".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
+                        if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
                             if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
                                 if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                                     holder.rootView.setVisibility(View.VISIBLE);
@@ -97,7 +100,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                 default:
                     for (int j = m - n; j >= 0; j--) {
 
-                        if ("0".equals(articleDataModelsNew.getChild().get(j).getPublicVisibility())) {
+                        if ("1".equals(articleDataModelsNew.getChild().get(j).getPublicVisibility())) {
                             if (articleDataModelsNew.getChild().get(j).getExtraData() != null) {
                                 holder.rootView.setVisibility(View.VISIBLE);
                                 //if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
@@ -149,7 +152,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
     public void setListData(Topics mParentingLists) {
         articleDataModelsNew = mParentingLists;
         for (int i = 0; i < articleDataModelsNew.getChild().size(); i++) {
-            if ("0".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
+            if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
                 // if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                 count++;
 

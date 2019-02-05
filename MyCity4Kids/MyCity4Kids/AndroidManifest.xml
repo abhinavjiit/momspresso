@@ -650,9 +650,9 @@
             </intent-filter>
         </receiver>
 
-       <!-- <activity android:name=".ui.rewards.activity.RewardsContainerActivity">
+        <!-- <activity android:name=".ui.rewards.activity.RewardsContainerActivity">
 
-        </activity>-->
+         </activity>-->
     </application>
 
 </manifest>

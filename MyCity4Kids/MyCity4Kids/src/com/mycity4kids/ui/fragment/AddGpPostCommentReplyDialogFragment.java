@@ -1526,7 +1526,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private void updateCommentProgressBar() {
         mHandler.postDelayed(mUpdateCommentTimeTask, 100);
     }
-}
+
 
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.google.gson.Gson;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.ui.fragment.TopicChallengeTabFragment;
@@ -35,7 +36,7 @@ public class TopicsShortStoriesPagerAdapter extends FragmentStatePagerAdapter {
 
 //            case 0:
         if (!subTopicsList.get(position).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-            bundle.putParcelable("currentSubTopic", subTopicsList.get(position));
+            bundle.putString("currentSubTopic", new Gson().toJson(subTopicsList.get(position)));
             TopicsShortStoriesTabFragment tab1 = new TopicsShortStoriesTabFragment();
             tab1.setArguments(bundle);
             return tab1;

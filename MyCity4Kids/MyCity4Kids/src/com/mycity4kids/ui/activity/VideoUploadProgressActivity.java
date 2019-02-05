@@ -3,7 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,12 +26,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -41,23 +38,17 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.request.UploadVideoRequest;
-import com.mycity4kids.models.response.HomeVideosListingResponse;
 import com.mycity4kids.models.response.UpdateVideoDetailsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.UploadVideosAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.TusAndroidUpload;
 import com.mycity4kids.ui.TusClient;
 import com.mycity4kids.ui.TusUpload;
 import com.mycity4kids.ui.TusUploader;
 import com.mycity4kids.utils.MixPanelUtils;
 
-import org.json.JSONObject;
-
-import java.net.URL;
 import java.util.ArrayList;
 
-import io.tus.android.client.TusPreferencesURLStore;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,6 +72,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private String thumbnailTime;
     private MixpanelAPI mixpanel;
     private long suffixName;
+    private String jsonMyObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +82,16 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
         mAuth = FirebaseAuth.getInstance();
 
-        contentURI = getIntent().getParcelableExtra("uri");
+        /*  contentURI = getIntent().getParcelableExtra("uri");*/
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            jsonMyObject = extras.getString("uri");
+        }
+        if (jsonMyObject != null && jsonMyObject.isEmpty())
+            contentURI = new Gson().fromJson(jsonMyObject, Uri.class);
+
+
         title = getIntent().getStringExtra("title");
         categoryId = getIntent().getStringExtra("categoryId");
         duration = getIntent().getStringExtra("duration");
@@ -128,8 +129,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("VideoUpload", "signInAnonymously:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-
-                            uploadToFirebase(contentURI);
+                            if (contentURI != null) {
+                                uploadToFirebase(contentURI);
+                            }
 
                         } else {
                             // If sign in fails, display a message to the user.

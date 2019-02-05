@@ -859,4 +859,6 @@
     <string name="male">ஆண் </string>
     <string name="female">பெண் </string>
     <string name="DOB">பிறந்த தேதி</string>
+
+    <string name="add">கூட்டு</string>
 </resources>

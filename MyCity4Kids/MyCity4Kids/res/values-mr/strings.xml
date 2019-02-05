@@ -855,4 +855,6 @@
     <string name="male">पुरुष</string>
     <string name="female">महिला</string>
     <string name="DOB">जन्म तिथि</string>
+
+    <string name="add">जोडा</string>
 </resources>

@@ -348,11 +348,11 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
             intent.putExtra("comingFrom", "notFromChallenge");
         }
 
-        if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
-            intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
-            startActivity(intent);
-        } else {
+        // if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
+        intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
+        startActivity(intent);
+       /* } else {
             showToast(getString(R.string.choose_mp4_file));
-        }
+        }*/
     }
 }

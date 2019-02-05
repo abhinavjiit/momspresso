@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -64,8 +65,10 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
             if (ActiveUrl != null) {
                 holder.challengeNameImage.setVisibility(View.VISIBLE);
                 try {
-                    Picasso.with(mContext).load(ActiveUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                            .fit().into(holder.challengeNameImage);
+                  /*  Picasso.with(mContext).load(ActiveUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                            .fit().into(holder.challengeNameImage);*/
+                    Glide.with(mContext).load(ActiveUrl).into(holder.challengeNameImage);
+
                 } catch (Exception e) {
                     holder.challengeNameImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
                 }

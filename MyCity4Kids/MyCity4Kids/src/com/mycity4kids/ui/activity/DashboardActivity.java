@@ -1771,7 +1771,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
                         num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
                         for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                            if ("0".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                            if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
                                 if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
                                     if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
                                         videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
@@ -1793,36 +1793,40 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 res = gson.fromJson(fileContent, TopicsResponse.class);
                 videoTopicList = new ArrayList<Topics>();
-                for (int i = 0; i < res.getData().size(); i++) {
-                    if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
-                        videoTopicList.add(res.getData().get(i));
-                    }
-                }
-                videoChallengeId = new ArrayList<>();
-                videoDisplay_Name = new ArrayList<>();
-                videoImageUrl = new ArrayList<>();
-                videoStreamUrl = new ArrayList<>();
-                num_of_categorys = videoTopicList.get(0).getChild().size();
-                for (int j = 0; j < num_of_categorys; j++) {
-                    if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
-                        num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
-                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                            if ("0".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
-                                    if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                        videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                        videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                        videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                        videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                if (res != null) {
+                    for (int i = 0; i < res.getData().size(); i++) {
+                        if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
+                            videoTopicList.add(res.getData().get(i));
 
-                                        break;
+                        }
+                    }
+                    videoChallengeId = new ArrayList<>();
+                    videoDisplay_Name = new ArrayList<>();
+                    videoImageUrl = new ArrayList<>();
+                    videoStreamUrl = new ArrayList<>();
+                    num_of_categorys = videoTopicList.get(0).getChild().size();
+                    if (num_of_categorys != 0) {
+                        for (int j = 0; j < num_of_categorys; j++) {
+                            if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+                                num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                    if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                        if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                            if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-
 
             }
         } catch (FileNotFoundException e)
@@ -1845,37 +1849,40 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                         res = gson.fromJson(fileContent, TopicsResponse.class);
                         videoTopicList = new ArrayList<Topics>();
-                        for (int i = 0; i < res.getData().size(); i++) {
-                            if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
-                                videoTopicList.add(res.getData().get(i));
+                        if (res != null) {
+                            for (int i = 0; i < res.getData().size(); i++) {
+                                if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
+                                    videoTopicList.add(res.getData().get(i));
+                                }
                             }
-                        }
-                        videoChallengeId = new ArrayList<>();
-                        videoDisplay_Name = new ArrayList<>();
-                        videoImageUrl = new ArrayList<>();
-                        videoStreamUrl = new ArrayList<>();
-                        num_of_categorys = videoTopicList.get(0).getChild().size();
-                        for (int j = 0; j < num_of_categorys; j++) {
-                            if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.HOME_VIDEOS_CATEGORYID)) {
-                                num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
-                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                                    if ("0".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                        if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
-                                            if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                                videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                                videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                                videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                                videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                            videoChallengeId = new ArrayList<>();
+                            videoDisplay_Name = new ArrayList<>();
+                            videoImageUrl = new ArrayList<>();
+                            videoStreamUrl = new ArrayList<>();
+                            num_of_categorys = videoTopicList.get(0).getChild().size();
+                            if (num_of_categorys != 0) {
+                                for (int j = 0; j < num_of_categorys; j++) {
+                                    if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.HOME_VIDEOS_CATEGORYID)) {
+                                        num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                            if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                                if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                                    if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                        videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                        videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                        videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                        videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
 
-                                                break;
+                                                        break;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
                                 }
+
                             }
                         }
-
-
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -1928,34 +1935,37 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 res = gson.fromJson(fileContent, TopicsResponse.class);
                 shortStoriesTopicList = new ArrayList<Topics>();
-                for (int i = 0; i < res.getData().size(); i++) {
-                    if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
-                        shortStoriesTopicList.add(res.getData().get(i));
+                if (res != null) {
+                    for (int i = 0; i < res.getData().size(); i++) {
+                        if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                            shortStoriesTopicList.add(res.getData().get(i));
+                        }
                     }
-                }
-                challengeId = new ArrayList<>();
-                Display_Name = new ArrayList<>();
-                ImageUrl = new ArrayList<>();
-                num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                for (int j = 0; j < num_of_categorys; j++) {
-                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
-                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                            if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
-                                    if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                        challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                        Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                        ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                        break;
+                    challengeId = new ArrayList<>();
+                    Display_Name = new ArrayList<>();
+                    ImageUrl = new ArrayList<>();
+                    num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                    if (num_of_categorys != 0) {
+                        for (int j = 0; j < num_of_categorys; j++) {
+                            if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                                num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                    if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                        if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                            if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+
                 }
-
-
             }
         } catch (FileNotFoundException e)
 
@@ -1976,35 +1986,38 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                         res = gson.fromJson(fileContent, TopicsResponse.class);
-                        shortStoriesTopicList = new ArrayList<Topics>();
-                        for (int i = 0; i < res.getData().size(); i++) {
-                            if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
-                                shortStoriesTopicList.add(res.getData().get(i));
+                        if (res != null) {
+                            shortStoriesTopicList = new ArrayList<Topics>();
+                            for (int i = 0; i < res.getData().size(); i++) {
+                                if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                                    shortStoriesTopicList.add(res.getData().get(i));
+                                }
                             }
-                        }
-                        challengeId = new ArrayList<>();
-                        Display_Name = new ArrayList<>();
-                        ImageUrl = new ArrayList<>();
-                        num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                        for (int j = 0; j < num_of_categorys; j++) {
-                            if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                                num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
-                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                                    if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                        if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
-                                            if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                                challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                                Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                                ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                                break;
+                            challengeId = new ArrayList<>();
+                            Display_Name = new ArrayList<>();
+                            ImageUrl = new ArrayList<>();
+                            num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                            if (num_of_categorys != 0) {
+                                for (int j = 0; j < num_of_categorys; j++) {
+                                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                            if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                                    if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                        challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                        Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                        ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                        break;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
+
                         }
-
-
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
