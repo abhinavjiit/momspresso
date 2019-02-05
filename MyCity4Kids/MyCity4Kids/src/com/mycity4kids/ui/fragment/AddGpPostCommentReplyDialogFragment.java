@@ -184,6 +184,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private LinearLayout playAudioLayout, timerLayout, dateContainermedia;
     private ImageView playAudioImageView, pauseAudioImageView, micImg;
     private ArrayList<String> audioCommentList;
+    private boolean isLocked = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -474,7 +475,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
     @Override
     public void onRecordingLocked() {
-
+        isLocked = true;
     }
 
     @Override
@@ -482,10 +483,11 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 //Stop Recording..
 //                String time = getHumanTimeText(recordTime);
         Log.d("RecordView", "onFinish");
+        isLocked = false;
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
         if (recordTime < 1) {
             resetIcons();
-            Toast.makeText(getActivity(), "Hold to record, Release to send", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.hold_to_release, Toast.LENGTH_SHORT).show();
         } else if (recordTime >= 4) {
             stopRecording();
             originalUri = Uri.parse(mFileName);
@@ -497,7 +499,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         } else {
             audioRecordView.disableClick(false);
             resetIcons();
-            Toast.makeText(getActivity(), "Please hold for minimum 3 seconds, to post comment", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.please_hold_for_3_seconds, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -854,9 +856,14 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private boolean isValid(Map<String, String> image) {
 
         if (StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString()) && image.isEmpty()) {
-            if (isAdded())
-                Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();
-            return false;
+            if (isAdded()){
+                if (isLocked){
+                    Toast.makeText(getActivity(), R.string.stop_recording, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();
+                }
+                return false;
+            }
         }
         return true;
     }
@@ -984,7 +991,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
             //When permission is not granted by user, show them message why this permission is needed.
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.RECORD_AUDIO)) {
-                Toast.makeText(getActivity(), "Please grant permissions to record audio", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.audio_permission, Toast.LENGTH_SHORT).show();
 
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO_PERMISSION);
 
@@ -1442,10 +1449,10 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         time = System.currentTimeMillis() / (1000);
         try {
             mRecorder.prepare();
+            mRecorder.start();
         } catch (IOException e) {
             Log.e("LOG_TAG", "prepare() failed");
         }
-        mRecorder.start();
     }
 
     private void stopRecording() {

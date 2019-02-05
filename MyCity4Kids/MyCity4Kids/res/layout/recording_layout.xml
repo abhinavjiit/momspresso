@@ -61,20 +61,17 @@
 
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:id="@+id/imageViewAudio"
-        android:layout_width="41dp"
-        android:layout_height="41dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_gravity="bottom|right"
         android:layout_marginTop="6dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="6dp"
-        android:clickable="true"
+        android:layout_marginBottom="8dp"
         android:elevation="2dp"
         android:translationZ="2dp"
-        app:cardCornerRadius="22dp"
-        app:cardUseCompatPadding="false"
-        app:contentPadding="0dp">
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/imageAudio"
@@ -82,23 +79,20 @@
             android:layout_height="match_parent"
             android:src="@drawable/ic_audio_record" />
 
-    </android.support.v7.widget.CardView>
+    </LinearLayout>
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:id="@+id/imageViewStop"
-        android:layout_width="41dp"
-        android:layout_height="41dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_gravity="bottom|right"
         android:layout_marginTop="6dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="6dp"
-        android:clickable="true"
+        android:layout_marginBottom="8dp"
         android:elevation="2dp"
         android:translationZ="2dp"
-        android:visibility="gone"
-        app:cardCornerRadius="22dp"
-        app:cardUseCompatPadding="false"
-        app:contentPadding="0dp">
+        android:clickable="true"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageStop"
@@ -106,7 +100,7 @@
             android:layout_height="match_parent"
             android:src="@drawable/stop_record_ic" />
 
-    </android.support.v7.widget.CardView>
+    </LinearLayout>
 
     <android.support.v7.widget.CardView
         android:id="@+id/imageViewSend"
@@ -256,7 +250,7 @@
                 android:layout_height="56dp"
                 android:layout_gravity="bottom|center_horizontal"
                 android:padding="13dp"
-                android:text="Cancel"
+                android:text="@string/cancel_audio"
                 android:textSize="20sp"
                 android:textStyle="normal"
                 android:visibility="gone" />

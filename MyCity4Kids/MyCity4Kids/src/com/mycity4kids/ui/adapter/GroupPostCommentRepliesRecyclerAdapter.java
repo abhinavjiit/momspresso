@@ -116,7 +116,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             return new AudioCommentViewHolder(v0);
         } else if (RESPONSE_TYPE_AUDIO_REPLY == viewType) {
             isComment = false;
-            View v0 = mInflator.inflate(R.layout.group_post_audio_comment_cell, parent, false);
+            View v0 = mInflator.inflate(R.layout.group_post_audio_reply_cell, parent, false);
             return new AudioCommentViewHolder(v0);
         } else {
             isComment = true;
@@ -179,21 +179,6 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
         } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
 
-            if (!isComment) {
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT
-                );
-                params.setMargins(24, 0, 0, 0);
-                audioCommentViewHolder.audiotRootView.setLayoutParams(params);
-            } else {
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT
-                );
-                params.setMargins(0, 0, 0, 0);
-                audioCommentViewHolder.audiotRootView.setLayoutParams(params);
-            }
             if (repliesList.get(position).getIsAnnon() == 1) {
                 audioCommentViewHolder.commentorUsernameTextView.setText(mContext.getString(R.string.groups_anonymous));
                 audioCommentViewHolder.commentorImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
@@ -360,7 +345,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
         public AudioCommentViewHolder(View view) {
             super(view);
             media = (ImageView) view.findViewById(R.id.media);
-            audiotRootView = view.findViewById(R.id.audiotRootView);
+            audiotRootView = view.findViewById(R.id.commentRootView);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
