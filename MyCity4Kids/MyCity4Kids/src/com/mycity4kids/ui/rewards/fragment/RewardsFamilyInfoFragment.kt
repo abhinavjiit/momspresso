@@ -13,12 +13,14 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.widget.AppCompatRadioButton
 import android.support.v7.widget.AppCompatSpinner
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
+import com.kelltontech.utils.DateTimeUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
@@ -26,7 +28,9 @@ import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
+import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
+import com.mycity4kids.ui.rewards.dialog.PickerDialogFragment
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -34,9 +38,12 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.event_details_activity.*
 import kotlinx.android.synthetic.main.fragment_rewards_family_info.*
 import kotlinx.android.synthetic.main.fragment_rewards_personal_info.*
+import kotlinx.android.synthetic.main.splash_activity.*
+import org.apmem.tools.layouts.FlowLayout
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,31 +54,116 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class RewardsFamilyInfoFragment : BaseFragment() {
+class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDoneListener {
+    override fun onItemClick(selectedValueName: ArrayList<String>, popupType: String) {
+        if (popupType == Constants.PopListRequestType.INTEREST.name) {
+            //preSelectedInterest = selectedValue
+            setFloatingLayout(selectedValueName, popupType)
+        } else if (popupType == Constants.PopListRequestType.LANGUAGE.name) {
+            //preSelectedDurables = selectedValue
+            setFloatingLayout(selectedValueName, popupType)
+        }
+    }
+
+    private fun setFloatingLayout(preSelectedItems: ArrayList<String>, popupType: String) {
+        if (popupType == Constants.PopListRequestType.INTEREST.name) {
+            floatingInterest.removeAllViews()
+            if (preSelectedItems.isNotEmpty()) {
+                textEditInterest.visibility = View.VISIBLE
+                linearInterest.visibility = View.VISIBLE
+                editInterest.visibility = View.GONE
+            } else {
+                textEditInterest.visibility = View.GONE
+                linearInterest.visibility = View.GONE
+                editInterest.visibility = View.VISIBLE
+            }
+            preSelectedInterest.clear()
+            preSelectedItems.forEach {
+                var name = if (Constants.TypeOfInterest.findByName(it) != null) {
+                    Constants.TypeOfInterest.findByName(it)
+                } else {
+                    null
+                }
+                if (name != null) {
+                    preSelectedInterest.add(name)
+                }
+                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val catTextView = subsubLL.getChildAt(0) as TextView
+                catTextView.setText(it)
+                catTextView.isSelected = true
+                //subsubLL.tag = it
+                floatingInterest.addView(subsubLL)
+            }
+        } else if (popupType == Constants.PopListRequestType.LANGUAGE.name) {
+            floatingLanguage.removeAllViews()
+            if (preSelectedItems.isNotEmpty()) {
+                textEditLanguage.visibility = View.VISIBLE
+                linearLanguage.visibility = View.VISIBLE
+                editLanguage.visibility = View.GONE
+            } else {
+                textEditLanguage.visibility = View.GONE
+                linearLanguage.visibility = View.GONE
+                editLanguage.visibility = View.VISIBLE
+            }
+            preSelectedLanguage.clear()
+            preSelectedItems.forEach {
+                var name = if (Constants.TypeOfLanguagesWithContent.findByName(it) != null) {
+                    Constants.TypeOfLanguages.findByName(it)
+                } else {
+                    null
+                }
+                if (name != null) {
+                    preSelectedLanguage.add(name)
+                }
+                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val catTextView = subsubLL.getChildAt(0) as TextView
+                catTextView.setText(it)
+                catTextView.isSelected = true
+                //subsubLL.tag = it
+                floatingLanguage.addView(subsubLL)
+            }
+        }
+    }
+
     override fun updateUi(response: Response?) {
     }
 
     private lateinit var containerView: View
     private lateinit var submitListener: SubmitListener
     private lateinit var layoutNumberOfKids: RelativeLayout
-    private lateinit var layoutExptectedDate: RelativeLayout
-    private lateinit var checkAreYouExpecting: CheckBox
     private lateinit var layoutMotherExptectedDate: RelativeLayout
     private lateinit var editExpectedDate: EditText
-    private lateinit var spinnernumberOfKids: Spinner
     private lateinit var checkNuclear: AppCompatRadioButton
     private lateinit var checkJoint: AppCompatRadioButton
     private lateinit var genderSpinner: AppCompatSpinner
+    private lateinit var spinnerGender: AppCompatSpinner
     private lateinit var radioYes: AppCompatRadioButton
     private lateinit var radioNo: AppCompatRadioButton
     private lateinit var radioExpecting: AppCompatRadioButton
     private lateinit var linearKidsDetail: LinearLayout
     private lateinit var apiGetResponse: RewardsDetailsResultResonse
-    lateinit var editMotherExpectedDate: EditText
+    private lateinit var radioGroupWorkingStatus: RadioGroup
+    private var preSelectedInterest = ArrayList<String>()
+    private var preSelectedLanguage = ArrayList<String>()
+    private lateinit var editInterest: EditText
+    private lateinit var linearInterest: LinearLayout
+    private lateinit var floatingInterest: FlowLayout
+    private lateinit var editLanguage: EditText
+    private lateinit var linearLanguage: LinearLayout
+    private lateinit var floatingLanguage: FlowLayout
+    private lateinit var textEditInterest: TextView
+    private lateinit var textEditLanguage: TextView
+    private lateinit var textAddChild: TextView
+    private lateinit var radioGroupAreMother: RadioGroup
+    private lateinit var layoutDynamicNumberOfKids: LinearLayout
+
 
     companion object {
 
         lateinit var textView: TextView
+        private lateinit var textDOB: TextView
+        private lateinit var textKidsDOB: TextView
+
         @JvmStatic
         fun newInstance() =
                 RewardsFamilyInfoFragment().apply {
@@ -113,6 +205,12 @@ class RewardsFamilyInfoFragment : BaseFragment() {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
                         apiGetResponse = response.data!!.result
 
+                        var list = ArrayList<String>()
+                        list.add("en")
+                        list.add("hi")
+
+                        //apiGetResponse.motherTongue = list
+
                         /*setting values to components*/
                         setValuesToComponents()
                     } else {
@@ -136,6 +234,50 @@ class RewardsFamilyInfoFragment : BaseFragment() {
             }
         }
 
+//        if (apiGetResponse.motherTongue != null && apiGetResponse.motherTongue!!.size > 0) {
+//            floatingLanguage.removeAllViews()
+//            textEditLanguage.visibility = View.VISIBLE
+//            editLanguage.visibility = View.GONE
+//            linearLanguage.visibility = View.VISIBLE
+//            apiGetResponse.motherTongue!!.forEach {
+//                var interestName = Constants.TypeOfLanguages.findById(it)
+//                preSelectedLanguage.add(it)
+//                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+//                val catTextView = subsubLL.getChildAt(0) as TextView
+//                catTextView.setText(interestName)
+//                catTextView.isSelected = true
+//                floatingLanguage.addView(subsubLL)
+//            }
+//        } else {
+//            editLanguage.visibility = View.VISIBLE
+//            linearLanguage.visibility = View.GONE
+//            floatingLanguage.visibility = View.GONE
+//            textEditLanguage.visibility = View.GONE
+//
+//        }
+
+        if (apiGetResponse.interest != null && apiGetResponse.interest!!.isNotEmpty()) {
+            floatingInterest.removeAllViews()
+            textEditInterest.visibility = View.VISIBLE
+            editInterest.visibility = View.GONE
+            linearInterest.visibility = View.VISIBLE
+            apiGetResponse.interest!!.forEach {
+                var interestName = Constants.TypeOfInterest.findById(it.toInt())
+                preSelectedInterest.add(it)
+                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val catTextView = subsubLL.getChildAt(0) as TextView
+                catTextView.setText(interestName)
+                catTextView.isSelected = true
+                floatingInterest.addView(subsubLL)
+            }
+        } else {
+            editInterest.visibility = View.VISIBLE
+            linearInterest.visibility = View.GONE
+            floatingInterest.visibility = View.GONE
+            textEditInterest.visibility = View.GONE
+
+        }
+
         if (apiGetResponse.isMother != null) {
             if (apiGetResponse.isMother == 1) {
                 radioYes.isChecked = true
@@ -143,45 +285,112 @@ class RewardsFamilyInfoFragment : BaseFragment() {
                 radioExpecting.isChecked = true
             }
         }
+
+        if (apiGetResponse.workStatus != null) {
+            if (apiGetResponse.workStatus == 0) {
+                radioGroupWorkingStatus.check(R.id.radioNotWorking)
+            } else if (apiGetResponse.workStatus == 1) {
+                radioGroupWorkingStatus.check(R.id.radiokWorking)
+            }
+        }
     }
 
     private fun initializeXMLComponents() {
         editExpectedDate = containerView.findViewById(R.id.editExpectedDate)
-        spinnernumberOfKids = containerView.findViewById(R.id.spinnernumberOfKids)
-        editMotherExpectedDate = containerView.findViewById(R.id.editMotherExpectedDate)
-        //genderSpinner = containerView.findViewById(R.id.genderSpinner)
+        //spinnernumberOfKids = containerView.findViewById(R.id.spinnernumberOfKids)
+        editLanguage = containerView.findViewById(R.id.editLanguage)
+        radioGroupWorkingStatus = containerView.findViewById(R.id.radioGroupWorkingStatus)
+        genderSpinner = containerView.findViewById(R.id.genderSpinner)
+        spinnerGender = containerView.findViewById(R.id.spinnerGender)
         layoutNumberOfKids = containerView.findViewById(R.id.layoutNumberOfKids)
-        layoutExptectedDate = containerView.findViewById(R.id.layoutExptectedDate)
-        layoutMotherExptectedDate = containerView.findViewById(R.id.layoutMotherExptectedDate)
-        checkAreYouExpecting = containerView.findViewById(R.id.checkAreYouExpecting)
+        layoutMotherExptectedDate = containerView.findViewById(R.id.layoutExptectedDateOfDelivery)
         linearKidsDetail = containerView.findViewById(R.id.linearKidsDetail)
+        textAddChild = containerView.findViewById(R.id.textAddChild)
         radioYes = containerView.findViewById(R.id.radioYes)
         radioNo = containerView.findViewById(R.id.radioNo)
         checkNuclear = containerView.findViewById(R.id.checkNuclear)
         checkJoint = containerView.findViewById(R.id.checkJoint)
-        editMotherExpectedDate.setOnClickListener {
+        textEditInterest = containerView.findViewById(R.id.textEditInterest)
+        floatingInterest = containerView.findViewById(R.id.floatingInterest)
+        linearInterest = containerView.findViewById(R.id.linearInterest)
+        editInterest = containerView.findViewById(R.id.editInterest)
+        textEditInterest = containerView.findViewById(R.id.textEditInterest)
+        textEditLanguage = containerView.findViewById(R.id.textEditLanguage)
+        floatingLanguage = containerView.findViewById(R.id.floatingLanguage)
+        linearLanguage = containerView.findViewById(R.id.linearLanguage)
+        editLanguage = containerView.findViewById(R.id.editLanguage)
+        textEditLanguage = containerView.findViewById(R.id.textEditLanguage)
+        containerView.findViewById<RadioGroup>(R.id.radioGroupAreMother)
+        layoutDynamicNumberOfKids = containerView.findViewById(R.id.layoutDynamicNumberOfKids)
+        RewardsFamilyInfoFragment.textKidsDOB = containerView.findViewById(R.id.textKidsDOB)
+        RewardsFamilyInfoFragment.textDOB = containerView.findViewById(R.id.textDOB)
+
+        (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
+            override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
+                if (isChecked) {
+                    layoutMotherExptectedDate.visibility= View.VISIBLE
+                } else {
+                    layoutMotherExptectedDate.visibility= View.GONE
+                }
+            }
+        })
+
+        textAddChild.setOnClickListener {
+            if (validateChildData()) {
+                createKidsDetailDynamicView()
+            } else {
+
+            }
+
+        }
+
+        textEditInterest.setOnClickListener {
+            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
+                    isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@RewardsFamilyInfoFragment)
+            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
+        }
+
+
+        RewardsFamilyInfoFragment.textDOB.setOnClickListener {
+            RewardsFamilyInfoFragment.textView = RewardsFamilyInfoFragment.textDOB
             showDatePickerDialog()
         }
 
-        editExpectedDate.setOnClickListener { }
-
-        containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
-            submitListener.FamilyOnSubmit()
+        RewardsFamilyInfoFragment.textKidsDOB.setOnClickListener {
+            RewardsFamilyInfoFragment.textView = RewardsFamilyInfoFragment.textKidsDOB
+            showDatePickerDialog()
         }
 
-        var numberOfChild = resources.getStringArray(R.array.number_of_child)
-        var numberOfChildData = ArrayList<String>()
-        numberOfChild.forEach { str ->
-            numberOfChildData.add(str)
+
+        textEditLanguage.setOnClickListener {
+            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.LANGUAGE.name,
+                    isSingleSelection = true, preSelectedItemIds = preSelectedLanguage, context = this@RewardsFamilyInfoFragment)
+            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
         }
-        val householdAdapter = CustomSpinnerAdapter(activity, numberOfChildData)
-        spinnernumberOfKids.adapter = householdAdapter
-        spinnernumberOfKids.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+        val genderList = ArrayList<String>()
+        genderList.add("Male")
+        genderList.add("Female")
+
+
+        val spinAdapter = CustomSpinnerAdapter(activity, genderList)
+        spinnerGender.adapter = spinAdapter
+        spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapter: AdapterView<*>, v: View,
                                         position: Int, id: Long) {
-                spinnernumberOfKids.setSelection(position)
+                spinnerGender.setSelection(position)
+            }
 
-                createKidsDetailDynamicView((spinnernumberOfKids.selectedItem.toString()).toInt())
+            override fun onNothingSelected(arg0: AdapterView<*>) {
+
+            }
+        }
+        genderSpinner.adapter = spinAdapter
+        genderSpinner.setSelection(1)
+        genderSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapter: AdapterView<*>, v: View,
+                                        position: Int, id: Long) {
+                genderSpinner.setSelection(position)
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
@@ -189,14 +398,15 @@ class RewardsFamilyInfoFragment : BaseFragment() {
             }
         }
 
-        checkAreYouExpecting.setOnClickListener {
-            if (checkAreYouExpecting.isChecked) {
-                layoutMotherExptectedDate.visibility = View.VISIBLE
-            } else {
-                layoutMotherExptectedDate.visibility = View.GONE
-            }
-            checkAreYouExpecting.isChecked = !checkAreYouExpecting.isChecked
+        editExpectedDate.setOnClickListener { }
 
+        containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
+            submitListener.FamilyOnSubmit()
+//            if(prepareDataForPosting()){
+//
+//            }else{
+//
+//            }
         }
 
         containerView.findViewById<RadioGroup>(R.id.radioGroupFamilyType)
@@ -216,66 +426,113 @@ class RewardsFamilyInfoFragment : BaseFragment() {
                 .setOnCheckedChangeListener { radioGroup, i ->
                     when (i) {
                         R.id.radioNo -> {
+                            linearKidsDetail.removeAllViews()
                             layoutNumberOfKids.visibility = View.GONE
-                            layoutExptectedDate.visibility = View.GONE
-                            //checkAreYouExpecting.visibility = View.GONE
-                            //layoutMotherExptectedDate.visibility = View.GONE
+                            linearKidsDetail.visibility = View.GONE
+                            layoutDynamicNumberOfKids.visibility = View.GONE
+                            textAddChild.visibility = View.GONE
                         }
 
                         R.id.radioYes -> {
+                            textAddChild.visibility = View.VISIBLE
+                            spinnernumberOfKids.setSelection(0)
                             layoutNumberOfKids.visibility = View.VISIBLE
-                            layoutExptectedDate.visibility = View.GONE
-                            //checkAreYouExpecting.visibility = View.VISIBLE
-                            //layoutMotherExptectedDate.visibility = View.GONE
+                            linearKidsDetail.visibility = View.VISIBLE
+                            layoutDynamicNumberOfKids.visibility = View.VISIBLE
                         }
 
-//                        R.id.radioExpecting -> {
-//                            layoutMotherExptectedDate.visibility = View.VISIBLE
-//                            layoutNumberOfKids.visibility = View.GONE
-//                            layoutExptectedDate.visibility = View.VISIBLE
-//                            checkAreYouExpecting.visibility = View.GONE
-//                        }
                     }
                 }
     }
 
-    fun createKidsDetailDynamicView(numberOfViews: Int) {
+    private fun validateChildData(): Boolean {
+        if (RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
+            Toast.makeText(activity, "DOB " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true
+    }
+
+    private fun prepareDataForPosting(): Boolean {
+        if (radioGroupWorkingStatus.checkedRadioButtonId == R.id.radiokWorking) {
+            apiGetResponse.workStatus = 1
+        } else {
+            apiGetResponse.workStatus = 0
+        }
+
+//        if(preSelectedLanguage.isEmpty()){
+//            Toast.makeText(activity,"Language " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+//            return false
+//        }else{
+//            apiGetResponse.motherTongue = preSelectedLanguage
+//        }
+
+        if (radioGroupAreMother.checkedRadioButtonId == R.id.radioYes) {
+            apiGetResponse.isMother = 1
+        } else if (radioGroupAreMother.checkedRadioButtonId == R.id.radioNo) {
+            apiGetResponse.isMother = 0
+        }
+
+        if (preSelectedInterest.isEmpty()) {
+            Toast.makeText(activity, "Interest " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            apiGetResponse.interest = preSelectedInterest
+        }
+
+        return true
+    }
+
+    fun createKidsDetailDynamicView() {
         val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-        linearKidsDetail.removeAllViews()
-        for (i in 1..numberOfViews) {
-            val indexView = inflater.inflate(R.layout.dynamic_child_view, null)
-            var textHeader = indexView.findViewById<TextView>(R.id.textHeader)
-            var spinnerGender = indexView.findViewById<Spinner>(R.id.spinnerGender)
-            var textDOB = indexView.findViewById<TextView>(R.id.textDOB)
-
-            textHeader.setText(String.format(resources.getString(R.string.kids_number), i))
-            val genderList = java.util.ArrayList<String>()
-            genderList.add("Male")
-            genderList.add("Female")
-
-            val spinAdapter = CustomSpinnerAdapter(activity, genderList)
-            spinnerGender.adapter = spinAdapter
-            spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                            position: Int, id: Long) {
-                    spinnerGender.setSelection(position)
-                }
-
-                override fun onNothingSelected(arg0: AdapterView<*>) {
-
+        val indexView = inflater.inflate(R.layout.dynamic_child_view, null)
+        var textHeader = indexView.findViewById<TextView>(R.id.textHeader)
+        var textDelete = indexView.findViewById<TextView>(R.id.textDeleteChild)
+        textDelete.visibility = View.VISIBLE
+        textDelete.setOnClickListener {
+            for (i in 0..linearKidsDetail.childCount) {
+                if (linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild) == it) {
+                    linearKidsDetail.removeViewAt(i)
+                    break
                 }
             }
-
-            textDOB.setOnClickListener {
-                RewardsFamilyInfoFragment.textView = textDOB
-                showDatePickerDialog()
-            }
-
-            linearKidsDetail.addView(indexView)
         }
+        var spinnerGender = indexView.findViewById<Spinner>(R.id.spinnerGender)
+        var textDOB = indexView.findViewById<TextView>(R.id.textKidsDOB)
+
+        //textHeader.setText(String.format(resources.getString(R.string.kids_number), linearKidsDetail.childCount+1))
+        val genderList = java.util.ArrayList<String>()
+        genderList.add("Male")
+        genderList.add("Female")
+
+        val spinAdapter = CustomSpinnerAdapter(activity, genderList)
+        spinnerGender.adapter = spinAdapter
+        spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapter: AdapterView<*>, v: View,
+                                        position: Int, id: Long) {
+                spinnerGender.setSelection(position)
+            }
+
+            override fun onNothingSelected(arg0: AdapterView<*>) {
+
+            }
+        }
+
+        textDOB.setOnClickListener {
+            RewardsFamilyInfoFragment.textDOB = it as TextView
+            showDatePickerDialog()
+        }
+
+
+        textDOB.text = RewardsFamilyInfoFragment.textKidsDOB.text
+        spinnerGender.setSelection(this.spinnerGender.selectedItemPosition)
+        RewardsFamilyInfoFragment.textKidsDOB.text = ""
+        this.spinnerGender.setSelection(0)
+
+        linearKidsDetail.addView(indexView)
     }
 
     class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
@@ -297,7 +554,7 @@ class RewardsFamilyInfoFragment : BaseFragment() {
         }
 
         override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-            if (textDOB != null) {
+            if (RewardsFamilyInfoFragment.textView != null) {
                 val sel_date = "" + day + "-" + (month + 1) + "-" + year
                 if (chkTime(sel_date)) {
                     RewardsFamilyInfoFragment.textView.setText("" + day + "-" + (month + 1) + "-" + year)
@@ -309,7 +566,6 @@ class RewardsFamilyInfoFragment : BaseFragment() {
 
         fun chkTime(time: String): Boolean {
             var result = true
-
             val currentime = "" + System.currentTimeMillis() / 1000
             if (Integer.parseInt(currentime) < Integer.parseInt(convertDate(time)))
                 result = false
@@ -357,7 +613,7 @@ class RewardsFamilyInfoFragment : BaseFragment() {
                         apiGetResponse = response.data!!.result
 
 //                        /*setting values to components*/
-//                        setValuesToComponents()
+                        setValuesToComponents()
                     } else {
 
                     }
@@ -375,6 +631,10 @@ class RewardsFamilyInfoFragment : BaseFragment() {
         if (context is RewardsContainerActivity) {
             submitListener = context
         }
+    }
+
+    fun convertStringToTimestamp(): Long {
+        return DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textDOB.getText().toString())
     }
 
     interface SubmitListener {

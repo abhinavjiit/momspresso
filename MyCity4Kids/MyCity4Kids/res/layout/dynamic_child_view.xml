@@ -3,40 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="20dp">
+    android:orientation="vertical">
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/textHeader"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="KID1 DETAIL"
-        android:textColor="@color/app_grey"
-        app:fontName="oswald_regular.ttf"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
 
-    <RelativeLayout
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/textHeader"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="wrap_content"
+            android:text="KID DETAIL"
+            android:textColor="@color/app_grey"
+            app:fontName="oswald_regular.ttf"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/textDeleteChild"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/shape_red_border"
+            android:gravity="center"
+            android:text="DELETE"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/app_red"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layoutKidsDOB"
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content">
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp">
 
         <RelativeLayout
             android:id="@+id/layoutExptectedDate"
-            android:layout_width="170dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="16dp">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".5">
 
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/spinnerGender"
-                android:layout_width="170dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@drawable/mainprofile_thin_border"
                 android:gravity="center_vertical"
                 android:hint="DD/MM/YYYY"
-                android:paddingLeft="10dp"
                 android:textColor="#000"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -54,17 +77,18 @@
 
 
         <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/textDOB"
-            android:layout_width="170dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
+            android:id="@+id/textKidsDOB"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/layoutExptectedDate"
+            android:layout_weight=".5"
             android:background="@drawable/mainprofile_thin_border"
             android:gravity="center_vertical"
             android:hint="DD/MM/YYYY"
             android:paddingLeft="10dp"
             android:textColor="#000"
             app:layout_constraintEnd_toEndOf="parent" />
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

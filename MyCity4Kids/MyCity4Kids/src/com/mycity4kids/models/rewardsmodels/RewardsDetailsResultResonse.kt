@@ -56,9 +56,9 @@ data class RewardsDetailsResultResonse(
         @SerializedName("longitude")
         @Expose
         var longitude: Double? = null,
-        @SerializedName("mother_tongue")
+        @SerializedName("preferred_languages")
         @Expose
-        var motherTongue: String? = null,
+        var preferred_languages: ArrayList<String>? = null,
         @SerializedName("profession_type")
         @Expose
         var professionType: Any? = null,

@@ -184,6 +184,28 @@
         <item>Respond to blog comments</item>
     </string-array>
 
+    public static final String LOCALE_ENGLISH = "en";
+    public static final String LOCALE_HINDI = "hi";
+    public static final String LOCALE_MARATHI = "mr";
+    public static final String LOCALE_BENGALI = "bn";
+    public static final String LOCALE_TAMIL = "ta";
+    public static final String LOCALE_TELUGU = "te";
+    public static final String LOCALE_KANNADA = "kn";
+    public static final String LOCALE_MALAYALAM = "ml";
+
+
+    <string-array name="popup_language_list">
+        <item>English</item>
+        <item>हिंदी</item>
+        <item>मराठी</item>
+        <item>বাংলা</item>
+        <item>தமிழ்</item>
+        <item>తెలుగు</item>
+        <item>ಕನ್ನಡ</item>
+        <item>മലയാളം</item>
+    </string-array>
+
+
     <string-array name="popup_durables_list">
         <item>Air Conditioner</item>
         <item>Refrigerator</item>

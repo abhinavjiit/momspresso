@@ -82,10 +82,10 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         addNewKidTextView = (TextView) view.findViewById(R.id.addNewKidTextView);
         kidNameEditText = (EditText) view.findViewById(R.id.kidNameEditText);
         kidsDOBTextView = (TextView) view.findViewById(R.id.kidsDOBTextView);
-//        deleteKidTextView = (TextView) view.findViewById(R.id.deleteKidTextView);
-//        maleRadioButton = (RadioButton) view.findViewById(R.id.maleRadioButton);
-//        femaleRadioButton = (RadioButton) view.findViewById(R.id.femaleRadioButton);
-//        genderRadioGroup = (RadioGroup) view.findViewById(R.id.genderRadioGroup);
+//      deleteKidTextView = (TextView) view.findViewById(R.id.deleteKidTextView);
+//      maleRadioButton = (RadioButton) view.findViewById(R.id.maleRadioButton);
+//      femaleRadioButton = (RadioButton) view.findViewById(R.id.femaleRadioButton);
+//      genderRadioGroup = (RadioGroup) view.findViewById(R.id.genderRadioGroup);
         addKidContainer = (RelativeLayout) view.findViewById(R.id.addKidContainer);
         genderSpinner = (AppCompatSpinner) view.findViewById(R.id.genderSpinner);
 

@@ -10,14 +10,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.facebook.CallbackManager
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.Scopes
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.Scope
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
+import com.kelltontech.utils.ConnectivityUtils
+import com.kelltontech.utils.ToastUtils.showToast
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.facebook.FacebookUtils
+import com.mycity4kids.interfaces.IFacebookUser
+import com.mycity4kids.models.request.LoginRegistrationRequest
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
+import com.mycity4kids.preference.SharedPrefUtils
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
@@ -36,76 +50,30 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- *
  */
-class RewardsSocialInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDoneListener {
-    override fun onItemClick(selectedValueName: ArrayList<String>, popupType: String) {
-        if (popupType == Constants.PopListRequestType.INTEREST.name) {
-            //preSelectedInterest = selectedValue
-            setFloatingLayout(selectedValueName, popupType)
-        } else if (popupType == Constants.PopListRequestType.DURABLES.name) {
-            //preSelectedDurables = selectedValue
-            setFloatingLayout(selectedValueName, popupType)
-        }
+class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient.OnConnectionFailedListener {
+    override fun onConnectionFailed(p0: ConnectionResult) {
+
     }
 
-    private fun setFloatingLayout(preSelectedItems: ArrayList<String>, popupType: String) {
-        if (popupType == Constants.PopListRequestType.INTEREST.name) {
-            floatingInterest.removeAllViews()
-            if (preSelectedItems.isNotEmpty()) {
-                textEditInterest.visibility = View.VISIBLE
-                linearInterest.visibility = View.VISIBLE
-                editInterest.visibility = View.GONE
-            } else {
-                textEditInterest.visibility = View.GONE
-                linearInterest.visibility = View.GONE
-                editInterest.visibility = View.VISIBLE
+    override fun getFacebookUser(user: String?) {
+        try {
+            if (user != null) {
+                loginMode = "fb"
+                val lr = LoginRegistrationRequest()
+                lr.cityId = "" + SharedPrefUtils.getCurrentCityModel(activity).id
+                lr.requestMedium = "fb"
+                lr.socialToken = user
+                val retrofit = BaseApplication.getInstance().retrofit
+                //val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
+                //val call = loginRegistrationAPI.login(lr)
+                //call.enqueue(onLoginResponseReceivedListener)
+
             }
-            preSelectedInterest.clear()
-            preSelectedItems.forEach {
-                var name = if (Constants.TypeOfInterest.findByName(it) != null) {
-                    Constants.TypeOfInterest.findByName(it)
-                } else {
-                    null
-                }
-                if (name != null) {
-                    preSelectedInterest.add(Constants.TypeOfInterest.findByName(it))
-                }
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
-                val catTextView = subsubLL.getChildAt(0) as TextView
-                catTextView.setText(it)
-                catTextView.isSelected = true
-                //subsubLL.tag = it
-                floatingInterest.addView(subsubLL)
-            }
-        } else if (popupType == Constants.PopListRequestType.DURABLES.name) {
-            floatingDurables.removeAllViews()
-            if (preSelectedItems.isNotEmpty()) {
-                textEditDurables.visibility = View.VISIBLE
-                linearDurables.visibility = View.VISIBLE
-                editDurables.visibility = View.GONE
-            } else {
-                textEditDurables.visibility = View.GONE
-                linearDurables.visibility = View.GONE
-                editDurables.visibility = View.VISIBLE
-            }
-            preSelectedDurables.clear()
-            preSelectedItems.forEach {
-                var name = if (Constants.TypeOfDurables.findByName(it) != null) {
-                    Constants.TypeOfDurables.findByName(it)
-                } else {
-                    null
-                }
-                if (name != null) {
-                    preSelectedDurables.add(Constants.TypeOfDurables.findByName(it))
-                }
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
-                val catTextView = subsubLL.getChildAt(0) as TextView
-                catTextView.setText(it)
-                catTextView.isSelected = true
-                //subsubLL.tag = it
-                floatingDurables.addView(subsubLL)
-            }
+        } catch (e: Exception) {
+            // e.printStackTrace();
+            removeProgressDialog()
+            (activity as RewardsContainerActivity).showToast(getString(R.string.toast_response_error))
         }
     }
 
@@ -118,26 +86,19 @@ class RewardsSocialInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     private lateinit var layoutFacebook: LinearLayout
     private lateinit var layoutTwitter: LinearLayout
     private lateinit var layoutYoutube: LinearLayout
-    private lateinit var editInterest: EditText
-    private lateinit var editDurables: EditText
     private lateinit var editWebsite: EditText
     private lateinit var editInstagram: EditText
     private lateinit var editFacebook: EditText
     private lateinit var editTwitter: EditText
     private lateinit var editYoutube: EditText
-    private lateinit var linearDurables: LinearLayout
-    private lateinit var floatingDurables: FlowLayout
-    private lateinit var linearInterest: LinearLayout
-    private lateinit var floatingInterest: FlowLayout
     private lateinit var spinnerProfession: AppCompatSpinner
     private lateinit var spinnerHouseHold: AppCompatSpinner
-    private lateinit var textEditInterest: TextView
-    private lateinit var textEditDurables: TextView
     private var householdList = ArrayList<String>()
     private var professionList = ArrayList<String>()
+    private var mGoogleApiClient: GoogleApiClient? = null
     private lateinit var apiGetResponse: RewardsDetailsResultResonse
-    private var preSelectedInterest = ArrayList<String>()
-    private var preSelectedDurables = ArrayList<String>()
+    private var callbackManager: CallbackManager? = null
+    private var loginMode = ""
 
     companion object {
         fun newInstance() = RewardsSocialInfoFragment().apply {
@@ -151,6 +112,17 @@ class RewardsSocialInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_social_info, container, false)
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail().requestScopes(Scope(Scopes.PLUS_ME))
+                .build()
+
+        mGoogleApiClient = GoogleApiClient.Builder(activity)
+                .enableAutoManage(activity, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build()
+        callbackManager = CallbackManager.Factory.create()
+
 
         /*initialize XML components*/
         initializeXMLComponents()
@@ -195,50 +167,6 @@ class RewardsSocialInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     }
 
     private fun setValuesToComponents() {
-        if (apiGetResponse.interest != null && apiGetResponse.interest!!.isNotEmpty()) {
-            floatingInterest.removeAllViews()
-            textEditInterest.visibility = View.VISIBLE
-            editInterest.visibility = View.GONE
-            linearInterest.visibility = View.VISIBLE
-            apiGetResponse.interest!!.forEach {
-                var interestName = Constants.TypeOfInterest.findById(it.toInt())
-                preSelectedInterest.add(it)
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
-                val catTextView = subsubLL.getChildAt(0) as TextView
-                catTextView.setText(interestName)
-                catTextView.isSelected = true
-                floatingInterest.addView(subsubLL)
-            }
-        } else {
-            editInterest.visibility = View.VISIBLE
-            linearInterest.visibility = View.GONE
-            floatingInterest.visibility = View.GONE
-            textEditInterest.visibility = View.GONE
-
-        }
-
-        if (apiGetResponse.durables != null && apiGetResponse.durables!!.isNotEmpty()) {
-            floatingDurables.removeAllViews()
-            editDurables.visibility = View.GONE
-            linearDurables.visibility = View.VISIBLE
-            textEditDurables.visibility = View.VISIBLE
-            apiGetResponse.durables!!.forEach {
-                var durablesName = Constants.TypeOfDurables.findById(it.toInt())
-                preSelectedDurables.add(it)
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
-                val catTextView = subsubLL.getChildAt(0) as TextView
-                catTextView.setText(durablesName)
-                catTextView.isSelected = true
-                //subsubLL.tag = it
-                floatingDurables.addView(subsubLL)
-            }
-        } else {
-            textEditDurables.visibility = View.GONE
-            editDurables.visibility = View.VISIBLE
-            linearDurables.visibility = View.GONE
-            floatingDurables.visibility = View.GONE
-
-        }
     }
 
     private fun initializeXMLComponents() {
@@ -246,32 +174,21 @@ class RewardsSocialInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         layoutFacebook = containerView.findViewById(R.id.layoutFacebook)
         layoutYoutube = containerView.findViewById(R.id.layoutYoutube)
         layoutTwitter = containerView.findViewById(R.id.layoutTwitter)
-        editInterest = containerView.findViewById(R.id.editInterest)
-        editDurables = containerView.findViewById(R.id.editDurables)
-        linearDurables = containerView.findViewById(R.id.linearDurables)
-        floatingDurables = containerView.findViewById(R.id.floatingDurables)
-        linearInterest = containerView.findViewById(R.id.linearInterest)
-        floatingInterest = containerView.findViewById(R.id.floatingInterest)
         spinnerProfession = containerView.findViewById(R.id.spinnerProfession)
         spinnerHouseHold = containerView.findViewById(R.id.spinnerHouseHold)
-        textEditInterest = containerView.findViewById(R.id.textEditInterest)
-        textEditDurables = containerView.findViewById(R.id.textEditDurables)
         editInstagram = containerView.findViewById(R.id.editInstagram)
         editFacebook = containerView.findViewById(R.id.editFacebook)
         editTwitter = containerView.findViewById(R.id.editTwitter)
         editWebsite = containerView.findViewById(R.id.editWebsite)
         editYoutube = containerView.findViewById(R.id.editYoutube)
 
-        textEditDurables.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.DURABLES.name,
-                    isSingleSelection = true, preSelectedItemIds = preSelectedDurables, context = this@RewardsSocialInfoFragment)
-            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
-        }
-
-        textEditInterest.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
-                    isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@RewardsSocialInfoFragment)
-            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
+        editFacebook.setOnClickListener {
+            if (ConnectivityUtils.isNetworkEnabled(activity)) {
+                showProgressDialog(getString(R.string.please_wait))
+                FacebookUtils.facebookLogin(activity, this)
+            } else {
+                (activity as RewardsContainerActivity).showToast(getString(R.string.error_network))
+            }
         }
 
         var houseHoldIncomeArray = resources.getStringArray(R.array.household_income)
@@ -320,29 +237,17 @@ class RewardsSocialInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             }
         }
 
-        editInterest.setOnClickListener {
-            if (preSelectedInterest.isNotEmpty()) {
-                var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
-                        isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@RewardsSocialInfoFragment)
-                fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
-            } else {
-                var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
-                        isSingleSelection = true, preSelectedItemIds = apiGetResponse?.interest!!, context = this@RewardsSocialInfoFragment)
-                fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
-            }
-        }
-
-        editDurables.setOnClickListener {
-            if (preSelectedDurables.isNotEmpty()) {
-                var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.DURABLES.name,
-                        isSingleSelection = true, preSelectedItemIds = preSelectedDurables, context = this@RewardsSocialInfoFragment)
-                fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
-            } else {
-                var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.DURABLES.name,
-                        isSingleSelection = true, preSelectedItemIds = apiGetResponse?.durables!!, context = this@RewardsSocialInfoFragment)
-                fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
-            }
-        }
+//        editDurables.setOnClickListener {
+//            if (preSelectedDurables.isNotEmpty()) {
+//                var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.DURABLES.name,
+//                        isSingleSelection = true, preSelectedItemIds = preSelectedDurables, context = this@RewardsSocialInfoFragment)
+//                fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
+//            } else {
+//                var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.DURABLES.name,
+//                        isSingleSelection = true, preSelectedItemIds = apiGetResponse?.durables!!, context = this@RewardsSocialInfoFragment)
+//                fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
+//            }
+//        }
 
         containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
             //submitListener.socialOnSubmitListener()

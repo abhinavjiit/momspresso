@@ -87,8 +87,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         newSelectedCityId = cityList.get(pos).getId()
     }
 
+//    fun setOtherCityName(pos: Int, cityName: String) {
+//        otherCityName = cityName
+//        cityList.get(pos).setCityName("Others($cityName)")
+//        editLocation.setText(cityList.get(pos).getCityName())
+//    }
+
     override fun onItemClick(language: String?) {
-        editLanguage.setText(Constants.TypeOfLanguages.findById(language))
+        //editLanguage.setText(Constants.TypeOfLanguages.findById(language))
     }
 
     override fun updateUi(response: Response?) {
@@ -99,23 +105,24 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var saveAndContinueListener: SaveAndContinueListener
     private lateinit var editFirstName: EditText
     private lateinit var editLastName: EditText
-    private lateinit var editPhone: EditText
+    private lateinit var editPhone: TextView
+    private lateinit var editAddNumber: TextView
     private lateinit var editEmail: EditText
     private lateinit var editLocation: EditText
-    private lateinit var editLanguage: EditText
+//    private lateinit var editLanguage: EditText
+//    private lateinit var radioGroupWorkingStatus: RadioGroup
+//    private lateinit var genderSpinner: AppCompatSpinner
     //private lateinit var textDOB: TextView
     private lateinit var textVerify: TextView
-    private lateinit var genderSpinner: AppCompatSpinner
-    private lateinit var radioGroupWorkingStatus: RadioGroup
     private lateinit var apiGetResponse: RewardsDetailsResultResonse
     private var cityList = ArrayList<CityInfoItem>()
     private var selectedCityId: Int = 0
     private var newSelectedCityId: String? = null
     private var currentCityName: String? = null
+    private var otherCityName: String? = null
+    private var accountKitAuthCode = ""
 
     companion object {
-        private lateinit var textDOB: TextView
-
         @JvmStatic
         fun newInstance() =
                 RewardsPersonalInfoFragment().apply {
@@ -140,6 +147,192 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         return containerView
     }
+
+
+    /*setting values to components*/
+    private fun setValuesToComponents() {
+        if (!apiGetResponse.firstName.isNullOrBlank()) editFirstName.setText(apiGetResponse.firstName)
+        if (!apiGetResponse.lastName.isNullOrBlank()) editLastName.setText(apiGetResponse.lastName)
+        if (!apiGetResponse.contact.isNullOrBlank()) {
+            editPhone.visibility = View.VISIBLE
+            textVerify.visibility = View.VISIBLE
+            editAddNumber.visibility = View.GONE
+        } else {
+            editPhone.visibility = View.GONE
+            textVerify.visibility = View.GONE
+            editAddNumber.visibility = View.VISIBLE
+        }
+        if (!apiGetResponse.email.isNullOrBlank()) editEmail.setText(apiGetResponse.email)
+        //if (apiGetResponse.dob != null && apiGetResponse.dob!! > 0) RewardsPersonalInfoFragment.textDOB.setText(DateTimeUtils.getDateFromTimestamp(apiGetResponse.dob!!.toLong()))
+        if (!apiGetResponse.location.isNullOrBlank()) editLocation.setText(apiGetResponse.location)
+
+    }
+
+    /*initialize XML components with clicks*/
+    private fun initializeXMLComponents() {
+        editFirstName = containerView.findViewById(R.id.editFirstName)
+        editLastName = containerView.findViewById(R.id.editLastName)
+        editPhone = containerView.findViewById(R.id.editPhone)
+        editAddNumber = containerView.findViewById(R.id.editAddNumber)
+        editFirstName = containerView.findViewById(R.id.editFirstName)
+        editEmail = containerView.findViewById(R.id.editEmail)
+        editLocation = containerView.findViewById(R.id.editLocation)
+
+        editAddNumber.setOnClickListener {
+            varifyNumberWithFacebookAccountKit()
+        }
+
+        editLocation.setOnClickListener {
+            var cityFragment = CityListingDialogFragment()
+            cityFragment.setTargetFragment(this, 0)
+            val _args = Bundle()
+            _args.putParcelableArrayList("cityList", cityList)
+            _args.putString("fromScreen", "rewards")
+            cityFragment.setArguments(_args)
+            val fm = childFragmentManager
+            cityFragment.show(fm, "Replies")
+        }
+
+        textVerify = containerView.findViewById(R.id.textVerify)
+        textVerify.setOnClickListener {
+            varifyNumberWithFacebookAccountKit()
+        }
+        (containerView.findViewById<TextView>(R.id.textSaveAndContinue)).setOnClickListener {
+            if (prepareDataForPosting()) {
+                postDataofRewardsToServer()
+            }
+        }
+    }
+
+    fun prepareDataForPosting(): Boolean {
+        if (editFirstName.text.isNullOrEmpty()) {
+            Toast.makeText(activity,"First Name " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            apiGetResponse.firstName = editFirstName.text.toString()
+        }
+
+        if (editLastName.text.isNullOrEmpty()) {
+            Toast.makeText(activity, "Last Name " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            apiGetResponse.lastName = editLastName.text.toString()
+        }
+
+        if(accountKitAuthCode.isNullOrEmpty() && apiGetResponse.contact.isNullOrEmpty()){
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            return false
+        }else{
+            if(!apiGetResponse.contact.isNullOrEmpty()){
+                apiGetResponse.contact = apiGetResponse.contact
+                apiGetResponse.mobile_token = ""
+            }else if(accountKitAuthCode.isNullOrEmpty()){
+                apiGetResponse.mobile_token = accountKitAuthCode
+                apiGetResponse.contact = ""
+            }
+        }
+
+        if (editEmail.text.isNullOrEmpty()) {
+            Toast.makeText(activity, "Email "  + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            return false
+        } else if (isMailValid()) {
+            apiGetResponse.email = editEmail.text.toString()
+        } else {
+            Toast.makeText(activity, resources.getString(R.string.enter_valid_email), Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+//        if (genderSpinner.selectedItem.toString().isNullOrEmpty()) {
+//            if (genderSpinner.selectedItem.toString().trim().toLowerCase().equals("Male")) {
+//                apiGetResponse.gender = 0
+//            } else if (genderSpinner.selectedItem.toString().trim().toLowerCase().equals("Female")) {
+//                apiGetResponse.gender = 1
+//            }
+//        }
+
+//        if (RewardsPersonalInfoFragment.textDOB.text.isNullOrEmpty()) {
+//            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+//            return false
+//        } else {
+//            apiGetResponse.dob = convertStringToTimestamp()
+//        }
+
+        if (editLocation.text.isNullOrEmpty()) {
+            Toast.makeText(activity, "Location " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            apiGetResponse.lastName = editLocation.text.toString()
+        }
+
+        return true
+    }
+
+    private fun varifyNumberWithFacebookAccountKit() {
+        val intent = Intent(activity, AccountKitActivity::class.java)
+        val configurationBuilder = AccountKitConfiguration.AccountKitConfigurationBuilder(
+                LoginType.PHONE, AccountKitActivity.ResponseType.CODE)
+        val themeId = R.style.AppLoginTheme
+        val themeManager = ThemeUIManager(themeId)
+        configurationBuilder.setUIManager(themeManager)
+        intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configurationBuilder.build())
+        startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data != null && resultCode == Activity.RESULT_OK) {
+            accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+        }
+    }
+
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is RewardsContainerActivity) {
+            saveAndContinueListener = context
+        }
+    }
+
+
+    interface SaveAndContinueListener {
+        fun profileOnSaveAndContinue()
+    }
+
+
+    fun isMailValid(): Boolean {
+        return !editEmail.text.isNullOrBlank() && StringUtils.isValidEmail(editEmail.text.toString())
+    }
+
+    /*post data to server*/
+    private fun postDataofRewardsToServer() {
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        if (userId != null) {
+            showProgressDialog(resources.getString(R.string.please_wait))
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData("8ffb68f436724516850cdfdb5d064d69", apiGetResponse, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+                override fun onComplete() {
+                    removeProgressDialog()
+                }
+
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
+                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                        apiGetResponse = response.data!!.result
+                        saveAndContinueListener.profileOnSaveAndContinue()
+                    } else {
+
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+            })
+        }
+    }
+
 
     /*fetch data from server*/
     private fun fetchRewardsData() {
@@ -170,7 +363,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
 
                 override fun onError(e: Throwable) {
-
+                    Log.e("exception in error" , e.message.toString())
                 }
             })
         }
@@ -208,13 +401,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                                 it.isSelected = currentCity.id == cId
                             }
                         }
-
-
-//                        /*getting city data from server*/
-//                        //fetchCityData()
-//
-//                        /*setting values to components*/
-//                        setValuesToComponents()
                     } else {
 
                     }
@@ -227,289 +413,5 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
     }
 
-    /*setting values to components*/
-    private fun setValuesToComponents() {
-        if (!apiGetResponse.firstName.isNullOrBlank()) editFirstName.setText(apiGetResponse.firstName)
-        if (!apiGetResponse.lastName.isNullOrBlank()) editLastName.setText(apiGetResponse.lastName)
-        if (!apiGetResponse.contact.isNullOrBlank()) editPhone.setText(apiGetResponse.contact)
-        if (!apiGetResponse.email.isNullOrBlank()) editEmail.setText(apiGetResponse.email)
-        if (apiGetResponse.dob != null && apiGetResponse.dob!! > 0) RewardsPersonalInfoFragment.textDOB.setText(DateTimeUtils.getDateFromTimestamp(apiGetResponse.dob!!.toLong()))
-        if (!apiGetResponse.location.isNullOrBlank()) editLocation.setText(apiGetResponse.location)
-        if (apiGetResponse.motherTongue.isNullOrBlank()) editLanguage.setText(apiGetResponse.motherTongue)
-        if (apiGetResponse.workStatus != null) {
-            if (apiGetResponse.workStatus == 0) {
-                radioGroupWorkingStatus.check(R.id.radioNotWorking)
-            } else if (apiGetResponse.workStatus == 1) {
-                radioGroupWorkingStatus.check(R.id.radiokWorking)
-            }
-        }
-    }
-
-    /*initialize XML components with clicks*/
-    private fun initializeXMLComponents() {
-        editFirstName = containerView.findViewById(R.id.editFirstName)
-        editLastName = containerView.findViewById(R.id.editLastName)
-        editPhone = containerView.findViewById(R.id.editPhone)
-        editFirstName = containerView.findViewById(R.id.editFirstName)
-        editEmail = containerView.findViewById(R.id.editEmail)
-        editLocation = containerView.findViewById(R.id.editLocation)
-        editLanguage = containerView.findViewById(R.id.editLanguage)
-        genderSpinner = containerView.findViewById(R.id.genderSpinner)
-
-        editLocation.setOnClickListener {
-            var cityFragment = CityListingDialogFragment()
-            cityFragment.setTargetFragment(this, 0)
-            val _args = Bundle()
-            _args.putParcelableArrayList("cityList", cityList)
-            _args.putString("fromScreen", "rewards")
-            cityFragment.setArguments(_args)
-            val fm = childFragmentManager
-            cityFragment.show(fm, "Replies")
-        }
-        RewardsPersonalInfoFragment.textDOB = containerView.findViewById(R.id.textDOB)
-        RewardsPersonalInfoFragment.textDOB.setOnClickListener {
-            showDatePickerDialog()
-        }
-        radioGroupWorkingStatus = containerView.findViewById(R.id.radioGroupWorkingStatus)
-        textVerify = containerView.findViewById(R.id.textVerify)
-        textVerify.setOnClickListener {
-            varifyNumberWithFacebookAccountKit()
-        }
-        (containerView.findViewById<TextView>(R.id.textSaveAndContinue)).setOnClickListener {
-            if (prepareDataForPosting()) {
-                postDataofRewardsToServer()
-            }
-
-            //postDataofRewardsToServer()
-        }
-
-        editLanguage.setOnClickListener {
-            val changePreferredLanguageDialogFragment = ChangePreferredLanguageDialogFragment.newInstance(this, true)
-            val fm = fragmentManager
-            changePreferredLanguageDialogFragment.isCancelable = true
-            changePreferredLanguageDialogFragment.show(fm, "Choose video option")
-        }
-
-        val genderList = ArrayList<String>()
-        genderList.add("Male")
-        genderList.add("Female")
-
-        val spinAdapter = CustomSpinnerAdapter(activity, genderList)
-        genderSpinner.adapter = spinAdapter
-        genderSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                        position: Int, id: Long) {
-                genderSpinner.setSelection(position)
-            }
-
-            override fun onNothingSelected(arg0: AdapterView<*>) {
-
-            }
-        }
-    }
-
-    fun prepareDataForPosting(): Boolean {
-        if (editFirstName.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
-            return false
-        } else {
-            apiGetResponse.firstName = editFirstName.text.toString()
-        }
-
-        if (editLastName.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
-            return false
-        } else {
-            apiGetResponse.lastName = editLastName.text.toString()
-        }
-
-        if (!apiGetResponse.contact.isNullOrEmpty() || !apiGetResponse.mobile_token.isNullOrEmpty()) {
-            apiGetResponse.contact = ""
-        } else {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if (editEmail.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
-            return false
-        } else if (isMailValid()) {
-            apiGetResponse.email = editEmail.text.toString()
-        } else {
-            Toast.makeText(activity, resources.getString(R.string.enter_valid_email), Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if (genderSpinner.selectedItem.toString().isNullOrEmpty()) {
-            if (genderSpinner.selectedItem.toString().trim().toLowerCase().equals("Male")) {
-                apiGetResponse.gender = 0
-            } else if (genderSpinner.selectedItem.toString().trim().toLowerCase().equals("Female")) {
-                apiGetResponse.gender = 1
-            }
-        }
-
-        if (RewardsPersonalInfoFragment.textDOB.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
-            return false
-        } else {
-            apiGetResponse.dob = convertStringToTimestamp()
-        }
-
-        apiGetResponse.location = editLocation.text.toString()
-
-        if (radioGroupWorkingStatus.checkedRadioButtonId == R.id.radiokWorking) {
-            apiGetResponse.workStatus = 1
-        } else {
-            apiGetResponse.workStatus = 0
-        }
-
-        if (!editLanguage.text.isNullOrEmpty()) {
-            apiGetResponse.motherTongue = Constants.TypeOfLanguages.findByName(editLanguage.text.toString())
-        }
-
-        return true
-    }
-
-    private fun varifyNumberWithFacebookAccountKit() {
-        val intent = Intent(activity, AccountKitActivity::class.java)
-        val configurationBuilder = AccountKitConfiguration.AccountKitConfigurationBuilder(
-                LoginType.PHONE, AccountKitActivity.ResponseType.CODE)
-        val themeId = R.style.AppLoginTheme
-        val themeManager = ThemeUIManager(themeId)
-        configurationBuilder.setUIManager(themeManager)
-        intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configurationBuilder.build())
-        startActivityForResult(intent, VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (data != null && resultCode == Activity.RESULT_OK) {
-            var authCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
-            varifyNumberWithFacebookAccountKit()
-            Log.e("authcode ", authCode)
-        }
-    }
-
-    /*fetch data from server*/
-    private fun postDataofRewardsToServer() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        if (userId != null) {
-            showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData("8ffb68f436724516850cdfdb5d064d69", apiGetResponse, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
-                override fun onComplete() {
-                    removeProgressDialog()
-                }
-
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
-                override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                        apiGetResponse = response.data!!.result
-
-                    } else {
-
-                    }
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-            })
-        }
-    }
-
-    fun showDatePickerDialog() {
-        val newFragment = DatePickerFragment()
-        newFragment.show(activity.supportFragmentManager, "datePicker")
-    }
-
-    class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
-
-        internal var cancel: Boolean = false
-
-        internal val c = Calendar.getInstance()
-        internal var curent_year = c.get(Calendar.YEAR)
-        internal var current_month = c.get(Calendar.MONTH)
-        internal var current_day = c.get(Calendar.DAY_OF_MONTH)
-
-        @SuppressLint("NewApi")
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            // Use the current date as the default date in the picker
-            val dlg = DatePickerDialog(activity, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day)
-            dlg.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dlg.datePicker.maxDate = c.timeInMillis
-            return dlg
-        }
-
-        override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-            if (RewardsPersonalInfoFragment.textDOB != null) {
-                val sel_date = "" + day + "-" + (month + 1) + "-" + year
-                if (chkTime(sel_date)) {
-                    RewardsPersonalInfoFragment.textDOB.setText("" + day + "-" + (month + 1) + "-" + year)
-                } else {
-                    RewardsPersonalInfoFragment.textDOB.setText("" + current_day + "-" + (current_month + 1) + "-" + curent_year)
-                }
-            }
-        }
-
-        fun chkTime(time: String): Boolean {
-            var result = true
-
-            val currentime = "" + System.currentTimeMillis() / 1000
-            if (Integer.parseInt(currentime) < Integer.parseInt(convertDate(time)))
-                result = false
-
-            return result
-        }
-
-        fun convertDate(convertdate: String): String {
-            var timestamp = ""
-            try {
-                val formatter = SimpleDateFormat("dd-MM-yyyy")
-                val dateobj = formatter.parse(convertdate)
-                timestamp = "" + dateobj.time / 1000
-                return timestamp
-            } catch (e: ParseException) {
-                // TODO Auto-generated catch block
-                e.printStackTrace()
-            }
-
-            return timestamp
-        }
-    }
-
-    private fun getLanguageCode() {
-        if (!editLanguage.text.isNullOrEmpty()) {
-            var languageCode = Constants.TypeOfLanguages.findByName(editLanguage.text.toString())
-            if (!languageCode.equals("")) {
-                Constants.TypeOfLanguagesCodes.findByName(languageCode)
-            } else {
-                editLanguage.setText("")
-            }
-        }
-    }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (context is RewardsContainerActivity) {
-            saveAndContinueListener = context
-        }
-    }
-
-
-    interface SaveAndContinueListener {
-        fun profileOnSaveAndContinue()
-    }
-
-    fun convertStringToTimestamp(): Long {
-        return DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textDOB.getText().toString())
-    }
-
-
-    fun isMailValid(): Boolean {
-        return !editEmail.text.isNullOrBlank() && StringUtils.isValidEmail(editEmail.text.toString())
-    }
 }
 

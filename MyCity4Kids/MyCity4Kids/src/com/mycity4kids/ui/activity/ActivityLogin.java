@@ -141,7 +141,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     public void loginWithFacebook() {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
             showProgressDialog(getString(R.string.please_wait));
-
             FacebookUtils.facebookLogin(this, this);
         } else {
             showToast(getString(R.string.error_network));
@@ -149,7 +148,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     }
 
     public void loginWithGplus() {
-
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }

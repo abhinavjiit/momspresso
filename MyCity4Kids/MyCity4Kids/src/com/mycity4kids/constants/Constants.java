@@ -406,28 +406,28 @@ public class Constants {
 
         public static String findById(String id) {
             for (TypeOfLanguages typeOfLanguages : TypeOfLanguages.values()) {
-                if (id == typeOfLanguages.getId())
+                if (id.trim().toLowerCase().equalsIgnoreCase(typeOfLanguages.getId()))
                     return typeOfLanguages.name;
             }
             return "";
         }
 
         public static String findByName(String name) {
-            for (TypeOfLanguages typeOfLanguages : TypeOfLanguages.values()) {
-                if (name == typeOfLanguages.getName())
+            for (TypeOfLanguagesWithContent typeOfLanguages : TypeOfLanguagesWithContent.values()) {
+                if (name.trim().toLowerCase().equalsIgnoreCase(typeOfLanguages.getName()))
                     return typeOfLanguages.id;
             }
             return "";
         }
     }
 
-    public enum TypeOfLanguagesCodes {
-        LOCALE_ENGLISH("0", "en"), LOCALE_HINDI("1","hi"), LOCALE_MARATHI("2","mr"), LOCALE_BENGALI("3","bn"), LOCALE_TAMIL("4","ta"), LOCALE_TELUGU("5","te"),
-        LOCALE_KANNADA("6","kn"), LOCALE_MALAYALAM("7","ml");
+    public enum TypeOfLanguagesWithContent {
+        LOCALE_ENGLISH("en", "English"), LOCALE_HINDI("hi","हिंदी"), LOCALE_MARATHI("mr","मराठी"), LOCALE_BENGALI("bn","বাংলা"), LOCALE_TAMIL("ta","தமிழ்"), LOCALE_TELUGU("te","తెలుగు"),
+        LOCALE_KANNADA("kn","ಕನ್ನಡ"), LOCALE_MALAYALAM("ml","മലയാളം");
         private final String name;
         private final String id;
 
-        TypeOfLanguagesCodes(String i, String name) {
+        TypeOfLanguagesWithContent(String i, String name) {
             this.name=name;
             this.id=i;
         }
@@ -441,26 +441,63 @@ public class Constants {
         }
 
         public static String findById(String id) {
-            for (TypeOfLanguagesCodes typeOfLanguagesCodes : TypeOfLanguagesCodes.values()) {
-                if (id == typeOfLanguagesCodes.getId())
-                    return typeOfLanguagesCodes.name;
+            for (TypeOfLanguagesWithContent typeOfLanguages : TypeOfLanguagesWithContent.values()) {
+                if (id.trim().toLowerCase().equalsIgnoreCase(typeOfLanguages.getId()))
+                    return typeOfLanguages.name;
             }
             return "";
         }
 
         public static String findByName(String name) {
-            for (TypeOfLanguagesCodes typeOfLanguagesCodes : TypeOfLanguagesCodes.values()) {
-                if (name == typeOfLanguagesCodes.getName())
-                    return typeOfLanguagesCodes.id;
+            for (TypeOfLanguages typeOfLanguages : TypeOfLanguages.values()) {
+                if (name.trim().toLowerCase().equalsIgnoreCase(typeOfLanguages.getName()))
+                    return typeOfLanguages.id;
             }
             return "";
         }
     }
 
+//    public enum TypeOfLanguagesCodes {
+//        LOCALE_ENGLISH("0", "en"), LOCALE_HINDI("1","hi"), LOCALE_MARATHI("2","mr"), LOCALE_BENGALI("3","bn"), LOCALE_TAMIL("4","ta"), LOCALE_TELUGU("5","te"),
+//        LOCALE_KANNADA("6","kn"), LOCALE_MALAYALAM("7","ml");
+//        private final String name;
+//        private final String id;
+//
+//        TypeOfLanguagesCodes(String i, String name) {
+//            this.name=name;
+//            this.id=i;
+//        }
+//
+//        public String getId(){
+//            return this.id;
+//        }
+//
+//        public String getName(){
+//            return this.name;
+//        }
+//
+//        public static String findById(String id) {
+//            for (TypeOfLanguagesCodes typeOfLanguagesCodes : TypeOfLanguagesCodes.values()) {
+//                if (id == typeOfLanguagesCodes.getId())
+//                    return typeOfLanguagesCodes.name;
+//            }
+//            return "";
+//        }
+//
+//        public static String findByName(String name) {
+//            for (TypeOfLanguagesCodes typeOfLanguagesCodes : TypeOfLanguagesCodes.values()) {
+//                if (name == typeOfLanguagesCodes.getName())
+//                    return typeOfLanguagesCodes.id;
+//            }
+//            return "";
+//        }
+//    }
+
     public enum PopListRequestType {
         INTEREST,
         DURABLES,
         INCOME,
-        PROFESSION
+        PROFESSION,
+        LANGUAGE
     }
 }

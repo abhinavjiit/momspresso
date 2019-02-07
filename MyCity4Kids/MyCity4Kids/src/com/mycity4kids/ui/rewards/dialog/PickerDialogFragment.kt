@@ -17,6 +17,7 @@ import android.widget.TextView
 import com.mycity4kids.R
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.ui.rewards.adapter.PickerDialogAdapter
+import com.mycity4kids.ui.rewards.fragment.RewardsFamilyInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
 import kotlinx.android.synthetic.main.cropimage.*
 import java.util.*
@@ -52,7 +53,7 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
     private lateinit var saveTextView: TextView
     private lateinit var cancelTextView: TextView
     private lateinit var adapter: PickerDialogAdapter
-    private lateinit var onClickDoneListener : OnClickDoneListener
+    private lateinit var onClickDoneListener: OnClickDoneListener
     private lateinit var contex: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +79,13 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
                     fillDurablesItemNamesByIds(preSelectedItemIds!!)
                 }
             }
+
+            Constants.PopListRequestType.LANGUAGE.name -> {
+                popAllData = resources.getStringArray(R.array.popup_language_list).toList()
+                if (preSelectedItemIds != null && preSelectedItemIds!!.isNotEmpty()) {
+                    fillLanguageItemNamesByIds(preSelectedItemIds!!)
+                }
+            }
         }
     }
 
@@ -86,6 +94,15 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
             id.map {
                 preSelectedItemNames.add(Constants.TypeOfDurables.findById(id.toInt()))
             }
+        }
+    }
+
+    private fun fillLanguageItemNamesByIds(preSelectedItemIds: ArrayList<String>) {
+        (preSelectedItemIds).forEach { id ->
+            preSelectedItemNames.add(Constants.TypeOfLanguagesWithContent.findById(id))
+//            id.map {
+//                preSelectedItemNames.add(Constants.TypeOfLanguages.findById(id))
+//            }
         }
     }
 
@@ -127,7 +144,7 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
         }
 
         (containerView.findViewById<TextView>(R.id.saveTextView)).setOnClickListener {
-            onClickDoneListener.onItemClick(preSelectedItemNames,popupType!!)
+            onClickDoneListener.onItemClick(preSelectedItemNames, popupType!!)
             dialog.dismiss()
         }
     }
@@ -141,7 +158,7 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
 
         // TODO: Customize parameter initialization
         @JvmStatic
-        fun newInstance(columnCount: Int = 1, popType: String, isSingleSelection: Boolean = false, preSelectedItemIds: ArrayList<String>? = null, context: RewardsSocialInfoFragment) =
+        fun newInstance(columnCount: Int = 1, popType: String, isSingleSelection: Boolean = false, preSelectedItemIds: ArrayList<String>? = null, context: RewardsFamilyInfoFragment) =
                 PickerDialogFragment().apply {
                     this.onClickDoneListener = context
                     arguments = Bundle().apply {
@@ -154,16 +171,7 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
     }
 
     interface OnClickDoneListener {
-        fun onItemClick(selectedValue: ArrayList<String>, popupType : String)
+        fun onItemClick(selectedValue: ArrayList<String>, popupType: String)
     }
 
-    override fun onResume() {
-        super.onResume()
-//        val params = dialog.window!!.attributes
-//        params.width = (ViewGroup.LayoutParams.MATCH_PARENT + 200)
-//        params.height = ViewGroup.LayoutParams.MATCH_PARENT
-//        //dialog.window.setGravity(Gravity.CENTER)
-//        dialog.window!!.attributes = params as android.view.WindowManager.LayoutParams
-
-    }
 }

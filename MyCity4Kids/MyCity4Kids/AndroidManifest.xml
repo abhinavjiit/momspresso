@@ -45,6 +45,11 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD0t9fusBGBU-bTdNO9teedX6by9J-LscI" />
+
+
         <!-- API key For Google Map Local -->
 
 

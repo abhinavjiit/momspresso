@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -137,7 +138,9 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
             IChangeCity changeCity = (IChangeCity) getTargetFragment();
             changeCity.onOtherCitySelect(position, otherCityName);
         } else if("rewards".equalsIgnoreCase(fromScreen)){
-            ((BlogSetupActivity) getActivity()).setOtherCityName(position, otherCityName);
+            IChangeCity changeCity = (IChangeCity) getTargetFragment();
+            changeCity.onOtherCitySelect(position, otherCityName);
+            //((BlogSetupActivity) getActivity()).setOtherCityName(position, otherCityName);
         }else {
             ((BlogSetupActivity) getActivity()).setOtherCityName(position, otherCityName);
         }
@@ -163,13 +166,17 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-        String cityNameVal = place.getName().toString();
-        if (StringUtils.isNullOrEmpty(cityNameVal)) {
-            ToastUtils.showToast(getActivity(), "Please enter the city name");
-        } else {
-            updateOtherCity(9, cityNameVal);
+        if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_SELECT_PLACE){
+            Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+            String cityNameVal = place.getName().toString();
+            if (StringUtils.isNullOrEmpty(cityNameVal)) {
+                ToastUtils.showToast(getActivity(), "Please enter the city name");
+            } else {
+                updateOtherCity(9, cityNameVal);
+            }
+            dismiss();
         }
+
     }
 
 

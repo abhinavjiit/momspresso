@@ -37,7 +37,9 @@ class RewardsContainerActivity : BaseActivity(),
         initializeXMLComponents()
 
         /*add fragement to container*/
-        addProfileFragment()
+        //addSocialFragment()
+        addFamilyFragment()
+        //addProfileFragment()
     }
 
     private fun initializeXMLComponents() {
