@@ -538,7 +538,7 @@
     <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
     <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
 
-    <string name="user_activities.toolbar.title">ACTIVITY</string>
+    <string name="user_activities.toolbar.title">SUGGESTED TOPICS</string>
     <string name="user_activities.tabs.recommended">LIKED</string>
     <string name="user_activities.tabs.bookmark">BOOKMARKS</string>
     <string name="user_activities.tabs.watch_later">WATCH LATER</string>
@@ -662,6 +662,7 @@
     <string name="author_type.blogger">BLOGGER</string>
     <string name="author_type.editor">EDITOR</string>
     <string name="author_type.editorial">EDITORIAL TEAM</string>
+    <string name="author_type.collaboration">VIDEO COLLABORATOR</string>
     <string name="author_type.expert">EXPERT</string>
     <string name="author_type.featured">FEATURED AUTHOR</string>
     <string name="author_type.user">USER</string>
@@ -939,5 +940,6 @@
     <string name="please_hold_for_3_seconds">Please hold for minimum 3 seconds, to post comment</string>
     <string name="stop_recording">First stop recording then save</string>
     <string name="cancel_audio">Cancel</string>
+
 
 </resources>

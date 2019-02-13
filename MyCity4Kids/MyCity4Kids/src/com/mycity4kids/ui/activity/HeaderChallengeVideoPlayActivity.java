@@ -114,7 +114,7 @@ public class HeaderChallengeVideoPlayActivity extends BaseActivity implements Vi
         //   backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
 
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(R.string.choose_challenge_label);
+        getSupportActionBar().setTitle("TAKE THE CHALLENGE");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 

@@ -82,16 +82,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
         mAuth = FirebaseAuth.getInstance();
 
-        /*  contentURI = getIntent().getParcelableExtra("uri");*/
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            jsonMyObject = extras.getString("uri");
-        }
-        if (jsonMyObject != null && jsonMyObject.isEmpty())
-            contentURI = new Gson().fromJson(jsonMyObject, Uri.class);
-
-
+        contentURI = getIntent().getParcelableExtra("uri");
         title = getIntent().getStringExtra("title");
         categoryId = getIntent().getStringExtra("categoryId");
         duration = getIntent().getStringExtra("duration");

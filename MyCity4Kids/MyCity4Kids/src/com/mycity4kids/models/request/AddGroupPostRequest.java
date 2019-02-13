@@ -1,5 +1,6 @@
 package com.mycity4kids.models.request;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -12,7 +13,7 @@ public class AddGroupPostRequest {
     private String type;
     private String pollType;
     private Map<String, String> pollOptions;
-    private Map<String, String> mediaUrls;
+    private LinkedHashMap<String, String> mediaUrls;
     private int groupId;
     private String userId;
     private int isAnnon;
@@ -49,11 +50,11 @@ public class AddGroupPostRequest {
         this.pollOptions = pollOptions;
     }
 
-    public Map<String, String> getMediaUrls() {
+    public LinkedHashMap<String, String> getMediaUrls() {
         return mediaUrls;
     }
 
-    public void setMediaUrls(Map<String, String> mediaUrls) {
+    public void setMediaUrls(LinkedHashMap<String, String> mediaUrls) {
         this.mediaUrls = mediaUrls;
     }
 

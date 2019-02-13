@@ -161,7 +161,17 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
                     model.setUserType(responseData.getData().get(0).getResult().getUserType());
                     model.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
-//                    model.setLoginMode(loginMode);
+
+
+
+
+                    model.setBlogTitle(responseData.getData().get(0).getResult().getBlogTitle());
+
+
+
+
+
+                    //                    model.setLoginMode(loginMode);
                     SharedPrefUtils.setUserDetailModel(IdTokenLoginActivity.this, model);
                     SharedPrefUtils.setProfileImgUrl(IdTokenLoginActivity.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
 

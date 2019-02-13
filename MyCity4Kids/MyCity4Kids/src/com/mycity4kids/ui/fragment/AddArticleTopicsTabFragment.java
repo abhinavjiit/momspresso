@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
@@ -23,8 +25,10 @@ import com.mycity4kids.ui.adapter.AddArticleTopicsTabAdapter;
 
 import org.apmem.tools.layouts.FlowLayout;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by hemant on 17/7/17.
@@ -43,6 +47,7 @@ public class AddArticleTopicsTabFragment extends BaseFragment implements AddArti
 //    private AddArticleTopicsTabAdapter searchTopicsSplashAdapter;
     private FlowLayout rootView;
     private LayoutInflater mInflator;
+    private String jsonMyObject;
 
 
     @Nullable
@@ -59,7 +64,19 @@ public class AddArticleTopicsTabFragment extends BaseFragment implements AddArti
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
 
         selectedTopicsMap = new HashMap<>();
+
+        /*Bundle extras = getArguments();
+
+        if (extras != null) {
+            jsonMyObject = extras.getString("selectTopicList");
+            Type listOfdoctorType = new TypeToken<ArrayList<Topics>>() {
+            }.getType();
+            selectTopic = new Gson().fromJson(jsonMyObject, listOfdoctorType);
+
+        }*/
+
         selectTopic = getArguments().getParcelableArrayList("selectTopicList");
+
         position = getArguments().getInt("position");
         previouslyFollowedTopics = getArguments().getStringArrayList("previouslyFollowedTopics");
         processTopicsDataForList();

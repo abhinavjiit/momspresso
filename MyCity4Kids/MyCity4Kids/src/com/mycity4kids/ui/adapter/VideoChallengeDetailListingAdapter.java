@@ -1,16 +1,40 @@
 package com.mycity4kids.ui.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlaybackControlView;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
@@ -26,7 +50,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 public class VideoChallengeDetailListingAdapter extends BaseAdapter {
+
     private Context mContext;
     private Topics topic;
     private LayoutInflater mInflator;
@@ -37,6 +64,17 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     private String selectedStreamUrl;
     private final float density;
     private ArrayList<VlogsListingAndDetailResult> mArticleListData;
+    public SimpleExoPlayer player;
+    public MediaSource mVideoSource;
+    public String STATE_RESUME_WINDOW = "resumeWindow";
+    public String STATE_RESUME_POSITION = "resumePosition";
+    public String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
+    public Uri daUri;
+    public String userAgent;
+    public DefaultHttpDataSourceFactory httpDataSourceFactory;
+    public DefaultDataSourceFactory dataSourceFactory;
+    public boolean isPaused = false;
+
 
     public VideoChallengeDetailListingAdapter(Context pContext, String selected_Name, String selectedActiveUrl, String selectedId, Topics topic, String selectedStreamUrl) {
         density = pContext.getResources().getDisplayMetrics().density;
@@ -47,7 +85,24 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         this.selectedActiveUrl = selectedActiveUrl;
         this.selectedId = selectedId;
         this.selectedStreamUrl = selectedStreamUrl;
+        intiExoPlayer();
     }
+
+    private void intiExoPlayer() {
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+        LoadControl loadControl = new DefaultLoadControl();
+        player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mContext), trackSelector, loadControl);
+        daUri = Uri.parse(selectedStreamUrl);
+        userAgent = Util.getUserAgent(mContext, getApplicationContext().getApplicationInfo().packageName);
+        httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
+        dataSourceFactory = new DefaultDataSourceFactory(mContext, null, httpDataSourceFactory);
+        mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
+        player.prepare(mVideoSource);
+
+    }
+
 
     public void setListData(ArrayList<VlogsListingAndDetailResult> mParentingLists) {
         mArticleListData = mParentingLists;
@@ -96,37 +151,19 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             if (view == null) {
                 videoChallengeHeaderView = new VideoChallengeHeaderView();
                 view = mInflator.inflate(R.layout.video_challenge_detail_listing_header, null);
+                videoChallengeHeaderView.mExoPlayerView = (SimpleExoPlayerView) view.findViewById(R.id.exoplayerChallengeDetailListing);
                 videoChallengeHeaderView.challengeNameText = (TextView) view.findViewById(R.id.ChallengeNameText);
                 videoChallengeHeaderView.rootChallengeHeaderContainer = (RelativeLayout) view.findViewById(R.id.rootChallengeHeaderContainer);
-                videoChallengeHeaderView.challengeHeaderImageView = (ImageView) view.findViewById(R.id.ChallengeNameImage);
+                //   videoChallengeHeaderView.challengeHeaderImageView = (ImageView) view.findViewById(R.id.ChallengeNameImage);
                 videoChallengeHeaderView.submitButtonVideoChallenge = (TextView) view.findViewById(R.id.submit_story_text);
                 view.setTag(videoChallengeHeaderView);
             } else {
                 videoChallengeHeaderView = (VideoChallengeHeaderView) view.getTag();
             }
-            try {
-                Picasso.with(mContext).load(selectedActiveUrl)
-                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(videoChallengeHeaderView.challengeHeaderImageView);
-            } catch (Exception e) {
-                videoChallengeHeaderView.challengeHeaderImageView.setImageResource(R.drawable.default_article);
-            }
+
+            videoChallengeHeaderView.mExoPlayerView.setPlayer(player);
+            player.setPlayWhenReady(true);
             videoChallengeHeaderView.challengeNameText.setText(selected_Name);
-            videoChallengeHeaderView.challengeHeaderImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Intent intent = new Intent(mContext, HeaderChallengeVideoPlayActivity.class);
-                    if (selected_Name != null && !selected_Name.isEmpty() && selectedId != null && !selectedId.isEmpty()) {
-                        intent.putExtra("selectedId", selectedId);
-                        intent.putExtra("selectedName", selected_Name);
-                        intent.putExtra("StreamUrl", selectedStreamUrl);
-                        intent.putExtra("comingFrom", "Challenge");
-                    }
-                    mContext.startActivity(intent);
-
-
-                }
-            });
             videoChallengeHeaderView.submitButtonVideoChallenge.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -141,6 +178,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             });
 
             return view;
+
         } else if (getItemViewType(position) == 0) {
             AddVlogViewHolderChallenge addVlogViewHolder;
             if (view == null) {
@@ -234,9 +272,11 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             } catch (Exception e) {
                 holder.articleImageView.setImageResource(R.drawable.default_article);
             }
+
             return view;
         }
     }
+
 
     class ViewHolderChallenge {
         TextView txvArticleTitle;
@@ -264,9 +304,15 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         RelativeLayout rootChallengeHeaderContainer;
         TextView submitButtonVideoChallenge;
         TextView challengeNameText;
+        SimpleExoPlayerView mExoPlayerView;
+        boolean mExoPlayerFullscreen = false;
+        FrameLayout mFullScreenButton;
+        ImageView mFullScreenIcon;
+        Dialog mFullScreenDialog;
 
 
     }
 
 
 }
+

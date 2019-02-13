@@ -72,7 +72,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
         switch (view.getId()) {
             case R.id.mainView:
             case R.id.getStartedTextView:
-               /* Bundle bundle = new Bundle();
+         /*       Bundle bundle = new Bundle();
                 bundle.putParcelable("topic", articledatamodal);*/
 
                 Intent intent = new Intent(getActivity(), VideoChallengeDetailListingActivity.class);

@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.SuggestBlogTitle;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.BloggerAnalyticsResponse;
 import com.mycity4kids.models.response.ReviewResponse;
@@ -8,6 +9,7 @@ import com.mycity4kids.models.response.UserDetailResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -62,4 +64,10 @@ public interface BloggerDashboardAPI {
     Call<UserCommentsResponse> getUsersComments(@Path("userId") String userId,
                                                 @Query("limit") int limit,
                                                 @Query("pagination") String pagination);
+
+
+    @GET("v1/users/suggestBlogTitle/")
+    Call<SuggestBlogTitle> getUserhandle();
+
+
 }
