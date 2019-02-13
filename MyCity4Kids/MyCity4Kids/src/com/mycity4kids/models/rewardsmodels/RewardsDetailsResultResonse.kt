@@ -43,7 +43,7 @@ data class RewardsDetailsResultResonse(
         var isMother: Int? = null,
         @SerializedName("kids_info")
         @Expose
-        var kidsInfo: List<Any>? = null,
+        var kidsInfo: ArrayList<KidsInfoResponse>? = null,
         @SerializedName("last_name")
         @Expose
         var lastName: String? = null,

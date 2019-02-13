@@ -18,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.google.api.client.util.DateTime
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
@@ -25,16 +26,20 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.rewardsmodels.KidsInfoResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
+import com.mycity4kids.ui.adapter.AdapterTaskList
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.ui.rewards.dialog.PickerDialogFragment
+import com.mycity4kids.utils.AppUtils
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.aa_attendee_item.view.*
 import kotlinx.android.synthetic.main.event_details_activity.*
 import kotlinx.android.synthetic.main.fragment_rewards_family_info.*
 import kotlinx.android.synthetic.main.fragment_rewards_personal_info.*
@@ -204,13 +209,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
                         apiGetResponse = response.data!!.result
-
-                        var list = ArrayList<String>()
-                        list.add("en")
-                        list.add("hi")
-
-                        //apiGetResponse.motherTongue = list
-
                         /*setting values to components*/
                         setValuesToComponents()
                     } else {
@@ -234,27 +232,27 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             }
         }
 
-//        if (apiGetResponse.motherTongue != null && apiGetResponse.motherTongue!!.size > 0) {
-//            floatingLanguage.removeAllViews()
-//            textEditLanguage.visibility = View.VISIBLE
-//            editLanguage.visibility = View.GONE
-//            linearLanguage.visibility = View.VISIBLE
-//            apiGetResponse.motherTongue!!.forEach {
-//                var interestName = Constants.TypeOfLanguages.findById(it)
-//                preSelectedLanguage.add(it)
-//                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
-//                val catTextView = subsubLL.getChildAt(0) as TextView
-//                catTextView.setText(interestName)
-//                catTextView.isSelected = true
-//                floatingLanguage.addView(subsubLL)
-//            }
-//        } else {
-//            editLanguage.visibility = View.VISIBLE
-//            linearLanguage.visibility = View.GONE
-//            floatingLanguage.visibility = View.GONE
-//            textEditLanguage.visibility = View.GONE
-//
-//        }
+        if (apiGetResponse.preferred_languages != null && apiGetResponse.preferred_languages!!.size > 0) {
+            floatingLanguage.removeAllViews()
+            textEditLanguage.visibility = View.VISIBLE
+            editLanguage.visibility = View.GONE
+            linearLanguage.visibility = View.VISIBLE
+            apiGetResponse.preferred_languages!!.forEach {
+                var interestName = Constants.TypeOfLanguages.findById(it)
+                preSelectedLanguage.add(it)
+                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val catTextView = subsubLL.getChildAt(0) as TextView
+                catTextView.setText(interestName)
+                catTextView.isSelected = true
+                floatingLanguage.addView(subsubLL)
+            }
+        } else {
+            editLanguage.visibility = View.VISIBLE
+            linearLanguage.visibility = View.GONE
+            floatingLanguage.visibility = View.GONE
+            textEditLanguage.visibility = View.GONE
+
+        }
 
         if (apiGetResponse.interest != null && apiGetResponse.interest!!.isNotEmpty()) {
             floatingInterest.removeAllViews()
@@ -278,12 +276,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         }
 
-        if (apiGetResponse.isMother != null) {
-            if (apiGetResponse.isMother == 1) {
-                radioYes.isChecked = true
-            } else if (apiGetResponse.isMother == 2) {
-                radioExpecting.isChecked = true
-            }
+        if (apiGetResponse.isMother != null && apiGetResponse.kidsInfo!=null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
+            radioYes.isChecked= true
+        }else{
+            radioNo.isChecked= true
         }
 
         if (apiGetResponse.workStatus != null) {
@@ -291,6 +287,27 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 radioGroupWorkingStatus.check(R.id.radioNotWorking)
             } else if (apiGetResponse.workStatus == 1) {
                 radioGroupWorkingStatus.check(R.id.radiokWorking)
+            }
+        }
+
+        if(apiGetResponse.gender!=null){
+            spinnerGender.setSelection(apiGetResponse.gender!!)
+        }
+        if(apiGetResponse.dob!=null){
+            RewardsFamilyInfoFragment.textDOB.setText(AppUtils.convertTimestampToDate(apiGetResponse.dob))
+        }
+
+        if(apiGetResponse.kidsInfo!=null && apiGetResponse.kidsInfo!!.isNotEmpty()){
+            (apiGetResponse.kidsInfo!!).forEach {
+                if(it!=null && it.dob!=null && it.gender!=null){
+                    createKidsDetailDynamicView(it.gender!!, AppUtils.convertTimestampToDate(it.dob))
+                }else if(it!=null && it.dob==null && it.gender==null){
+                    if(it.expected_date!=null){
+                        editExpectedDate.setText(AppUtils.convertTimestampToDate(it.expected_date))
+                        checkAreYouExpecting.isChecked = true
+                        layoutExptectedDateOfDelivery.visibility = View.VISIBLE
+                    }
+                }
             }
         }
     }
@@ -350,7 +367,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
         }
 
-
         RewardsFamilyInfoFragment.textDOB.setOnClickListener {
             RewardsFamilyInfoFragment.textView = RewardsFamilyInfoFragment.textDOB
             showDatePickerDialog()
@@ -398,7 +414,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             }
         }
 
-        editExpectedDate.setOnClickListener { }
+        editExpectedDate.setOnClickListener {
+            RewardsFamilyInfoFragment.textView = editExpectedDate
+            showDatePickerDialog()
+        }
 
         containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
             submitListener.FamilyOnSubmit()
@@ -484,7 +503,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         return true
     }
 
-    fun createKidsDetailDynamicView() {
+    fun createKidsDetailDynamicView(gender : Int? = null , date : String = "") {
         val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -526,11 +545,23 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             showDatePickerDialog()
         }
 
+        if(gender!=null && !date.isNullOrEmpty()){
+            textDOB.text = date
+            spinnerGender.setSelection(this.spinnerGender.selectedItemPosition)
+        }else{
+            textDOB.text = RewardsFamilyInfoFragment.textKidsDOB.text
+            spinnerGender.setSelection(this.spinnerGender.selectedItemPosition)
+            this.spinnerGender.setSelection(0)
+            RewardsFamilyInfoFragment.textKidsDOB.text = ""
 
-        textDOB.text = RewardsFamilyInfoFragment.textKidsDOB.text
-        spinnerGender.setSelection(this.spinnerGender.selectedItemPosition)
-        RewardsFamilyInfoFragment.textKidsDOB.text = ""
-        this.spinnerGender.setSelection(0)
+//            var kidsInfoResponse =KidsInfoResponse(null,0,gender,0)
+//            if(apiGetResponse.kidsInfo!=null){
+//
+//            }else{
+//
+//            }
+//            apiGetResponse.kidsInfo.add(kidsInfoResponse)
+        }
 
         linearKidsDetail.addView(indexView)
     }
@@ -612,8 +643,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
                         apiGetResponse = response.data!!.result
 
-//                        /*setting values to components*/
-                        setValuesToComponents()
                     } else {
 
                     }

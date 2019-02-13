@@ -119,7 +119,6 @@
                     android:textColor="@color/app_light_black"
                     app:fontName="oswald.ttf" />
 
-
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/editPhone"
                     android:layout_width="match_parent"
@@ -239,16 +238,14 @@
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textSaveAndContinue"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
                 android:background="@color/app_red"
                 android:gravity="center"
-                android:paddingLeft="35dp"
-                android:paddingTop="15dp"
-                android:paddingRight="35dp"
-                android:paddingBottom="15dp"
                 android:text="@string/save_continue"
                 android:textColor="@color/white"
                 android:textSize="18sp" />

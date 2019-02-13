@@ -985,10 +985,14 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_website">ADD WEBSITE</string>
+    <string name="add_youtube">YOUTUBE</string>
+    <string name="add_twitter">TWITTER</string>
+    <string name="add_facebook">FACEBOOK</string>
     <string name="kids_number">"KID %d DETAIL</string>
 
     <string name="cannot_be_left_blank">cannot be left blank\u0020</string>
     <string name="Please_enter_a_valid">Please enter a valid\u0020</string>
     <string name="need_to_select_option">You need to select an option for\u0020</string>
+    <string name="rewards_tab_detail">Rewards</string>
 
 </resources>

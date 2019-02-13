@@ -219,6 +219,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.contact_details)));
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.about_txt)));
+                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.rewards_tab_detail)));
 
                     AppUtils.changeTabsFont(EditProfileNewActivity.this, tabLayout);
 
@@ -229,6 +230,11 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
+                            if(tab.getPosition()==2){
+                                saveTextView.setVisibility(View.GONE);
+                            }else{
+                                saveTextView.setVisibility(View.VISIBLE);
+                            }
                             viewPager.setCurrentItem(tab.getPosition());
                         }
 
@@ -242,8 +248,6 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
                         }
                     });
-
-
                 } else {
                 }
             } catch (Exception e) {
@@ -468,7 +472,6 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
     }
 
     private boolean validateFields() {
-
         if (viewPager.getCurrentItem() == 1) {
             if (TextUtils.isEmpty(viewPagerAdapter.getAbout().getAboutEditText().getText())) {
                 Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_empty), Toast.LENGTH_SHORT).show();

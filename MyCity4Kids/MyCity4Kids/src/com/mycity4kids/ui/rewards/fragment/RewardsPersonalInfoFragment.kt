@@ -25,11 +25,14 @@ import com.facebook.accountkit.ui.AccountKitActivity
 import com.facebook.accountkit.ui.AccountKitConfiguration
 import com.facebook.accountkit.ui.LoginType
 import com.facebook.accountkit.ui.ThemeUIManager
+import com.google.android.gms.location.places.AutocompleteFilter
+import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.api.client.util.DateTime
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
+import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -70,6 +73,7 @@ import java.util.*
  */
 
 const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
+const val REQUEST_SELECT_PLACE = 1000
 
 class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity {
     override fun onCitySelect(cityItem: CityInfoItem?) {
@@ -119,7 +123,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private var selectedCityId: Int = 0
     private var newSelectedCityId: String? = null
     private var currentCityName: String? = null
-    private var otherCityName: String? = null
+    private var cityName: String? = null
     private var accountKitAuthCode = ""
 
     companion object {
@@ -183,14 +187,23 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
 
         editLocation.setOnClickListener {
-            var cityFragment = CityListingDialogFragment()
-            cityFragment.setTargetFragment(this, 0)
-            val _args = Bundle()
-            _args.putParcelableArrayList("cityList", cityList)
-            _args.putString("fromScreen", "rewards")
-            cityFragment.setArguments(_args)
-            val fm = childFragmentManager
-            cityFragment.show(fm, "Replies")
+
+            val typeFilter = AutocompleteFilter.Builder()
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                    .build()
+            val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                    .setFilter(typeFilter)
+                    .build(activity)
+            startActivityForResult(intent, REQUEST_SELECT_PLACE)
+
+//            var cityFragment = CityListingDialogFragment()
+//            cityFragment.setTargetFragment(this, 0)
+//            val _args = Bundle()
+//            _args.putParcelableArrayList("cityList", cityList)
+//            _args.putString("fromScreen", "rewards")
+//            cityFragment.setArguments(_args)
+//            val fm = childFragmentManager
+//            cityFragment.show(fm, "Replies")
         }
 
         textVerify = containerView.findViewById(R.id.textVerify)
@@ -280,8 +293,22 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (data != null && resultCode == Activity.RESULT_OK) {
-            accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+        if(resultCode == Activity.RESULT_OK && data!=null){
+            when(requestCode){
+                REQUEST_SELECT_PLACE -> {
+                    val place = PlaceAutocomplete.getPlace(activity, data)
+                    if(!place.name.toString().isNullOrEmpty()){
+                        cityName = place.name.toString()
+                        editLocation.setText(cityName)
+                    }
+                }
+                VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE ->{
+                    if (data != null && resultCode == Activity.RESULT_OK) {
+                        accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+                    }
+                }
+
+            }
         }
     }
 

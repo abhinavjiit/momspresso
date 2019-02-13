@@ -310,6 +310,11 @@ public class Constants {
     //API Success status
     public static String SUCCESS = "success";
 
+    /*constants for instagram*/
+    public static final String CLIENT_ID = "e1379c056236404cbc786d15e7dac994";
+    public static final String CLIENT_SECRET = "2c3a283fe8e141e799235bb38cce561a";
+    public static final String INSTA_CALLBACK_URL = "https://www.momspresso.com";
+
     public enum TypeOfDurables {
         AIR_CONDITIONER(1, "Air Conditioner"), REFRIGERATOR(2, "Refrigerator"), CAR(3, "Car"), TWO_WHEELER(4, "Two wheeler"), AIR_PURIFIER(5, "Air Purifier"),
         WASHING_MACHINE(6, "Washing Machine"), TV(7, "TV"), MUSIC_SYSTEM(8, "Music System"), WATER_HEATER(9, "Water Heater"), MOBILE_PHONE(10, "Mobile phone"),

@@ -3,6 +3,8 @@ package com.mycity4kids.facebook;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -80,7 +82,6 @@ public final class FacebookUtils {
 //                                            lr.setCityId("" + SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId());
 //                                            lr.setRequestMedium("fb");
 //                                            lr.setSocialToken(accessToken.getToken());
-//
 //                                            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
 //                                            LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
 //                                            Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
@@ -96,18 +97,20 @@ public final class FacebookUtils {
                         parameters.putString("fields", "id,name,email,gender");
                         request.setParameters(parameters);
                         request.executeAsync();
-
                     }
 
                     @Override
                     public void onCancel() {
                         AccessToken.setCurrentAccessToken(null);
+                        Log.e("faceboook on cancel", "cancel");
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
+
                         AccessToken.setCurrentAccessToken(null);
-                        // Toast.makeText(SignUpOption.this, exception.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.e("faceboook on error", "onError");
+                         //Toast.makeText(act, exception.getMessage(), Toast.LENGTH_LONG).show();
 //                        showToast(exception.getMessage());
                     }
                 });

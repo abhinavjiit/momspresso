@@ -9,10 +9,13 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:theme="@style/ToolbarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextAppearance="@style/ToolbarTheme.Title">
 
         <RelativeLayout
@@ -27,8 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:text="@string/momspresso_rewards"
                 android:textColor="@color/home.toolbar.titlecolor"
                 android:textSize="20sp"
@@ -38,16 +41,16 @@
                 android:id="@+id/selectOptToolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_toLeftOf="@+id/rightContainerLL"
                 android:layout_toStartOf="@+id/rightContainerLL"
+                android:layout_toLeftOf="@+id/rightContainerLL"
                 android:gravity="center"
-                android:paddingBottom="10dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:text="@string/home_screen.select_an_option.title"
                 android:textColor="@color/select_option.toolbar.titlecolor"
                 android:textSize="20sp"
@@ -61,10 +64,10 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/toolbarTitle"
                 android:layout_toRightOf="@+id/toolbarTitle"
-                android:paddingBottom="15dp"
                 android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:paddingTop="15dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="15dp"
                 android:src="@drawable/arrow_bluexxhdpidown"
                 android:tint="#507cbe"
                 android:visibility="gone" />
@@ -83,10 +86,10 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
                     android:src="@drawable/ic_search"
                     android:visibility="visible" />
 
@@ -94,12 +97,12 @@
                     android:id="@+id/langTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="5dp"
                     android:drawableRight="@drawable/arrowdownnew"
-                    android:paddingBottom="10dp"
+                    android:drawablePadding="5dp"
                     android:paddingLeft="5dp"
-                    android:paddingRight="10dp"
                     android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
                     android:text="@string/language_label.english"
                     android:textColor="#545454"
                     android:textSize="20sp"
@@ -108,6 +111,12 @@
             </LinearLayout>
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_light"
+        app:layout_constraintBottom_toTopOf="@+id/container" />
 
     <FrameLayout
         android:id="@+id/container"

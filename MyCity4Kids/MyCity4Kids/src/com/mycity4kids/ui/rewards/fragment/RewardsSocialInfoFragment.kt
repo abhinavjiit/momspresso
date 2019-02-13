@@ -2,9 +2,17 @@ package com.mycity4kids.ui.rewards.fragment
 
 
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
+import android.support.customtabs.CustomTabsClient.getPackageName
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.AppCompatSpinner
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +26,7 @@ import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Scope
 import com.kelltontech.network.Response
+import com.kelltontech.ui.BaseActivity
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ConnectivityUtils
 import com.kelltontech.utils.ToastUtils.showToast
@@ -26,6 +35,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
+import com.mycity4kids.instagram.InstagramApp
 import com.mycity4kids.interfaces.IFacebookUser
 import com.mycity4kids.models.request.LoginRegistrationRequest
 import com.mycity4kids.models.response.BaseResponseGeneric
@@ -42,6 +52,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.event_details_activity.*
 import org.apmem.tools.layouts.FlowLayout
+import java.security.MessageDigest
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -51,7 +62,17 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  */
-class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient.OnConnectionFailedListener {
+class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient.OnConnectionFailedListener, InstagramApp.OAuthAuthenticationListener {
+    override fun onSuccess() {
+        if (mApp!!.hasAccessToken()) {
+            editInstagram.setText("INSTAGRAM CONNECTED")
+            instagramAuthToken= mApp!!.accessToken
+        }
+    }
+
+    override fun onFail(error: String?) {
+    }
+
     override fun onConnectionFailed(p0: ConnectionResult) {
 
     }
@@ -59,17 +80,10 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     override fun getFacebookUser(user: String?) {
         try {
             if (user != null) {
-                loginMode = "fb"
-                val lr = LoginRegistrationRequest()
-                lr.cityId = "" + SharedPrefUtils.getCurrentCityModel(activity).id
-                lr.requestMedium = "fb"
-                lr.socialToken = user
-                val retrofit = BaseApplication.getInstance().retrofit
-                //val loginRegistrationAPI = retrofit.create(LoginRegistrationAPI::class.java)
-                //val call = loginRegistrationAPI.login(lr)
-                //call.enqueue(onLoginResponseReceivedListener)
-
+                facebookAuthToken= user
+                editFacebook.setText("FACEBOOK CONNECTED")
             }
+            removeProgressDialog()
         } catch (e: Exception) {
             // e.printStackTrace();
             removeProgressDialog()
@@ -97,8 +111,12 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     private var professionList = ArrayList<String>()
     private var mGoogleApiClient: GoogleApiClient? = null
     private lateinit var apiGetResponse: RewardsDetailsResultResonse
-    private var callbackManager: CallbackManager? = null
     private var loginMode = ""
+    private var mApp: InstagramApp? = null
+    private var userInfoHashmap = HashMap<String, String>()
+    private var callbackManager: CallbackManager? = null
+    private var facebookAuthToken : String? = null
+    private var instagramAuthToken : String? = null
 
     companion object {
         fun newInstance() = RewardsSocialInfoFragment().apply {
@@ -107,6 +125,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
             }
         }
     }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -129,6 +148,28 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
         /*fetch data from server*/
         fetchRewardsData()
+
+
+        mApp = InstagramApp(activity, Constants.CLIENT_ID,
+                Constants.CLIENT_SECRET, Constants.INSTA_CALLBACK_URL)
+        mApp!!.setListener(this)
+
+//        mApp!!.setListener(object : InstagramApp.OAuthAuthenticationListener{
+//            override fun onSuccess() {
+//                //mApp!!.fetchUserName(handler)
+//            }
+//
+//            override fun onFail(error: String?) {
+//                Toast.makeText(activity, error, Toast.LENGTH_SHORT)
+//                        .show()
+//            }
+//
+//        })
+//
+        if (mApp!!.hasAccessToken()) {
+            editInstagram.setText("INSTAGRAM CONNECTED")
+            instagramAuthToken= mApp!!.accessToken
+        }
 
 
         return containerView
@@ -160,7 +201,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 }
 
                 override fun onError(e: Throwable) {
-
+                    Log.e("exception in error", e.message.toString())
                 }
             })
         }
@@ -181,6 +222,23 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         editTwitter = containerView.findViewById(R.id.editTwitter)
         editWebsite = containerView.findViewById(R.id.editWebsite)
         editYoutube = containerView.findViewById(R.id.editYoutube)
+
+        layoutInstagram.setOnClickListener {
+            AuthenticateWithInstagram()
+        }
+
+        editInstagram.setOnClickListener {
+            AuthenticateWithInstagram()
+        }
+
+        layoutFacebook.setOnClickListener {
+            if (ConnectivityUtils.isNetworkEnabled(activity)) {
+                showProgressDialog(getString(R.string.please_wait))
+                FacebookUtils.facebookLogin(activity, this)
+            } else {
+                (activity as BaseActivity).showToast(getString(R.string.error_network))
+            }
+        }
 
         editFacebook.setOnClickListener {
             if (ConnectivityUtils.isNetworkEnabled(activity)) {
@@ -252,7 +310,12 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
             //submitListener.socialOnSubmitListener()
             //postDataofRewardsToServer()
+        }
+    }
 
+    private fun AuthenticateWithInstagram() {
+        if (!mApp!!.hasAccessToken()) {
+            mApp!!.authorize()
         }
     }
 
@@ -297,6 +360,20 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     interface SubmitListener {
         fun socialOnSubmitListener()
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == 0) {
+            removeProgressDialog()
+        }
+        callbackManager!!.onActivityResult(requestCode, resultCode, data)
+        FacebookUtils.onActivityResult(activity, requestCode, resultCode, data)
+    }
+
+    fun updateFaceBookView(){
+        editFacebook.setText("FACEBOOK CONNECTED")
     }
 
 }

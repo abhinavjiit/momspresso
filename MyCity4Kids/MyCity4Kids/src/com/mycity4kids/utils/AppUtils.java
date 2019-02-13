@@ -68,7 +68,10 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -812,5 +815,49 @@ public class AppUtils {
         } else {
             return activity.getString(stringId);
         }
+    }
+
+    public static String convertTimestampToDate(Long timestamp){
+        return new SimpleDateFormat("dd/MM/yyyy").format(new Date(timestamp*1000));
+    }
+
+    public static void CopyStream(InputStream is, OutputStream os) {
+        final int buffer_size = 1024;
+        try {
+            byte[] bytes = new byte[buffer_size];
+            for (;;) {
+                int count = is.read(bytes, 0, buffer_size);
+                if (count == -1)
+                    break;
+                os.write(bytes, 0, count);
+            }
+        } catch (Exception ex) {
+        }
+    }
+
+    public static String streamToString(InputStream is) throws IOException {
+        String str = "";
+
+        if (is != null) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+
+            try {
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(is));
+
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                reader.close();
+            } finally {
+                is.close();
+            }
+
+            str = sb.toString();
+        }
+
+        return str;
     }
 }

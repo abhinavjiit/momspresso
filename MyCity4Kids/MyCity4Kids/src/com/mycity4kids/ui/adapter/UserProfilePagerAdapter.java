@@ -9,7 +9,7 @@ import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.ui.fragment.About;
 import com.mycity4kids.ui.fragment.Contactdetails;
-import com.mycity4kids.ui.fragment.RewardsFragment;
+import com.mycity4kids.ui.fragment.RewardsTabFragment;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     private About about;
     private Contactdetails contactdetails;
-    private RewardsFragment rewardsFragment;
+    private RewardsTabFragment rewardsFragment;
 
     public UserProfilePagerAdapter(FragmentManager fm, UserDetailResult userDetails, ArrayList<CityInfoItem> mDatalist) {
         super(fm);
@@ -48,7 +48,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
                 return contactdetails;
             case 2:
                 if (rewardsFragment == null) {
-                    rewardsFragment = new RewardsFragment();
+                    rewardsFragment = new RewardsTabFragment();
                 }
                 rewardsFragment.setArguments(bundle);
                 return rewardsFragment;
@@ -58,7 +58,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     public About getAbout() {
@@ -69,7 +69,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
         return contactdetails;
     }
 
-    public RewardsFragment getRewardsFragment(){
+    public RewardsTabFragment getRewardsFragment() {
         return rewardsFragment;
     }
 }
