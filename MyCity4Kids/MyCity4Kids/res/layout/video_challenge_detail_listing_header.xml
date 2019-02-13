@@ -27,7 +27,23 @@
             android:visibility="visible"
             app:fontName="oswald.ttf" />
 
-        <ImageView
+        <FrameLayout
+            android:id="@+id/main_media_frame"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@id/ChallengeNameText"
+            android:visibility="visible"
+            android:background="#000000">
+
+            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                android:id="@+id/exoplayerChallengeDetailListing"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center" />
+
+        </FrameLayout>
+
+    <!--    <ImageView
 
             android:id="@+id/ChallengeNameImage"
             android:layout_width="match_parent"
@@ -35,7 +51,7 @@
             android:layout_below="@id/ChallengeNameText"
             android:background="@drawable/short_story_border_bg"
             android:src="@drawable/groups_generic"
-            android:visibility="visible" />
+            android:visibility="visible" />-->
 
         <ImageView
             android:id="@+id/videoIndicatorImageView"
@@ -44,7 +60,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="90dp"
             android:src="@drawable/ic_videos"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/submit_challenge_relative_Layout"

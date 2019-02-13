@@ -284,9 +284,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         return true;
                     }
                 });
-                mWebView.setLongClickable(false);}
+                mWebView.setLongClickable(false);
+            }
 //            videoWebView.setWebChromeClient(mWebChromeClient);
-            
+
             author_type = (TextView) fragmentView.findViewById(R.id.blogger_type);
 
             followClick = (TextView) fragmentView.findViewById(R.id.follow_click);
@@ -784,6 +785,19 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     } else {
                         shareUrl = deepLinkURL;
                     }
+                } else if (AppConstants.USER_TYPE_COLLABORATION.equals(detailData.getUserType())) {
+                    if (isAdded()) {
+                        author_type.setText(AppUtils.getString(getActivity(), R.string.author_type_collaboration));
+                    } else {
+                        author_type.setText(AppConstants.AUTHOR_TYPE_COLLABORATION.toUpperCase());
+                    }
+
+                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
+                    } else {
+                        shareUrl = deepLinkURL;
+                    }
+
                 } else {
                     if (isAdded()) {
 //                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_user));

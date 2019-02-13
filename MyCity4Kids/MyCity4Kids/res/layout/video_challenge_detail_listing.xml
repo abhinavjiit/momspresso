@@ -40,6 +40,7 @@
         android:id="@+id/shimmer_funny_videos_article"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
         fab:duration="1000">
 
         <LinearLayout
@@ -54,6 +55,7 @@
         </LinearLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
+
 
     <ListView
         android:id="@+id/vlogsListView"
@@ -226,9 +228,9 @@
         android:id="@+id/fabSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="right|bottom"
         fab:fab_colorNormal="@color/fab.white"
         fab:fab_colorPressed="@color/fab.white"

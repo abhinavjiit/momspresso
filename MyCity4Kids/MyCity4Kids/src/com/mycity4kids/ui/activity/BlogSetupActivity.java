@@ -41,6 +41,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.SuggestBlogTitle;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
@@ -114,8 +115,12 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     private CityListingDialogFragment cityFragment;
     private ImageView profilePicImageView, changeProfilePicImageView;
     private View mLayout;
-    TextView emailLabelTextView;
+    TextView emailLabelTextView, blogTitlesLabelTextView, blogHandleLabelTextView;
     EditText emailEditText;
+    private String comingFrom = "Normal";
+    private String blogTitle;
+    private String email;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +141,45 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         changeProfilePicImageView = (ImageView) findViewById(R.id.changeProfilePicImageView);
         emailEditText = (EditText) findViewById(R.id.emailEditText);
         emailLabelTextView = (TextView) findViewById(R.id.emailLabelTextView);
+        blogTitlesLabelTextView = (TextView) findViewById(R.id.blogTitlesLabelTextView);
+        blogHandleLabelTextView = (TextView) findViewById(R.id.blogHandleLabelTextView);
+        Intent intent = getIntent();
+        comingFrom = intent.getStringExtra("comingFrom");
+        blogTitle = intent.getStringExtra("BlogTitle");
+        email = intent.getStringExtra("email");
+        if (blogTitle != null && !blogTitle.isEmpty()) {
+            blogTitleEditText.setText(blogTitle);
+            blogTitleEditText.setEnabled(false);
+        } else {
+            blogTitleEditText.setEnabled(true);
+        }
+
+        if (email != null && !email.isEmpty()) {
+            emailEditText.setText(email);
+            emailEditText.setEnabled(false);
+        } else {
+            emailEditText.setEnabled(true);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*if (comingFrom == null) {
+            comingFrom = "Normal";
+        }*/
+       /* if (comingFrom.equals("Videos")) {
+            aboutSelfEditText.setText("Hey,I Am A Vlogger");
+        }*/
 
         okayTextView.setOnClickListener(this);
         cityTextView.setOnClickListener(this);
@@ -155,7 +199,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             emailEditText.setVisibility(View.GONE);
             emailLabelTextView.setVisibility(View.GONE);
         }
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
         Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -164,7 +207,62 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         ConfigAPIs cityConfigAPI = retrofit.create(ConfigAPIs.class);
         Call<CityConfigResponse> cityCall = cityConfigAPI.getCityConfig();
         cityCall.enqueue(cityConfigResponseCallback);
+
+        if (comingFrom.equals("Videos")) {
+            blogHandleLabelTextView.setVisibility(View.VISIBLE);
+            blogTitlesLabelTextView.setVisibility(View.GONE);
+            aboutSelfEditText.setText("Hey,I Am A Vlogger");
+            setUserHandle();
+        } else {
+            blogTitlesLabelTextView.setVisibility(View.VISIBLE);
+            blogHandleLabelTextView.setVisibility(View.GONE);
+        }
+
+
     }
+
+    private void setUserHandle() {
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
+        Call<SuggestBlogTitle> call = bloggerDashboardAPI.getUserhandle();
+        call.enqueue(getUserHandleResponseCallBack);
+
+
+    }
+
+    private Callback<SuggestBlogTitle> getUserHandleResponseCallBack = new Callback<SuggestBlogTitle>() {
+        @Override
+        public void onResponse(Call<SuggestBlogTitle> call, retrofit2.Response<SuggestBlogTitle> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                return;
+            }
+            SuggestBlogTitle responsedata = response.body();
+            if (responsedata != null) {
+                if (responsedata.getCode() == 200 && Constants.SUCCESS.equals(responsedata.getStatus())) {
+                    if (responsedata.getData().size() != 0 && responsedata.getData() != null) {
+
+                        blogTitleEditText.setText(responsedata.getData().get(0).toString().replaceAll("-", " "));
+                    } else {
+                        ToastUtils.showToast(BlogSetupActivity.this, "something went wrong at the server");
+                    }
+                } else {
+                    ToastUtils.showToast(BlogSetupActivity.this, "something went wrong at the server");
+                }
+
+
+            } else {
+                ToastUtils.showToast(BlogSetupActivity.this, "something went wrong at the server");
+            }
+        }
+
+        @Override
+        public void onFailure(Call<SuggestBlogTitle> call, Throwable t) {
+
+        }
+    };
+
 
     private Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
         @Override
@@ -176,9 +274,19 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                if (comingFrom.equals("ShortStoryAndArticle")) {
+                    blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
+                }
 
-                blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
-                aboutSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
+                if (responseData.getData().get(0).getResult().getUserBio() != null && !responseData.getData().get(0).getResult().getUserBio().isEmpty()) {
+                    aboutSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
+                }
+
+
+
+                /*if (comingFrom.equals("ShortStoryAndArticle")) {
+                    aboutSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
+                }*/
 
                 if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
 //                    phoneEditText.setText(" ");
@@ -450,20 +558,31 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     }
 
     private boolean validateFields() {
-        if (StringUtils.isNullOrEmpty(aboutSelfEditText.getText().toString().trim())) {
-            Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_empty), Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (StringUtils.isNullOrEmpty(blogTitleEditText.getText().toString().trim())) {
+        if (comingFrom.equals("ShortStoryAndArticle")) {
+            if (StringUtils.isNullOrEmpty(aboutSelfEditText.getText().toString().trim())) {
+                Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_empty), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+
+        if (StringUtils.isNullOrEmpty(blogTitleEditText.getText().toString().trim())) {
             Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_blog_title_empty), Toast.LENGTH_SHORT).show();
             return false;
-        } else if (countWords(aboutSelfEditText.getText().toString()) > MAX_WORDS) {
-            Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_max)
-                    + " " + MAX_WORDS + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words), Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (emailEditText.getVisibility() == View.VISIBLE) {
-            if ((!StringUtils.isValidEmail(emailEditText.getText().toString()))) {
-                Toast.makeText(this, getString(R.string.enter_valid_email), Toast.LENGTH_SHORT).show();
+        }
+        if (comingFrom.equals("ShortStoryAndArticle")) {
+            if (countWords(aboutSelfEditText.getText().toString()) > MAX_WORDS) {
+                Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_max)
+                        + " " + MAX_WORDS + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words), Toast.LENGTH_SHORT).show();
                 return false;
+            }
+        }
+        if (comingFrom.equals("ShortStoryAndArticle")) {
+            if (emailEditText.getVisibility() == View.VISIBLE) {
+                if ((!StringUtils.isValidEmail(emailEditText.getText().toString()))) {
+                    Toast.makeText(this, getString(R.string.enter_valid_email), Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }
         }
         return true;

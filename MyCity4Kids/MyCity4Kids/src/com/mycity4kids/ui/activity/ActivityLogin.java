@@ -3,6 +3,8 @@ package com.mycity4kids.ui.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -72,6 +75,8 @@ import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -115,6 +120,10 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().requestScopes(new Scope(Scopes.PLUS_ME))
                 .build();
+
+
+
+
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -353,6 +362,11 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         model.setSessionId(userDetailResult.getSessionId());
         model.setIsLangSelection(userDetailResult.getIsLangSelection());
         model.setUserType(userDetailResult.getUserType());
+
+
+        model.setBlogTitle(userDetailResult.getBlogTitle());
+
+
         int cityIdFromLocation = SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId();
         if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
             model.setCityId(userDetailResult.getCityId());
@@ -520,6 +534,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     model.setIsLangSelection(responseData.getData().get(0).getResult().getIsLangSelection());
                     model.setUserType(responseData.getData().get(0).getResult().getUserType());
                     model.setGender("" + responseData.getData().get(0).getResult().getGender());
+                    model.setBlogTitle(responseData.getData().get(0).getResult().getBlogTitle());
                     int cityIdFromLocation = SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId();
                     if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
                         model.setCityId(responseData.getData().get(0).getResult().getCityId());

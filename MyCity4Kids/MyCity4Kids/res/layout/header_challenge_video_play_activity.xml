@@ -29,7 +29,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/choose_challenge_label"
                 android:textSize="20sp"
                 app:fontName="oswald.ttf" />
         </RelativeLayout>
@@ -40,6 +39,7 @@
     <FrameLayout
         android:id="@+id/main_media_frame"
         android:layout_width="match_parent"
+
         android:layout_height="300dp"
         android:layout_below="@+id/anim_toolbar"
         android:background="#000000">

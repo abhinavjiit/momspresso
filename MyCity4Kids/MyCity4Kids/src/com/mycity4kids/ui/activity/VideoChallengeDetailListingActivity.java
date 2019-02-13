@@ -1,8 +1,12 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -10,9 +14,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -22,6 +29,24 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -35,9 +60,14 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
+import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
 import com.mycity4kids.utils.MixPanelUtils;
+import com.mycity4kids.widget.CustomFontTextView;
+import com.mycity4kids.widget.RelatedArticlesView;
+
+import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.ArrayList;
 
@@ -45,7 +75,62 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 public class VideoChallengeDetailListingActivity extends BaseActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+    private static final int RECOVERY_REQUEST = 1;
+
+    private RelativeLayout mLodingView;
+    private ObservableScrollView mScrollView;
+    private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
+    private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
+    private LinearLayout trendingArticles;
+    private LinearLayout recentAuthorArticles;
+    private FlowLayout tagsLayout;
+    private TextView articleViewCountTextView;
+    private Toolbar mToolbar;
+    private ImageView authorImageView;
+    private TextView followClick;
+    private Rect scrollBounds;
+    private TextView authorTypeTextView, authorNameTextView;
+    private TextView article_title;
+    private TextView articleCreatedDateTextView;
+
+    private VlogsListingAndDetailResult detailData;
+    private String videoId;
+    private String commentURL = "";
+    private String commentMainUrl;
+    boolean isArticleDetailEndReached = false;
+    private String authorId;
+    private String titleSlug;
+    private String authorType, author;
+    private String shareUrl = "";
+    private String deepLinkURL;
+    private Boolean isFollowing = false;
+    long duration;
+    private VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI;
+    private CustomFontTextView facebookShareTextView, whatsappShareTextView, emailShareTextView, likeArticleTextView, bookmarkArticleTextView;
+    private String userDynamoId;
+    private ImageView backNavigationImageView;
+    private LinearLayout bottomToolbarLL;
+    private TextView viewCommentsTextView;
+
+    private final String STATE_RESUME_WINDOW = "resumeWindow";
+    private final String STATE_RESUME_POSITION = "resumePosition";
+    private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
+
+    private MediaSource mVideoSource;
+    private boolean mExoPlayerFullscreen = false;
+    SimpleExoPlayer player;
+    private FrameLayout mFullScreenButton;
+    private ImageView mFullScreenIcon;
+    private Dialog mFullScreenDialog;
+
+    private int mResumeWindow;
+    private long mResumePosition;
+    String streamUrl = "";
+    private String taggedCategories;
+    private MixpanelAPI mixpanel;
 
     private VideoChallengeDetailListingAdapter articlesListingAdapter;
     private String selectedId;
@@ -54,6 +139,7 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
     private String selectedStreamUrl;
     private int pos;
     private Topics topic;
+
     private String parentName, parentId;
     private String ActiveUrl;
     private ArrayList<String> challengeId = new ArrayList<>();
@@ -64,7 +150,6 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
     FloatingActionsMenu fabMenu;
     ListView listView;
 
-    private RelativeLayout mLodingView;
     TextView noBlogsTextView;
     FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     FrameLayout frameLayout;
@@ -78,11 +163,11 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
     private String fromScreen;
     private ShimmerFrameLayout funnyvideosshimmer;
     private String videoCategory;
-    private MixpanelAPI mixpanel;
-    private Toolbar mToolbar;
     private TextView toolbarTitleText;
     private String Topics;
     private String jsonMyObject;
+
+
     ;
 
     @Override
@@ -111,7 +196,11 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setDisplayShowHomeEnabled(true);
 
-
+        if (savedInstanceState != null) {
+            mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
+            mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
+            /* mExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);*/
+        }
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             jsonMyObject = extras.getString("Topic");
@@ -190,16 +279,27 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
         articlesListingAdapter = new VideoChallengeDetailListingAdapter(this, selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
-
         articlesListingAdapter.notifyDataSetChanged();
+
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
+
+
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem != 0) {
+
+                    articlesListingAdapter.player.setPlayWhenReady(false);
+                    articlesListingAdapter.isPaused = true;
+                }/* else {
+
+                    articlesListingAdapter.player.setPlayWhenReady(true);
+                    articlesListingAdapter.isPaused = false;
+                }*/
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
@@ -226,14 +326,22 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
                         intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
                         startActivity(intent);
                     }
-                }
-                if (i == 0) {
+                } else {
+                    if (!articlesListingAdapter.isPaused) {
+                        articlesListingAdapter.player.setPlayWhenReady(true);
+                        articlesListingAdapter.isPaused = false;
+                    }
+                    if (articlesListingAdapter.isPaused) {
+                        articlesListingAdapter.player.setPlayWhenReady(false);
+                        articlesListingAdapter.isPaused = true;
+                    }
 
 
                 }
 
             }
         });
+        //initExoPlayer();
 
     }
 
@@ -406,6 +514,35 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
     public void onPause() {
         super.onPause();
         funnyvideosshimmer.stopShimmerAnimation();
+        if (articlesListingAdapter.player != null) {
+            articlesListingAdapter.player.setPlayWhenReady(false);
+
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (articlesListingAdapter.player != null) {
+            articlesListingAdapter.player.setPlayWhenReady(false);
+
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (articlesListingAdapter.player != null) {
+            articlesListingAdapter.player.setPlayWhenReady(false);
+
+        }
     }
 
     @Override
@@ -417,4 +554,6 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
         }
         return true;
     }
+
+
 }

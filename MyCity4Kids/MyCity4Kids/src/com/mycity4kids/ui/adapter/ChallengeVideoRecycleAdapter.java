@@ -39,6 +39,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
         mInflator = (LayoutInflater) mcontext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.recyclerViewClickListener = recyclerViewClickListener;
         this.mcontext = mcontext;
+        setHasStableIds(true);
     }
 
 
@@ -48,6 +49,16 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
         View view = mInflator.inflate(R.layout.challenge_recyler_adapter, parent, false);
         viewHolder = new ChallengeViewHolder(view, recyclerViewClickListener);
         return viewHolder;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override

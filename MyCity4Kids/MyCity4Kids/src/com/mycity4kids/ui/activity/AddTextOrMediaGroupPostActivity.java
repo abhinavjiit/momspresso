@@ -82,6 +82,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -112,7 +113,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
     private TaskFragment mTaskFragment;
     private GroupResult selectedGroup;
-    private HashMap<ImageView, String> imageUrlHashMap = new HashMap<>();
+    private LinkedHashMap<ImageView, String> imageUrlHashMap = new LinkedHashMap<>();
     private Uri imageUri;
     private File photoFile;
     private String mCurrentPhotoPath, absoluteImagePath;
@@ -312,7 +313,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         }
         addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
 
-        Map<String, String> mediaMap = new HashMap<>();
+        LinkedHashMap<String, String> mediaMap = new LinkedHashMap<>();
         int i = 1;
         if (!imageUrlHashMap.isEmpty()) {
             for (Map.Entry<ImageView, String> entry : imageUrlHashMap.entrySet()) {

@@ -39,6 +39,7 @@ import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
+import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -55,9 +56,11 @@ import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
+import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ShortStoryTopicsRecyclerAdapter;
@@ -83,8 +86,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-/**
- * Created by hemant on 31/5/18.
+/*
+  Created by hemant on 31/5/18.
  */
 
 public class AddShortStoryActivity extends BaseActivity implements View.OnClickListener, ShortStoryTopicsRecyclerAdapter.RecyclerViewClickListener {
@@ -527,9 +530,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             }
 
         } catch (
-                FileNotFoundException e)
-
-        {
+                FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -893,12 +894,108 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     };
 
     private void getBlogPage() {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+     /*   Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
 
         Call<BlogPageResponse> call = getBlogPageAPI.getUserBlogPage(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        call.enqueue(blogPageSetUpResponseListener);
+        call.enqueue(blogPageSetUpResponseListener);*/
+        BaseApplication.getInstance().destroyRetrofitInstance();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(onLoginResponseReceivedListener);
+
+
     }
+
+
+    Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+
+            Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+
+            UserDetailResponse responseData = response.body();
+            if (responseData != null) {
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                    if (responseData.getData().get(0).getResult().getBlogTitleSlug() == null || responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+
+                        if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                            Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
+                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+                            intent.putExtra("comingFrom", "ShortStoryAndArticle");
+                            startActivity(intent);
+                        } else if (responseData.getData().get(0).getResult().getEmail() != null || !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+
+                            Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
+                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+                            intent.putExtra("comingFrom", "ShortStoryAndArticle");
+                            startActivity(intent);
+                        }
+
+
+                    } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+
+
+                        if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                            Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
+                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+                            intent.putExtra("comingFrom", "ShortStoryAndArticle");
+                            startActivity(intent);
+                        } else if (responseData.getData().get(0).getResult().getEmail() != null || !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+
+                            /*Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
+                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+                            startActivity(intent);*/
+
+                            if (Build.VERSION.SDK_INT >= 23) {
+                                if (ActivityCompat.checkSelfPermission(AddShortStoryActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                                        != PackageManager.PERMISSION_GRANTED
+                                        || ActivityCompat.checkSelfPermission(AddShortStoryActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                        != PackageManager.PERMISSION_GRANTED) {
+                                    Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
+                                    requestStoragePermissions();
+                                } else {
+                                    createAndUploadShareableImage();
+                                }
+                            } else {
+                                createAndUploadShareableImage();
+                            }
+
+
+                        }
+
+
+                    }
+                }
+
+
+            } else {
+                ToastUtils.showToast(AddShortStoryActivity.this, "something went wrong");
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+
+        }
+    };
+
 
     private Callback<BlogPageResponse> blogPageSetUpResponseListener = new Callback<BlogPageResponse>() {
         @Override

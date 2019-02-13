@@ -65,6 +65,7 @@
         android:layout_above="@+id/bottombarTopline"
         android:layout_below="@+id/toolbar"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginTop="-2dp"
         android:layout_marginBottom="2dp"
         android:fillViewport="true">
@@ -155,9 +156,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/commentDataTextView"
+                    android:layout_marginTop="10dp"
                     android:layout_toEndOf="@+id/commentorImageView"
                     android:layout_toRightOf="@+id/commentorImageView"
-                    android:layout_marginTop="10dp"
                     android:visibility="gone">
 
                     <ImageView
@@ -198,8 +199,8 @@
                     android:layout_alignStart="@+id/commentorUsernameTextView"
                     android:layout_alignLeft="@+id/commentorUsernameTextView"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone"
-                    android:background="?attr/selectableItemBackgroundBorderless">
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:visibility="gone">
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/audioTimeElapsed"
@@ -314,8 +315,6 @@
                     android:gravity="top|start"
                     android:hint="@string/add_reply"
                     android:inputType="textCapSentences|textMultiLine"
-                    android:lines="10"
-                    android:maxLines="10"
                     android:minLines="1"
                     android:overScrollMode="always"
                     android:padding="15dp"
@@ -417,8 +416,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:padding="10dp"
-        android:visibility="gone"
-        android:src="@drawable/ic_add_image" />
+        android:src="@drawable/ic_add_image"
+        android:visibility="gone" />
 
     <com.mycity4kids.utils.AudioRecordView
         android:id="@+id/recordingView"

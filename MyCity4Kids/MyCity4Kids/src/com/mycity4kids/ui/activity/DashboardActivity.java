@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -77,11 +78,14 @@ import com.mycity4kids.models.response.DeepLinkingResult;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
+import com.mycity4kids.models.response.UserDetailResponse;
+import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
@@ -207,6 +211,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
+    private Bundle extras;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -234,6 +240,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         onNewIntent(getIntent());
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
+       /* BaseApplication.getInstance().destroyRetrofitInstance();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(onLoginResponseReceivedListener);*/
 
         if (null != intent.getParcelableExtra("notificationExtras")) {
             if ("upcoming_event_list".equals(((Bundle) intent.getParcelableExtra("notificationExtras")).getString("type")))
@@ -336,8 +347,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         upArrow.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().show();
-        //    ContextCompat.getDrawable(this,R.drawable.hamburger_menu).mutate().setColorFilter(ContextCompat.getColor(this, R.color.app_red), PorterDuff.Mode.MULTIPLY);
-        //   actionbar.setHomeAsUpIndicator(ContextCompat.getDrawable(this,R.drawable.hamburger_menu));
+
         Utils.pushOpenScreenEvent(this, "DashboardScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         downArrowImageView.setOnClickListener(this);
@@ -608,6 +618,57 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         //  Call<ResponseBody> call = draftAPI.getAllDrafts("0");
         call.enqueue(draftsResponseCallback);
     }
+
+
+ /*   Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    UserInfo model = new UserInfo();
+                    model.setId(responseData.getData().get(0).getResult().getId());
+                    model.setDynamoId(responseData.getData().get(0).getResult().getDynamoId());
+                    model.setEmail(responseData.getData().get(0).getResult().getEmail());
+                    model.setIsValidated(responseData.getData().get(0).getResult().getIsValidated());
+                    model.setFirst_name(responseData.getData().get(0).getResult().getFirstName());
+                    model.setLast_name(responseData.getData().get(0).getResult().getLastName());
+                    model.setUserType(responseData.getData().get(0).getResult().getUserType());
+                    model.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                    model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
+
+
+                    model.setBlogTitle(responseData.getData().get(0).getResult().getBlogTitle());
+
+
+                    SharedPrefUtils.setUserDetailModel(DashboardActivity.this, model);
+
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            removeProgressDialog();
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+            showToast(getString(R.string.went_wrong));
+        }
+    };*/
+
 
     private Callback<ResponseBody> draftsResponseCallback = new Callback<ResponseBody>() {
         @Override
@@ -1035,9 +1096,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
                             @Override
+
                             public void onButtonCLick(int buttonId) {
                                 fragmentToLoad = Constants.PROFILE_FRAGMENT;
                             }
+
+
                         });
                     } else {
                         fragmentToLoad = Constants.PROFILE_FRAGMENT;
@@ -1225,9 +1289,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
 
             }
-        } catch (FileNotFoundException e)
-
-        {
+        } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -1703,9 +1765,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             chooseLayoutVideo.setVisibility(View.INVISIBLE);
         }
 
-        if (v.getId() == R.id.write_story)
-
-        {
+        if (v.getId() == R.id.write_story) {
             Intent ssintent = new Intent(this, AddShortStoryActivity.class);
             ssintent.putExtra("selectedrequest", shortstory);
             startActivity(ssintent);
@@ -1767,18 +1827,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 videoImageUrl = new ArrayList<>();
                 videoStreamUrl = new ArrayList<>();
                 num_of_categorys = videoTopicList.get(0).getChild().size();
-                for (int j = 0; j < num_of_categorys; j++) {
-                    if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
-                        num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
-                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                            if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
-                                    if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                        videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                        videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                        videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                        videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
-                                        break;
+                if (num_of_categorys != 0) {
+                    for (int j = 0; j < num_of_categorys; j++) {
+                        if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+                            num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                            for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                    if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                        if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                            videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                            videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                            videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                            videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -1829,9 +1891,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
 
             }
-        } catch (FileNotFoundException e)
-
-        {
+        } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -1855,32 +1915,34 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                     videoTopicList.add(res.getData().get(i));
                                 }
                             }
-                            videoChallengeId = new ArrayList<>();
-                            videoDisplay_Name = new ArrayList<>();
-                            videoImageUrl = new ArrayList<>();
-                            videoStreamUrl = new ArrayList<>();
-                            num_of_categorys = videoTopicList.get(0).getChild().size();
-                            if (num_of_categorys != 0) {
-                                for (int j = 0; j < num_of_categorys; j++) {
-                                    if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.HOME_VIDEOS_CATEGORYID)) {
-                                        num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
-                                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                                            if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                                if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
-                                                    if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                                        videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                                        videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                                        videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                                        videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                            if (videoTopicList.size() != 0 && videoTopicList != null) {
+                                videoChallengeId = new ArrayList<>();
+                                videoDisplay_Name = new ArrayList<>();
+                                videoImageUrl = new ArrayList<>();
+                                videoStreamUrl = new ArrayList<>();
+                                num_of_categorys = videoTopicList.get(0).getChild().size();
+                                if (num_of_categorys != 0) {
+                                    for (int j = 0; j < num_of_categorys; j++) {
+                                        if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.HOME_VIDEOS_CATEGORYID)) {
+                                            num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                                            for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                                if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                                    if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                                        if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                            videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                            videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                            videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                            videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
 
-                                                        break;
+                                                            break;
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                }
 
+                                }
                             }
                         }
                     } catch (FileNotFoundException e) {
@@ -1967,9 +2029,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                 }
             }
-        } catch (FileNotFoundException e)
-
-        {
+        } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -2035,97 +2095,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     }
 
-   /* private void findvaluesOfActiveChallenge() {
-
-        try {
-            shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
-            if (shortStoriesTopicList == null) {
-                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                res = gson.fromJson(fileContent, TopicsResponse.class);
-                shortStoriesTopicList = new ArrayList<Topics>();
-                for (int i = 0; i < res.getData().size(); i++) {
-                    if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
-                        shortStoriesTopicList.add(res.getData().get(i));
-                    }
-                }
-                *//*challengeId = new ArrayList<>();
-                Display_Name = new ArrayList<>();
-                ImageUrl = new ArrayList<>();
-                num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                for (int j = 0; j < num_of_categorys; j++) {
-                    if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                        num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
-
-                        for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                            challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                            Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                            ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                            break;
-                        }
-
-                    }
-                }*//*
-
-            }
-        } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
-            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-            caller.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
-                    try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                        res = gson.fromJson(fileContent, TopicsResponse.class);
-                        shortStoriesTopicList = new ArrayList<Topics>();
-                        for (int i = 0; i < res.getData().size(); i++) {
-                            if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
-                                shortStoriesTopicList.add(res.getData().get(i));
-                            }
-                        }
-                        challengeId = new ArrayList<>();
-                        Display_Name = new ArrayList<>();
-                        ImageUrl = new ArrayList<>();
-                        num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                        for (int j = 0; j < num_of_categorys; j++) {
-                            if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                                num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
-
-                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                                    challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                    Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                    ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                    break;
-                                }
-
-                            }
-                        }
-
-
-                    } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
-                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
-                    Log.d("MC4KException", Log.getStackTraceString(t));
-                }
-            });
-        }
-
-    }*/
 
     private void hideCreateContentView() {
         createContentContainer.setVisibility(View.INVISIBLE);

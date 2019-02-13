@@ -395,6 +395,7 @@ public class AppConstants {
     public static final String AUTHOR_TYPE_EXPERT = "Expert";
     public static final String AUTHOR_TYPE_FEATURED = "Featured Author";
     public static final String AUTHOR_TYPE_USER = "User";
+    public static final String AUTHOR_TYPE_COLLABORATION ="VIDEO COLLABORATOR";
   /*  public static final String USER_TYPE_EDITOR = "0";
     public static final String USER_TYPE_EXPERT = "1";
     public static final String USER_TYPE_BLOGGER = "2";
@@ -443,7 +444,7 @@ public class AppConstants {
     public static final String USER_TYPE_BLOGGER = "7";
     public static final String USER_TYPE_EDITORIAL = "8";
     public static final String USER_TYPE_FEATURED = "9";
-
+    public static final String USER_TYPE_COLLABORATION = "14";
     public static final String COMMENT_OR_REPLY_OR_NESTED_REPLY = "editType";
     public static final int EDIT_COMMENT = 0;
     public static final int EDIT_REPLY = 1;
