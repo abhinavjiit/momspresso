@@ -246,6 +246,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         } else {
                             postType = AppConstants.POST_TYPE_TEXT_POLL;
                         }
+                    } else if (postData.getType().equals("3")) {
+                        postType = AppConstants.POST_TYPE_AUDIO;
                     }
 
                     if (postData.getDisableComments() == 1) {
@@ -293,6 +295,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     private void formatPostData() {
         for (int i = 0; i < postData.getCounts().size(); i++) {
+            if (postData.getMediaUrls() != null && !((Map<String, String>) postData.getMediaUrls()).isEmpty()) {
+                if (((Map<String, String>) postData.getMediaUrls()).get("audio") != null) {
+                    postData.setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
+                }
+            }
             switch (postData.getCounts().get(i).getName()) {
                 case "helpfullCount":
                     postData.setHelpfullCount(postData.getCounts().get(i).getCount());

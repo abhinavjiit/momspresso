@@ -582,6 +582,7 @@ public class AppConstants {
     public static final String POST_TYPE_MEDIA = "mediaPost";
     public static final String POST_TYPE_TEXT_POLL = "textPoll";
     public static final String POST_TYPE_IMAGE_POLL = "imagePoll";
+    public static final String POST_TYPE_AUDIO = "audioPost";
 
     public static final String POST_TYPE_TEXT_KEY = "0";
     public static final String POST_TYPE_MEDIA_KEY = "1";

@@ -439,13 +439,15 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
         if (v instanceof EditText) {
             View w = getCurrentFocus();
             int scrcoords[] = new int[2];
-            w.getLocationOnScreen(scrcoords);
-            float x = event.getRawX() + w.getLeft() - scrcoords[0];
-            float y = event.getRawY() + w.getTop() - scrcoords[1];
+            if (w != null) {
+                w.getLocationOnScreen(scrcoords);
+                float x = event.getRawX() + w.getLeft() - scrcoords[0];
+                float y = event.getRawY() + w.getTop() - scrcoords[1];
 
-            if (event.getAction() == MotionEvent.ACTION_UP && (x < w.getLeft() || x >= w.getRight() || y < w.getTop() || y > w.getBottom())) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+                if (event.getAction() == MotionEvent.ACTION_UP && (x < w.getLeft() || x >= w.getRight() || y < w.getTop() || y > w.getBottom())) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+                }
             }
         }
         return ret;
