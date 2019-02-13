@@ -74,6 +74,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimerTask;
 
 import okhttp3.ResponseBody;
@@ -503,6 +504,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     private void formatPostData(ArrayList<GroupPostResult> dataList) {
         for (int j = 0; j < dataList.size(); j++) {
+            if (dataList.get(j).getMediaUrls() != null && !((Map<String, String>) dataList.get(j).getMediaUrls()).isEmpty()) {
+                if (((Map<String, String>) dataList.get(j).getMediaUrls()).get("audio") != null) {
+                    dataList.get(j).setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
+                }
+            }
             if (dataList.get(j).getCounts() != null) {
                 for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
                     switch (dataList.get(j).getCounts().get(i).getName()) {

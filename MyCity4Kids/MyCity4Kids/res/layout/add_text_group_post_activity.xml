@@ -104,7 +104,69 @@
         android:layout_above="@+id/anonymousImageView"
         android:background="@color/light_underline" />
 
+
     <ImageView
+        android:id="@+id/anonymousImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/anonymousTextView"
+        android:padding="10dp"
+        android:src="@drawable/ic_incognito" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/anonymousTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/anonymousImageView"
+        android:layout_alignBottom="@+id/anonymousImageView"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/anonymousCheckbox"
+        android:gravity="center_vertical"
+        android:paddingRight="10dp"
+        android:text="@string/groups.anonymous" />
+
+    <CheckBox
+        android:id="@+id/anonymousCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="2dp"
+        android:button="@drawable/language_selector_checkbox"
+        android:buttonTint="@color/app_red"
+        android:checked="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="2dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/app_red"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/addMediaImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/recordingView"
+        android:padding="10dp"
+        android:src="@drawable/ic_add_image" />
+
+    <com.mycity4kids.utils.AudioRecordView
+        android:id="@+id/recordingView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+
+
+    <!--<ImageView
         android:id="@+id/addMediaImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -112,7 +174,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:padding="10dp"
-        android:src="@drawable/ic_add_image" />
+        android:src="@drawable/ic_add_image" />-->
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/addMediaTextView"
@@ -124,10 +186,11 @@
         android:layout_toEndOf="@+id/addMediaImageView"
         android:layout_toRightOf="@+id/addMediaImageView"
         android:gravity="center_vertical"
+        android:visibility="gone"
         android:paddingRight="10dp"
         android:text="@string/groups.add_image" />
 
-    <ImageView
+   <!-- <ImageView
         android:id="@+id/anonymousImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -167,7 +230,7 @@
         android:paddingRight="2dp"
         android:paddingTop="10dp"
         android:textColor="@color/app_red"
-        android:textSize="16sp" />
+        android:textSize="16sp" />-->
 
     <RelativeLayout
         android:id="@+id/chooseMediaTypeContainer"

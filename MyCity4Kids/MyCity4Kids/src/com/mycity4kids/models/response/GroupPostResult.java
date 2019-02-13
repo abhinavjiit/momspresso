@@ -47,6 +47,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
     private int option2VoteCount;
     private int option3VoteCount;
     private int option4VoteCount;
+    private int commentType;
 
     public GroupPostResult() {
     }
@@ -76,6 +77,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         userInfo = in.readParcelable(UserInfo.class.getClassLoader());
         helpfullCount = in.readInt();
         notHelpfullCount = in.readInt();
+        commentType = in.readInt();
     }
 
     public static final Creator<GroupPostResult> CREATOR = new Creator<GroupPostResult>() {
@@ -298,6 +300,14 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         this.helpfullCount = helpfullCount;
     }
 
+    public int getCommentType() {
+        return commentType;
+    }
+
+    public void setCommentType(int commentType) {
+        this.commentType = commentType;
+    }
+
     public int getShareCount() {
         return shareCount;
     }
@@ -384,6 +394,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         dest.writeParcelable(userInfo, flags);
         dest.writeInt(helpfullCount);
         dest.writeInt(notHelpfullCount);
+        dest.writeInt(commentType);
     }
 }
 
