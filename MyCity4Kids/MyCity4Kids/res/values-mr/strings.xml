@@ -865,21 +865,21 @@
     //Rewards Strings
 
 
-    <string name="rewars_enter_otp">OTP समाविष्ट करा</string>
-    <string name="rewars_confirm">खात्री करा</string>
-    <string name="rewars_first_name">पहिले नाव</string>
-    <string name="rewars_last_name">आडनाव</string>
-    <string name="rewars_verify">अधिकृत</string>
-    <string name="rewars_phone">दूरध्वनी</string>
-    <string name="rewars_email">ई -मेल</string>
-    <string name="rewars_gender">लिंग</string>
-    <string name="rewars_male">पुरुष</string>
-    <string name="rewars_female">स्त्री</string>
-    <string name="rewars_dob">जन्मतारीख</string>
-    <string name="rewars_location">स्थान</string>
-    <string name="rewars_working_status">कामाचा हुद्दा</string>
-    <string name="rewars_working">काम करत आहेत</string>
-    <string name="rewars_non_working">नॉन- वर्किंग</string>
-    <string name="rewars_language">भाषा</string>
-    <string name="rewars_save_continue">जतन करा आणि सुरु ठेवा</string>
+    <string name="rewards_enter_otp">OTP समाविष्ट करा</string>
+    <string name="rewards_confirm">खात्री करा</string>
+    <string name="rewards_first_name">पहिले नाव</string>
+    <string name="rewards_last_name">आडनाव</string>
+    <string name="rewards_verify">अधिकृत</string>
+    <string name="rewards_phone">दूरध्वनी</string>
+    <string name="rewards_email">ई -मेल</string>
+    <string name="rewards_gender">लिंग</string>
+    <string name="rewards_male">पुरुष</string>
+    <string name="rewards_female">स्त्री</string>
+    <string name="rewards_dob">जन्मतारीख</string>
+    <string name="rewards_location">स्थान</string>
+    <string name="rewards_working_status">कामाचा हुद्दा</string>
+    <string name="rewards_working">काम करत आहेत</string>
+    <string name="rewards_non_working">नॉन- वर्किंग</string>
+    <string name="rewards_language">भाषा</string>
+    <string name="rewards_save_continue">जतन करा आणि सुरु ठेवा</string>
 </resources>

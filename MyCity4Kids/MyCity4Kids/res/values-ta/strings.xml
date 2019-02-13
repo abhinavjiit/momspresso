@@ -861,24 +861,27 @@
     <string name="DOB">பிறந்த தேதி</string>
     <string name="add">கூட்டு</string>
 
+
+
+
     //Rewards Strings
 
 
-    <string name="rewars_enter_otp">OTP யை உள்ளிடவும்</string>
-    <string name="rewars_confirm">உறுதிப்படுத்தவும்</string>
-    <string name="rewars_first_name">முதல் பெயர்</string>
-    <string name="rewars_last_name">கடைசி பெயர்</string>
-    <string name="rewars_verify">நிச்சயப்படுத்தவும்</string>
-    <string name="rewars_phone">தொலைபேசி</string>
-    <string name="rewars_email">மின்னஞ்சல்</string>
-    <string name="rewars_gender">பாலினம்</string>
-    <string name="rewars_male">ஆண்</string>
-    <string name="rewars_female">பெண்</string>
-    <string name="rewars_dob">பிறந்த தேதி</string>
-    <string name="rewars_location">இருப்பிடம்</string>
-    <string name="rewars_working_status">வேலை நிலை</string>
-    <string name="rewars_working">வேலைக்கு செல்பவர்</string>
-    <string name="rewars_non_working">வேலைக்கு செல்லாதவர்</string>
-    <string name="rewars_language">மொழி</string>
-    <string name="rewars_save_continue">சேமி  தொடரவும்</string>
+    <string name="rewards_enter_otp">OTP யை உள்ளிடவும்</string>
+    <string name="rewards_confirm">உறுதிப்படுத்தவும்</string>
+    <string name="rewards_first_name">முதல் பெயர்</string>
+    <string name="rewards_last_name">கடைசி பெயர்</string>
+    <string name="rewards_verify">நிச்சயப்படுத்தவும்</string>
+    <string name="rewards_phone">தொலைபேசி</string>
+    <string name="rewards_email">மின்னஞ்சல்</string>
+    <string name="rewards_gender">பாலினம்</string>
+    <string name="rewards_male">ஆண்</string>
+    <string name="rewards_female">பெண்</string>
+    <string name="rewards_dob">பிறந்த தேதி</string>
+    <string name="rewards_location">இருப்பிடம்</string>
+    <string name="rewards_working_status">வேலை நிலை</string>
+    <string name="rewards_working">வேலைக்கு செல்பவர்</string>
+    <string name="rewards_non_working">வேலைக்கு செல்லாதவர்</string>
+    <string name="rewards_language">மொழி</string>
+    <string name="rewards_save_continue">சேமி  தொடரவும்</string>
 </resources>

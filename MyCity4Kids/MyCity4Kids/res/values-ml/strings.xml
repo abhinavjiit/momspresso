@@ -910,21 +910,21 @@
     //Rewards Strings
 
 
-    <string name="rewars_enter_otp">"OTP ടൈപ്പ് ചെയ്യൂ "</string>
-    <string name="rewars_confirm">"സ്ഥിരീകരിക്കൂ "</string>
-    <string name="rewars_first_name">"പേര് "</string>
-    <string name="rewars_last_name">"സർ നെയിം "</string>
-    <string name="rewars_verify">"ഉറപ്പിക്കൂ "</string>
-    <string name="rewars_phone">"ഫോൺ "</string>
-    <string name="rewars_email">"ഇ മെയിൽ "</string>
-    <string name="rewars_gender">"ലിംഗം "</string>
-    <string name="rewars_male">"പുരുഷൻ "</string>
-    <string name="rewars_female">"സ്ത്രീ "</string>
-    <string name="rewars_dob">"ജനനതീയതി "</string>
-    <string name="rewars_location">"സ്ഥലം "</string>
-    <string name="rewars_working_status">"ജോലിയുടെ സ്ഥിതി "</string>
-    <string name="rewars_working">"ജോലി ചെയ്യുന്നു "</string>
-    <string name="rewars_non_working">"ജോലി ചെയ്യുന്നില്ല "</string>
-    <string name="rewars_language">"ഭാഷ "</string>
-    <string name="rewars_save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
+    <string name="rewards_enter_otp">"OTP ടൈപ്പ് ചെയ്യൂ "</string>
+    <string name="rewards_confirm">"സ്ഥിരീകരിക്കൂ "</string>
+    <string name="rewards_first_name">"പേര് "</string>
+    <string name="rewards_last_name">"സർ നെയിം "</string>
+    <string name="rewards_verify">"ഉറപ്പിക്കൂ "</string>
+    <string name="rewards_phone">"ഫോൺ "</string>
+    <string name="rewards_email">"ഇ മെയിൽ "</string>
+    <string name="rewards_gender">"ലിംഗം "</string>
+    <string name="rewards_male">"പുരുഷൻ "</string>
+    <string name="rewards_female">"സ്ത്രീ "</string>
+    <string name="rewards_dob">"ജനനതീയതി "</string>
+    <string name="rewards_location">"സ്ഥലം "</string>
+    <string name="rewards_working_status">"ജോലിയുടെ സ്ഥിതി "</string>
+    <string name="rewards_working">"ജോലി ചെയ്യുന്നു "</string>
+    <string name="rewards_non_working">"ജോലി ചെയ്യുന്നില്ല "</string>
+    <string name="rewards_language">"ഭാഷ "</string>
+    <string name="rewards_save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
 </resources>

@@ -1030,23 +1030,23 @@
     //Rewards Strings
 
 
-    <string name="rewars_enter_otp">Enter OTP</string>
-    <string name="rewars_confirm">Confirm</string>
-    <string name="rewars_first_name">First Name</string>
-    <string name="rewars_last_name">Last Name</string>
-    <string name="rewars_verify">Verify</string>
-    <string name="rewars_phone">Phone</string>
-    <string name="rewars_email">Email</string>
-    <string name="rewars_gender">Gender</string>
-    <string name="rewars_male">Male</string>
-    <string name="rewars_female">Female</string>
-    <string name="rewars_dob">Date of Birth</string>
-    <string name="rewars_location">Location</string>
-    <string name="rewars_working_status">Working Status</string>
-    <string name="rewars_working">Working</string>
-    <string name="rewars_non_working">Non-working</string>
-    <string name="rewars_language">Language</string>
-    <string name="rewars_save_continue"> Save And Continue</string>
+    <string name="rewards_enter_otp">Enter OTP</string>
+    <string name="rewards_confirm">Confirm</string>
+    <string name="rewards_first_name">First Name</string>
+    <string name="rewards_last_name">Last Name</string>
+    <string name="rewards_verify">Verify</string>
+    <string name="rewards_phone">Phone</string>
+    <string name="rewards_email">Email</string>
+    <string name="rewards_gender">Gender</string>
+    <string name="rewards_male">Male</string>
+    <string name="rewards_female">Female</string>
+    <string name="rewards_dob">Date of Birth</string>
+    <string name="rewards_location">Location</string>
+    <string name="rewards_working_status">Working Status</string>
+    <string name="rewards_working">Working</string>
+    <string name="rewards_non_working">Non-working</string>
+    <string name="rewards_language">Language</string>
+    <string name="rewards_save_continue"> Save And Continue</string>
 
 
 </resources>
