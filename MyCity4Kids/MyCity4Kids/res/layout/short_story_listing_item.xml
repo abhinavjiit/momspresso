@@ -35,6 +35,7 @@
                 app:fontName="georgia.ttf" />
 
             <View
+                android:id="@+id/viewId"
                 android:layout_width="100dp"
                 android:layout_height="1dp"
                 android:layout_below="@+id/storyTitleTextView"
@@ -152,6 +153,7 @@
                 android:tint="@color/app_red" />
 
             <LinearLayout
+                android:id="@+id/linearLayoutContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -209,6 +211,7 @@
                         app:fontName="open_sans.ttf" />
 
                     <ImageView
+                        android:id="@+id/icSsComment"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:paddingBottom="12dp"

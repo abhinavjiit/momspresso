@@ -46,12 +46,11 @@
         <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/view11"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:padding="20dp"
             android:text="@string/video_progress.uploading_msg"
             android:textColor="@color/video_progress.uploading_msg"
             app:fontName="oswald.ttf" />

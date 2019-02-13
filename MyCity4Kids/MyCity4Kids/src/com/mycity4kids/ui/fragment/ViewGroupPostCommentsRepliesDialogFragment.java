@@ -46,6 +46,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -231,6 +232,11 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
 
     private void formatCommentData(ArrayList<GroupPostCommentResult> dataList) {
         for (int j = 0; j < dataList.size(); j++) {
+            if (dataList.get(j).getMediaUrls() != null && !((Map<String, String>) dataList.get(j).getMediaUrls()).isEmpty()) {
+                if (((Map<String, String>) dataList.get(j).getMediaUrls()).get("audio") != null) {
+                    dataList.get(j).setCommentType(AppConstants.COMMENT_TYPE_AUDIO);
+                }
+            }
             if (dataList.get(j).getCounts() != null) {
                 for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
                     switch (dataList.get(j).getCounts().get(i).getName()) {
@@ -304,7 +310,9 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                 FragmentManager fm = getChildFragmentManager();
                 commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
-                _args.putInt("position", commentPosition);
+                _args.putInt("position", position);
+                _args.putInt("commentPosition", commentPosition);
+                _args.putInt("commentType", repliesList.get(position).getCommentType());
                 _args.putString("responseType", "COMMENT");
                 _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
                 _args.putString("authorId", repliesList.get(position).getUserId());
@@ -320,6 +328,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "REPLY");
+                _args.putInt("commentType", repliesList.get(position).getCommentType());
                 _args.putInt("commentPosition", commentPosition);
                 _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
                 _args.putString("authorId", repliesList.get(position).getUserId());
@@ -329,10 +338,14 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             }
             break;
             case R.id.upvoteCommentContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+                break;
             case R.id.upvoteReplyContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
                 break;
             case R.id.downvoteCommentContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+                break;
             case R.id.downvoteReplyContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
@@ -502,5 +515,17 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             }
         }
         groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        groupPostCommentRepliesRecyclerAdapter.releasePlayer();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        groupPostCommentRepliesRecyclerAdapter.releasePlayer();
     }
 }

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
@@ -48,6 +49,7 @@ import com.mycity4kids.ui.activity.SubscribeTopicsActivity;
 import com.mycity4kids.ui.adapter.EmailSubscriptionAdapter;
 import com.mycity4kids.ui.adapter.NotificationSubscriptionAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 
 import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONObject;
@@ -98,7 +100,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         subscriptionSettingRecyclerView = (RecyclerView) view.findViewById(R.id.subscriptionSettingRecyclerView);
         notificationSettingRecyclerView = (RecyclerView) view.findViewById(R.id.notificationSettingRecyclerView);
         facebookConnectTextView = (TextView) view.findViewById(R.id.fbConnectBtn);
-
+        facebookConnectTextView.setOnClickListener(this);
         addTopicsBtn.setOnClickListener(this);
         saveTextView.setOnClickListener(this);
         showMoreFollowedTopicsTextView.setOnClickListener(this);
@@ -276,7 +278,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                     try {
                         FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
                         checkCurrentCategoryExists(res, mDatalist);
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
@@ -332,7 +335,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                         try {
                             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                            FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
+                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                            FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
                             checkCurrentCategoryExists(res, mDatalist);
                         } catch (FileNotFoundException e) {
                             Crashlytics.logException(e);

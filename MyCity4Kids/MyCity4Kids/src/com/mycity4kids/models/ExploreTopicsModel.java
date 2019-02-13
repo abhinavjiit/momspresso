@@ -16,7 +16,6 @@ public class ExploreTopicsModel implements Parcelable {
 
     @SerializedName("public")
     private String publicVisibility;
-
     private String showInMenu;
     private ArrayList<ExploreTopicsModel> child;
     private String parentId;
@@ -26,7 +25,8 @@ public class ExploreTopicsModel implements Parcelable {
 
     private List<ExtraData> extraData;
 
-    public class ExtraData {
+    public class ExtraData  {
+        private Challenges challenges;
         private String metaTitle;
         private String metaDescription;
         private String max_duration = "60";
@@ -54,6 +54,14 @@ public class ExploreTopicsModel implements Parcelable {
 
         public void setCategoryBackImage(CategoryImage categoryBackImage) {
             this.categoryBackImage = categoryBackImage;
+        }
+
+        public Challenges getChallenges() {
+            return challenges;
+        }
+
+        public void setChallenges(Challenges challenges) {
+            this.challenges = challenges;
         }
 
         public String getMax_duration() {
@@ -91,6 +99,46 @@ public class ExploreTopicsModel implements Parcelable {
 
             public void setMob(String mob) {
                 this.mob = mob;
+            }
+        }
+
+        private class Challenges {
+
+            private String active;
+            private String type;
+            private String desc;
+            private String imageUrl;
+
+            public String getActive() {
+                return active;
+            }
+
+            public String getDesc() {
+                return desc;
+            }
+
+            public String getImageUrl() {
+                return imageUrl;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public void setActive(String active) {
+                this.active = active;
+            }
+
+            public void setDesc(String desc) {
+                this.desc = desc;
+            }
+
+            public void setImageUrl(String imageUrl) {
+                this.imageUrl = imageUrl;
+            }
+
+            public void setType(String type) {
+                this.type = type;
             }
         }
     }

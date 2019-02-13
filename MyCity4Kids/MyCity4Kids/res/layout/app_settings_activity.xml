@@ -30,18 +30,6 @@
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
-            <ImageView
-                android:id="@+id/searchAllImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:src="@drawable/ic_search" />
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>

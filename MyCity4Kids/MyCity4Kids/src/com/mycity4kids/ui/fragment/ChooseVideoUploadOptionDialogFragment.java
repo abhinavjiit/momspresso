@@ -208,6 +208,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             intent.setType("video/mp4");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
+
             if ("dashboard".equals(activity)) {
                 getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("myfunnyvideos".equals(activity)) {

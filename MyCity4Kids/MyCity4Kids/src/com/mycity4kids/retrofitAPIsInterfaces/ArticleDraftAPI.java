@@ -64,5 +64,5 @@ public interface ArticleDraftAPI {
     Call<ArticleDraftResponse> deleteDraft(@Url String url);
 
     @GET("v1/articles/drafts/")
-    Call<AllDraftsResponse> getAllDrafts(@Query("aType") String aType);
+    Call<ResponseBody> getAllDrafts(@Query("aType") String aType);
 }

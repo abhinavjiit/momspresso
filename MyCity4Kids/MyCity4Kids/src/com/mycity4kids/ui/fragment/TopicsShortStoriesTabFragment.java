@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -110,6 +111,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private boolean isRecommendRequestRunning;
     private String likeStatus;
     private int currentShortStoryPosition;
+    private String jsonMyObject;
 
     @Nullable
     @Override
@@ -184,12 +186,17 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         shortStoryAPI = retro.create(ShortStoryAPI.class);
 
-        if (getArguments() != null) {
+       /* if (getArguments() != null) {
             currentSubTopic = getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;
+        }*/
+        Bundle extras = getArguments();
+        if (extras != null) {
+            jsonMyObject = extras.getString("currentSubTopic");
+
+            currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
+            selectedTopic = currentSubTopic;
         }
-
-
         hitFilteredTopicsArticleListingApi(sortType);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -230,9 +237,11 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, "0");
+        if (selectedTopic != null) {
+            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, "0");
 
-        filterCall.enqueue(articleListingResponseCallback);
+            filterCall.enqueue(articleListingResponseCallback);
+        }
     }
 
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
@@ -691,7 +700,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             // to the threshold provided. If it falls under the desired limit,
             // add it to the tracking data.
             if (viewPosition >= 0) {
-                    if (getVisibleHeightPercentage(itemView) >= minimumVisibleHeightThreshold) {
+                if (getVisibleHeightPercentage(itemView) >= minimumVisibleHeightThreshold) {
                     viewsViewed.add(viewPosition);
                 }
             }

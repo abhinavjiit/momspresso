@@ -1,8 +1,10 @@
 package com.mycity4kids.ui.activity;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
@@ -13,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,6 +28,7 @@ import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.coremedia.iso.boxes.Container;
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
@@ -36,13 +40,16 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.editor.ArticleImageTagUploadActivity;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.BlogPageResponse;
+import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.utils.AppUtils;
 
 import java.io.File;
@@ -80,6 +87,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private String duration;
     private String thumbnailTime;
     private SharedPreferences pref;
+    private String comingFrom, challengeId, challengeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +110,11 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         categoryId = getIntent().getStringExtra("categoryId");
         duration = getIntent().getStringExtra("duration");
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
+        comingFrom = getIntent().getStringExtra("comingFrom");
+        if (comingFrom.equals("Challenge")) {
+            challengeId = getIntent().getStringExtra("ChallengeId");
+            challengeName = getIntent().getStringExtra("ChallengeName");
+        }
 
         muteSwitch.setOnClickListener(this);
 
@@ -298,39 +311,111 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
 
     public void resumeUpload() {
-
-        pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
+        getBlogPage();
+        /*pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
         blogSetup = pref.getBoolean("blogSetup", false);
         Log.e("blogsetup", blogSetup + "");
         if (!blogSetup) {
             getBlogPage();
         } else {
             launchUploadActivity();
-        }
+        }*/
     }
 
     private void launchUploadActivity() {
         Intent intt = new Intent(this, VideoUploadProgressActivity.class);
+        /*if (contentURI != null) {
+            intt.putExtra("uri", new Gson().toJson(contentURI));
+        }*/
         intt.putExtra("uri", contentURI);
         intt.putExtra("title", videoTitleEditText.getText().toString());
         intt.putExtra("categoryId", categoryId);
         intt.putExtra("duration", duration);
         intt.putExtra("thumbnailTime", thumbnailTime);
+        if (comingFrom.equals("Challenge")) {
+            intt.putExtra("ChallengeId", challengeId);
+            intt.putExtra("ChallengeName", challengeName);
+            intt.putExtra("comingFrom", "Challenge");
+
+        } else {
+            intt.putExtra("comingFrom", "notFromChallenge");
+        }
         startActivity(intt);
     }
 
     private void getBlogPage() {
         showProgressDialog(getResources().getString(R.string.please_wait));
+       /* Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+          BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);*/
+//        BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-
-        BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
+        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(onLoginResponseReceivedListener);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
         }
 
-        Call<BlogPageResponse> call = getBlogPageAPI.getBlogPage("v1/users/blogPage/" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+    }
+
+    Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+
+            Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+
+            UserDetailResponse responseData = response.body();
+            if (responseData != null) {
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                    if (responseData.getData().get(0).getResult().getBlogTitleSlug() == null || responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+
+
+                        Intent intent = new Intent(AddVideoDetailsActivity.this, BlogSetupActivity.class);
+                        intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+                        intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+                        intent.putExtra("comingFrom", "Videos");
+                        startActivity(intent);
+
+
+                    } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+
+                        showProgressDialog(getResources().getString(R.string.please_wait));
+                        pref = getApplicationContext().getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putBoolean("blogSetup", true);
+                        Log.e("blog setup in update ui", true + "");
+                        editor.commit();
+                        launchUploadActivity();
+
+
+                    }
+                }
+
+
+            } else {
+                ToastUtils.showToast(AddVideoDetailsActivity.this, "something went wrong");
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+
+        }
+    };
+      /*  Call<BlogPageResponse> call = getBlogPageAPI.getBlogPage("v1/users/blogPage/" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
         call.enqueue(new Callback<BlogPageResponse>() {
 
             @Override
@@ -355,6 +440,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                         launchUploadActivity();
                     } else if (responseModel.getData().getResult().getIsSetup() == 0) {
                         Intent intent = new Intent(AddVideoDetailsActivity.this, BlogSetupActivity.class);
+                        intent.putExtra("comingFrom","Videos");
                         startActivity(intent);
                     }
                 }
@@ -366,9 +452,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                 Crashlytics.logException(t);
                 Log.d("MC4KException", Log.getStackTraceString(t));
             }
-        });
+        });*/
 
-    }
 
     @Override
     public void onStarted(EasyVideoPlayer player) {

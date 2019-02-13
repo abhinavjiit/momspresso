@@ -478,8 +478,13 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                 return false;
             }
         } else {
-            if (StringUtils.isNullOrEmpty(viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().trim())) {
-                Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_fn_empty), Toast.LENGTH_SHORT).show();
+            try {
+                if (StringUtils.isNullOrEmpty(viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().trim())) {
+                    Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_fn_empty), Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            } catch (Exception e) {
+
                 return false;
             }
         }

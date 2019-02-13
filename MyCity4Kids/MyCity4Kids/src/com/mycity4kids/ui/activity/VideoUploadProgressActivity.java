@@ -3,7 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,7 +26,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -40,23 +38,17 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.request.UploadVideoRequest;
-import com.mycity4kids.models.response.HomeVideosListingResponse;
 import com.mycity4kids.models.response.UpdateVideoDetailsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.UploadVideosAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.TusAndroidUpload;
 import com.mycity4kids.ui.TusClient;
 import com.mycity4kids.ui.TusUpload;
 import com.mycity4kids.ui.TusUploader;
 import com.mycity4kids.utils.MixPanelUtils;
 
-import org.json.JSONObject;
-
-import java.net.URL;
 import java.util.ArrayList;
 
-import io.tus.android.client.TusPreferencesURLStore;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,11 +67,12 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private UploadTask uploadTask;
     private Uri contentURI;
     private String title;
-    private String categoryId;
+    private String categoryId, challengeId, challengeName, comingFrom;
     private String duration;
     private String thumbnailTime;
     private MixpanelAPI mixpanel;
     private long suffixName;
+    private String jsonMyObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +87,12 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         categoryId = getIntent().getStringExtra("categoryId");
         duration = getIntent().getStringExtra("duration");
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
+
+        comingFrom = getIntent().getStringExtra("comingFrom");
+        if (comingFrom.equals("Challenge")) {
+            challengeId = getIntent().getStringExtra("ChallengeId");
+            challengeName = getIntent().getStringExtra("ChallengeName");
+        }
 
         uploadingContainer = (RelativeLayout) findViewById(R.id.uploadingContainer);
         uploadFinishContainer = (RelativeLayout) findViewById(R.id.uploadFinishContainer);
@@ -121,7 +120,10 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("VideoUpload", "signInAnonymously:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            uploadToFirebase(contentURI);
+                            if (contentURI != null) {
+                                uploadToFirebase(contentURI);
+                            }
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
@@ -182,6 +184,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private void createRowForFailedAttempt(String message) {
         ArrayList<String> catList = new ArrayList<String>();
         catList.add(categoryId);
+        if (comingFrom.equals("Challenge")) {
+            catList.add(challengeId);
+        }
         UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
         uploadVideoRequest.setTitle(title);
         uploadVideoRequest.setCategory_id(catList);
@@ -197,6 +202,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private void publishVideo(Uri uri) {
         ArrayList<String> catList = new ArrayList<String>();
         catList.add(categoryId);
+        if (comingFrom.equals("Challenge")) {
+            catList.add(challengeId);
+        }
         UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
         uploadVideoRequest.setTitle(title);
         uploadVideoRequest.setFilename(contentURI.getLastPathSegment() + "_" + suffixName);
@@ -204,6 +212,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         uploadVideoRequest.setFile_location("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/");
         uploadVideoRequest.setUploaded_url(uri.toString());
         uploadVideoRequest.setThumbnail_milliseconds(thumbnailTime);
+        uploadVideoRequest.setUser_agent("Android");
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI api = retrofit.create(VlogsListingAndDetailsAPI.class);

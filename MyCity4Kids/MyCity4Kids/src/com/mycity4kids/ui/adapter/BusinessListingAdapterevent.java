@@ -35,6 +35,7 @@ import com.mycity4kids.models.ColorModel;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.ExploreEventsResourcesActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.squareup.picasso.Picasso;
 
@@ -453,8 +454,8 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
     }
 
     private void requestCalendarPermissions() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale((DashboardActivity) mContext,
-                Manifest.permission.READ_CALENDAR) || ActivityCompat.shouldShowRequestPermissionRationale((DashboardActivity) mContext,
+        if (ActivityCompat.shouldShowRequestPermissionRationale((ExploreEventsResourcesActivity) mContext,
+                Manifest.permission.READ_CALENDAR) || ActivityCompat.shouldShowRequestPermissionRationale((ExploreEventsResourcesActivity) mContext,
                 Manifest.permission.WRITE_CALENDAR)) {
             Log.i("Permissions",
                     "Displaying get accounts permission rationale to provide additional context.");

@@ -522,7 +522,7 @@
     <string name="add_video_details.audio_picker.title">म्यूजिक ऐड करें</string>
 
     <string name="video_progress.uploading_label">अपलोड हो रहा है ...</string>
-    <string name="video_progress.uploading_msg">कृपया ऐप से बाहर न निकलें, यह आप अपलोड को रद्द कर देगा। अपलोड करते समय आप एप्लिकेशन का उपयोग कर सकते हैं</string>
+    <string name="video_progress.uploading_msg">"कृपया ऐप से बाहर न निकलें, यह आप अपलोड को रद्द कर देगा। "</string>
     <string name="video_progress.way_to_go">आगे का मार्ग!</string>
     <string name="video_progress.success_msg">वीडियो सफलतापूर्वक अपलोड हो गया है और मॉडरेशन के लिए भेजा गया है।मॉडरेशन के बाद हम आपको सूचित  करेंगे</string>
     <string name="video_progress.okay">ठीक है</string>
@@ -850,7 +850,25 @@
     <string name="delete_comment">DELETE COMMENT</string>
     <string name="edit_comment">EDIT COMMENT</string>
     <string name="report">REPORT</string>
-    <string name="select_atleast_one_topic">Please choose atleast one topic to continue</string>
+    <string name="select_atleast_one_topic">कम से कम एक केटेगरी का चुनाव अवश्य करें</string>
     <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
     <string name="successfully_updated">Successfully updated!</string>
+
+    <string name="submit_story_text">अपनी कहानी को प्रस्तुत करें</string>
+    <string name="this_week_challenge">इस सप्ताह का चैलेंज</string>
+    <string name="previous_week_challenge">पिछले सप्ताहों के चैलेंज</string>
+    <string name="what_is_your_story">आपकी 100 शब्दों की कहानी क्या है ?</string>
+    <string name="use_picture_word_to_write_one">कहानी लिखने के लिए चित्र , शब्द ,वाक्य या वीडियो का प्रयोग करें</string>
+    <string name="challenge_write_story_for_this_picture">इस तस्वीर के अनुसार अपनी कहानी लिखें</string>
+    <string name="choose_challenge_label">चैलेंज का हिस्सा बनें</string>
+    <string name="start_writing">लिखना शुरू करें</string>
+
+    <string name="male">पुरुष</string>
+    <string name="female">महिला</string>
+    <string name="DOB">जन्म तिथि</string>
+    <string name="hold_to_release">रिकॉर्ड करने के लिए पकड़ो, भेजने के लिए छोड़ दें।</string>
+    <string name="slide_to_cancel">रद्द करने के लिए स्लाइड</string>
+    <string name="stop_recording">पहले रिकॉर्डिंग बंद करो फिर सेव करो।</string>
+    <string name="cancel_audio">रद्द</string>
+    <string name="add">ऐड करें</string>
 </resources>

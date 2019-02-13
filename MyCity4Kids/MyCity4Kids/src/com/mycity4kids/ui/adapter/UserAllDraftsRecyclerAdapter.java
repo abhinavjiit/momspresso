@@ -13,6 +13,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.AllDraftsResponse;
+import com.mycity4kids.models.response.DraftListResult;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -64,7 +65,7 @@ public class UserAllDraftsRecyclerAdapter extends RecyclerView.Adapter<UserAllDr
         holder.bodyTextView.setText(allDraftsList.get(position).getBody());
 
         try {
-            holder.updatedOnTextView.setText(DateTimeUtils.getKidsDOBNanoMilliTimestamp(allDraftsList.get(position).getUpdatedTime()));
+            holder.updatedOnTextView.setText(DateTimeUtils.getKidsDOBNanoMilliTimestamp(String.valueOf(allDraftsList.get(position).getUpdatedTime())));
         } catch (Exception e) {
             e.printStackTrace();
         }

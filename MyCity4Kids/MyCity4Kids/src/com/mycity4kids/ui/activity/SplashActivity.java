@@ -157,7 +157,7 @@ public class SplashActivity extends BaseActivity {
         }
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-       /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
+        /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         // mUrl = Uri.parse("http://www.mycity4kids.com/parenting/kalpana---without-boundaries/article/From-the-Bicycle-to-the-Recycle-days...");
         mUrl = Uri.parse("android-app://com.mycity4kids/http/momspresso.com");
@@ -167,7 +167,7 @@ public class SplashActivity extends BaseActivity {
 
             setContentView(R.layout.splash_activity);
             mLayout = findViewById(R.id.rootLayout);
-           /* AnalyticsHelper.logEvent("Application Launch...");*/
+            /* AnalyticsHelper.logEvent("Application Launch...");*/
 
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
@@ -203,7 +203,7 @@ public class SplashActivity extends BaseActivity {
                         != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED
-                        ) {
+                ) {
                     Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
                     requestLocationAndStoragePermissions();
                 } else {
@@ -216,6 +216,7 @@ public class SplashActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -399,8 +400,21 @@ public class SplashActivity extends BaseActivity {
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
         if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken()) && AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) { // if he signup
 
-            Intent intent5 = new Intent(this, PushTokenService.class);
-            startService(intent5);
+         /*   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(new Intent(context, ServedService.class));
+            } else {
+                context.startService(new Intent(context, ServedService.class));
+            }*/
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                Intent intent5 = new Intent(this, PushTokenService.class);
+                startForegroundService(intent5);
+            } else {
+                Intent intent5 = new Intent(this, PushTokenService.class);
+                startService(intent5);
+            }
             startSyncingUserInfo();
 
             try {
@@ -472,7 +486,7 @@ public class SplashActivity extends BaseActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
-                ) {
+        ) {
 
             // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_location_rationale,

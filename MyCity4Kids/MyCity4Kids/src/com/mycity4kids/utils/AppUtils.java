@@ -31,6 +31,7 @@ import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -49,6 +51,7 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
+import com.mycity4kids.ui.activity.ChallnegeDetailListingActivity;
 import com.mycity4kids.widget.Hashids;
 
 import org.json.JSONArray;
@@ -275,6 +278,47 @@ public class AppUtils {
             }
         }
     }
+
+
+    public static Uri exportAudioToGallery(String filename, ContentResolver contentResolver, Context mContext) {
+        // Save the name and description of a video in a ContentValues map.
+        final ContentValues values = new ContentValues(2);
+        values.put(MediaStore.Video.Media.MIME_TYPE, "audio/3gp");
+        values.put(MediaStore.Video.Media.DATA, filename);
+        // Add a new record (identified by uri)
+        final Uri uri = contentResolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                values);
+        mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.parse("file://" + filename)));
+        return uri;
+    }
+
+    public static final Uri getAudioUriFromMediaProvider(String videoFile, ContentResolver contentResolver) {
+        String selection = MediaStore.Video.VideoColumns.DATA + "=?";
+        String[] selectArgs = {videoFile};
+        String[] projection = {MediaStore.Audio.AudioColumns._ID};
+        Cursor c = null;
+        try {
+            c = contentResolver.query(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection, selection, selectArgs, null);
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                String id = c.getString(c
+                        .getColumnIndex(MediaStore.Audio.AudioColumns._ID));
+
+                return Uri
+                        .withAppendedPath(
+                                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                id);
+            }
+            return null;
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+    }
+
 
     public static void deleteDirectoryContent(String dirName) {
         File dir = new File(Environment.getExternalStorageDirectory() + File.separator + dirName);
@@ -759,6 +803,32 @@ public class AppUtils {
         Utils.pushShareStoryEvent(topicsShortStoriesTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
     }
 
+    public static void shareStoryWithFBC(BaseFragment topicsChallengeTabFragment, String userType, String blogSlug, String titleSlug,
+                                        String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent content = new ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(shareUrl))
+                    .build();
+            new ShareDialog(topicsChallengeTabFragment).show(content);
+        }
+        Utils.pushShareStoryEvent(topicsChallengeTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
+    }
+
+    public static void shareStoryWithFB(Activity ChallnegeDetailListingActivity, Context mContext, String userType, String blogSlug, String titleSlug,
+                                        String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent content = new ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(shareUrl))
+                    .build();
+            new ShareDialog(ChallnegeDetailListingActivity).show(content);
+        }
+        Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
+    }
+
     public static void shareStoryGeneric(Context mContext, String userType, String blogSlug, String titleSlug,
                                          String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
@@ -815,6 +885,15 @@ public class AppUtils {
         } else {
             return activity.getString(stringId);
         }
+    }
+
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
     }
 
     public static String convertTimestampToDate(Long timestamp){

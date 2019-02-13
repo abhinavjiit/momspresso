@@ -43,12 +43,14 @@ import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -381,7 +383,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     private void initializeViews(MediaPostViewHolder holder, int position) {
         ArrayList<String> mediaList = new ArrayList<>();
-        Map<String, String> map = (Map<String, String>) postList.get(position).getMediaUrls();
+        LinkedTreeMap<String, String> map = (LinkedTreeMap<String, String>) postList.get(position).getMediaUrls();
         for (String entry : map.values()) {
             mediaList.add(entry);
         }
@@ -940,7 +942,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         }
 
         @Override
-        public void onClick(View widget) {
+        public void onClick(@NotNull View widget) {
             Intent intent = new Intent(mContext, NewsLetterWebviewActivity.class);
             intent.putExtra(Constants.URL, mUrl);
             mContext.startActivity(intent);

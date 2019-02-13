@@ -23,6 +23,7 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -156,7 +157,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         });
 
         if (getArguments() != null) {
-            currentSubTopic = getArguments().getParcelable("currentSubTopic");
+            currentSubTopic = (Topics) getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;
         }
 
@@ -342,9 +343,12 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
 
 
     private void openFilteredTopicArticles() {
+
         Intent intent = new Intent(getActivity(), LeafNodeTopicArticlesActivity.class);
-        intent.putExtra("leafTopicParent", currentSubTopic);
-        intent.putExtra("leafTopic", selectedTopic);
+
+        intent.putExtra("leafTopicParent", new Gson().toJson(currentSubTopic));
+        intent.putExtra("leafTopic", new Gson().toJson(selectedTopic));
+
         startActivity(intent);
     }
 

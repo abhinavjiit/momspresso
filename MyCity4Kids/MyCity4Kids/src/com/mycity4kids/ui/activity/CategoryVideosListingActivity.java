@@ -6,11 +6,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
@@ -23,6 +26,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.VideoTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,7 +42,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 25/5/17.
  */
-public class CategoryVideosListingActivity extends BaseActivity {
+public class CategoryVideosListingActivity extends BaseActivity implements View.OnClickListener {
 
     //    private View view;
     private TabLayout tabLayout;
@@ -53,6 +57,8 @@ public class CategoryVideosListingActivity extends BaseActivity {
     private ArrayList<Topics> subTopicsList;
     private Toolbar toolbar;
     private TextView toolbarTitleTextView;
+    public ImageView recentPopularSortingImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +69,9 @@ public class CategoryVideosListingActivity extends BaseActivity {
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
         viewPager = (ViewPager) findViewById(R.id.pager);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         parentTopicId = getIntent().getStringExtra("parentTopicId");
 
         toolbarTitleTextView.setText(getString(R.string.myprofile_section_videos_label));
@@ -76,7 +80,8 @@ public class CategoryVideosListingActivity extends BaseActivity {
 
             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
-            TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+            TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
             createTopicsData(res);
             getCurrentParentTopicCategoriesAndSubCategories();
             initializeUI();
@@ -95,7 +100,8 @@ public class CategoryVideosListingActivity extends BaseActivity {
                     try {
                         FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
                         createTopicsData(res);
                         getCurrentParentTopicCategoriesAndSubCategories();
                         initializeUI();
@@ -229,7 +235,7 @@ public class CategoryVideosListingActivity extends BaseActivity {
             if (parentTopicId.equals(allTopicsList.get(i).getId())) {
 //                subTopicsList.addAll(allTopicsList.get(i).getChild());
                 for (int j = 0; j < allTopicsList.get(i).getChild().size(); j++) {
-                    if ("1".equals(allTopicsList.get(i).getChild().get(j).getPublicVisibility()) || "category-ee7ea82543bd4bc0a8dad288561f2beb".equals(allTopicsList.get(i).getChild().get(j).getId())) {
+                    if ("1".equals(allTopicsList.get(i).getChild().get(j).getPublicVisibility()) || AppConstants.VIDEO_CHALLENGE_ID.equals(allTopicsList.get(i).getChild().get(j).getId())) {
                         subTopicsList.add(allTopicsList.get(i).getChild().get(j));
                     }
                 }
@@ -263,5 +269,14 @@ public class CategoryVideosListingActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+        }
+
     }
 }

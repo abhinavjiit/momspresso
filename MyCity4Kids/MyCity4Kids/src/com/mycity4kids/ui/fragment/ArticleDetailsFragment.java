@@ -34,12 +34,9 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.ads.Ad;
-import com.facebook.ads.AdChoicesView;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdIconView;
-import com.facebook.ads.AdListener;
 import com.facebook.ads.AdOptionsView;
-import com.facebook.ads.AdSettings;
 import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdLayout;
@@ -147,6 +144,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private MixpanelAPI mixpanel;
     private ArticleDetailResult detailData;
     private Bitmap defaultBloggerBitmap;
+    private Bitmap resized;
     private ArticleDetailsAPI articleDetailsAPI;
     private ArrayList<ImageData> imageList;
     private ArrayList<VideoData> videoList;
@@ -270,6 +268,24 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             mWebChromeClient = new MyWebChromeClient();
             mWebView.setWebChromeClient(mWebChromeClient);
+
+            if ((AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(getActivity())))) {
+                mWebView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return false;
+                    }
+                });
+            } else {
+
+                mWebView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return true;
+                    }
+                });
+                mWebView.setLongClickable(false);
+            }
 //            videoWebView.setWebChromeClient(mWebChromeClient);
 
             author_type = (TextView) fragmentView.findViewById(R.id.blogger_type);
@@ -300,8 +316,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             density = getResources().getDisplayMetrics().density;
             width = getResources().getDisplayMetrics().widthPixels;
 
+          /*  Bitmap yourBitmap;
+            Bitmap resized = Bitmap.createScaledBitmap(yourBitmap, newWidth, newHeight, true);
+          */
             defaultBloggerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_blogger_profile_img);
-            floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), defaultBloggerBitmap));
+            //resizing image because of crash .image size is large.
+            resized = Bitmap.createScaledBitmap(defaultBloggerBitmap, 96, 96, true);
+            floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), resized));
             swipeNextTextView = (TextView) fragmentView.findViewById(R.id.swipeNextTextView);
 
             commentLayout = ((LinearLayout) fragmentView.findViewById(R.id.commnetLout));
@@ -376,7 +397,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-
                 hitArticleDetailsRedisAPI();
                 getViewCountAPI();
                 hitRecommendedStatusAPI();
@@ -765,6 +785,19 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     } else {
                         shareUrl = deepLinkURL;
                     }
+                } else if (AppConstants.USER_TYPE_COLLABORATION.equals(detailData.getUserType())) {
+                    if (isAdded()) {
+                        author_type.setText(AppUtils.getString(getActivity(), R.string.author_type_collaboration));
+                    } else {
+                        author_type.setText(AppConstants.AUTHOR_TYPE_COLLABORATION.toUpperCase());
+                    }
+
+                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
+                    } else {
+                        shareUrl = deepLinkURL;
+                    }
+
                 } else {
                     if (isAdded()) {
 //                        author_type.setText(BaseApplication.getAppContext().getString(R.string.author_type_user));
@@ -1597,10 +1630,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
         if (youTubeInitializationResult.isUserRecoverableError()) {
             youTubeInitializationResult.getErrorDialog(getActivity(), RECOVERY_REQUEST).show();
-        } else {
-            String error = "ERROR";//String.format(getString(R.string.player_error), errorReason.toString());
-            Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
         }
+
+        // Retry initialization if user performed a recovery action
+        // getYouTubePlayerProvider().initialize(DeveloperKey.DEVELOPER_KEY, this);
+
+          /*  String error = "ERROR";//String.format(getString(R.string.player_error), errorReason.toString());
+            Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();*/
+
     }
 
 
@@ -2249,7 +2286,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void createSponsporedTagsList(ArrayList<String> sponsoredList) throws FileNotFoundException {
         FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
         String fileContent = AppUtils.convertStreamToString(fileInputStream);
-        TopicsResponse tRes = new Gson().fromJson(fileContent, TopicsResponse.class);
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+        TopicsResponse tRes = gson.fromJson(fileContent, TopicsResponse.class);
         for (int i = 0; i < tRes.getData().size(); i++) {
             if (AppConstants.SPONSORED_CATEGORYID.equals(tRes.getData().get(i).getId())) {
                 for (int j = 0; j < tRes.getData().get(i).getChild().size(); j++) {

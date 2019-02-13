@@ -31,6 +31,7 @@ import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -55,6 +56,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.ui.fragment.FilterTopicsDialogFragment;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.FeedNativeAd;
 
 import org.json.JSONObject;
@@ -79,9 +81,9 @@ import retrofit2.Retrofit;
  */
 
 /*
-* Used for Listing of Topics Article Listing, Language Specific Article Listing, Momspresso Article Listing
-*
-* */
+ * Used for Listing of Topics Article Listing, Language Specific Article Listing, Momspresso Article Listing
+ *
+ * */
 
 public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, FilterTopicsDialogFragment.OnTopicsSelectionComplete, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
@@ -206,7 +208,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             if (allTopicsList == null || allTopicsMap == null) {
                 FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = convertStreamToString(fileInputStream);
-                TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
                 createTopicsData(res);
             }
 
@@ -713,7 +716,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                         try {
                             FileInputStream fileInputStream = openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                             String fileContent = convertStreamToString(fileInputStream);
-                            FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
+                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                            FollowTopics[] res = gson.fromJson(fileContent, FollowTopics[].class);
                             checkCurrentCategoryExists(res);
                         } catch (FileNotFoundException e) {
                             Crashlytics.logException(e);

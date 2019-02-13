@@ -66,6 +66,8 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
     private View rootLayout;
     private String categoryId;
     private String duration;
+    private String challengeId, challengeName, comingFrom;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,25 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Intent intent = getIntent();
+        comingFrom = intent.getStringExtra("comingFrom");
+        if (comingFrom == null || comingFrom.isEmpty()) {
+            comingFrom = "notFromChallenge";
+        }
+        if (comingFrom.equals("Challenge")) {
+            challengeId = intent.getStringExtra("selectedId");
+            challengeName = intent.getStringExtra("selectedName");
+        }
 
+
+       /* if (intent != null) {
+            challengeId = intent.getStringExtra("selectedId");
+            challengeName = intent.getStringExtra("selectedName");
+            comingFrom = intent.getStringExtra("comingFrom");
+        } else {
+            if (comingFrom == null || comingFrom.isEmpty())
+                comingFrom = "notFromChallenge";
+        }*/
         try {
             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -319,11 +339,20 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
         String filepath = FileUtils.getPath(this, uri);
         intent.putExtra("categoryId", categoryId);
         intent.putExtra("duration", duration);
-        if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
-            intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
-            startActivity(intent);
+
+        if (comingFrom.equals("Challenge")) {
+            intent.putExtra("ChallengeId", challengeId);
+            intent.putExtra("ChallengeName", challengeName);
+            intent.putExtra("comingFrom", "Challenge");
         } else {
-            showToast(getString(R.string.choose_mp4_file));
+            intent.putExtra("comingFrom", "notFromChallenge");
         }
+
+        // if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
+        intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
+        startActivity(intent);
+       /* } else {
+            showToast(getString(R.string.choose_mp4_file));
+        }*/
     }
 }

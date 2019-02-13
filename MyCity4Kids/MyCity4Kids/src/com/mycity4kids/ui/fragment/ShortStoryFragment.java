@@ -748,7 +748,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 break;
             case R.id.facebookShareImageView: {
                 if (isAdded()) {
-                    AppUtils.shareStoryWithFB(this, headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
+                    AppUtils.shareStoryWithFBC(this, headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
                             "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId, author);
                 }
             }

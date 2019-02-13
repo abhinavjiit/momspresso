@@ -37,6 +37,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
     private String categoryId;
     private String duration;
     private String thumbnailTime;
+    private String challengeId, challengeName, comingFrom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +51,13 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
             path = extraIntent.getStringExtra(EXTRA_VIDEO_PATH);
             categoryId = extraIntent.getStringExtra("categoryId");
             duration = extraIntent.getStringExtra("duration");
+            comingFrom = extraIntent.getStringExtra("comingFrom");
+            if (comingFrom.equals("Challenge")) {
+                challengeId = extraIntent.getStringExtra("ChallengeId");
+                challengeName = extraIntent.getStringExtra("ChallengeName");
+            }
         }
-        if (path!=null && path.contains(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/")) {
+        if (path != null && path.contains(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/")) {
             Log.d("TRIM Video", "Video Picked from Mycity folder");
         } else {
             AppUtils.deleteDirectoryContent("MyCity4Kids/videos");
@@ -97,6 +103,13 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
             Intent intent = new Intent(VideoTrimmerActivity.this, AddVideoDetailsActivity.class);
             intent.putExtra("categoryId", categoryId);
             intent.putExtra("duration", duration);
+            if (comingFrom.equals("Challenge")) {
+                intent.putExtra("ChallengeId", challengeId);
+                intent.putExtra("ChallengeName", challengeName);
+                intent.putExtra("comingFrom", "Challenge");
+            } else {
+                intent.putExtra("comingFrom", "notFromChallenge");
+            }
             intent.putExtra("thumbnailTime", "" + mVideoTrimmer.getTimeStampForIFrame());
             if (uri.getPath().contains("/MyCity4Kids/videos/")) {
                 intent.putExtra("uriPath", uri.getPath());

@@ -8,6 +8,7 @@ import com.mycity4kids.BuildConfig;
  * @author Hemant Parmar
  */
 public class AppConstants {
+
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.220.87.141/";
 
@@ -394,6 +395,7 @@ public class AppConstants {
     public static final String AUTHOR_TYPE_EXPERT = "Expert";
     public static final String AUTHOR_TYPE_FEATURED = "Featured Author";
     public static final String AUTHOR_TYPE_USER = "User";
+    public static final String AUTHOR_TYPE_COLLABORATION ="VIDEO COLLABORATOR";
   /*  public static final String USER_TYPE_EDITOR = "0";
     public static final String USER_TYPE_EXPERT = "1";
     public static final String USER_TYPE_BLOGGER = "2";
@@ -442,7 +444,7 @@ public class AppConstants {
     public static final String USER_TYPE_BLOGGER = "7";
     public static final String USER_TYPE_EDITORIAL = "8";
     public static final String USER_TYPE_FEATURED = "9";
-
+    public static final String USER_TYPE_COLLABORATION = "14";
     public static final String COMMENT_OR_REPLY_OR_NESTED_REPLY = "editType";
     public static final int EDIT_COMMENT = 0;
     public static final int EDIT_REPLY = 1;
@@ -623,6 +625,13 @@ public class AppConstants {
 
     public static final String ANDROID_NEW_EDITOR = "android_new_editor";
     public static final String ANDROID_OLD_EDITOR = "android_old_editor";
+    public static final int COMMENT_TYPE_AUDIO = 2;
+
+    public static final String SHORT_STORY_CHALLENGE_ID = "category-743892a865774baf9c20cbcc5c01d35f";
+
+    public static final String VIDEO_CHALLENGE_ID = "category-ee7ea82543bd4bc0a8dad288561f2beb";
+
+    public static final String PUBLIC_VISIBILITY = "1";
 
     enum SocialPlatformName{
 

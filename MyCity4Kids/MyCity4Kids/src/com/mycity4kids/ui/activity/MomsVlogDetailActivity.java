@@ -1110,7 +1110,9 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
     @Override
     protected void onPause() {
         super.onPause();
+
         if (mExoPlayerView != null && mExoPlayerView.getPlayer() != null) {
+
             mResumeWindow = mExoPlayerView.getPlayer().getCurrentWindowIndex();
             mResumePosition = Math.max(0, mExoPlayerView.getPlayer().getContentPosition());
             mExoPlayerView.getPlayer().release();
@@ -1309,6 +1311,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
 
     private void openViewCommentDialog() {
         try {
+
             ViewAllCommentsDialogFragment commentFrag = new ViewAllCommentsDialogFragment();
             Bundle _args = new Bundle();
             _args.putString("mycityCommentURL", commentMainUrl);
@@ -1318,6 +1321,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
             commentFrag.setArguments(_args);
             FragmentManager fm = getSupportFragmentManager();
             commentFrag.show(fm, "ViewAllComments");
+//            mExoPlayerView.getPlayer().setPlayWhenReady(false);             //bug fixed
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -1420,4 +1424,6 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
         }
         mixpanel.track("Player_Start", jsonObject);
     }
+
+
 }

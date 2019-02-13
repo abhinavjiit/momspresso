@@ -9,19 +9,26 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
 import android.media.ExifInterface;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -33,19 +40,35 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.models.response.GroupPostCommentResult;
@@ -55,6 +78,8 @@ import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
+import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.AudioRecordView;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.Picasso;
@@ -77,25 +102,27 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 import static android.app.Activity.RESULT_OK;
+import static com.facebook.accountkit.internal.AccountKitController.getApplicationContext;
 
 /**
  * Created by user on 08-06-2015.
  */
-public class AddGpPostCommentReplyDialogFragment extends DialogFragment implements OnClickListener, TaskFragment.TaskCallbacks {
+public class AddGpPostCommentReplyDialogFragment extends DialogFragment implements OnClickListener, TaskFragment.TaskCallbacks, AudioRecordView.RecordingListener, SeekBar.OnSeekBarChangeListener {
 
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
     private ProgressDialog mProgressDialog;
-//    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
 
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-//    private static String PERMISSION_AUDIO_RECORD = Manifest.permission.RECORD_AUDIO;
-//    private boolean permissionToRecordAccepted = false;
+    private static String PERMISSION_AUDIO_RECORD = Manifest.permission.RECORD_AUDIO;
+    private boolean permissionToRecordAccepted = false;
 
 //    private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
 
     private static final int REQUEST_INIT_PERMISSION = 1;
     private HashMap<ImageView, String> imageUrlHashMap = new HashMap<>();
+    private HashMap<ImageView, String> audioUrlHashMap = new HashMap<>();
     public static final int ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE = 1111;
     private Map<String, String> mediaMap = new HashMap<>();
     public static final int ADD_IMAGE_CAMERA_ACTIVITY_REQUEST_CODE = 1112;
@@ -119,7 +146,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private RelativeLayout chooseMediaTypeContainer;
     private int position;
     private TextView headingTextView;
-    private ImageView addMediaImageView;
+    private ImageView addMediaImageView, addAudioImageView;
     private RelativeLayout relativeMainContainer;
     private ImageView commentorImageView;
     private TextView commentorUsernameTextView;
@@ -130,17 +157,34 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private CheckBox anonymousCheckbox;
     private View bottombarTopline;
     private int groupId, postId;
-    private TextView addMediaTextView;
+    private TextView addMediaTextView, audioTimeElapsed, audioTimeElapsedComment;
     private View mLayout;
     private TaskFragment mTaskFragment;
-//    private RecordView record_view;
-//    private RecordButton record_button;
-//    private MediaRecorder mRecorder;
-//    private String mFileName;
-//    private FirebaseAuth mAuth;
-//    private Uri originalUri;
-//    private Uri contentURI;
-//    private long suffixName;
+    private MediaRecorder mRecorder;
+    private String mFileName;
+    private FirebaseAuth mAuth;
+    private Uri originalUri;
+    private Uri contentURI;
+    private long suffixName;
+    private MediaPlayer mMediaplayer, mMediaPlayerComment;
+    private Uri downloadUri;
+    private AudioRecordView audioRecordView;
+    private long time;
+    private RelativeLayout mLinearBottomSheet;
+    private ImageView mImgRecordButton, mImgRecordCross;
+    private Animation slideDownAnim, slideAnim, fadeAnim;
+    private Handler mHandler = new Handler();
+    private SeekBar audioSeekBarUpdate, audioSeekBar;
+    private long totalDuration, currentDuration;
+    private ImageView playAudio, pauseAudio;
+    private int pos;
+    private boolean isPlayed = false;
+    private boolean isPaused = false;
+    private boolean isCommentPlay = false;
+    private LinearLayout playAudioLayout, timerLayout, dateContainermedia;
+    private ImageView playAudioImageView, pauseAudioImageView, micImg;
+    private ArrayList<String> audioCommentList;
+    private boolean isLocked = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -152,6 +196,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         commentdatetextviewmedia = (TextView) rootView.findViewById(R.id.commentDateTextViewmedia);
         mLayout = rootView.findViewById(R.id.root);
         addMediaImageView = (ImageView) rootView.findViewById(R.id.addMediaImageView);
+        addAudioImageView = (ImageView) rootView.findViewById(R.id.addAudioImageView);
         addMediaTextView = (TextView) rootView.findViewById(R.id.addMediaTextView);
         closeImageView = (ImageView) rootView.findViewById(R.id.closeImageView);
         addCommentTextView = (TextView) rootView.findViewById(R.id.postCommentReplyTextView);
@@ -172,15 +217,34 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         imageGalleryTextView = (TextView) rootView.findViewById(R.id.imageGalleryTextView);
         postImageView = (ImageView) rootView.findViewById(R.id.postImageView);
         cancelTextView = (TextView) rootView.findViewById(R.id.cancelTextView);
-//        record_view = (RecordView) rootView.findViewById(R.id.record_view);
-//        record_button = (RecordButton) rootView.findViewById(R.id.record_button);
-//
-//        record_button.setRecordView(record_view);
-//
-//        mAuth = FirebaseAuth.getInstance();
-//
-//        mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
-//        mFileName += "/audiorecordtest.3gp";
+        audioRecordView = rootView.findViewById(R.id.recordingView);
+        mImgRecordButton = rootView.findViewById(R.id.record_button_red);
+        mImgRecordCross = rootView.findViewById(R.id.bottomSheetCross);
+        mLinearBottomSheet = rootView.findViewById(R.id.bottomsheet);
+        slideAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.appear_from_bottom);
+        fadeAnim = AnimationUtils.loadAnimation(getContext(), R.anim.alpha_anim);
+        slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
+        playAudioLayout = rootView.findViewById(R.id.playAudioLayout);
+        timerLayout = rootView.findViewById(R.id.timerLayout);
+        playAudioImageView = rootView.findViewById(R.id.playAudioImageView);
+        pauseAudioImageView = rootView.findViewById(R.id.pauseAudioImageView);
+        audioSeekBar = rootView.findViewById(R.id.audioSeekBar);
+        dateContainermedia = rootView.findViewById(R.id.dateContainermedia);
+        audioTimeElapsedComment = rootView.findViewById(R.id.audioTimeElapsed);
+
+
+        audioRecordView.setRecordingListener(this);
+        setListener();
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                requestAudioPermissions();
+            }
+        }
+        mAuth = FirebaseAuth.getInstance();
+
+        mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
+        mFileName += "/audiorecordtest.m4a";
 
         commentReplyEditText.setOnTouchListener(new View.OnTouchListener() {
 
@@ -197,47 +261,34 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             }
         });
 
-//        record_view.setOnRecordListener(new OnRecordListener() {
-//            @Override
-//            public void onStart() {
-//                //Start Recording..
-//                if (Build.VERSION.SDK_INT >= 23) {
-//                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-//                        requestAudioRecordPermission();
-//                    } else {
-//                        startRecording();
-//                    }
-//                } else {
-//                    startRecording();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                //On Swipe To Cancel
-//                Log.d("RecordView", "onCancel");
-//
-//            }
-//
-//            @Override
-//            public void onFinish(long recordTime) {
-//                //Stop Recording..
-////                String time = getHumanTimeText(recordTime);
-//                Log.d("RecordView", "onFinish");
-//                stopRecording();
-//                originalUri = Uri.parse(mFileName);
-//                contentURI = AppUtils.exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(), getActivity());
-//                contentURI = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver());
-//                uploadAudio(contentURI);
-//                Log.d("RecordTime", "" + recordTime);
-//            }
-//
-//            @Override
-//            public void onLessThanSecond() {
-//                //When the record time is less than One Second
-//                Log.d("RecordView", "onLessThanSecond");
-//            }
-//        });
+        commentReplyEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().length() > 0) {
+                    audioRecordView.setVisibility(View.GONE);
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    addMediaImageView.setLayoutParams(params);
+                } else {
+                    audioRecordView.setVisibility(View.VISIBLE);
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
+                    params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    params.addRule(RelativeLayout.LEFT_OF, R.id.recordingView);
+                    addMediaImageView.setLayoutParams(params);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         Bundle extras = getArguments();
         commentOrReplyData = (GroupPostCommentResult) extras.get("parentCommentData");
@@ -255,6 +306,12 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         addMediaTextView.setOnClickListener(this);
         imageCameraTextView.setOnClickListener(this);
         imageGalleryTextView.setOnClickListener(this);
+        audioRecordView.setOnClickListener(this);
+        playAudioImageView.setOnClickListener(this);
+        pauseAudioImageView.setOnClickListener(this);
+//        addAudioImageView.setOnClickListener(this);
+        mImgRecordCross.setOnClickListener(this);
+        mImgRecordButton.setOnClickListener(this);
 //        videoCameraTextView.setOnClickListener(this);
 //        videoGalleryTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
@@ -275,12 +332,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.ad_comments_edit_label));
                 relativeMainContainer.setVisibility(View.GONE);
                 commentReplyEditText.setText(commentOrReplyData.getContent());
-                anonymousImageView.setVisibility(View.GONE);
-                anonymousTextView.setVisibility(View.GONE);
-                anonymousCheckbox.setVisibility(View.GONE);
-                bottombarTopline.setVisibility(View.GONE);
-                addMediaImageView.setVisibility(View.GONE);
-                addMediaTextView.setVisibility(View.GONE);
             } else {
                 headingTextView.setText(BaseApplication.getAppContext().getString(R.string.reply));
                 relativeMainContainer.setVisibility(View.VISIBLE);
@@ -289,20 +340,52 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 if (commentOrReplyData.getIsAnnon() == 1) {
                     commentorUsernameTextView.setText(BaseApplication.getAppContext().getString(R.string.groups_anonymous));
                     commentorImageView.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.ic_incognito));
-                    ArrayList<String> mediaList = new ArrayList<>();
-                    Map<String, String> map = (Map<String, String>) commentOrReplyData.getMediaUrls();
-                    if (map != null && !map.isEmpty()) {
-                        for (String entry : map.values()) {
-                            mediaList.add(entry);
+                    if (commentOrReplyData.getCommentType() == AppConstants.COMMENT_TYPE_AUDIO) {
+                        audioCommentList = new ArrayList<>();
+                        Map<String, String> map = (Map<String, String>) commentOrReplyData.getMediaUrls();
+                        if (map != null && !map.isEmpty()) {
+                            for (String entry : map.values()) {
+                                audioCommentList.add(entry);
+                            }
+                            commentDateTextView.setVisibility(View.GONE);
+                            media.setVisibility(View.GONE);
+                            playAudioLayout.setVisibility(View.VISIBLE);
+                            timerLayout.setVisibility(View.VISIBLE);
+                            commentdatetextviewmedia.setVisibility(View.VISIBLE);
+                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
+                            params.addRule(RelativeLayout.BELOW, R.id.timerLayout);
+                            dateContainermedia.setLayoutParams(params);
+//                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
+                        } else {
+                            commentDateTextView.setVisibility(View.VISIBLE);
+                            media.setVisibility(View.GONE);
+                            playAudioLayout.setVisibility(View.GONE);
+                            timerLayout.setVisibility(View.GONE);
+                            commentdatetextviewmedia.setVisibility(View.GONE);
                         }
-                        commentDateTextView.setVisibility(View.GONE);
-                        media.setVisibility(View.VISIBLE);
-                        commentdatetextviewmedia.setVisibility(View.VISIBLE);
-                        Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
                     } else {
-                        commentDateTextView.setVisibility(View.VISIBLE);
-                        media.setVisibility(View.GONE);
-                        commentdatetextviewmedia.setVisibility(View.GONE);
+                        ArrayList<String> mediaList = new ArrayList<>();
+                        Map<String, String> map = (Map<String, String>) commentOrReplyData.getMediaUrls();
+                        if (map != null && !map.isEmpty()) {
+                            for (String entry : map.values()) {
+                                mediaList.add(entry);
+                            }
+                            commentDateTextView.setVisibility(View.GONE);
+                            media.setVisibility(View.VISIBLE);
+                            playAudioLayout.setVisibility(View.GONE);
+                            timerLayout.setVisibility(View.GONE);
+                            commentdatetextviewmedia.setVisibility(View.VISIBLE);
+                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
+                            params.addRule(RelativeLayout.BELOW, R.id.media);
+                            dateContainermedia.setLayoutParams(params);
+                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
+                        } else {
+                            commentDateTextView.setVisibility(View.VISIBLE);
+                            media.setVisibility(View.GONE);
+                            playAudioLayout.setVisibility(View.GONE);
+                            timerLayout.setVisibility(View.GONE);
+                            commentdatetextviewmedia.setVisibility(View.GONE);
+                        }
                     }
                 } else {
                     try {
@@ -315,20 +398,48 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(commentorImageView);
                     }
                     commentorUsernameTextView.setText(commentOrReplyData.getUserInfo().getFirstName() + " " + commentOrReplyData.getUserInfo().getLastName());
-                    ArrayList<String> mediaList = new ArrayList<>();
-                    Map<String, String> map = (Map<String, String>) commentOrReplyData.getMediaUrls();
-                    if (map != null && !map.isEmpty()) {
-                        for (String entry : map.values()) {
-                            mediaList.add(entry);
+                    if (commentOrReplyData.getCommentType() == AppConstants.COMMENT_TYPE_AUDIO) {
+                        audioCommentList = new ArrayList<>();
+                        Map<String, String> map = (Map<String, String>) commentOrReplyData.getMediaUrls();
+                        if (map != null && !map.isEmpty()) {
+                            for (String entry : map.values()) {
+                                audioCommentList.add(entry);
+                            }
+                            commentDateTextView.setVisibility(View.GONE);
+                            media.setVisibility(View.GONE);
+                            playAudioLayout.setVisibility(View.VISIBLE);
+                            timerLayout.setVisibility(View.VISIBLE);
+                            commentdatetextviewmedia.setVisibility(View.VISIBLE);
+                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
+                            params.addRule(RelativeLayout.BELOW, R.id.timerLayout);
+                            dateContainermedia.setLayoutParams(params);
+//                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
+                        } else {
+                            commentDateTextView.setVisibility(View.VISIBLE);
+                            media.setVisibility(View.GONE);
+                            playAudioLayout.setVisibility(View.GONE);
+                            timerLayout.setVisibility(View.GONE);
+                            commentdatetextviewmedia.setVisibility(View.GONE);
                         }
-                        commentDateTextView.setVisibility(View.GONE);
-                        media.setVisibility(View.VISIBLE);
-                        commentdatetextviewmedia.setVisibility(View.VISIBLE);
-                        Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
                     } else {
-                        commentDateTextView.setVisibility(View.VISIBLE);
-                        media.setVisibility(View.GONE);
-                        commentdatetextviewmedia.setVisibility(View.GONE);
+                        ArrayList<String> mediaList = new ArrayList<>();
+                        Map<String, String> map = (Map<String, String>) commentOrReplyData.getMediaUrls();
+                        if (map != null && !map.isEmpty()) {
+                            for (String entry : map.values()) {
+                                mediaList.add(entry);
+                            }
+                            commentDateTextView.setVisibility(View.GONE);
+                            media.setVisibility(View.VISIBLE);
+                            commentdatetextviewmedia.setVisibility(View.VISIBLE);
+                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
+                            params.addRule(RelativeLayout.BELOW, R.id.media);
+                            dateContainermedia.setLayoutParams(params);
+                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
+                        } else {
+                            commentDateTextView.setVisibility(View.VISIBLE);
+                            media.setVisibility(View.GONE);
+                            commentdatetextviewmedia.setVisibility(View.GONE);
+                        }
                     }
                 }
 
@@ -342,6 +453,89 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             }
         }
         return rootView;
+    }
+
+
+    private void setListener() {
+
+    }
+
+    @Override
+    public void onRecordingStarted() {
+        if (mMediaPlayerComment != null && isCommentPlay) {
+            mMediaPlayerComment.release();
+            mMediaPlayerComment = null;
+            playAudioImageView.setVisibility(View.VISIBLE);
+            pauseAudioImageView.setVisibility(View.GONE);
+            audioSeekBar.setProgress(0);
+            audioTimeElapsedComment.setVisibility(View.GONE);
+        }
+        startRecording();
+    }
+
+    @Override
+    public void onRecordingLocked() {
+        isLocked = true;
+    }
+
+    @Override
+    public void onRecordingCompleted() {
+//Stop Recording..
+//                String time = getHumanTimeText(recordTime);
+        Log.d("RecordView", "onFinish");
+        isLocked = false;
+        int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
+        if (recordTime < 1) {
+            resetIcons();
+            Toast.makeText(getActivity(), R.string.hold_to_release, Toast.LENGTH_SHORT).show();
+        } else if (recordTime >= 4) {
+            stopRecording();
+            originalUri = Uri.parse(mFileName);
+            contentURI = AppUtils.exportAudioToGallery(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver(), getActivity());
+            contentURI = AppUtils.getAudioUriFromMediaProvider(originalUri.getPath(), BaseApplication.getAppContext().getContentResolver());
+            uploadAudio(contentURI);
+            mImgRecordCross.setVisibility(View.VISIBLE);
+            Log.d("RecordTime", "" + recordTime);
+        } else {
+            audioRecordView.disableClick(false);
+            resetIcons();
+            Toast.makeText(getActivity(), R.string.please_hold_for_3_seconds, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRecordingCanceled() {
+        addAudioImageView.setEnabled(false);
+        addMediaImageView.setEnabled(false);
+        addMediaTextView.setEnabled(false);
+    }
+
+    @Override
+    public void onReset() {
+        resetIcons();
+    }
+
+    @Override
+    public void setPermission() {
+        requestAudioPermissions();
+    }
+
+    private void resetIcons() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                commentReplyEditText.setVisibility(View.VISIBLE);
+                addMediaImageView.setVisibility(View.VISIBLE);
+                anonymousCheckbox.setVisibility(View.VISIBLE);
+                anonymousImageView.setVisibility(View.VISIBLE);
+                anonymousTextView.setVisibility(View.VISIBLE);
+                ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
+                params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                audioRecordView.setLayoutParams(params);
+                audioRecordView.disableClick(true);
+            }
+        }, 500);
     }
 
     @NonNull
@@ -392,8 +586,9 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         mediaMap.put("image" + i, entry.getValue());
                         i++;
                     }
+                } else if (!audioUrlHashMap.isEmpty()) {
+                    mediaMap.put("audio", downloadUri.toString());
                 }
-//                mediaMap.put("audio", "https://firebasestorage.googleapis.com/v0/b/api-project-3577377239.appspot.com/o/user%2F6f57d7cb01fa46c89bf85e3d2ade7de3%2Faudio%2F381688_1546001128185?alt=media&token=3417b1b6-5a55-4d62-b143-ad7b1116d0a6");
                 if (isValid(mediaMap)) {
                     if ("EDIT_COMMENT".equals(actionType)) {
                         if (getActivity() instanceof GroupPostDetailActivity)
@@ -419,6 +614,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         }
                     }
                     dismiss();
+                    commentReplyEditText.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.closeImageView:
@@ -460,6 +656,43 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     openMediaChooserDialog();
                 }
                 break;
+
+            case R.id.bottomSheetCross:
+                mLinearBottomSheet.startAnimation(slideDownAnim);
+                slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mLinearBottomSheet.setVisibility(View.GONE);
+                                commentReplyEditText.setVisibility(View.VISIBLE);
+                                addMediaImageView.setVisibility(View.VISIBLE);
+                                anonymousCheckbox.setVisibility(View.VISIBLE);
+                                anonymousImageView.setVisibility(View.VISIBLE);
+                                anonymousTextView.setVisibility(View.VISIBLE);
+                                addAudioImageView.setEnabled(true);
+                                addMediaImageView.setEnabled(true);
+                                addMediaTextView.setEnabled(true);
+                            }
+                        }, 0);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                break;
+            case R.id.record_button_red:
+                audioRecordView.setVisibility(View.VISIBLE);
+                mImgRecordButton.setVisibility(View.GONE);
+                mImgRecordCross.setVisibility(View.GONE);
+                break;
             case R.id.imageCameraTextView:
                 loadImageFromCamera();
                 chooseMediaTypeContainer.setVisibility(View.GONE);
@@ -479,6 +712,78 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
                 break;
+            case R.id.playAudioImageView:
+                playComment();
+                break;
+            case R.id.pauseAudioImageView:
+                pauseComment();
+                break;
+        }
+    }
+
+    private void pauseComment() {
+        playAudioImageView.setVisibility(View.VISIBLE);
+        pauseAudioImageView.setVisibility(View.GONE);
+        mMediaPlayerComment.pause();
+        isCommentPlay = false;
+        isPaused = true;
+        audioSeekBar.setProgress(0);
+    }
+
+    private void playComment() {
+        if (mMediaplayer != null && isPlayed) {
+            mMediaplayer.release();
+            mMediaplayer = null;
+            playAudio.setVisibility(View.VISIBLE);
+            pauseAudio.setVisibility(View.GONE);
+            audioSeekBarUpdate.setProgress(0);
+            audioTimeElapsed.setVisibility(View.GONE);
+            micImg.setVisibility(View.GONE);
+        }
+        pauseAudioImageView.setVisibility(View.VISIBLE);
+        playAudioImageView.setVisibility(View.GONE);
+        audioTimeElapsedComment.setVisibility(View.VISIBLE);
+        isCommentPlay = true;
+        if (mMediaPlayerComment != null && isPaused) {
+            mMediaPlayerComment.start();
+            updateCommentProgressBar();
+            isPlayed = true;
+            isPaused = false;
+        } else {
+            mMediaPlayerComment = new MediaPlayer();
+            mMediaPlayerComment.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            audioSeekBar.setProgress(0);
+            audioSeekBar.setMax(100);
+            try {
+                mMediaPlayerComment.setDataSource(audioCommentList.get(0));
+
+                // wait for media player to get prepare
+                mMediaPlayerComment.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                        mMediaPlayerComment.start();
+                        updateCommentProgressBar();
+                        isPlayed = true;
+                    }
+                });
+                mMediaPlayerComment.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        if (isPlayed) {
+                            isPlayed = false;
+                            isCommentPlay = false;
+                            playAudioImageView.setVisibility(View.VISIBLE);
+                            pauseAudioImageView.setVisibility(View.GONE);
+                            mMediaPlayerComment.stop();
+                            mMediaPlayerComment = null;
+                            audioSeekBar.setProgress(0);
+                        }
+                    }
+                });
+                mMediaPlayerComment.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -551,9 +856,14 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private boolean isValid(Map<String, String> image) {
 
         if (StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString()) && image.isEmpty()) {
-            if (isAdded())
-                Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();
-            return false;
+            if (isAdded()){
+                if (isLocked){
+                    Toast.makeText(getActivity(), R.string.stop_recording, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();
+                }
+                return false;
+            }
         }
         return true;
     }
@@ -598,6 +908,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
     }
 
+
     private class CustomerTextClick extends ClickableSpan {
         private String mUrl;
 
@@ -613,6 +924,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 getActivity().startActivity(intent);
             }
         }
+
     }
 
     private void requestPermissions() {
@@ -657,31 +969,57 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     }
 
 
-//    private void requestAudioRecordPermission() {
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-//                Manifest.permission.RECORD_AUDIO)) {
-//
-//            // Display a SnackBar with an explanation and a button to trigger the request.
-//            Snackbar.make(mLayout, "record permission",
-//                    Snackbar.LENGTH_INDEFINITE)
-//                    .setAction(R.string.ok, new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            requestUngrantedAudioRecordingPermissions();
-//                        }
-//                    })
-//                    .show();
-//        }
-//    }
-//
-//    private void requestUngrantedAudioRecordingPermissions() {
-//        ArrayList<String> permissionList = new ArrayList<>();
-//        if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSION_AUDIO_RECORD) != PackageManager.PERMISSION_GRANTED) {
-//            permissionList.add(PERMISSION_AUDIO_RECORD);
-//        }
-//        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
-//        ActivityCompat.requestPermissions(getActivity(), requiredPermission, REQUEST_RECORD_AUDIO_PERMISSION);
-//    }
+    private void requestAudioRecordPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                Manifest.permission.RECORD_AUDIO)) {
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, "record permission",
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedAudioRecordingPermissions();
+                        }
+                    })
+                    .show();
+        }
+    }
+
+    private void requestAudioPermissions() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+            //When permission is not granted by user, show them message why this permission is needed.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.RECORD_AUDIO)) {
+                Toast.makeText(getActivity(), R.string.audio_permission, Toast.LENGTH_SHORT).show();
+
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO_PERMISSION);
+
+            } else {
+                // Show user dialog to grant permission to record audio
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        REQUEST_RECORD_AUDIO_PERMISSION);
+            }
+        }
+       /* //If permission is granted, then go ahead recording audio
+        else if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            //Go ahead with recording audio now
+            startRecording();
+        }*/
+    }
+
+    private void requestUngrantedAudioRecordingPermissions() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSION_AUDIO_RECORD) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(PERMISSION_AUDIO_RECORD);
+        }
+        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+        ActivityCompat.requestPermissions(getActivity(), requiredPermission, REQUEST_RECORD_AUDIO_PERMISSION);
+    }
 
     private void requestUngrantedPermissions() {
         ArrayList<String> permissionList = new ArrayList<>();
@@ -709,19 +1047,17 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
-        }
-//        else if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
-//            if (PermissionUtil.verifyPermissions(grantResults)) {
-//                Snackbar.make(mLayout, R.string.permision_available_init,
-//                        Snackbar.LENGTH_SHORT)
-//                        .show();
-//            } else {
-//                Snackbar.make(mLayout, R.string.permissions_not_granted,
-//                        Snackbar.LENGTH_SHORT)
-//                        .show();
-//            }
-//        }
-        else {
+        } else if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(mLayout, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            } else {
+                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
@@ -823,74 +1159,82 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         }
     }
 
-//    public void uploadAudio(Uri file) {
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//
-//        mAuth.signInAnonymously()
-//                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d("VideoUpload", "signInAnonymously:success");
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            uploadAudioToFirebase(contentURI);
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
-//                            Toast.makeText(getActivity(), "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-////                            updateUI(null);
-//                        }
-//
-//                        // ...
-//                    }
-//                });
-//    }
-//
-//    private void uploadAudioToFirebase(Uri file2) {
-//        FirebaseStorage storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com");
-//
-//        final StorageReference storageRef = storage.getReference();
-//
-//        suffixName = System.currentTimeMillis();
-////        Uri file = Uri.fromFile(file2);
-//        final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
-//                + "/audio/" + file2.getLastPathSegment() + "_" + suffixName);
-//        com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2);
-//
-//// Register observers to listen for when the download is done or if it fails
-//        uploadTask.addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                // Handle unsuccessful uploads
-////                MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
-////                createRowForFailedAttempt(exception.getMessage());
-//
-//            }
-//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-////                MixPanelUtils.pushVideoUploadSuccessEvent(mixpanel, title);
-//                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                    @Override
-//                    public void onSuccess(Uri uri) {
-//                        Uri downloadUri = uri;
-////                        publishVideo(uri);
-//                    }
-//                });
-//                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-//                // ...
-//            }
-//        });
-//
-//        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onProgress(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-//                Log.e("Tuts+", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
-//            }
-//        });
-//    }
+    public void uploadAudio(Uri file) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("VideoUpload", "signInAnonymously:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            uploadAudioToFirebase(contentURI);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
+    private void uploadAudioToFirebase(Uri file2) {
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com");
+
+        final StorageReference storageRef = storage.getReference();
+
+        suffixName = System.currentTimeMillis();
+//        Uri file = Uri.fromFile(file2);
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("audio/m4a")
+                .build();
+        final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()
+                + "/audio/" + file2.getLastPathSegment() + "_" + suffixName + ".m4a");
+        com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2, metadata);
+
+// Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+//                MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
+//                createRowForFailedAttempt(exception.getMessage());
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
+//                MixPanelUtils.pushVideoUploadSuccessEvent(mixpanel, title);
+                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        downloadUri = uri;
+                        removeProgressDialog();
+                        audioRecordView.setVisibility(View.GONE);
+                        addMediaImageView.setVisibility(View.GONE);
+                        commentReplyEditText.setVisibility(View.GONE);
+                        addAudioToContainer(contentURI.toString());
+                    }
+                });
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+            }
+        });
+
+        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
+                Log.e("Tuts+", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
+            }
+        });
+    }
+
 
     public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
@@ -925,13 +1269,15 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
-                                 }
+                                     addImageToContainer(responseModel.getData().getResult().getUrl());
+                                     Toast.makeText(getActivity(), "image_upload_success", Toast.LENGTH_SHORT).show();
 
-                                 addImageToContainer(responseModel.getData().getResult().getUrl());
+                                 } else {
+                                     Toast.makeText(getActivity(), "please try again later", Toast.LENGTH_SHORT).show();
+                                 }
 //                                 Picasso.with(AddTextOrMediaGroupPostActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(postImageView);
 //                                 postImageView.setVisibility(View.VISIBLE);
                                  //showToast(getString(R.string.image_upload_success));
-                                 Toast.makeText(getActivity(), "image_upload_success", Toast.LENGTH_SHORT).show();
                              }
                          }
 
@@ -959,45 +1305,392 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         final ImageView removeIV = (ImageView) rl.findViewById(R.id.removeItemImageView);
         mediaContainer.addView(rl);
         imageUrlHashMap.put(removeIV, url);
+        audioRecordView.setVisibility(View.GONE);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        addMediaImageView.setLayoutParams(params);
         Picasso.with(getActivity()).load(url).error(R.drawable.default_article).into(uploadedIV);
         removeIV.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
             @Override
             public void onClick(View v) {
                 imageUrlHashMap.remove(removeIV);
                 mediaContainer.removeView((View) removeIV.getParent());
+                audioRecordView.setVisibility(View.VISIBLE);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
+                params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                params.addRule(RelativeLayout.LEFT_OF, R.id.recordingView);
+                addMediaImageView.setLayoutParams(params);
             }
         });
     }
 
-//    private void startRecording() {
-//        mRecorder = new MediaRecorder();
-//        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-//        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-//        mRecorder.setOutputFile(mFileName);
-//        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-//
-//        try {
-//            mRecorder.prepare();
-//        } catch (IOException e) {
-//            Log.e("LOG_TAG", "prepare() failed");
-//        }
-//
-//        mRecorder.start();
-//    }
-//
-//    private void stopRecording() {
-//        mRecorder.stop();
-//        mRecorder.release();
-//        mRecorder = null;
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        if (mRecorder != null) {
-//            mRecorder.release();
-//            mRecorder = null;
-//        }
-//    }
+    private void addAudioToContainer(String url) {
+        RelativeLayout rl = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.audio_post_upload_item, null);
+        final ImageView removeIV = (ImageView) rl.findViewById(R.id.removeItemImageView);
+        playAudio = rl.findViewById(R.id.playAudioImageView);
+        pauseAudio = rl.findViewById(R.id.pauseAudioImageView);
+        micImg = rl.findViewById(R.id.mic_img);
+        audioSeekBarUpdate = rl.findViewById(R.id.audioSeekBar);
+        audioTimeElapsed = rl.findViewById(R.id.audioTimeElapsed);
+        mediaContainer.addView(rl);
+        audioUrlHashMap.put(removeIV, url);
 
+        playAudio.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mMediaPlayerComment != null && isCommentPlay) {
+                    mMediaPlayerComment.release();
+                    mMediaPlayerComment = null;
+                    playAudioImageView.setVisibility(View.VISIBLE);
+                    pauseAudioImageView.setVisibility(View.GONE);
+                    audioSeekBar.setProgress(0);
+                    audioTimeElapsedComment.setVisibility(View.GONE);
+                }
+                pauseAudio.setVisibility(View.VISIBLE);
+                playAudio.setVisibility(View.GONE);
+                audioTimeElapsed.setVisibility(View.VISIBLE);
+                isCommentPlay = false;
+                if (mMediaplayer != null && isPaused) {
+                    mMediaplayer.start();
+                    updateProgressBar();
+                    micImg.setVisibility(View.VISIBLE);
+                    isPlayed = true;
+                    isPaused = false;
+                } else {
+                    mMediaplayer = new MediaPlayer();
+                    mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    audioSeekBarUpdate.setProgress(0);
+                    audioSeekBarUpdate.setMax(100);
+                    try {
+                        mMediaplayer.setDataSource(mFileName);
+
+                        // wait for media player to get prepare
+                        mMediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                mMediaplayer.start();
+                                updateProgressBar();
+                                micImg.setVisibility(View.VISIBLE);
+                                isPlayed = true;
+                            }
+                        });
+                        mMediaplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mediaPlayer) {
+                                if (isPlayed) {
+                                    isPlayed = false;
+                                    playAudio.setVisibility(View.VISIBLE);
+                                    pauseAudio.setVisibility(View.GONE);
+                                    mMediaplayer.stop();
+                                    mMediaplayer = null;
+//                                    audioSeekBarUpdate.setProgress(0);
+                                }
+                            }
+                        });
+                        mMediaplayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        pauseAudio.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playAudio.setVisibility(View.VISIBLE);
+                pauseAudio.setVisibility(View.GONE);
+                mMediaplayer.pause();
+                isPaused = true;
+                isCommentPlay = false;
+                audioSeekBarUpdate.setProgress(0);
+            }
+        });
+        removeIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMediaplayer != null) {
+                    mMediaplayer.stop();
+                    mMediaplayer.release();
+                    isCommentPlay = false;
+                    mMediaplayer = null;
+                }
+                audioUrlHashMap.remove(removeIV);
+                mediaContainer.removeView((View) removeIV.getParent());
+                commentReplyEditText.setVisibility(View.VISIBLE);
+                addAudioImageView.setEnabled(true);
+                addMediaImageView.setEnabled(true);
+                addMediaTextView.setEnabled(true);
+                audioRecordView.setVisibility(View.VISIBLE);
+                addMediaImageView.setVisibility(View.VISIBLE);
+            }
+        });
+
+    }
+
+    private void startRecording() {
+        if (mRecorder != null) {
+            mRecorder.release();
+        }
+        ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        audioRecordView.setLayoutParams(params);
+        mRecorder = new MediaRecorder();
+        commentReplyEditText.setVisibility(View.GONE);
+        addAudioImageView.setVisibility(View.GONE);
+        addMediaImageView.setVisibility(View.GONE);
+        anonymousCheckbox.setVisibility(View.GONE);
+        anonymousImageView.setVisibility(View.GONE);
+        anonymousTextView.setVisibility(View.GONE);
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mRecorder.setOutputFile(mFileName);
+        time = System.currentTimeMillis() / (1000);
+        try {
+            mRecorder.prepare();
+            mRecorder.start();
+        } catch (IOException e) {
+            Log.e("LOG_TAG", "prepare() failed");
+        }
+    }
+
+    private void stopRecording() {
+        if (mRecorder != null) {
+            try {
+                mRecorder.stop();
+            } catch (RuntimeException e) {
+
+            } finally {
+                mRecorder.release();
+                showProgressDialog(getString(R.string.please_wait));
+                mRecorder = null;
+                mLinearBottomSheet.startAnimation(slideDownAnim);
+                slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mLinearBottomSheet.setVisibility(View.GONE);
+                                addAudioImageView.setEnabled(false);
+                                addMediaImageView.setEnabled(false);
+                                addMediaTextView.setEnabled(false);
+                                commentReplyEditText.setVisibility(View.VISIBLE);
+                                addMediaImageView.setVisibility(View.VISIBLE);
+                                anonymousCheckbox.setVisibility(View.VISIBLE);
+                                anonymousImageView.setVisibility(View.VISIBLE);
+                                anonymousTextView.setVisibility(View.VISIBLE);
+                                ViewGroup.LayoutParams params = audioRecordView.getLayoutParams();
+                                params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                                audioRecordView.setLayoutParams(params);
+                            }
+                        }, 0);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        playAudioImageView.setVisibility(View.VISIBLE);
+        pauseAudioImageView.setVisibility(View.GONE);
+        if (!audioUrlHashMap.isEmpty()) {
+            playAudio.setVisibility(View.VISIBLE);
+            pauseAudio.setVisibility(View.GONE);
+        }
+        if (mRecorder != null) {
+            mRecorder.release();
+            mRecorder = null;
+        }
+        if (mMediaplayer != null) {
+//            mMediaplayer.stop();
+            mMediaplayer.release();
+            mMediaplayer = null;
+        }
+        if (mMediaPlayerComment != null) {
+            mMediaPlayerComment.release();
+            mMediaPlayerComment = null;
+        }
+    }
+
+
+    public void updateProgressBar() {
+        mHandler.postDelayed(mUpdateTimeTask, 100);
+    }
+
+    private void updateCommentProgressBar() {
+        mHandler.postDelayed(mUpdateCommentTimeTask, 100);
+    }
+
+
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            if (mMediaplayer != null && !isCommentPlay) {
+                totalDuration = mMediaplayer.getDuration();
+                currentDuration = mMediaplayer.getCurrentPosition();
+
+                audioTimeElapsed.setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
+
+                // Updating progress bar
+                int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+                //Log.d("Progress", ""+progress);
+                audioSeekBarUpdate.setProgress(progress);
+
+
+                // Running this thread after 100 milliseconds
+                mHandler.postDelayed(this, 100);
+            }
+        }
+    };
+
+
+    private Runnable mUpdateCommentTimeTask = new Runnable() {
+        public void run() {
+            if (mMediaPlayerComment != null && isCommentPlay) {
+                totalDuration = mMediaPlayerComment.getDuration();
+                currentDuration = mMediaPlayerComment.getCurrentPosition();
+
+                audioTimeElapsedComment.setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
+
+                // Updating progress bar
+                int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+                //Log.d("Progress", ""+progress);
+                audioSeekBar.setProgress(progress);
+
+
+                // Running this thread after 100 milliseconds
+                mHandler.postDelayed(this, 100);
+            }
+        }
+    };
+
+    /**
+     *
+     * */
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
+
+    }
+
+    /**
+     * When user starts moving the progress handler
+     */
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        // remove message Handler from updating progress bar
+        if (isCommentPlay) {
+            mHandler.removeCallbacks(mUpdateCommentTimeTask);
+        } else {
+            mHandler.removeCallbacks(mUpdateTimeTask);
+        }
+    }
+
+    /**
+     * When user stops moving the progress hanlder
+     */
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        if (isCommentPlay) {
+            mHandler.removeCallbacks(mUpdateCommentTimeTask);
+            int totalDuration = mMediaPlayerComment.getDuration();
+            int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
+
+            // forward or backward to certain seconds
+            mMediaPlayerComment.seekTo(currentPosition);
+        } else {
+            mHandler.removeCallbacks(mUpdateTimeTask);
+
+            int totalDuration = mMediaplayer.getDuration();
+            int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
+
+            // forward or backward to certain seconds
+            mMediaplayer.seekTo(currentPosition);
+        }
+        // update timer progress again
+//        updateProgressBar();
+    }
+
+    public int progressToTimer(int progress, int totalDuration) {
+        int currentDuration = 0;
+        totalDuration = (int) (totalDuration / 1000);
+        currentDuration = (int) ((((double) progress) / 100) * totalDuration);
+
+        // return current duration in milliseconds
+        return currentDuration * 1000;
+    }
+
+    public String milliSecondsToTimer(long milliseconds) {
+        String finalTimerString = "";
+        String secondsString = "";
+
+        // Convert total duration into time
+        int hours = (int) (milliseconds / (1000 * 60 * 60));
+        int minutes = (int) (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
+        int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
+        // Add hours if there
+        if (hours > 0) {
+            finalTimerString = hours + ":";
+        }
+
+        // Prepending 0 to seconds if it is one digit
+        if (seconds < 10) {
+            secondsString = "0" + seconds;
+        } else {
+            secondsString = "" + seconds;
+        }
+
+        finalTimerString = finalTimerString + minutes + ":" + secondsString;
+
+        // return timer string
+        return finalTimerString;
+    }
+
+    public int getProgressPercentage(long currentDuration, long totalDuration) {
+        Double percentage = (double) 0;
+
+        long currentSeconds = (int) (currentDuration / 1000);
+        long totalSeconds = (int) (totalDuration / 1000);
+
+        // calculating percentage
+        percentage = (((double) currentSeconds) / totalSeconds) * 100;
+
+        // return percentage
+        return percentage.intValue();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        playAudioImageView.setVisibility(View.VISIBLE);
+        pauseAudioImageView.setVisibility(View.GONE);
+        if (!audioUrlHashMap.isEmpty()) {
+            playAudio.setVisibility(View.VISIBLE);
+            pauseAudio.setVisibility(View.GONE);
+        }
+        if (mMediaplayer != null) {
+//            mMediaplayer.stop();
+            mMediaplayer.release();
+            mMediaplayer = null;
+        }
+        if (mMediaPlayerComment != null) {
+            mMediaPlayerComment.release();
+            mMediaPlayerComment = null;
+        }
+        if (mRecorder != null) {
+            mRecorder.release();
+            mRecorder = null;
+        }
+    }
 }

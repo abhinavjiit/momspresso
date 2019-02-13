@@ -52,7 +52,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
     private VlogsListingAdapter articlesListingAdapter;
     private ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
-
     FloatingActionsMenu fabMenu;
     ListView listView;
     private RelativeLayout mLodingView;
@@ -60,7 +59,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     FrameLayout frameLayout;
     private View rootLayout;
-
     private int sortType = 0;
     private int nextPageNumber;
     private int limit = 10;
@@ -71,6 +69,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private ShimmerFrameLayout funnyvideosshimmer;
     private String videoCategory;
     private MixpanelAPI mixpanel;
+
 
     @Nullable
     @Override
@@ -330,6 +329,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     public void onResume() {
         super.onResume();
         funnyvideosshimmer.startShimmerAnimation();
+
     }
 
     @Override

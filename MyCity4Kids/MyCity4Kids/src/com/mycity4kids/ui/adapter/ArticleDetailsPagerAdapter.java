@@ -1,9 +1,11 @@
 package com.mycity4kids.ui.adapter;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -53,4 +55,12 @@ public class ArticleDetailsPagerAdapter extends FragmentStatePagerAdapter {
         return mNumOfTabs;
     }
 
+    @Override
+    public void restoreState(Parcelable state, ClassLoader loader) {
+        try {
+            super.restoreState(state, loader);
+        } catch (Exception e) {
+            Log.e("TAG", "Error Restore State of Fragment : " + e.getMessage(), e);
+        }
+    }
 }

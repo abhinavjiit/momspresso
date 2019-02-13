@@ -43,7 +43,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:paddingTop="8dp"
-            android:text="@string/app_settings.edit_profile.dob"
+            android:text="@string/DOB"
             android:textColor="@color/app_settings.edit_profile.dob"
             app:fontName="oswald.ttf" />
 
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:padding="4dp"
-                android:text="Male"
+                android:text="@string/male"
                 app:buttonTint="@color/app_red"
                 app:layoutDirection="rtl" />
 
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:padding="4dp"
-                android:text="Female"
+                android:text="@string/female"
                 app:buttonTint="@color/app_red"
                 app:layoutDirection="rtl" />
         </RadioGroup>

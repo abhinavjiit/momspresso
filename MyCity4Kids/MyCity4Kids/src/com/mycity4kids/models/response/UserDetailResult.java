@@ -15,7 +15,7 @@ public class UserDetailResult implements Parcelable {
     private String mc4kToken;
     private String firstName;
     private String lastName;
-    private String email;
+    private String email = "";
     private String cityId;
     private String userType;
     private String isValidated;
@@ -36,11 +36,7 @@ public class UserDetailResult implements Parcelable {
     private Map<String, String> langSubscription;
     private String totalArticles;
     private String totalArticlesViews;
-    private String gender;
 
-    public UserDetailResult() {
-
-    }
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();
@@ -65,6 +61,7 @@ public class UserDetailResult implements Parcelable {
         totalArticles = in.readString();
         totalArticlesViews = in.readString();
         gender = in.readString();
+        blogTitleSlug = in.readString();
     }
 
     public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
@@ -78,6 +75,21 @@ public class UserDetailResult implements Parcelable {
             return new UserDetailResult[size];
         }
     };
+
+    public String getBlogTitleSlug() {
+        return blogTitleSlug;
+    }
+
+    public void setBlogTitleSlug(String blogTitleSlug) {
+        this.blogTitleSlug = blogTitleSlug;
+    }
+
+    private String gender;
+    private String blogTitleSlug;
+
+    public UserDetailResult() {
+
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -324,6 +336,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(totalArticles);
         parcel.writeString(totalArticlesViews);
         parcel.writeString(gender);
+        parcel.writeString(blogTitleSlug);
     }
 
     public class SocialTokens {

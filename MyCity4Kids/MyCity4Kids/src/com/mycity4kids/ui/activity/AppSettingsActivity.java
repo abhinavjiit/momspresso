@@ -25,25 +25,22 @@ public class AppSettingsActivity extends BaseActivity implements View.OnClickLis
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private ImageView searchAllImageView;
+    //private ImageView searchAllImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_settings_activity);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.pager);
-        searchAllImageView = (ImageView) findViewById(R.id.searchAllImageView);
-
-        searchAllImageView.setOnClickListener(this);
-
+        //  searchAllImageView = (ImageView) findViewById(R.id.searchAllImageView);
+        //searchAllImageView.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-//        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_edit_profile)));
+//      tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_edit_profile)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_edit_prefs)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_lang_prefs)));
 //        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_change_password)));
@@ -93,7 +90,7 @@ public class AppSettingsActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+       /* switch (v.getId()) {
             case R.id.searchAllImageView:
 //                setNewLocale("hi", false);
                 Intent searchIntent = new Intent(this, SearchAllActivity.class);
@@ -102,7 +99,7 @@ public class AppSettingsActivity extends BaseActivity implements View.OnClickLis
                 startActivity(searchIntent);
                 break;
 
-        }
+        }*/
     }
 
 //    private boolean setNewLocale(String language, boolean restartProcess) {

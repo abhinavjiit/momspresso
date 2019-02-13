@@ -28,6 +28,7 @@ public class GpPostCommentOptionsDialogFragment extends DialogFragment implement
     private String authorId;
     private int commentPosition;
     private String memberType;
+    private int commentType = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,6 +42,7 @@ public class GpPostCommentOptionsDialogFragment extends DialogFragment implement
         commentPosition = getArguments().getInt("commentPosition");
         responseType = getArguments().getString("responseType");
         authorId = getArguments().getString("authorId");
+        commentType = getArguments().getInt("commentType");
         memberType = getArguments().getString(AppConstants.GROUP_MEMBER_TYPE);
 
         TextView deleteCommentTextView = (TextView) rootView.findViewById(R.id.deleteCommentTextView);
@@ -55,7 +57,11 @@ public class GpPostCommentOptionsDialogFragment extends DialogFragment implement
                 || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
                 || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
             deleteCommentTextView.setVisibility(View.VISIBLE);
-            editCommentTextView.setVisibility(View.VISIBLE);
+            if (commentType == AppConstants.COMMENT_TYPE_AUDIO){
+                editCommentTextView.setVisibility(View.GONE);
+            } else {
+                editCommentTextView.setVisibility(View.VISIBLE);
+            }
             reportCommentTextView.setVisibility(View.VISIBLE);
         } else {
             deleteCommentTextView.setVisibility(View.GONE);

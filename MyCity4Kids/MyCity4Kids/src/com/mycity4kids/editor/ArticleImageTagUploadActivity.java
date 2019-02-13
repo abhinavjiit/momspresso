@@ -33,6 +33,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -46,10 +47,13 @@ import com.mycity4kids.models.response.ArticleTagsImagesResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.PublishDraftObject;
+import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
+import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.ArticleModerationOrShareActivity;
 import com.mycity4kids.ui.activity.BlogSetupActivity;
 import com.mycity4kids.ui.adapter.ArticleTagsImagesGridAdapter;
@@ -467,7 +471,80 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
     private void getBlogPage() {
         showProgressDialog(getResources().getString(R.string.please_wait));
+        BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(onLoginResponseReceivedListener);
+
+    }
+
+    Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+
+            Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+
+            UserDetailResponse responseData = response.body();
+            if (responseData != null) {
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                    if (responseData.getData().get(0).getResult().getBlogTitleSlug() == null || responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+
+                        if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                            Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
+                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+                            intent.putExtra("comingFrom", "ShortStoryAndArticle");
+                            startActivity(intent);
+                        } else if (responseData.getData().get(0).getResult().getEmail() != null || !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+
+                            Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
+                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+                            intent.putExtra("comingFrom", "ShortStoryAndArticle");
+                            startActivity(intent);
+                        }
+
+
+                    } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+
+
+                        if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                            Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
+                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
+                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
+                            intent.putExtra("comingFrom", "ShortStoryAndArticle");
+                            startActivity(intent);
+                        } else if (responseData.getData().get(0).getResult().getEmail() != null || !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+
+                            publishArticleRequest();
+                        }
+                    }
+                }
+
+
+            } else {
+                ToastUtils.showToast(ArticleImageTagUploadActivity.this, "something went wrong");
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+
+        }
+    };
+       /* Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
 
         BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
@@ -512,8 +589,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 Log.d("MC4KException", Log.getStackTraceString(t));
             }
         });
+*/
 
-    }
 
     public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
@@ -612,14 +689,16 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                     return;
                 }
                 Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId() + "", "Article Image Upload");
-                pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
+
+                getBlogPage();
+              /*  pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                 blogSetup = pref.getBoolean("blogSetup", false);
                 Log.e("blogsetup", blogSetup + "");
                 if (blogSetup == false) {
                     getBlogPage();
                 } else {
                     publishArticleRequest();
-                }
+                }*/
                 break;
         }
     }

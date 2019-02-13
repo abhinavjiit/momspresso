@@ -45,6 +45,7 @@ public class TimeLineView extends View {
     private Uri mVideoUri;
     private int mHeightView;
     private LongSparseArray<Bitmap> mBitmapList = null;
+    private long videoLengthInMs;
 
     public TimeLineView(@NonNull Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -86,37 +87,47 @@ public class TimeLineView extends View {
                                        public void execute() {
                                            try {
                                                LongSparseArray<Bitmap> thumbnailList = new LongSparseArray<>();
-
                                                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-                                               mediaMetadataRetriever.setDataSource(getContext(), mVideoUri);
+                                               try {
+                                                   mediaMetadataRetriever.setDataSource(getContext(), mVideoUri);
+                                                   // Retrieve media data
+                                               } catch (Exception e) {
+                                                   e.printStackTrace();
+                                               }
+//NumberFormateException
 
-                                               // Retrieve media data
-                                               long videoLengthInMs = Integer.parseInt(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
+                                               if (mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION) != null) {
+                                                   videoLengthInMs = Integer.parseInt(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
 
-                                               // Set thumbnail properties (Thumbs are squares)
-                                               final int thumbWidth = mHeightView;
-                                               final int thumbHeight = mHeightView;
 
-                                               int numThumbs = (int) Math.ceil(((float) viewWidth) / thumbWidth);
+                                                   // videoLengthInMs = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
 
-                                               final long interval = videoLengthInMs / numThumbs;
+                                                   // Set thumbnail properties (Thumbs are squares)
+                                                   final int thumbWidth = mHeightView;
+                                                   final int thumbHeight = mHeightView;
+                                                   int numThumbs = (int) Math.ceil(((float) viewWidth) / thumbWidth);
 
-                                               for (int i = 0; i < numThumbs; ++i) {
-                                                   Bitmap bitmap = mediaMetadataRetriever.getFrameAtTime(i * interval, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
-                                                   // TODO: bitmap might be null here, hence throwing NullPointerException. You were right
-                                                   try {
-                                                       bitmap = Bitmap.createScaledBitmap(bitmap, thumbWidth, thumbHeight, false);
-                                                   } catch (Exception e) {
-                                                       e.printStackTrace();
+                                                   final long interval = videoLengthInMs / numThumbs;
+                                                   for (int i = 0; i < numThumbs; ++i) {
+                                                       Bitmap bitmap = mediaMetadataRetriever.getFrameAtTime(i * interval, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+                                                       // TODO: bitmap might be null here, hence throwing NullPointerException. You were right
+                                                       try {
+                                                           bitmap = Bitmap.createScaledBitmap(bitmap, thumbWidth, thumbHeight, false);
+                                                       } catch (Exception e) {
+                                                           e.printStackTrace();
+                                                       }
+                                                       thumbnailList.put(i, bitmap);
                                                    }
-                                                   thumbnailList.put(i, bitmap);
+
+                                                   mediaMetadataRetriever.release();
+                                                   returnBitmaps(thumbnailList);
                                                }
 
-                                               mediaMetadataRetriever.release();
-                                               returnBitmaps(thumbnailList);
+
                                            } catch (final Throwable e) {
                                                Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                                            }
+
                                        }
                                    }
         );
