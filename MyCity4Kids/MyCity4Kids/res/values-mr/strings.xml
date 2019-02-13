@@ -860,4 +860,26 @@
     <string name="slide_to_cancel">रद्द करण्यासाठी स्लाइड</string>
     <string name="stop_recording">प्रथम रेकॉर्डिंग थांबवा मग सेव्ह करा.</string>
     <string name="cancel_audio">रद्द</string>
+
+
+    //Rewards Strings
+
+
+    <string name="rewars_enter_otp">OTP समाविष्ट करा</string>
+    <string name="rewars_confirm">खात्री करा</string>
+    <string name="rewars_first_name">पहिले नाव</string>
+    <string name="rewars_last_name">आडनाव</string>
+    <string name="rewars_verify">अधिकृत</string>
+    <string name="rewars_phone">दूरध्वनी</string>
+    <string name="rewars_email">ई -मेल</string>
+    <string name="rewars_gender">लिंग</string>
+    <string name="rewars_male">पुरुष</string>
+    <string name="rewars_female">स्त्री</string>
+    <string name="rewars_dob">जन्मतारीख</string>
+    <string name="rewars_location">स्थान</string>
+    <string name="rewars_working_status">कामाचा हुद्दा</string>
+    <string name="rewars_working">काम करत आहेत</string>
+    <string name="rewars_non_working">नॉन- वर्किंग</string>
+    <string name="rewars_language">भाषा</string>
+    <string name="rewars_save_continue">जतन करा आणि सुरु ठेवा</string>
 </resources>

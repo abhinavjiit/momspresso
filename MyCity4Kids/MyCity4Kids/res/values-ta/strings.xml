@@ -860,4 +860,25 @@
     <string name="female">பெண் </string>
     <string name="DOB">பிறந்த தேதி</string>
     <string name="add">கூட்டு</string>
+
+    //Rewards Strings
+
+
+    <string name="rewars_enter_otp">OTP யை உள்ளிடவும்</string>
+    <string name="rewars_confirm">உறுதிப்படுத்தவும்</string>
+    <string name="rewars_first_name">முதல் பெயர்</string>
+    <string name="rewars_last_name">கடைசி பெயர்</string>
+    <string name="rewars_verify">நிச்சயப்படுத்தவும்</string>
+    <string name="rewars_phone">தொலைபேசி</string>
+    <string name="rewars_email">மின்னஞ்சல்</string>
+    <string name="rewars_gender">பாலினம்</string>
+    <string name="rewars_male">ஆண்</string>
+    <string name="rewars_female">பெண்</string>
+    <string name="rewars_dob">பிறந்த தேதி</string>
+    <string name="rewars_location">இருப்பிடம்</string>
+    <string name="rewars_working_status">வேலை நிலை</string>
+    <string name="rewars_working">வேலைக்கு செல்பவர்</string>
+    <string name="rewars_non_working">வேலைக்கு செல்லாதவர்</string>
+    <string name="rewars_language">மொழி</string>
+    <string name="rewars_save_continue">சேமி  தொடரவும்</string>
 </resources>

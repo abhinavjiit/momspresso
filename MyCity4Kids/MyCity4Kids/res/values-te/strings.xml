@@ -855,4 +855,26 @@
     <string name="female">Female</string>
     <string name="DOB">Date Of Birth</string>
     <string name="add">జోడించు</string>
+
+
+    //Rewards Strings
+
+
+    <string name="rewars_enter_otp">OTP  ఎంటర్ చెయ్యండి</string>
+    <string name="rewars_confirm">నిర్ధారించండి</string>
+    <string name="rewars_first_name">మొదటి పేరు</string>
+    <string name="rewars_last_name">చివరి పేరు</string>
+    <string name="rewars_verify">"వెరిఫై "</string>
+    <string name="rewars_phone">ఫోన్</string>
+    <string name="rewars_email">ఇమెయిల్</string>
+    <string name="rewars_gender">"లింగ "</string>
+    <string name="rewars_male">"పురుషుడు "</string>
+    <string name="rewars_female">"స్త్రీ "</string>
+    <string name="rewars_dob">పుట్టిన తేది</string>
+    <string name="rewars_location">స్థానం</string>
+    <string name="rewars_working_status">ఉద్యోగ స్థితి</string>
+    <string name="rewars_working">వర్కింగ్</string>
+    <string name="rewars_non_working">"నాన్ వర్కింగ్ "</string>
+    <string name="rewars_language">భాష</string>
+    <string name="rewars_save_continue">సేవ్ చేసి కొనసాగండి</string>
 </resources>

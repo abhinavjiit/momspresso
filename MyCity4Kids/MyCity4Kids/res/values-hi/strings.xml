@@ -871,4 +871,26 @@
     <string name="stop_recording">पहले रिकॉर्डिंग बंद करो फिर सेव करो।</string>
     <string name="cancel_audio">रद्द</string>
     <string name="add">ऐड करें</string>
+
+
+    //Rewards Strings
+
+
+    <string name="rewars_enter_otp">OTP  दर्ज करें </string>
+    <string name="rewars_confirm">पुष्टि करें </string>
+    <string name="rewars_first_name">"पहला नाम "</string>
+    <string name="rewars_last_name">"आख़िरी नाम "</string>
+    <string name="rewars_verify">"सत्यापित करें "</string>
+    <string name="rewars_phone">"फोन "</string>
+    <string name="rewars_email">"ई मेल "</string>
+    <string name="rewars_gender">लिंग</string>
+    <string name="rewars_male">पुरुष</string>
+    <string name="rewars_female">"महिला "</string>
+    <string name="rewars_dob">"जन्म तिथि "</string>
+    <string name="rewars_location">स्थान</string>
+    <string name="rewars_working_status">"कामकाजी स्थिति "</string>
+    <string name="rewars_working">"कामकाजी "</string>
+    <string name="rewars_non_working">"गैर कामकाजी "</string>
+    <string name="rewars_language">"भाषा "</string>
+    <string name="rewars_save_continue">"सेव करें और आगे बढ़ें "</string>
 </resources>

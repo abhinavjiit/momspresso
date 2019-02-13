@@ -906,4 +906,26 @@
     <string name="female">ಸ್ತ್ರೀ</string>
     <string name="DOB">ಹುಟ್ಟಿದ ದಿನ</string>
     <string name="add">ಸೇರಿಸಿ</string>
+
+
+    //Rewards Strings
+
+
+    <string name="rewars_enter_otp">OTP ಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="rewars_confirm">ದೃಢೀಕರಿಸಿ</string>
+    <string name="rewars_first_name">ಮೊದಲ ಹೆಸರು</string>
+    <string name="rewars_last_name">ಕೊನೆಯ ಹೆಸರು</string>
+    <string name="rewars_verify">ಪರಿಶೀಲಿಸಿ</string>
+    <string name="rewars_phone">ದೂರವಾಣಿ</string>
+    <string name="rewars_email">ಇಮೇಲ್</string>
+    <string name="rewars_gender">ಲಿಂಗ</string>
+    <string name="rewars_male">ಪುರುಷ</string>
+    <string name="rewars_female">ಸ್ತ್ರೀ</string>
+    <string name="rewars_dob">"ಹುಟ್ಟಿದ ದಿನ "</string>
+    <string name="rewars_location">ಸ್ಥಳ</string>
+    <string name="rewars_working_status">ಕೆಲಸದ ಸ್ಥಿತಿ</string>
+    <string name="rewars_working">ಕೆಲಸ ಮಾಡುವುದು</string>
+    <string name="rewars_non_working">ಕೆಲಸ ಮಾಡದಿರುವುದು</string>
+    <string name="rewars_language">ಭಾಷೆ</string>
+    <string name="rewars_save_continue">"ಉಳಿಸಿ ಮತ್ತು ಮುಂದುವರೆಸಿ "</string>
 </resources>

@@ -905,4 +905,26 @@
     <string name="female">സ്ത്രീ</string>
     <string name="DOB">ജനനത്തീയതി</string>
     <string name="add">ചേർക്കുക</string>
+
+
+    //Rewards Strings
+
+
+    <string name="rewars_enter_otp">"OTP ടൈപ്പ് ചെയ്യൂ "</string>
+    <string name="rewars_confirm">"സ്ഥിരീകരിക്കൂ "</string>
+    <string name="rewars_first_name">"പേര് "</string>
+    <string name="rewars_last_name">"സർ നെയിം "</string>
+    <string name="rewars_verify">"ഉറപ്പിക്കൂ "</string>
+    <string name="rewars_phone">"ഫോൺ "</string>
+    <string name="rewars_email">"ഇ മെയിൽ "</string>
+    <string name="rewars_gender">"ലിംഗം "</string>
+    <string name="rewars_male">"പുരുഷൻ "</string>
+    <string name="rewars_female">"സ്ത്രീ "</string>
+    <string name="rewars_dob">"ജനനതീയതി "</string>
+    <string name="rewars_location">"സ്ഥലം "</string>
+    <string name="rewars_working_status">"ജോലിയുടെ സ്ഥിതി "</string>
+    <string name="rewars_working">"ജോലി ചെയ്യുന്നു "</string>
+    <string name="rewars_non_working">"ജോലി ചെയ്യുന്നില്ല "</string>
+    <string name="rewars_language">"ഭാഷ "</string>
+    <string name="rewars_save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
 </resources>

@@ -1026,4 +1026,27 @@
     <string name="stop_recording">First stop recording then save</string>
     <string name="cancel_audio">Cancel</string>
     <string name="add">Add</string>
+
+    //Rewards Strings
+
+
+    <string name="rewars_enter_otp">Enter OTP</string>
+    <string name="rewars_confirm">Confirm</string>
+    <string name="rewars_first_name">First Name</string>
+    <string name="rewars_last_name">Last Name</string>
+    <string name="rewars_verify">Verify</string>
+    <string name="rewars_phone">Phone</string>
+    <string name="rewars_email">Email</string>
+    <string name="rewars_gender">Gender</string>
+    <string name="rewars_male">Male</string>
+    <string name="rewars_female">Female</string>
+    <string name="rewars_dob">Date of Birth</string>
+    <string name="rewars_location">Location</string>
+    <string name="rewars_working_status">Working Status</string>
+    <string name="rewars_working">Working</string>
+    <string name="rewars_non_working">Non-working</string>
+    <string name="rewars_language">Language</string>
+    <string name="rewars_save_continue"> Save And Continue</string>
+
+
 </resources>
