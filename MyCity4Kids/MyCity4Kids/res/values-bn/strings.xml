@@ -861,23 +861,23 @@
     //Rewards Strings
 
 
-    <string name="rewars_enter_otp">"OTP সাবমিট করুন "</string>
-    <string name="rewars_confirm">"সুনিশ্চিত করুন "</string>
-    <string name="rewars_first_name">"নাম "</string>
-    <string name="rewars_last_name">"পদবি "</string>
-    <string name="rewars_verify">"যাচাই করুন "</string>
-    <string name="rewars_phone">"দূরাভাষ "</string>
-    <string name="rewars_email">"ইমেল "</string>
-    <string name="rewars_gender">"লিঙ্গ "</string>
-    <string name="rewars_male">"পুরুষ "</string>
-    <string name="rewars_female">"মহিলা "</string>
-    <string name="rewars_dob">"জন্ম তারিখ "</string>
-    <string name="rewars_location">"স্থান "</string>
-    <string name="rewars_working_status">"কোন পেশাতে যুক্ত আছেন "</string>
-    <string name="rewars_working">"কর্মরতা "</string>
-    <string name="rewars_non_working">"কর্মরতা নন "</string>
-    <string name="rewars_language">"ভাষা "</string>
-    <string name="rewars_save_continue">"সেভ করুন আর এগিয়ে যান "</string>
+    <string name="rewards_enter_otp">"OTP সাবমিট করুন "</string>
+    <string name="rewards_confirm">"সুনিশ্চিত করুন "</string>
+    <string name="rewards_first_name">"নাম "</string>
+    <string name="rewards_last_name">"পদবি "</string>
+    <string name="rewards_verify">"যাচাই করুন "</string>
+    <string name="rewards_phone">"দূরাভাষ "</string>
+    <string name="rewards_email">"ইমেল "</string>
+    <string name="rewards_gender">"লিঙ্গ "</string>
+    <string name="rewards_male">"পুরুষ "</string>
+    <string name="rewards_female">"মহিলা "</string>
+    <string name="rewards_dob">"জন্ম তারিখ "</string>
+    <string name="rewards_location">"স্থান "</string>
+    <string name="rewards_working_status">"কোন পেশাতে যুক্ত আছেন "</string>
+    <string name="rewards_working">"কর্মরতা "</string>
+    <string name="rewards_non_working">"কর্মরতা নন "</string>
+    <string name="rewards_language">"ভাষা "</string>
+    <string name="rewards_save_continue">"সেভ করুন আর এগিয়ে যান "</string>
 
 
 
