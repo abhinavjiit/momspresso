@@ -582,6 +582,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             break;
             case R.id.addPostFAB:
+                if (groupsGenericPostRecyclerAdapter != null) {
+                    groupsGenericPostRecyclerAdapter.releasePlayer();
+                }
                 addPostContainer.setVisibility(View.VISIBLE);
                 break;
             case R.id.postContainer: {
@@ -1001,6 +1004,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             } else {
                 super.onBackPressed();
             }
+        }
+        if (groupsGenericPostRecyclerAdapter != null) {
+            groupsGenericPostRecyclerAdapter.releasePlayer();
         }
     }
 
@@ -1672,5 +1678,21 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onForYouArticleRemoved(int position) {
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (groupsGenericPostRecyclerAdapter != null) {
+            groupsGenericPostRecyclerAdapter.releasePlayer();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (groupsGenericPostRecyclerAdapter != null) {
+            groupsGenericPostRecyclerAdapter.releasePlayer();
+        }
     }
 }

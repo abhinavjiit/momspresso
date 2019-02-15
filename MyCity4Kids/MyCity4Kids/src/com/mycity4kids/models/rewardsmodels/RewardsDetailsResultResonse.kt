@@ -64,7 +64,7 @@ data class RewardsDetailsResultResonse(
         var professionType: Any? = null,
         @SerializedName("social_accounts")
         @Expose
-        var socialAccounts: List<SocialAccountObject>? = null,
+        var socialAccounts: ArrayList<SocialAccountObject>? = null,
         @SerializedName("user_id")
         @Expose
         var userId: String? = null,
@@ -73,7 +73,15 @@ data class RewardsDetailsResultResonse(
         var workStatus: Int? = null,
         @SerializedName("mobile_token")
         @Expose
-        var mobile_token : String? = null
+        var mobile_token : String? = null,
+        @SerializedName("is_expecting")
+        @Expose
+        var isExpecting : Int? = null,
+        @SerializedName("expected_date")
+        @Expose
+        var expectedDate : Long? = null
+
+
 )
 
 

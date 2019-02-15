@@ -196,51 +196,6 @@
             android:paddingBottom="6dp"
             android:paddingTop="6dp">
 
-            <!--   <com.mycity4kids.widget.CustomFontTextView
-                   android:id="@+id/facebookShareTextView"
-                   android:layout_width="0dp"
-                   android:layout_height="40dp"
-                   android:layout_weight="1"
-                   android:drawableTint="@color/white"
-                   android:drawableTop="@drawable/ic_facebook_svg"
-                   android:gravity="center" />
-
-               <com.mycity4kids.widget.CustomFontTextView
-                   android:id="@+id/whatsappShareTextView"
-                   android:layout_width="0dp"
-                   android:layout_height="40dp"
-                   android:layout_weight="1"
-                   android:drawableTint="@color/white"
-                   android:drawableTop="@drawable/ic_whats_app"
-                   android:gravity="center" />
-
-               <com.mycity4kids.widget.CustomFontTextView
-                   android:id="@+id/emailShareTextView"
-                   android:layout_width="0dp"
-                   android:layout_height="40dp"
-                   android:layout_weight="1"
-                   android:drawableTint="@color/white"
-                   android:drawableTop="@drawable/ic_share_white"
-                   android:gravity="center" />
-
-               <com.mycity4kids.widget.CustomFontTextView
-                   android:id="@+id/bookmarkTextView"
-                   android:layout_width="0dp"
-                   android:layout_height="40dp"
-                   android:layout_weight="1"
-                   android:drawableTint="@color/white"
-                   android:drawableTop="@drawable/ic_bookmark"
-                   android:gravity="center" />
-
-               <com.mycity4kids.widget.CustomFontTextView
-                   android:id="@+id/likeTextView"
-                   android:layout_width="0dp"
-                   android:layout_height="40dp"
-                   android:layout_weight="1"
-                   android:drawableTint="@color/white"
-                   android:drawableTop="@drawable/ic_recommend"
-                   android:gravity="center" />
-   -->
         </LinearLayout>
     </RelativeLayout>
 

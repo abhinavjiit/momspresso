@@ -125,6 +125,9 @@ public class InstagramApp {
                     writer.write("client_id=" + mClientId + "&client_secret="
                             + mClientSecret + "&grant_type=authorization_code"
                             + "&redirect_uri=" + mCallbackUrl + "&code=" + code);
+//                    TOKEN_URL + "?client_id=" + clientId + "&client_secret="
+//                            + clientSecret + "&redirect_uri=" + mCallbackUrl
+//                            + "&grant_type=authorization_code";
                     writer.flush();
                     String response = AppUtils.streamToString(urlConnection
                             .getInputStream());
@@ -153,76 +156,6 @@ public class InstagramApp {
         }.start();
     }
 
-    public void fetchUserName(final Handler handler) {
-        mProgress = new ProgressDialog(mCtx);
-        mProgress.setMessage("Loading ...");
-        mProgress.show();
-
-        new Thread() {
-            @Override
-            public void run() {
-                Log.i(TAG, "Fetching user info");
-                int what = WHAT_FINALIZE;
-                try {
-                    URL url = new URL(API_URL + "/users/" + mSession.getId()
-                            + "/?access_token=" + mAccessToken);
-
-                    Log.d(TAG, "Opening URL " + url.toString());
-                    HttpURLConnection urlConnection = (HttpURLConnection) url
-                            .openConnection();
-                    urlConnection.setRequestMethod("GET");
-                    urlConnection.setDoInput(true);
-                    urlConnection.connect();
-                    String response = AppUtils.streamToString(urlConnection
-                            .getInputStream());
-                    System.out.println(response);
-                    JSONObject jsonObj = (JSONObject) new JSONTokener(response)
-                            .nextValue();
-
-                    // String name = jsonObj.getJSONObject("data").getString(
-                    // "full_name");
-                    // String bio =
-                    // jsonObj.getJSONObject("data").getString("bio");
-                    // Log.i(TAG, "Got name: " + name + ", bio [" + bio + "]");
-                    JSONObject data_obj = jsonObj.getJSONObject(TAG_DATA);
-                    userInfo.put(TAG_ID, data_obj.getString(TAG_ID));
-
-                    userInfo.put(TAG_PROFILE_PICTURE,
-                            data_obj.getString(TAG_PROFILE_PICTURE));
-
-                    userInfo.put(TAG_USERNAME, data_obj.getString(TAG_USERNAME));
-
-                    userInfo.put(TAG_BIO, data_obj.getString(TAG_BIO));
-
-                    userInfo.put(TAG_WEBSITE, data_obj.getString(TAG_WEBSITE));
-
-                    JSONObject counts_obj = data_obj.getJSONObject(TAG_COUNTS);
-
-                    userInfo.put(TAG_FOLLOWS, counts_obj.getString(TAG_FOLLOWS));
-
-                    userInfo.put(TAG_FOLLOWED_BY,
-                            counts_obj.getString(TAG_FOLLOWED_BY));
-
-                    userInfo.put(TAG_MEDIA, counts_obj.getString(TAG_MEDIA));
-
-                    userInfo.put(TAG_FULL_NAME,
-                            data_obj.getString(TAG_FULL_NAME));
-
-                    JSONObject meta_obj = jsonObj.getJSONObject(TAG_META);
-
-                    userInfo.put(TAG_CODE, meta_obj.getString(TAG_CODE));
-                } catch (Exception ex) {
-                    what = WHAT_ERROR;
-                    ex.printStackTrace();
-                }
-                mProgress.dismiss();
-                handler.sendMessage(handler.obtainMessage(what, 2, 0));
-            }
-        }.start();
-
-    }
-
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -246,10 +179,6 @@ public class InstagramApp {
             }
         }
     };
-
-    public HashMap<String, String> getUserInfo() {
-        return userInfo;
-    }
 
     public boolean hasAccessToken() {
         return (mAccessToken == null) ? false : true;

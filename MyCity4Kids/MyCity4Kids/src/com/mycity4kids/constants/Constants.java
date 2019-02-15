@@ -133,6 +133,8 @@ public class Constants {
 
     public static final String WEB_VIEW_ECOMMERECE = "webViewEcommerceUrl";
 
+    public static final String SUCCESS_MESSAGE = "updated successfully";
+
     /**
      * request codes for startActivityForResult
      */
@@ -504,5 +506,13 @@ public class Constants {
         INCOME,
         PROFESSION,
         LANGUAGE
+    }
+
+    public enum SocialPlatformName{
+        facebook,
+        twitter,
+        youtube,
+        instagram,
+        website
     }
 }

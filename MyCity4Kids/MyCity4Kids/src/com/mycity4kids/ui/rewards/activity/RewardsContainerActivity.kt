@@ -53,7 +53,7 @@ class RewardsContainerActivity : BaseActivity(),
         initializeXMLComponents()
 
         /*add fragement to container*/
-        //addSocialFragment()
+//        addSocialFragment()
         //addFamilyFragment()
         addProfileFragment()
 

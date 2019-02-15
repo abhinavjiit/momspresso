@@ -4,7 +4,12 @@
     android:id="@+id/commentRootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white_color">
+    android:layout_marginBottom="16dp"
+    android:background="@color/white_color"
+    android:paddingBottom="4dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="8dp">
 
     //Change View hierarchy with caution. getParent method is in use in the class file
 
