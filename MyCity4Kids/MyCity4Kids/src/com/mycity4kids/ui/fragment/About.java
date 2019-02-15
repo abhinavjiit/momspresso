@@ -70,6 +70,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     private EditText kidNameEditText;
     private RelativeLayout addKidContainer;
     private AppCompatSpinner genderSpinner;
+    int position;
 
     @Nullable
     @Override
@@ -139,7 +140,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
             }
         });
 
-        int position = 0;
+        position = 0;
         if (userDetail.getKids() != null) {
             for (KidsModel km : userDetail.getKids()) {
                 addKidView(km, position);
@@ -179,6 +180,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
                     editKidInfoDialogFragment.show(fm, "Choose video option");
                 }
             });
+
             childInfoContainer.addView(kidsInfo1);
         } catch (Exception ex) {
             Crashlytics.logException(ex);
@@ -323,8 +325,11 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
             kmodel.setGender(ki.getGender());
             kidsModelArrayList.add(kmodel);
         }
-        kidsModelArrayList.remove(kidsViewPosition);
-
+        if (kidsModelArrayList.size() == kidsViewPosition) {
+            kidsModelArrayList.remove(kidsViewPosition - 1);
+        } else {
+            kidsModelArrayList.remove(kidsViewPosition);
+        }
         UpdateUserDetailsRequest addCityAndKidsInformationRequest = new UpdateUserDetailsRequest();
         addCityAndKidsInformationRequest.setKids(kidsModelArrayList);
 

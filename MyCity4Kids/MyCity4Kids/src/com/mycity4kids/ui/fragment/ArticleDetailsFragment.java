@@ -32,6 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
@@ -65,6 +66,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
@@ -167,6 +169,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private String bookmarkId;
     private String authorId;
     private String author;
+    private String parentId;
     private String articleId;
     private String deepLinkURL;
     private String blogSlug;
@@ -236,6 +239,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private NativeAd nativeAd;
     private NativeBannerAd nativeBannerAd;
     private NativeAdLayout nativeAdLayout;
+    ImageView sponsoredImage;
+    TextView sponsoredTextView;
+    RelativeLayout sponsoredViewContainer;
+    private ArrayList<Topics> shortStoriesTopicList = new ArrayList<>();
+    private ArrayList<Topics> shortStoriesTopicList1 = new ArrayList<>();
+    private ImageView badge;
 
     @Nullable
     @Override
@@ -265,7 +274,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             emailShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.emailShareTextView);
             likeArticleTextView = (CustomFontTextView) fragmentView.findViewById(R.id.likeTextView);
             bookmarkArticleTextView = (CustomFontTextView) fragmentView.findViewById(R.id.bookmarkTextView);
-
+            sponsoredViewContainer = (RelativeLayout) fragmentView.findViewById(R.id.sponseredLayoutContainer);
+            sponsoredImage = (ImageView) fragmentView.findViewById(R.id.sponseredImage);
+            sponsoredTextView = (TextView) fragmentView.findViewById(R.id.sponseredText);
+            badge = (ImageView) fragmentView.findViewById(R.id.badge);
             mWebChromeClient = new MyWebChromeClient();
             mWebView.setWebChromeClient(mWebChromeClient);
 
@@ -352,6 +364,62 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             writeArticleImageView.setOnClickListener(this);
             writeArticleTextView.setOnClickListener(this);
             groupHeaderView.setOnClickListener(this);
+            try {
+
+
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
+                for (int i = 0; i < res.getData().size(); i++) {
+                    if ("category-51a2ea215c634753ac6a9aa377deae0b".equals(res.getData().get(i).getId())) {
+                        shortStoriesTopicList.add(res.getData().get(i));
+                        shortStoriesTopicList1 = shortStoriesTopicList;
+
+                    }
+                }
+
+
+            } catch (FileNotFoundException e) {
+                Crashlytics.logException(e);
+                Log.d("FileNotFoundException", Log.getStackTraceString(e));
+
+
+                Retrofit retro = BaseApplication.getInstance().getRetrofit();
+                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+                caller.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+
+                        try {
+                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                            TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
+                            for (int i = 0; i < res.getData().size(); i++) {
+                                if ("category-51a2ea215c634753ac6a9aa377deae0b".equals(res.getData().get(i).getId())) {
+                                    shortStoriesTopicList.add(res.getData().get(i));
+                                    shortStoriesTopicList1 = shortStoriesTopicList;
+                                }
+                            }
+
+                        } catch (FileNotFoundException e) {
+                            Crashlytics.logException(e);
+                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Crashlytics.logException(t);
+                        Log.d("MC4KException", Log.getStackTraceString(t));
+                    }
+                });
+            }
+
 
 //            YouTubePlayerSupportFragment youTubePlayerFragment =
 //                    (YouTubePlayerSupportFragment) getChildFragmentManager().findFragmentById(R.id.youtube_fragment);
@@ -371,6 +439,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             Bundle bundle = getArguments();
             if (bundle != null) {
+                parentId = bundle.getString("parentId");
                 articleId = bundle.getString(Constants.ARTICLE_ID);
                 authorId = bundle.getString(Constants.AUTHOR_ID, "");
                 blogSlug = bundle.getString(Constants.BLOG_SLUG);
@@ -398,6 +467,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
                 hitArticleDetailsRedisAPI();
+                bindSponsored();
                 getViewCountAPI();
                 hitRecommendedStatusAPI();
             }
@@ -414,6 +484,37 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
         return fragmentView;
     }
+
+    private void bindSponsored() {
+
+        for (int i = 0; i < shortStoriesTopicList.get(0).getChild().size(); i++) {
+            if (parentId.equals(shortStoriesTopicList.get(0).getChild().get(i).getId())) {
+                if (shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage() != null && !shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
+                    sponsoredViewContainer.setVisibility(View.VISIBLE);
+                    Picasso.with(getActivity()).load(shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryImage()).placeholder(R.drawable.default_article).into(sponsoredImage);
+                    // Glide.with(getActivity()).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).into(sponsoredImage);
+                    sponsoredTextView.setText("this story is sponsored by ");
+
+                } else {
+                    sponsoredViewContainer.setVisibility(View.GONE);
+                }
+
+                if (shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryBadge() != null && !shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryBadge().isEmpty()) {
+                    badge.setVisibility(View.VISIBLE);
+                    Picasso.with(getActivity()).load(shortStoriesTopicList.get(0).getChild().get(i).getExtraData().get(0).getCategoryTag().getCategoryBadge()).placeholder(R.drawable.default_article).into(badge);
+
+                } else {
+                    badge.setVisibility(View.GONE);
+
+                }
+            }
+
+
+        }
+
+
+    }
+
 
     private void showTopBannerAd() {
         nativeBannerAd = new NativeBannerAd(getActivity(), AppConstants.FB_AD_PLACEMENT_ARTICLE_DETAILS_TOP);

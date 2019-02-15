@@ -551,6 +551,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                     intent.putExtra(Constants.BLOG_SLUG, mDatalist.get(position).getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, mDatalist.get(position).getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
+                    intent.putExtra("id", selectedTopic.getId());
                     intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
                     intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
 

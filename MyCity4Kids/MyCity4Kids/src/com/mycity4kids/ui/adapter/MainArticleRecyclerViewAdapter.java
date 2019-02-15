@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -30,6 +31,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
@@ -38,6 +41,7 @@ import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
@@ -54,6 +58,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -64,6 +70,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by hemant on 4/12/17.
@@ -93,6 +104,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private String screenName;
     private Gson gson;
     private boolean showVideoFlag;
+
 
     public MainArticleRecyclerViewAdapter(Context pContext, FeedNativeAd feedNativeAd, RecyclerViewClickListener listener, boolean topicHeaderVisibilityFlag, String screenName, boolean showVideoFlag) {
         mContext = pContext;
@@ -250,6 +262,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             addArticleItem(viewHolder.txvArticleTitle, viewHolder.forYouInfoLL, viewHolder.viewCountTextView, viewHolder.commentCountTextView,
                     viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView, viewHolder.videoIndicatorImageView
                     , viewHolder.bookmarkArticleImageView, viewHolder.watchLaterImageView, articleDataModelsNew.get(position), position, viewHolder);
+
+
+
         } else if (holder instanceof JoinGroupViewHolder) {
             if (StringUtils.isNullOrEmpty(heading) || StringUtils.isNullOrEmpty(subHeading)) {
                 ((JoinGroupViewHolder) holder).groupHeadingTextView.setText("");
@@ -592,6 +607,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
+        ImageView sponsoredImage;
+        TextView sponsoredTextView;
+        RelativeLayout sponsoredViewContainer;
 
         FeedViewHolder(View view) {
             super(view);
@@ -606,6 +624,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
+
+
             view.setOnClickListener(this);
         }
 
@@ -626,6 +646,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         RelativeLayout mainView;
 
+
         public ShortStoriesViewHolder(View itemView) {
             super(itemView);
             mainView = (RelativeLayout) itemView.findViewById(R.id.mainView);
@@ -642,6 +663,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
             instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
             genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
+
 
             whatsappShareImageView.setTag(itemView);
 
@@ -803,6 +825,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             whatsappShareImageView = (ImageView) view.findViewById(R.id.whatsappShareImageView);
             instagramShareImageView = (ImageView) view.findViewById(R.id.instagramShareImageView);
             genericShareImageView = (ImageView) view.findViewById(R.id.genericShareImageView);
+
 
             whatsappShareImageView.setTag(view);
 

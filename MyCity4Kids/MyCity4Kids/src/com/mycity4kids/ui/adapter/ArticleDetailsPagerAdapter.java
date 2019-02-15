@@ -21,12 +21,14 @@ public class ArticleDetailsPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
     ArrayList<ArticleListingResult> articleList;
     private boolean isSwipeNextAvailable = false;
+    private String parentId;
 
-    public ArticleDetailsPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<ArticleListingResult> articleList, String fromScreen) {
+    public ArticleDetailsPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<ArticleListingResult> articleList, String fromScreen, String parentId) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
         this.articleList = articleList;
         this.fromScreen = fromScreen;
+        this.parentId = parentId;
         if (articleList != null && articleList.size() > 1) {
             isSwipeNextAvailable = true;
         }
@@ -43,6 +45,7 @@ public class ArticleDetailsPagerAdapter extends FragmentStatePagerAdapter {
         bundle.putString(Constants.FROM_SCREEN, fromScreen);
         bundle.putString(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
         bundle.putString(Constants.ARTICLE_INDEX, "-1");
+        bundle.putString("parentId", parentId);
         bundle.putBoolean("fromNotification", false);
         bundle.putBoolean("swipeNext", isSwipeNextAvailable);
 

@@ -49,7 +49,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
     private ArticleDetailsAPI articleDetailsAPI;
     private TopicsCategoryAPI topicsAPI;
-
+    private String parentId;
     private ViewPager mViewPager;
     private ArticleDetailsPagerAdapter mViewPagerAdapter;
     private Toolbar mToolbar;
@@ -99,6 +99,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             String listingType = bundle.getString(Constants.ARTICLE_OPENED_FROM);
             String index = bundle.getString(Constants.ARTICLE_INDEX);
             String screen = bundle.getString(Constants.FROM_SCREEN);
+            parentId = bundle.getString("id");
             Utils.pushViewArticleEvent(this, screen, userDynamoId + "", articleId, listingType, index + "", author);
         }
 
@@ -121,7 +122,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         } else {
             final int pos = Integer.parseInt(bundle.getString(Constants.ARTICLE_INDEX));
 
-            mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen);
+            mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen,parentId);
             mViewPager.setAdapter(mViewPagerAdapter);
             mViewPager.setCurrentItem(pos);
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -469,7 +470,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     };
 
     private void initializeViewPager() {
-        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, "dw");
+        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, "dw",parentId);
         mViewPager.setAdapter(mViewPagerAdapter);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

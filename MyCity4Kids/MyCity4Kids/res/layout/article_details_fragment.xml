@@ -28,8 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/native_banner_ad_container"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center_vertical"
                 android:lineSpacingExtra="-4dp"
                 android:paddingLeft="10dp"
@@ -51,8 +51,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/article_title"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
                     android:text=""
                     android:textColor="@color/ad.stats.text"
                     android:textSize="12sp"
@@ -62,8 +62,8 @@
                     android:id="@+id/articleViewCountTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
                     android:drawableLeft="@drawable/ic_views"
                     android:drawablePadding="3dp"
                     android:text=""
@@ -76,8 +76,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/article_title"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
                     android:drawableLeft="@drawable/ic_comments"
                     android:drawablePadding="3dp"
                     android:text=""
@@ -101,32 +101,83 @@
             </org.apmem.tools.layouts.FlowLayout>
 
             <ImageView
-                android:id="@+id/cover_image"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/article_details_app_bar_height"
-                android:layout_below="@+id/statsFlowLayout"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/default_article" />
-
-            <!--<WebView-->
-            <!--android:id="@+id/videoWebView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/article_details_app_bar_height"-->
-            <!--android:visibility="gone" />-->
-
-            <FrameLayout
-                android:id="@+id/youtube_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
+                android:id="@+id/badge"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_below="@+id/article_title"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/default_article"
+                android:translationZ="5dp"
                 android:visibility="gone" />
+
+
+            <RelativeLayout
+                android:id="@+id/headerImageOrYoutubeViewContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/statsFlowLayout">
+
+                <ImageView
+                    android:id="@+id/cover_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/article_details_app_bar_height"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_article" />
+
+
+                <!--<WebView-->
+                <!--android:id="@+id/videoWebView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/article_details_app_bar_height"-->
+                <!--android:visibility="gone" />-->
+
+                <FrameLayout
+                    android:id="@+id/youtube_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/sponseredLayoutContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/headerImageOrYoutubeViewContainer"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:visibility="gone">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/sponseredText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/ad.author_name.text"
+                    android:textSize="12sp"
+                    app:fontName="open_sans.ttf"
+                   />
+
+                <ImageView
+                    android:id="@+id/sponseredImage"
+                    android:layout_width="100dp"
+                    android:layout_height="90dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/default_article"
+
+                    />
+
+
+            </RelativeLayout>
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/user_image"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_below="@+id/cover_image"
+                android:layout_below="@+id/sponseredLayoutContainer"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
                 android:clickable="true"
@@ -142,13 +193,13 @@
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/cover_image"
+                android:layout_below="@+id/sponseredLayoutContainer"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@+id/user_image"
                 android:gravity="center"
-                android:paddingBottom="2dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
+                android:paddingBottom="2dp"
                 android:text="author name"
                 android:textColor="@color/ad.author_name.text"
                 android:textSize="12sp"
@@ -171,10 +222,10 @@
                 android:id="@+id/follow_click"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/sponseredLayoutContainer"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/cover_image"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
                 android:padding="10dp"
                 android:text="@string/ad.follow_author"
                 android:textColor="@color/app_red"
@@ -186,8 +237,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/user_image"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="9dp"
+                android:layout_marginBottom="10dp"
                 android:background="@color/light_grey1" />
 
             <WebView
@@ -214,8 +265,8 @@
                 android:id="@+id/writeArticleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/writeArticleImageView"
                 android:layout_alignTop="@+id/writeArticleImageView"
+                android:layout_alignBottom="@+id/writeArticleImageView"
                 android:gravity="center"
                 android:text="@string/ad.write_blog"
                 android:textColor="@color/app_red"
@@ -226,18 +277,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/writeArticleImageView"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginBottom="10dp"
                 android:visibility="visible">
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/tagsTitleTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="6dp"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:paddingTop="6dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="6dp"
                     android:text="@string/ad.tags_title.text"
                     android:textColor="@color/ad.tags_title.text"
                     android:textSize="15sp"
@@ -248,10 +299,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tagsTitleTextView"
-                    android:paddingBottom="6dp"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:paddingTop="6dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="6dp"
                     android:text="@string/ad.tags_subtitle.text"
                     android:textColor="@color/ad.tags_subtitle.text"
                     android:textSize="14sp"
@@ -279,10 +330,10 @@
                         android:layout_below="@+id/tagsLayout"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:paddingBottom="6dp"
                         android:paddingLeft="10dp"
-                        android:paddingRight="15dp"
                         android:paddingTop="6dp"
+                        android:paddingRight="15dp"
+                        android:paddingBottom="6dp"
                         android:text="@string/ad.view_all_tags.text"
                         android:textColor="@color/app_red"
                         android:textSize="14sp"
@@ -315,10 +366,10 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginBottom="2dp"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp">
 
@@ -328,8 +379,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:adjustViewBounds="true"
-                        android:paddingBottom="5dp"
                         android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:src="@drawable/groups_generic" />
 
                     <RelativeLayout
@@ -340,11 +391,11 @@
                             android:id="@+id/groupHeadingTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="20dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
                             android:layout_marginStart="20dp"
+                            android:layout_marginLeft="20dp"
                             android:layout_marginTop="40dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginRight="20dp"
                             android:text="@string/groups.join_support_gp"
                             android:textColor="@color/white"
                             android:textSize="20sp"
@@ -355,10 +406,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/groupHeadingTextView"
-                            android:layout_marginEnd="20dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
                             android:layout_marginStart="20dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginRight="20dp"
                             android:text="@string/groups.not_alone"
                             android:textColor="@color/white"
                             android:textSize="14sp"
@@ -369,15 +420,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/groupSubHeadingTextView"
-                            android:layout_marginLeft="20dp"
                             android:layout_marginStart="20dp"
+                            android:layout_marginLeft="20dp"
                             android:layout_marginTop="20dp"
                             android:background="@drawable/red_rect_bg"
                             android:gravity="center"
-                            android:paddingBottom="10dp"
                             android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
                             android:paddingTop="5dp"
+                            android:paddingRight="20dp"
+                            android:paddingBottom="10dp"
                             android:text="@string/groups.join_group"
                             android:textColor="@color/white"
                             android:textSize="14sp"
@@ -398,8 +449,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/groupHeaderView"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -418,8 +469,8 @@
                     android:id="@+id/relatedArticles1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="5dp"
                     android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     app:articleImage="@drawable/progress_spinner"
                     app:articleTitle="" />
 
@@ -432,8 +483,8 @@
                     android:id="@+id/relatedArticles2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="5dp"
                     android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     app:articleImage="@drawable/progress_spinner"
                     app:articleTitle="" />
 
@@ -446,8 +497,8 @@
                     android:id="@+id/relatedArticles3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="5dp"
                     android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     app:articleImage="@drawable/progress_spinner"
                     app:articleTitle="" />
 
@@ -467,8 +518,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/recentAuthorArticles"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -485,8 +536,8 @@
                     android:id="@+id/trendingRelatedArticles1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="5dp"
                     android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     app:articleImage="@drawable/progress_spinner"
                     app:articleTitle="" />
 
@@ -499,8 +550,8 @@
                     android:id="@+id/trendingRelatedArticles2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="5dp"
                     android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     app:articleImage="@drawable/progress_spinner"
                     app:articleTitle="" />
 
@@ -513,8 +564,8 @@
                     android:id="@+id/trendingRelatedArticles3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="5dp"
                     android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     app:articleImage="@drawable/progress_spinner"
                     app:articleTitle="" />
 
@@ -532,18 +583,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/trendingArticles"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/follow_topic_author_bg"
                 android:foregroundGravity="center"
                 android:gravity="center"
-                android:paddingBottom="12dp"
                 android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:paddingTop="12dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="12dp"
                 android:text="@string/ad.comments.view_comment"
                 android:textColor="@color/app_red"
                 android:textSize="16sp"
@@ -700,17 +751,17 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
-                android:paddingBottom="6dp"
-                android:paddingTop="6dp">
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp">
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/facebookShareTextView"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_facebook_svg"
                     android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
-                    android:drawableTop="@drawable/ic_facebook_svg"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.facebook"
                     android:textColor="@color/app_grey"
@@ -722,9 +773,9 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_whats_app"
                     android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
-                    android:drawableTop="@drawable/ic_whats_app"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.whatsapp"
                     android:textColor="@color/app_grey"
@@ -736,9 +787,9 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_share_white"
                     android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
-                    android:drawableTop="@drawable/ic_share_white"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.generic_share"
                     android:textColor="@color/app_grey"
@@ -750,9 +801,9 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_bookmark"
                     android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
-                    android:drawableTop="@drawable/ic_bookmark"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.bookmark"
                     android:textColor="@color/app_grey"
@@ -764,9 +815,9 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_recommend"
                     android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
-                    android:drawableTop="@drawable/ic_recommend"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.like"
                     android:textColor="@color/app_grey"

@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Topics implements Parcelable {
 
@@ -28,8 +29,18 @@ public class Topics implements Parcelable {
 
     public static class ExtraData implements Parcelable {
         private Challenges challenge;
+        private CategoryTag categoryTag;
 
-        public ExtraData(Challenges challenge) {
+        public CategoryTag getCategoryTag() {
+            return categoryTag;
+        }
+
+        public void setCategoryTag(CategoryTag categoryTag) {
+            this.categoryTag = categoryTag;
+        }
+
+        public ExtraData(Challenges challenge, CategoryTag categoryTag) {
+            this.categoryTag = categoryTag;
             this.challenge = challenge;
         }
 
@@ -41,6 +52,67 @@ public class Topics implements Parcelable {
         public void setChallenge(Challenges challenge) {
             this.challenge = challenge;
         }
+
+
+        public static class CategoryTag implements Parcelable {
+            private String categoryImage;
+            private String categoryBadge;
+
+
+            public CategoryTag(String categoryImage, String categoryBadge) {
+                this.categoryImage = categoryImage;
+                this.categoryBadge = categoryBadge;
+            }
+
+
+            public String getCategoryImage() {
+                return categoryImage;
+            }
+
+            public void setCategoryImage(String categoryImage) {
+                this.categoryImage = categoryImage;
+            }
+
+            public String getCategoryBadge() {
+                return categoryBadge;
+            }
+
+            public void setCategoryBadge(String categoryBadge) {
+                this.categoryBadge = categoryBadge;
+            }
+
+            protected CategoryTag(Parcel in) {
+                categoryImage = in.readString();
+                categoryBadge = in.readString();
+
+
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(categoryImage);
+                dest.writeString(categoryBadge);
+
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public static final Creator<CategoryTag> CREATOR = new Creator<CategoryTag>() {
+                @Override
+                public CategoryTag createFromParcel(Parcel in) {
+                    return new CategoryTag(in);
+                }
+
+                @Override
+                public CategoryTag[] newArray(int size) {
+                    return new CategoryTag[size];
+                }
+            };
+        }
+
 
         public static class Challenges implements Parcelable {
             private String active;
