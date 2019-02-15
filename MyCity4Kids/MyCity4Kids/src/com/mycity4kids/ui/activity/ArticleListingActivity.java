@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -31,6 +33,8 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -38,8 +42,12 @@ import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
+import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.FeedNativeAd;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -289,29 +297,43 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
 
     }
 
+//    FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+//    String fileContent = AppUtils.convertStreamToString(fileInputStream);
+//    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+//    TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
+//    createTopicsData(res);
+//    getCurrentParentTopicCategoriesAndSubCategories();
+//    initializeTabsAndPager();
+
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
-            isReuqestRunning = false;
-            progressBar.setVisibility(View.GONE);
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
-            }
-            if (response == null || response.body() == null) {
-                return;
-            }
-            try {
-                ArticleListingResponse responseData = response.body();
+            try{
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                ArticleListingResponse res = gson.fromJson(fileContent, ArticleListingResponse.class);
+                isReuqestRunning = false;
+                progressBar.setVisibility(View.GONE);
+                if (mLodingView.getVisibility() == View.VISIBLE) {
+                    mLodingView.setVisibility(View.GONE);
+                }
+                if (res == null || res.getData() == null) {
+                    return;
+                }
+                ArticleListingResponse responseData = res;
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
                     ashimmerFrameLayout.stopShimmerAnimation();
                     ashimmerFrameLayout.setVisibility(View.GONE);
                 } else {
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
             }
+
         }
 
         @Override

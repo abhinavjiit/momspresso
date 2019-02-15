@@ -144,12 +144,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/transparent_status">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
             <!-- The following intent filter is added to provide deep linking to the MC4K app -->
             <intent-filter android:autoVerify="true">
                 <data android:scheme="mc4k" />
@@ -655,9 +649,12 @@
             </intent-filter>
         </receiver>
 
-        <!-- <activity android:name=".ui.rewards.activity.RewardsContainerActivity">
-
-         </activity>-->
+         <activity android:name=".ui.rewards.activity.RewardsContainerActivity">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
     </application>
 
 </manifest>

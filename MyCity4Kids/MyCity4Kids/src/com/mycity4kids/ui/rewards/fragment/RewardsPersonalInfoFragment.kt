@@ -28,6 +28,7 @@ import com.facebook.accountkit.ui.ThemeUIManager
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.api.client.util.DateTime
+import com.google.gson.Gson
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
@@ -40,6 +41,7 @@ import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.CityConfigResponse
 import com.mycity4kids.models.response.CityInfoItem
+import com.mycity4kids.models.response.UserDetailData
 import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
 import com.mycity4kids.models.rewardsmodels.CityDataResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
@@ -73,7 +75,7 @@ import java.util.*
  */
 
 const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
-const val REQUEST_SELECT_PLACE = 1000
+const val REQUEST_SELECT_PLACE = 2000
 
 class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity {
     override fun onCitySelect(cityItem: CityInfoItem?) {
@@ -113,7 +115,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var editAddNumber: TextView
     private lateinit var editEmail: EditText
     private lateinit var editLocation: EditText
-//    private lateinit var editLanguage: EditText
+    //    private lateinit var editLanguage: EditText
 //    private lateinit var radioGroupWorkingStatus: RadioGroup
 //    private lateinit var genderSpinner: AppCompatSpinner
     //private lateinit var textDOB: TextView
@@ -219,7 +221,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     fun prepareDataForPosting(): Boolean {
         if (editFirstName.text.isNullOrEmpty()) {
-            Toast.makeText(activity,"First Name " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "First Name " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.firstName = editFirstName.text.toString()
@@ -232,21 +234,21 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             apiGetResponse.lastName = editLastName.text.toString()
         }
 
-        if(accountKitAuthCode.isNullOrEmpty() && apiGetResponse.contact.isNullOrEmpty()){
-            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+        if (accountKitAuthCode.isNullOrEmpty() && apiGetResponse.contact.isNullOrEmpty()) {
+            Toast.makeText(activity, "Contact " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
             return false
-        }else{
-            if(!apiGetResponse.contact.isNullOrEmpty()){
+        } else {
+            if (!apiGetResponse.contact.isNullOrEmpty()) {
                 apiGetResponse.contact = apiGetResponse.contact
                 apiGetResponse.mobile_token = ""
-            }else if(accountKitAuthCode.isNullOrEmpty()){
+            } else if (!accountKitAuthCode.isNullOrEmpty()) {
                 apiGetResponse.mobile_token = accountKitAuthCode
                 apiGetResponse.contact = ""
             }
         }
 
         if (editEmail.text.isNullOrEmpty()) {
-            Toast.makeText(activity, "Email "  + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Email " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
             return false
         } else if (isMailValid()) {
             apiGetResponse.email = editEmail.text.toString()
@@ -255,27 +257,15 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             return false
         }
 
-//        if (genderSpinner.selectedItem.toString().isNullOrEmpty()) {
-//            if (genderSpinner.selectedItem.toString().trim().toLowerCase().equals("Male")) {
-//                apiGetResponse.gender = 0
-//            } else if (genderSpinner.selectedItem.toString().trim().toLowerCase().equals("Female")) {
-//                apiGetResponse.gender = 1
-//            }
-//        }
-
-//        if (RewardsPersonalInfoFragment.textDOB.text.isNullOrEmpty()) {
-//            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
-//            return false
-//        } else {
-//            apiGetResponse.dob = convertStringToTimestamp()
-//        }
-
         if (editLocation.text.isNullOrEmpty()) {
             Toast.makeText(activity, "Location " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
             return false
         } else {
-            apiGetResponse.lastName = editLocation.text.toString()
+            apiGetResponse.location = editLocation.text.toString()
         }
+
+        apiGetResponse.latitude = 28.7041
+        apiGetResponse.longitude = 77.1025
 
         return true
     }
@@ -293,18 +283,21 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK && data!=null){
-            when(requestCode){
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            when (requestCode) {
                 REQUEST_SELECT_PLACE -> {
                     val place = PlaceAutocomplete.getPlace(activity, data)
-                    if(!place.name.toString().isNullOrEmpty()){
+                    if (!place.name.toString().isNullOrEmpty()) {
                         cityName = place.name.toString()
                         editLocation.setText(cityName)
                     }
                 }
-                VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE ->{
+                VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
                     if (data != null && resultCode == Activity.RESULT_OK) {
                         accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+                        editPhone.visibility = View.VISIBLE
+                        textVerify.visibility = View.VISIBLE
+                        editAddNumber.visibility = View.GONE
                     }
                 }
 
@@ -332,10 +325,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     /*post data to server*/
     private fun postDataofRewardsToServer() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        if (userId != null) {
+        //var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        if (!userId.isNullOrEmpty()) {
+            Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData("8ffb68f436724516850cdfdb5d064d69", apiGetResponse, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+            Log.e("sending json", Gson().toJson(apiGetResponse))
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserDetailData>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -344,9 +340,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
                 }
 
-                override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                        apiGetResponse = response.data!!.result
+                override fun onNext(response: BaseResponseGeneric<UserDetailData>) {
+                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
+                        //apiGetResponse = response.data!!.result
                         saveAndContinueListener.profileOnSaveAndContinue()
                     } else {
 
@@ -354,19 +350,19 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
 
                 override fun onError(e: Throwable) {
-
+                    Log.e("exception in error", e.message.toString())
                 }
             })
         }
     }
 
-
     /*fetch data from server*/
     private fun fetchRewardsData() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+//        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData("8ffb68f436724516850cdfdb5d064d69", 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
                 override fun onComplete() {
 
                 }
@@ -390,7 +386,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
 
                 override fun onError(e: Throwable) {
-                    Log.e("exception in error" , e.message.toString())
+                    Log.e("exception in error", e.message.toString())
                 }
             })
         }
@@ -398,7 +394,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     private fun fetchCityData() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        if (userId != null) {
+        if (!userId.isNullOrEmpty()) {
             BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
                 override fun onComplete() {
                     removeProgressDialog()

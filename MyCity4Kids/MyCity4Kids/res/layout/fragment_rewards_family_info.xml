@@ -554,7 +554,7 @@
                 android:paddingTop="15dp"
                 android:paddingRight="35dp"
                 android:paddingBottom="15dp"
-                android:text="SUBMIT"
+                android:text="@string/save_continue"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />

@@ -19,6 +19,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.google.api.client.util.DateTime
+import com.google.gson.Gson
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
@@ -26,6 +27,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.response.UserDetailData
 import com.mycity4kids.models.rewardsmodels.KidsInfoResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
@@ -194,10 +196,11 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
     /*fetch data from server*/
     private fun fetchRewardsData() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        if (userId != null) {
+//        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData("8ffb68f436724516850cdfdb5d064d69", 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 2).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -276,10 +279,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         }
 
-        if (apiGetResponse.isMother != null && apiGetResponse.kidsInfo!=null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
-            radioYes.isChecked= true
-        }else{
-            radioNo.isChecked= true
+        if (apiGetResponse.isMother != null && apiGetResponse.kidsInfo != null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
+            radioYes.isChecked = true
+        } else {
+            radioNo.isChecked = true
         }
 
         if (apiGetResponse.workStatus != null) {
@@ -290,23 +293,25 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             }
         }
 
-        if(apiGetResponse.gender!=null){
+        if (apiGetResponse.gender != null) {
             spinnerGender.setSelection(apiGetResponse.gender!!)
         }
-        if(apiGetResponse.dob!=null){
+        if (apiGetResponse.dob != null) {
             RewardsFamilyInfoFragment.textDOB.setText(AppUtils.convertTimestampToDate(apiGetResponse.dob))
         }
 
-        if(apiGetResponse.kidsInfo!=null && apiGetResponse.kidsInfo!!.isNotEmpty()){
+        if (apiGetResponse.isExpecting == 1 && apiGetResponse.expectedDate!=null) {
+            editExpectedDate.setText(AppUtils.convertTimestampToDate(apiGetResponse.expectedDate))
+            checkAreYouExpecting.isChecked = true
+            layoutExptectedDateOfDelivery.visibility = View.VISIBLE
+        }else{
+            layoutExptectedDateOfDelivery.visibility = View.GONE
+        }
+
+        if (apiGetResponse.kidsInfo != null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
             (apiGetResponse.kidsInfo!!).forEach {
-                if(it!=null && it.dob!=null && it.gender!=null){
+                if (it != null && it.dob != null && it.gender != null) {
                     createKidsDetailDynamicView(it.gender!!, AppUtils.convertTimestampToDate(it.dob))
-                }else if(it!=null && it.dob==null && it.gender==null){
-                    if(it.expected_date!=null){
-                        editExpectedDate.setText(AppUtils.convertTimestampToDate(it.expected_date))
-                        checkAreYouExpecting.isChecked = true
-                        layoutExptectedDateOfDelivery.visibility = View.VISIBLE
-                    }
                 }
             }
         }
@@ -342,12 +347,12 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         RewardsFamilyInfoFragment.textKidsDOB = containerView.findViewById(R.id.textKidsDOB)
         RewardsFamilyInfoFragment.textDOB = containerView.findViewById(R.id.textDOB)
 
-        (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
+        (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
                 if (isChecked) {
-                    layoutMotherExptectedDate.visibility= View.VISIBLE
+                    layoutMotherExptectedDate.visibility = View.VISIBLE
                 } else {
-                    layoutMotherExptectedDate.visibility= View.GONE
+                    layoutMotherExptectedDate.visibility = View.GONE
                 }
             }
         })
@@ -421,11 +426,9 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
             submitListener.FamilyOnSubmit()
-//            if(prepareDataForPosting()){
-//
-//            }else{
-//
-//            }
+            if(prepareDataForPosting()){
+                postDataofRewardsToServer()
+            }
         }
 
         containerView.findViewById<RadioGroup>(R.id.radioGroupFamilyType)
@@ -480,12 +483,24 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             apiGetResponse.workStatus = 0
         }
 
-//        if(preSelectedLanguage.isEmpty()){
-//            Toast.makeText(activity,"Language " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
-//            return false
-//        }else{
-//            apiGetResponse.motherTongue = preSelectedLanguage
-//        }
+        apiGetResponse.gender = if(spinnerGender.selectedItemPosition == 0){
+            0
+        }else{
+            1
+        }
+
+        if(RewardsFamilyInfoFragment.textDOB.text.isNullOrEmpty()){
+            Toast.makeText(activity, resources.getString(R.string.please_enter_a_valid) + "Date Of Birth", Toast.LENGTH_SHORT).show()
+        }else{
+            apiGetResponse.expectedDate = textDOB.text.toString().toLong()
+        }
+
+        if(preSelectedLanguage.isEmpty()){
+            Toast.makeText(activity,"Language " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            return false
+        }else{
+            apiGetResponse.preferred_languages = preSelectedLanguage
+        }
 
         if (radioGroupAreMother.checkedRadioButtonId == R.id.radioYes) {
             apiGetResponse.isMother = 1
@@ -500,10 +515,18 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             apiGetResponse.interest = preSelectedInterest
         }
 
+        if(checkAreYouExpecting.isChecked){
+            if(editExpectedDate.text.isNullOrEmpty()){
+                Toast.makeText(activity, resources.getString(R.string.please_enter_a_valid) + "Expected Date", Toast.LENGTH_SHORT).show()
+            }else{
+                apiGetResponse.expectedDate = editExpectedDate.text.toString().toLong()
+            }
+        }
+
         return true
     }
 
-    fun createKidsDetailDynamicView(gender : Int? = null , date : String = "") {
+    fun createKidsDetailDynamicView(gender: Int? = null, date: String = "") {
         val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -545,22 +568,14 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             showDatePickerDialog()
         }
 
-        if(gender!=null && !date.isNullOrEmpty()){
+        if (gender != null && !date.isNullOrEmpty()) {
             textDOB.text = date
             spinnerGender.setSelection(this.spinnerGender.selectedItemPosition)
-        }else{
+        } else {
             textDOB.text = RewardsFamilyInfoFragment.textKidsDOB.text
             spinnerGender.setSelection(this.spinnerGender.selectedItemPosition)
             this.spinnerGender.setSelection(0)
             RewardsFamilyInfoFragment.textKidsDOB.text = ""
-
-//            var kidsInfoResponse =KidsInfoResponse(null,0,gender,0)
-//            if(apiGetResponse.kidsInfo!=null){
-//
-//            }else{
-//
-//            }
-//            apiGetResponse.kidsInfo.add(kidsInfoResponse)
         }
 
         linearKidsDetail.addView(indexView)
@@ -627,10 +642,12 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
     /*fetch data from server*/
     private fun postDataofRewardsToServer() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        if (userId != null) {
+//        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        if (!userId.isNullOrEmpty()) {
+            Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData("8ffb68f436724516850cdfdb5d064d69", apiGetResponse, 2).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 2).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserDetailData>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -639,10 +656,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
                 }
 
-                override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                        apiGetResponse = response.data!!.result
-
+                override fun onNext(response: BaseResponseGeneric<UserDetailData>) {
+                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
+                        //apiGetResponse = response.data!!.result
+                        submitListener.FamilyOnSubmit()
                     } else {
 
                     }
