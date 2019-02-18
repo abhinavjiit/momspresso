@@ -33,12 +33,14 @@ import java.util.Arrays.asList
  */
 class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickListener {
     override fun onItemClick(clickedText: String) {
-        if (preSelectedItemIds != null && preSelectedItemIds!!.isNotEmpty()) {
+        if (preSelectedItemNames != null && preSelectedItemNames!!.isNotEmpty()) {
             if (preSelectedItemNames!!.contains(clickedText)) {
                 preSelectedItemNames!!.remove(clickedText)
             } else {
                 preSelectedItemNames!!.add(clickedText)
             }
+        }else{
+            preSelectedItemNames!!.add(clickedText)
         }
         adapter.notifyDataSetChanged()
     }

@@ -368,7 +368,6 @@ public class BaseApplication extends Application {
                 Log.w("Retrofit@Response", response.body().string() + "  mc4ktoken ==" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 return chain.proceed(request);
             }
-
         };
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -491,7 +490,6 @@ public class BaseApplication extends Application {
     }
 
     public void toggleGroupBaseURL() {
-
         if (HttpUrl.parse(AppConstants.GROUPS_TEST_LIVE_URL).equals(groupsRetrofit.baseUrl())) {
             groupsRetrofit = null;
             createGroupRetrofitInstance(AppConstants.GROUPS_TEST_STAGING_URL);

@@ -47,18 +47,32 @@
                 <com.mycity4kids.widget.CustomFontEditText
                     android:id="@+id/editInstagram"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight=".6"
-                    android:hint="INSTAGRAM"
-                    android:focusable="false"
-                    android:editable="false"
+                    android:layout_height="wrap_content"
                     android:background="@null"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/app_grey"
-                    android:textSize="16sp"
+                    android:hint="INSTAGRAM"
+                    android:inputType="textNoSuggestions"
+                    android:textColor="@color/app_light_black"
+                    android:textSize="16dp"
                     app:fontName="oswald_regular.ttf" />
+
+                <!--<com.mycity4kids.widget.CustomFontEditText-->
+                    <!--android:id="@+id/editInstagram"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight=".6"-->
+                    <!--android:hint="INSTAGRAM"-->
+                    <!--android:focusable="false"-->
+                    <!--android:editable="false"-->
+                    <!--android:background="@null"-->
+                    <!--android:paddingTop="10dp"-->
+                    <!--android:paddingBottom="10dp"-->
+                    <!--android:textAllCaps="true"-->
+                    <!--android:textColor="@color/app_grey"-->
+                    <!--android:textSize="16sp"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
 
                 <ImageView
                     android:layout_width="0dp"
