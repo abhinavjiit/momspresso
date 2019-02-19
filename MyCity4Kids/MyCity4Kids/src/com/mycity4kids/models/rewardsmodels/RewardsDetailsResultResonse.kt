@@ -80,8 +80,6 @@ data class RewardsDetailsResultResonse(
         @SerializedName("expected_date")
         @Expose
         var expectedDate : Long? = null
-
-
 )
 
 

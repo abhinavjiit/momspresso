@@ -118,7 +118,7 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
-        getUserHistoryAndTrendingSearchResult();
+        //getUserHistoryAndTrendingSearchResult();
 
         AppUtils.changeTabsFont(this, mSlidingTabLayout);
         searchImageView.setOnClickListener(this);

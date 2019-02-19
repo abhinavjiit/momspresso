@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -427,6 +428,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             if (AppConstants.ANDROID_NEW_EDITOR.equals(userAgent)) {
                 articleDraftRequest.setUserAgent1(userAgent);
             }
+            Log.e("publish request to server", new Gson().toJson(articleDraftRequest));
             Call<ArticleDraftResponse> call1 = articlePublishAPI.updateArticle(draftObject.getId(), articleDraftRequest);
             call1.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override

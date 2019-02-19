@@ -22,7 +22,7 @@
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/englishTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="23dp"
         android:paddingTop="8dp"
@@ -35,7 +35,7 @@
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/hindiTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:paddingLeft="23dp"
@@ -49,7 +49,7 @@
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/bengaliTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:paddingLeft="23dp"
@@ -63,7 +63,7 @@
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/marathiTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:paddingLeft="23dp"
@@ -91,7 +91,7 @@
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/teluguTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:paddingLeft="23dp"
@@ -119,7 +119,7 @@
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/malayalamTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:paddingLeft="23dp"

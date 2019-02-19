@@ -164,7 +164,13 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         publishedSectionTextView1 = (TextView) findViewById(R.id.publishedSectionTextView1);
         publishCoachmark1 = (LinearLayout) findViewById(R.id.publishCoachmark1);
         publishCoachmark2 = (LinearLayout) findViewById(R.id.publishCoachmark2);
-
+        ((TextView)findViewById(R.id.profileCompletionLabel)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
+                startActivity(intent);
+            }
+        });
         authorNameTextView.setOnClickListener(this);
 //        locationTextView.setOnClickListener(this);
         authorBioTextView.setOnClickListener(this);

@@ -878,9 +878,9 @@
     <string name="rewards_non_working">"কর্মরতা নন "</string>
     <string name="rewards_language">"ভাষা "</string>
     <string name="rewards_save_continue">"সেভ করুন আর এগিয়ে যান "</string>
-
-
-
+    <string name="rewards_header_title">মমস্প্রেস্সো রিয়ার্ডস</string>
+    <string name="momspresso_rewards">মমস্প্রেস্সো রিয়ার্ডস</string>
+    <string name="rewards_participate">"অংশগ্রহণ করুন আর  আপনার প্রোফাইলটি সম্পূর্ণরূপে লিখে উপার্জন করুন "</string>
 
 
 </resources>
