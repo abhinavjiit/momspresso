@@ -336,6 +336,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         String cities = getIntent().getStringExtra("cities");
         String from = getIntent().getStringExtra("from");
         showProgressDialog(getResources().getString(R.string.please_wait));
+        BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         ArticlePublishAPI articlePublishAPI = retrofit.create(ArticlePublishAPI.class);
@@ -693,7 +694,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId() + "", "Article Image Upload");
 
                 getBlogPage();
-              /*  pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
+           /*     pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                 blogSetup = pref.getBoolean("blogSetup", false);
                 Log.e("blogsetup", blogSetup + "");
                 if (blogSetup == false) {
