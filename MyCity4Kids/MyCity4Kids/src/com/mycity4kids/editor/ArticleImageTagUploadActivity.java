@@ -52,6 +52,7 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
@@ -474,15 +475,19 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
     private void getBlogPage() {
         showProgressDialog(getResources().getString(R.string.please_wait));
-        BaseApplication.getInstance().destroyRetrofitInstance();
+        /*BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
         Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        call.enqueue(onLoginResponseReceivedListener);
+        call.enqueue(onLoginResponseReceivedListener);*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
+        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(getUserDetailsResponseCallback);
 
     }
 
-    Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
+    Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
 
