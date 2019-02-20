@@ -32,6 +32,33 @@ public class ArticleDetailResult {
     private String bookmarkId;
     private String isMomspresso;
     private String userAgent;
+    private String isSponsored;
+    private String sponsoredImage;
+    private String sponsoredBadge;
+
+    public String getSponsoredImage() {
+        return sponsoredImage;
+    }
+
+    public void setSponsoredImage(String sponsoredImage) {
+        this.sponsoredImage = sponsoredImage;
+    }
+
+    public String getSponsoredBadge() {
+        return sponsoredBadge;
+    }
+
+    public void setSponsoredBadge(String sponsoredBadge) {
+        this.sponsoredBadge = sponsoredBadge;
+    }
+
+    public String getIsSponsored() {
+        return isSponsored;
+    }
+
+    public void setIsSponsored(String isSponsored) {
+        this.isSponsored = isSponsored;
+    }
 
     public String getId() {
         return id;

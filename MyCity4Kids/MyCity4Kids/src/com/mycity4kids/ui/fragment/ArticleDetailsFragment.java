@@ -244,6 +244,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     RelativeLayout sponsoredViewContainer;
     private ArrayList<Topics> shortStoriesTopicList = new ArrayList<>();
     private ArrayList<Topics> shortStoriesTopicList1 = new ArrayList<>();
+    ArticleDetailResult responseData;
     private ImageView badge;
 
     @Nullable
@@ -467,7 +468,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
                 hitArticleDetailsRedisAPI();
-                bindSponsored();
+                //bindSponsored();
+
                 getViewCountAPI();
                 hitRecommendedStatusAPI();
             }
@@ -483,6 +485,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
         return fragmentView;
+    }
+
+    private void setSponsoredDataToView(){
+
     }
 
     private void bindSponsored() {
@@ -666,7 +672,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void hitRelatedArticleAPI() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
-        Call<ArticleListingResponse> vernacularTrendingCall = topicsCategoryAPI.getVernacularTrendingArticles(1, 4, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<ArticleListingResponse> vernacularTrendingCall = topicsCategoryAPI.getTrendingArticles(1, 4, SharedPrefUtils.getLanguageFilters(getActivity()));
         vernacularTrendingCall.enqueue(vernacularTrendingResponseCallback);
 
         Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId, 0, 3, SharedPrefUtils.getLanguageFilters(getActivity()));
@@ -1779,7 +1785,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void addRemoveBookmark() {
-
         if (bookmarkStatus == 0) {
             ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
             articleDetailRequest.setArticleId(articleId);
@@ -1814,6 +1819,68 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     }
 
+    public void checkingForSponsored() {
+        if (responseData.getIsSponsored().equalsIgnoreCase("1")) {
+            Boolean flag = false;
+            FileInputStream fileInputStream = null;
+            try {
+                fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                TopicsResponse res = gson.fromJson(fileContent, TopicsResponse.class);
+                for (int i = 0; i < res.getData().size(); i++) {
+                    shortStoriesTopicList.add(res.getData().get(i));
+                }
+
+                ArrayList<Topics> topicLocalList = new ArrayList<>();
+                for (Topics topic : shortStoriesTopicList) {
+                    if (topic.getSlug() != null && topic.getSlug().equalsIgnoreCase("sponsored-stories")) {
+                        topicLocalList = topic.getChild();
+                        break;
+                    }
+                }
+
+                for (Topics topic : topicLocalList) {
+                    for (Map<String, String> var : responseData.getTags()) {
+                        if (var.size() > 0) {
+                            for (Map.Entry<String, String> entry : var.entrySet()) {
+                                if (topic.getId().equalsIgnoreCase(entry.getKey())) {
+                                    if(!topic.getExtraData().isEmpty() && topic.getExtraData().get(0)!=null && topic.getExtraData().get(0).getCategoryTag()!=null){
+                                        if(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()!=null && !topic.getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()){
+                                            sponsoredViewContainer.setVisibility(View.VISIBLE);
+                                            Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()).into(sponsoredImage);
+                                            sponsoredTextView.setText("this story is sponsored by ");
+                                        }else{
+                                            sponsoredViewContainer.setVisibility(View.GONE);
+                                        }
+
+                                        if(topic.getExtraData().get(0).getCategoryTag().getCategoryBadge()!=null && !topic.getExtraData().get(0).getCategoryTag().getCategoryBadge().isEmpty()){
+                                            badge.setVisibility(View.VISIBLE);
+                                            Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryBadge()).into(badge);
+                                        } else {
+                                            badge.setVisibility(View.GONE);
+
+                                        }
+                                    }
+
+                                    flag = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if(flag){
+                        break;
+                    }
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     Callback<ArticleDetailResult> articleDetailResponseCallbackRedis = new Callback<ArticleDetailResult>() {
         @Override
         public void onResponse(Call<ArticleDetailResult> call, retrofit2.Response<ArticleDetailResult> response) {
@@ -1823,8 +1890,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
             try {
-                ArticleDetailResult responseData = response.body();
+                responseData = response.body();
                 getResponseUpdateUi(responseData);
+
+                checkingForSponsored();
+
                 authorId = detailData.getUserId();
                 isArticleDetailLoaded = true;
                 hitBookmarkFollowingStatusAPI();

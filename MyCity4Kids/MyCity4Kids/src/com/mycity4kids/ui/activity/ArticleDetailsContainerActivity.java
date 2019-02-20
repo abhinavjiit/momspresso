@@ -387,7 +387,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
 
             if (response == null || response.body() == null) {
-                Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(1, 6, preferredLang);
+                Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
                 filterCall.enqueue(articleListingResponseCallback);
                 return;
             }
@@ -403,20 +403,20 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                         }
                     }
                     if (dataList.size() < 5) {
-                        Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(1, 6, preferredLang);
+                        Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
                         filterCall.enqueue(articleListingResponseCallback);
                     } else {
                         articleList.addAll(dataList);
                         initializeViewPager();
                     }
                 } else {
-                    Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(1, 6, preferredLang);
+                    Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
                     filterCall.enqueue(articleListingResponseCallback);
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(1, 6, preferredLang);
+                Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
                 filterCall.enqueue(articleListingResponseCallback);
 
             }
@@ -424,7 +424,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(1, 6, preferredLang);
+            Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
             filterCall.enqueue(articleListingResponseCallback);
         }
     };

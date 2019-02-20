@@ -12,7 +12,7 @@ interface RewardsAPI {
                            @Query("fn") pageValue : Int)
             : Observable<BaseResponseGeneric<UserDetailData>>
 
-    @GET("/rewards/v1/usersa/{userId}")
+    @GET("/rewards/v1/users/{userId}")
     fun getRewardsapiData(@Path("userId") userId: String, @Query("fn") pageValue : Int)
             : Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
 

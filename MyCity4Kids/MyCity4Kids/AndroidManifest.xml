@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="123"
+    android:versionCode="124"
     android:versionName="9.8">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
@@ -51,9 +51,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD0t9fusBGBU-bTdNO9teedX6by9J-LscI" />
 
-
         <!-- API key For Google Map Local -->
-
 
         <!-- <meta-data -->
         <!-- android:name="com.google.android.maps.v2.API_KEY" -->
@@ -144,6 +142,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/transparent_status">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
             <!-- The following intent filter is added to provide deep linking to the MC4K app -->
             <intent-filter android:autoVerify="true">
                 <data android:scheme="mc4k" />
@@ -205,7 +208,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/fb_login_protocol_scheme" />
+                <data android:scheme="@string/fb_login_protocol_scheme"
+                    tools:ignore="ManifestResource" />
             </intent-filter>
         </activity>
 
@@ -650,10 +654,11 @@
         </receiver>
 
          <activity android:name=".ui.rewards.activity.RewardsContainerActivity">
-             <intent-filter>
+             <!--<intent-filter>
                  <action android:name="android.intent.action.MAIN" />
                  <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+             </intent-filter>-->
+
          </activity>
     </application>
 

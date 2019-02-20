@@ -25,7 +25,8 @@ public class Topics implements Parcelable {
     private boolean isSelected;
     private String slug;
     private List<ExtraData> extraData;
-
+    private String sponsoredCategoryImage ;
+    private String sponsoredCategoryBadge;
 
     public static class ExtraData implements Parcelable {
         private Challenges challenge;

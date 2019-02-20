@@ -927,4 +927,6 @@
     <string name="rewards_non_working">"ജോലി ചെയ്യുന്നില്ല "</string>
     <string name="rewards_language">"ഭാഷ "</string>
     <string name="rewards_save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
+    <string name="momspresso_rewards">"മോംസ്പ്രേസ്സോ റീവാർഡുകൾ "</string>
+    <string name="rewards_participate">പ്രൊഫൈൽ പൂരിപ്പിക്കൂ, ഇതിൽ പങ്ക് ചേരൂ, സമ്പാദിക്കാൻ തുടങ്ങൂ!</string>
 </resources>

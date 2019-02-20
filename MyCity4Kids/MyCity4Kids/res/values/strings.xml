@@ -1002,7 +1002,6 @@
     <string name="not_working">Not Working</string>
     <string name="working">Working</string>
     <string name="save_continue"><![CDATA[SAVE & CONTINUE]]></string>
-    <string name="rewards_header_title">MOMSPRESSO REWARDS</string>
     <string name="momspresso_rewards">MOMSPRESSO REWARDS</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -1045,4 +1044,5 @@
     <string name="rewards_save_continue"> Save And Continue</string>
     <string name="rewards.social.facebook_connected">FACEBOOK CONNECTED</string>
     <string name="rewards.social.instagram_connected">INSTAGRAM CONNECTED</string>
+    <string name="rewards_participate">Participate and earn now by completing your profile!</string>
 </resources>

@@ -348,13 +348,13 @@ public class BaseApplication extends Application {
                 Request.Builder requestBuilder = original.newBuilder();
 
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-                requestBuilder.addHeader("mc4kToken", "acf825688fc4a97f3ddc046ec7ba9af6");
-                requestBuilder.addHeader("id", "6f57d7cb01fa46c89bf85e3d2ade7de3");
+//                requestBuilder.addHeader("mc4kToken", "acf825688fc4a97f3ddc046ec7ba9af6");
+//                requestBuilder.addHeader("id", "6f57d7cb01fa46c89bf85e3d2ade7de3");
 
                 //requestBuilder.addHeader("id", "a66ac4980fb54dec85dccb3b894d793a");
-//                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 //requestBuilder.addHeader("mc4kToken", "e93e10906909e6c67fc236adbca297c2");
-//                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
@@ -365,10 +365,9 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
                 Response response = chain.proceed(request);
-                Log.w("Retrofit@Response", response.body().string() + "  mc4ktoken ==" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                //Log.w("Retrofit@Response", response.body().string() + "  mc4ktoken ==" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 return chain.proceed(request);
             }
-
         };
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -491,7 +490,6 @@ public class BaseApplication extends Application {
     }
 
     public void toggleGroupBaseURL() {
-
         if (HttpUrl.parse(AppConstants.GROUPS_TEST_LIVE_URL).equals(groupsRetrofit.baseUrl())) {
             groupsRetrofit = null;
             createGroupRetrofitInstance(AppConstants.GROUPS_TEST_STAGING_URL);

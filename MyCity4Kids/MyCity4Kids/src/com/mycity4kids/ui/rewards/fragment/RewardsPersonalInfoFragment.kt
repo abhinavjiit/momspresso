@@ -295,6 +295,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
                     if (data != null && resultCode == Activity.RESULT_OK) {
                         accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+                        apiGetResponse.contact = null
                         editPhone.visibility = View.VISIBLE
                         textVerify.visibility = View.VISIBLE
                         editAddNumber.visibility = View.GONE
@@ -386,6 +387,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
 
                 override fun onError(e: Throwable) {
+                    removeProgressDialog()
                     Log.e("exception in error", e.message.toString())
                 }
             })
@@ -430,7 +432,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
 
                 override fun onError(e: Throwable) {
-
+                    removeProgressDialog()
                 }
             })
         }
