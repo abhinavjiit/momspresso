@@ -347,12 +347,12 @@ public class BaseApplication extends Application {
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
 
-                requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
+                //requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
 //                requestBuilder.addHeader("mc4kToken", "EAAC7f1na98IBAL6IM6FZAaZAdU03rlt6anfXVHRCqJY4BVhEg4uw4ltXjjRhQgpZBJWCCNE1KqxWI7y7emHtGdGkm7DwPyrt3iHmiTYwnIKOBXclskr1gEmzbnUZAeGMhSsxZA9uPQkEXHCdcrucYiv57BHEByKIG9T7yd7ZA07W8DQesIFq2nFJeZC3ObF5bAqLr2ZCfhTZBawZDZD");
 //                requestBuilder.addHeader("id", "8ffb68f436724516850cdfdb5d064d69");
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
-                requestBuilder.addHeader("agent", "android");
+                requestBuilder.addHeader("User-Agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
                 requestBuilder.addHeader("appVersion", appVersion);
