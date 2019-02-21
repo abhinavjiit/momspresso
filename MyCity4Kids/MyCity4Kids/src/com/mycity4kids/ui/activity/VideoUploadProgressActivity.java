@@ -176,7 +176,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         uploadTask.addOnProgressListener(new OnProgressListener<com.google.firebase.storage.UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-                Log.e("Tuts+", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
+                Log.e("video uplo to firebase=", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
             }
         });
     }
@@ -224,7 +224,11 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+                if(response.errorBody()!=null){
+                    MixPanelUtils.pushVideoPublishSuccessEvent(mixpanel, title);
+                    uploadingContainer.setVisibility(View.GONE);
+                    uploadFinishContainer.setVisibility(View.VISIBLE);
+                }else if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }

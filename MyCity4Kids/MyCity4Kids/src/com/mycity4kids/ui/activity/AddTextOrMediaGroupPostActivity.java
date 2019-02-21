@@ -987,7 +987,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-                Log.e("Tuts+", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
+                Log.e("audio uploaded to firebase", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
             }
         });
     }

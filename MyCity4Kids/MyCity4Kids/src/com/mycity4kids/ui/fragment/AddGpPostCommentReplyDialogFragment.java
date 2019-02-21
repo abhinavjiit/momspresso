@@ -1230,7 +1230,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
-                Log.e("Tuts+", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
+                Log.e("video uploaded", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
             }
         });
     }

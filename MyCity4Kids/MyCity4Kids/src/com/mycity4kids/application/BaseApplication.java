@@ -362,7 +362,7 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
                 Response response = chain.proceed(request);
-                //Log.w("Retrofit@Response", response.body().string() + "  mc4ktoken ==" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                Log.w("Retrofit@Response", response.body().string() + "  mc4ktoken ==" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 return chain.proceed(request);
             }
         };
