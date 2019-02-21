@@ -133,15 +133,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:layout_weight="0.2"
+                android:layout_weight="0.1"
                 android:src="@drawable/play" />
 
             <ImageView
                 android:id="@+id/pauseAudioImageView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_weight="0.2"
+                android:layout_marginRight="2dp"
+                android:layout_weight="0.1"
                 android:src="@drawable/pause"
                 android:visibility="gone" />
 
@@ -151,9 +151,9 @@
                 android:layout_height="4dp"
                 android:layout_below="@+id/commentDateTextView"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="2dp"
                 android:layout_toRightOf="@+id/playAudioImageView"
-                android:layout_weight="0.8"
+                android:layout_weight="0.9"
                 android:progressDrawable="@drawable/progress"
                 android:thumb="@color/app_red" />
         </LinearLayout>
@@ -163,16 +163,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/playAudioLayout"
-            android:layout_alignStart="@+id/commentorUsernameTextView"
-            android:layout_alignLeft="@+id/commentorUsernameTextView"
-            android:layout_marginTop="10dp"
+            android:layout_alignStart="@+id/playAudioLayout"
+            android:layout_alignLeft="@+id/playAudioLayout"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="10dp"
             android:background="?attr/selectableItemBackgroundBorderless">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/audioTimeElapsed"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="25dp"
                 android:gravity="center"
                 android:textColor="@color/groups.grey"
                 android:textSize="12sp"
