@@ -697,9 +697,9 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
 
     private void startHeaderMediaPlayer(AudioCommentViewHeaderHolder audioCommentViewHeaderHolder, int position) {
-        if (mMediaplayer != null && isCommentPlaying) {
-            mMediaplayer.release();
-            mMediaplayer = null;
+        if (mediaPlayer != null && isCommentPlaying) {
+            mediaPlayer.release();
+            mediaPlayer = null;
             isCommentPlaying = false;
             if (playingHolder != null) {
                 playingHolder.playAudioImageView.setImageResource(R.drawable.play);
