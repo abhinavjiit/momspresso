@@ -219,7 +219,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.contact_details)));
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.about_txt)));
-                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.rewards_tab_detail)));
+                    //tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.rewards_tab_detail)));
 
                     AppUtils.changeTabsFont(EditProfileNewActivity.this, tabLayout);
 
@@ -230,11 +230,11 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
-                            if(tab.getPosition()==2){
-                                saveTextView.setVisibility(View.GONE);
-                            }else{
-                                saveTextView.setVisibility(View.VISIBLE);
-                            }
+//                            if(tab.getPosition()==2){
+//                                saveTextView.setVisibility(View.GONE);
+//                            }else{
+//                                saveTextView.setVisibility(View.VISIBLE);
+//                            }
                             viewPager.setCurrentItem(tab.getPosition());
                         }
 

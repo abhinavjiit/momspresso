@@ -59,30 +59,11 @@ public interface VlogsListingAndDetailsAPI {
                                             @Query("type") int type,
                                             @Query("category_id") String categoryId);
 
-    @GET("v2/videos/")
-    Call<HomeVideosListingResponse> getHomeVideos(/*@Query("start") int start,
-                                                  @Query("end") int end,
-                                                  @Query("sort") int sort,
-                                                  @Query("type") int type*/);
-
     @POST("v2/videos/")
     Call<ResponseBody> publishHomeVideo(@Body UploadVideoRequest uploadVideoRequest/*@Query("start") int start,
                                                   @Query("end") int end,
                                                   @Query("sort") int sort,
                                                   @Query("type") int type*/);
-
-//    For Local JSON Testing
-//    @GET("http://10.0.0.27/test/{index}.json")
-//    Call<VlogsListingResponse> getRecentVlogsLocal(@Path("index") String index,
-//                                                   @Query("start") int start,
-//                                                  @Query("end") int end,
-//                                                  @Query("sort") int authorId,
-//                                                  @Query("type") int type);
-
-
-//    For Local JSON Testing
-//    @GET("http://10.0.0.27/test/article-fa3ae55a274040688a4370b055e6f8d6.json")
-//    Call<ArticleDetailResult> getArticleDetailsFromLocal();
 
     @GET("/v1/articles/doc/")
     Call<ArticleDetailResponse> getArticleDetailsFromWebservice(@Query("articleId") String articleId);

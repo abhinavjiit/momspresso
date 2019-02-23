@@ -51,7 +51,6 @@ import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -205,8 +204,8 @@ public class BaseApplication extends Application {
     }
 
     /*
-         * Returns the Google Analytics tracker.
-         */
+     * Returns the Google Analytics tracker.
+     */
     public static Tracker getGaTracker() {
         return mTracker;
     }
@@ -348,29 +347,41 @@ public class BaseApplication extends Application {
                 Request.Builder requestBuilder = original.newBuilder();
 
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
+
 //                requestBuilder.addHeader("mc4kToken", "acf825688fc4a97f3ddc046ec7ba9af6");
 //                requestBuilder.addHeader("id", "6f57d7cb01fa46c89bf85e3d2ade7de3");
                /* requestBuilder.addHeader("mc4kToken", "EAAC7f1na98IBAL6IM6FZAaZAdU03rlt6anfXVHRCqJY4BVhEg4uw4ltXjjRhQgpZBJWCCNE1KqxWI7y7emHtGdGkm7DwPyrt3iHmiTYwnIKOBXclskr1gEmzbnUZAeGMhSsxZA9uPQkEXHCdcrucYiv57BHEByKIG9T7yd7ZA07W8DQesIFq2nFJeZC3ObF5bAqLr2ZCfhTZBawZDZD");
                 requestBuilder.addHeader("id", "8ffb68f436724516850cdfdb5d064d69");*/
             /* *//*   //requestBuilder.addHeader("id", "a66ac4980fb54dec85dccb3b894d793a");
+=======
+//                requestBuilder.addHeader("mc4kToken", "EAAC7f1na98IBAL6IM6FZAaZAdU03rlt6anfXVHRCqJY4BVhEg4uw4ltXjjRhQgpZBJWCCNE1KqxWI7y7emHtGdGkm7DwPyrt3iHmiTYwnIKOBXclskr1gEmzbnUZAeGMhSsxZA9uPQkEXHCdcrucYiv57BHEByKIG9T7yd7ZA07W8DQesIFq2nFJeZC3ObF5bAqLr2ZCfhTZBawZDZD");
+//                requestBuilder.addHeader("id", "8ffb68f436724516850cdfdb5d064d69");
+
+                //requestBuilder.addHeader("id", "a66ac4980fb54dec85dccb3b894d793a");
+>>>>>>> 8f2b43c97ccdf1d8e0dd600e404fe964170147d6
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 //requestBuilder.addHeader("mc4kToken", "e93e10906909e6c67fc236adbca297c2");
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());*//*
                 requestBuilder.addHeader("agent", "android");*/
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+
+                requestBuilder.addHeader("User-Agent", "android");
+
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
                 requestBuilder.addHeader("appVersion", appVersion);
-                requestBuilder.addHeader("source", "2");
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
                 requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
-                Response response = chain.proceed(request);
-                //Log.w("Retrofit@Response", response.body().string() + "  mc4ktoken ==" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+
+//                Response response = chain.proceed(request);
+//                Log.w("Retrofit@Response", response.body().string());
                 return chain.proceed(request);
             }
+
         };
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -396,26 +407,30 @@ public class BaseApplication extends Application {
                     .build();
         }
 
-//        Gson gson = new GsonBuilder()
-//                .setLenient()
-//                .create();
-
         retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
                 .addConverterFactory(buildGsonConverter())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build();
+
+//        retrofit = new Retrofit.Builder()
+//                .baseUrl("http://35.200.209.192:5000/")
+//                .addConverterFactory(buildGsonConverter())
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//                .client(client)
+//                .build();
         return retrofit;
     }
 
     public Retrofit createGroupRetrofitInstance(String base_url) {
+
         Interceptor mainInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
+
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
@@ -427,10 +442,12 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
                 requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
-//              Response response = chain.proceed(request);
-//              Log.w("Retrofit@Response", response.body().string());
+
+//                Response response = chain.proceed(request);
+//                Log.w("Retrofit@Response", response.body().string());
                 return chain.proceed(request);
             }
+
         };
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -493,6 +510,7 @@ public class BaseApplication extends Application {
     }
 
     public void toggleGroupBaseURL() {
+
         if (HttpUrl.parse(AppConstants.GROUPS_TEST_LIVE_URL).equals(groupsRetrofit.baseUrl())) {
             groupsRetrofit = null;
             createGroupRetrofitInstance(AppConstants.GROUPS_TEST_STAGING_URL);
@@ -539,6 +557,7 @@ public class BaseApplication extends Application {
                 Request original = chain.request();
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
+
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
@@ -590,4 +609,96 @@ public class BaseApplication extends Application {
     }
 
 
+//    private static final String DOWNLOAD_ACTION_FILE = "actions";
+//    private static final String DOWNLOAD_TRACKER_ACTION_FILE = "tracked_actions";
+//    private static final String DOWNLOAD_CONTENT_DIRECTORY = "downloads";
+//    private static final int MAX_SIMULTANEOUS_DOWNLOADS = 2;
+//
+//    protected String userAgent;
+//
+//    private File downloadDirectory;
+//    private Cache downloadCache;
+//    private DownloadManager downloadManager;
+//    private DownloadTracker downloadTracker;
+//
+//    /**
+//     * Returns a {@link DataSource.Factory}.
+//     */
+//    public DataSource.Factory buildDataSourceFactory() {
+//        DefaultDataSourceFactory upstreamFactory =
+//                new DefaultDataSourceFactory(this, buildHttpDataSourceFactory());
+//        return buildReadOnlyCacheDataSource(upstreamFactory, getDownloadCache());
+//    }
+//
+//    /**
+//     * Returns a {@link HttpDataSource.Factory}.
+//     */
+//    public HttpDataSource.Factory buildHttpDataSourceFactory() {
+//        return new DefaultHttpDataSourceFactory(userAgent);
+//    }
+//
+//    /**
+//     * Returns whether extension renderers should be used.
+//     */
+//    public boolean useExtensionRenderers() {
+//        return "withExtensions".equals(BuildConfig.FLAVOR);
+//    }
+//
+//    public DownloadManager getDownloadManager() {
+//        initDownloadManager();
+//        return downloadManager;
+//    }
+//
+//    public DownloadTracker getDownloadTracker() {
+//        initDownloadManager();
+//        return downloadTracker;
+//    }
+//
+//    private synchronized void initDownloadManager() {
+//        if (downloadManager == null) {
+//            DownloaderConstructorHelper downloaderConstructorHelper =
+//                    new DownloaderConstructorHelper(getDownloadCache(), buildHttpDataSourceFactory());
+//            downloadManager =
+//                    new DownloadManager(
+//                            downloaderConstructorHelper,
+//                            MAX_SIMULTANEOUS_DOWNLOADS,
+//                            DownloadManager.DEFAULT_MIN_RETRY_COUNT,
+//                            new File(getDownloadDirectory(), DOWNLOAD_ACTION_FILE));
+//            downloadTracker =
+//                    new DownloadTracker(
+//              /* context= */ this,
+//                            buildDataSourceFactory(),
+//                            new File(getDownloadDirectory(), DOWNLOAD_TRACKER_ACTION_FILE));
+//            downloadManager.addListener(downloadTracker);
+//        }
+//    }
+//
+//    private Cache getDownloadCache() {
+//        if (downloadCache == null) {
+//            File downloadContentDirectory = new File(getDownloadDirectory(), DOWNLOAD_CONTENT_DIRECTORY);
+//            downloadCache = new SimpleCache(downloadContentDirectory, new NoOpCacheEvictor());
+//        }
+//        return downloadCache;
+//    }
+//
+//    private File getDownloadDirectory() {
+//        if (downloadDirectory == null) {
+//            downloadDirectory = getExternalFilesDir(null);
+//            if (downloadDirectory == null) {
+//                downloadDirectory = getFilesDir();
+//            }
+//        }
+//        return downloadDirectory;
+//    }
+//
+//    private static CacheDataSourceFactory buildReadOnlyCacheDataSource(
+//            DefaultDataSourceFactory upstreamFactory, Cache cache) {
+//        return new CacheDataSourceFactory(
+//                cache,
+//                upstreamFactory,
+//                new FileDataSourceFactory(),
+//        /* cacheWriteDataSinkFactory= */ null,
+//                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR,
+//        /* eventListener= */ null);
+//    }
 }
