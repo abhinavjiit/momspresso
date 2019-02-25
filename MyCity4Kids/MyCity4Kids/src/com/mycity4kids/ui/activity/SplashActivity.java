@@ -171,6 +171,7 @@ public class SplashActivity extends BaseActivity {
 
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
+            Log.e("version number ", version);
 
             if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.GROUPS_COACHMARK_VERSION) && SharedPrefUtils.isGroupTourFirstLaunch(this)) {
                 SharedPrefUtils.setCoachmarksShownFlag(this, "groups", false);
@@ -304,6 +305,7 @@ public class SplashActivity extends BaseActivity {
                         }
 
                         String version = pInfo.versionName;
+                        Log.e("version number ", version);
                         if (!StringUtils.isNullOrEmpty(version)) {
                             versionApiModel.setAppUpdateVersion(version);
                         }
@@ -638,6 +640,7 @@ public class SplashActivity extends BaseActivity {
                                     e.printStackTrace();
                                 }
                                 String version = pInfo.versionName;
+                                Log.e("version number ", version);
 
                                 //First launch or logout or Shared prefs cleared scenario.
                                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();

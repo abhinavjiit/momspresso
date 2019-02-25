@@ -40,6 +40,7 @@ import com.mycity4kids.instagram.InstagramApp
 import com.mycity4kids.interfaces.IFacebookUser
 import com.mycity4kids.models.request.LoginRegistrationRequest
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.response.SetupBlogData
 import com.mycity4kids.models.response.UserDetailData
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.models.rewardsmodels.SocialAccountObject
@@ -375,7 +376,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         if (!userId.isNullOrEmpty()) {
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserDetailData>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<SetupBlogData>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -384,7 +385,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
                 }
 
-                override fun onNext(response: BaseResponseGeneric<UserDetailData>) {
+                override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
                         //apiGetResponse = response.data!!.result
                         submitListener.socialOnSubmitListener()

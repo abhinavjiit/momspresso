@@ -37,7 +37,7 @@ data class RewardsDetailsResultResonse(
         var incomeSlab: Any? = null,
         @SerializedName("interest")
         @Expose
-        var interest: ArrayList<String>? = null,
+        var interest: ArrayList<Int>? = null,
         @SerializedName("is_mother")
         @Expose
         var isMother: Int? = null,

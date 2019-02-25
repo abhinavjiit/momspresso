@@ -39,10 +39,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
-        android:layout_marginBottom="2dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp">
+        android:layout_marginBottom="2dp">
 
         <RelativeLayout
             android:id="@+id/uploadImageContainer"
@@ -57,8 +57,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
                 android:src="@drawable/ic_camera" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -88,9 +88,9 @@
             android:id="@+id/changePictureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/uploadImageLayout"
             android:layout_alignEnd="@+id/uploadImageLayout"
             android:layout_alignRight="@+id/uploadImageLayout"
+            android:layout_alignBottom="@+id/uploadImageLayout"
             android:layout_gravity="bottom|right"
             android:background="@color/publish_article.tag_images.selected_bg"
             android:padding="5dp"

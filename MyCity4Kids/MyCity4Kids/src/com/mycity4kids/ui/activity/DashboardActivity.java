@@ -1918,7 +1918,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 num_of_categorys = videoTopicList.get(0).getChild().size();
                                 if (num_of_categorys != 0) {
                                     for (int j = 0; j < num_of_categorys; j++) {
-                                        if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.HOME_VIDEOS_CATEGORYID)) {
+                                        if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.VIDEO_CHALLENGE_ID)) {
                                             num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
                                             for (int k = num_of_challeneges - 1; k >= 0; k--) {
                                                 if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {

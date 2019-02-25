@@ -905,7 +905,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         } else {
             Toast.makeText(BaseApplication.getAppContext(), R.string.went_wrong, Toast.LENGTH_SHORT).show();
         }
-
     }
 
 
