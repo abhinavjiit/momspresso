@@ -1823,6 +1823,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     public void processImage(Uri imageUri) {
         android.app.FragmentManager fm = getFragmentManager();
+        mTaskFragment=null;
         mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
         if (mTaskFragment == null) {
             mTaskFragment = new TaskFragment();

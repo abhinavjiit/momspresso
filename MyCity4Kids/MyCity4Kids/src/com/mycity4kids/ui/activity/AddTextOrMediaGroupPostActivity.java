@@ -55,6 +55,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
@@ -569,7 +570,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         showProgressDialog(getString(R.string.please_wait));
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
-        Log.e("requestBodyFile", requestBodyFile.toString());
+        Log.e("requestBodyFile", new Gson().toJson(requestBodyFile.toString()));
         //   RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "2");
         // prepare call in Retrofit 2.0

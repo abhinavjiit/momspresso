@@ -665,6 +665,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 overlayView.setVisibility(View.GONE);
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
+
         }
     }
 

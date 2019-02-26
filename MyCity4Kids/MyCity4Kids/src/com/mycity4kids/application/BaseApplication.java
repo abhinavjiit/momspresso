@@ -349,8 +349,6 @@ public class BaseApplication extends Application {
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
-//                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-//                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
@@ -430,7 +428,6 @@ public class BaseApplication extends Application {
 //                Log.w("Retrofit@Response", response.body().string());
                 return chain.proceed(request);
             }
-
         };
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();

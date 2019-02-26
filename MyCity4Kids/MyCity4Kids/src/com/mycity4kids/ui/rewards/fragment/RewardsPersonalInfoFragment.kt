@@ -38,10 +38,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.models.response.BaseResponseGeneric
-import com.mycity4kids.models.response.CityConfigResponse
-import com.mycity4kids.models.response.CityInfoItem
-import com.mycity4kids.models.response.UserDetailData
+import com.mycity4kids.models.response.*
 import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
 import com.mycity4kids.models.rewardsmodels.CityDataResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
@@ -153,7 +150,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         return containerView
     }
-
 
     /*setting values to components*/
     private fun setValuesToComponents() {
@@ -332,7 +328,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
             Log.e("sending json", Gson().toJson(apiGetResponse))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserDetailData>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<SetupBlogData>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -341,7 +337,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
                 }
 
-                override fun onNext(response: BaseResponseGeneric<UserDetailData>) {
+                override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
+                    Log.e("response is ", Gson().toJson(response.data))
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
                         //apiGetResponse = response.data!!.result
                         saveAndContinueListener.profileOnSaveAndContinue()

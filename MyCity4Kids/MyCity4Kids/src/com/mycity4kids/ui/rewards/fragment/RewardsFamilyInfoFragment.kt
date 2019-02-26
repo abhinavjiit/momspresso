@@ -27,6 +27,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.response.SetupBlogData
 import com.mycity4kids.models.response.UserDetailData
 import com.mycity4kids.models.rewardsmodels.KidsInfoResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
@@ -151,6 +152,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     private lateinit var apiGetResponse: RewardsDetailsResultResonse
     private lateinit var radioGroupWorkingStatus: RadioGroup
     private var preSelectedInterest = ArrayList<String>()
+    private var preSelectedInterestForPosting = ArrayList<Int>()
     private var preSelectedLanguage = ArrayList<String>()
     private lateinit var editInterest: EditText
     private lateinit var linearInterest: LinearLayout
@@ -262,7 +264,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             linearInterest.visibility = View.VISIBLE
             apiGetResponse.interest!!.forEach {
                 var interestName = Constants.TypeOfInterest.findById(it.toInt())
-                preSelectedInterest.add(it)
+                preSelectedInterest.add(it.toString())
                 val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(interestName)
@@ -515,7 +517,14 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
 
         if (!preSelectedInterest.isEmpty()) {
-            apiGetResponse.interest = preSelectedInterest
+            (preSelectedInterest).forEach {
+                try {
+                    preSelectedInterestForPosting.add(it.toInt())
+                } catch (ex: Exception) {
+
+                }
+            }
+            apiGetResponse.interest = preSelectedInterestForPosting
         }
 
         if (checkAreYouExpecting.isChecked) {
@@ -655,7 +664,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         if (!userId.isNullOrEmpty()) {
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 2).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<UserDetailData>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 2).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<SetupBlogData>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -664,7 +673,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
                 }
 
-                override fun onNext(response: BaseResponseGeneric<UserDetailData>) {
+                override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
                         //apiGetResponse = response.data!!.result
                         submitListener.FamilyOnSubmit()
