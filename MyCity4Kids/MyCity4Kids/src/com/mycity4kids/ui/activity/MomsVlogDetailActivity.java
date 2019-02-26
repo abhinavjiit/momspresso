@@ -1321,7 +1321,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
             commentFrag.setArguments(_args);
             FragmentManager fm = getSupportFragmentManager();
             commentFrag.show(fm, "ViewAllComments");
-//            mExoPlayerView.getPlayer().setPlayWhenReady(false);             //bug fixed
+           mExoPlayerView.getPlayer().setPlayWhenReady(false);             //bug fixed
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));

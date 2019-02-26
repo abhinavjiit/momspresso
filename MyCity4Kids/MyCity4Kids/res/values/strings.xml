@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name">Momspresso</string>
     <string name="unknown_person">Unknown</string>
     <string name="resend_email">Resend Email</string>
 
@@ -1045,4 +1044,5 @@
     <string name="rewards.social.facebook_connected">FACEBOOK CONNECTED</string>
     <string name="rewards.social.instagram_connected">INSTAGRAM CONNECTED</string>
     <string name="rewards_participate">Participate and earn now by completing your profile!</string>
+    <string name="app_name">Momspresso</string>
 </resources>

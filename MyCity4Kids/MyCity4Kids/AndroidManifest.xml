@@ -456,7 +456,7 @@
         <activity
             android:name=".ui.activity.GroupSettingsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.LeaveGroupActivity" />
+        <activity android:name=".ui.activity.LeaveGroupActivity" />q
         <activity android:name=".ui.activity.EditGroupActivity" />
         <activity
             android:name=".ui.activity.AddShortStoryActivity"

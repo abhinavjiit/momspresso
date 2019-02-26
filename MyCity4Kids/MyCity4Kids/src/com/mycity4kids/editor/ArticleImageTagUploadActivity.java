@@ -402,7 +402,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                          }
             );
         } else {
-            // Article which is published is  already saved as draft.
             ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
             articleDraftRequest.setTitle(draftObject.getTitle().trim());
             articleDraftRequest.setBody(draftObject.getBody());
@@ -454,12 +453,12 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         startActivity(intent);
                     } else {
                         if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {
-                            if(responseModel.getReason().equalsIgnoreCase("Can't update article which is under moderation !!")){
+                            if (responseModel.getReason().equalsIgnoreCase("Can't update article which is under moderation !!")) {
                                 Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
                                 intent.putExtra("shareUrl", "" + "");
                                 intent.putExtra("source", "addArticle");
                                 startActivity(intent);
-                            }else{
+                            } else {
                                 showToast(responseModel.getReason());
                             }
                         } else {
@@ -510,15 +509,15 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             if (responseData != null) {
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
-                    if (responseData.getData().get(0).getResult().getBlogTitleSlug() == null || responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+                    if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
 
-                        if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
                             Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
                             intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
                             intent.putExtra("comingFrom", "ShortStoryAndArticle");
                             startActivity(intent);
-                        } else if (responseData.getData().get(0).getResult().getEmail() != null || !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
 
                             Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
@@ -528,16 +527,16 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         }
 
 
-                    } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+                    } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
 
 
-                        if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
                             Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
                             intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
                             intent.putExtra("comingFrom", "ShortStoryAndArticle");
                             startActivity(intent);
-                        } else if (responseData.getData().get(0).getResult().getEmail() != null || !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
 
                             publishArticleRequest();
                         }

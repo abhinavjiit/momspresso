@@ -160,20 +160,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         } else {
             emailEditText.setEnabled(true);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         /*if (comingFrom == null) {
             comingFrom = "Normal";
         }*/
