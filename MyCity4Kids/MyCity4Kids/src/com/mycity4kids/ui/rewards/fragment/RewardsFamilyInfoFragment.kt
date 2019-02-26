@@ -349,6 +349,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                     layoutMotherExptectedDate.visibility = View.VISIBLE
                 } else {
                     layoutMotherExptectedDate.visibility = View.GONE
+                    editExpectedDate.setText("")
                 }
             }
         })
@@ -532,8 +533,31 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 Toast.makeText(activity, resources.getString(R.string.please_enter_a_valid) + "Expected Date", Toast.LENGTH_SHORT).show()
                 return false
             } else {
+                apiGetResponse.isExpecting = 1
                 apiGetResponse.expectedDate = DateTimeUtils.convertStringToTimestamp(editExpectedDate.text.toString())
             }
+        }else{
+            apiGetResponse.isExpecting=0
+            apiGetResponse.expectedDate=0
+        }
+
+        if(linearKidsDetail.childCount>0){
+            var kidsList = ArrayList<KidsInfoResponse>()
+            for(i in 0..linearKidsDetail.childCount){
+                var kidsInfoResponse = KidsInfoResponse()
+                if(linearKidsDetail.getChildAt(i)!=null){
+                    kidsInfoResponse.gender = if(linearKidsDetail.getChildAt(i).findViewById<Spinner>(R.id.spinnerGender).selectedItemPosition==0){
+                        0
+                    }else{
+                        1
+                    }
+                    kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString())
+                    kidsList.add(kidsInfoResponse)
+                }
+            }
+            apiGetResponse.kidsInfo=kidsList
+        }else{
+
         }
 
         apiGetResponse.latitude = 28.7041

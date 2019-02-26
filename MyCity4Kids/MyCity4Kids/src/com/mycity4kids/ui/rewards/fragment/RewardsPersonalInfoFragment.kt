@@ -1,20 +1,11 @@
 package com.mycity4kids.ui.rewards.fragment
 
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Parcelable
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v7.widget.AppCompatSpinner
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,44 +18,27 @@ import com.facebook.accountkit.ui.LoginType
 import com.facebook.accountkit.ui.ThemeUIManager
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
-import com.google.api.client.util.DateTime
 import com.google.gson.Gson
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
-import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
-import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.*
 import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
-import com.mycity4kids.models.rewardsmodels.CityDataResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
-import com.mycity4kids.ui.activity.ActivityLogin.APP_REQUEST_CODE
-import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.fragment.CityListingDialogFragment
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
-import io.reactivex.Observable
 import io.reactivex.Observer
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.internal.operators.observable.ObservableReplay.observeOn
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.aa_rate_app.view.*
-import kotlinx.android.synthetic.main.activity_write_a_review.*
-import kotlinx.android.synthetic.main.dynamic_child_view.*
-import kotlinx.android.synthetic.main.fragment_rewards_personal_info.*
-import kotlinx.android.synthetic.main.group_about_item.*
-import org.jsoup.Connection
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**editLanguage
@@ -325,7 +299,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         //var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
-            Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
             Log.e("sending json", Gson().toJson(apiGetResponse))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<SetupBlogData>> {
@@ -392,7 +365,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     }
 
     private fun fetchCityData() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        //var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
                 override fun onComplete() {

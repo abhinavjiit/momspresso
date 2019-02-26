@@ -20,8 +20,22 @@
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:text="We need this information to determine the eligibility for a compaign"
+                android:gravity="center"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/app_grey"
+                android:textSize="18sp"
+                android:layout_marginRight="20dp"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:text="LINK SOCIAL ACCOUNTS"
                 android:textAllCaps="true"
                 android:textColor="@color/app_grey"

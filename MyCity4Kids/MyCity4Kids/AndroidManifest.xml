@@ -208,7 +208,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/fb_login_protocol_scheme"
+                <data
+                    android:scheme="@string/fb_login_protocol_scheme"
                     tools:ignore="ManifestResource" />
             </intent-filter>
         </activity>
@@ -653,11 +654,11 @@
             </intent-filter>
         </receiver>
 
-         <activity android:name=".ui.rewards.activity.RewardsContainerActivity">
-             <!--<intent-filter>-->
-                 <!--<action android:name="android.intent.action.MAIN" />-->
-                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
-             <!--</intent-filter>-->
-         </activity>
+        <activity android:name=".ui.rewards.activity.RewardsContainerActivity">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
     </application>
 </manifest>

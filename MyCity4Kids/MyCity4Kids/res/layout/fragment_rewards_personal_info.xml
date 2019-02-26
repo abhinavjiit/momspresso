@@ -20,6 +20,19 @@
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:text="We need this information to get in touch with you"
+                android:textAllCaps="true"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/app_grey"
+                android:textSize="14sp"
+                app:fontName="oswald.ttf" />
+
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
                 android:text="@string/first_name"
