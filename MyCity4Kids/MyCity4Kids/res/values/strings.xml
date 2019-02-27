@@ -12,6 +12,9 @@
     <string name="write_review_prompt">What would you like to review?</string>
 
     <string name="loading_txt">Loading&#8230;</string>
+    <string name="empty_screen">Oops!! An unexpected error occurred</string>
+    <string name="please_retry">Please retry after sometime</string>
+    <string name="retry">Retry</string>
 
     <string name="subcategoryName">subCategory</string>
     <string name="location_info">To get personalized recommendations, Please select your preferred location</string>

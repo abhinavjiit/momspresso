@@ -1074,7 +1074,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
             mExoPlayerView.getPlayer().seekTo(mResumeWindow, mResumePosition);
         }
 
-        mExoPlayerView.getPlayer().prepare(mVideoSource);
+//        mExoPlayerView.getPlayer().prepare(mVideoSource);
         mExoPlayerView.getPlayer().setPlayWhenReady(true);
     }
 

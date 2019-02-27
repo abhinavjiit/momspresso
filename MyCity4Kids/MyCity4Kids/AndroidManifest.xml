@@ -547,6 +547,9 @@
         <activity
             android:name=".ui.activity.HeaderChallengeVideoPlayActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ParallelFeedActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"
