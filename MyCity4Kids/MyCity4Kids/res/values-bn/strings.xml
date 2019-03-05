@@ -580,7 +580,7 @@
     <string name="rate_us.dialog.message1">আপনি যদি মম্স্প্রেস্সো অ্যাপটি ব্যবহার করে খুশী হয়ে থাকেন, এর মান নির্ণয়ের জন্য একটু সময় বার করে নিন</string>
     <string name="rate_us.dialog.message2">আপনার সমর্থনের জন্য ধন্যবাদ !!!</string>
 
-    <string name="suggested_topic.start_writing">START WRITING</string>
+    <string name="suggested_topic.start_writing">লেখা শুরু করুন</string>
 
     <string name="no_articles_found">No articles found</string>
     <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>

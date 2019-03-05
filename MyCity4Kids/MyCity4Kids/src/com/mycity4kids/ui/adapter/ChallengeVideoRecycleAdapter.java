@@ -87,6 +87,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                             if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
                                 if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                                     holder.rootView.setVisibility(View.VISIBLE);
+                                    holder.liveTextViewVideoChallenge.setVisibility(View.VISIBLE);
                                     challengeId.add(articleDataModelsNew.getChild().get(i).getId());
                                     // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
                                     Display_Name.add(articleDataModelsNew.getChild().get(i).getDisplay_name());
@@ -116,6 +117,8 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                         if ("1".equals(articleDataModelsNew.getChild().get(j).getPublicVisibility())) {
                             if (articleDataModelsNew.getChild().get(j).getExtraData() != null) {
                                 holder.rootView.setVisibility(View.VISIBLE);
+                                holder.liveTextViewVideoChallenge.setVisibility(View.GONE);
+
                                 //if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
                                 if (position != 1) {
                                     holder.previousAndThisWeekTextView.setVisibility(View.GONE);
@@ -186,7 +189,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
         private TextView previousAndThisWeekTextView;
         private TextView yourStoryTextView;
         private LinearLayout StorytextViewLayout;
-        private TextView useThePictureTextView, noChallengeAddedText;
+        private TextView useThePictureTextView, noChallengeAddedText, liveTextViewVideoChallenge;
 
 
         public ChallengeViewHolder(View itemView, ChallengeVideoRecycleAdapter.RecyclerViewClickListener recyclerViewClickListener) {
@@ -205,7 +208,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
             yourStoryTextView = (TextView) itemView.findViewById(R.id.your_100_word_story_text);
             StorytextViewLayout = (LinearLayout) itemView.findViewById(R.id.whats_your_story_text_linear_layout);
             useThePictureTextView = (TextView) itemView.findViewById(R.id.use_the_picture_textView);
-
+            liveTextViewVideoChallenge = (TextView) itemView.findViewById(R.id.liveTextViewVideoChallenge);
             getStartedTextView.setOnClickListener(this);
             mainView.setOnClickListener(this);
 

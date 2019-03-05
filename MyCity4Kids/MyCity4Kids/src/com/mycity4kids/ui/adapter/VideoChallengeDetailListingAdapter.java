@@ -55,13 +55,15 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
     private Context mContext;
-    private Topics topic;
+    /*
+        private Topics topic;
+    */
     private LayoutInflater mInflator;
     ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
     private String selectedId;
-    private String selected_Name;
-    private String selectedActiveUrl;
-    private String selectedStreamUrl;
+    /* private String selected_Name;
+     private String selectedActiveUrl;
+     private String selectedStreamUrl;*/
     private final float density;
     private ArrayList<VlogsListingAndDetailResult> mArticleListData;
     public SimpleExoPlayer player;
@@ -76,19 +78,17 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     public boolean isPaused = false;
 
 
-    public VideoChallengeDetailListingAdapter(Context pContext, String selected_Name, String selectedActiveUrl, String selectedId, Topics topic, String selectedStreamUrl) {
+    public VideoChallengeDetailListingAdapter(Context pContext, String selectedId) {
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
-        this.topic = topic;
-        this.selected_Name = selected_Name;
-        this.selectedActiveUrl = selectedActiveUrl;
+
         this.selectedId = selectedId;
-        this.selectedStreamUrl = selectedStreamUrl;
-        intiExoPlayer();
+
+        //  intiExoPlayer();
     }
 
-    private void intiExoPlayer() {
+  /*  private void intiExoPlayer() {
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
@@ -101,7 +101,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
         player.prepare(mVideoSource);
 
-    }
+    }*/
 
 
     public void setListData(ArrayList<VlogsListingAndDetailResult> mParentingLists) {
@@ -116,16 +116,16 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         if (position != 0 && position % 5 == 0) {
             return 0;
-        } else if (position == 0) {
+        }/* else if (position == 0) {
             return 2;
-        } else {
+        }*/ else {
             return 1;
         }
     }
 
     @Override
     public int getCount() {
-        return articleDataModelsNew == null ? 0 : articleDataModelsNew.size() + 1;
+        return articleDataModelsNew == null ? 0 : articleDataModelsNew.size() ;
     }
 
     @Override
@@ -141,7 +141,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return 3;
+        return 2;
     }
 
     @Override
@@ -161,18 +161,18 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 videoChallengeHeaderView = (VideoChallengeHeaderView) view.getTag();
             }
 
-            videoChallengeHeaderView.mExoPlayerView.setPlayer(player);
-            player.setPlayWhenReady(true);
-            videoChallengeHeaderView.challengeNameText.setText(selected_Name);
+           /* videoChallengeHeaderView.mExoPlayerView.setPlayer(player);
+            player.setPlayWhenReady(true);*/
+            // videoChallengeHeaderView.challengeNameText.setText(selected_Name);
             videoChallengeHeaderView.submitButtonVideoChallenge.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, ChooseVideoCategoryActivity.class);
-                    if (selected_Name != null && !selected_Name.isEmpty() && selectedId != null && !selectedId.isEmpty()) {
+                    /*if (selected_Name != null && !selected_Name.isEmpty() && selectedId != null && !selectedId.isEmpty()) {
                         intent.putExtra("selectedId", selectedId);
                         intent.putExtra("selectedName", selected_Name);
                         intent.putExtra("comingFrom", "Challenge");
-                    }
+                    }*/
                     mContext.startActivity(intent);
                 }
             });
@@ -202,13 +202,13 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 addVlogViewHolder = (AddVlogViewHolderChallenge) view.getTag();
             }
 
-            addVlogViewHolder.txvArticleTitle.setText(articleDataModelsNew.get(position - 1).getTitle());
+            addVlogViewHolder.txvArticleTitle.setText(articleDataModelsNew.get(position ).getTitle());
             addVlogViewHolder.viewCountTextView.setVisibility(View.GONE);
             addVlogViewHolder.commentCountTextView.setVisibility(View.GONE);
             addVlogViewHolder.recommendCountTextView.setVisibility(View.GONE);
 
             try {
-                String userName = articleDataModelsNew.get(position - 1).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position - 1).getAuthor().getLastName();
+                String userName = articleDataModelsNew.get(position ).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position ).getAuthor().getLastName();
                 if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
                     addVlogViewHolder.txvAuthorName.setText("NA");
                 } else {
@@ -218,7 +218,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 addVlogViewHolder.txvAuthorName.setText("NA");
             }
             try {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position - 1).getThumbnail())
+                Picasso.with(mContext).load(articleDataModelsNew.get(position ).getThumbnail())
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(addVlogViewHolder.articleImageView);
             } catch (Exception e) {
                 addVlogViewHolder.articleImageView.setImageResource(R.drawable.default_article);
@@ -228,7 +228,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-                    MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, topic.getDisplay_name());
+                    //  MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, topic.getDisplay_name());
                     Intent intent = new Intent(mContext, ChooseVideoCategoryActivity.class);
                     mContext.startActivity(intent);
                 }
@@ -251,13 +251,13 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             } else {
                 holder = (ViewHolderChallenge) view.getTag();
             }
-            holder.txvArticleTitle.setText(articleDataModelsNew.get(position - 1).getTitle());
+            holder.txvArticleTitle.setText(articleDataModelsNew.get(position ).getTitle());
             holder.viewCountTextView.setVisibility(View.GONE);
             holder.commentCountTextView.setVisibility(View.GONE);
             holder.recommendCountTextView.setVisibility(View.GONE);
 
             try {
-                String userName = articleDataModelsNew.get(position - 1).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position - 1).getAuthor().getLastName();
+                String userName = articleDataModelsNew.get(position ).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position ).getAuthor().getLastName();
                 if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
                     holder.txvAuthorName.setText("NA");
                 } else {
@@ -267,7 +267,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 holder.txvAuthorName.setText("NA");
             }
             try {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position - 1).getThumbnail())
+                Picasso.with(mContext).load(articleDataModelsNew.get(position ).getThumbnail())
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
             } catch (Exception e) {
                 holder.articleImageView.setImageResource(R.drawable.default_article);
@@ -275,7 +275,6 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
             return view;
         }
-
 
 
     }

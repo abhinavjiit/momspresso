@@ -10,12 +10,16 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -29,9 +33,12 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
+import com.mycity4kids.ui.videochallengenewui.Adapter.VideoChallengeTopicsAdapter;
+import com.mycity4kids.ui.videochallengenewui.ExpandableHeightGridView;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.PermissionUtil;
@@ -59,46 +66,69 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
     private ArrayList<ExploreTopicsModel> mainTopicsList;
-
+    /*  String[] mobileArray = {"Android", "IPhone", "WindowsMobile", "Blackberry",
+              "WebOS", "Ubuntu", "Windows7", "Max OS X"};*/
     private ParentTopicsGridAdapter adapter;
-    private GridView gridview;
+    private ExpandableHeightGridView gridview;
+    private RecyclerView horizontalRecyclerViewForVideoChallenge;
     private Toolbar toolbar;
-    private View rootLayout;
+    private LinearLayout rootLayout;
     private String categoryId;
     private String duration;
     private String challengeId, challengeName, comingFrom;
+    private Topics videoChallengeTopics;
+    private TextView challengesTextView, categoriesTextView;
+    private String jasonMyObject;
+    VideoChallengeTopicsAdapter videoChallengeTopicsAdapter;
+    private LinearLayoutManager linearLayoutManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_video_category_activity);
-        rootLayout = findViewById(R.id.rootLayout);
+        rootLayout = (LinearLayout) findViewById(R.id.rootLayout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        gridview = (GridView) findViewById(R.id.gridview);
-
+        gridview = (ExpandableHeightGridView) findViewById(R.id.gridview);
+        horizontalRecyclerViewForVideoChallenge = (RecyclerView) findViewById(R.id.horizontalRecyclerViewForVideoChallenge);
+        challengesTextView = (TextView) findViewById(R.id.challengesTextView);
+        categoriesTextView = (TextView) findViewById(R.id.categoriesTextView);
+        /*horizontalRecyclerViewForVideoChallenge.setExpanded(true);*/
+        gridview.setExpanded(true);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Intent intent = getIntent();
         comingFrom = intent.getStringExtra("comingFrom");
-        if (comingFrom == null || comingFrom.isEmpty()) {
+        if (StringUtils.isNullOrEmpty(comingFrom)) {
             comingFrom = "notFromChallenge";
         }
+
         if (comingFrom.equals("Challenge")) {
             challengeId = intent.getStringExtra("selectedId");
             challengeName = intent.getStringExtra("selectedName");
+        } else if (comingFrom.equals("createDashboardIcon")) {
+
+            //        Bundle extras = getIntent().getExtras();
+            if (intent != null) {
+                jasonMyObject = intent.getStringExtra("currentChallengesTopic");
+
+            }
+            videoChallengeTopics = new Gson().fromJson(jasonMyObject, Topics.class);
+            categoriesTextView.setVisibility(View.VISIBLE);
+            challengesTextView.setVisibility(View.VISIBLE);
+            horizontalRecyclerViewForVideoChallenge.setVisibility(View.VISIBLE);
+        } else {
+            comingFrom = "notFromChallenge";
         }
 
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        horizontalRecyclerViewForVideoChallenge.setLayoutManager(linearLayoutManager);
+        videoChallengeTopicsAdapter = new VideoChallengeTopicsAdapter(this);
+        horizontalRecyclerViewForVideoChallenge.setAdapter(videoChallengeTopicsAdapter);
+        videoChallengeTopicsAdapter.setData(videoChallengeTopics);
 
-       /* if (intent != null) {
-            challengeId = intent.getStringExtra("selectedId");
-            challengeName = intent.getStringExtra("selectedName");
-            comingFrom = intent.getStringExtra("comingFrom");
-        } else {
-            if (comingFrom == null || comingFrom.isEmpty())
-                comingFrom = "notFromChallenge";
-        }*/
+
         try {
             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -108,6 +138,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
 
             adapter = new ParentTopicsGridAdapter(null);
             gridview.setAdapter(adapter);
+            gridview.setExpanded(true);
             adapter.setDatalist(mainTopicsList);
 //            adapter.setVideoFlag();
         } catch (FileNotFoundException e) {

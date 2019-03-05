@@ -1,17 +1,23 @@
-package com.mycity4kids.ui.activity;
+package com.mycity4kids.ui.videochallengenewui.Fragment;
 
 import android.accounts.NetworkErrorException;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v13.view.ViewCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -28,21 +34,16 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.gson.Gson;
-import com.kelltontech.network.Response;
-import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
+import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.widget.CustomFontTextView;
@@ -56,10 +57,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class VideoChallengeDetailListingActivity extends BaseActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class VideoChallengeListing extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     private static final int RECOVERY_REQUEST = 1;
 
     private RelativeLayout mLodingView;
+    private ProgressDialog mProgressDialog;
+
     private ObservableScrollView mScrollView;
     private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
     private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
@@ -117,7 +120,7 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
     private String selectedActiveUrl;
     private String selectedStreamUrl;
     private int pos;
-    private Topics topic;
+    private com.mycity4kids.models.Topics topic;
 
     private String parentName, parentId;
     private String ActiveUrl;
@@ -146,77 +149,27 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
     private String Topics;
     private String jsonMyObject;
 
-
-    ;
-
+    @SuppressLint("ClickableViewAccessibility")
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.video_challenge_detail_listing);
-        rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
-        /* writeAtricleCell = (RelativeLayout) findViewById(R.id.writeArticleCell);*/
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        listView = (ListView) findViewById(R.id.vlogsListView);
-        toolbarTitleText = (TextView) findViewById(R.id.toolbarTitleTextView);
-        mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
-        noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-        fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);
-        recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
-        fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
-        funnyvideosshimmer = (ShimmerFrameLayout) findViewById(R.id.shimmer_funny_videos_article);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.video_challenge_detail_listing, container, false);
+        listView = (ListView) view.findViewById(R.id.vlogsListView);
+
+        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
+        fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
+        popularSortFAB = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
+        recentSortFAB = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
+        fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
+        funnyvideosshimmer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_funny_videos_article);
+
         frameLayout.getBackground().setAlpha(0);
-        Intent intent = getIntent();
 
-        setSupportActionBar(mToolbar);
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setDisplayShowHomeEnabled(true);
+        selectedId = getArguments().getString("selectedId");
 
-        if (savedInstanceState != null) {
-            mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
-            mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
-            /* mExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);*/
-        }
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            jsonMyObject = extras.getString("Topic");
-        }
-        topic = new Gson().fromJson(jsonMyObject, Topics.class);
-
-
-        pos = intent.getIntExtra("position", 0);
-        challengeId = intent.getStringArrayListExtra("challenge");
-        Display_Name = intent.getStringArrayListExtra("Display_Name");
-        activeUrl = intent.getStringArrayListExtra("StringUrl");
-        parentId = intent.getStringExtra("parentId");
-        parentName = intent.getStringExtra("topics");
-        activeStreamUrl = intent.getStringArrayListExtra("StreamUrl");
-
-        if (challengeId != null && challengeId.size() != 0) {
-            selectedId = challengeId.get(pos);
-        } else {
-            ToastUtils.showToast(this, "server problem,please refresh your app");
-        }
-        if (activeUrl != null && activeUrl.size() != 0) {
-            selectedActiveUrl = activeUrl.get(pos);
-        } else {
-            ToastUtils.showToast(this, "server problem,please refresh your app");
-        }
-        if (activeStreamUrl != null && activeStreamUrl.size() != 0) {
-            selectedStreamUrl = activeStreamUrl.get(pos);
-        } else {
-            ToastUtils.showToast(this, "server problem,please refresh your app");
-        }
-        if (Display_Name != null && Display_Name.size() != 0) {
-            selected_Name = Display_Name.get(pos);
-        } else {
-            ToastUtils.showToast(this, "server problem,please refresh your app");
-        }
-
-        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
@@ -251,11 +204,35 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
             }
         });
 
+        if (Build.VERSION.SDK_INT >= 21) {
+            ViewCompat.setNestedScrollingEnabled(listView, true);
+        } else {
+            listView.setOnTouchListener((v, event) -> {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            });
+        }
+
+
         articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
         nextPageNumber = 1;
         hitArticleListingApi();
 
-        articlesListingAdapter = new VideoChallengeDetailListingAdapter(this,  selectedId);
+        articlesListingAdapter = new VideoChallengeDetailListingAdapter(getActivity(), selectedId);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -272,8 +249,8 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem != 0) {
 
-                    articlesListingAdapter.player.setPlayWhenReady(false);
-                    articlesListingAdapter.isPaused = true;
+                  /*  articlesListingAdapter.player.setPlayWhenReady(false);
+                    articlesListingAdapter.isPaused = true;*/
                 }/* else {
 
                     articlesListingAdapter.player.setPlayWhenReady(true);
@@ -291,42 +268,32 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i != 0) {
-                    Intent intent = new Intent(VideoChallengeDetailListingActivity.this, MomsVlogDetailActivity.class);
-                    if (adapterView.getAdapter() instanceof VideoChallengeDetailListingAdapter) {
-                        MixPanelUtils.pushMomVlogClickEvent(mixpanel, i - 1, "" + videoCategory);
-                        VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i - 1);
-                        intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
-                        intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
-                        intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
-                        intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
-                        intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-                        intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
-                        startActivity(intent);
-                    }
-                } else {
-                    if (!articlesListingAdapter.isPaused) {
-                        articlesListingAdapter.player.setPlayWhenReady(true);
-                        articlesListingAdapter.isPaused = false;
-                    }
-                    if (articlesListingAdapter.isPaused) {
-                        articlesListingAdapter.player.setPlayWhenReady(false);
-                        articlesListingAdapter.isPaused = true;
-                    }
 
+                Intent intent = new Intent(getActivity(), MomsVlogDetailActivity.class);
+                if (adapterView.getAdapter() instanceof VideoChallengeDetailListingAdapter) {
+                    MixPanelUtils.pushMomVlogClickEvent(mixpanel, i, "" + videoCategory);
+                    VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
+                    intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
+                    intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
+                    intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                    intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
+                    startActivity(intent);
 
                 }
 
             }
         });
-        //initExoPlayer();
 
+
+        return view;
     }
 
 
     void hitArticleListingApi() {
-        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
             return;
         }
@@ -393,6 +360,7 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
         }
     };
 
+
     private void processResponse(VlogsListingResponse responseData) {
         ArrayList<VlogsListingAndDetailResult> dataList = responseData.getData().get(0).getResult();
         if (dataList == null || dataList.size() == 0) {
@@ -423,10 +391,17 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
         }
     }
 
-
     @Override
-    protected void updateUi(Response response) {
+    public void onRefresh() {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            removeProgressDialog();
+//            showToast(getString(R.string.error_network));
+            return;
+        }
 
+        isLastPageReached = false;
+        nextPageNumber = 1;
+        hitArticleListingApi();
     }
 
     @Override
@@ -454,85 +429,20 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
                 nextPageNumber = 1;
                 hitArticleListingApi();
                 break;
-            /*case R.id.writeArticleCell:
-                Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
-                if (selected_Name != null && !selected_Name.isEmpty() && selectedId != null && !selectedId.isEmpty()) {
-                    intent.putExtra("selectedId", selectedId);
-                    intent.putExtra("selectedName", selected_Name);
-                    intent.putExtra("comingFrom", "Challenge");
-                    startActivity(intent);
-                }*/
 
 
         }
 
     }
 
-    @Override
-    public void onRefresh() {
-        if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            removeProgressDialog();
-//            showToast(getString(R.string.error_network));
-            return;
+    public void removeProgressDialog() {
+        try {
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        isLastPageReached = false;
-        nextPageNumber = 1;
-        hitArticleListingApi();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        funnyvideosshimmer.startShimmerAnimation();
-
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        funnyvideosshimmer.stopShimmerAnimation();
-        if (articlesListingAdapter.player != null) {
-            articlesListingAdapter.player.setPlayWhenReady(false);
-
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (articlesListingAdapter.player != null) {
-            articlesListingAdapter.player.setPlayWhenReady(false);
-
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (articlesListingAdapter.player != null) {
-            articlesListingAdapter.player.setPlayWhenReady(false);
-
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return true;
-    }
-
-
 }

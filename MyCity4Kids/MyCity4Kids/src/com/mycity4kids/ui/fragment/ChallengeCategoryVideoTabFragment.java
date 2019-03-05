@@ -17,8 +17,8 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.VideoChallengeDetailListingActivity;
 import com.mycity4kids.ui.adapter.ChallengeVideoRecycleAdapter;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 
 import java.util.ArrayList;
 
@@ -34,15 +34,21 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
     private ArrayList<String> activeImageUrl = new ArrayList<String>();
     private ArrayList<String> activeStreamUrl = new ArrayList<String>();
     private ChallengeVideoRecycleAdapter recyclerAdapter;
+    private String jsonMyObject;
 
     @Nullable
     @Override
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.challenge_tab_fragment, container, false);
         if (getArguments() != null) {
-            currentSubTopic = getArguments().getParcelable("currentSubTopic");
+           /* jsonMyObject = getArguments().getString("currentSubTopic");
+            currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);*/
+               currentSubTopic = getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;
         }
+
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_challenge);
         llm = new LinearLayoutManager(getActivity());
         recyclerAdapter = new ChallengeVideoRecycleAdapter(this, getActivity(), challengeId, Display_Name, activeImageUrl, activeStreamUrl);
@@ -75,7 +81,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
          /*       Bundle bundle = new Bundle();
                 bundle.putParcelable("topic", articledatamodal);*/
 
-                Intent intent = new Intent(getActivity(), VideoChallengeDetailListingActivity.class);
+                Intent intent = new Intent(getActivity(), NewVideoChallengeActivity.class);
                 intent.putExtra("Display_Name", Display_Name);
                 intent.putExtra("challenge", challengeId);
                 intent.putExtra("position", position);

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -161,6 +162,9 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
     String streamUrl = "https://www.momspresso.com/new-videos/v1/test1/playlist.m3u8";
     private String taggedCategories;
     private MixpanelAPI mixpanel;
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,6 +230,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
         bookmarkArticleTextView.setOnClickListener(this);
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
 
         likeArticleTextView.setEnabled(false);
         bookmarkArticleTextView.setEnabled(false);

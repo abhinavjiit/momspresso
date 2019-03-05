@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -247,11 +248,17 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     ArticleDetailResult responseData;
     private ImageView badge;
 
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mInflater = inflater;
         fragmentView = inflater.inflate(R.layout.article_details_fragment, container, false);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
         userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
 
         deepLinkURL = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);
@@ -281,6 +288,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             badge = (ImageView) fragmentView.findViewById(R.id.badge);
             mWebChromeClient = new MyWebChromeClient();
             mWebView.setWebChromeClient(mWebChromeClient);
+
+            facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
 
             if ((AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(getActivity())))) {
                 mWebView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -487,7 +496,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         return fragmentView;
     }
 
-    private void setSponsoredDataToView(){
+    private void setSponsoredDataToView() {
 
     }
 
@@ -1845,16 +1854,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         if (var.size() > 0) {
                             for (Map.Entry<String, String> entry : var.entrySet()) {
                                 if (topic.getId().equalsIgnoreCase(entry.getKey())) {
-                                    if(!topic.getExtraData().isEmpty() && topic.getExtraData().get(0)!=null && topic.getExtraData().get(0).getCategoryTag()!=null){
-                                        if(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()!=null && !topic.getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()){
+                                    if (!topic.getExtraData().isEmpty() && topic.getExtraData().get(0) != null && topic.getExtraData().get(0).getCategoryTag() != null) {
+                                        if (topic.getExtraData().get(0).getCategoryTag().getCategoryImage() != null && !topic.getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
                                             sponsoredViewContainer.setVisibility(View.VISIBLE);
                                             Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()).into(sponsoredImage);
                                             sponsoredTextView.setText("this story is sponsored by ");
-                                        }else{
+                                        } else {
                                             sponsoredViewContainer.setVisibility(View.GONE);
                                         }
 
-                                        if(topic.getExtraData().get(0).getCategoryTag().getCategoryBadge()!=null && !topic.getExtraData().get(0).getCategoryTag().getCategoryBadge().isEmpty()){
+                                        if (topic.getExtraData().get(0).getCategoryTag().getCategoryBadge() != null && !topic.getExtraData().get(0).getCategoryTag().getCategoryBadge().isEmpty()) {
                                             badge.setVisibility(View.VISIBLE);
                                             Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryBadge()).into(badge);
                                         } else {
@@ -1870,7 +1879,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     }
 
-                    if(flag){
+                    if (flag) {
                         break;
                     }
                 }

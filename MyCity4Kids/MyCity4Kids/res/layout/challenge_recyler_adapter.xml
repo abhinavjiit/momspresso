@@ -22,8 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:paddingBottom="7dp"
         android:paddingTop="7dp"
+        android:paddingBottom="7dp"
         android:text="adssasa kjsdjk kjdsb"
         android:textColor="@color/greytxt_color"
         android:textSize="20sp"
@@ -39,7 +39,7 @@
         android:layout_below="@id/this_week_previous_week_textView"
         android:layout_margin="10dp"
         android:background="@drawable/short_story_border_bg"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <RelativeLayout
             android:id="@+id/mainView"
@@ -59,24 +59,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="2"
-                    android:visibility="gone"
-                    android:paddingBottom="14dp"
                     android:paddingLeft="14dp"
-                    android:paddingRight="14dp"
                     android:paddingTop="14dp"
+                    android:paddingRight="14dp"
+                    android:paddingBottom="14dp"
                     android:text=""
                     android:textColor="@color/short_story.light_black_color"
                     android:textSize="18sp"
+                    android:visibility="gone"
                     app:fontName="georgia.ttf" />
 
                 <View
                     android:id="@+id/TittleText_Line"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:visibility="gone"
                     android:layout_below="@+id/storyTitleTextView"
                     android:layout_marginLeft="14dp"
-                    android:background="@color/common_underline" />
+                    android:background="@color/common_underline"
+                    android:visibility="gone" />
 
 
             </RelativeLayout>
@@ -107,8 +107,8 @@
                     android:background="@color/app_blue"
                     android:gravity="center"
                     android:paddingLeft="14dp"
-                    android:paddingRight="14dp"
                     android:paddingTop="14dp"
+                    android:paddingRight="14dp"
                     android:text="RAIN"
                     android:textColor="@color/white"
                     android:textSize="50dp"
@@ -151,12 +151,35 @@
                 <ImageView
                     android:id="@+id/imageBody"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="200dp"
                     android:layout_below="@id/whats_your_story_text_linear_layout"
                     android:adjustViewBounds="true"
                     android:background="@color/white"
+                    android:scaleType="fitXY"
                     android:src="@drawable/groups_generic"
                     android:visibility="visible" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/liveTextViewVideoChallenge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/whats_your_story_text_linear_layout"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginTop="7dp"
+                    android:background="@drawable/border_live_text_on_image_video_challenge"
+                    android:elevation="4dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="3dp"
+                    android:text="LIVE"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    app:fontName="oswald.ttf" />
+
+
             </RelativeLayout>
 
             <com.mycity4kids.widget.CustomFontTextView

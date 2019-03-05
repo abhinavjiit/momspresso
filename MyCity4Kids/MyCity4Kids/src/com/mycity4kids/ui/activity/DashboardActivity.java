@@ -154,6 +154,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<Topics> subTopicsList;
     public boolean filter = false;
     Tracker t;
+    Topics videoChallengeTopics;
     private String TAG = "PhoneDetails";
     private String deepLinkUrl;
     private String mToolbarTitle = "";
@@ -209,6 +210,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
     }
 
     private Bundle extras;
@@ -1659,7 +1661,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.videoContainer: {
                 hideCreateContentView();
-                chooseLayoutVideo.setVisibility(View.VISIBLE);
+                mDrawerLayout.closeDrawers();
+                if (videoChallengeTopics == null) {
+                    findActiveVideoChallenge();
+                } else {
+                    MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                    Intent cityIntent = new Intent(this, ChooseVideoCategoryActivity.class);
+                    cityIntent.putExtra("comingFrom", "createDashboardIcon");
+                    cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
+                    //   cityIntent.putExtra("currentChallengesTopic", videoChallengeTopics);*/
+                    startActivity(cityIntent);
+                }
+                //  chooseLayoutVideo.setVisibility(View.VISIBLE);
                /* MixPanelUtils.pushAddMomVlogClickEvent(mMixpanel, "BottomSheet");
                 Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
                 startActivity(intent);*/
@@ -1830,7 +1843,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 if (num_of_categorys != 0) {
                     for (int j = 0; j < num_of_categorys; j++) {
                         if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
-                            num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+
+                            videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+                          /*  num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
                             for (int k = num_of_challeneges - 1; k >= 0; k--) {
                                 if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
                                     if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
@@ -1843,7 +1858,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                         }
                                     }
                                 }
-                            }
+                            }*/
                         }
                     }
                 }
@@ -1868,7 +1883,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (num_of_categorys != 0) {
                         for (int j = 0; j < num_of_categorys; j++) {
                             if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
-                                num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                                videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+
+                               /* num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
                                 for (int k = num_of_challeneges - 1; k >= 0; k--) {
                                     if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
                                         if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
@@ -1881,7 +1898,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                             }
                                         }
                                     }
-                                }
+                                }*/
                             }
                         }
                     }
@@ -1919,7 +1936,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 if (num_of_categorys != 0) {
                                     for (int j = 0; j < num_of_categorys; j++) {
                                         if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.VIDEO_CHALLENGE_ID)) {
-                                            num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                                            videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+
+                                           /* num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
                                             for (int k = num_of_challeneges - 1; k >= 0; k--) {
                                                 if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
                                                     if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
@@ -1932,7 +1951,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                                         }
                                                     }
                                                 }
-                                            }
+                                            }*/
                                         }
                                     }
                                 }
@@ -1943,6 +1962,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
                     }
                 }
+
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Crashlytics.logException(t);
