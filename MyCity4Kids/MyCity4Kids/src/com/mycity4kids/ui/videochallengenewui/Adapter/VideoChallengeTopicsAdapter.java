@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
@@ -19,16 +18,26 @@ import java.util.ArrayList;
 
 public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChallengeTopicsAdapter.ViewHolder> {
 
+    private RecyclerViewClickListener recyclerViewClickListener;
     private Context mContext;
     private int n = 1;
     private int m;
     int count = 0;
     private LayoutInflater mInflator;
     private Topics challengeTopics;
+    private ArrayList<String> challengeId;
+    private ArrayList<String> Display_Name;
+    private ArrayList<String> activeImageUrl;
+    private ArrayList<String> activeStreamUrl;
 
-    public VideoChallengeTopicsAdapter(Context mContext) {
+    public VideoChallengeTopicsAdapter(Context mContext, RecyclerViewClickListener recyclerViewClickListener, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl) {
+        this.recyclerViewClickListener = recyclerViewClickListener;
         this.mContext = mContext;
         mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.challengeId = challengeId;
+        this.activeImageUrl = activeImageUrl;
+        this.activeStreamUrl = activeStreamUrl;
+        this.Display_Name = Display_Name;
         setHasStableIds(true);
 
     }
@@ -37,7 +46,7 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder = null;
         View view = (View) mInflator.inflate(R.layout.horizontal_recycler_view_video_challenge, parent, false);
-        viewHolder = new ViewHolder(view);
+        viewHolder = new ViewHolder(view, recyclerViewClickListener);
 
         return viewHolder;
     }
@@ -57,9 +66,9 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
                             if ("1".equals(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
 
                                 holder.liveTextViewVideoChallenge.setVisibility(View.VISIBLE);
-                                //    challengeId.add(articleDataModelsNew.getChild().get(i).getId());
+                                challengeId.add(challengeTopics.getChild().get(i).getId());
                                 // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
-                                //    Display_Name.add(articleDataModelsNew.getChild().get(i).getDisplay_name());
+                                Display_Name.add(challengeTopics.getChild().get(i).getDisplay_name());
                                 //   holder.storyTitleTextView.setVisibility(View.GONE);
                                 //    holder.titleTextUnderLine.setVisibility(View.GONE);
                                 //if (3 == (articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getType())) {
@@ -68,8 +77,8 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
                                     //    Glide.with(mContext).load(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.cureentChallengesImage);
                                     Picasso.with(mContext).load(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                             .fit().into(holder.cureentChallengesImage);
-                                    // activeImageUrl.add(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl());
-                                    //activeStreamUrl.add(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getVideoUrl());
+                                    activeImageUrl.add(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl());
+                                    activeStreamUrl.add(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getVideoUrl());
                                 } catch (Exception e) {
                                     holder.cureentChallengesImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
                                 }
@@ -97,8 +106,8 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
                                 holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                                 holder.previousAndThisWeekTextView.setText(R.string.previous_week_challenge);
                             }*/
-                            //challengeId.add(articleDataModelsNew.getChild().get(j).getId());
-                            //Display_Name.add(articleDataModelsNew.getChild().get(j).getDisplay_name());
+                            challengeId.add(challengeTopics.getChild().get(j).getId());
+                            Display_Name.add(challengeTopics.getChild().get(j).getDisplay_name());
                             // holder.storyTitleTextView.setText(R.string.previous_week_challenge);
                           /*  holder.storyTitleTextView.setVisibility(View.GONE);
                             holder.titleTextUnderLine.setVisibility(View.GONE);*/
@@ -109,8 +118,8 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
                                 //  Glide.with(mContext).load(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.cureentChallengesImage);
                                 Picasso.with(mContext).load(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                         .fit().into(holder.cureentChallengesImage);
-                                //    activeImageUrl.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl());
-                                //   activeStreamUrl.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getVideoUrl());
+                                activeImageUrl.add(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl());
+                                activeStreamUrl.add(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getVideoUrl());
                             } catch (Exception e) {
                                 holder.cureentChallengesImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
                             }
@@ -158,14 +167,27 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView cureentChallengesImage;
         TextView liveTextViewVideoChallenge;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, RecyclerViewClickListener recyclerViewClickListener) {
             super(itemView);
             cureentChallengesImage = (ImageView) itemView.findViewById(R.id.tagImageView);
             liveTextViewVideoChallenge = (TextView) itemView.findViewById(R.id.liveTextViewVideoChallenge);
+            cureentChallengesImage.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, challengeTopics, activeImageUrl, activeStreamUrl);
+
+        }
+    }
+
+
+    public interface RecyclerViewClickListener {
+        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl);
+
     }
 }

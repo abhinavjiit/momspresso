@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +38,7 @@ import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.videochallengenewui.Adapter.VideoChallengeTopicsAdapter;
 import com.mycity4kids.ui.videochallengenewui.ExpandableHeightGridView;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.PermissionUtil;
@@ -57,10 +57,11 @@ import retrofit2.Retrofit;
  * Created by hemant on 30/10/18.
  */
 
-public class ChooseVideoCategoryActivity extends BaseActivity {
+public class ChooseVideoCategoryActivity extends BaseActivity implements View.OnClickListener, VideoChallengeTopicsAdapter.RecyclerViewClickListener {
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
+
 
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
@@ -77,10 +78,15 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
     private String duration;
     private String challengeId, challengeName, comingFrom;
     private Topics videoChallengeTopics;
+    private Topics articledatamodelsnew;
     private TextView challengesTextView, categoriesTextView;
     private String jasonMyObject;
     VideoChallengeTopicsAdapter videoChallengeTopicsAdapter;
     private LinearLayoutManager linearLayoutManager;
+    private ArrayList<String> challenge_Id = new ArrayList<String>();
+    private ArrayList<String> Display_Name = new ArrayList<String>();
+    private ArrayList<String> activeImageUrl = new ArrayList<String>();
+    private ArrayList<String> activeStreamUrl = new ArrayList<String>();
 
 
     @Override
@@ -118,15 +124,14 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
             categoriesTextView.setVisibility(View.VISIBLE);
             challengesTextView.setVisibility(View.VISIBLE);
             horizontalRecyclerViewForVideoChallenge.setVisibility(View.VISIBLE);
+            linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            horizontalRecyclerViewForVideoChallenge.setLayoutManager(linearLayoutManager);
+            videoChallengeTopicsAdapter = new VideoChallengeTopicsAdapter(this, this, challenge_Id, Display_Name, activeImageUrl, activeStreamUrl);
+            horizontalRecyclerViewForVideoChallenge.setAdapter(videoChallengeTopicsAdapter);
+            videoChallengeTopicsAdapter.setData(videoChallengeTopics);
         } else {
             comingFrom = "notFromChallenge";
         }
-
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        horizontalRecyclerViewForVideoChallenge.setLayoutManager(linearLayoutManager);
-        videoChallengeTopicsAdapter = new VideoChallengeTopicsAdapter(this);
-        horizontalRecyclerViewForVideoChallenge.setAdapter(videoChallengeTopicsAdapter);
-        videoChallengeTopicsAdapter.setData(videoChallengeTopics);
 
 
         try {
@@ -385,5 +390,34 @@ public class ChooseVideoCategoryActivity extends BaseActivity {
        /* } else {
             showToast(getString(R.string.choose_mp4_file));
         }*/
+    }
+
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    @Override
+    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl) {
+
+
+        switch (view.getId()) {
+            case R.id.tagImageView:
+            case R.id.topicContainer:
+         /*       Bundle bundle = new Bundle();
+                bundle.putParcelable("topic", articledatamodal);*/
+
+                Intent intent = new Intent(this, NewVideoChallengeActivity.class);
+                intent.putExtra("Display_Name", Display_Name);
+                intent.putExtra("challenge", challengeId);
+                intent.putExtra("position", position);
+                intent.putExtra("StreamUrl", activeStreamUrl);
+                intent.putExtra("topics", articledatamodelsnew.getParentName());
+                intent.putExtra("parentId", articledatamodelsnew.getParentId());
+                intent.putExtra("StringUrl", activeImageUrl);
+                intent.putExtra("Topic", new Gson().toJson(articledatamodelsnew));
+
+                startActivity(intent);
+        }
     }
 }

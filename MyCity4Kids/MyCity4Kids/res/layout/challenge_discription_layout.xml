@@ -59,7 +59,7 @@
                 android:layout_marginTop="10dp"
                 android:text="Thank you for your interest in this question. Because it has attracted low-quality or spam answers that had to be removed, posting an answer now requires."
                 android:textColor="@color/app_grey"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:fontName="oswald.ttf" />
 
 
