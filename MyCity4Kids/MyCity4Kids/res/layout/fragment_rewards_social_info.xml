@@ -20,9 +20,23 @@
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/rewards_social_header"
+                android:gravity="center"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:text="LINK SOCIAL ACCOUNTS"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/app_grey"
+                android:textSize="18sp"
+                android:layout_marginRight="20dp"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/rewards_link_social"
                 android:textAllCaps="true"
                 android:textColor="@color/app_grey"
                 android:textSize="18sp"
@@ -407,6 +421,8 @@
                 android:id="@+id/textSubmit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
@@ -417,6 +433,7 @@
                 android:paddingRight="35dp"
                 android:paddingBottom="15dp"
                 android:text="SUBMIT"
+                android:layout_marginBottom="10dp"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>

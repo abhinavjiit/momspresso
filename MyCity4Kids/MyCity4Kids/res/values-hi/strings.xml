@@ -895,4 +895,25 @@
     <string name="rewards_save_continue">"सेव करें और आगे बढ़ें "</string>
     <string name="momspresso_rewards">"मॉम्सप्रेस्सो ईनामी योजना "</string>
     <string name="rewards_participate">अपने प्रोफाइल को अभी भरें और ईनामी योजना में हिस्सा ले कर लाभ कमाएं !</string>
+    <string name="save_continue">"सेव करें और आगे बढ़ें "</string>
+    <string name="rewards_personal_header">हमें आपसे संपर्क करने के लिए इस जानकारी की आवश्यकता है.</string>
+    <string name="rewards_welcome">मॉम्सप्रेस्सो ईनामी योजना में आपका स्वागत है!</string>
+    <string name="rewards_description">प्रतिष्ठित  ब्रांड नियमित रूप से सर्वे, ई-कॉमर्स रिव्यु, स्पोंसर्ड  ब्लॉग्स  और अन्य अभियान चलाते हैं। इन अभियानों के लिए आपकी योग्यता  निर्धारित करने के लिए हमें आपसे कुछ जानकारी चाहिए। इन अभियानों में भाग लेने कर आप आर्थिक लाभ के साथ साथ मॉम्सप्रेस्सो ईनामी योजना के भी हकदार हो सकते हैं .</string>
+    <string name="rewards_start_now">अभी शुरुआत करें</string>
+    <string name="rewards_family_header">विभिन्न अभियानों के लिए आपकी योग्यता  निर्धारित करने के लिए हमें इस  जानकारी की आवश्यकता है.</string>
+    <string name="rewards_social_header">हमें आपके सोशल  मीडिया अभियानों में आमंत्रित करने के लिए इस जानकारी की आवश्यकता है.</string>
+    <string name="rewards_number_of_kids">"बच्चों की संख्या "</string>
+    <string name="rewards_interest">रूचि</string>
+    <string name="rewards_not_working">"गैर कामकाजी "</string>
+    <string name="rewards_are_expecing">क्या आप माँ बनने वाली हैं ?</string>
+
+    <string name="cannot_be_left_blank">%1$s इसे खाली नहीं छोड़ा जा सकता </string>
+    <string name="please_enter_a_valid">कृपया सही लिखें %1$s</string>
+    <string name="need_to_select_option">आपको एक विकल्प चुनना होगा %1$s</string>
+    <string name="rewards_expected_date">"बच्चे के जन्म की संभावित तिथि "</string>
+    <string name="rewards_mobile_number_verified">मोबाइल नंबर वेरीफाई करें।</string>
+    <string name="rewards_have_children">क्या आपके बच्चे हैं?</string>
+    <string name="rewards_tab_detail">रिवार्ड्स</string>
+    <string name="rewards_add_child">कितने बच्चे हैं?</string>
+    <string name="rewards_kid_detail">बच्चों की डिटेल भरें।</string>
 </resources>

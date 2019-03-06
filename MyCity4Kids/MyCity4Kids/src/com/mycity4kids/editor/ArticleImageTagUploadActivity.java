@@ -452,12 +452,12 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         startActivity(intent);
                     } else {
                         if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {
-                            if(responseModel.getReason().equalsIgnoreCase("Can't update article which is under moderation !!")){
+                            if (responseModel.getReason().equalsIgnoreCase("Can't update article which is under moderation !!")) {
                                 Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
                                 intent.putExtra("shareUrl", "" + "");
                                 intent.putExtra("source", "addArticle");
                                 startActivity(intent);
-                            }else{
+                            } else {
                                 showToast(responseModel.getReason());
                             }
                         } else {

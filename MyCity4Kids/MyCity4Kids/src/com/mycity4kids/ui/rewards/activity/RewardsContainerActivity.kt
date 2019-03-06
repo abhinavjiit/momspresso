@@ -16,9 +16,9 @@ import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
 class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
         RewardsSocialInfoFragment.SubmitListener,
-        RewardsFamilyInfoFragment.SubmitListener,IFacebookEvent {
+        RewardsFamilyInfoFragment.SubmitListener, IFacebookEvent {
     override fun onFacebookEventReceived(response: String?) {
-        if(rewardsSocialInfoFragment!=null){
+        if (rewardsSocialInfoFragment != null) {
             rewardsSocialInfoFragment!!.updateFaceBookView()
         }
     }
@@ -39,9 +39,9 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     private var callbackManager: CallbackManager? = null
-    private var rewardsPersonalInfoFragment : RewardsPersonalInfoFragment?  = null
-    private var rewardsFamilyInfoFragment : RewardsFamilyInfoFragment?  = null
-    private var rewardsSocialInfoFragment : RewardsSocialInfoFragment?  = null
+    private var rewardsPersonalInfoFragment: RewardsPersonalInfoFragment? = null
+    private var rewardsFamilyInfoFragment: RewardsFamilyInfoFragment? = null
+    private var rewardsSocialInfoFragment: RewardsSocialInfoFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,8 +100,5 @@ class RewardsContainerActivity : BaseActivity(),
         }
         callbackManager!!.onActivityResult(requestCode, resultCode, data)
         FacebookUtils.onActivityResult(this, requestCode, resultCode, data)
-
-
     }
-
 }

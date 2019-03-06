@@ -864,7 +864,6 @@
 
     //Rewards Strings
 
-
     <string name="rewards_enter_otp">OTP समाविष्ट करा</string>
     <string name="rewards_confirm">खात्री करा</string>
     <string name="rewards_first_name">पहिले नाव</string>
@@ -884,4 +883,25 @@
     <string name="rewards_save_continue">जतन करा आणि सुरु ठेवा</string>
     <string name="momspresso_rewards">मोम्सप्रेसो पुरस्कार</string>
     <string name="rewards_participate">सहभाग घ्या आपले प्रोफाइल पूर्ण करा आणि कमवा!</string>
+    <string name="save_continue">जतन करा आणि सुरु ठेवा</string>
+    <string name="rewards_personal_header">"तुमच्या संपर्कात रहाण्यासाठी आम्हालाही  माहिती हवी आहे. "</string>
+    <string name="rewards_welcome">मॉम्सप्रेसो पुरस्कारमध्ये स्वागत आहे!</string>
+    <string name="rewards_description">"प्रथितयश ब्रँड होस्ट मोहिम अर्जाच्या माध्यमातून सर्वेक्षण, इ -कॉमर्स रिव्ह्यूज तसेच प्रायोजित ब्लॉग यांचे नियमितपणे सर्वेक्षण करीत आहे. त्यासाठी आपली पात्रता या सर्वेक्षणातून निर्धारित करण्याकरिता  ग्राह्य धरण्यासाठी तुमची काही माहिती हवी आहे.  या सर्वेक्षणात भाग घेण्याने तुम्हाला फायदाच आहे. मॉनिटरी रिवार्डबरोबरच आपल्याला मोमस्प्रेसोकडून पारितोषिकेही देण्यात येणार आहे.   "</string>
+    <string name="rewards_start_now">करा सुरवात</string>
+    <string name="rewards_family_header">"आम्हाला तुमची माहिती पात्रता निर्धारित करण्यासाठी हि नवीन माहिती आवश्यक होती. "</string>
+    <string name="rewards_social_header">"आम्हाला तुमची हि माहिती सोशल मिडिया  माध्यमातून घेतल्याने सोशल मिडिया कॅम्पेन साठी बोलावणे सोपे जाईल. "</string>
+    <string name="rewards_number_of_kids">मुलांची संख्या</string>
+    <string name="rewards_interest">आवड</string>
+    <string name="rewards_not_working">नॉन- वर्किंग</string>
+    <string name="rewards_are_expecing">एक्स्पेक्टिंग (गरोदर)</string>
+
+    <string name="cannot_be_left_blank">%1$s याला रिकामे ठेऊ शकत नाही</string>
+    <string name="please_enter_a_valid">कृपया वैध नाव जमा करा %1$s</string>
+    <string name="need_to_select_option">तुम्हाला यासाठी पर्याय निवडावा लागेल %1$s</string>
+    <string name="rewards_expected_date">अपेक्षित तारीख</string>
+    <string name="rewards_mobile_number_verified">मोबाईल नंबर तपासून पहा.</string>
+    <string name="rewards_have_children">तुम्हाला मुलं आहेत का?</string>
+    <string name="rewards_tab_detail">पुरस्कार</string>
+    <string name="rewards_add_child">मुलांची माहिती</string>
+    <string name="rewards_kid_detail">मुलांची माहिती</string>
 </resources>

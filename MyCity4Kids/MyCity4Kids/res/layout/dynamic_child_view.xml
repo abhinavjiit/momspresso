@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_weight=".5"
             android:layout_height="wrap_content"
-            android:text="KID DETAIL"
+            android:text="@string/rewards_kid_detail"
             android:textColor="@color/app_grey"
             app:fontName="oswald_regular.ttf"
             app:layout_constraintStart_toStartOf="parent"
