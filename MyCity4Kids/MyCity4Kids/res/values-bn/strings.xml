@@ -580,7 +580,7 @@
     <string name="rate_us.dialog.message1">আপনি যদি মম্স্প্রেস্সো অ্যাপটি ব্যবহার করে খুশী হয়ে থাকেন, এর মান নির্ণয়ের জন্য একটু সময় বার করে নিন</string>
     <string name="rate_us.dialog.message2">আপনার সমর্থনের জন্য ধন্যবাদ !!!</string>
 
-    <string name="suggested_topic.start_writing">START WRITING</string>
+    <string name="suggested_topic.start_writing">লেখা শুরু করুন</string>
 
     <string name="no_articles_found">No articles found</string>
     <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
@@ -878,9 +878,28 @@
     <string name="rewards_non_working">"কর্মরতা নন "</string>
     <string name="rewards_language">"ভাষা "</string>
     <string name="rewards_save_continue">"সেভ করুন আর এগিয়ে যান "</string>
-    <string name="rewards_header_title">মমস্প্রেস্সো রিয়ার্ডস</string>
     <string name="momspresso_rewards">মমস্প্রেস্সো রিয়ার্ডস</string>
     <string name="rewards_participate">"অংশগ্রহণ করুন আর  আপনার প্রোফাইলটি সম্পূর্ণরূপে লিখে উপার্জন করুন "</string>
+    <string name="save_continue">"সেভ করুন আর এগিয়ে যান "</string>
+    <string name="rewards_personal_header">"আপনার সাথে যোগাযোগ করার জন্য এই তথ্যটি জানা প্রয়োজন "</string>
+    <string name="rewards_description">বিভিন্ন খ্যাতিসম্পন্ন ব্র্যান্ড সার্ভে, ই-কমার্স রিভিউ এবং স্পনসরড আর্টিকেলের মাধ্যমে ক্যাম্পেন করে থাকেন। এই ক্যাম্পেনে অংশগ্রহণ করার জন্য আপনার কিছু তথ্য আমাদের জানা প্রয়োজন যা নির্ধারণ করবে আপনি এই ক্যাম্পেনে অংশগ্রহণের জন্য উপযুক্ত কিনা।</string>
+    <string name="rewards_start_now">"এবার শুরু করুন "</string>
+    <string name="rewards_family_header">"বিভিন্ন ক্যাম্পেনে অংশগ্রহণের জন্য আপনার যোগ্যতা নির্ধারণ করার জন্য নিম্নলিখিত তথ্যগুলি আমাদের জানা প্রয়োজন "</string>
+    <string name="rewards_social_header">"আমাদের স্যোসাল মিডিয়া ক্যাম্পেনে আপনাকে আমন্ত্রণ জানানোর জন্য এই তথ্যটি জানা প্রয়োজন "</string>
+    <string name="rewards_number_of_kids">"সন্তান সংখ্যা "</string>
+    <string name="rewards_interest">"উৎসাহী "</string>
+    <string name="rewards_not_working">"কর্মরতা নন "</string>
+    <string name="rewards_are_expecing">"সন্তান সম্ভবা "</string>
+
+    <string name="cannot_be_left_blank">%1$s খালি রাখা যাবে না</string>
+    <string name="please_enter_a_valid">দয়া করে বৈধ এন্টার করুন %1$s</string>
+    <string name="need_to_select_option">একটি অপশন চিহ্নিত করা প্রয়োজনীয় %1$s</string>
+    <string name="rewards_expected_date">"প্রসবের তারিখ "</string>
+    <string name="rewards_mobile_number_verified">আপনার মোবাইল নম্বর কি ভেরিফায়েড?</string>
+    <string name="rewards_have_children">আপনার কি সন্তান আছে?</string>
+    <string name="rewards_tab_detail">পুরস্কার</string>
+    <string name="rewards_add_child">সন্তান থাকলে লিখুন</string>
+    <string name="rewards_kid_detail">সন্তানের বিবরণ</string>
 
 
 </resources>

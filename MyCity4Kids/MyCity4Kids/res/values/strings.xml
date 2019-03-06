@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="unknown_person">Unknown</string>
-    <string name="resend_email">Resend Email</string>
+    <string name="resend_email" translatable="false">Resend Email</string>
 
     <string name="facebook_app_id">206155642763202</string>
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
@@ -1004,18 +1004,11 @@
     <string name="momspresso_rewards">MOMSPRESSO REWARDS</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_website">ADD WEBSITE</string>
     <string name="add_youtube">YOUTUBE</string>
     <string name="add_twitter">TWITTER</string>
     <string name="add_facebook">FACEBOOK</string>
     <string name="kids_number">"KID %d DETAIL</string>
-
-    <string name="cannot_be_left_blank">cannot be left blank\u0020</string>
-    <string name="please_enter_a_valid">Please enter a valid\u0020</string>
-    <string name="need_to_select_option">You need to select an option for\u0020</string>
-    <string name="rewards_tab_detail">Rewards</string>
-
 
     <string name="hold_to_release">Hold to record, Release to send</string>
     <string name="slide_to_cancel">Slide to cancel</string>
@@ -1031,18 +1024,37 @@
     <string name="rewards_verify">Verify</string>
     <string name="rewards_phone">Phone</string>
     <string name="rewards_email">Email</string>
-    <string name="rewards_gender">Gender</string>
     <string name="rewards_male">Male</string>
     <string name="rewards_female">Female</string>
-    <string name="rewards_dob">Date of Birth</string>
     <string name="rewards_location">Location</string>
-    <string name="rewards_working_status">Working Status</string>
-    <string name="rewards_working">Working</string>
-    <string name="rewards_non_working">Non-working</string>
-    <string name="rewards_language">Language</string>
     <string name="rewards_save_continue"> Save And Continue</string>
     <string name="rewards.social.facebook_connected">FACEBOOK CONNECTED</string>
     <string name="rewards.social.instagram_connected">INSTAGRAM CONNECTED</string>
     <string name="rewards_participate">Participate and earn now by completing your profile!</string>
+    <string name="rewards_personal_header">We need this information to get in touch with you</string>
+    <string name="rewards_welcome">Welcome to the Momspresso Rewards!</string>
+    <string name="rewards_description">Leading brands host campaigns in the form of surveys, e-commerce reviews, sponsored blogs and others on a regular basis. We need some information from you to determine your eligibility for these campaigns. Participation in these campaigns involves a monetary benefit and hence Momspresso Rewards.</string>
+    <string name="rewards_start_now">START NOW</string>
+    <string name="rewards_family_header">We need this information below to determine your eligibility for various campaigns</string>
+    <string name="rewards_social_header">We need this information to invite you to our social media campaigns.</string>
+    <string name="rewards_dob">Date of Birth</string>
+    <string name="rewards_working_status">Working Status</string>
+    <string name="rewards_working">Working</string>
+    <string name="rewards_non_working">Non-working</string>
+    <string name="rewards_language">Language</string>
+    <string name="rewards_number_of_kids">Number of kids</string>
+    <string name="rewards_interest">Interests</string>
+    <string name="rewards_link_social">Link Social Accounts</string>
+    <string name="rewards_are_expecing">ARE YOU EXPECTING?</string>
+    <string name="cannot_be_left_blank">%1$s cannot be left blank\u0020</string>
+    <string name="please_enter_a_valid">Please enter a valid\u0020 %1$s</string>
+    <string name="need_to_select_option">You need to select an option for\u0020 %1$s</string>
+    <string name="rewards_tab_detail">Rewards</string>
+    <string name="rewards_gender">Gender</string>
+    <string name= "rewards_expected_date">Expected date</string>
+    <string name="rewards_mobile_number_verified">Mobile number is verified</string>
+    <string name="rewards_have_children">Do you have children?</string>
+    <string name="rewards_add_child">Add Child</string>
+    <string name="rewards_kid_detail">Kid detail</string>
     <string name="app_name">Momspresso</string>
 </resources>

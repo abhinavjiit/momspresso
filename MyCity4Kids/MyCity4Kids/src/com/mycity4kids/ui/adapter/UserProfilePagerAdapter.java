@@ -21,11 +21,13 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
     private About about;
     private Contactdetails contactdetails;
     private RewardsTabFragment rewardsFragment;
+    private String isRewardAdded = "0";
 
-    public UserProfilePagerAdapter(FragmentManager fm, UserDetailResult userDetails, ArrayList<CityInfoItem> mDatalist) {
+    public UserProfilePagerAdapter(FragmentManager fm, UserDetailResult userDetails, ArrayList<CityInfoItem> mDatalist,String isRewardAdded) {
         super(fm);
         this.userDetailResult = userDetails;
         this.mDatalist = mDatalist;
+        this.isRewardAdded = isRewardAdded;
     }
 
     @Override
@@ -50,6 +52,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
                 if (rewardsFragment == null) {
                     rewardsFragment = new RewardsTabFragment();
                 }
+                bundle.putString("isRewardsAdded",isRewardAdded);
                 rewardsFragment.setArguments(bundle);
                 return rewardsFragment;
         }
@@ -58,7 +61,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     public About getAbout() {
