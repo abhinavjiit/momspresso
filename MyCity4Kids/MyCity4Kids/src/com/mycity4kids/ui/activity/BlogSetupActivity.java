@@ -149,7 +149,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         email = intent.getStringExtra("email");
         if (blogTitle != null && !blogTitle.isEmpty()) {
             blogTitleEditText.setText(blogTitle);
-            blogTitleEditText.setEnabled(false);
+
         } else {
             blogTitleEditText.setEnabled(true);
         }
@@ -160,7 +160,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         } else {
             emailEditText.setEnabled(true);
         }
-
         /*if (comingFrom == null) {
             comingFrom = "Normal";
         }*/
@@ -179,13 +178,13 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profilePicImageView);
         }
 
-        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getUserDetailModel(this).getEmail())) {
+      /*  if (StringUtils.isNullOrEmpty(SharedPrefUtils.getUserDetailModel(this).getEmail())) {
             emailEditText.setVisibility(View.VISIBLE);
             emailLabelTextView.setVisibility(View.VISIBLE);
         } else {
             emailEditText.setVisibility(View.GONE);
             emailLabelTextView.setVisibility(View.GONE);
-        }
+        }*/
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
         Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -230,7 +229,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 if (responsedata.getCode() == 200 && Constants.SUCCESS.equals(responsedata.getStatus())) {
                     if (responsedata.getData().size() != 0 && responsedata.getData() != null) {
 
-                        blogTitleEditText.setText(responsedata.getData().get(0).toString().replaceAll("-", " "));
+                        blogTitleEditText.setText(responsedata.getData().get(0).toString().replace("-", " "));
                     } else {
                         ToastUtils.showToast(BlogSetupActivity.this, "something went wrong at the server");
                     }
@@ -263,6 +262,11 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (comingFrom.equals("ShortStoryAndArticle")) {
                     blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
+                    if (responseData.getData().get(0).getResult().getEmail() != null && !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        emailEditText.setText(responseData.getData().get(0).getResult().getEmail());
+
+                    }
+
                 }
 
                 if (responseData.getData().get(0).getResult().getUserBio() != null && !responseData.getData().get(0).getResult().getUserBio().isEmpty()) {

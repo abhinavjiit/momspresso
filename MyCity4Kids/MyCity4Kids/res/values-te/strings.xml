@@ -12,7 +12,7 @@
     <string name="subcategoryName">subCategory</string>
     <string name="location_info">వ్యక్తిగతీకరించిన సిఫార్సులు రావడానికి, మీ లొకేషన్ ప్రాధాన్యత తెలుపండి</string>
     <string name="hint_text">మీరు దేని కోసం చూస్తున్నారు ?</string>
-    <string name="locality_txt">ఏ ప్రాతం లో</string>
+    <string name="locality_txt">ఏ ప్రాంతానికి చెందిన వారు ?</string>
     <string name="error_network">పరికరం నెట్వర్క్ కవరేజ్ లో లేదు</string>
     <string name="please_wait">దయచేసి వేచి ఉండండి...</string>
     <string name="no_result_txt">ఎలాంటి ఫలితం దొరకలేదు</string>
@@ -29,7 +29,7 @@
 
     <!-- Filter/sort Screen -->
     <string name="no_age_group">వెతికడానికి ప్రశ్న వేయండి</string>
-    <string name="no_category_group">ఫిల్టర్ కి కాటోగెరి లేదు</string>
+    <string name="no_category_group">ఫిల్టర్ కి కాటగిరీ లేదు</string>
     <string name="ageGroup">వయో వర్గం</string>
 
     <!-- Add Listing Screen -->
@@ -100,7 +100,7 @@
 
     <string name="saving_image">ఫోటో ను సేవ్ చేస్తున్నాం</string>
     <string name="preparing_card">కార్డ్ తయారు అవుతోంది</string>
-    <string name="no_storage_card">స్తొరేజ్ కార్డ్ లేదు</string>
+    <string name="no_storage_card">స్టోరేజ్  కార్డ్ లేదు </string>
     <string name="not_enough_space">తగినంత స్థలం లేదు</string>
     <string name="server_error">ఎదో లోపం ఉంది, దయచేసి కాసేపాగి ప్రయత్నించండి!</string>
 
@@ -124,7 +124,7 @@
     <string name="select_image_fail">ఫోటో ని ఎంచుకోండి (విఫలమైన డెమో)</string>
     <string name="select_video">వీడియో ని ఎంచుకోండి</string>
     <string name="select_video_fail">వీడియో ని ఎంచుకోండి (విఫలమైన డెమో)</string>
-    <string name="camera_pick">కెమెరా తో ఫోటో </string>
+    <string name="camera_pick">కెమెరాతో ఫోటో తీయండి </string>
 
     <string name="analytics.popup.last30days">చివరి 30 రోజులు</string>
     <string name="analytics.popup.customdates">కస్టమ్</string>
@@ -134,7 +134,7 @@
     <string name="analytics.popup.improve_rank">నా రాంక్ ని ఎలా మెరుగుపరుచుకోవచ్చు</string>
     <string name="analytics.popup.improve_social">నా సోషల్ షేర్ ని ఎలా మెరుగుపరచుకోవచ్చు</string>
 
-    <string name="videos.dialog.title">ఉప లోడ్ చేసే వీడియో ఎంచుకోండి</string>
+    <string name="videos.dialog.title">అప్లోడ్  చేసే వీడియో ఎంచుకోండిి</string>
     <string name="videos.upload_option.camera">వీడియో తీయండి</string>
     <string name="videos.upload_option.gallery">గ్యాలరీ నించి ఎంచుకోండి</string>
     <string name="videos.upload_option.cancel">క్యాన్సల్</string>
@@ -193,7 +193,7 @@
         <item>షేర్ చేయడానికి ఉన్న బటన్స్ ని నొక్కి మీ బ్లాగ్ పోస్ట్ ని షేర్ చేయండి</item>
         <item>మీ ప్రొఫైల్ లో సోషల్ ప్లగిన్ చేయండి ఉదాహరణ:  www.twitter.com/bloggername</item>
         <item>మీ బ్లాగ్ పోస్టుని షేర్ చేసేటప్పుడు మీ కంటెంట్ ని మార్చండి మరియు దానిపై దృష్టి పెట్టండి</item>
-        <item>సరిపడా హాష్టాగ్స్ ఉపయోగించండి</item>
+        <item>ఖచ్చితమైన  హాష్‌ట్యాగ్  ఉపయోగించండి</item>
     </string-array>
 
     <string-array name="increase_followers_array">
@@ -267,7 +267,7 @@
     <string name="onboarding.desc_4">మామ్స్ కమ్యూనిటీని మరింత శక్తివంతం చేయండి .మీ సందేహాలు అడగండి మరియు మిగతావారికి సహాయపడండి !</string>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">బ్లాగ్స్</string>
-    <string name="onboarding_desc_array.tutorial_1.videos">మామ్ వ్లోగ్స్</string>
+    <string name="onboarding_desc_array.tutorial_1.videos">మామ్ వీలాగ్స్ </string>
     <string name="onboarding_desc_array.tutorial_2.english">English</string>
     <string name="onboarding_desc_array.tutorial_2.hindi">హిందీ</string>
     <string name="onboarding_desc_array.tutorial_2.bengali">బెంగాలీ</string>
@@ -295,9 +295,9 @@
     <string name="sign_up.sign_in_btn">సైన్ ఇన్</string>
 
     <string name="login_email.login">లాగిన్</string>
-    <string name="login_email.forgot_password">పాస్వర్డ్ మర్చిపోయారా</string>
+    <string name="login_email.forgot_password">పాస్‌వర్ద్ మర్చిపోయారా ?</string>
     <string name="login_email.username_hint">ఇమెయిల్</string>
-    <string name="login_email.password_hint">పాస్వర్డ్</string>
+    <string name="login_email.password_hint">పాస్‌వర్ద్ </string>
 
 
     <string name="signin.login_via_facebook">ఫేస్ బుక్ తో లాగిన్</string>
@@ -305,7 +305,7 @@
     <string name="signin.login_via_email">ఇమెయిల్ తో లాగిన్</string>
     <string name="signin.login_via_phone">LOGIN USING PHONE</string>
 
-    <string name="signup.connect_via_facebook">ఫేస్బుక్ ద్వారా కనెక్ట్ అవ్వండి</string>
+    <string name="signup.connect_via_facebook">ఫేస్‌బుక్  ద్వారా కనెక్ట్ అవ్వండి</string>
     <string name="signup.connect_via_google">గూగుల్ ద్వారా కనెక్ట్ అవ్వండి</string>
     <string name="signup.connect_via_phone">CONNECT USING PHONE</string>
 
@@ -339,7 +339,7 @@
     <string name="myprofile.followers_label">ఫాలోవర్లు</string>
     <string name="myprofile.section.articles_label">కథనం</string>
     <string name="myprofile.section.short_story_label">100 పదాల కథ</string>
-    <string name="myprofile.section.videos_label">మామ్ వ్లోగ్స్</string>
+    <string name="myprofile.section.videos_label">మామ్ వీలాగ్స్ </string>
     <string name="myprofile.section.activity_label">కార్యకలాపం</string>
     <string name="myprofile.section.myranking_label">నా రాంక్</string>
     <string name="myprofile.section.settings_label">సెట్టింగులు</string>
@@ -352,7 +352,7 @@
     <string name="blogger_profile.view_count_label">వ్యూలు</string>
     <string name="blogger_profile.article_count_label">పోస్టులు</string>
     <string name="blogger_profile.section.articles_label">వ్యాసాలు</string>
-    <string name="blogger_profile.section.videos_label">మామ్ వ్లోగ్స్</string>
+    <string name="blogger_profile.section.videos_label">మామ్ వీలాగ్స్ </string>
     <string name="blogger_profile.section.activity_label">కార్యకలాపం</string>
     <string name="blogger_profile.section.myranking_label">నా ర్యాంక్</string>
     <string name="blogger_profile.top_3_article">అత్యుత్తమమైన 3 వ్యాసాలు</string>
@@ -409,11 +409,11 @@
     <string name="app_settings.edit_prefs.pref_lang">ఇష్టమైన భాషలు</string>
     <string name="app_settings.edit_prefs.subscribe_top_reads">ప్రతి నేలా టాప్ రీడ్స్ కి నమోదు చేసుకోండి</string>
     <string name="app_settings.edit_prefs.subscribe_trending_blog">ప్రతి రోజు ట్రెండ్ అవుతున్న టాప్ బ్లాగ్ కి నమోదు చేసుకోండి</string>
-    <string name="app_settings.edit_prefs.subscribe_momspresso">మామ్స్‌ప్రెస్సో  టివి కి నమోదు చేసుకోండి</string>
+    <string name="app_settings.edit_prefs.subscribe_momspresso">మామ్స్‌ప్రెస్సో టివి కి నమోదు చేసుకోండి</string>
     <string name="app_settings.edit_prefs.subscribe_city_best">మీ సిటీ లో జరుగుతున్న విషయాలు తెలుసుకోవడానికి నమోదు చేసుకోండి</string>
 
-    <string name="app_settings.change_pass.hint_current_pass">ప్రస్తుత గుర్తింపు పదము </string>
-    <string name="app_settings.change_pass.hint_new_pass">కొత్త గుర్తింపు పదము</string>
+    <string name="app_settings.change_pass.hint_current_pass">ప్రస్తుత పాస్‌వర్ద్   </string>
+    <string name="app_settings.change_pass.hint_new_pass">కొత్త పాస్‌వర్ద్ </string>
     <string name="app_settings.change_pass.hint_confirm_pass">గుర్తింపు పదము నిర్ధారణ</string>
     <string name="app_settings.change_pass.save">சேமிக்க</string>
     <string name="app_settings.change_pass.toast_current_pass_empty">ప్రస్తుత గుర్తింపు పదము ఖాళీగా ఉంచరాదు</string>
@@ -482,8 +482,8 @@
         <item>ఎవరు సహకారం అందించగలరు?</item>
     </string-array>
     <string-array name="become_blogger_desc_array">
-        <item>మీకు వచ్చిన భాషలో మీ ఆలోచనలు, భావాలు, కథలు భారత దేశంలోనే అతి పెద్ద పెరెంటింగ్ కమ్యూనిటీ లో రాయండి. ప్రతి నేలా 8 మిలియన్ మామ్స్ కి మీ నుంచి జ్ఞానం, ప్రేరణ, ఆశ పొందుతారు </item>
-        <item>మీ పెరెంటింగ్ కథలని వెబ్ సైట్ లేదా ఐఓఎస్ ద్వారా లేదా ఆండ్రాయిడ్ ఆప్ ద్వారా షేర్ చేసుకోండి. మీకు వచ్చిన భాష - హిందీ, ఇంగ్లీష్, బెంగాలీ, మరాఠీ, తెలుగు లేదా తమిళ్ లో మీ భావాలని పంచుకోండి</item>
+        <item>మీకు వచ్చిన భాషలో మీ ఆలోచనలు, భావాలు, కథలు భారత దేశంలోనే అతి పెద్ద పెరెంటింగ్ కమ్యూనిటీ లో రాయండి. ప్రతి నేలా 8 మిలియన్  తల్లులు  మీ నుంచి జ్ఞానం, ప్రేరణ, ఆశ పొందుతారు </item>
+        <item>మీపేరెంటింగ్ కథలని వెబ్ సైట్ లేదా ఐఓఎస్ ద్వారా లేదా ఆండ్రాయిడ్ ఆప్ ద్వారా షేర్ చేసుకోండి. మీకు వచ్చిన భాష - హిందీ, ఇంగ్లీష్, బెంగాలీ, మరాఠీ, తెలుగు లేదా తమిళ్ లో మీ భావాలని పంచుకోండి</item>
         <item>మామ్స్‌ప్రెస్సో  బ్లాగర్స్ కి వారి బ్లాగ్స్ పబ్లిష్ చేసుకోవడానికి డబ్బులు ఇవ్వదు. బ్రాండ్స్ కోసం చేసే రాత పనులకు డబ్బులు ఇవ్వడం జరుగుతుంది. మంచి క్వాలిటీ కంటెంట్ ఇచ్చిన బ్లాగర్స్ కి డబ్బులు ఇవ్వడం జరుగుతుంది </item>
         <item>మీ కథ పెరెంటింగ్ గురించి అయినా, అమ్మతనం, బంధాలు, కష్టాలు, ఆనందాలు, వ్యక్తిగత శ్రేయస్సు అయినా రాయచ్చు. 5౦౦౦ అమ్మలు ఇచ్చే ఇష్టాలు, అభిప్రాయాలు, సిఫార్సులు తెలుసుకోండి. సొంత కంటెంట్ రాయడానికి ప్రయత్నించండి.  </item>
     </string-array>
@@ -507,7 +507,7 @@
     <string name="moderation_or_share.twitter_fail">ట్విట్టర్ తో షేర్ చేయలేకపోతున్నాం</string>
 
     <string name="complete_blogger_profile.complete_label">మీ బ్లాగర్ల ప్రొఫైల్స్ ని నింపండి</string>
-    <string name="complete_blogger_profile.paid_eligibility">రాసి సంపాదించే పనికి అర్హత సంపాదించండి. ఈ వివరాలు అన్ని మా దగ్గర జాగ్రత్త గా ఉంటాయి</string>
+    <string name="complete_blogger_profile.paid_eligibility">డబ్బు అందించి రాసే అసైన్మెంట్స్ కోసం అర్హులు అవ్వండి. ఈ వివరాలు అన్ని మా దగ్గర జాగ్రత్త గా ఉంటాయి</string>
     <string name="complete_blogger_profile.save">సేవ్</string>
     <string name="complete_blogger_profile.incorrect_date">దయచేసి పుట్టిన తేది వివరాలు తప్పులు లేకుండా ఇవ్వండి</string>
 
@@ -525,13 +525,13 @@
     <string name="video_progress.way_to_go">WAY TO GO!</string>
     <string name="video_progress.success_msg">వీడియో విజయవంతంగా అప్లోడ్ అయ్యి మోడరేషన్ కు పంపటం జరిగింది. మోడరేషన్ అయ్యాక మీకు తెలియజేస్తాము</string>
     <string name="video_progress.okay">ఓకే</string>
-    <string name="video_progress.uploading_failed">విఫలమైన అప్లోడ్</string>
+    <string name="video_progress.uploading_failed">అప్లోడ్ విఫలమైనది</string>
     <string name="video_progress.uploading_error">మీ వీడియో అప్లోడ్ అవుతున్నప్పుడు లోపం వచ్చింది. దయచేసి మళ్ళీ ప్రయత్నించండి</string>
     <string name="video_progress.progress_lost_msg">మీరు అప్లోడ్ చేస్తుంది ఆగిపోతుంది. మీరు ఎగ్జిట్ అవ్వాలి అనుకుంటున్నారా?</string>
 
     <string name="user_activities.toolbar.title">కార్యకలాపం</string>
     <string name="user_activities.tabs.recommended">లైక్ చేశారు</string>
-    <string name="user_activities.tabs.bookmark">బుక్మార్క్స్ </string>
+    <string name="user_activities.tabs.bookmark">బుక్‌మార్క్స్ </string>
     <string name="user_activities.tabs.watch_later">తరువాత చూడండి</string>
     <string name="user_activities.tabs.comment">కామెంట్లు</string>
     <string name="user_activities.bookmarks.remove">తీసేయండి</string>
@@ -540,7 +540,7 @@
     <string name="user_activities.comments.edit">మార్చు</string>
     <string name="user_activities.comments.no_comments">ఏ ఆర్టికల్ మీద మీరు ఎలాంటి కామెంట్ ఇవ్వలేదు</string>
     <string name="user_activities.recommended.no_recommendations">మీరు ఎలాంటి ఆర్టికల్ ను సిఫార్సు చేయలేదు</string>
-    <string name="user_activities.bookmarks.no_bookmarks">ఏ ఆర్టికల్ కూడా ఇంక బుక్మార్క్ అవ్వలేదు</string>
+    <string name="user_activities.bookmarks.no_bookmarks">ఏ ఆర్టికల్ కూడా ఇంక బుక్‌మార్క్  అవ్వలేదు</string>
     <string name="user_activities.watch_later.no_watch_later">మీరు ఎలాంటి వీడియోలు సేవ్ చేయలేదు</string>
 
     <string name="explore.section.events">ఈవెంట్లు</string>
@@ -552,14 +552,14 @@
     <string name="explore.events.upcoming_lbl">రాబోవు ఈవెంట్లు</string>
 
     <string name="all_videos.toolbar.title">వీడియోలు</string>
-    <string name="all_videos.tabbar.momspresso_label">మామ్స్‌ప్రెస్సోటీవీ</string>
-    <string name="all_videos.tabbar.funny_label">మామ్ వ్లోగ్స్</string>
-    <string name="all_videos.funny_videos.no_videos">మామ్ వ్లోగ్స్ ఏమి జత అవ్వలేదు</string>
+    <string name="all_videos.tabbar.momspresso_label">మామ్స్‌ప్రెస్సో టీవీ </string>
+    <string name="all_videos.tabbar.funny_label">మామ్ వీలాగ్స్ </string>
+    <string name="all_videos.funny_videos.no_videos">మామ్ వీలాగ్స్  ఏమి జత అవ్వలేదు</string>
 
     <string name="notification.read_all">అన్ని చదవండి</string>
     <string name="notification.no_notification">ప్రకటనలు లేవు</string>
 
-    <string name="user_funny_video.toolbar.title">మామ్ వ్లోగ్స్</string>
+    <string name="user_funny_video.toolbar.title">మామ్ వీలాగ్స్ </string>
     <string name="user_funny_video.published_on">ప్రచురించబడిన తేది: %1$s</string>
 
     <string name="article_listing.toolbar.title_recent">ఇటీవల</string>
@@ -584,7 +584,7 @@
 
     <string name="no_articles_found">ఎలాంటి ఆర్టికల్స్ దొరకలేదు</string>
     <string name="check_out_blog">మామ్స్‌ప్రెస్సోఈ ఆసక్తికరమైన బ్లాగ్ పోస్ట్ ని చూడండి</string>
-    <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
+    <string name="check_out_short_story">మామ్స్‌ప్రెస్సో\n\nCheck out this interesting short story\n</string>
     <string name="contributors">రచనలు పంపేవారు</string>
     <string name="contributor_in">ఇందులో రచనలు పంపేవారు</string>
     <string name="recent_article">సంబంధిత ఆర్టికల్స్</string>
@@ -617,7 +617,7 @@
     <string name="article_listing.type.videos_label">వీడియోలు</string>
     <string name="article_listing.type.recent_label">ఇటీవల</string>
 
-    <string name="lang_sel.welcome_msg">మామ్స్‌ప్రెస్సోకు స్వాగతం</string>
+    <string name="lang_sel.welcome_msg">మామ్స్‌ప్రెస్సోకు స్వాగతం !</string>
     <string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>
     <string name="lang_sel.curr_lang">Current Language</string>
     <string name="lang_sel.app_lang_desc">You are using english as current language. Would you like to view this application in the same language?</string>
@@ -746,9 +746,9 @@
     <string name="groups.membership_pending">Membership Pending</string>
     <string name="groups.why_leave">Please let us know why you are leaving.</string>
     <string name="groups.leave_be_back">This is temporary. I\'ll be back.</string>
-    <string name="groups.spend_time">I spend too much time using Momspresso.</string>
-    <string name="groups.not_useful">I don\'t find Momspresso useful.</string>
-    <string name="groups.how_to_use">I don\'t understand how to use Momspresso</string>
+    <string name="groups.spend_time">I spend too much time using మామ్స్‌ప్రెస్సో.</string>
+    <string name="groups.not_useful">I don\'t find మామ్స్‌ప్రెస్సో useful.</string>
+    <string name="groups.how_to_use">I don\'t understand how to use మామ్స్‌ప్రెస్సో</string>
     <string name="groups.user_blocked_msg">You have been blocked from this group</string>
     <string name="groups.user_membership_rejected_msg">Your membership has been rejected for this group</string>
     <string name="groups.join_group">గ్రూపులో జాయిన్ అవ్వండి </string>
@@ -803,7 +803,7 @@
     <string name="navigation_bar.notifications">నోటిఫికేషన్స్</string>
     <string name="navigation_bar.groups">గ్రూప్స్</string>
 
-    <string name="coachmark.home">హోం : మామ్స్‌ప్రెస్సోకి స్వాగతం !  ఈ యాప్ లో మీరు మీకు నచ్చిన భాషలో ఉపయోగించవచ్చు </string>
+    <string name="coachmark.home">హోం : మామ్స్‌ప్రెస్సోకు స్వాగతం  !  ఈ యాప్ లో మీరు మీకు నచ్చిన భాషలో ఉపయోగించవచ్చు </string>
     <string name="coachmark.explore">ను అన్వేషించండి: మీరు ఈ రోజు ఏమి చేయాలనుకుంటున్నారు? 100 వర్డ్ స్టోరీని లేదా వీడియోలను వీక్షించండి. మీరు వివిధ వర్గాలను అన్వేషించి బ్లాగ్లను చదవగలరు</string>
     <string name="coachmark.create">సృష్టించండి: మీ #100పదాలకథలు , బ్లాగ్ పోస్ట్, లేదా మీ వీడియోలను జోడించండి. మీ డ్రాఫ్ట్స్  వీక్షించండి / సవరించండి</string>
     <string name="coachmark.menu">డ్రావర్ ఐకాన్ : తక్షణమే మీరు మీకు నచ్చిన  విభాగానికి వెళ్ళండి   . మీ బుక్మార్క్ చేసిన కథనాలను వీక్షించండి మరియు మీ యాప్  సెట్టింగ్స్  అప్డేట్ చేయండి </string>
@@ -830,7 +830,7 @@
     <string name="upload_larger_video">అయ్యో ! మీ వీడియో కనీయం 5 క్షణాలు ఉండాలి </string>
     <string name="minutes_label">నిమిషాల</string>
     <string name="women_only">Oops! This section is for women only. You can, however, continue to read our other content</string>
-    <string name="check_out_momvlog">Momspresso\n\nCheck out this interesting blog post\n</string>
+    <string name="check_out_momvlog">మామ్స్‌ప్రెస్సో\n\nCheck out this interesting blog post\n</string>
     <string name="take_picture_from_camera">Take picture from camera</string>
     <string name="select_an_image">Select an image</string>
     <string name="related_videos">RELATED VIDEOS</string>

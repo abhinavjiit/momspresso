@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name">Momspresso</string>
     <string name="unknown_person">Unknown</string>
     <string name="resend_email" translatable="false">Resend Email</string>
 
@@ -1047,7 +1046,6 @@
     <string name="rewards_interest">Interests</string>
     <string name="rewards_link_social">Link Social Accounts</string>
     <string name="rewards_are_expecing">ARE YOU EXPECTING?</string>
-
     <string name="cannot_be_left_blank">%1$s cannot be left blank\u0020</string>
     <string name="please_enter_a_valid">Please enter a valid\u0020 %1$s</string>
     <string name="need_to_select_option">You need to select an option for\u0020 %1$s</string>
@@ -1058,4 +1056,5 @@
     <string name="rewards_have_children">Do you have children?</string>
     <string name="rewards_add_child">Add Child</string>
     <string name="rewards_kid_detail">Kid detail</string>
+    <string name="app_name">Momspresso</string>
 </resources>

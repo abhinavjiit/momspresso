@@ -52,6 +52,7 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
@@ -336,6 +337,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         String cities = getIntent().getStringExtra("cities");
         String from = getIntent().getStringExtra("from");
         showProgressDialog(getResources().getString(R.string.please_wait));
+        BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         ArticlePublishAPI articlePublishAPI = retrofit.create(ArticlePublishAPI.class);
@@ -400,7 +402,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                          }
             );
         } else {
-            // Article which is published is  already saved as draft.
             ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
             articleDraftRequest.setTitle(draftObject.getTitle().trim());
             articleDraftRequest.setBody(draftObject.getBody());
@@ -480,15 +481,19 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
     private void getBlogPage() {
         showProgressDialog(getResources().getString(R.string.please_wait));
-        BaseApplication.getInstance().destroyRetrofitInstance();
+        /*BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
         Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        call.enqueue(onLoginResponseReceivedListener);
+        call.enqueue(onLoginResponseReceivedListener);*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
+        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(getUserDetailsResponseCallback);
 
     }
 
-    Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
+    Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
 
@@ -504,15 +509,15 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             if (responseData != null) {
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
-                    if (responseData.getData().get(0).getResult().getBlogTitleSlug() == null || responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+                    if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
 
-                        if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
                             Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
                             intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
                             intent.putExtra("comingFrom", "ShortStoryAndArticle");
                             startActivity(intent);
-                        } else if (responseData.getData().get(0).getResult().getEmail() != null || !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
 
                             Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
@@ -522,16 +527,16 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         }
 
 
-                    } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+                    } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
 
 
-                        if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
                             Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
                             intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
                             intent.putExtra("comingFrom", "ShortStoryAndArticle");
                             startActivity(intent);
-                        } else if (responseData.getData().get(0).getResult().getEmail() != null || !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
 
                             publishArticleRequest();
                         }
@@ -700,7 +705,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId() + "", "Article Image Upload");
 
                 getBlogPage();
-              /*  pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
+           /*     pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                 blogSetup = pref.getBoolean("blogSetup", false);
                 Log.e("blogsetup", blogSetup + "");
                 if (blogSetup == false) {
