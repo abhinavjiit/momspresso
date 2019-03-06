@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.google.gson.Gson;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
 
@@ -26,7 +27,7 @@ public class TopicsPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("currentSubTopic", subTopicsList.get(position));
+                bundle.putString("currentSubTopic", new Gson().toJson(subTopicsList.get(position)));
         TopicsArticlesTabFragment tab1 = new TopicsArticlesTabFragment();
         tab1.setArguments(bundle);
         return tab1;

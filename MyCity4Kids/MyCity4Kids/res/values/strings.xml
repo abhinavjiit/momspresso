@@ -1051,7 +1051,7 @@
     <string name="need_to_select_option">You need to select an option for\u0020 %1$s</string>
     <string name="rewards_tab_detail">Rewards</string>
     <string name="rewards_gender">Gender</string>
-    <string name= "rewards_expected_date">Expected date</string>
+    <string name="rewards_expected_date">Expected date</string>
     <string name="rewards_mobile_number_verified">Mobile number is verified</string>
     <string name="rewards_have_children">Do you have children?</string>
     <string name="rewards_add_child">Add Child</string>
