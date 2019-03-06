@@ -471,7 +471,6 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:drawableTint="@color/app_red"
-                    android:drawableTop="@drawable/ic_facebook_svg"
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.facebook"
                     android:textColor="@color/app_grey"

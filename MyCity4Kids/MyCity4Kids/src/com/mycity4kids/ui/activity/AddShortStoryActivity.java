@@ -59,6 +59,7 @@ import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
@@ -901,15 +902,15 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         call.enqueue(blogPageSetUpResponseListener);*/
         BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        call.enqueue(onLoginResponseReceivedListener);
+        BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
+        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(getUserDetailsResponseCallback);
 
 
     }
 
 
-    Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
+    Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
 
@@ -925,15 +926,15 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             if (responseData != null) {
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
-                    if (responseData.getData().get(0).getResult().getBlogTitleSlug() == null || responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+                    if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
 
-                        if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
                             Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
                             intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
                             intent.putExtra("comingFrom", "ShortStoryAndArticle");
                             startActivity(intent);
-                        } else if (responseData.getData().get(0).getResult().getEmail() != null || !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
 
                             Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
@@ -943,7 +944,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         }
 
 
-                    } else if (responseData.getData().get(0).getResult().getBlogTitleSlug() != null || !responseData.getData().get(0).getResult().getBlogTitleSlug().isEmpty()) {
+                    } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
 
 
                         if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
@@ -952,7 +953,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                             intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
                             intent.putExtra("comingFrom", "ShortStoryAndArticle");
                             startActivity(intent);
-                        } else if (responseData.getData().get(0).getResult().getEmail() != null || !responseData.getData().get(0).getResult().getEmail().isEmpty()) {
+                        } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
 
                             /*Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());

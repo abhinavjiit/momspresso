@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -162,6 +163,10 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
     private String taggedCategories;
     private MixpanelAPI mixpanel;
 
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -200,6 +205,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
         viewCommentsTextView = ((TextView) findViewById(R.id.viewCommentsTextView));
+        facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
@@ -1321,7 +1327,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
             commentFrag.setArguments(_args);
             FragmentManager fm = getSupportFragmentManager();
             commentFrag.show(fm, "ViewAllComments");
-           mExoPlayerView.getPlayer().setPlayWhenReady(false);             //bug fixed
+            mExoPlayerView.getPlayer().setPlayWhenReady(false);             //bug fixed
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));

@@ -25,7 +25,7 @@ public class Topics implements Parcelable {
     private boolean isSelected;
     private String slug;
     private List<ExtraData> extraData;
-    private String sponsoredCategoryImage ;
+    private String sponsoredCategoryImage;
     private String sponsoredCategoryBadge;
 
     public static class ExtraData implements Parcelable {
@@ -267,7 +267,9 @@ public class Topics implements Parcelable {
         showInMenu = in.readString();
         isSelected = in.readByte() != 0;
         slug = in.readString();
-        extraData = in.readParcelable(ExtraData.class.getClassLoader());
+        in.readTypedList(this.extraData, ExtraData.CREATOR);
+
+        //extraData = in.readParcelable(ExtraData.class.getClassLoader());
         //  extraData = in.createTypedArrayList(ExploreTopicsModel.CREATOR);
 
 
