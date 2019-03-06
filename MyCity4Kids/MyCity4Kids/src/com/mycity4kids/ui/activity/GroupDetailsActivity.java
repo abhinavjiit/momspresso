@@ -147,7 +147,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_details_activity);
         Utils.pushOpenScreenEvent(this, "GroupDetailsScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         groupPostTabLayout = (TabLayout) findViewById(R.id.groupPostTabLayout);
@@ -665,6 +664,12 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 overlayView.setVisibility(View.GONE);
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
+//            case R.id.upvoteCommentContainer:
+//                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+//                break;
+//            case R.id.downvoteCommentContainer:
+//                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+//                break;
 
         }
     }

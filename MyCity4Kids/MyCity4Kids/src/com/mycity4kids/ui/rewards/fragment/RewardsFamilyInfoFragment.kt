@@ -293,7 +293,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
 
         if (apiGetResponse.gender != null) {
-            spinnerGender.setSelection(apiGetResponse.gender!!)
+            genderSpinner.setSelection(apiGetResponse.gender!!)
         }
         if (apiGetResponse.dob != null) {
             RewardsFamilyInfoFragment.textDOB.setText(AppUtils.convertTimestampToDate(apiGetResponse.dob))
@@ -491,7 +491,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             apiGetResponse.workStatus = 0
         }
 
-        apiGetResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
+        apiGetResponse.gender = if (genderSpinner.selectedItemPosition == 0) {
             0
         } else {
             1
@@ -615,7 +615,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         if (gender != null && !date.isNullOrEmpty()) {
             textDOB.text = date
-            spinnerGender.setSelection(this.spinnerGender.selectedItemPosition)
+            spinnerGender.setSelection(gender)
         } else {
             textDOB.text = RewardsFamilyInfoFragment.textKidsDOB.text
             spinnerGender.setSelection(this.spinnerGender.selectedItemPosition)
