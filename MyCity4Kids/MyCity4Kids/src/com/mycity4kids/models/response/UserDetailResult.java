@@ -37,6 +37,16 @@ public class UserDetailResult implements Parcelable {
     private String totalArticles;
     private String totalArticlesViews;
 
+    public String getRewardsAdded() {
+        return rewardsAdded;
+    }
+
+    public void setRewardsAdded(String rewardsAdded) {
+        this.rewardsAdded = rewardsAdded;
+    }
+
+    private String rewardsAdded;
+
 
     protected UserDetailResult(Parcel in) {
         id = in.readString();
@@ -62,6 +72,7 @@ public class UserDetailResult implements Parcelable {
         totalArticlesViews = in.readString();
         gender = in.readString();
         blogTitleSlug = in.readString();
+        rewardsAdded = in.readString();
     }
 
     public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
@@ -337,6 +348,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(totalArticlesViews);
         parcel.writeString(gender);
         parcel.writeString(blogTitleSlug);
+        parcel.writeString(rewardsAdded);
     }
 
     public class SocialTokens {

@@ -929,4 +929,25 @@
     <string name="rewards_save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
     <string name="momspresso_rewards">"മോംസ്പ്രേസ്സോ റീവാർഡുകൾ "</string>
     <string name="rewards_participate">പ്രൊഫൈൽ പൂരിപ്പിക്കൂ, ഇതിൽ പങ്ക് ചേരൂ, സമ്പാദിക്കാൻ തുടങ്ങൂ!</string>
+    <string name="save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
+    <string name="rewards_personal_header">ഈ വിവരം ഞങ്ങൾക്ക് താങ്കളുമായി ബന്ധപ്പെടാൻ ആവശ്യമാണ്.</string>
+    <string name="rewards_welcome">" മോംസ്പ്രെസ്സോ റിവാർഡ്‌സിലേക്ക് സ്വാഗതം"</string>
+    <string name="rewards_description">വിപണനത്തിൽ മുൻനിരയിലുള്ള ബ്രാൻഡുകൾ സർവ്വേ, ഓൺലൈൻ വിപണനത്തെ കുറിച്ചുള്ള അവലോകനങ്ങൾ, സ്‌പോൺസേർഡ് ബ്ലോഗ്ഗുകൾ തുടങ്ങിയ ക്യാമ്പെയ്‌നുകൾ പതിവായി നടത്തി വരാറുണ്ട്.താങ്കൾക്ക് ഈ ക്യാമ്പെയ്‌നുകളിൽ ഭാഗമാകാനുള്ള യോഗ്യത പരിശോധിക്കാൻ ഞങ്ങൾക്ക് ചില വിവരങ്ങൾ താങ്കളിൽ നിന്ന് ആവശ്യമുണ്ട്. ഇത്തരം ക്യാമ്പെയ്‌നുകളിൽ പങ്കെടുക്കുന്നത് വഴി താങ്കൾക്ക് സാമ്പത്തിക ലാഭവും മോംസ്പ്രെസ്സോ റിവാർഡുകളും ലഭിക്കുന്നതാണ്.</string>
+    <string name="rewards_start_now">ഇപ്പോൾ തന്നെ തുടങ്ങുക</string>
+    <string name="rewards_family_header">"താഴെ കൊടുത്തിരിക്കുന്ന വിവരങ്ങൾ താങ്കൾക്ക് വിവിധ ക്യാമ്പെയ്‌നുകളിൽ പങ്കെടുക്കാനുള്ള യോഗ്യത നിർണ്ണയിക്കാൻ ഞങ്ങൾക്ക് ആവശ്യമാണ്. "</string>
+    <string name="rewards_social_header">" ഈ വിവരം ഞങ്ങൾക്ക് താങ്കളെ ഞങ്ങളുടെ സാമൂഹ്യ മാദ്ധ്യമങ്ങളിലുള്ള ക്യാമ്പെയ്‌നുകളിലേക്ക് ക്ഷണിക്കാൻ ആവശ്യമാണ്."</string>
+    <string name="rewards_number_of_kids">"എത്ര കുട്ടികൾ "</string>
+    <string name="rewards_interest">"താല്പര്യങ്ങൾ "</string>
+    <string name="rewards_not_working">"ജോലി ചെയ്യുന്നില്ല "</string>
+    <string name="rewards_are_expecing">"ഗർഭിണിയാണ് "</string>
+
+    <string name="cannot_be_left_blank">%1$s ശൂന്യമായി ഇടരുത്</string>
+    <string name="please_enter_a_valid">ദയവായി നിലവിലുള്ള %1$s ടൈപ്പ് ചെയ്യുക</string>
+    <string name="need_to_select_option">%1$s നായി തന്നിരിക്കുന്നതിൽ നിന്ന് ഒരു ഓപ്ഷൻ തിരഞ്ഞെടുക്കുക</string>
+    <string name="rewards_expected_date">"ഡ്യൂ ഡേറ്റ് "</string>
+    <string name="rewards_mobile_number_verified">മൊബൈൽ നമ്പർ സ്ഥിരീകരിച്ചിരുന്നു</string>
+    <string name="rewards_have_children">നിങ്ങൾക്ക് കുട്ടികളുണ്ടോ?</string>
+    <string name="rewards_tab_detail">പ്രതിഫലങ്ങൾ</string>
+    <string name="rewards_add_child">കുട്ടിയെ ചേർക്കുക</string>
+    <string name="rewards_kid_detail">കുട്ടിയെ കുറിച്ച്</string>
 </resources>

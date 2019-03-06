@@ -61,9 +61,6 @@ import java.util.*
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 /**
  * A simple [Fragment] subclass.
  */
@@ -99,6 +96,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     }
 
     override fun updateUi(response: Response?) {
+
     }
 
     private lateinit var containerView: View
@@ -117,7 +115,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     private var householdList = ArrayList<String>()
     private var professionList = ArrayList<String>()
     private var mGoogleApiClient: GoogleApiClient? = null
-    private lateinit var apiGetResponse: RewardsDetailsResultResonse
+    private var apiGetResponse: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
     private var loginMode = ""
     private var mApp: InstagramApp? = null
     private var userInfoHashmap = HashMap<String, String>()
@@ -162,8 +160,8 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     /*fetch data from server*/
     private fun fetchRewardsData() {
-//        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+//        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
@@ -187,6 +185,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 }
 
                 override fun onError(e: Throwable) {
+                    removeProgressDialog()
                     Log.e("exception in error", e.message.toString())
                 }
             })
@@ -232,7 +231,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     private fun setValuesForSocial(platformName: Constants.SocialPlatformName, token: String) {
         if (apiGetResponse.socialAccounts != null && apiGetResponse.socialAccounts!!.isNotEmpty()) {
-            var socialAccountsListNotContainsGivenPlatform = ArrayList<SocialAccountObject>(apiGetResponse.socialAccounts!!.filter { it -> !it.platform_name.equals(platformName.name)})
+            var socialAccountsListNotContainsGivenPlatform = ArrayList<SocialAccountObject>(apiGetResponse.socialAccounts!!.filter { it -> !it.platform_name.equals(platformName.name) })
             var socialAccountsListByGivenPlatform = apiGetResponse.socialAccounts!!.filter { it -> it.platform_name.equals(platformName.name) }
             if (socialAccountsListByGivenPlatform.isNotEmpty()) {
                 var localSocialAccout = SocialAccountObject()
@@ -261,7 +260,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 }
                 socialAccountsListNotContainsGivenPlatform.add(localSocialAccout)
             }
-            apiGetResponse.socialAccounts=socialAccountsListNotContainsGivenPlatform
+            apiGetResponse.socialAccounts = socialAccountsListNotContainsGivenPlatform
         } else {
             var localSocialAccout = SocialAccountObject()
             if (platformName.name.equals(Constants.SocialPlatformName.facebook.name, true)) {
@@ -392,8 +391,8 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     /*fetch data from server*/
     private fun postDataofRewardsToServer() {
-//        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+//        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
@@ -416,7 +415,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 }
 
                 override fun onError(e: Throwable) {
-
+                    removeProgressDialog()
                 }
             })
         }

@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
-                android:text="We need this information to get in touch with you"
+                android:text="@string/rewards_personal_header"
                 android:textAllCaps="true"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/app_grey"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
-                android:text="@string/first_name"
+                android:text="@string/rewards_first_name"
                 android:textAllCaps="true"
                 android:textColor="@color/app_grey"
                 android:textSize="14sp"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
-                android:text="@string/last_name"
+                android:text="@string/rewards_last_name"
                 android:textAllCaps="true"
                 android:textColor="@color/app_grey"
                 android:textSize="14sp"
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
-                android:text="@string/app_settings.edit_profile.hint_phone"
+                android:text="@string/rewards_phone"
                 android:textColor="@color/app_grey"
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
@@ -121,7 +121,7 @@
                     android:layout_marginEnd="0dp"
                     android:layout_marginRight="0dp"
                     android:layout_marginBottom="0dp"
-                    android:text="ADD NUMBER AND VERIFIED"
+                    android:text="ADD NUMBER AND VERIFY"
                     android:background="@drawable/mainprofile_thin_border"
                     android:gravity="center"
                     android:inputType="number"
@@ -147,7 +147,7 @@
                     android:layout_marginEnd="0dp"
                     android:layout_marginRight="0dp"
                     android:layout_marginBottom="0dp"
-                    android:text="CELL NUMBER VERIFIED"
+                    android:text="@string/rewards_mobile_number_verified"
                     android:background="@drawable/mainprofile_thin_border"
                     android:gravity="center_vertical"
                     android:inputType="number"
@@ -180,7 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
-                android:text="EMAIL"
+                android:text="@string/rewards_email"
                 android:textColor="@color/app_grey"
                 app:fontName="oswald_regular.ttf" />
 
@@ -214,7 +214,7 @@
                     android:id="@+id/textViewLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/location"
+                    android:text="@string/rewards_location"
                     android:textColor="@color/app_grey"
                     app:fontName="oswald_regular.ttf" />
 
@@ -261,6 +261,7 @@
                 android:gravity="center"
                 android:text="@string/save_continue"
                 android:textColor="@color/white"
+                android:layout_marginBottom="10dp"
                 android:textSize="18sp" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

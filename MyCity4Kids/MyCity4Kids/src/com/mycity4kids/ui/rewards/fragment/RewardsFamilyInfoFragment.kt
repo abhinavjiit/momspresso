@@ -149,7 +149,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     private lateinit var radioNo: AppCompatRadioButton
     private lateinit var radioExpecting: AppCompatRadioButton
     private lateinit var linearKidsDetail: LinearLayout
-    private lateinit var apiGetResponse: RewardsDetailsResultResonse
+    private var apiGetResponse: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
     private lateinit var radioGroupWorkingStatus: RadioGroup
     private var preSelectedInterest = ArrayList<String>()
     private var preSelectedInterestForPosting = ArrayList<Int>()
@@ -197,8 +197,8 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
     /*fetch data from server*/
     private fun fetchRewardsData() {
-//        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        //var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 2).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
@@ -377,12 +377,12 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         RewardsFamilyInfoFragment.textDOB.setOnClickListener {
             RewardsFamilyInfoFragment.textView = RewardsFamilyInfoFragment.textDOB
-            showDatePickerDialog()
+            showDatePickerDialog(true)
         }
 
         RewardsFamilyInfoFragment.textKidsDOB.setOnClickListener {
             RewardsFamilyInfoFragment.textView = RewardsFamilyInfoFragment.textKidsDOB
-            showDatePickerDialog()
+            showDatePickerDialog(true)
         }
 
 
@@ -430,7 +430,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         editExpectedDate.setOnClickListener {
             RewardsFamilyInfoFragment.textView = editExpectedDate
-            showDatePickerDialog()
+            showDatePickerDialog(false)
         }
 
         containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
@@ -477,7 +477,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
     private fun validateChildData(): Boolean {
         if (RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
-            Toast.makeText(activity, "DOB " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -498,14 +498,14 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
 
         if (RewardsFamilyInfoFragment.textDOB.text.isNullOrEmpty()) {
-            Toast.makeText(activity, resources.getString(R.string.please_enter_a_valid) + "Date Of Birth", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
             return false
         } else {
-            apiGetResponse.expectedDate = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textDOB.text.toString())
+            apiGetResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textDOB.text.toString())
         }
 
         if (preSelectedLanguage.isEmpty()) {
-            Toast.makeText(activity, "Language " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_language)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.preferred_languages = preSelectedLanguage
@@ -518,6 +518,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
 
         if (!preSelectedInterest.isEmpty()) {
+            preSelectedInterestForPosting.clear()
             (preSelectedInterest).forEach {
                 try {
                     preSelectedInterestForPosting.add(it.toInt())
@@ -530,34 +531,37 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         if (checkAreYouExpecting.isChecked) {
             if (editExpectedDate.text.isNullOrEmpty()) {
-                Toast.makeText(activity, resources.getString(R.string.please_enter_a_valid) + "Expected Date", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_expected_date)), Toast.LENGTH_SHORT).show()
                 return false
             } else {
                 apiGetResponse.isExpecting = 1
                 apiGetResponse.expectedDate = DateTimeUtils.convertStringToTimestamp(editExpectedDate.text.toString())
             }
-        }else{
-            apiGetResponse.isExpecting=0
-            apiGetResponse.expectedDate=0
+        } else {
+            apiGetResponse.isExpecting = 0
+            apiGetResponse.expectedDate = 0
         }
 
-        if(linearKidsDetail.childCount>0){
-            var kidsList = ArrayList<KidsInfoResponse>()
-            for(i in 0..linearKidsDetail.childCount){
-                var kidsInfoResponse = KidsInfoResponse()
-                if(linearKidsDetail.getChildAt(i)!=null){
-                    kidsInfoResponse.gender = if(linearKidsDetail.getChildAt(i).findViewById<Spinner>(R.id.spinnerGender).selectedItemPosition==0){
-                        0
-                    }else{
-                        1
+        if(radioGroupAreMother.checkedRadioButtonId == R.id.radioYes){
+            if (linearKidsDetail.childCount > 0) {
+                var kidsList = ArrayList<KidsInfoResponse>()
+                for (i in 0..linearKidsDetail.childCount) {
+                    var kidsInfoResponse = KidsInfoResponse()
+                    if (linearKidsDetail.getChildAt(i) != null) {
+                        kidsInfoResponse.gender = if (linearKidsDetail.getChildAt(i).findViewById<Spinner>(R.id.spinnerGender).selectedItemPosition == 0) {
+                            0
+                        } else {
+                            1
+                        }
+                        kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString())
+                        kidsList.add(kidsInfoResponse)
                     }
-                    kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString())
-                    kidsList.add(kidsInfoResponse)
                 }
+                apiGetResponse.kidsInfo = kidsList
+            } else {
+                Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                return false
             }
-            apiGetResponse.kidsInfo=kidsList
-        }else{
-
         }
 
         apiGetResponse.latitude = 28.7041
@@ -606,7 +610,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         textDOB.setOnClickListener {
             RewardsFamilyInfoFragment.textDOB = it as TextView
-            showDatePickerDialog()
+            showDatePickerDialog(true)
         }
 
         if (gender != null && !date.isNullOrEmpty()) {
@@ -629,14 +633,22 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         internal var curent_year = c.get(Calendar.YEAR)
         internal var current_month = c.get(Calendar.MONTH)
         internal var current_day = c.get(Calendar.DAY_OF_MONTH)
+        var isShowTillCurrent: Boolean = false
 
 
         @SuppressLint("NewApi")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             // Use the current date as the default date in the picker
             val dlg = DatePickerDialog(activity, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day)
+
+            if (arguments != null) {
+                isShowTillCurrent = arguments.getBoolean("is_show_current_only", false)
+            }
             dlg.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dlg.datePicker.maxDate = c.timeInMillis
+            if(isShowTillCurrent){
+                dlg.datePicker.maxDate = c.timeInMillis
+            }
+
             return dlg
         }
 
@@ -676,15 +688,18 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
     }
 
-    fun showDatePickerDialog() {
+    fun showDatePickerDialog(isShowTillCurrent : Boolean) {
         val newFragment = DatePickerFragment()
+        var bundle = Bundle()
+        bundle.putBoolean("is_show_current_only", isShowTillCurrent)
+        newFragment.arguments = bundle
         newFragment.show(activity.supportFragmentManager, "datePicker")
     }
 
     /*fetch data from server*/
     private fun postDataofRewardsToServer() {
-//        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+//        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="125"
+    android:versionCode="126"
     android:versionName="9.9">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
@@ -33,7 +33,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    !-- Maps API needs OpenGL ES 2.0. -->
+    <!-- Maps API needs OpenGL ES 2.0. -->
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -127,10 +127,8 @@
         <!-- <intent-filter android:autoVerify="true"> -->
         <!-- <action android:name="android.intent.action.VIEW" /> -->
 
-
         <!-- <category android:name="android.intent.category.DEFAULT" /> -->
         <!-- <category android:name="android.intent.category.BROWSABLE" /> -->
-
 
         <!-- </intent-filter> -->
         <!-- </activity> -->
@@ -654,11 +652,14 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.rewards.activity.RewardsContainerActivity">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+        <activity android:name=".ui.rewards.activity.RewardsContainerActivity"
+            android:screenOrientation="portrait">
+
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
     </application>
 </manifest>

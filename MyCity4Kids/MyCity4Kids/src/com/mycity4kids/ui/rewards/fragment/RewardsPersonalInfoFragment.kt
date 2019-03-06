@@ -91,7 +91,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 //    private lateinit var genderSpinner: AppCompatSpinner
     //private lateinit var textDOB: TextView
     private lateinit var textVerify: TextView
-    private lateinit var apiGetResponse: RewardsDetailsResultResonse
+    private var apiGetResponse: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
     private var cityList = ArrayList<CityInfoItem>()
     private var selectedCityId: Int = 0
     private var newSelectedCityId: String? = null
@@ -191,21 +191,21 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     fun prepareDataForPosting(): Boolean {
         if (editFirstName.text.isNullOrEmpty()) {
-            Toast.makeText(activity, "First Name " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_first_name)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.firstName = editFirstName.text.toString()
         }
 
         if (editLastName.text.isNullOrEmpty()) {
-            Toast.makeText(activity, "Last Name " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_last_name)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.lastName = editLastName.text.toString()
         }
 
         if (accountKitAuthCode.isNullOrEmpty() && apiGetResponse.contact.isNullOrEmpty()) {
-            Toast.makeText(activity, "Contact " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_phone)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             if (!apiGetResponse.contact.isNullOrEmpty()) {
@@ -218,17 +218,17 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
 
         if (editEmail.text.isNullOrEmpty()) {
-            Toast.makeText(activity, "Email " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_email)), Toast.LENGTH_SHORT).show()
             return false
         } else if (isMailValid()) {
             apiGetResponse.email = editEmail.text.toString()
         } else {
-            Toast.makeText(activity, resources.getString(R.string.enter_valid_email), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, resources.getString(R.string.please_enter_a_valid, resources.getString(R.string.rewards_email)), Toast.LENGTH_SHORT).show()
             return false
         }
 
         if (editLocation.text.isNullOrEmpty()) {
-            Toast.makeText(activity, "Location " + resources.getString(R.string.cannot_be_left_blank), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_location)), Toast.LENGTH_SHORT).show()
             return false
         } else {
             apiGetResponse.location = editLocation.text.toString()
@@ -265,13 +265,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
                     if (data != null && resultCode == Activity.RESULT_OK) {
                         accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
+                        Log.e("account code ", accountKitAuthCode)
                         apiGetResponse.contact = null
                         editPhone.visibility = View.VISIBLE
                         textVerify.visibility = View.VISIBLE
                         editAddNumber.visibility = View.GONE
                     }
                 }
-
             }
         }
     }
@@ -296,8 +296,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     /*post data to server*/
     private fun postDataofRewardsToServer() {
-        //var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        //var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
             Log.e("sending json", Gson().toJson(apiGetResponse))
@@ -321,6 +321,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
 
                 override fun onError(e: Throwable) {
+                    removeProgressDialog()
                     Log.e("exception in error", e.message.toString())
                 }
             })
@@ -329,8 +330,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     /*fetch data from server*/
     private fun fetchRewardsData() {
-//        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+//        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
@@ -365,8 +366,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     }
 
     private fun fetchCityData() {
-        //var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        //var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
                 override fun onComplete() {
