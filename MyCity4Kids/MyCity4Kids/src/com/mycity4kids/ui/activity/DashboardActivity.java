@@ -1844,6 +1844,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     for (int j = 0; j < num_of_categorys; j++) {
                         if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
 
+
                             videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
                           /*  num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
                             for (int k = num_of_challeneges - 1; k >= 0; k--) {
@@ -1855,6 +1856,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                             videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
                                             videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
                                             break;
+=======
+                            num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                            if (num_of_challeneges != 0) {
+                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                    if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                        if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                            if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                                                break;
+                                            }
+>>>>>>> 6a282990b0111ad5b1c3ea6bf3092f25dea644fe
                                         }
                                     }
                                 }
@@ -1883,6 +1898,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (num_of_categorys != 0) {
                         for (int j = 0; j < num_of_categorys; j++) {
                             if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+
                                 videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
 
                                /* num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
@@ -1895,6 +1911,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                                 videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
                                                 videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
                                                 break;
+=======
+                                num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                                if (num_of_challeneges != 0) {
+                                    for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                        if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                            if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                                if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                    videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                    videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                    videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                    videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                                                    break;
+                                                }
+>>>>>>> 6a282990b0111ad5b1c3ea6bf3092f25dea644fe
                                             }
                                         }
                                     }
@@ -1936,6 +1966,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 if (num_of_categorys != 0) {
                                     for (int j = 0; j < num_of_categorys; j++) {
                                         if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.VIDEO_CHALLENGE_ID)) {
+
                                             videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
 
                                            /* num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
@@ -1948,6 +1979,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                                             videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
                                                             videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
                                                             break;
+=======
+                                            num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                                            if (num_of_challeneges != 0) {
+                                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                                    if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                                        if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                                            if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                                videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                                videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                                videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                                videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                                                                break;
+                                                            }
+>>>>>>> 6a282990b0111ad5b1c3ea6bf3092f25dea644fe
                                                         }
                                                     }
                                                 }

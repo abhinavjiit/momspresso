@@ -58,21 +58,19 @@ import kotlinx.android.synthetic.main.event_details_activity.*
 import org.apmem.tools.layouts.FlowLayout
 import java.security.MessageDigest
 import java.util.*
+import java.util.stream.Collectors
 import kotlin.collections.ArrayList
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
  */
 class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient.OnConnectionFailedListener, InstagramApp.OAuthAuthenticationListener {
     override fun onSuccess() {
-        if (mApp!!.hasAccessToken()) {
-            editInstagram.setText(getString(R.string.rewards_social_instagram_connected))
-            instagramAuthToken= mApp!!.accessToken
-            setValuesForSocial(Constants.SocialPlatformName.instagram, instagramAuthToken!!)
-        }
+//        if (mApp!!.hasAccessToken()) {
+//            editInstagram.setText(getString(R.string.rewards_social_instagram_connected))
+//            instagramAuthToken = mApp!!.accessToken
+//            setValuesForSocial(Constants.SocialPlatformName.instagram, instagramAuthToken!!)
+//        }
     }
 
     override fun onFail(error: String?) {
@@ -85,7 +83,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     override fun getFacebookUser(user: String?) {
         try {
             if (user != null) {
-                facebookAuthToken= user
+                facebookAuthToken = user
                 editFacebook.setText(getString(R.string.rewards_social_facebook_connected))
                 setValuesForSocial(Constants.SocialPlatformName.facebook, facebookAuthToken!!)
             }
@@ -98,6 +96,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     }
 
     override fun updateUi(response: Response?) {
+
     }
 
     private lateinit var containerView: View
@@ -116,13 +115,13 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     private var householdList = ArrayList<String>()
     private var professionList = ArrayList<String>()
     private var mGoogleApiClient: GoogleApiClient? = null
-    private lateinit var apiGetResponse: RewardsDetailsResultResonse
+    private var apiGetResponse: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
     private var loginMode = ""
     private var mApp: InstagramApp? = null
     private var userInfoHashmap = HashMap<String, String>()
     private var callbackManager: CallbackManager? = null
-    private var facebookAuthToken : String? = null
-    private var instagramAuthToken : String? = null
+    private var facebookAuthToken: String? = null
+    private var instagramAuthToken: String? = null
 
     companion object {
         fun newInstance() = RewardsSocialInfoFragment().apply {
@@ -156,35 +155,13 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         fetchRewardsData()
 
 
-        mApp = InstagramApp(activity, Constants.CLIENT_ID,
-                Constants.CLIENT_SECRET, Constants.INSTA_CALLBACK_URL)
-        mApp!!.setListener(this)
-
-//        mApp!!.setListener(object : InstagramApp.OAuthAuthenticationListener{
-//            override fun onSuccess() {
-//                //mApp!!.fetchUserName(handler)
-//            }
-//
-//            override fun onFail(error: String?) {
-//                Toast.makeText(activity, error, Toast.LENGTH_SHORT)
-//                        .show()
-//            }
-//
-//        })
-//
-        if (mApp!!.hasAccessToken()) {
-            editInstagram.setText(getString(R.string.rewards_social_instagram_connected))
-            instagramAuthToken= mApp!!.accessToken
-        }
-
-
         return containerView
     }
 
     /*fetch data from server*/
     private fun fetchRewardsData() {
-//        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+//        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
@@ -208,6 +185,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 }
 
                 override fun onError(e: Throwable) {
+                    removeProgressDialog()
                     Log.e("exception in error", e.message.toString())
                 }
             })
@@ -215,34 +193,34 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     }
 
     private fun setValuesToComponents() {
-        if(apiGetResponse.socialAccounts!=null && apiGetResponse.socialAccounts!!.isNotEmpty()){
+        if (apiGetResponse.socialAccounts != null && apiGetResponse.socialAccounts!!.isNotEmpty()) {
             (apiGetResponse.socialAccounts)!!.forEach {
-                when(it.platform_name){
-                    Constants.SocialPlatformName.facebook.name ->{
-                        if(!it.acc_link.isNullOrEmpty()){
+                when (it.platform_name) {
+                    Constants.SocialPlatformName.facebook.name -> {
+                        if (!it.acc_link.isNullOrEmpty()) {
                             editFacebook.setText(getString(R.string.rewards_social_facebook_connected))
                         }
                     }
 
-                    Constants.SocialPlatformName.instagram.name ->{
-                        if(it.acc_link!=null && !it.acc_link!!.trim().isNullOrBlank()){
-                            editInstagram.setText(getString(R.string.rewards_social_instagram_connected))
+                    Constants.SocialPlatformName.instagram.name -> {
+                        if (it.acc_link != null && !it.acc_link!!.trim().isNullOrBlank()) {
+                            editInstagram.setText(it.acc_link)
                         }
                     }
 
-                    Constants.SocialPlatformName.twitter.name ->{
-                        if(it.acc_link!=null && !it.acc_link!!.trim().isNullOrBlank()){
+                    Constants.SocialPlatformName.twitter.name -> {
+                        if (it.acc_link != null && !it.acc_link!!.trim().isNullOrBlank()) {
                             editTwitter.setText(it.acc_link)
                         }
                     }
 
-                    Constants.SocialPlatformName.youtube.name ->{
-                        if(it.acc_link!=null && !it.acc_link!!.trim().isNullOrBlank()){
+                    Constants.SocialPlatformName.youtube.name -> {
+                        if (it.acc_link != null && !it.acc_link!!.trim().isNullOrBlank()) {
                             editYoutube.setText(it.acc_link)
                         }
                     }
-                    Constants.SocialPlatformName.website.name ->{
-                        if(it.acc_link!=null && !it.acc_link!!.trim().isNullOrBlank()){
+                    Constants.SocialPlatformName.website.name -> {
+                        if (it.acc_link != null && !it.acc_link!!.trim().isNullOrBlank()) {
                             editWebsite.setText(it.acc_link)
                         }
                     }
@@ -251,26 +229,55 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         }
     }
 
-    private fun setValuesForSocial(platformName : Constants.SocialPlatformName , token : String) {
-        if(apiGetResponse.socialAccounts!=null && apiGetResponse.socialAccounts!!.isNotEmpty()){
-            var tempSocialAccounts = apiGetResponse.socialAccounts!!.filter { it -> it.platform_name == platformName.name}
-            if(tempSocialAccounts.isNotEmpty()){
-                tempSocialAccounts.get(0).access_token = token
-                tempSocialAccounts.get(0).platform_name = platformName.name
-            }else{
+    private fun setValuesForSocial(platformName: Constants.SocialPlatformName, token: String) {
+        if (apiGetResponse.socialAccounts != null && apiGetResponse.socialAccounts!!.isNotEmpty()) {
+            var socialAccountsListNotContainsGivenPlatform = ArrayList<SocialAccountObject>(apiGetResponse.socialAccounts!!.filter { it -> !it.platform_name.equals(platformName.name) })
+            var socialAccountsListByGivenPlatform = apiGetResponse.socialAccounts!!.filter { it -> it.platform_name.equals(platformName.name) }
+            if (socialAccountsListByGivenPlatform.isNotEmpty()) {
                 var localSocialAccout = SocialAccountObject()
+                if (socialAccountsListByGivenPlatform.get(0).platform_name.equals(Constants.SocialPlatformName.facebook.name, true)) {
+//                    SocialAccountsListByGivenPlatform.get(0).access_token = token
+//                    SocialAccountsListByGivenPlatform.get(0).platform_name = platformName.name
+                    localSocialAccout.platform_name = platformName.name
+                    localSocialAccout.access_token = token
+                    localSocialAccout.id = socialAccountsListByGivenPlatform.get(0).id
+                } else {
+                    localSocialAccout.platform_name = platformName.name
+                    localSocialAccout.acc_link = token
+                    localSocialAccout.id = socialAccountsListByGivenPlatform.get(0).id
+                }
+                socialAccountsListNotContainsGivenPlatform.add(localSocialAccout)
+            } else {
+                var localSocialAccout = SocialAccountObject()
+                if (platformName.name.equals(Constants.SocialPlatformName.facebook.name, true)) {
+                    localSocialAccout.access_token = token
+                    localSocialAccout.platform_name = platformName.name
+                    apiGetResponse.socialAccounts!!.add(localSocialAccout)
+                } else {
+                    localSocialAccout.acc_link = token
+                    localSocialAccout.platform_name = platformName.name
+                    apiGetResponse.socialAccounts!!.add(localSocialAccout)
+                }
+                socialAccountsListNotContainsGivenPlatform.add(localSocialAccout)
+            }
+            apiGetResponse.socialAccounts = socialAccountsListNotContainsGivenPlatform
+        } else {
+            var localSocialAccout = SocialAccountObject()
+            if (platformName.name.equals(Constants.SocialPlatformName.facebook.name, true)) {
                 localSocialAccout.access_token = token
                 localSocialAccout.platform_name = platformName.name
                 apiGetResponse.socialAccounts!!.add(localSocialAccout)
+            } else {
+                localSocialAccout.acc_link = token
+                localSocialAccout.platform_name = platformName.name
+                apiGetResponse.socialAccounts!!.add(localSocialAccout)
             }
-        }else{
-            var localSocialAccout = SocialAccountObject()
-            localSocialAccout.access_token = token
-            localSocialAccout.platform_name = platformName.name
             var localListSocialAccount = ArrayList<SocialAccountObject>()
             localListSocialAccount.add(localSocialAccout)
             apiGetResponse.socialAccounts = localListSocialAccount
         }
+
+        //Log.e("apiGetResponse is ", Gson().toJson(apiGetResponse))
     }
 
     private fun initializeXMLComponents() {
@@ -287,11 +294,11 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         editYoutube = containerView.findViewById(R.id.editYoutube)
 
         layoutInstagram.setOnClickListener {
-            AuthenticateWithInstagram()
+            //AuthenticateWithInstagram()
         }
 
         editInstagram.setOnClickListener {
-            AuthenticateWithInstagram()
+            //AuthenticateWithInstagram()
         }
 
         layoutFacebook.setOnClickListener {
@@ -359,20 +366,33 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         }
 
         containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
-            postDataofRewardsToServer()
+            if (prepareDataForPosting()) {
+                postDataofRewardsToServer()
+            }
         }
     }
 
-    private fun AuthenticateWithInstagram() {
-        if (!mApp!!.hasAccessToken()) {
-            mApp!!.authorize()
+    private fun prepareDataForPosting(): Boolean {
+        if (!editInstagram.text.isNullOrEmpty()) {
+            setValuesForSocial(Constants.SocialPlatformName.instagram, editInstagram.text.toString())
         }
+        if (!editTwitter.text.isNullOrEmpty()) {
+            setValuesForSocial(Constants.SocialPlatformName.twitter, editTwitter.text.toString())
+        }
+        if (!editWebsite.text.isNullOrEmpty()) {
+            setValuesForSocial(Constants.SocialPlatformName.website, editWebsite.text.toString())
+        }
+        if (!editYoutube.text.isNullOrEmpty()) {
+            setValuesForSocial(Constants.SocialPlatformName.youtube, editYoutube.text.toString())
+        }
+
+        return true
     }
 
     /*fetch data from server*/
     private fun postDataofRewardsToServer() {
-//        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+//        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
@@ -395,7 +415,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 }
 
                 override fun onError(e: Throwable) {
-
+                    removeProgressDialog()
                 }
             })
         }
@@ -422,7 +442,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         FacebookUtils.onActivityResult(activity, requestCode, resultCode, data)
     }
 
-    fun updateFaceBookView(){
+    fun updateFaceBookView() {
         editFacebook.setText(getString(R.string.rewards_social_facebook_connected))
     }
 

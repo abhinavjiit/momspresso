@@ -268,6 +268,11 @@ public class Topics implements Parcelable {
         isSelected = in.readByte() != 0;
         slug = in.readString();
         in.readTypedList(this.extraData, ExtraData.CREATOR);
+
+
+
+        //extraData = in.readParcelable(ExtraData.class.getClassLoader());
+
         //  extraData = in.createTypedArrayList(ExploreTopicsModel.CREATOR);
 
 

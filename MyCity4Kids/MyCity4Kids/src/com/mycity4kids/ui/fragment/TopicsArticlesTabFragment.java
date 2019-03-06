@@ -100,6 +100,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     private MixpanelAPI mixpanel;
     private String jsonMyObject;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -157,6 +158,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             }
         });
 
+
         Bundle extras = getArguments();
         if (extras != null) {
             jsonMyObject = extras.getString("currentSubTopic");
@@ -172,6 +174,21 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             selectedTopic = currentSubTopic;
         }
 */
+
+        /* if (getArguments() != null) {*/
+
+
+       /* Bundle extras = getArguments();
+        if (extras != null) {
+            jsonMyObject = extras.getString("currentSubTopic");
+        }
+        currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
+        selectedTopic = currentSubTopic;*/
+          /*  currentSubTopic = (Topics) getArguments().getParcelable("currentSubTopic");
+            selectedTopic = currentSubTopic;*/
+
+
+
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         mDatalist = new ArrayList<>();

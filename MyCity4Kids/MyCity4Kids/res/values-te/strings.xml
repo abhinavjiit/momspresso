@@ -111,11 +111,13 @@
     <string name="duration_txt">వ్యవధి</string>
     <string name="cost_txt">ఖర్చు</string>
 
+
+
     <string name="event_added">ఈవెంట్ జోడించడం జరిగింది</string>
 
 
     <string name="new_yes">అవును</string>
-    <string name="new_cancel">రద్దు</string>
+    <string name="new_cancel">క్యాన్సిల్ </string>
     <string name="load_error">కంటైనర్ లోడ్ విఫలం</string>
     <string name="example_post_title_placeholder">ఆర్టికల్ టైటిల్</string>
     <string name="example_post_content_placeholder">మీ కథను ఇక్కడ షేర్ చేయండి</string>
@@ -134,7 +136,7 @@
     <string name="analytics.popup.improve_rank">నా రాంక్ ని ఎలా మెరుగుపరుచుకోవచ్చు</string>
     <string name="analytics.popup.improve_social">నా సోషల్ షేర్ ని ఎలా మెరుగుపరచుకోవచ్చు</string>
 
-    <string name="videos.dialog.title">అప్లోడ్  చేసే వీడియో ఎంచుకోండిి</string>
+    <string name="videos.dialog.title">అప్లోడ్  చేసే వీడియో ఎంచుకోండి</string>
     <string name="videos.upload_option.camera">వీడియో తీయండి</string>
     <string name="videos.upload_option.gallery">గ్యాలరీ నించి ఎంచుకోండి</string>
     <string name="videos.upload_option.cancel">క్యాన్సల్</string>
@@ -151,7 +153,7 @@
     <string name="ad.comments.fb_comment">ఫేస్ బుక్ కామెంట్</string>
     <string name="ad.comments.edit_label">మార్చు</string>
     <string name="ad.comments.save">సేవ్</string>
-    <string name="ad.comments.toast_empty_comment">దయచేసి చెల్లుబాటు అయ్యే వివరాలు ఇవ్వండి</string>
+    <string name="ad.comments.toast_empty_comment">దయచేసి చెల్లుబాతో  అయ్యే వివరాలు ఇవ్వండి</string>
     <string name="ad.comments.toolbar.title">కామెంట్లు</string>
     <string name="ad.comments.replying_to">మీరు కు జవాబు ఇస్తున్నారు %1$s</string>
     <string name="ad.bottom_bar.facebook">ఫేస్ బుక్</string>
@@ -202,7 +204,7 @@
         <item>మీ బ్లాగులను ఫేస్ బుక్, వాట్సాప్ వంటి అన్ని నెటీవర్కులలో షేర్ చేయండి</item>
     </string-array>
 
-    <string name="confirmation_dialog.delete_draft.message">మీ డ్రాఫ్ట్ ని డిలీట్ చెయ్యాలి అనుకుంటున్నారా?</string>
+    <string name="confirmation_dialog.delete_draft.message">మీ డ్రాఫ్ట్ ని డిలీట్ చెయ్యాలి అనుకుంతోన్నారా?</string>
     <string name="confirmation_dialog.no">కాదు</string>
     <string name="confirmation_dialog.yes">అవును</string>
 
@@ -577,7 +579,7 @@
     <string name="rate_now">ఇప్పుడే రేట్ చేయండి</string>
     <string name="rate_us.dialog.title">మా ఆప్ ని రేట్ చేయండి?</string>
     <string name="rate_us.dialog.not_now">ఇప్పుడు కాదు</string>
-    <string name="rate_us.dialog.message1">మామ్స్‌ప్రెస్సోయాప్ ని ఎంజాయ్ చేస్తుంటే దయచేసి రేటింగ్స్ ఇవ్వండి</string>
+    <string name="rate_us.dialog.message1">మామ్స్‌ప్రెస్సో యాప్ ని ఎంజాయ్ చేస్తుంటే దయచేసి రేటింగ్స్ ఇవ్వండి</string>
     <string name="rate_us.dialog.message2">మీ మద్దతు కోసం ధన్యవాదాలు</string>
 
     <string name="suggested_topic.start_writing">రాయటం మొదలుపెట్టండి</string>
@@ -879,4 +881,25 @@
     <string name="rewards_save_continue">సేవ్ చేసి కొనసాగండి</string>
     <string name="momspresso_rewards">"మామ్స్‌ప్రెస్సో రివార్ద్స్‌ "</string>
     <string name="rewards_participate">"మీ ప్రొఫైల్ పూర్తి చేసి పాల్గొనండి మరియు సంపాదించండి! "</string>
+    <string name="save_continue">సేవ్ చేసి కొనసాగండి</string>
+    <string name="rewards_personal_header">మీతో సన్నిహితంగా ఉండటానికి ఈ సమాచారం మాకు అవసరం</string>
+    <string name="rewards_welcome">మామ్స్‌ప్రెస్సో రివార్ద్స్‌కు స్వాగతం!</string>
+    <string name="rewards_description">సర్వేలు, ఇ-కామర్స్ సమీక్షలు, ప్రాయోజిత బ్లాగులు మరియు ఇతర    ప్రముఖ బ్రాండ్స్ క్రమ పద్ధతిలో ప్రచారం చేస్తుంటారు   . ఈ ప్రచారానికి మీ అర్హతను నిర్ణయించడానికి మీ నుండి కొంత సమాచారం మాకు అవసరం. ఈ ప్రచారంలో పాల్గొనడం వలన మీకు డబ్బు అందించే మామ్స్‌ప్రెస్సో రివార్డ్స్ ఉంటాయి .</string>
+    <string name="rewards_start_now">ఇప్పుడు ప్రారంబించండి</string>
+    <string name="rewards_family_header">వివిధ ప్రచారాల కోసం మీ అర్హతను గుర్తించడానికి మాకు ఈ క్రింది సమాచారం అవసరం</string>
+    <string name="rewards_social_header">మా సోషల్ మీడియా ప్రచారాలకు మిమ్మల్ని ఆహ్వానించడానికి మాకు ఈ సమాచారం అవసరం.</string>
+    <string name="rewards_number_of_kids">పిల్లల సంఖ్య</string>
+    <string name="rewards_interest">అభిరుచులు</string>
+    <string name="rewards_not_working">"నాన్ వర్కింగ్ "</string>
+    <string name="rewards_are_expecing">"గర్భవతిని  "</string>
+
+    <string name="cannot_be_left_blank">%1$s ఖాళీగా వదిలేయకండి</string>
+    <string name="please_enter_a_valid">సరైన %1$s ఇవ్వండి</string>
+    <string name="need_to_select_option">మీరు %1$s కొరకు ఒక ఆప్షన్ ఎంచుకోండి</string>
+    <string name="rewards_expected_date">డెలివరీ  తేదీ</string>
+    <string name="rewards_mobile_number_verified">మొబైల్ నంబర్ ధృవీకరించబడింది</string>
+    <string name="rewards_have_children">మీకు పిల్లలు ఉన్నారా?</string>
+    <string name="rewards_tab_detail">బహుమతులు</string>
+    <string name="rewards_add_child">పిల్లల సంఖ్య జోడించండి</string>
+    <string name="rewards_kid_detail">పిల్లల వివరాలు</string>
 </resources>

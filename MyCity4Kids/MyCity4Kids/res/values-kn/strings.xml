@@ -930,4 +930,25 @@
     <string name="rewards_save_continue">"ಉಳಿಸಿ ಮತ್ತು ಮುಂದುವರೆಸಿ "</string>
     <string name="momspresso_rewards">ಮೊಮ್ಸ್‍ಪ್ರೆಸ್ಸೊ ಬಹುಮಾನಗಳು</string>
     <string name="rewards_participate">ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸುವ ಮೂಲಕ ಭಾಗವಹಿಸಿ ಮತ್ತು ಗಳಿಸಿ!</string>
+    <string name="save_continue">"ಉಳಿಸಿ ಮತ್ತು ಮುಂದುವರೆಸಿ "</string>
+    <string name="rewards_personal_header">ನಾನಾ ಪ್ರಚಾರಾಂದೋಲನಗಳಿಗಾಗಿ ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ನಿರ್ಧರಿಸಲು ಈ ಕೆಳಗೆ ತಿಳಿಸಿರುವ ಮಾಹಿತಿಯನ್ನು ನೀವು ನಮ್ಮೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಬೇಕು.</string>
+    <string name="rewards_welcome">ಮೊಮ್ಸ್‍ ಪ್ರೆಸ್ಸೊ ಬಹುಮಾನಗಳಿಗೆ ಸ್ವಾಗತ!</string>
+    <string name="rewards_description">ಪ್ರಾಯೋಜಿತ ಬ್ಲಾಗ್ ಮತ್ತು ಇತರ ನಿಯಮಗಳ ಆಧಾರದಲ್ಲಿ ಪ್ರಮುಖ ಬ್ರಾಂಡ್‍ ಗಳ ನಿಯಮಿತ ಆತಿಥೇಯ ಪ್ರಚಾರ, ಸಮೀಕ್ಷೆ, ಇ-ವಾಣಿಜ್ಯ ವಿಮರ್ಶೆ ಮಾಡಲಾಗುತ್ತದೆ. ಈ ಪ್ರಚಾರಾಂದೋಲನಕ್ಕಾಗಿ ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ನಿರ್ಧರಿಸಲು ನಮಗೆ ಕೆಲವು ಮಾಹಿತಿಗಳು ಅಗತ್ಯವಾಗಿದೆ. ಈ ಪ್ರಚಾರಾಂದೋಲನದಲ್ಲಿ ಭಾಗವಹಿಸುವುದರಿಂದ ನಿಮಗೆ ಹಣಕಾಸಿನ ಪ್ರಯೋಜನದ ಜೊತೆಗೆ ಮೊಮ್ಸ್ ಪ್ರೆಸ್ಸೊ ವತಿಯಿಂದ ನಿಮಗೆ ಬಹುಮಾನಗಳನ್ನು ನೀಡಲಾಗುತ್ತದೆ.</string>
+    <string name="rewards_start_now">ಈಗಲೇ ಪ್ರಾರಂಭಿಸಿ.</string>
+    <string name="rewards_family_header">ನಾನಾ ಪ್ರಚಾರಾಂದೋಲನಗಳಿಗಾಗಿ ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ನಿರ್ಧರಿಸಲು ಈ ಕೆಳಗೆ ತಿಳಿಸಿರುವ ಮಾಹಿತಿಯನ್ನು ನೀವು ನಮ್ಮೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಬೇಕು.</string>
+    <string name="rewards_social_header">ನಮ್ಮ ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ ಪ್ರಚಾರಕ್ಕೆ ನಿಮ್ಮನ್ನು ಆಹ್ವಾನಿಸಲು ಈ ಮಾಹಿತಿಗಳನ್ನು ನಾವು ಬಯಸುತ್ತೇವೆ.</string>
+    <string name="rewards_number_of_kids">ಮಕ್ಕಳ ಸಂಖ್ಯೆ</string>
+    <string name="rewards_interest">ಆಸಕ್ತಿಗಳು</string>
+    <string name="rewards_not_working">ಕೆಲಸ ಮಾಡದಿರುವುದು</string>
+    <string name="rewards_are_expecing">ನಿರೀಕ್ಷಿಸು</string>
+
+    <string name="cannot_be_left_blank">%1$s ಖಾಲಿ ಬಿಡುವಂತಿಲ್ಲ</string>
+    <string name="please_enter_a_valid">ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದುದನ್ನು ನಮೂದಿಸಿ %1$s</string>
+    <string name="need_to_select_option">ನೀವು ಆಯ್ಕೆಗಾಗಿ ಆರಿಸಿಕೊಳ್ಳಬೇಕಾಗುತ್ತದೆ %1$s</string>
+    <string name="rewards_expected_date">ನಿರೀಕ್ಷಿತ ದಿನಾಂಕ</string>
+    <string name="rewards_mobile_number_verified">ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗಿದೆ</string>
+    <string name="rewards_have_children">ನಿಮಗೆ ಮಕ್ಕಳಿದ್ದಾರಾ?</string>
+    <string name="rewards_tab_detail">ಬಹುಮಾನಗಳು</string>
+    <string name="rewards_add_child">ಮಕ್ಕಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="rewards_kid_detail">ಮಗುವಿನ ವಿವರ</string>
 </resources>

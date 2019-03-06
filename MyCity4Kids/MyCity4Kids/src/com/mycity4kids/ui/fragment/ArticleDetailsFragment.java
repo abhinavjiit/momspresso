@@ -288,6 +288,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             badge = (ImageView) fragmentView.findViewById(R.id.badge);
             mWebChromeClient = new MyWebChromeClient();
             mWebView.setWebChromeClient(mWebChromeClient);
+            facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
 
             facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
 

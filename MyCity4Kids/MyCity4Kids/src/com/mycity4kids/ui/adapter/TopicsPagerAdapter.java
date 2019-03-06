@@ -27,7 +27,11 @@ public class TopicsPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
+
         bundle.putString("currentSubTopic", new Gson().toJson(subTopicsList.get(position)));
+
+                bundle.putString("currentSubTopic", new Gson().toJson(subTopicsList.get(position)));
+
         TopicsArticlesTabFragment tab1 = new TopicsArticlesTabFragment();
         tab1.setArguments(bundle);
         return tab1;
