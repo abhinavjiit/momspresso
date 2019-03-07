@@ -508,6 +508,8 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_GROUP_DETAILS = "group_details";
     public static final String NOTIFICATION_TYPE_POST_DETAILS = "post_details";
     public static final String NOTIFICATION_TYPE_GROUP_LISTING = "group_listing";
+    public static final String NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING = "momsights_screen";
+    public static final String NOTIFICATION_NOTIFY_TYPE_MOMSIGHT_REWARDS = "20";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";

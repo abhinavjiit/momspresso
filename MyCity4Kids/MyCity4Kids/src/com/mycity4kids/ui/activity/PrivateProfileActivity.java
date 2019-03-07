@@ -168,8 +168,8 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         ((TextView)findViewById(R.id.profileCompletionLabel)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
+//                startActivity(intent);
             }
         });
         authorNameTextView.setOnClickListener(this);
@@ -432,19 +432,28 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 SharedPrefUtils.setCoachmarksShownFlag(PrivateProfileActivity.this, "Profile", true);
                 break;
             case R.id.editProfileImageView:
-            case R.id.editProfileTextView:
-            case R.id.updateProfileTextView: {
                 Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
                 intent.putExtra("isRewardAdded", isRewardsAdded);
                 startActivity(intent);
+                break;
+            case R.id.editProfileTextView:
+                Intent intent1 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
+                intent1.putExtra("isRewardAdded", isRewardsAdded);
+                startActivity(intent1);
+                break;
+            case R.id.updateProfileTextView: {
+                Intent intent2 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
+                intent2.putExtra("isRewardAdded", isRewardsAdded);
+                intent2.putExtra("isComingFromReward", true);
+                startActivity(intent2);
+                break;
             }
-            break;
             case R.id.menuImageView:
                 onBackPressed();
                 break;
             case R.id.authorNameTextView: {
-                Intent intent = new Intent(this, PrivateProfileActivity.class);
-                startActivity(intent);
+                Intent intent3 = new Intent(this, PrivateProfileActivity.class);
+                startActivity(intent3);
             }
             break;
             case R.id.authorTypeTextView:
@@ -491,14 +500,14 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 startActivity(ssIntent);
                 break;
             case R.id.bookmarksSectionTextView: {
-                Intent intent = new Intent(this, UserActivitiesActivity.class);
-                intent.putExtra(Constants.AUTHOR_ID, userId);
-                startActivity(intent);
+                Intent intent4 = new Intent(this, UserActivitiesActivity.class);
+                intent4.putExtra(Constants.AUTHOR_ID, userId);
+                startActivity(intent4);
             }
             case R.id.activitySectionTextView: {
-                Intent intent = new Intent(this, UserActivitiesActivity.class);
-                intent.putExtra(Constants.AUTHOR_ID, userId);
-                startActivity(intent);
+                Intent intent5 = new Intent(this, UserActivitiesActivity.class);
+                intent5.putExtra(Constants.AUTHOR_ID, userId);
+                startActivity(intent5);
             }
             break;
             case R.id.rankContainer:
@@ -514,16 +523,16 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                     startActivity(_intent);
                     return;
                 } else {
-                    Intent intent = new Intent(this, RankingActivity.class);
-                    startActivity(intent);
+                    Intent intent6 = new Intent(this, RankingActivity.class);
+                    startActivity(intent6);
                 }
 //                if (rankingSectionTextView.getVisibility() == View.VISIBLE) {
 
 //                }
                 break;
             case R.id.rankingSectionTextView: {
-                Intent intent = new Intent(this, RankingActivity.class);
-                startActivity(intent);
+                Intent intent7 = new Intent(this, RankingActivity.class);
+                startActivity(intent7);
             }
             break;
             case R.id.settingsSectionTextView:
@@ -535,18 +544,18 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 break;
             case R.id.followingContainer: {
                 Utils.pushOpenScreenEvent(this, "FollowingListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                Intent intent = new Intent(this, FollowersAndFollowingListActivity.class);
-                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST);
-                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);
-                startActivity(intent);
+                Intent intent8 = new Intent(this, FollowersAndFollowingListActivity.class);
+                intent8.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST);
+                intent8.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);
+                startActivity(intent8);
             }
             break;
             case R.id.followerContainer: {
                 Utils.pushOpenScreenEvent(this, "FollowersListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                Intent intent = new Intent(this, FollowersAndFollowingListActivity.class);
-                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
-                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);
-                startActivity(intent);
+                Intent intent9 = new Intent(this, FollowersAndFollowingListActivity.class);
+                intent9.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
+                intent9.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);
+                startActivity(intent9);
             }
         }
     }

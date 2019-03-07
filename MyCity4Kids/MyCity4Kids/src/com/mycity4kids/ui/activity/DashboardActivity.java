@@ -104,6 +104,7 @@ import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.MixPanelUtils;
@@ -819,6 +820,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     jsonObject.put("type", "article_details");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("momsights_screen")) {
+
+                Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
+                startActivity(intent1);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "momsights_screen");
                     mMixpanel.track("PushNotification", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();

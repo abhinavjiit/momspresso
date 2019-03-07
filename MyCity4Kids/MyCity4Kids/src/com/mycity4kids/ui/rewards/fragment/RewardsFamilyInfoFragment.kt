@@ -542,7 +542,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             apiGetResponse.expectedDate = 0
         }
 
-        if(radioGroupAreMother.checkedRadioButtonId == R.id.radioYes){
+        if (radioGroupAreMother.checkedRadioButtonId == R.id.radioYes) {
             if (linearKidsDetail.childCount > 0) {
                 var kidsList = ArrayList<KidsInfoResponse>()
                 for (i in 0..linearKidsDetail.childCount) {
@@ -645,7 +645,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 isShowTillCurrent = arguments.getBoolean("is_show_current_only", false)
             }
             dlg.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            if(isShowTillCurrent){
+            if (isShowTillCurrent) {
                 dlg.datePicker.maxDate = c.timeInMillis
             }
 
@@ -655,11 +655,11 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
             if (RewardsFamilyInfoFragment.textView != null) {
                 val sel_date = "" + day + "-" + (month + 1) + "-" + year
-                if (chkTime(sel_date)) {
-                    RewardsFamilyInfoFragment.textView.setText("" + day + "-" + (month + 1) + "-" + year)
-                } else {
-                    RewardsFamilyInfoFragment.textView.setText("" + current_day + "-" + (current_month + 1) + "-" + curent_year)
-                }
+//                if (chkTime(sel_date)) {
+                RewardsFamilyInfoFragment.textView.setText("" + day + "-" + (month + 1) + "-" + year)
+//                } else {
+//                    //RewardsFamilyInfoFragment.textView.setText("" + current_day + "-" + (current_month + 1) + "-" + curent_year)
+//                }
             }
         }
 
@@ -688,7 +688,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
     }
 
-    fun showDatePickerDialog(isShowTillCurrent : Boolean) {
+    fun showDatePickerDialog(isShowTillCurrent: Boolean) {
         val newFragment = DatePickerFragment()
         var bundle = Bundle()
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)

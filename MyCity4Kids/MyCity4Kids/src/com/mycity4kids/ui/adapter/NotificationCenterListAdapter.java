@@ -49,6 +49,7 @@ import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.GroupsFragment;
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -613,6 +614,28 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                         jsonObject.put("type", "18");
+                        //Log.d("NotificationCenterClick", jsonObject.toString());
+                        mixpanel.track("NotificationCenterClick", jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_MOMSIGHT_REWARDS.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+                    hitNotificationReadAPI(notificationList.get(position).getId());
+                    notifyDataSetChanged();
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "momsights_screen");
+                    Intent intent = new Intent(mContext, RewardsContainerActivity.class);
+                    mContext.startActivity(intent);
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                        jsonObject.put("type", AppConstants.NOTIFICATION_NOTIFY_TYPE_MOMSIGHT_REWARDS);
                         //Log.d("NotificationCenterClick", jsonObject.toString());
                         mixpanel.track("NotificationCenterClick", jsonObject);
                     } catch (Exception e) {

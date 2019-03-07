@@ -104,6 +104,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
     private String mCurrentPhotoPath, absoluteImagePath;
     private Uri imageUri;
     private String isRewardsAdded = "0";
+    private boolean isComingFromReward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +127,12 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         if(getIntent()!=null){
             if(getIntent().getExtras().containsKey("isRewardAdded")){
                 isRewardsAdded = getIntent().getStringExtra("isRewardAdded");
+            }
+        }
+
+        if(getIntent()!=null){
+            if(getIntent().getExtras().containsKey("isComingFromReward")){
+                isComingFromReward = getIntent().getBooleanExtra("isComingFromReward",false);
             }
         }
 
@@ -234,6 +241,10 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
                     viewPagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), userDetails, mDatalist,isRewardsAdded);
                     viewPager.setAdapter(viewPagerAdapter);
+                    if(isComingFromReward){
+                        viewPager.setCurrentItem(2);
+                        saveTextView.setVisibility(View.GONE);
+                    }
 
                     viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
