@@ -66,6 +66,7 @@
 
     <color name="cool_grey">#9fa6b0</color>
     <color name="tabsScrollColor">#ec3b55</color>
+    <color name="transparent_black_90">#99000000</color>
 
     <color name="login_grey">#cccccc</color>
     <color name="login_line_grey">#e0e0e0</color>

@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,6 +35,7 @@ import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
@@ -42,6 +44,10 @@ import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -54,6 +60,9 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.VideoInfo;
+import com.mycity4kids.models.parentingstop.ParentingRequest;
+import com.mycity4kids.models.request.ArticleDetailRequest;
+import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
@@ -65,6 +74,7 @@ import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.ExoPlayerRecyclerView;
@@ -151,6 +161,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private String taggedCategories;
     private MixpanelAPI mixpanel;
     ArrayList<VlogsListingAndDetailResult> dataList = new ArrayList<>();
+    ArrayList<VlogsListingAndDetailResult> dataListHeader = new ArrayList<>();
 
     ExoPlayerRecyclerView recyclerViewFeed;
 
@@ -159,6 +170,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private List<VlogsDetailResponse> videoInfoList = new ArrayList<>();
     private VideoRecyclerViewAdapter mAdapter;
     private boolean firstTime = true;
+    private PlaybackControlView controlView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +185,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 //        prepareVideoList();
         recyclerViewFeed = (ExoPlayerRecyclerView) findViewById(R.id.recyclerViewFeed);
         recyclerViewFeed.setRecyclerView(recyclerViewFeed);
-        PlaybackControlView controlView = recyclerViewFeed.findViewById(R.id.exo_controller);
+        controlView = recyclerViewFeed.findViewById(R.id.exo_controller);
 
 
         Bundle bundle = getIntent().getExtras();
@@ -329,7 +341,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 VlogsDetailResponse responseData = response.body();
                 updateUIfromResponse(responseData.getData().getResult());
                 authorId = responseData.getData().getResult().getAuthor().getId();
-//                hitBookmarkFollowingStatusAPI();
+                hitBookmarkFollowingStatusAPI(videoId);
                 hitRelatedArticleAPI();
                 commentURL = responseData.getData().getResult().getCommentUri();
                 commentMainUrl = responseData.getData().getResult().getCommentUri();
@@ -352,6 +364,17 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         }
     };
 
+
+    public void hitBookmarkFollowingStatusAPI(String vidId) {
+        videoId = vidId;
+        ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
+        articleDetailRequest.setArticleId(videoId);
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI bookmarFollowingStatusAPI = retro.create(VlogsListingAndDetailsAPI.class);
+
+        Call<ArticleDetailResponse> callBookmark = bookmarFollowingStatusAPI.checkFollowingBookmarkStatus(videoId, authorId);
+        callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
+    }
 
     private void hitRelatedArticleAPI() {
 
@@ -398,9 +421,10 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                         }
                     }
 
+                    dataList.addAll(0, dataListHeader);
 
                     recyclerViewFeed.setVideoInfoList(dataList);
-                    mAdapter = new VideoRecyclerViewAdapter(dataList);
+                    mAdapter = new VideoRecyclerViewAdapter(ParallelFeedActivity.this, dataList);
                     recyclerViewFeed.setLayoutManager(new LinearLayoutManager(ParallelFeedActivity.this, VERTICAL, false));
                     Drawable dividerDrawable = ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.divider_drawable);
                     recyclerViewFeed.addItemDecoration(new DividerItemDecoration(dividerDrawable));
@@ -625,13 +649,12 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
     private void updateUIfromResponse(VlogsListingAndDetailResult responseData) {
         detailData = responseData;
-        dataList.add(detailData);
-/*
+        dataListHeader.add(detailData);
         if (StringUtils.isNullOrEmpty(streamUrl)) {
             streamUrl = responseData.getUrl();
-            if (mExoPlayerView == null) {
+            if (recyclerViewFeed != null) {
 
-                mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
+//                mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
                 initFullscreenDialog();
                 initFullscreenButton();
 
@@ -643,109 +666,40 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
             }
 
-            initExoPlayer();
+//            initExoPlayer();
 
             if (mExoPlayerFullscreen) {
-                ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
-                mFullScreenDialog.addContentView(mExoPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                ((ViewGroup) recyclerViewFeed.getParent()).removeView(recyclerViewFeed);
+                mFullScreenDialog.addContentView(recyclerViewFeed, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_fullscreen_skrink));
                 mFullScreenDialog.show();
             }
         }
-        authorType = responseData.getAuthor().getUserType();
-        author = responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName();
-        article_title.setText(responseData.getTitle());
-        titleSlug = responseData.getTitleSlug();
-        articleViewCountTextView.setText(responseData.getView_count() + " Views");
-        try {
-            if (!StringUtils.isNullOrEmpty(authorType)) {
+    }
 
-                if (AppConstants.USER_TYPE_BLOGGER.equals(authorType)) {
-                    authorTypeTextView.setText(getString(R.string.author_type_blogger));
-                    authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
-                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        String bSlug = detailData.getAuthor().getBlogTitleSlug();
-                        if (StringUtils.isNullOrEmpty(bSlug)) {
-                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
-                        } else {
-                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + bSlug + "/video/" + detailData.getTitleSlug();
-                        }
-                    } else {
-                        shareUrl = deepLinkURL;
-                    }
-                } else if (AppConstants.USER_TYPE_EXPERT.equals(authorType)) {
-                    authorTypeTextView.setText(getString(R.string.author_type_expert));
-                    authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_expert));
-                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
-                    } else {
-                        shareUrl = deepLinkURL;
-                    }
-                } else if (AppConstants.USER_TYPE_EDITOR.equals(authorType)) {
-                    authorTypeTextView.setText(getString(R.string.author_type_editor));
-                    authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editor));
-                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
-                    } else {
-                        shareUrl = deepLinkURL;
-                    }
-                } else if (AppConstants.USER_TYPE_EDITORIAL.equals(authorType)) {
-                    authorTypeTextView.setText(getString(R.string.author_type_editorial));
-                    authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editorial));
-                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
-                    } else {
-                        shareUrl = deepLinkURL;
-                    }
-                } else if (AppConstants.USER_TYPE_FEATURED.equals(authorType)) {
-                    authorTypeTextView.setText(getString(R.string.author_type_featured));
-                    authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_featured));
-                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
-                    } else {
-                        shareUrl = deepLinkURL;
-                    }
-                } else if (AppConstants.USER_TYPE_USER.equals(authorType)) {
-                    authorTypeTextView.setText(getString(R.string.author_type_user));
-                    authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
-                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        String bSlug = detailData.getAuthor().getBlogTitleSlug();
-                        if (StringUtils.isNullOrEmpty(bSlug)) {
-                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
-                        } else {
-                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + bSlug + "/video/" + detailData.getTitleSlug();
-                        }
-                    } else {
-                        shareUrl = deepLinkURL;
-                    }
-                }
-            } else {
-                // Default Author type set to Blogger
-                authorTypeTextView.setText(getString(R.string.author_type_user));
-                authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
-                if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                    shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + detailData.getAuthor().getBlogTitleSlug() + "/video/" + titleSlug;
-                } else {
-                    shareUrl = deepLinkURL;
-                }
-            }
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
+
+    public void followAPICall(String id) {
+        authorId = id;
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        FollowAPI followAPI = retrofit.create(FollowAPI.class);
+        FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
+        request.setFollowerId(authorId);
+
+        if (isFollowing) {
+            isFollowing = false;
+            mAdapter.setText(getString(R.string.ad_follow_author));
+//            followClick.setText(getString(R.string.ad_follow_author));
+            Utils.pushFollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
+            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
+            followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
+        } else {
+            isFollowing = true;
+            mAdapter.setText(getString(R.string.ad_following_author));
+//            followClick.setText(getString(R.string.ad_following_author));
+            Utils.pushUnfollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
+            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
+            followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
-        hitUpdateViewCountAPI(detailData.getAuthor().getId());
-        authorNameTextView.setText(author);
-
-        try {
-            Picasso.with(this).load(responseData.getAuthor().getProfilePic().getClientApp()).into(authorImageView);
-        } catch (Exception e) {
-            authorImageView.setImageResource(R.drawable.default_blogger_profile_img);
-        }
-        try {
-            articleCreatedDateTextView.setText(DateTimeUtils.getDateFromTimestamp(Long.parseLong(responseData.getPublished_time())));
-        } catch (Exception e) {
-        }*/
-
 
     }
 
@@ -761,7 +715,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    followClick.setText(getString(R.string.ad_follow_author));
+                    mAdapter.setText(getString(R.string.ad_follow_author));
+//                    followClick.setText(getString(R.string.ad_follow_author));
                     isFollowing = false;
                 }
             } catch (Exception e) {
@@ -791,7 +746,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    followClick.setText(getString(R.string.ad_following_author));
+                    mAdapter.setText(getString(R.string.ad_following_author));
+//                    followClick.setText(getString(R.string.ad_following_author));
                     isFollowing = true;
                 }
             } catch (Exception e) {
@@ -823,12 +779,14 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     followClick.setVisibility(View.INVISIBLE);
                 } else {
                     if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
-                        followClick.setEnabled(true);
-                        followClick.setText(getString(R.string.ad_follow_author));
+                        mAdapter.setTextFromResponse(true, getString(R.string.ad_follow_author));
+//                        followClick.setEnabled(true);
+//                        followClick.setText(getString(R.string.ad_follow_author));
                         isFollowing = false;
                     } else {
-                        followClick.setEnabled(true);
-                        followClick.setText(getString(R.string.ad_following_author));
+                        mAdapter.setTextFromResponse(false, getString(R.string.ad_following_author));
+//                        followClick.setEnabled(true);
+//                        followClick.setText(getString(R.string.ad_following_author));
                         isFollowing = true;
                     }
                 }
@@ -1059,8 +1017,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
 
     private void openFullscreenDialog() {
-        ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
-        mFullScreenDialog.addContentView(mExoPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ((ViewGroup) recyclerViewFeed.getParent()).removeView(recyclerViewFeed);
+        mFullScreenDialog.addContentView(recyclerViewFeed, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_fullscreen_skrink));
         mExoPlayerFullscreen = true;
         mFullScreenDialog.show();
@@ -1068,8 +1026,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
 
     private void closeFullscreenDialog() {
-        ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
-        ((FrameLayout) findViewById(R.id.main_media_frame)).addView(mExoPlayerView);
+        ((ViewGroup) recyclerViewFeed.getParent()).removeView(recyclerViewFeed);
+        ((FrameLayout) findViewById(R.id.main_media_frame)).addView(recyclerViewFeed);
         mExoPlayerFullscreen = false;
         mFullScreenDialog.dismiss();
         mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_fullscreen_expand));
@@ -1077,7 +1035,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
 
     private void initFullscreenButton() {
-        PlaybackControlView controlView = mExoPlayerView.findViewById(R.id.exo_controller);
+//        PlaybackControlView controlView = recyclerViewFeed.findViewById(R.id.exo_controller);
         mFullScreenIcon = controlView.findViewById(R.id.exo_fullscreen_icon);
         mFullScreenButton = controlView.findViewById(R.id.exo_fullscreen_button);
         mFullScreenButton.setOnClickListener(new View.OnClickListener() {
@@ -1105,19 +1063,19 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             mExoPlayerView.getPlayer().seekTo(mResumeWindow, mResumePosition);
         }
 
-//        mExoPlayerView.getPlayer().prepare(mVideoSource);
+        player.prepare(mVideoSource);
         mExoPlayerView.getPlayer().setPlayWhenReady(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        /*if (streamUrl == null) {
+        if (streamUrl == null) {
             return;
         }
 
-        if (mExoPlayerView == null) {
-            mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
+        if (recyclerViewFeed != null) {
+//            recyclerViewFeed = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
             initFullscreenDialog();
             initFullscreenButton();
             String userAgent = Util.getUserAgent(ParallelFeedActivity.this, getApplicationContext().getApplicationInfo().packageName);
@@ -1127,19 +1085,21 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
         }
 
-        initExoPlayer();
+//        initExoPlayer();
 
         if (mExoPlayerFullscreen) {
-            ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
-            mFullScreenDialog.addContentView(mExoPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            ((ViewGroup) recyclerViewFeed.getParent()).removeView(recyclerViewFeed);
+            mFullScreenDialog.addContentView(recyclerViewFeed, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_fullscreen_skrink));
             mFullScreenDialog.show();
-        }*/
+        }
     }
 
 
     @Override
     protected void onPause() {
+        if (recyclerViewFeed != null)
+            recyclerViewFeed.onPausePlayer();
         super.onPause();
 
         /*if (mExoPlayerView != null && mExoPlayerView.getPlayer() != null) {
@@ -1147,10 +1107,17 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             mResumeWindow = mExoPlayerView.getPlayer().getCurrentWindowIndex();
             mResumePosition = Math.max(0, mExoPlayerView.getPlayer().getContentPosition());
             mExoPlayerView.getPlayer().release();
-        }
+        }*/
 
         if (mFullScreenDialog != null)
-            mFullScreenDialog.dismiss();*/
+            mFullScreenDialog.dismiss();
+    }
+
+    @Override
+    protected void onRestart() {
+        if (recyclerViewFeed != null)
+            recyclerViewFeed.onRestartPlayer();
+        super.onRestart();
     }
 
     @Override
@@ -1163,7 +1130,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    private void openViewCommentDialog() {
+    public void openViewCommentDialog(String commentMainUrl, String shareUrl, String authorId, String author) {
         try {
 
             ViewAllCommentsDialogFragment commentFrag = new ViewAllCommentsDialogFragment();
@@ -1342,5 +1309,12 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         if (recyclerViewFeed != null)
             recyclerViewFeed.onRelease();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        if (recyclerViewFeed != null)
+            recyclerViewFeed.onRelease();
+        super.onStop();
     }
 }

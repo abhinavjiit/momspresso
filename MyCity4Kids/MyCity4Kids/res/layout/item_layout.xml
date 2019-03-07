@@ -16,45 +16,59 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            app:srcCompat="@drawable/ic_user" />
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/user_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/main_media_frame"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:src="@drawable/default_commentor_img"
+            app:civ_border="true"
+            app:civ_border_color="@color/white_color"
+            app:civ_border_width="0dp"
+            app:civ_shadow="true"
+            app:civ_shadow_color="@color/grey"
+            app:civ_shadow_radius="4" />
 
-        <TextView
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/userHandle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:textStyle="bold"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="2dp"
-            android:layout_toRightOf="@+id/imageView"
+            android:layout_toRightOf="@+id/user_image"
             android:letterSpacing="-0.02"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            tools:text="by @surya.kushawah1" />
+            android:textColor="#E6FFFFFF"
+            android:textSize="13sp" />
 
-        <TextView
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/follow_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/three_dot"
             android:background="@drawable/rounded_corner"
             android:padding="5dp"
             android:text="Follow"
-            android:textColor="@color/white" />
+            android:textColor="#CCFFFFFF" />
 
         <ImageView
             android:id="@+id/three_dot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:padding="5dp"
-            android:src="@drawable/ic_more_vert_black_24dp" />
+            android:src="@drawable/ic_more_vert_black_24dp"
+            android:tint="#CCFFFFFF" />
     </RelativeLayout>
 
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/textViewTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,12 +76,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:ellipsize="end"
         android:letterSpacing="-0.02"
         android:lineSpacingExtra="5sp"
-        android:maxLines="1"
-        android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textColor="#CCFFFFFF"
+        android:textSize="14sp"
         android:textStyle="bold"
         tools:text="Was india better then south africa in current serise?" />
 
@@ -90,9 +102,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/title"
-            android:background="@android:color/white"
             android:scaleType="centerCrop"
-            android:src="@drawable/cover" />
+            android:src="@drawable/default_article" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -111,14 +122,13 @@
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="10dp">
 
-        <TextView
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/viewsCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:text="50 Views"
-            android:textColor="@color/white" />
+            android:textColor="#80FFFFFF" />
 
         <View
             android:id="@+id/countlikeseparator"
@@ -128,18 +138,18 @@
             android:layout_toRightOf="@+id/viewsCount"
             android:background="@drawable/dot" />
 
-        <TextView
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/viewsLike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/countlikeseparator"
-            android:text="11 Likes"
-            android:textColor="@color/white" />
+            android:textColor="#80FFFFFF" />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/bottom_cell"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/countlikecontainer"
@@ -151,7 +161,8 @@
             android:layout_height="25dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_likes" />
+            android:src="@drawable/ic_likes"
+            android:tint="@color/white" />
 
         <ImageView
             android:id="@+id/share"
@@ -160,7 +171,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/heart"
-            android:src="@drawable/share" />
+            android:src="@drawable/share"
+            android:tint="@color/white" />
 
         <ImageView
             android:id="@+id/whatsapp"
@@ -169,7 +181,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/share"
-            android:src="@drawable/ic_whats_app" />
+            android:src="@drawable/ic_whats_app"
+            android:tint="@color/white" />
 
         <ImageView
             android:id="@+id/comment"
@@ -178,16 +191,19 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/commentCount"
-            android:src="@drawable/ic_comments" />
+            android:src="@drawable/ic_comments"
+            android:visibility="gone" />
 
-        <TextView
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/commentCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:text="150"
-            android:textColor="@color/white" />
+            android:drawableLeft="@drawable/ic_comments"
+            android:drawablePadding="@dimen/space_10"
+            android:textColor="@color/white"
+            android:tint="@color/white" />
     </RelativeLayout>
 </RelativeLayout>

@@ -59,6 +59,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private static final String TAG = "ExoPlayerRecyclerView";
 
     private List<VlogsListingAndDetailResult> videoInfoList = new ArrayList<>();
+    private List<VlogsListingAndDetailResult> videoInfoListHeader = new ArrayList<>();
     private int videoSurfaceDefaultHeight = 0;
     private int screenDefaultHeight = 0;
     SimpleExoPlayer player;
