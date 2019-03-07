@@ -658,18 +658,16 @@
             </intent-filter>
         </receiver>
 
-<<<<<<< HEAD
 
-=======
-        <activity android:name=".ui.rewards.activity.RewardsContainerActivity"
-            android:screenOrientation="portrait">
+     <!--   <activity
+            android:name=".ui.rewards.activity.RewardsContainerActivity"
+            android:screenOrientation="portrait"></activity>-->
+
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.MAIN" />-->
+        <!--<category android:name="android.intent.category.LAUNCHER" />-->
+        <!--</intent-filter>-->
 
 
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
->>>>>>> 6a282990b0111ad5b1c3ea6bf3092f25dea644fe
     </application>
 </manifest>

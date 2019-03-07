@@ -186,17 +186,23 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- <com.mycity4kids.widget.CustomFontTextView
-         android:id="@+id/saveTextView"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_gravity="bottom"
-         android:layout_marginTop="10dp"
-         android:background="@color/app_red"
-         android:gravity="center"
-         android:padding="15dp"
-         android:text="@string/app_settings.edit_profile.save"
-         android:textColor="@color/white"
-         android:textSize="17sp"
-         app:fontName="oswald_regular.ttf" />-->
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/saveTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/update_profile_bg"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/add"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        app:fontName="oswald_regular.ttf" />
+
+
 </android.support.design.widget.CoordinatorLayout>

@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,6 +21,7 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.videochallengenewui.Adapter.VideoChallengePagerAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -32,7 +34,7 @@ public class NewVideoChallengeActivity extends BaseActivity {
     private RelativeLayout mainMediaFrameLayout;
     private SimpleExoPlayerView exoplayerChallengeDetailListing;
     private LinearLayout submitButtonLinearLayout;
-    private TextView challengeNameText, submitStoryText, toolbarTitleTextView;
+    private TextView challengeNameText, submitStoryText, toolbarTitleTextView, saveTextView;
     private TabLayout tabs;
     private ViewPager viewPager;
     private Toolbar toolbar;
@@ -56,6 +58,7 @@ public class NewVideoChallengeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_video_listing_detail);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.mainprofile_parent_layout);
+        saveTextView = (TextView) findViewById(R.id.saveTextView);
         appBarLayout = (AppBarLayout) findViewById(R.id.id_appbar);
         challengeHeaderRelative = (RelativeLayout) findViewById(R.id.challengeHeaderRelative);
         mainMediaFrameLayout = (RelativeLayout) findViewById(R.id.main_media_frame);
@@ -126,11 +129,11 @@ public class NewVideoChallengeActivity extends BaseActivity {
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-//                            if(tab.getPosition()==2){
-//                                saveTextView.setVisibility(View.GONE);
-//                            }else{
-//                                saveTextView.setVisibility(View.VISIBLE);
-//                            }
+                if (tab.getPosition() == 2 || tab.getPosition() == 1) {
+                    saveTextView.setVisibility(View.GONE);
+                } else {
+                    saveTextView.setVisibility(View.VISIBLE);
+                }
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -144,7 +147,22 @@ public class NewVideoChallengeActivity extends BaseActivity {
 
             }
         });
+        saveTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NewVideoChallengeActivity.this, ChooseVideoCategoryActivity.class);
+                if (selected_Name != null && !selected_Name.isEmpty() && selectedId != null && !selectedId.isEmpty()) {
+                    intent.putExtra("selectedId", selectedId);
+                    intent.putExtra("selectedName", selected_Name);
+                    intent.putExtra("comingFrom", "Challenge");
+                    startActivity(intent);
 
+                } else {
+                    ToastUtils.showToast(NewVideoChallengeActivity.this, "something went wrong at the server");
+
+                }
+            }
+        });
 
     }
 

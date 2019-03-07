@@ -255,7 +255,7 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
         nextPageNumber = 1;
         hitArticleListingApi();
 
-        articlesListingAdapter = new VideoChallengeDetailListingAdapter(this,  selectedId);
+        articlesListingAdapter = new VideoChallengeDetailListingAdapter(this, selectedId, topic);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();

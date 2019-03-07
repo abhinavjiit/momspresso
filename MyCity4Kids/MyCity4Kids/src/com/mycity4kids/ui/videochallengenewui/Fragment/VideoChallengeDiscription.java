@@ -68,7 +68,7 @@ public class VideoChallengeDiscription extends Fragment implements View.OnClickL
     @Override
     public void onClick(View view) {
 
-        Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
+       /* Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
         if (selectedName != null && !selectedName.isEmpty() && selectedId != null && !selectedId.isEmpty()) {
             intent.putExtra("selectedId", selectedId);
             intent.putExtra("selectedName", selectedName);
@@ -78,7 +78,7 @@ public class VideoChallengeDiscription extends Fragment implements View.OnClickL
         } else {
             ToastUtils.showToast(getContext(), "something went wrong at the server");
 
-        }
+        }*/
 
     }
 }

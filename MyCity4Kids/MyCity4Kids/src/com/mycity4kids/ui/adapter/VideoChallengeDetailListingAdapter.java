@@ -76,13 +76,14 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     public DefaultHttpDataSourceFactory httpDataSourceFactory;
     public DefaultDataSourceFactory dataSourceFactory;
     public boolean isPaused = false;
+    private Topics topics;
 
 
-    public VideoChallengeDetailListingAdapter(Context pContext, String selectedId) {
+    public VideoChallengeDetailListingAdapter(Context pContext, String selectedId, Topics topics) {
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
-
+        this.topics = topics;
         this.selectedId = selectedId;
 
         //  intiExoPlayer();
@@ -125,7 +126,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return articleDataModelsNew == null ? 0 : articleDataModelsNew.size() ;
+        return articleDataModelsNew == null ? 0 : articleDataModelsNew.size();
     }
 
     @Override
@@ -202,13 +203,13 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 addVlogViewHolder = (AddVlogViewHolderChallenge) view.getTag();
             }
 
-            addVlogViewHolder.txvArticleTitle.setText(articleDataModelsNew.get(position ).getTitle());
+            addVlogViewHolder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
             addVlogViewHolder.viewCountTextView.setVisibility(View.GONE);
             addVlogViewHolder.commentCountTextView.setVisibility(View.GONE);
             addVlogViewHolder.recommendCountTextView.setVisibility(View.GONE);
 
             try {
-                String userName = articleDataModelsNew.get(position ).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position ).getAuthor().getLastName();
+                String userName = articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName();
                 if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
                     addVlogViewHolder.txvAuthorName.setText("NA");
                 } else {
@@ -218,7 +219,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 addVlogViewHolder.txvAuthorName.setText("NA");
             }
             try {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position ).getThumbnail())
+                Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail())
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(addVlogViewHolder.articleImageView);
             } catch (Exception e) {
                 addVlogViewHolder.articleImageView.setImageResource(R.drawable.default_article);
@@ -228,7 +229,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-                    //  MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, topic.getDisplay_name());
+                    MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, topics.getDisplay_name());
                     Intent intent = new Intent(mContext, ChooseVideoCategoryActivity.class);
                     mContext.startActivity(intent);
                 }
@@ -251,13 +252,13 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             } else {
                 holder = (ViewHolderChallenge) view.getTag();
             }
-            holder.txvArticleTitle.setText(articleDataModelsNew.get(position ).getTitle());
+            holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
             holder.viewCountTextView.setVisibility(View.GONE);
             holder.commentCountTextView.setVisibility(View.GONE);
             holder.recommendCountTextView.setVisibility(View.GONE);
 
             try {
-                String userName = articleDataModelsNew.get(position ).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position ).getAuthor().getLastName();
+                String userName = articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName();
                 if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
                     holder.txvAuthorName.setText("NA");
                 } else {
@@ -267,7 +268,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 holder.txvAuthorName.setText("NA");
             }
             try {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position ).getThumbnail())
+                Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail())
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
             } catch (Exception e) {
                 holder.articleImageView.setImageResource(R.drawable.default_article);
