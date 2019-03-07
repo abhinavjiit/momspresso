@@ -415,6 +415,7 @@
                 android:paddingBottom="10dp"
                 android:text="@string/rewards_add_child"
                 android:textColor="@color/white"
+                app:fontName="oswald_regular.ttf"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -572,6 +573,7 @@
                 android:paddingRight="35dp"
                 android:paddingBottom="15dp"
                 android:text="@string/save_continue"
+                app:fontName="oswald_regular.ttf"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:layout_marginBottom="10dp"
