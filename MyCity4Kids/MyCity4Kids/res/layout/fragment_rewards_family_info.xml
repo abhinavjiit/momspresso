@@ -352,6 +352,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rewards_number_of_kids"
+                    android:visibility="gone"
                     android:textColor="@color/app_grey"
                     app:fontName="oswald_regular.ttf" />
 
