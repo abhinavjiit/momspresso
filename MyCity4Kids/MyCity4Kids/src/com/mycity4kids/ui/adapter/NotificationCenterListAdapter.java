@@ -196,12 +196,13 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
 //                    mContext.startActivity(intent);
                     Intent intent = new Intent(mContext, MomsVlogDetailActivity.class);
                     intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
-                    intent.putExtra(Constants.STREAM_URL, notificationList.get(position).getUrl());
+                    //intent.putExtra(Constants.STREAM_URL, notificationList.get(position).getUrl());
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
                     intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
                     mContext.startActivity(intent);
 
+                   // https://www.momspresso.com/parenting/just-another-perspective/story/dewdrop-on-a-rose
                     //https://www.momspresso.com/new-videos/v1/videos-91556df5-a531-412c-946b-3219dcfa30cb/playlist.m3u8
                     try {
                         JSONObject jsonObject = new JSONObject();
