@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -41,6 +42,10 @@ import java.util.TimerTask;
 
 
 public class AudioRecordView extends FrameLayout {
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     public enum UserBehaviour {
         CANCELING,
@@ -193,9 +198,10 @@ public class AudioRecordView extends FrameLayout {
         return editTextMessage;
     }
 
-    public void disableClick(boolean clickStatus){
+    public void disableClick(boolean clickStatus) {
         imageViewAudio.setEnabled(clickStatus);
     }
+
     private void setupRecording() {
 
         imageViewSend.animate().scaleX(0f).scaleY(0f).setDuration(100).setInterpolator(new LinearInterpolator()).start();
@@ -276,13 +282,13 @@ public class AudioRecordView extends FrameLayout {
                         if (motionX > motionY && lastX < (firstX - 160) && layoutLock.getVisibility() == View.VISIBLE) {
                             direction = UserBehaviour.CANCELING;
 
-                        } else if (motionY > motionX && lastY < (firstY-160) && layoutLock.getVisibility() == View.VISIBLE) {
+                        } else if (motionY > motionX && lastY < (firstY - 160) && layoutLock.getVisibility() == View.VISIBLE) {
                             direction = UserBehaviour.LOCKING;
                         }
 
                     } else if ((motionX + motionX / 2) > (motionY + motionY / 2) && motionX > directionOffset && lastX < (firstX - 160) && layoutLock.getVisibility() == View.VISIBLE) {
                         direction = UserBehaviour.CANCELING;
-                    } else if ((motionY + motionY / 2) > (motionX + motionX / 2) && motionY > directionOffset && lastY < (firstY-160) && layoutLock.getVisibility() == View.VISIBLE) {
+                    } else if ((motionY + motionY / 2) > (motionX + motionX / 2) && motionY > directionOffset && lastY < (firstY - 160) && layoutLock.getVisibility() == View.VISIBLE) {
                         direction = UserBehaviour.LOCKING;
                     }
 
@@ -484,7 +490,7 @@ public class AudioRecordView extends FrameLayout {
                     public void run() {
                         timeText.setText(timeFormatter.format(new Date(audioTotalTime * 1000)));
                         audioTotalTime++;
-                        if (audioTotalTime ==4){
+                        if (audioTotalTime == 4) {
                             layoutLock.setVisibility(View.VISIBLE);
                             imageViewAudio.animate().scaleXBy(1f).scaleYBy(1f).setDuration(200).setInterpolator(new OvershootInterpolator()).start();
                         }
