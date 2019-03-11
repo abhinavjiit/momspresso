@@ -77,7 +77,7 @@
             android:id="@+id/imageAudio"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_audio_record" />
+            app:srcCompat="@drawable/ic_audio_record" />
 
     </LinearLayout>
 
