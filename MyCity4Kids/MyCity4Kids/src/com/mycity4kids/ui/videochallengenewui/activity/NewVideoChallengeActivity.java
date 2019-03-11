@@ -27,15 +27,15 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class NewVideoChallengeActivity extends BaseActivity {
+public class NewVideoChallengeActivity extends BaseActivity implements View.OnClickListener {
     VideoChallengePagerAdapter videoChallengePagerAdapter;
-    private AppBarLayout appBarLayout;
-    private RelativeLayout challengeHeaderRelative;
-    private RelativeLayout mainMediaFrameLayout;
-    private SimpleExoPlayerView exoplayerChallengeDetailListing;
-    private LinearLayout submitButtonLinearLayout;
-    private TextView challengeNameText, submitStoryText, toolbarTitleTextView, saveTextView;
-    private TabLayout tabs;
+    AppBarLayout appBarLayout;
+    RelativeLayout challengeHeaderRelative;
+    RelativeLayout mainMediaFrameLayout;
+    SimpleExoPlayerView exoplayerChallengeDetailListing;
+    LinearLayout submitButtonLinearLayout;
+    TextView challengeNameText, submitStoryText, toolbarTitleTextView, saveTextView;
+    TabLayout tabs;
     private ViewPager viewPager;
     private Toolbar toolbar;
     private String jsonMyObject;
@@ -43,12 +43,14 @@ public class NewVideoChallengeActivity extends BaseActivity {
     private String selected_Name;
     private String selectedActiveUrl;
     private String selectedStreamUrl;
+    String challengeRules;
     private int pos;
     private Topics topic;
     private ArrayList<String> challengeId = new ArrayList<>();
     private ArrayList<String> activeUrl = new ArrayList<>();
     private ArrayList<String> activeStreamUrl = new ArrayList<>();
     private ArrayList<String> Display_Name = new ArrayList<>();
+    private ArrayList<String> rules = new ArrayList<>();
     private String parentName, parentId;
     private CoordinatorLayout coordinatorLayout;
     private ImageView thumbNail;
@@ -91,6 +93,7 @@ public class NewVideoChallengeActivity extends BaseActivity {
         parentId = intent.getStringExtra("parentId");
         parentName = intent.getStringExtra("topics");
         activeStreamUrl = intent.getStringArrayListExtra("StreamUrl");
+        rules = intent.getStringArrayListExtra("rules");
 
         if (challengeId != null && challengeId.size() != 0) {
             selectedId = challengeId.get(pos);
@@ -112,6 +115,9 @@ public class NewVideoChallengeActivity extends BaseActivity {
         } else {
             ToastUtils.showToast(this, "server problem,please refresh your app");
         }
+        if (rules != null && rules.size() != 0) {
+            challengeRules = rules.get(pos);
+        }
         try {
             Picasso.with(this).load(selectedActiveUrl)
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(thumbNail);
@@ -122,7 +128,7 @@ public class NewVideoChallengeActivity extends BaseActivity {
         tabs.addTab(tabs.newTab().setText("ABOUT"));
         tabs.addTab(tabs.newTab().setText("VIDEOS"));
 
-        videoChallengePagerAdapter = new VideoChallengePagerAdapter(getSupportFragmentManager(), selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl);
+        videoChallengePagerAdapter = new VideoChallengePagerAdapter(getSupportFragmentManager(), selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl, challengeRules);
         viewPager.setAdapter(videoChallengePagerAdapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
@@ -147,6 +153,7 @@ public class NewVideoChallengeActivity extends BaseActivity {
 
             }
         });
+        thumbNail.setOnClickListener(this);
         saveTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,5 +186,17 @@ public class NewVideoChallengeActivity extends BaseActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if (view.getId() == R.id.thumbNail) {
+            Intent intent = new Intent(this, ExoplayerVideoChallengePlayViewActivity.class);
+            intent.putExtra("StreamUrl", selectedStreamUrl);
+            startActivity(intent);
+        }
+
+
     }
 }

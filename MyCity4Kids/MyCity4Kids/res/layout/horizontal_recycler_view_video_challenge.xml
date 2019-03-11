@@ -52,6 +52,17 @@
                 android:visibility="gone"
                 app:fontName="oswald.ttf" />
 
+            <ImageView
+                android:id="@+id/info"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_alignRight="@+id/tagImageView"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_circle"
+                android:padding="3dp"
+                android:tint="@color/app_red"
+                app:srcCompat="@drawable/ic_info" />
+
 
         </RelativeLayout>
 

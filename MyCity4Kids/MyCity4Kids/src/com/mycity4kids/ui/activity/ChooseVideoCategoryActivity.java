@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
+import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -67,8 +70,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
     private ArrayList<ExploreTopicsModel> mainTopicsList;
-    /*  String[] mobileArray = {"Android", "IPhone", "WindowsMobile", "Blackberry",
-              "WebOS", "Ubuntu", "Windows7", "Max OS X"};*/
     private ParentTopicsGridAdapter adapter;
     private ExpandableHeightGridView gridview;
     private RecyclerView horizontalRecyclerViewForVideoChallenge;
@@ -87,6 +88,9 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     private ArrayList<String> Display_Name = new ArrayList<String>();
     private ArrayList<String> activeImageUrl = new ArrayList<String>();
     private ArrayList<String> activeStreamUrl = new ArrayList<String>();
+    private ArrayList<String> info = new ArrayList<String>();
+
+    private String challengeRulesInDialogBox;
 
 
     @Override
@@ -126,7 +130,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             horizontalRecyclerViewForVideoChallenge.setVisibility(View.VISIBLE);
             linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             horizontalRecyclerViewForVideoChallenge.setLayoutManager(linearLayoutManager);
-            videoChallengeTopicsAdapter = new VideoChallengeTopicsAdapter(this, this, challenge_Id, Display_Name, activeImageUrl, activeStreamUrl);
+            videoChallengeTopicsAdapter = new VideoChallengeTopicsAdapter(this, this, challenge_Id, Display_Name, activeImageUrl, activeStreamUrl, info);
             horizontalRecyclerViewForVideoChallenge.setAdapter(videoChallengeTopicsAdapter);
             videoChallengeTopicsAdapter.setData(videoChallengeTopics);
         } else {
@@ -398,15 +402,12 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     }
 
     @Override
-    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl) {
+    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info) {
 
 
         switch (view.getId()) {
             case R.id.tagImageView:
             case R.id.topicContainer:
-         /*       Bundle bundle = new Bundle();
-                bundle.putParcelable("topic", articledatamodal);*/
-
                 Intent intent = new Intent(this, NewVideoChallengeActivity.class);
                 intent.putExtra("Display_Name", Display_Name);
                 intent.putExtra("challenge", challengeId);
@@ -416,8 +417,29 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                 intent.putExtra("parentId", articledatamodelsnew.getParentId());
                 intent.putExtra("StringUrl", activeImageUrl);
                 intent.putExtra("Topic", new Gson().toJson(articledatamodelsnew));
-
                 startActivity(intent);
+                break;
+
+
+            case R.id.info:
+                if (info != null) {
+
+                    if (info.size() > position) {
+                        if (!StringUtils.isNullOrEmpty(info.get(position))) {
+                            challengeRulesInDialogBox = info.get(position);
+                            ToastUtils.showToast(this, String.valueOf(position) + " clicked");
+                            final Dialog dialog = new Dialog(this);
+                            dialog.setContentView(R.layout.challenge_rules_dialog);
+                            dialog.setTitle("Title...");
+                            WebView webView = (WebView) dialog.findViewById(R.id.videoChallengeRulesWebView);
+                            webView.loadData(challengeRulesInDialogBox, "text/html", "UTF-8");
+                            dialog.show();
+                        }
+                    }
+                }
+                break;
         }
+
+
     }
 }

@@ -162,9 +162,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
     String streamUrl = "https://www.momspresso.com/new-videos/v1/test1/playlist.m3u8";
     private String taggedCategories;
     private MixpanelAPI mixpanel;
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
+
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);

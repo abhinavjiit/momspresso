@@ -33,6 +33,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
     private ArrayList<String> Display_Name = new ArrayList<String>();
     private ArrayList<String> activeImageUrl = new ArrayList<String>();
     private ArrayList<String> activeStreamUrl = new ArrayList<String>();
+
     private ChallengeVideoRecycleAdapter recyclerAdapter;
     private String jsonMyObject;
 
@@ -44,7 +45,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
         if (getArguments() != null) {
            /* jsonMyObject = getArguments().getString("currentSubTopic");
             currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);*/
-               currentSubTopic = getArguments().getParcelable("currentSubTopic");
+            currentSubTopic = getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;
         }
 
@@ -74,7 +75,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
     }
 
     @Override
-    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodal, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl) {
+    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodal, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> rules) {
         switch (view.getId()) {
             case R.id.mainView:
             case R.id.getStartedTextView:
@@ -86,6 +87,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
                 intent.putExtra("challenge", challengeId);
                 intent.putExtra("position", position);
                 intent.putExtra("StreamUrl", activeStreamUrl);
+                intent.putExtra("rules", rules);
                 intent.putExtra("topics", articledatamodal.getParentName());
                 intent.putExtra("parentId", articledatamodal.getParentId());
                 intent.putExtra("StringUrl", activeImageUrl);

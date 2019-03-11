@@ -16,16 +16,18 @@ public class VideoChallengePagerAdapter extends FragmentPagerAdapter {
     private String selectedActiveUrl;
     private String selectedStreamUrl;
     private Topics topic;
+    String challengeRules;
     VideoChallengeDiscription discription;
     VideoChallengeListing listing;
 
-    public VideoChallengePagerAdapter(FragmentManager fm, String selected_Name, String selectedActiveUrl, String selectedId, Topics topic, String selectedStreamUrl) {
+    public VideoChallengePagerAdapter(FragmentManager fm, String selected_Name, String selectedActiveUrl, String selectedId, Topics topic, String selectedStreamUrl, String challengeRules) {
         super(fm);
         this.selected_Name = selected_Name;
         this.selectedActiveUrl = selectedActiveUrl;
         this.selectedId = selectedId;
         this.topic = topic;
         this.selectedStreamUrl = selectedStreamUrl;
+        this.challengeRules = challengeRules;
 
 
     }
@@ -37,6 +39,7 @@ public class VideoChallengePagerAdapter extends FragmentPagerAdapter {
         bundle.putString("selected_Name", selected_Name);
         bundle.putString("selectedActiveUrl", selectedActiveUrl);
         bundle.putString("selectedStreamUrl", selectedStreamUrl);
+        bundle.putString(" challengeRules ", challengeRules);
         bundle.putParcelable("topics", topic);
 
         switch (position) {

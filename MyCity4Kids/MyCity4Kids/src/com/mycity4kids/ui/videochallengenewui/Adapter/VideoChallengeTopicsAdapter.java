@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
@@ -22,15 +23,16 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
     private Context mContext;
     private int n = 1;
     private int m;
-    int count = 0;
+    private int count = 0;
     private LayoutInflater mInflator;
     private Topics challengeTopics;
     private ArrayList<String> challengeId;
     private ArrayList<String> Display_Name;
     private ArrayList<String> activeImageUrl;
     private ArrayList<String> activeStreamUrl;
+    private ArrayList<String> info;
 
-    public VideoChallengeTopicsAdapter(Context mContext, RecyclerViewClickListener recyclerViewClickListener, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl) {
+    public VideoChallengeTopicsAdapter(Context mContext, RecyclerViewClickListener recyclerViewClickListener, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info) {
         this.recyclerViewClickListener = recyclerViewClickListener;
         this.mContext = mContext;
         mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -38,6 +40,7 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
         this.activeImageUrl = activeImageUrl;
         this.activeStreamUrl = activeStreamUrl;
         this.Display_Name = Display_Name;
+        this.info = info;
         setHasStableIds(true);
 
     }
@@ -54,10 +57,6 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-
-        //  Picasso.with(mContext).load(challengeTopics.get(position).getExtraData().)
-
-
         switch (position) {
             case 0:
                 for (int i = challengeTopics.getChild().size() - 1; i >= 0; i--) {
@@ -67,16 +66,15 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
 
                                 holder.liveTextViewVideoChallenge.setVisibility(View.VISIBLE);
                                 challengeId.add(challengeTopics.getChild().get(i).getId());
-                                // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
                                 Display_Name.add(challengeTopics.getChild().get(i).getDisplay_name());
-                                //   holder.storyTitleTextView.setVisibility(View.GONE);
-                                //    holder.titleTextUnderLine.setVisibility(View.GONE);
-                                //if (3 == (articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getType())) {
-                                //    holder.imageBody.setVisibility(View.VISIBLE);
                                 try {
-                                    //    Glide.with(mContext).load(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.cureentChallengesImage);
                                     Picasso.with(mContext).load(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                             .fit().into(holder.cureentChallengesImage);
+                                    if (!StringUtils.isNullOrEmpty(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getRules())) {
+                                        info.add(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getRules());
+                                    } else {
+                                        info.add("<ol>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n</ol>");
+                                    }
                                     activeImageUrl.add(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl());
                                     activeStreamUrl.add(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getVideoUrl());
                                 } catch (Exception e) {
@@ -91,33 +89,25 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
 
 
                 }
+
+
                 break;
             default:
                 for (int j = m - n; j >= 0; j--) {
                     if ("1".equals(challengeTopics.getChild().get(j).getPublicVisibility())) {
                         if (challengeTopics.getChild().get(j).getExtraData() != null) {
-                            //  holder.rootView.setVisibility(View.VISIBLE);
-                            //holder.liveTextViewVideoChallenge.setVisibility(View.GONE);
-
-                            //if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
-                           /* if (position != 1) {
-                                holder.previousAndThisWeekTextView.setVisibility(View.GONE);
-                            } else {
-                                holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
-                                holder.previousAndThisWeekTextView.setText(R.string.previous_week_challenge);
-                            }*/
                             challengeId.add(challengeTopics.getChild().get(j).getId());
                             Display_Name.add(challengeTopics.getChild().get(j).getDisplay_name());
-                            // holder.storyTitleTextView.setText(R.string.previous_week_challenge);
-                          /*  holder.storyTitleTextView.setVisibility(View.GONE);
-                            holder.titleTextUnderLine.setVisibility(View.GONE);*/
-                            //  holder.storytitle.setText(articleDataModelsNew.getChild().get(j).getDisplay_name());
-                            //  if (3 == (articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getType())) {
-                            //   holder.imageBody.setVisibility(View.VISIBLE);
+
                             try {
-                                //  Glide.with(mContext).load(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.cureentChallengesImage);
                                 Picasso.with(mContext).load(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                         .fit().into(holder.cureentChallengesImage);
+                                if (!StringUtils.isNullOrEmpty(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getRules())) {
+                                    info.add(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getRules());
+                                } else {
+
+                                }
+
                                 activeImageUrl.add(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl());
                                 activeStreamUrl.add(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getVideoUrl());
                             } catch (Exception e) {
@@ -159,35 +149,35 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
         this.challengeTopics = challengeTopics;
         for (int i = 0; i < challengeTopics.getChild().size(); i++) {
             if (AppConstants.PUBLIC_VISIBILITY.equals(challengeTopics.getChild().get(i).getPublicVisibility())) {
-                // if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                 count++;
-
-                //}
             }
         }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView cureentChallengesImage;
+        ImageView cureentChallengesImage, infoImage;
+
         TextView liveTextViewVideoChallenge;
 
         public ViewHolder(View itemView, RecyclerViewClickListener recyclerViewClickListener) {
             super(itemView);
             cureentChallengesImage = (ImageView) itemView.findViewById(R.id.tagImageView);
             liveTextViewVideoChallenge = (TextView) itemView.findViewById(R.id.liveTextViewVideoChallenge);
+            infoImage = (ImageView) itemView.findViewById(R.id.info);
             cureentChallengesImage.setOnClickListener(this);
+            infoImage.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, challengeTopics, activeImageUrl, activeStreamUrl);
+            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, challengeTopics, activeImageUrl, activeStreamUrl, info);
 
         }
     }
 
 
     public interface RecyclerViewClickListener {
-        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl);
+        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info);
 
     }
 }

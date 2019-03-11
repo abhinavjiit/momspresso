@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
@@ -32,6 +33,8 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
     private ArrayList<String> Display_Name;
     private ArrayList<String> activeImageUrl;
     private ArrayList<String> activeStreamUrl;
+    private ArrayList<String> rules;
+
 
     public ChallengeVideoRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mcontext, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl) {
         this.challengeId = challengeId;
@@ -95,6 +98,9 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                                     holder.titleTextUnderLine.setVisibility(View.GONE);
                                     //if (3 == (articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getType())) {
                                     holder.imageBody.setVisibility(View.VISIBLE);
+                                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules())) {
+                                        rules.add(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules());
+                                    }
                                     try {
                                         Glide.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
                                        /* Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
@@ -111,6 +117,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                             }
                         }
                     }
+
                     break;
                 default:
                     for (int j = m - n; j >= 0; j--) {
@@ -138,6 +145,9 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                                     Glide.with(mcontext).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
                                /*     Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                             .fit().into(holder.imageBody);*/
+                                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getRules())) {
+                                        rules.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getRules());
+                                    }
                                     activeImageUrl.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl());
                                     activeStreamUrl.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getVideoUrl());
                                 } catch (Exception e) {
@@ -216,13 +226,13 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
 
         @Override
         public void onClick(View view) {
-            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, articleDataModelsNew, activeImageUrl, activeStreamUrl);
+            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, articleDataModelsNew, activeImageUrl, activeStreamUrl, rules);
 
         }
     }
 
     public interface RecyclerViewClickListener {
-        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl);
+        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> rules);
     }
 
 }
