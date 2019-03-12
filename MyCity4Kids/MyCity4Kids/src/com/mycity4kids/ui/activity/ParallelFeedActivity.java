@@ -652,8 +652,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         dataListHeader.add(detailData);
         if (StringUtils.isNullOrEmpty(streamUrl)) {
             streamUrl = responseData.getUrl();
-            if (recyclerViewFeed != null) {
-
+            if (recyclerViewFeed == null) {
+                recyclerViewFeed = (ExoPlayerRecyclerView) findViewById(R.id.exoplayer);
 //                mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
                 initFullscreenDialog();
                 initFullscreenButton();
@@ -1035,7 +1035,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
 
     private void initFullscreenButton() {
-//        PlaybackControlView controlView = recyclerViewFeed.findViewById(R.id.exo_controller);
+        PlaybackControlView controlView = recyclerViewFeed.findViewById(R.id.exo_controller);
         mFullScreenIcon = controlView.findViewById(R.id.exo_fullscreen_icon);
         mFullScreenButton = controlView.findViewById(R.id.exo_fullscreen_button);
         mFullScreenButton.setOnClickListener(new View.OnClickListener() {
@@ -1074,8 +1074,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             return;
         }
 
-        if (recyclerViewFeed != null) {
-//            recyclerViewFeed = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
+        if (recyclerViewFeed == null) {
+            recyclerViewFeed = (ExoPlayerRecyclerView) findViewById(R.id.exoplayer);
             initFullscreenDialog();
             initFullscreenButton();
             String userAgent = Util.getUserAgent(ParallelFeedActivity.this, getApplicationContext().getApplicationInfo().packageName);

@@ -845,7 +845,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
-                Intent intent1 = new Intent(DashboardActivity.this, MomsVlogDetailActivity.class);
+                Intent intent1 = new Intent(DashboardActivity.this, ParallelFeedActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.VIDEO_ID, articleId);
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
@@ -2403,7 +2403,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderVlogDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getId())) {
-            Intent intent = new Intent(DashboardActivity.this, MomsVlogDetailActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, ParallelFeedActivity.class);
 //            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             intent.putExtra(Constants.VIDEO_ID, data.getId());
             intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
