@@ -778,16 +778,20 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 if (SharedPrefUtils.getUserDetailModel(ParallelFeedActivity.this).getDynamoId().equals(authorId)) {
                     followClick.setVisibility(View.INVISIBLE);
                 } else {
-                    if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
-                        mAdapter.setTextFromResponse(true, getString(R.string.ad_follow_author));
+                    if (mAdapter!=null) {
+                        if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
+                            mAdapter.setTextFromResponse(true, getString(R.string.ad_follow_author));
 //                        followClick.setEnabled(true);
 //                        followClick.setText(getString(R.string.ad_follow_author));
-                        isFollowing = false;
-                    } else {
-                        mAdapter.setTextFromResponse(false, getString(R.string.ad_following_author));
+                            isFollowing = false;
+                        } else {
+                            mAdapter.setTextFromResponse(false, getString(R.string.ad_following_author));
 //                        followClick.setEnabled(true);
 //                        followClick.setText(getString(R.string.ad_following_author));
-                        isFollowing = true;
+                            isFollowing = true;
+                        }
+                    }else {
+                        showToast(getString(R.string.server_went_wrong));
                     }
                 }
             } else {

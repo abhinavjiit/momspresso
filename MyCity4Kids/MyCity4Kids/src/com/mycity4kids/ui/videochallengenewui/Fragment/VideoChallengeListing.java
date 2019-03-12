@@ -45,6 +45,7 @@ import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.widget.CustomFontTextView;
@@ -270,7 +271,7 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(getActivity(), MomsVlogDetailActivity.class);
+                Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
                 if (adapterView.getAdapter() instanceof VideoChallengeDetailListingAdapter) {
                     MixPanelUtils.pushMomVlogClickEvent(mixpanel, i, "" + videoCategory);
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
