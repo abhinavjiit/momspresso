@@ -345,13 +345,13 @@
     <string-array name="onboarding_title_array">
         <item>Create a Blog</item>
         <item>Enjoy Blogs in any of 8 Languages</item>
-        <item>Watch Videos on the go</item>
+        <item>Upload your Mom Vlogs or watch on the go</item>
         <item>With Support Groups, you are not alone</item>
     </string-array>
 
     <string name="onboarding.desc_1">Every mom has a story. What\'s yours? Share it in text or video.</string>
     <string name="onboarding.desc_2">Choose from English, Hindi, Bangla, Marathi, Tamil, Telugu, Kannada and Malayalam.</string>
-    <string name="onboarding.desc_3">Momspresso TV brings you beautiful, inspiring, useful, and funny videos. All at one place!</string>
+    <string name="onboarding.desc_3">Share your home videos in Mom Vlogs or watch beautiful, inspiring, useful and funny videos on Momspresso TV.</string>
     <string name="onboarding.desc_4">Harness the power of our mom community. Share your queries and help others!</string>
 
 

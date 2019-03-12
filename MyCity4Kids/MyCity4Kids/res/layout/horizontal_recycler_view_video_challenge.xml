@@ -28,8 +28,8 @@
 
             <ImageView
                 android:id="@+id/tagImageView"
-                android:layout_width="220dp"
-                android:layout_height="130dp"
+                android:layout_width="260dp"
+                android:layout_height="160dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/default_article" />
 
@@ -47,7 +47,7 @@
                 android:paddingRight="10dp"
                 android:paddingBottom="3dp"
                 android:text="LIVE"
-                android:textColor="@color/white"
+                android:textColor="@color/red"
                 android:textSize="14sp"
                 android:visibility="gone"
                 app:fontName="oswald.ttf" />
@@ -59,6 +59,7 @@
                 android:layout_alignRight="@+id/tagImageView"
                 android:layout_margin="10dp"
                 android:background="@drawable/round_circle"
+                android:elevation="7dp"
                 android:padding="3dp"
                 android:tint="@color/app_red"
                 app:srcCompat="@drawable/ic_info" />
