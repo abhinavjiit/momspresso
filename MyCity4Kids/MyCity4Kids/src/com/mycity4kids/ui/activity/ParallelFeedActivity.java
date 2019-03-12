@@ -652,9 +652,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         dataListHeader.add(detailData);
         if (StringUtils.isNullOrEmpty(streamUrl)) {
             streamUrl = responseData.getUrl();
-            if (recyclerViewFeed == null) {
-                recyclerViewFeed = (ExoPlayerRecyclerView) findViewById(R.id.exoplayer);
-//                mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
+            if (mExoPlayerView == null) {
+//                recyclerViewFeed = (ExoPlayerRecyclerView) findViewById(R.id.exoplayer);
+                mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
                 initFullscreenDialog();
                 initFullscreenButton();
 
@@ -1017,8 +1017,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
 
     private void openFullscreenDialog() {
-        ((ViewGroup) recyclerViewFeed.getParent()).removeView(recyclerViewFeed);
-        mFullScreenDialog.addContentView(recyclerViewFeed, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ((ViewGroup) recyclerViewFeed.getSimpleExo().getParent()).removeView(recyclerViewFeed.getSimpleExo());
+        mFullScreenDialog.addContentView(recyclerViewFeed.getSimpleExo(), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_fullscreen_skrink));
         mExoPlayerFullscreen = true;
         mFullScreenDialog.show();
@@ -1026,16 +1026,16 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
 
     private void closeFullscreenDialog() {
-        ((ViewGroup) recyclerViewFeed.getParent()).removeView(recyclerViewFeed);
-        ((FrameLayout) findViewById(R.id.main_media_frame)).addView(recyclerViewFeed);
+        ((ViewGroup) recyclerViewFeed.getSimpleExo().getParent()).removeView(recyclerViewFeed.getSimpleExo());
+        (recyclerViewFeed.frameLayout).addView(recyclerViewFeed.getSimpleExo());
         mExoPlayerFullscreen = false;
         mFullScreenDialog.dismiss();
         mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_fullscreen_expand));
     }
 
 
-    private void initFullscreenButton() {
-        PlaybackControlView controlView = recyclerViewFeed.findViewById(R.id.exo_controller);
+    public void initFullscreenButton() {
+        PlaybackControlView controlView = recyclerViewFeed.getSimpleExo().findViewById(R.id.exo_controller);
         mFullScreenIcon = controlView.findViewById(R.id.exo_fullscreen_icon);
         mFullScreenButton = controlView.findViewById(R.id.exo_fullscreen_button);
         mFullScreenButton.setOnClickListener(new View.OnClickListener() {
@@ -1074,8 +1074,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             return;
         }
 
-        if (recyclerViewFeed == null) {
-            recyclerViewFeed = (ExoPlayerRecyclerView) findViewById(R.id.exoplayer);
+        if (mExoPlayerView == null) {
+            mExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer);
             initFullscreenDialog();
             initFullscreenButton();
             String userAgent = Util.getUserAgent(ParallelFeedActivity.this, getApplicationContext().getApplicationInfo().packageName);
