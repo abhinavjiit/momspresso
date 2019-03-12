@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -26,7 +25,6 @@ import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
@@ -36,10 +34,8 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
-import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
@@ -48,7 +44,6 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
-import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
 import com.mycity4kids.utils.VideoPlayerConfig;
 
@@ -63,7 +58,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private int videoSurfaceDefaultHeight = 0;
     private int screenDefaultHeight = 0;
     SimpleExoPlayer player;
-    private PlayerView videoSurfaceView;
+    private SimpleExoPlayerView videoSurfaceView;
     private ImageView mCoverImage;
     private RelativeLayout videoCell;
 
@@ -130,7 +125,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
      * prepare for video play
      */
     //remove the player from the row
-    private void removeVideoView(PlayerView videoView) {
+    private void removeVideoView(SimpleExoPlayerView videoView) {
 
         ViewGroup parent = (ViewGroup) videoView.getParent();
         if (parent == null) {
@@ -269,17 +264,13 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         videoSurfaceDefaultHeight = point.x;
 
         screenDefaultHeight = point.y;
-        videoSurfaceView = new PlayerView(appContext);
-        videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
+        videoSurfaceView = new SimpleExoPlayerView(appContext);
+//        videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-        LoadControl loadControl = new DefaultLoadControl(new DefaultAllocator(true, 16),
-                VideoPlayerConfig.MIN_BUFFER_DURATION,
-                VideoPlayerConfig.MAX_BUFFER_DURATION,
-                VideoPlayerConfig.MIN_PLAYBACK_START_BUFFER,
-                VideoPlayerConfig.MIN_PLAYBACK_RESUME_BUFFER, -1, true);
+        LoadControl loadControl = new DefaultLoadControl();
 
         // 2. Create the player
 //        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this), trackSelector, loadControl);
@@ -321,6 +312,85 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         });
 
         player.addListener(new Player.EventListener() {
+            @Override
+            public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+            }
+
+            @Override
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+            }
+
+            @Override
+            public void onLoadingChanged(boolean isLoading) {
+
+            }
+
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                switch (playbackState) {
+
+                    case Player.STATE_BUFFERING:
+                        videoSurfaceView.setAlpha(0.5f);
+                        System.out.println("playingposition-----" + playPosition);
+                        Log.e(TAG, "onPlayerStateChanged: Buffering ");
+                        if (mProgressBar != null) {
+                            mProgressBar.setVisibility(VISIBLE);
+                            videoCell.setBackgroundColor(getResources().getColor(R.color.black));
+                        }
+
+                        break;
+                    case Player.STATE_ENDED:
+                        player.seekTo(0);
+                        if (playPosition < videoInfoList.size() - 1) {
+                            recyclerView.smoothScrollToPosition(playPosition + 1);
+                            playVideo(true);
+                        }
+                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
+                        break;
+                    case Player.STATE_IDLE:
+                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
+                        break;
+                    case Player.STATE_READY:
+                        Log.e(TAG, "onPlayerStateChanged: Ready ");
+                        System.out.println("playingposition-----" + playPosition);
+                        if (mProgressBar != null) {
+                            mProgressBar.setVisibility(GONE);
+                        }
+                        videoCell.setBackgroundColor(getResources().getColor(R.color.black));
+                        videoSurfaceView.setVisibility(VISIBLE);
+                        videoSurfaceView.setAlpha(1);
+                        mCoverImage.setVisibility(GONE);
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onRepeatModeChanged(int repeatMode) {
+
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+
+            }
+
+            @Override
+            public void onPositionDiscontinuity() {
+
+            }
+
+            @Override
+            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+            }
+        });
+
+       /* player.addListener(new Player().EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
 
@@ -407,7 +477,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             public void onSeekProcessed() {
 
             }
-        });
+        });*/
     }
 
     public void onPausePlayer() {
