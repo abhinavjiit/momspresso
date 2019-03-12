@@ -44,6 +44,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
 import com.mycity4kids.utils.VideoPlayerConfig;
 
@@ -60,7 +61,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     SimpleExoPlayer player;
     private SimpleExoPlayerView videoSurfaceView;
     private ImageView mCoverImage;
-    private RelativeLayout videoCell;
+    public RelativeLayout videoCell;
+    public FrameLayout frameLayout;
 
     private ProgressBar mProgressBar;
     private Context appContext;
@@ -198,7 +200,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         videoCell = holder.videoCell;
         mCoverImage = holder.mCover;
         mProgressBar = holder.mProgressBar;
-        FrameLayout frameLayout = holder.itemView.findViewById(R.id.video_layout);
+        frameLayout = holder.itemView.findViewById(R.id.video_layout);
         frameLayout.addView(videoSurfaceView);
         addedVideo = true;
         rowParent = holder.itemView;
@@ -275,6 +277,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         // 2. Create the player
 //        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this), trackSelector, loadControl);
         player = ExoPlayerFactory.newSimpleInstance(appContext, trackSelector, loadControl);
+
         // Bind the player to the view.
         videoSurfaceView.setUseController(true);
         videoSurfaceView.setPlayer(player);
@@ -478,6 +481,10 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
             }
         });*/
+    }
+
+    public SimpleExoPlayerView getSimpleExo() {
+        return videoSurfaceView;
     }
 
     public void onPausePlayer() {
