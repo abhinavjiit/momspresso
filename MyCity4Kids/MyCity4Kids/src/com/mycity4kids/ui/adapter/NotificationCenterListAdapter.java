@@ -41,6 +41,7 @@ import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
@@ -49,7 +50,6 @@ import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.GroupsFragment;
-import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -194,7 +194,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
 //                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
 //                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getAuthorId() + "~");
 //                    mContext.startActivity(intent);
-                    Intent intent = new Intent(mContext, MomsVlogDetailActivity.class);
+                    Intent intent = new Intent(mContext, ParallelFeedActivity.class);
                     intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
                     //intent.putExtra(Constants.STREAM_URL, notificationList.get(position).getUrl());
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
@@ -202,7 +202,6 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
                     mContext.startActivity(intent);
 
-                   // https://www.momspresso.com/parenting/just-another-perspective/story/dewdrop-on-a-rose
                     //https://www.momspresso.com/new-videos/v1/videos-91556df5-a531-412c-946b-3219dcfa30cb/playlist.m3u8
                     try {
                         JSONObject jsonObject = new JSONObject();

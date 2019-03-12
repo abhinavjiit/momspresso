@@ -262,6 +262,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mInflater = inflater;
         fragmentView = inflater.inflate(R.layout.article_details_fragment, container, false);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
         userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         layoutBottomSheet = fragmentView.findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
@@ -293,6 +295,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             badge = (ImageView) fragmentView.findViewById(R.id.badge);
             mWebChromeClient = new MyWebChromeClient();
             mWebView.setWebChromeClient(mWebChromeClient);
+            facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
+
             facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
 
             if ((AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(getActivity())))) {

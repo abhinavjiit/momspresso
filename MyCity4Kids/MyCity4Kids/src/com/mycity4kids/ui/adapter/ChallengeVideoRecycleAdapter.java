@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
@@ -32,6 +33,8 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
     private ArrayList<String> Display_Name;
     private ArrayList<String> activeImageUrl;
     private ArrayList<String> activeStreamUrl;
+    private ArrayList<String> rules;
+
 
     public ChallengeVideoRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mcontext, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl) {
         this.challengeId = challengeId;
@@ -87,6 +90,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                             if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
                                 if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                                     holder.rootView.setVisibility(View.VISIBLE);
+                                    holder.liveTextViewVideoChallenge.setVisibility(View.VISIBLE);
                                     challengeId.add(articleDataModelsNew.getChild().get(i).getId());
                                     // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
                                     Display_Name.add(articleDataModelsNew.getChild().get(i).getDisplay_name());
@@ -94,6 +98,9 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                                     holder.titleTextUnderLine.setVisibility(View.GONE);
                                     //if (3 == (articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getType())) {
                                     holder.imageBody.setVisibility(View.VISIBLE);
+                                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules())) {
+                                        rules.add(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules());
+                                    }
                                     try {
                                         Glide.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
                                        /* Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
@@ -110,12 +117,15 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                             }
                         }
                     }
+
                     break;
                 default:
                     for (int j = m - n; j >= 0; j--) {
                         if ("1".equals(articleDataModelsNew.getChild().get(j).getPublicVisibility())) {
                             if (articleDataModelsNew.getChild().get(j).getExtraData() != null) {
                                 holder.rootView.setVisibility(View.VISIBLE);
+                                holder.liveTextViewVideoChallenge.setVisibility(View.GONE);
+
                                 //if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
                                 if (position != 1) {
                                     holder.previousAndThisWeekTextView.setVisibility(View.GONE);
@@ -135,6 +145,9 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                                     Glide.with(mcontext).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
                                /*     Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                                             .fit().into(holder.imageBody);*/
+                                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getRules())) {
+                                        rules.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getRules());
+                                    }
                                     activeImageUrl.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl());
                                     activeStreamUrl.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getVideoUrl());
                                 } catch (Exception e) {
@@ -186,7 +199,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
         private TextView previousAndThisWeekTextView;
         private TextView yourStoryTextView;
         private LinearLayout StorytextViewLayout;
-        private TextView useThePictureTextView, noChallengeAddedText;
+        private TextView useThePictureTextView, noChallengeAddedText, liveTextViewVideoChallenge;
 
 
         public ChallengeViewHolder(View itemView, ChallengeVideoRecycleAdapter.RecyclerViewClickListener recyclerViewClickListener) {
@@ -205,7 +218,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
             yourStoryTextView = (TextView) itemView.findViewById(R.id.your_100_word_story_text);
             StorytextViewLayout = (LinearLayout) itemView.findViewById(R.id.whats_your_story_text_linear_layout);
             useThePictureTextView = (TextView) itemView.findViewById(R.id.use_the_picture_textView);
-
+            liveTextViewVideoChallenge = (TextView) itemView.findViewById(R.id.liveTextViewVideoChallenge);
             getStartedTextView.setOnClickListener(this);
             mainView.setOnClickListener(this);
 
@@ -213,13 +226,13 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
 
         @Override
         public void onClick(View view) {
-            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, articleDataModelsNew, activeImageUrl, activeStreamUrl);
+            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, articleDataModelsNew, activeImageUrl, activeStreamUrl, rules);
 
         }
     }
 
     public interface RecyclerViewClickListener {
-        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl);
+        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> rules);
     }
 
 }

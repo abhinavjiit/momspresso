@@ -395,7 +395,7 @@ public class AppConstants {
     public static final String AUTHOR_TYPE_EXPERT = "Expert";
     public static final String AUTHOR_TYPE_FEATURED = "Featured Author";
     public static final String AUTHOR_TYPE_USER = "User";
-    public static final String AUTHOR_TYPE_COLLABORATION ="VIDEO COLLABORATOR";
+    public static final String AUTHOR_TYPE_COLLABORATION = "VIDEO COLLABORATOR";
   /*  public static final String USER_TYPE_EDITOR = "0";
     public static final String USER_TYPE_EXPERT = "1";
     public static final String USER_TYPE_BLOGGER = "2";
@@ -635,8 +635,9 @@ public class AppConstants {
     public static final String VIDEO_CHALLENGE_ID = "category-ee7ea82543bd4bc0a8dad288561f2beb";
 
     public static final String PUBLIC_VISIBILITY = "1";
+    public static final String PUBLIC_INVISIBILITY = "0";
 
-    enum SocialPlatformName{
+    enum SocialPlatformName {
 
     }
 }

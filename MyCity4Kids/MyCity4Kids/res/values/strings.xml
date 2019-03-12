@@ -12,6 +12,9 @@
     <string name="write_review_prompt">What would you like to review?</string>
 
     <string name="loading_txt">Loading&#8230;</string>
+    <string name="empty_screen">Oops!! An unexpected error occurred</string>
+    <string name="please_retry">Please retry after sometime</string>
+    <string name="retry">Retry</string>
 
     <string name="subcategoryName">subCategory</string>
     <string name="location_info">To get personalized recommendations, Please select your preferred location</string>
@@ -341,13 +344,13 @@
 
     <string-array name="onboarding_title_array">
         <item>Create a Blog</item>
-        <item>Enjoy Blogs in any of 6 Languages</item>
+        <item>Enjoy Blogs in any of 8 Languages</item>
         <item>Watch Videos on the go</item>
         <item>With Support Groups, you are not alone</item>
     </string-array>
 
     <string name="onboarding.desc_1">Every mom has a story. What\'s yours? Share it in text or video.</string>
-    <string name="onboarding.desc_2">Choose from English, Hindi, Bangla, Marathi, Tamil and Telugu.</string>
+    <string name="onboarding.desc_2">Choose from English, Hindi, Bangla, Marathi, Tamil, Telugu, Kannada and Malayalam.</string>
     <string name="onboarding.desc_3">Momspresso TV brings you beautiful, inspiring, useful, and funny videos. All at one place!</string>
     <string name="onboarding.desc_4">Harness the power of our mom community. Share your queries and help others!</string>
 
@@ -1016,7 +1019,7 @@
     <string name="please_hold_for_3_seconds">Please hold for minimum 3 seconds, to post comment</string>
     <string name="stop_recording">First stop recording then save</string>
     <string name="cancel_audio">Cancel</string>
-    <string name="add">Add</string>
+    <string name="add">Add Video</string>
     <string name="rewards_enter_otp">Enter OTP</string>
     <string name="rewards_confirm">Confirm</string>
     <string name="rewards_first_name">First Name</string>

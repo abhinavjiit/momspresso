@@ -158,8 +158,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             }
         });
 
-        /* if (getArguments() != null) {*/
-
 
         Bundle extras = getArguments();
         if (extras != null) {
@@ -167,8 +165,28 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         }
         currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
         selectedTopic = currentSubTopic;
+
+
+       /* if (getArguments() != null) {
+
+
+            currentSubTopic = (Topics) getArguments().getParcelable("currentSubTopic");
+            selectedTopic = currentSubTopic;
+        }
+*/
+
+        /* if (getArguments() != null) {*/
+
+
+       /* Bundle extras = getArguments();
+        if (extras != null) {
+            jsonMyObject = extras.getString("currentSubTopic");
+        }
+        currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
+        selectedTopic = currentSubTopic;*/
           /*  currentSubTopic = (Topics) getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;*/
+
 
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);

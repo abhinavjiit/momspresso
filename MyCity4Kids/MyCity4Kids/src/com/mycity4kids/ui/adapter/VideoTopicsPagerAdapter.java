@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.google.gson.Gson;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
 import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
@@ -30,6 +31,7 @@ public class VideoTopicsPagerAdapter extends FragmentStatePagerAdapter {
 
         if (subTopicsList != null && subTopicsList.get(position).getId() != null && subTopicsList.get(position).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
             bundle.putString("video_challenge_category_id", subTopicsList.get(position).getId());
+           // bundle.putString("currentSubTopic", new Gson().toJson(subTopicsList.get(position)));
             bundle.putParcelable("currentSubTopic", subTopicsList.get(position));
             ChallengeCategoryVideoTabFragment tab2 = new ChallengeCategoryVideoTabFragment();
             tab2.setArguments(bundle);

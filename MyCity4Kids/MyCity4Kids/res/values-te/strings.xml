@@ -445,16 +445,16 @@
     <string name="ranking.tabs_page_views_label">మీ పేజీ వ్యూలు</string>
     <string name="ranking.views_label">బ్లాగ్ పేజీ వ్యూలు</string>
     <string name="ranking.menu_30_days_label">30 రోజుల వ్యూ</string>
-    <string name="ranking.menu_custom_label">CUSTOM</string>
-    <string name="ranking.improve_views_label">నా పేజీ వ్యూలను ఎలా మెరుగుపెట్టచ్చు?</string>
-    <string name="ranking.improve_social_share">నా సోషల్ షేర్ ని ఎలా మెరుగు పెట్టచ్చు?</string>
-    <string name="ranking.page_views_label">పేజీ వ్యూలు: </string>
+    <string name="ranking.menu_custom_label">కస్టమ్</string>
+    <string name="ranking.improve_views_label">నా పేజీ వ్యూ లను ఎలా మెరుగుపరచవచ్చు?</string>
+    <string name="ranking.improve_social_share">నా సోషల్ షేర్ ని ఎలా మెరుగుపరచుకోవచ్చు?</string>
+    <string name="ranking.page_views_label">PAGE VIEWS: </string>
     <string name="ranking.engagement">ఎంగేజ్మెంట్స్ </string>
     <string name="ranking.stats_like">లైక్ లు</string>
     <string name="ranking.stats_shares">షేర్లు</string>
     <string name="ranking.stats_comments">కామెంట్లు</string>
     <string name="ranking.how_calculated">దీనిని ఎలా లెక్కిస్తారు?</string>
-    <string name="ranking.top_bloggers">అత్యుత్తమ బ్లాగర్లు</string>
+    <string name="ranking.top_bloggers">Tఅత్యుత్తమ బ్లాగర్లు</string>
     <string name="ranking.followers_label">ఫాలోవర్లు</string>
     <string name="ranking.in">ఇన్</string>
     <string name="ranking.toast_start_end_date">మొదలు పెట్టిన డేట్ ఆఖరి రోజు కంటే తక్కువ ఉండాలి</string>
@@ -630,11 +630,11 @@
 
     <string name="all_categories_label">అన్ని</string>
 
-    <string name="language_label.english">English</string>
-    <string name="language_label.hindi">हिंदी</string>
-    <string name="language_label.marathi">मराठी</string>
+    <string name="language_label.english">ఆంగ్లం</string>
+    <string name="language_label.hindi">హిందీ</string>
+    <string name="language_label.marathi">మరాఠీ</string>
     <string name="language_label.bengali">বাংলা</string>
-    <string name="language_label.tamil">தமிழ்</string>
+    <string name="language_label.tamil">తమిళ్</string>
     <string name="language_label.telegu">తెలుగు</string>
     <string name="language_label.kannada">ಕನ್ನಡ</string>
     <string name="language_label.malayalam">മലയാളം</string>
