@@ -104,9 +104,9 @@
                 android:id="@+id/badge"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginRight="10dp"
                 android:layout_below="@+id/article_title"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
                 android:translationZ="5dp"
                 android:visibility="gone" />
 
@@ -754,7 +754,6 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_facebook_svg"
                     android:drawablePadding="2dp"
                     android:drawableTint="@color/app_red"
                     android:gravity="center"

@@ -115,6 +115,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private RelativeLayout menuCoachmark;
     private LinearLayout publishCoachmark1, publishCoachmark2;
     private TextView publishedSectionTextView1;
+    private String isRewardsAdded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,6 +245,9 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             try {
                 UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if(responseData.getData()!=null && responseData.getData().get(0)!=null && responseData.getData().get(0).getResult()!=null){
+                        isRewardsAdded = responseData.getData().get(0).getResult().getRewardsAdded();
+                    }
                     if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
                         rankCountTextView.setText("--");
                         rankLanguageTextView.setText(getString(R.string.myprofile_rank_label));
@@ -431,6 +435,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             case R.id.editProfileTextView:
             case R.id.updateProfileTextView: {
                 Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
+                intent.putExtra("isRewardAdded", isRewardsAdded);
                 startActivity(intent);
             }
             break;

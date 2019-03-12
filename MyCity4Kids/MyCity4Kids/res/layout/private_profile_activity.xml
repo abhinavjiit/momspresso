@@ -251,9 +251,10 @@
                 android:layout_below="@+id/userbioTextView"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/profile_completion"
-                android:textColor="@color/app_light_black"
-                app:fontName="oswald.ttf" />
+                android:text="@string/momspresso_rewards"
+                android:textColor="@color/app_red"
+                android:textStyle="bold"
+                app:fontName="oswald_regular.ttf"/>
 
             <com.mycity4kids.widget.RoundedHorizontalProgressBar
                 android:id="@+id/progress_bar_1"
@@ -309,9 +310,8 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/updateProfileTextView"
-                android:text="@string/improve_reachability"
-                android:textColor="@color/myprofile.improve_reach"
-                app:fontName="oswald_regular.ttf" />
+                android:text="@string/rewards_participate"
+                app:fontName="oswald.ttf" />
 
             <LinearLayout
                 android:id="@+id/statsCountContainer"
@@ -438,7 +438,6 @@
                 android:elevation="18dp"
                 android:orientation="vertical"
                 android:visibility="invisible">
-
             </LinearLayout>
 
             <com.mycity4kids.widget.CustomFontTextView

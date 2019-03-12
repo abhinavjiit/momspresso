@@ -25,7 +25,7 @@ public class Topics implements Parcelable {
     private boolean isSelected;
     private String slug;
     private List<ExtraData> extraData;
-    private String sponsoredCategoryImage ;
+    private String sponsoredCategoryImage;
     private String sponsoredCategoryBadge;
 
     public static class ExtraData implements Parcelable {
@@ -122,6 +122,16 @@ public class Topics implements Parcelable {
             private int type;
             private String desc;
 
+            public String getRules() {
+                return rules;
+            }
+
+            public void setRules(String rules) {
+                this.rules = rules;
+            }
+
+            private String rules;
+
 
             public Challenges(String active, String videoUrl, String imageUrl, int type, String desc) {
                 this.active = active;
@@ -180,6 +190,8 @@ public class Topics implements Parcelable {
                 imageUrl = in.readString();
                 type = in.readInt();
                 desc = in.readString();
+                rules = in.readString();
+
             }
 
             @Override
@@ -189,6 +201,7 @@ public class Topics implements Parcelable {
                 dest.writeString(imageUrl);
                 dest.writeInt(type);
                 dest.writeString(desc);
+                dest.writeString(rules);
 
             }
 
@@ -267,7 +280,11 @@ public class Topics implements Parcelable {
         showInMenu = in.readString();
         isSelected = in.readByte() != 0;
         slug = in.readString();
-        extraData = in.readParcelable(ExtraData.class.getClassLoader());
+        in.readTypedList(this.extraData, ExtraData.CREATOR);
+
+
+        //extraData = in.readParcelable(ExtraData.class.getClassLoader());
+
         //  extraData = in.createTypedArrayList(ExploreTopicsModel.CREATOR);
 
 

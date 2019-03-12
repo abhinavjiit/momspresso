@@ -352,6 +352,7 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
+                requestBuilder.addHeader("source", "2");
                 requestBuilder.addHeader("appVersion", appVersion);
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
                 requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));

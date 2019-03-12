@@ -103,6 +103,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
     private File photoFile;
     private String mCurrentPhotoPath, absoluteImagePath;
     private Uri imageUri;
+    private String isRewardsAdded = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +120,14 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+
+        if(getIntent()!=null){
+            if(getIntent().getExtras().containsKey("isRewardAdded")){
+                isRewardsAdded = getIntent().getStringExtra("isRewardAdded");
+            }
+        }
 
         saveTextView.setOnClickListener(this);
         editImageView.setOnClickListener(this);
@@ -219,22 +228,22 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.contact_details)));
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.about_txt)));
-                    //tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.rewards_tab_detail)));
+                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.rewards_tab_detail)));
 
                     AppUtils.changeTabsFont(EditProfileNewActivity.this, tabLayout);
 
-                    viewPagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), userDetails, mDatalist);
+                    viewPagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), userDetails, mDatalist,isRewardsAdded);
                     viewPager.setAdapter(viewPagerAdapter);
 
                     viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
-//                            if(tab.getPosition()==2){
-//                                saveTextView.setVisibility(View.GONE);
-//                            }else{
-//                                saveTextView.setVisibility(View.VISIBLE);
-//                            }
+                            if(tab.getPosition()==2){
+                                saveTextView.setVisibility(View.GONE);
+                            }else{
+                                saveTextView.setVisibility(View.VISIBLE);
+                            }
                             viewPager.setCurrentItem(tab.getPosition());
                         }
 

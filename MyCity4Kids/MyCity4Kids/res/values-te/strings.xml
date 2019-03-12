@@ -111,11 +111,13 @@
     <string name="duration_txt">వ్యవధి</string>
     <string name="cost_txt">ఖర్చు</string>
 
+
+
     <string name="event_added">ఈవెంట్ జోడించడం జరిగింది</string>
 
 
     <string name="new_yes">అవును</string>
-    <string name="new_cancel">రద్దు</string>
+    <string name="new_cancel">క్యాన్సిల్ </string>
     <string name="load_error">కంటైనర్ లోడ్ విఫలం</string>
     <string name="example_post_title_placeholder">ఆర్టికల్ టైటిల్</string>
     <string name="example_post_content_placeholder">మీ కథను ఇక్కడ షేర్ చేయండి</string>
@@ -134,7 +136,7 @@
     <string name="analytics.popup.improve_rank">నా రాంక్ ని ఎలా మెరుగుపరుచుకోవచ్చు</string>
     <string name="analytics.popup.improve_social">నా సోషల్ షేర్ ని ఎలా మెరుగుపరచుకోవచ్చు</string>
 
-    <string name="videos.dialog.title">అప్లోడ్  చేసే వీడియో ఎంచుకోండిి</string>
+    <string name="videos.dialog.title">అప్లోడ్  చేసే వీడియో ఎంచుకోండి</string>
     <string name="videos.upload_option.camera">వీడియో తీయండి</string>
     <string name="videos.upload_option.gallery">గ్యాలరీ నించి ఎంచుకోండి</string>
     <string name="videos.upload_option.cancel">క్యాన్సల్</string>
@@ -151,7 +153,7 @@
     <string name="ad.comments.fb_comment">ఫేస్ బుక్ కామెంట్</string>
     <string name="ad.comments.edit_label">మార్చు</string>
     <string name="ad.comments.save">సేవ్</string>
-    <string name="ad.comments.toast_empty_comment">దయచేసి చెల్లుబాటు అయ్యే వివరాలు ఇవ్వండి</string>
+    <string name="ad.comments.toast_empty_comment">దయచేసి చెల్లుబాతో  అయ్యే వివరాలు ఇవ్వండి</string>
     <string name="ad.comments.toolbar.title">కామెంట్లు</string>
     <string name="ad.comments.replying_to">మీరు కు జవాబు ఇస్తున్నారు %1$s</string>
     <string name="ad.bottom_bar.facebook">ఫేస్ బుక్</string>
@@ -202,7 +204,7 @@
         <item>మీ బ్లాగులను ఫేస్ బుక్, వాట్సాప్ వంటి అన్ని నెటీవర్కులలో షేర్ చేయండి</item>
     </string-array>
 
-    <string name="confirmation_dialog.delete_draft.message">మీ డ్రాఫ్ట్ ని డిలీట్ చెయ్యాలి అనుకుంటున్నారా?</string>
+    <string name="confirmation_dialog.delete_draft.message">మీ డ్రాఫ్ట్ ని డిలీట్ చెయ్యాలి అనుకుంతోన్నారా?</string>
     <string name="confirmation_dialog.no">కాదు</string>
     <string name="confirmation_dialog.yes">అవును</string>
 
@@ -315,7 +317,7 @@
 
     <string name="lang_specific.toolbar.title">భాషలు</string>
 
-    <string name="lang_setting.stories_label">Stories</string>
+    <string name="lang_setting.stories_label">కథలు</string>
 
     <string name="search.article_label">కథనం</string>
     <string name="search.author_label">రచయిత</string>
@@ -443,19 +445,19 @@
     <string name="ranking.tabs_page_views_label">మీ పేజీ వ్యూలు</string>
     <string name="ranking.views_label">బ్లాగ్ పేజీ వ్యూలు</string>
     <string name="ranking.menu_30_days_label">30 రోజుల వ్యూ</string>
-    <string name="ranking.menu_custom_label">CUSTOM</string>
-    <string name="ranking.improve_views_label">How can I improve my Page views?</string>
-    <string name="ranking.improve_social_share">How can I improve my Social Share?</string>
+    <string name="ranking.menu_custom_label">కస్టమ్</string>
+    <string name="ranking.improve_views_label">నా పేజీ వ్యూ లను ఎలా మెరుగుపరచవచ్చు?</string>
+    <string name="ranking.improve_social_share">నా సోషల్ షేర్ ని ఎలా మెరుగుపరచుకోవచ్చు?</string>
     <string name="ranking.page_views_label">PAGE VIEWS: </string>
-    <string name="ranking.engagement">ENGAGEMENTS</string>
-    <string name="ranking.stats_like">LIKES</string>
-    <string name="ranking.stats_shares">SHARES</string>
+    <string name="ranking.engagement">ఎంగేజ్మెంట్స్ </string>
+    <string name="ranking.stats_like">లైక్ లు</string>
+    <string name="ranking.stats_shares">షేర్లు</string>
     <string name="ranking.stats_comments">కామెంట్లు</string>
-    <string name="ranking.how_calculated">How is this calculated?</string>
-    <string name="ranking.top_bloggers">TOP BLOGGERS IN</string>
+    <string name="ranking.how_calculated">దీనిని ఎలా లెక్కిస్తారు?</string>
+    <string name="ranking.top_bloggers">Tఅత్యుత్తమ బ్లాగర్లు</string>
     <string name="ranking.followers_label">ఫాలోవర్లు</string>
     <string name="ranking.in">ఇన్</string>
-    <string name="ranking.toast_start_end_date">Start date must be less than end date</string>
+    <string name="ranking.toast_start_end_date">మొదలు పెట్టిన డేట్ ఆఖరి రోజు కంటే తక్కువ ఉండాలి</string>
 
     <string name="editor.publish">ప్రచురణ</string>
 
@@ -493,7 +495,7 @@
     <string name="upload_video.desc1">వీడియో షూట్ చేసి వెంటనే మీ మొబైల్ యాప్ నుండి  అప్లోడ్ చేయండి</string>
     <string name="upload_video.get_started">మొదలుపెట్టండి</string>
 
-    <string name="moderation_or_share.way_to_go">WAY TO GO!</string>
+    <string name="moderation_or_share.way_to_go">ఆరంభించండి !</string>
     <string name="moderation_or_share.moderation_message">మీ ఆర్టికల్ మోడరేషన్ లో ఉంది. 24 గంటల లోగా మీకు మీ బ్లాగ్ స్టేటస్ గురించి ఇమెయిల్ వస్తుంది</string>
     <string name="moderation_or_share.publish_message">శుభాకాంక్షలు మీ బ్లాగ్ ప్రచురించబడింది. మీ కుంటుంబ సభ్యులతో మరియు మిత్రులతో షేర్ చేయండి</string>
     <string name="moderation_or_share.later">తర్వాత</string>
@@ -522,7 +524,7 @@
 
     <string name="video_progress.uploading_label">అప్లోడ్ అవుతోంది ...</string>
     <string name="video_progress.uploading_msg">ఆప్ ని మధ్యలో మూసివేయకండి, అప్లోడ్ ని అది సొంతంగా ఆపివేస్తుంది. అప్లోడ్ చేయడానికి ఆప్ ఉపయోగించండి.</string>
-    <string name="video_progress.way_to_go">WAY TO GO!</string>
+    <string name="video_progress.way_to_go">ఆరంభించండి !</string>
     <string name="video_progress.success_msg">వీడియో విజయవంతంగా అప్లోడ్ అయ్యి మోడరేషన్ కు పంపటం జరిగింది. మోడరేషన్ అయ్యాక మీకు తెలియజేస్తాము</string>
     <string name="video_progress.okay">ఓకే</string>
     <string name="video_progress.uploading_failed">అప్లోడ్ విఫలమైనది</string>
@@ -577,7 +579,7 @@
     <string name="rate_now">ఇప్పుడే రేట్ చేయండి</string>
     <string name="rate_us.dialog.title">మా ఆప్ ని రేట్ చేయండి?</string>
     <string name="rate_us.dialog.not_now">ఇప్పుడు కాదు</string>
-    <string name="rate_us.dialog.message1">మామ్స్‌ప్రెస్సోయాప్ ని ఎంజాయ్ చేస్తుంటే దయచేసి రేటింగ్స్ ఇవ్వండి</string>
+    <string name="rate_us.dialog.message1">మామ్స్‌ప్రెస్సో యాప్ ని ఎంజాయ్ చేస్తుంటే దయచేసి రేటింగ్స్ ఇవ్వండి</string>
     <string name="rate_us.dialog.message2">మీ మద్దతు కోసం ధన్యవాదాలు</string>
 
     <string name="suggested_topic.start_writing">రాయటం మొదలుపెట్టండి</string>
@@ -628,11 +630,11 @@
 
     <string name="all_categories_label">అన్ని</string>
 
-    <string name="language_label.english">English</string>
-    <string name="language_label.hindi">हिंदी</string>
-    <string name="language_label.marathi">मराठी</string>
+    <string name="language_label.english">ఆంగ్లం</string>
+    <string name="language_label.hindi">హిందీ</string>
+    <string name="language_label.marathi">మరాఠీ</string>
     <string name="language_label.bengali">বাংলা</string>
-    <string name="language_label.tamil">தமிழ்</string>
+    <string name="language_label.tamil">తమిళ్</string>
     <string name="language_label.telegu">తెలుగు</string>
     <string name="language_label.kannada">ಕನ್ನಡ</string>
     <string name="language_label.malayalam">മലയാളം</string>
@@ -849,11 +851,11 @@
     <string name="use_picture_word_to_write_one">Use The Picture ,Word, Phrase Or video Given Blow To Write One</string>
     <string name="challenge_write_story_for_this_picture">Write Your Story Around This Picture</string>
     <string name="choose_challenge_label">TAKE THE CHALLENGE</string>
-    <string name="start_writing">Start Writing</string>
+    <string name="start_writing">రాయటం మొదలుపెట్టండి</string>
 
-    <string name="male">Male</string>
-    <string name="female">Female</string>
-    <string name="DOB">Date Of Birth</string>
+    <string name="male">పురుషుడు</string>
+    <string name="female">స్త్రీ</string>
+    <string name="DOB">పుట్టిన తేదీ</string>
     <string name="add">జోడించు</string>
 
 
@@ -879,4 +881,25 @@
     <string name="rewards_save_continue">సేవ్ చేసి కొనసాగండి</string>
     <string name="momspresso_rewards">"మామ్స్‌ప్రెస్సో రివార్ద్స్‌ "</string>
     <string name="rewards_participate">"మీ ప్రొఫైల్ పూర్తి చేసి పాల్గొనండి మరియు సంపాదించండి! "</string>
+    <string name="save_continue">సేవ్ చేసి కొనసాగండి</string>
+    <string name="rewards_personal_header">మీతో సన్నిహితంగా ఉండటానికి ఈ సమాచారం మాకు అవసరం</string>
+    <string name="rewards_welcome">మామ్స్‌ప్రెస్సో రివార్ద్స్‌కు స్వాగతం!</string>
+    <string name="rewards_description">సర్వేలు, ఇ-కామర్స్ సమీక్షలు, ప్రాయోజిత బ్లాగులు మరియు ఇతర    ప్రముఖ బ్రాండ్స్ క్రమ పద్ధతిలో ప్రచారం చేస్తుంటారు   . ఈ ప్రచారానికి మీ అర్హతను నిర్ణయించడానికి మీ నుండి కొంత సమాచారం మాకు అవసరం. ఈ ప్రచారంలో పాల్గొనడం వలన మీకు డబ్బు అందించే మామ్స్‌ప్రెస్సో రివార్డ్స్ ఉంటాయి .</string>
+    <string name="rewards_start_now">ఇప్పుడు ప్రారంబించండి</string>
+    <string name="rewards_family_header">వివిధ ప్రచారాల కోసం మీ అర్హతను గుర్తించడానికి మాకు ఈ క్రింది సమాచారం అవసరం</string>
+    <string name="rewards_social_header">మా సోషల్ మీడియా ప్రచారాలకు మిమ్మల్ని ఆహ్వానించడానికి మాకు ఈ సమాచారం అవసరం.</string>
+    <string name="rewards_number_of_kids">పిల్లల సంఖ్య</string>
+    <string name="rewards_interest">అభిరుచులు</string>
+    <string name="rewards_not_working">"నాన్ వర్కింగ్ "</string>
+    <string name="rewards_are_expecing">"గర్భవతిని  "</string>
+
+    <string name="cannot_be_left_blank">%1$s ఖాళీగా వదిలేయకండి</string>
+    <string name="please_enter_a_valid">సరైన %1$s ఇవ్వండి</string>
+    <string name="need_to_select_option">మీరు %1$s కొరకు ఒక ఆప్షన్ ఎంచుకోండి</string>
+    <string name="rewards_expected_date">డెలివరీ  తేదీ</string>
+    <string name="rewards_mobile_number_verified">మొబైల్ నంబర్ ధృవీకరించబడింది</string>
+    <string name="rewards_have_children">మీకు పిల్లలు ఉన్నారా?</string>
+    <string name="rewards_tab_detail">బహుమతులు</string>
+    <string name="rewards_add_child">పిల్లల సంఖ్య జోడించండి</string>
+    <string name="rewards_kid_detail">పిల్లల వివరాలు</string>
 </resources>

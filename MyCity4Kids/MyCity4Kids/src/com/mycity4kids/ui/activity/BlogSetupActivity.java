@@ -178,13 +178,13 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profilePicImageView);
         }
 
-      /*  if (StringUtils.isNullOrEmpty(SharedPrefUtils.getUserDetailModel(this).getEmail())) {
+        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getUserDetailModel(this).getEmail())) {
             emailEditText.setVisibility(View.VISIBLE);
             emailLabelTextView.setVisibility(View.VISIBLE);
         } else {
             emailEditText.setVisibility(View.GONE);
             emailLabelTextView.setVisibility(View.GONE);
-        }*/
+        }
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
         Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());

@@ -98,6 +98,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     private boolean showGuide = false;
     ShimmerFrameLayout shimmerFrameLayout;
     private MixpanelAPI mixpanel;
+    private String jsonMyObject;
+
 
     @Nullable
     @Override
@@ -156,10 +158,36 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             }
         });
 
-        if (getArguments() != null) {
+
+        Bundle extras = getArguments();
+        if (extras != null) {
+            jsonMyObject = extras.getString("currentSubTopic");
+        }
+        currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
+        selectedTopic = currentSubTopic;
+
+
+       /* if (getArguments() != null) {
+
+
             currentSubTopic = (Topics) getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;
         }
+*/
+
+        /* if (getArguments() != null) {*/
+
+
+       /* Bundle extras = getArguments();
+        if (extras != null) {
+            jsonMyObject = extras.getString("currentSubTopic");
+        }
+        currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
+        selectedTopic = currentSubTopic;*/
+          /*  currentSubTopic = (Topics) getArguments().getParcelable("currentSubTopic");
+            selectedTopic = currentSubTopic;*/
+
+
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 

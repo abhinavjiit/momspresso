@@ -886,4 +886,24 @@
     <string name="rewards_save_continue">சேமி  தொடரவும்</string>
     <string name="momspresso_rewards">மாம்ஸ்ப்ரெஸ்ஸோ வெகுமதிகள்</string>
     <string name="rewards_participate">உங்கள் சுயவிவரத்தை நிறைவு செய்வதன் மூலம் இப்போது பங்கேற்று சம்பாதிக்கலாம்!</string>
+    <string name="save_continue">சேமி &amp; தொடரவும்</string>
+    <string name="rewards_personal_header">உங்களுடன் தொடர்பு கொள்ள இந்தத் தகவல் எங்களுக்குத் தேவை</string>
+    <string name="rewards_welcome">மாம்ஸ்ப்ரெஸ்ஸோ வெகுமதிகளுக்கு வரவேற்கிறோம்!</string>
+    <string name="rewards_description">"ஆய்வுகள், மின் வணிக விமர்சனங்கள், நிதியுதவி பெற்ற வலைப்பதிவு மற்றும் பிற வடிவங்களில் முன்னணி பிராண்டுகள் தொடர்ச்சியாக பிரச்சாரங்கள் நடத்துவார்கள். இந்த பிரச்சாரங்களில் பங்கேற்க உங்கள் தகுதியைத் தீர்மானிக்க எங்களுக்கு சில தகவல்கள் தேவை. இந்த பிரச்சாரங்களில் பங்கு கொள்வதில் பண ஆதாயம் உள்ளது. அதனால் தான் மாம்ஸ்ப்ரெஸ்ஸோ வெகுமதிகள் "</string>
+    <string name="rewards_start_now">"இப்போது தொடங்கவும் "</string>
+    <string name="rewards_family_header">பல்வேறு பிரச்சாரங்களில் பங்கேற்க உங்கள் தகுதியைத் தீர்மானிக்க கீழே உள்ள தகவல் எங்களுக்குத் தேவை</string>
+    <string name="rewards_social_header">எங்கள் சமூக ஊடக பிரச்சாரங்களுக்கு உங்களை வரவேற்கிறோம்.</string>
+    <string name="rewards_number_of_kids">குழந்தைகள் எண்ணிக்கை</string>
+    <string name="rewards_interest">ஆர்வங்கள்</string>
+    <string name="rewards_not_working">வேலைக்கு செல்லாதவர்</string>
+    <string name="rewards_are_expecing">குழந்தையை எதிர்பார்ப்பவர்</string>
+    <string name="cannot_be_left_blank">%1$s காலியாக விடமுடியாது</string>
+    <string name="please_enter_a_valid">செல்லுபடியாகும் ஒரு %1$s உள்ளிடுக</string>
+    <string name="need_to_select_option">க்கு %1$s ஒரு விருப்பத்தை தேர்வு செய்யவேண்டும்.</string>
+    <string name="rewards_expected_date">எதிர்பார்க்கும் தேதி</string>
+    <string name="rewards_mobile_number_verified">கைபேசி எண் சரிபார்க்கப்பட்டது</string>
+    <string name="rewards_have_children">உங்களுக்கு குழந்தைகள் இருக்கிறார்களா?</string>
+    <string name="rewards_tab_detail">வெகுமதிகள்</string>
+    <string name="rewards_add_child">குழந்தையை சேர்க்கவும்</string>
+    <string name="rewards_kid_detail">குழந்தையை பற்றி விவரம்</string>
 </resources>

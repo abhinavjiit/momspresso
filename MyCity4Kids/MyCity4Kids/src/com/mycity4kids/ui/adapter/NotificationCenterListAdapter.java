@@ -196,7 +196,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
 //                    mContext.startActivity(intent);
                     Intent intent = new Intent(mContext, ParallelFeedActivity.class);
                     intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getArticleId());
-                    intent.putExtra(Constants.STREAM_URL, notificationList.get(position).getUrl());
+                    // intent.putExtra(Constants.STREAM_URL, notificationList.get(position).getUrl());
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
                     intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");

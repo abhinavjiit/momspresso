@@ -3,7 +3,6 @@ package com.mycity4kids.models.rewardsmodels
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-
 data class RewardsDetailsResultResonse(
         @SerializedName("contact")
         @Expose
@@ -35,7 +34,7 @@ data class RewardsDetailsResultResonse(
         @SerializedName("income_slab")
         @Expose
         var incomeSlab: Any? = null,
-        @SerializedName("interest")
+        @SerializedName("interests")
         @Expose
         var interest: ArrayList<Int>? = null,
         @SerializedName("is_mother")
