@@ -199,7 +199,7 @@
         android:elevation="4dp"
         android:gravity="center"
         android:padding="15dp"
-        android:text="@string/add"
+        android:text="@string/add_article_or_video.upload_video"
         android:textColor="@color/white"
         android:textSize="17sp"
         app:fontName="oswald_regular.ttf" />

@@ -264,7 +264,7 @@
     </string-array>
 
     <string name="onboarding.desc_1">हर माँ की अपनी एक कहानी है। आपकी क्या है? उसे ब्लॉग पोस्ट या वीडियो के रूप में शेयर  करें।</string>
-    <string name="onboarding.desc_2">अंग्रेजी, हिंदी, बांग्ला, मराठी, तमिल और तेलुगु में से चुनें।</string>
+    <string name="onboarding.desc_2">अंग्रेजी, हिंदी, बांग्ला, मराठी, तमिल, तेलुगु, कन्नड़ और मलयालम में से चुनें।</string>
     <string name="onboarding.desc_3">मॉम्सप्रेस्सो टीवी में आपके लिए हैं  खूबसूरत , प्रेरणादायक, उपयोगी और मज़ेदार वीडियो । सभी वीडियो एक साथ ही मंच पर!</string>
     <string name="onboarding.desc_4">हमारी माँओं की कम्यूनिटी को सशक्त बनायें  .  अपने सवाल साझा करें और दूसरों की मदद करें!</string>
 
@@ -916,4 +916,8 @@
     <string name="rewards_tab_detail">रिवार्ड्स</string>
     <string name="rewards_add_child">कितने बच्चे हैं?</string>
     <string name="rewards_kid_detail">बच्चों की डिटेल भरें।</string>
+    <string name="rewards_participating_earn_completing_profile">अपने प्रोफाइल को अभी भरें और ईनामी योजना में हिस्सा ले कर लाभ कमाएं !</string>
+    <string name="rewards_momspresso">मॉम्सप्रेस्सो ईनामी योजना</string>
+
+
 </resources>

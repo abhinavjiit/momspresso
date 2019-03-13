@@ -23,6 +23,7 @@ public class VlogsListingAndDetailResult {
     private String like_count;
     private String comment_count;
 
+
     public String getId() {
         return id;
     }

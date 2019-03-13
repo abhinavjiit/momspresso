@@ -264,7 +264,7 @@
     </string-array>
 
     <string name="onboarding.desc_1">प्रत्येक आईच्या \'आईपणाची\'  ची कहाणी.  तुमचीही  आहे ना? शेअर करा लिखीत व व्हिडीओच्या माध्यमातून</string>
-    <string name="onboarding.desc_2">निवडा तुमची भाषा इंग्रजी, हिन्दी , बंगाल , मराठी, तामिळ आणि तेलगू.</string>
+    <string name="onboarding.desc_2">निवडा तुमची भाषा इंग्रजी, हिन्दी , बंगाल , मराठी, तामिळ, तेलगू, कन्नड आणि मल्याळम.</string>
     <string name="onboarding.desc_3">Momspresso TV च्या  माध्यमातून पहा   सुंदर, प्रेरणादायी, माहितीपूर्ण , मजेशीर व्हिडीओ खास तुमच्यासाठी.</string>
     <string name="onboarding.desc_4">\'ती\' च्या  अस्तित्वाचा लढा  सशक्त करू. चला शेअर करा तुमच्या सूचना , कलपना आणि लिहित्या व्हा.</string>
 
@@ -904,4 +904,6 @@
     <string name="rewards_tab_detail">पुरस्कार</string>
     <string name="rewards_add_child">मुलांची माहिती</string>
     <string name="rewards_kid_detail">मुलांची माहिती</string>
+    <string name="rewards_participating_earn_completing_profile">सहभाग घ्या आपले प्रोफाइल पूर्ण करा आणि कमवा!</string>
+    <string name="rewards_momspresso">मोम्सप्रेसो पुरस्कार</string>
 </resources>

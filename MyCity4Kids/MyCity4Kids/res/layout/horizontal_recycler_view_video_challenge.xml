@@ -30,6 +30,7 @@
                 android:id="@+id/tagImageView"
                 android:layout_width="260dp"
                 android:layout_height="160dp"
+                android:foreground="@drawable/gradient_in_video_challenge_image"
                 android:scaleType="fitXY"
                 android:src="@drawable/default_article" />
 
@@ -46,8 +47,8 @@
                 android:paddingTop="3dp"
                 android:paddingRight="10dp"
                 android:paddingBottom="3dp"
-                android:text="LIVE"
-                android:textColor="@color/red"
+                android:text="@string/video_challenge_live_text"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:visibility="gone"
                 app:fontName="oswald.ttf" />
@@ -63,6 +64,23 @@
                 android:padding="3dp"
                 android:tint="@color/app_red"
                 app:srcCompat="@drawable/ic_info" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/challengeNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tagImageView"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:elevation="@dimen/space_10"
+                android:shadowColor="@color/black"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:text="#AWW MOMENTS"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                app:fontName="oswald_regular.ttf" />
 
 
         </RelativeLayout>

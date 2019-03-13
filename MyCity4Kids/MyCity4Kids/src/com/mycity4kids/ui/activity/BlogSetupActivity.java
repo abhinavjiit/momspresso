@@ -588,7 +588,11 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
     private void saveUserDetails() {
         UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
-        updateUserDetail.setUserBio(aboutSelfEditText.getText().toString().trim() + "");
+        if (!StringUtils.isNullOrEmpty(aboutSelfEditText.getText().toString())) {
+            updateUserDetail.setUserBio(aboutSelfEditText.getText().toString().trim() + "");
+        } else {
+            updateUserDetail.setUserBio(" ");
+        }
         updateUserDetail.setBlogTitle(blogTitleEditText.getText().toString().trim() + "");
         if (emailEditText.getVisibility() == View.VISIBLE) {
             updateUserDetail.setEmail(emailEditText.getText().toString().trim() + "");

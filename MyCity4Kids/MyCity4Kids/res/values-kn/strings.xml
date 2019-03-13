@@ -268,7 +268,7 @@
     </string-array>
 
     <string name="onboarding.desc_1">ಪ್ರತಿ ತಾಯಿಯ ಒಂದು ಕಥೆ ಇದೆ. ನಿಮ್ಮದೇನು? ಇದನ್ನು ಪಠ್ಯ ಅಥವಾ ವೀಡಿಯೊದಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ.</string>
-    <string name="onboarding.desc_2">ಇಂಗ್ಲೀಷ್, ಹಿಂದಿ, ಬಾಂಗ್ಲಾ, ಮರಾಠಿ, ತಮಿಳು, ತೆಲುಗು, ಮಲಯಾಳಂ, ಮತ್ತು ಕನ್ನಡದಿಂದ ಆಯ್ಕೆ ಮಾಡಿ.</string>
+    <string name="onboarding.desc_2">ಇಂಗ್ಲೀಷ್, ಹಿಂದಿ, ಬಾಂಗ್ಲಾ, ಮರಾಠಿ, ತಮಿಳು, ತೆಲುಗು, ಮಲಯಾಳಂ, ಕನ್ನಡದಿಂದ ಆಯ್ಕೆ ಮಾಡಿ,  ಮತ್ತು .</string>
     <string name="onboarding.desc_3">ಮೊಮ್ಮೆಸ್ಪ್ರೆಸೊ ಟಿವಿ ನಿಮಗೆ ಸುಂದರ, ಸ್ಪೂರ್ತಿದಾಯಕ, ಉಪಯುಕ್ತ, ಮತ್ತು ಮೋಜಿನ ವೀಡಿಯೊಗಳನ್ನು ತರುತ್ತದೆ. ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ!</string>
     <string name="onboarding.desc_4">ನಮ್ಮ ತಾಯಿ ಸಮುದಾಯದ ಶಕ್ತಿಯನ್ನು ಸಜ್ಜುಗೊಳಿಸಿ. ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ ಮತ್ತು ಇತರರಿಗೆ ಸಹಾಯ ಮಾಡಿ</string>
 
@@ -951,4 +951,6 @@
     <string name="rewards_tab_detail">ಬಹುಮಾನಗಳು</string>
     <string name="rewards_add_child">ಮಕ್ಕಳನ್ನು ಸೇರಿಸಿ</string>
     <string name="rewards_kid_detail">ಮಗುವಿನ ವಿವರ</string>
+    <string name="rewards_participating_earn_completing_profile">ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸುವ ಮೂಲಕ ಭಾಗವಹಿಸಿ ಮತ್ತು ಗಳಿಸಿ!</string>
+    <string name="rewards_momspresso">ಮೊಮ್ಸ್‍ಪ್ರೆಸ್ಸೊ ಬಹುಮಾನಗಳು</string>
 </resources>

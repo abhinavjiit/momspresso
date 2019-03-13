@@ -264,7 +264,7 @@
     </string-array>
 
     <string name="onboarding.desc_1">প্রত্যেক মায়েরই কিছু গল্প আছে,আপনার গল্পটি কি? আপনি তা লিখে বা ভিডিওর মাধ্যমে পাঠাতে পারেন |</string>
-    <string name="onboarding.desc_2">ইংরেজী,হিন্দি,বাংলা, মারাঠি,তামিল এবং তেলেগু তে আমরা উপলব্ধ |</string>
+    <string name="onboarding.desc_2">ইংরেজী,হিন্দি,বাংলা, মারাঠি,তামিল, কন্নড, মালয়ালম এবং তেলেগু তে আমরা উপলব্ধ |</string>
     <string name="onboarding.desc_3">মম্স্প্রেস্সো টিভি আপনাদের জন্য নিয়ে এসেছে অনুপ্রেরণাকারী,প্রয়োজনীয়,সুন্দর এবং মজাদার ভিডিও, একই মঞ্চে |</string>
     <string name="onboarding.desc_4">আপনার যেকোনো প্রশ্নের উত্তর পাওয়ার জন্য ও অন্য একজন মা\'কে আপনার অভিজ্ঞতা দিয়ে সাহায্য করার জন্য,মায়েদের শক্তির সাথে যুক্ত হোন |</string>
 
@@ -900,6 +900,10 @@
     <string name="rewards_tab_detail">পুরস্কার</string>
     <string name="rewards_add_child">সন্তান থাকলে লিখুন</string>
     <string name="rewards_kid_detail">সন্তানের বিবরণ</string>
+    <string name="rewards_participating_earn_completing_profile">অংশগ্রহণ করুন আর  আপনার প্রোফাইলটি সম্পূর্ণরূপে লিখে উপার্জন করুন </string>
+    <string name="rewards_momspresso">মমস্প্রেস্সো রিয়ার্ডস
+
+</string>
 
 
 </resources>

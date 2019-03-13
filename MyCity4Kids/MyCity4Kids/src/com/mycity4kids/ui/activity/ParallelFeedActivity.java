@@ -60,7 +60,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.VideoInfo;
-import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.ArticleDetailResponse;
@@ -778,7 +777,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 if (SharedPrefUtils.getUserDetailModel(ParallelFeedActivity.this).getDynamoId().equals(authorId)) {
                     followClick.setVisibility(View.INVISIBLE);
                 } else {
-                    if (mAdapter!=null) {
+                    if (mAdapter != null) {
                         if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
                             mAdapter.setTextFromResponse(true, getString(R.string.ad_follow_author));
 //                        followClick.setEnabled(true);
@@ -790,7 +789,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 //                        followClick.setText(getString(R.string.ad_following_author));
                             isFollowing = true;
                         }
-                    }else {
+                    } else {
                         showToast(getString(R.string.server_went_wrong));
                     }
                 }

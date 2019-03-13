@@ -158,10 +158,12 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                                 //  }
                             } else if (articleDataModelsNew.getChild().get(j).getExtraData() == null) {
                                 n++;
-                            } else if (articleDataModelsNew.getChild().get(j).getPublicVisibility().equals("0")) {
+                            } /*else if (articleDataModelsNew.getChild().get(j).getPublicVisibility().equals("0")) {
                                 n++;
                                 break;
-                            }
+                            }*/
+                        } else {
+                            m--;
                         }
                     }
                     break;

@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:text="CHALLENGES"
+            android:text="@string/video_challenge_text"
             android:textColor="@color/greytxt_color"
             android:textSize="20sp"
             android:visibility="gone"

@@ -906,4 +906,6 @@
     <string name="rewards_tab_detail">வெகுமதிகள்</string>
     <string name="rewards_add_child">குழந்தையை சேர்க்கவும்</string>
     <string name="rewards_kid_detail">குழந்தையை பற்றி விவரம்</string>
+    <string name="rewards_participating_earn_completing_profile">உங்கள் சுயவிவரத்தை நிறைவு செய்வதன் மூலம் இப்போது பங்கேற்று சம்பாதிக்கலாம்!</string>
+    <string name="rewards_momspresso">மாம்ஸ்ப்ரெஸ்ஸோ வெகுமதிகள்</string>
 </resources>

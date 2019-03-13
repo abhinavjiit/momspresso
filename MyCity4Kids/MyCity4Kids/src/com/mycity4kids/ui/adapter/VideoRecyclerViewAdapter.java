@@ -2,11 +2,8 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -32,19 +29,17 @@ import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.VideoInfo;
-import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.BaseViewHolder;
-import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -188,39 +183,19 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                    intent.setType("text/html");
-                    final PackageManager pm = mContext.getPackageManager();
-                    final List<ResolveInfo> matches = pm.queryIntentActivities(intent, 0);
-                    ResolveInfo best = null;
-                    for (final ResolveInfo info : matches) {
-                        if (info.activityInfo.packageName.endsWith(".gm") || info.activityInfo.name.toLowerCase().contains("gmail")) {
-                            best = info;
-                            break;
-                        }
-                    }
-                    if (best != null) {
-                        intent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
-                    }
-                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Momspresso");
-                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml(mContext.getString(R.string.check_out_momvlog) + getShareUrl(responseData)));
 
-                    try {
-                        mContext.startActivity(intent);
-//                        Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
-                    } catch (Exception e) {
-                        Intent i = new Intent(Intent.ACTION_SEND);
-                        i.setType("plain/text");
-                        i.putExtra(Intent.EXTRA_EMAIL, new String[]{});
-                        i.putExtra(Intent.EXTRA_SUBJECT, "");
-                        i.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.check_out_momvlog) + getShareUrl(responseData));
-                        try {
-                            mContext.startActivity(Intent.createChooser(i, "Send mail..."));
-//                            Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
-                        } catch (android.content.ActivityNotFoundException ex) {
-                            Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-                        }
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+
+                    if (StringUtils.isNullOrEmpty(getShareUrl(responseData))) {
+
+                    } else {
+                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, getShareUrl(responseData));
+                        mContext.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+
                     }
+
+
                 }
             });
 

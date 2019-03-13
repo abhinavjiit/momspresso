@@ -125,8 +125,8 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             thumbNail.setImageResource(R.drawable.default_article);
         }
 
-        tabs.addTab(tabs.newTab().setText("ABOUT"));
-        tabs.addTab(tabs.newTab().setText("VIDEOS"));
+        tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_txt)));
+        tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.all_videos_toolbar_title)));
 
         videoChallengePagerAdapter = new VideoChallengePagerAdapter(getSupportFragmentManager(), selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl, challengeRules);
         viewPager.setAdapter(videoChallengePagerAdapter);
