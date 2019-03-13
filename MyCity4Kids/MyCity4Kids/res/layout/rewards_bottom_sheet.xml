@@ -8,6 +8,7 @@
     android:paddingBottom="10dp"
     app:behavior_hideable="false"
     android:clickable="true"
+    android:background="@drawable/shape_shadow_rectangle"
     app:behavior_peekHeight="100dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
@@ -27,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight=".7"
@@ -159,7 +160,7 @@
             android:gravity="center"
             android:text="@string/rewards_description"
             android:textSize="14sp"
-            app:fontName="oswald_regular.ttf" />
+            app:fontName="oswald.ttf" />
 
         <TextView
             android:id="@+id/text3"

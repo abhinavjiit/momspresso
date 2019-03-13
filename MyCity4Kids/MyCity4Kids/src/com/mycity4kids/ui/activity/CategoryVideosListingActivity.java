@@ -2,6 +2,7 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -46,14 +47,10 @@ import retrofit2.Retrofit;
  * Created by hemant on 25/5/17.
  */
 public class CategoryVideosListingActivity extends BaseActivity implements View.OnClickListener {
-
-    //    private View view;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private FrameLayout topLayerGuideLayout;
-
     private VideoTopicsPagerAdapter pagerAdapter;
-
     private HashMap<Topics, List<Topics>> allTopicsMap;
     private ArrayList<Topics> allTopicsList;
     private String parentTopicId;
@@ -74,32 +71,42 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
-
-        bottom_sheet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else {
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(CategoryVideosListingActivity.this);
+        if(!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")){
+            bottom_sheet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    } else {
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    }
                 }
-            }
-        });
+            });
 
-        textUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(CategoryVideosListingActivity.this,EditProfileNewActivity.class));
-            }
-        });
+            textUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(CategoryVideosListingActivity.this,EditProfileNewActivity.class));
+                }
+            });
 
-        textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(CategoryVideosListingActivity.this,EditProfileNewActivity.class));
-            }
-        });
+            textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(CategoryVideosListingActivity.this,EditProfileNewActivity.class));
+                }
+            });
 
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bottom_sheet.setVisibility(View.GONE);
+                }
+            },10000);
+        }else{
+            bottom_sheet.setVisibility(View.GONE);
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);

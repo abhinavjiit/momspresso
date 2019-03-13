@@ -265,9 +265,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
-        layoutBottomSheet = fragmentView.findViewById(R.id.bottom_sheet);
-        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-        sheetBehavior.setPeekHeight(100);
         deepLinkURL = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);
         try {
             mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);

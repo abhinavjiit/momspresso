@@ -62,6 +62,7 @@ import com.kelltontech.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
+import com.mycity4kids.animation.MyCityAnimationsUtil;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -84,6 +85,7 @@ import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
@@ -109,6 +111,7 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 
@@ -120,6 +123,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -208,6 +212,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout chooseLayout;
     private RelativeLayout chooseLayoutVideo;
     private View overLayChooseVideo;
+    private String isRewardsAdded;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -610,6 +615,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         findActiveChallenge();
         findActiveVideoChallenge();
+
+        getUsersData();
     }
 
     private void loadAllDrafts() {
@@ -621,6 +628,44 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         //  Call<ResponseBody> call = draftAPI.getAllDrafts("0");
         call.enqueue(draftsResponseCallback);
     }
+
+
+    private void getUsersData(){
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
+        String userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
+        if(!userId.isEmpty()){
+            Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(userId);
+            call.enqueue(userDetailsResponseListener);
+        }
+    }
+
+    private Callback<UserDetailResponse> userDetailsResponseListener = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            removeProgressDialog();
+            if (response == null || null == response.body()) {
+                return;
+            }
+            try {
+                UserDetailResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if(responseData.getData()!=null && responseData.getData().get(0)!=null && responseData.getData().get(0).getResult()!=null){
+                        SharedPrefUtils.setIsRewardsAdded(DashboardActivity.this, responseData.getData().get(0).getResult().getRewardsAdded());
+                    }
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
 
  /*   Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {

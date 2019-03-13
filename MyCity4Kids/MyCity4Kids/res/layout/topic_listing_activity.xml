@@ -45,7 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
@@ -61,27 +62,26 @@
             app:tabSelectedTextColor="@color/topic_articles.tabbar_text"
             app:tabTextAppearance="@style/CustomTabText"
             app:tabTextColor="@color/topic_articles.tabbar_text" />
+
+        <FrameLayout
+            android:id="@+id/topLayerGuideLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/toolbar"
+            android:layout_alignBottom="@+id/tabContainer"
+            android:background="@color/dark_transparent"
+            android:clickable="true"
+            android:elevation="6dp"
+            android:visibility="gone" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/topLayerGuideLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/toolbar"
-        android:layout_alignBottom="@+id/tabContainer"
-        android:background="@color/dark_transparent"
-        android:clickable="true"
-        android:elevation="6dp"
-        android:visibility="gone" />
 
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/tabContainer"
-        android:layout_marginBottom="100dp" />
-
-    <include layout="@layout/rewards_bottom_sheet" />
+    <include layout="@layout/rewards_bottom_sheet"/>
 
 </android.support.design.widget.CoordinatorLayout>

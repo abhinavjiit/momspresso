@@ -58,6 +58,8 @@ public class SharedPrefUtils {
     public static final String IS_APP_WANT_UPGRADE = "isAppWantUpgrade";
     public static final String APP_UPGRADE_MESSAGE = "appUpgradeMessage";
 
+    public static final String IS_REWARDS_ADDED = "isRewardsAdded";
+
     // user detail model
     public static final String USER_ID = "userid";
     public static final String DYNAMO_USER_ID = "dynamoUserid";
@@ -327,6 +329,18 @@ public class SharedPrefUtils {
         Editor _editor = _sharedPref.edit();
         _editor.putBoolean(IS_APP_WANT_UPGRADE, isAppWantsUpgrade);
         _editor.commit();
+    }
+
+    public static void setIsRewardsAdded(Context pContext, String isRewardAdded) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(IS_REWARDS_ADDED, isRewardAdded);
+        _editor.commit();
+    }
+
+    public static String getIsRewardsAdded(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString(IS_REWARDS_ADDED, "");
     }
 
     public static boolean getAppUpgrade(Context pContext) {
