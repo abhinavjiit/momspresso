@@ -50,6 +50,7 @@ import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.GroupsFragment;
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
