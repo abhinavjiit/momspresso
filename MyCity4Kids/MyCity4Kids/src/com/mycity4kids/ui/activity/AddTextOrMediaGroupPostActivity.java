@@ -25,6 +25,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -162,6 +163,10 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     private HashMap<ImageView, String> audioUrlHashMap = new HashMap<>();
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private boolean isLocked = false;
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -355,7 +360,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             }
             addGroupPostRequest.setMediaUrls(mediaMap);
             addGroupPostRequest.setType("1");
-        }  else if (!audioUrlHashMap.isEmpty()) {
+        } else if (!audioUrlHashMap.isEmpty()) {
             mediaMap.put("audio", downloadUri.toString());
             addGroupPostRequest.setType("3");
             addGroupPostRequest.setMediaUrls(mediaMap);
@@ -1094,9 +1099,11 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         });
 
     }
+
     public void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 100);
     }
+
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             if (mMediaplayer != null && !isCommentPlay) {

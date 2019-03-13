@@ -432,13 +432,13 @@
                 android:id="@+id/publishCoachmark1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/publishedSectionTextView"
+                android:layout_above="@+id/publishedSectionTextView1"
                 android:layout_alignParentTop="true"
+                android:layout_marginBottom="0dp"
                 android:background="@color/dark_transparent"
                 android:elevation="18dp"
                 android:orientation="vertical"
-                android:visibility="invisible">
-            </LinearLayout>
+                android:visibility="invisible"></LinearLayout>
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/publishedSectionTextView1"
