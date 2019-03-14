@@ -2,6 +2,8 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.squareup.picasso.Picasso;
 
 import org.apmem.tools.layouts.FlowLayout;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 /**

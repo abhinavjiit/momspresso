@@ -71,13 +71,10 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private String videoCategory;
     private MixpanelAPI mixpanel;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = getActivity().getLayoutInflater().inflate(R.layout.funny_videos_tab_fragment, container, false);
-
         rootLayout = view.findViewById(R.id.rootLayout);
         listView = (ListView) view.findViewById(R.id.vlogsListView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);

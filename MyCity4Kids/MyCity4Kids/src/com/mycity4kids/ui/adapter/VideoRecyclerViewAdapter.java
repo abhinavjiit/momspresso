@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +21,7 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +40,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -52,6 +59,7 @@ import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GenericFileProvider;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -59,7 +67,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -159,7 +166,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         TextView textViewTitle;
         TextView userHandle, followText, commentCount, viewsCount, likeCount;
         public RelativeLayout videoCell;
-        public FrameLayout videoLayout;
+        public RelativeLayout videoLayout;
         public ImageView mCover, heart, share, whatsapp, three_dot;
         public ProgressBar mProgressBar;
         public final View parent;
@@ -331,6 +338,28 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             Glide.with(itemView.getContext())
                     .load(responseData.getThumbnail()).apply(new RequestOptions().optionalCenterCrop())
                     .into(mCover);
+
+//            Glide.with(itemView.getContext().getApplicationContext())
+//                    .asBitmap()
+//                    .load(responseData.getThumbnail())
+//                    .into(new SimpleTarget<Bitmap>() {
+//                        @Override
+//                        public void onResourceReady(Bitmap bitmap,
+//                                                    Transition<? super Bitmap> transition) {
+//                            int w = bitmap.getWidth();
+//                            int h = bitmap.getHeight();
+//                            Log.e("width and height", w + " * " + h);
+//
+//                            int  heightInDp = Math.round(bitmap.getHeight() / itemView.getContext().getResources().getDisplayMetrics().density);
+//                            int widthInDp = Math.round(bitmap.getWidth() / itemView.getContext().getResources().getDisplayMetrics().density);
+////                            mCover.getLayoutParams().height = heightInDp;
+////                            mCover.getLayoutParams().width = widthInDp;
+//                            mCover.getLayoutParams().height = 500;
+//                            mCover.getLayoutParams().width = 500;
+//
+//                            Log.e("width and height", widthInDp + " * " + heightInDp);
+//                        }
+//                    });
         }
     }
 

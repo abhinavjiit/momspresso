@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -84,6 +85,7 @@ import com.mycity4kids.ui.ExoPlayerRecyclerView;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
 import com.mycity4kids.ui.fragment.ViewAllCommentsDialogFragment;
 import com.mycity4kids.utils.DividerItemDecoration;
+import com.mycity4kids.utils.EndlessScrollListener;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
@@ -172,7 +174,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private MixpanelAPI mixpanel;
     ArrayList<VlogsListingAndDetailResult> dataList = new ArrayList<>();
     ArrayList<VlogsListingAndDetailResult> dataListHeader = new ArrayList<>();
-
     ExoPlayerRecyclerView recyclerViewFeed;
     private int followPos;
 
@@ -192,9 +193,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);
 
-//        prepareVideoList();
         recyclerViewFeed = (ExoPlayerRecyclerView) findViewById(R.id.recyclerViewFeed);
         recyclerViewFeed.setRecyclerView(recyclerViewFeed);
+
         controlView = recyclerViewFeed.findViewById(R.id.exo_controller);
 
 
@@ -352,7 +353,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 updateUIfromResponse(responseData.getData().getResult());
                 authorId = responseData.getData().getResult().getAuthor().getId();
 //                hitBookmarkFollowingStatusAPI(videoId);
-                hitRelatedArticleAPI();
+                hitRelatedArticleAPI(0);
                 commentURL = responseData.getData().getResult().getCommentUri();
                 commentMainUrl = responseData.getData().getResult().getCommentUri();
                 if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
@@ -385,7 +386,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
     }
 
-    private void hitRelatedArticleAPI() {
+    private void hitRelatedArticleAPI(int startIndex) {
 
         if (detailData.getCategory_id() != null && !detailData.getCategory_id().isEmpty()) {
             taggedCategories = detailData.getCategory_id().get(0);
@@ -394,7 +395,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 //        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 4, 0, 3, taggedCategories);
 //        callRecentVideoArticles.enqueue(recentArticleResponseCallback);
 
-        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(0, 4, 1, 3, null);
+        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(startIndex, startIndex + 10, 1, 3, null);
         callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
     }
 
@@ -441,8 +442,17 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
                     recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, dataList);
                     mAdapter = new VideoRecyclerViewAdapter(ParallelFeedActivity.this, dataList);
-                    recyclerViewFeed.setLayoutManager(new LinearLayoutManager(ParallelFeedActivity.this, VERTICAL, false));
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ParallelFeedActivity.this, VERTICAL, false);
+                    recyclerViewFeed.setLayoutManager(linearLayoutManager);
                     Drawable dividerDrawable = ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.divider_drawable);
+                    recyclerViewFeed.setOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
+                        @Override
+                        public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                            hitRelatedArticleAPI(totalItemsCount);
+                        }
+                    });
+
+
                     recyclerViewFeed.addItemDecoration(new DividerItemDecoration(dividerDrawable));
                     recyclerViewFeed.setItemAnimator(new DefaultItemAnimator());
                     recyclerViewFeed.setAdapter(mAdapter);
@@ -741,7 +751,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 //                    followClick.setText(getString(R.string.ad_follow_author));
                     isFollowing = false;
                 }
-                mAdapter.setListUpdate(updateFollowPos,dataList);
+                mAdapter.setListUpdate(updateFollowPos, dataList);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
@@ -775,7 +785,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 //                    followClick.setText(getString(R.string.ad_following_author));
                     isFollowing = true;
                 }
-                mAdapter.setListUpdate(updateFollowPos,dataList);
+                mAdapter.setListUpdate(updateFollowPos, dataList);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);

@@ -1,8 +1,14 @@
 package com.mycity4kids.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -17,6 +23,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -47,9 +56,17 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
 import com.mycity4kids.utils.VideoPlayerConfig;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.http.Url;
 
 public class ExoPlayerRecyclerView extends RecyclerView {
     private static final String TAG = "ExoPlayerRecyclerView";
@@ -62,7 +79,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private SimpleExoPlayerView videoSurfaceView;
     private ImageView mCoverImage;
     public RelativeLayout videoCell;
-    public FrameLayout frameLayout;
+    public RelativeLayout frameLayout;
 
     private ProgressBar mProgressBar;
     private Context appContext;
@@ -179,6 +196,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         if (videoSurfaceView == null) {
             return;
         }
+        videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+
         videoSurfaceView.setVisibility(INVISIBLE);
         removeVideoView(videoSurfaceView);
 
@@ -203,12 +222,66 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         mCoverImage = holder.mCover;
         mProgressBar = holder.mProgressBar;
         frameLayout = holder.itemView.findViewById(R.id.video_layout);
+//        frameLayout.getLayoutParams().height = 1000;
+//        frameLayout.getLayoutParams().width = 1000;
+
+        Glide.with(appContext)
+                .asBitmap()
+                .load(videoInfoList.get(targetPosition).getThumbnail())
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap,
+                                                Transition<? super Bitmap> transition) {
+                        int w = bitmap.getWidth();
+                        int h = bitmap.getHeight();
+                        Log.e("width and height", w + " * " + h);
+
+                        //int  heightInDp = appContext.getResources().getDisplayMetrics().density;
+                        //int widthInDp = Math.round(bitmap.getWidth() / appContext.getResources().getDisplayMetrics().density);
+
+                        float ratio = ((float)h / (float)w);
+//                            mCover.getLayoutParams().height = heightInDp;
+//                            mCover.getLayoutParams().width = widthInDp;
+                        frameLayout.getLayoutParams().height = Math.round(ratio * appContext.getResources().getDisplayMetrics().widthPixels);
+                        frameLayout.getLayoutParams().width = Math.round(appContext.getResources().getDisplayMetrics().widthPixels);
+
+                        Log.e("from ratio", w + "   " + h  + "   "+ frameLayout.getLayoutParams().height + " * " + frameLayout.getLayoutParams().width);
+                    }
+                });
+
+//        ImageView profile = new ImageView(appContext);
+//        Picasso.with(appContext).load(videoInfoList.get(targetPosition).getThumbnail()).into(holder.mCover, new Callback() {
+//            @Override
+//            public void onSuccess() {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {//You will get your bitmap here
+//                        Bitmap innerBitmap = ((BitmapDrawable) holder.mCover.getDrawable()).getBitmap();
+//                        frameLayout.getLayoutParams().height = innerBitmap.getHeight();
+//                        frameLayout.getLayoutParams().width = innerBitmap.getWidth();
+//                        Log.e("width and height", innerBitmap.getWidth() + " * " + innerBitmap.getHeight());
+//                    }
+//                }, 100);
+//            }
+//
+//            @Override
+//            public void onError() {
+//                Log.e("on error", "on error");
+//            }
+//        });
+
         frameLayout.addView(videoSurfaceView);
+
+
         addedVideo = true;
         rowParent = holder.itemView;
         videoSurfaceView.requestFocus();
         // Bind the player to the view.
         videoSurfaceView.setPlayer(player);
+
+
+
+
 
         // Measures bandwidth during playback. Can be null if not required.
         DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
