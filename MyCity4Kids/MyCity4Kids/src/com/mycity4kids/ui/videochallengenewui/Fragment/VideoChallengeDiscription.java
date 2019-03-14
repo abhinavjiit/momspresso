@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
@@ -26,6 +27,7 @@ public class VideoChallengeDiscription extends Fragment implements View.OnClickL
     private LinearLayout challengeRuleLinearLayout;
     private String selectedName, selectedId, challengeRules;
     private WebView webView;
+    private String url;
 
 
     static {
@@ -50,7 +52,9 @@ public class VideoChallengeDiscription extends Fragment implements View.OnClickL
         } else {
             ToastUtils.showToast(getContext(), "something went wrong at the server");
         }
-        webView.loadData("<ol>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n</ol>", "text/html", "UTF-8");
+        if (!StringUtils.isNullOrEmpty(url)) {
+            webView.loadData(url, "text/html", "UTF-8");
+        }
         return view;
     }
 

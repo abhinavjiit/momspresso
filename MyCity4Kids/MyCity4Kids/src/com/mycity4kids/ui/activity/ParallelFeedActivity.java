@@ -62,9 +62,12 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.VideoInfo;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
+import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.response.ArticleDetailResponse;
+import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
+import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
@@ -133,6 +136,13 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private String shareUrl = "";
     private String deepLinkURL;
     private Boolean isFollowing = false;
+    private String likeStatus;
+    private boolean isRecommendRequestRunning;
+    private String recommendationFlag = "0";
+    private int recommendStatus;
+    private int updateLikePos;
+    private int updateFollowPos;
+    private int changeFollowUnfollowTextPos;
 
 
     private VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI;
@@ -149,7 +159,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
     private SimpleExoPlayerView mExoPlayerView;
     private MediaSource mVideoSource;
-    private boolean mExoPlayerFullscreen = false;
+    public boolean mExoPlayerFullscreen = false;
     private FrameLayout mFullScreenButton;
     private ImageView mFullScreenIcon;
     private Dialog mFullScreenDialog;
@@ -163,7 +173,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     ArrayList<VlogsListingAndDetailResult> dataListHeader = new ArrayList<>();
 
     ExoPlayerRecyclerView recyclerViewFeed;
-
+    private int followPos;
 
     //    private List<VideoInfo> videoInfoList = new ArrayList<>();
     private List<VlogsDetailResponse> videoInfoList = new ArrayList<>();
@@ -340,7 +350,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 VlogsDetailResponse responseData = response.body();
                 updateUIfromResponse(responseData.getData().getResult());
                 authorId = responseData.getData().getResult().getAuthor().getId();
-                hitBookmarkFollowingStatusAPI(videoId);
+//                hitBookmarkFollowingStatusAPI(videoId);
                 hitRelatedArticleAPI();
                 commentURL = responseData.getData().getResult().getCommentUri();
                 commentMainUrl = responseData.getData().getResult().getCommentUri();
@@ -365,13 +375,12 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
 
     public void hitBookmarkFollowingStatusAPI(String vidId) {
-        videoId = vidId;
         ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-        articleDetailRequest.setArticleId(videoId);
+        articleDetailRequest.setArticleId(vidId);
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI bookmarFollowingStatusAPI = retro.create(VlogsListingAndDetailsAPI.class);
 
-        Call<ArticleDetailResponse> callBookmark = bookmarFollowingStatusAPI.checkFollowingBookmarkStatus(videoId, authorId);
+        Call<ArticleDetailResponse> callBookmark = bookmarFollowingStatusAPI.checkFollowingBookmarkStatus(vidId, authorId);
         callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
     }
 
@@ -418,11 +427,18 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                             dataList.remove(i);
                             break;
                         }
+
                     }
 
                     dataList.addAll(0, dataListHeader);
 
-                    recyclerViewFeed.setVideoInfoList(dataList);
+                    /*for (int i = 0; i < dataList.size(); i++) {
+                        followPos = i;
+                        hitBookmarkFollowingStatusAPI(dataList.get(i).getId());
+                        hitRecommendedStatusAPI(dataList.get(i).getId());
+                    }*/
+
+                    recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, dataList);
                     mAdapter = new VideoRecyclerViewAdapter(ParallelFeedActivity.this, dataList);
                     recyclerViewFeed.setLayoutManager(new LinearLayoutManager(ParallelFeedActivity.this, VERTICAL, false));
                     Drawable dividerDrawable = ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.divider_drawable);
@@ -677,8 +693,10 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    public void followAPICall(String id) {
+    public void followAPICall(String id, int pos) {
         authorId = id;
+        updateFollowPos = pos;
+        changeFollowUnfollowTextPos = pos;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followAPI = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
@@ -686,14 +704,16 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
         if (isFollowing) {
             isFollowing = false;
-            mAdapter.setText(getString(R.string.ad_follow_author));
+            dataList.get(updateFollowPos).setFollowed(false);
+//            mAdapter.setText(updateFollowPos, getString(R.string.ad_follow_author));
 //            followClick.setText(getString(R.string.ad_follow_author));
             Utils.pushFollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
-            mAdapter.setText(getString(R.string.ad_following_author));
+            dataList.get(updateFollowPos).setFollowed(true);
+//            mAdapter.setText(updateFollowPos, getString(R.string.ad_following_author));
 //            followClick.setText(getString(R.string.ad_following_author));
             Utils.pushUnfollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
@@ -714,10 +734,13 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    mAdapter.setText(getString(R.string.ad_follow_author));
+                    dataList.get(updateFollowPos).setFollowed(false);
+//                    mAdapter.setText(updateFollowPos, getString(R.string.ad_follow_author));
+//                    mAdapter.notifyItemChanged(changeFollowUnfollowTextPos);
 //                    followClick.setText(getString(R.string.ad_follow_author));
                     isFollowing = false;
                 }
+                mAdapter.setListUpdate(updateFollowPos,dataList);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
@@ -745,10 +768,13 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    mAdapter.setText(getString(R.string.ad_following_author));
+                    dataList.get(updateFollowPos).setFollowed(true);
+//                    mAdapter.setText(updateFollowPos, getString(R.string.ad_following_author));
+//                    mAdapter.notifyItemChanged(changeFollowUnfollowTextPos);
 //                    followClick.setText(getString(R.string.ad_following_author));
                     isFollowing = true;
                 }
+                mAdapter.setListUpdate(updateFollowPos,dataList);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
@@ -771,26 +797,27 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 showToast(getString(R.string.server_went_wrong));
                 return;
             }
-
             ArticleDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (SharedPrefUtils.getUserDetailModel(ParallelFeedActivity.this).getDynamoId().equals(authorId)) {
                     followClick.setVisibility(View.INVISIBLE);
                 } else {
-                    if (mAdapter != null) {
-                        if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
-                            mAdapter.setTextFromResponse(true, getString(R.string.ad_follow_author));
+                    if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
+                        dataList.get(followPos).setFollowed(false);
+//                        mAdapter.setTextFromResponse(true, getString(R.string.ad_follow_author));
 //                        followClick.setEnabled(true);
 //                        followClick.setText(getString(R.string.ad_follow_author));
-                            isFollowing = false;
-                        } else {
-                            mAdapter.setTextFromResponse(false, getString(R.string.ad_following_author));
+                        isFollowing = false;
+                    } else if ("1".equals(responseData.getData().getResult().getIsFollowed())) {
+                        dataList.get(followPos).setFollowed(true);
+//                            mAdapter.setTextFromResponse(false, getString(R.string.ad_following_author));
 //                        followClick.setEnabled(true);
 //                        followClick.setText(getString(R.string.ad_following_author));
-                            isFollowing = true;
-                        }
-                    } else {
-                        showToast(getString(R.string.server_went_wrong));
+                        isFollowing = true;
+                    } else if ("0".equals(responseData.getData().getResult().getBookmarkStatus())) {
+                        dataList.get(followPos).setBookmarked(true);
+                    } else if ("1".equals(responseData.getData().getResult().getBookmarkStatus())) {
+                        dataList.get(followPos).setBookmarked(true);
                     }
                 }
             } else {
@@ -1028,9 +1055,11 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    private void closeFullscreenDialog() {
-        ((ViewGroup) recyclerViewFeed.getSimpleExo().getParent()).removeView(recyclerViewFeed.getSimpleExo());
-        (recyclerViewFeed.frameLayout).addView(recyclerViewFeed.getSimpleExo());
+    public void closeFullscreenDialog() {
+        if ((ViewGroup) recyclerViewFeed.getSimpleExo().getParent() != null) {
+            ((ViewGroup) recyclerViewFeed.getSimpleExo().getParent()).removeView(recyclerViewFeed.getSimpleExo());
+            (recyclerViewFeed.frameLayout).addView(recyclerViewFeed.getSimpleExo());
+        }
         mExoPlayerFullscreen = false;
         mFullScreenDialog.dismiss();
         mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_fullscreen_expand));
@@ -1132,6 +1161,103 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View view) {
 
     }
+
+    public void recommendUnrecommentArticleAPI(String vidId, String likeStatus, int pos) {
+        updateLikePos = pos;
+        this.likeStatus = likeStatus;
+        Utils.pushLikeStoryEvent(this, "ShortStoryDetailsScreen", userDynamoId + "", vidId, authorId + "~" + author);
+        isRecommendRequestRunning = true;
+        RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
+        recommendUnrecommendArticleRequest.setArticleId(vidId);
+        recommendUnrecommendArticleRequest.setStatus(likeStatus);
+        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = vlogsListingAndDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
+        recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
+    }
+
+
+    private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback = new Callback<RecommendUnrecommendArticleResponse>() {
+        @Override
+        public void onResponse(Call<RecommendUnrecommendArticleResponse> call, retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
+            isRecommendRequestRunning = false;
+            if (response == null || null == response.body()) {
+                showToast(getString(R.string.server_went_wrong));
+                return;
+            }
+
+            try {
+                RecommendUnrecommendArticleResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                    if (likeStatus.equals("1")) {
+                        dataList.get(updateLikePos).setLiked(true);
+                    } else {
+                        dataList.get(updateLikePos).setLiked(false);
+                    }
+
+                    mAdapter.setList(updateLikePos, dataList);
+                    showToast("" + responseData.getReason());
+//                    if (null != responseData.getData() && !responseData.getData().isEmpty()) {
+//                        ((ShortStoryContainerActivity) getActivity()).showToast(responseData.getReason());
+//                        headerModel.getSsResult().setLikeCount("" + (Integer.parseInt(headerModel.getSsResult().getLikeCount()) + 1));
+//                        adapter.notifyDataSetChanged();
+//                    } else {
+//                        ((ShortStoryContainerActivity) getActivity()).showToast(responseData.getReason());
+//                    }
+                } else {
+                    showToast(getString(R.string.server_went_wrong));
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
+            isRecommendRequestRunning = false;
+            handleExceptions(t);
+        }
+    };
+
+
+    public void hitRecommendedStatusAPI(String vidId) {
+        Call<ArticleRecommendationStatusResponse> checkArticleRecommendStaus = vlogsListingAndDetailsAPI.getArticleRecommendedStatus(vidId);
+        checkArticleRecommendStaus.enqueue(recommendStatusResponseCallback);
+    }
+
+    private Callback<ArticleRecommendationStatusResponse> recommendStatusResponseCallback = new Callback<ArticleRecommendationStatusResponse>() {
+        @Override
+        public void onResponse(Call<ArticleRecommendationStatusResponse> call, retrofit2.Response<ArticleRecommendationStatusResponse> response) {
+            if (response == null || null == response.body()) {
+                showToast("Unable to fetch like status");
+                return;
+            }
+            ArticleRecommendationStatusResponse responseData = response.body();
+            recommendationFlag = responseData.getData().getStatus();
+
+            if ("0".equals(recommendationFlag)) {
+                recommendStatus = 0;
+                dataList.get(followPos).setFollowed(false);
+//                Drawable top = ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_recommend);
+//                likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
+            } else {
+                recommendStatus = 1;
+                dataList.get(followPos).setFollowed(true);
+//                Drawable top = ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_recommended);
+//                likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
+            }
+//            mAdapter.setLikeIcon(recommendStatus);
+
+
+        }
+
+        @Override
+        public void onFailure(Call<ArticleRecommendationStatusResponse> call, Throwable t) {
+            handleExceptions(t);
+        }
+    };
+
 
     public void openViewCommentDialog(String commentMainUrl, String shareUrl, String authorId, String author) {
         try {

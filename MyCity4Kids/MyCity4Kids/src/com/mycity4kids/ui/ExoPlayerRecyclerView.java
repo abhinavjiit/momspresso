@@ -66,6 +66,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
     private ProgressBar mProgressBar;
     private Context appContext;
+    private Context mContext;
 
 
     /**
@@ -117,7 +118,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         this.recyclerView = recyclerView;
     }
 
-    public void setVideoInfoList(ArrayList<VlogsListingAndDetailResult> videoInfoList) {
+    public void setVideoInfoList(Context mContext, ArrayList<VlogsListingAndDetailResult> videoInfoList) {
+        this.mContext = mContext;
         this.videoInfoList = videoInfoList;
 
     }
@@ -287,7 +289,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                    playVideo(false);
+                    if (playPosition < videoInfoList.size() - 1)
+                        playVideo(false);
                 }
             }
 
@@ -350,10 +353,12 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                             recyclerView.smoothScrollToPosition(playPosition + 1);
                             playVideo(true);
                         }
-                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
+                        if (((ParallelFeedActivity) mContext).mExoPlayerFullscreen)
+                            ((ParallelFeedActivity) mContext).closeFullscreenDialog();
+//                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
                         break;
                     case Player.STATE_IDLE:
-                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
+//                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
                         break;
                     case Player.STATE_READY:
                         Log.e(TAG, "onPlayerStateChanged: Ready ");
