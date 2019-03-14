@@ -69,8 +69,6 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
                                 Display_Name.add(challengeTopics.getChild().get(i).getDisplay_name());
                                 if (!StringUtils.isNullOrEmpty(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getRules())) {
                                     info.add(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getRules());
-                                } else {
-                                    info.add("<ol>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n<li><b>Rules</b></li>\n</ol>");
                                 }
                                 try {
                                     Picasso.with(mContext).load(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)

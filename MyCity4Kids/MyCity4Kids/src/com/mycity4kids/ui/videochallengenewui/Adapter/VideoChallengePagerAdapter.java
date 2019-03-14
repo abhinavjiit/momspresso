@@ -44,14 +44,14 @@ public class VideoChallengePagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
 
-            case 0:
+            case 1:
                 if (discription == null) {
                     discription = new VideoChallengeDiscription();
                 }
                 discription.setArguments(bundle);
 
                 return discription;
-            case 1:
+            case 0:
                 if (listing == null) {
                     listing = new VideoChallengeListing();
                 }

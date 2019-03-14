@@ -904,4 +904,9 @@
     <string name="rewards_kid_detail">పిల్లల వివరాలు</string>
     <string name="rewards_participating_earn_completing_profile">మీ ప్రొఫైల్ పూర్తి చేసి పాల్గొనండి మరియు సంపాదించండి!</string>
     <string name="rewards_momspresso">మామ్స్‌ప్రెస్సో రివార్ద్స్‌</string>
+
+    //new Video Challenge Ui Strings
+    <string name="video_challenge_live_text">LIVE</string>
+    <string name="video_challenge_text">CHALLENGES</string>
+    <string name="choose_video_categories_text">CATEGORIES</string>
 </resources>

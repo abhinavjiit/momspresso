@@ -124,9 +124,9 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         } catch (Exception e) {
             thumbNail.setImageResource(R.drawable.default_article);
         }
-
-        tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_txt)));
         tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.all_videos_toolbar_title)));
+        tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_txt)));
+
 
         videoChallengePagerAdapter = new VideoChallengePagerAdapter(getSupportFragmentManager(), selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl, challengeRules);
         viewPager.setAdapter(videoChallengePagerAdapter);
@@ -136,9 +136,9 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 2 || tab.getPosition() == 1) {
-                    saveTextView.setVisibility(View.GONE);
-                } else {
                     saveTextView.setVisibility(View.VISIBLE);
+                } else {
+                    saveTextView.setVisibility(View.GONE);
                 }
                 viewPager.setCurrentItem(tab.getPosition());
             }

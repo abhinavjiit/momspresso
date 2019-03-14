@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,8 +65,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
-
-
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
@@ -89,7 +88,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     private ArrayList<String> activeImageUrl = new ArrayList<String>();
     private ArrayList<String> activeStreamUrl = new ArrayList<String>();
     private ArrayList<String> info = new ArrayList<String>();
-
     private String challengeRulesInDialogBox;
 
 
@@ -427,12 +425,15 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                     if (info.size() > position) {
                         if (!StringUtils.isNullOrEmpty(info.get(position))) {
                             challengeRulesInDialogBox = info.get(position);
-                            ToastUtils.showToast(this, String.valueOf(position) + " clicked");
+                            //  ToastUtils.showToast(this, String.valueOf(position) + " clicked");
                             final Dialog dialog = new Dialog(this);
                             dialog.setContentView(R.layout.challenge_rules_dialog);
                             dialog.setTitle("Title...");
+                            ImageView imageView = (ImageView) dialog.findViewById(R.id.closeEditorImageView);
                             WebView webView = (WebView) dialog.findViewById(R.id.videoChallengeRulesWebView);
                             webView.loadData(challengeRulesInDialogBox, "text/html", "UTF-8");
+                            imageView.setOnClickListener(view2 -> dialog.dismiss());
+
                             dialog.show();
                         }
                     }

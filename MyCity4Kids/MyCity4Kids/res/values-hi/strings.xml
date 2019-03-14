@@ -920,4 +920,10 @@
     <string name="rewards_momspresso">मॉम्सप्रेस्सो ईनामी योजना</string>
 
 
+    //new Video Challenge Ui Strings
+    <string name="video_challenge_live_text">LIVE</string>
+    <string name="video_challenge_text">CHALLENGES</string>
+    <string name="choose_video_categories_text">CATEGORIES</string>
+
+
 </resources>
