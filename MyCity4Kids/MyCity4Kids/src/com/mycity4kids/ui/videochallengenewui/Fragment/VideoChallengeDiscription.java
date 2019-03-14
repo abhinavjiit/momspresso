@@ -52,8 +52,8 @@ public class VideoChallengeDiscription extends Fragment implements View.OnClickL
         } else {
             ToastUtils.showToast(getContext(), "something went wrong at the server");
         }
-        if (!StringUtils.isNullOrEmpty(url)) {
-            webView.loadData(url, "text/html", "UTF-8");
+        if (!StringUtils.isNullOrEmpty(challengeRules)) {
+            webView.loadData(challengeRules, "text/html", "UTF-8");
         }
         return view;
     }
