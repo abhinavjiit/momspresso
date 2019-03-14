@@ -554,7 +554,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ParallelFeedActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.rankingTheme" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"

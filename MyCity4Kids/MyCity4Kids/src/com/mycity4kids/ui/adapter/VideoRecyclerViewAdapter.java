@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
+import android.media.Image;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +18,16 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,19 +38,28 @@ import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.VideoInfo;
+import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
+import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.ui.BaseViewHolder;
 import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.GenericFileProvider;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -53,6 +68,9 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private Context mContext;
     private String followUnfollowText;
     private boolean enableDisableFollow;
+    private ViewHolder mHolder;
+    private String likeStatus;
+    private boolean isRecommendRequestRunning;
 
     //    private List<VideoInfo> mInfoList;
     private ArrayList<VlogsListingAndDetailResult> mInfoList;
@@ -62,9 +80,20 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         mInfoList = infoList;
     }
 
-    public void setText(String followUnfollowText) {
+    public void setText(int pos, String followUnfollowText) {
         this.followUnfollowText = followUnfollowText;
-        notifyDataSetChanged();
+        notifyItemChanged(pos, mHolder.followText);
+    }
+
+
+    public void setListUpdate(int updatePos, ArrayList<VlogsListingAndDetailResult> infoList) {
+        mInfoList = infoList;
+        notifyItemChanged(updatePos, mHolder.followText);
+    }
+
+    public void setList(int updatePos, ArrayList<VlogsListingAndDetailResult> infoList) {
+        mInfoList = infoList;
+        notifyItemChanged(updatePos, mHolder.heart);
     }
 
 
@@ -87,7 +116,14 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
+        mHolder = (ViewHolder) holder;
+        holder.onBind(position);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, List<Object> payload) {
+        mHolder = (ViewHolder) holder;
         holder.onBind(position);
     }
 
@@ -124,7 +160,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         TextView userHandle, followText, commentCount, viewsCount, likeCount;
         public RelativeLayout videoCell;
         public FrameLayout videoLayout;
-        public ImageView mCover, heart, share, whatsapp;
+        public ImageView mCover, heart, share, whatsapp, three_dot;
         public ProgressBar mProgressBar;
         public final View parent;
         ImageView userImage;
@@ -146,6 +182,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             heart = itemView.findViewById(R.id.heart);
             share = itemView.findViewById(R.id.share);
             whatsapp = itemView.findViewById(R.id.whatsapp);
+            three_dot = itemView.findViewById(R.id.three_dot);
             parent = itemView;
         }
 
@@ -158,7 +195,26 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             parent.setTag(this);
 
             VlogsListingAndDetailResult responseData = mInfoList.get(position);
-            ((ParallelFeedActivity) mContext).hitBookmarkFollowingStatusAPI(responseData.getId());
+//            ((ParallelFeedActivity) mContext).hitBookmarkFollowingStatusAPI(responseData.getId());
+//            ((ParallelFeedActivity) mContext).hitRecommendedStatusAPI(responseData.getId());
+
+            if (responseData.getLiked()) {
+                heart.setImageResource(R.drawable.ic_recommended);
+            } else {
+                heart.setImageResource(R.drawable.ic_likes);
+            }
+
+            if (responseData.isFollowed()) {
+                followText.setText(R.string.ad_following_author);
+            } else {
+                followText.setText(R.string.ad_follow_author);
+            }
+
+            if (responseData.isBookmarked()) {
+
+            } else {
+
+            }
 //            VlogsListingAndDetailResult videoInfo = responseData.getData().getResult();
             textViewTitle.setText(responseData.getTitle());
             makeTextViewResizable(textViewTitle, 2, " ..See More", true, responseData.getTitle());
@@ -174,14 +230,21 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             followText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((ParallelFeedActivity) mContext).followAPICall(responseData.getAuthor().getId());
+                    ((ParallelFeedActivity) mContext).followAPICall(responseData.getAuthor().getId(), position);
                 }
             });
 
             heart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    if (responseData.getLiked()) {
+                        likeStatus = "0";
+                        ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
+                    } else {
+                        likeStatus = "1";
+                        ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
+                    }
+//                    notifyDataSetChanged();
                 }
             });
 
@@ -250,16 +313,71 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 }
             });
 
-            if (followUnfollowText != null && !followUnfollowText.isEmpty()) {
+            three_dot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    popupmenuoption(three_dot, responseData.getId(), responseData.isBookmarked());
+                    PopupWindow popupwindow_obj = popupDisplay(responseData.getId(), responseData.isBookmarked());
+                    popupwindow_obj.showAsDropDown(three_dot, -40, 18);
+                }
+            });
+
+            /*if (followUnfollowText != null && !followUnfollowText.isEmpty()) {
                 followText.setText(followUnfollowText);
                 followText.setEnabled(enableDisableFollow);
                 followUnfollowText = null;
-            }
+            }*/
 
             Glide.with(itemView.getContext())
                     .load(responseData.getThumbnail()).apply(new RequestOptions().optionalCenterCrop())
                     .into(mCover);
         }
+    }
+
+    private void popupmenuoption(ImageView three_dot, String vidId, boolean isBookmarked) {
+        final PopupMenu popup = new PopupMenu(mContext, three_dot);
+        popup.getMenuInflater().inflate(R.menu.menu_parallel_feed, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                int i = item.getItemId();
+                if (i == R.id.bookmark) {
+                    if (isBookmarked) {
+
+                    }
+                    return true;
+                }
+                return true;
+            }
+
+        });
+        popup.show();
+    }
+
+    public PopupWindow popupDisplay(String vidId, boolean isBookmarked) {
+
+        final PopupWindow popupWindow = new PopupWindow(mContext);
+
+        // inflate your layout or dynamically add view
+        LayoutInflater inflater = (LayoutInflater) ((ParallelFeedActivity) mContext).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View view = inflater.inflate(R.layout.parallel_feed_popup, null);
+
+        ImageView imageView = view.findViewById(R.id.popup_bookmark);
+        TextView textView = view.findViewById(R.id.bookmark_text);
+        if (isBookmarked) {
+            textView.setText("Bookmarked");
+            imageView.setImageResource(R.drawable.ic_bookmarked);
+        } else {
+            textView.setText("Bookmark");
+            imageView.setImageResource(R.drawable.ic_bookmark);
+        }
+
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setContentView(view);
+
+        return popupWindow;
     }
 
     public void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore, final String userBio) {
@@ -456,5 +574,14 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         public void onClick(View v) {
 
         }
+    }
+
+    public void setLikeIcon(int recommendStatus) {
+        if (recommendStatus == 1) {
+            mHolder.heart.setImageResource(R.drawable.ic_recommended);
+        } else {
+            mHolder.heart.setImageResource(R.drawable.ic_likes);
+        }
+//        notifyDataSetChanged();
     }
 }

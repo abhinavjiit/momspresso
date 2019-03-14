@@ -66,6 +66,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
     private ProgressBar mProgressBar;
     private Context appContext;
+    private Context mContext;
 
 
     /**
@@ -117,7 +118,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         this.recyclerView = recyclerView;
     }
 
-    public void setVideoInfoList(ArrayList<VlogsListingAndDetailResult> videoInfoList) {
+    public void setVideoInfoList(Context mContext,ArrayList<VlogsListingAndDetailResult> videoInfoList) {
+        this.mContext = mContext;
         this.videoInfoList = videoInfoList;
 
     }
@@ -350,6 +352,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                             recyclerView.smoothScrollToPosition(playPosition + 1);
                             playVideo(true);
                         }
+                        if (((ParallelFeedActivity) mContext).mExoPlayerFullscreen)
+                            ((ParallelFeedActivity) mContext).closeFullscreenDialog();
                         videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
                         break;
                     case Player.STATE_IDLE:
