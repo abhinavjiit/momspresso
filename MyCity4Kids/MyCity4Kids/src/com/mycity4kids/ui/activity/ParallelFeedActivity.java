@@ -89,6 +89,7 @@ import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
 
 import org.apmem.tools.layouts.FlowLayout;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -180,6 +181,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private VideoRecyclerViewAdapter mAdapter;
     private boolean firstTime = true;
     private PlaybackControlView controlView;
+    public String urlString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +198,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         recyclerViewFeed.setRecyclerView(recyclerViewFeed);
         controlView = recyclerViewFeed.findViewById(R.id.exo_controller);
 
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -220,6 +223,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             vlogsListingAndDetailsAPI = retro.create(VlogsListingAndDetailsAPI.class);
             hitArticleDetailsS3API();
         }
+        mixpanel.timeEvent("Player_Start");
 
         /*if (firstTime) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -740,7 +744,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 //                    followClick.setText(getString(R.string.ad_follow_author));
                     isFollowing = false;
                 }
-                mAdapter.setListUpdate(updateFollowPos,dataList);
+                mAdapter.setListUpdate(updateFollowPos, dataList);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
@@ -774,7 +778,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 //                    followClick.setText(getString(R.string.ad_following_author));
                     isFollowing = true;
                 }
-                mAdapter.setListUpdate(updateFollowPos,dataList);
+                mAdapter.setListUpdate(updateFollowPos, dataList);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
@@ -1115,7 +1119,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(ParallelFeedActivity.this, null, httpDataSourceFactory);
             Uri daUri = Uri.parse(streamUrl);
             mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
+
         }
+
 
 //        initExoPlayer();
 
@@ -1130,16 +1136,16 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void onPause() {
-        if (recyclerViewFeed != null)
-            recyclerViewFeed.onPausePlayer();
         super.onPause();
 
-        /*if (mExoPlayerView != null && mExoPlayerView.getPlayer() != null) {
+        /*if (recyclerViewFeed != null && recyclerViewFeed.videoSurfaceView != null) {
 
-            mResumeWindow = mExoPlayerView.getPlayer().getCurrentWindowIndex();
-            mResumePosition = Math.max(0, mExoPlayerView.getPlayer().getContentPosition());
-            mExoPlayerView.getPlayer().release();
+            mResumeWindow = recyclerViewFeed.player.getCurrentWindowIndex();
+            mResumePosition = Math.max(0, recyclerViewFeed.player.getContentPosition());
+            recyclerViewFeed.onPausePlayer();
         }*/
+
+        recyclerViewFeed.player.setVolume(0F);
 
         if (mFullScreenDialog != null)
             mFullScreenDialog.dismiss();
@@ -1147,9 +1153,17 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void onRestart() {
-        if (recyclerViewFeed != null)
-            recyclerViewFeed.onRestartPlayer();
         super.onRestart();
+
+        recyclerViewFeed.player.setVolume(1F);
+
+        /*boolean haveResumePosition = mResumeWindow != C.INDEX_UNSET;
+
+        if (haveResumePosition) {
+            recyclerViewFeed.player.seekTo(mResumeWindow, mResumePosition);
+        }
+
+        recyclerViewFeed.setPlayer(urlString, haveResumePosition);*/
     }
 
     @Override
@@ -1435,15 +1449,20 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void onDestroy() {
-        if (recyclerViewFeed != null)
-            recyclerViewFeed.onRelease();
         super.onDestroy();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("videoId", videoId);
+            jsonObject.put("videoTitle", article_title);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mixpanel.track("Player_Start", jsonObject);
     }
 
     @Override
     protected void onStop() {
-        if (recyclerViewFeed != null)
-            recyclerViewFeed.onRelease();
         super.onStop();
     }
 }
