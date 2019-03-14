@@ -354,10 +354,10 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         }
                         if (((ParallelFeedActivity) mContext).mExoPlayerFullscreen)
                             ((ParallelFeedActivity) mContext).closeFullscreenDialog();
-                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
+//                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
                         break;
                     case Player.STATE_IDLE:
-                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
+//                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
                         break;
                     case Player.STATE_READY:
                         Log.e(TAG, "onPlayerStateChanged: Ready ");
