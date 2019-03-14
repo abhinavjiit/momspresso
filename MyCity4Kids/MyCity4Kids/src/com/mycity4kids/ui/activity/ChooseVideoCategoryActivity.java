@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +30,6 @@ import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -64,8 +64,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
-
-
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
@@ -89,7 +87,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     private ArrayList<String> activeImageUrl = new ArrayList<String>();
     private ArrayList<String> activeStreamUrl = new ArrayList<String>();
     private ArrayList<String> info = new ArrayList<String>();
-
     private String challengeRulesInDialogBox;
 
 
@@ -410,12 +407,14 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             case R.id.topicContainer:
                 Intent intent = new Intent(this, NewVideoChallengeActivity.class);
                 intent.putExtra("Display_Name", Display_Name);
+                intent.putExtra("screenName", "creation");
                 intent.putExtra("challenge", challengeId);
                 intent.putExtra("position", position);
                 intent.putExtra("StreamUrl", activeStreamUrl);
                 intent.putExtra("topics", articledatamodelsnew.getParentName());
                 intent.putExtra("parentId", articledatamodelsnew.getParentId());
                 intent.putExtra("StringUrl", activeImageUrl);
+                intent.putExtra("rules", info);
                 intent.putExtra("Topic", new Gson().toJson(articledatamodelsnew));
                 startActivity(intent);
                 break;
@@ -427,12 +426,15 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                     if (info.size() > position) {
                         if (!StringUtils.isNullOrEmpty(info.get(position))) {
                             challengeRulesInDialogBox = info.get(position);
-                            ToastUtils.showToast(this, String.valueOf(position) + " clicked");
+                            //  ToastUtils.showToast(this, String.valueOf(position) + " clicked");
                             final Dialog dialog = new Dialog(this);
                             dialog.setContentView(R.layout.challenge_rules_dialog);
                             dialog.setTitle("Title...");
+                            ImageView imageView = (ImageView) dialog.findViewById(R.id.closeEditorImageView);
                             WebView webView = (WebView) dialog.findViewById(R.id.videoChallengeRulesWebView);
                             webView.loadData(challengeRulesInDialogBox, "text/html", "UTF-8");
+                            imageView.setOnClickListener(view2 -> dialog.dismiss());
+
                             dialog.show();
                         }
                     }

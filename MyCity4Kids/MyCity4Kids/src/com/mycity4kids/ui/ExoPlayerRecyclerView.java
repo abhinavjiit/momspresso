@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.google.android.exoplayer2.C;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -75,8 +76,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private List<VlogsListingAndDetailResult> videoInfoListHeader = new ArrayList<>();
     private int videoSurfaceDefaultHeight = 0;
     private int screenDefaultHeight = 0;
-    SimpleExoPlayer player;
-    private SimpleExoPlayerView videoSurfaceView;
+    public SimpleExoPlayer player;
+    public SimpleExoPlayerView videoSurfaceView;
     private ImageView mCoverImage;
     public RelativeLayout videoCell;
     public RelativeLayout frameLayout;
@@ -285,11 +286,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
         // Measures bandwidth during playback. Can be null if not required.
         DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
-        // Produces DataSource instances through which media data is loaded.
-
-//        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(appContext,
-//                Util.getUserAgent(appContext, "android_wave_list"), defaultBandwidthMeter);
-        // This is the MediaSource representing the media to be played.
         String uriString = videoInfoList.get(targetPosition).getUrl();
 //        String uriString = "https://androidwave.com/media/androidwave-video-6.mp4";
         System.out.println("uriString----" + uriString);
@@ -342,7 +338,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
         screenDefaultHeight = point.y;
         videoSurfaceView = new SimpleExoPlayerView(appContext);
-//        videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
+//        videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+        videoSurfaceView.setFastForwardIncrementMs(5000);
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
@@ -353,6 +350,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 //        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this), trackSelector, loadControl);
         player = ExoPlayerFactory.newSimpleInstance(appContext, trackSelector, loadControl);
 
+        player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
         // Bind the player to the view.
         videoSurfaceView.setUseController(true);
         videoSurfaceView.setPlayer(player);
@@ -567,9 +565,9 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
     public void onPausePlayer() {
         if (videoSurfaceView != null) {
-            removeVideoView(videoSurfaceView);
+//            removeVideoView(videoSurfaceView);
             player.release();
-            videoSurfaceView = null;
+//            videoSurfaceView = null;
         }
     }
 
@@ -587,7 +585,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
         if (player != null) {
             player.release();
-            player = null;
+
         }
 
         rowParent = null;

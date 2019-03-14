@@ -12,7 +12,6 @@ import android.media.Image;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -54,8 +53,8 @@ import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.BaseViewHolder;
-import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GenericFileProvider;
@@ -78,6 +77,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private ViewHolder mHolder;
     private String likeStatus;
     private boolean isRecommendRequestRunning;
+    private String userDynamoId;
 
     //    private List<VideoInfo> mInfoList;
     private ArrayList<VlogsListingAndDetailResult> mInfoList;
@@ -85,6 +85,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     public VideoRecyclerViewAdapter(Context mContext, ArrayList<VlogsListingAndDetailResult> infoList) {
         this.mContext = mContext;
         mInfoList = infoList;
+        userDynamoId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
     }
 
     public void setText(int pos, String followUnfollowText) {
@@ -184,6 +185,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mProgressBar = itemView.findViewById(R.id.progressBar);
             followText = itemView.findViewById(R.id.follow_textview);
             commentCount = itemView.findViewById(R.id.commentCount);
+            comment = itemView.findViewById(R.id.comment);
             viewsCount = itemView.findViewById(R.id.viewsCount);
             likeCount = itemView.findViewById(R.id.viewsLike);
             heart = itemView.findViewById(R.id.heart);
@@ -202,8 +204,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             parent.setTag(this);
 
             VlogsListingAndDetailResult responseData = mInfoList.get(position);
-//            ((ParallelFeedActivity) mContext).hitBookmarkFollowingStatusAPI(responseData.getId());
-//            ((ParallelFeedActivity) mContext).hitRecommendedStatusAPI(responseData.getId());
 
             if (responseData.getLiked()) {
                 heart.setImageResource(R.drawable.ic_recommended);
@@ -251,46 +251,25 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         likeStatus = "1";
                         ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
                     }
-//                    notifyDataSetChanged();
                 }
             });
 
             share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                    intent.setType("text/html");
-                    final PackageManager pm = mContext.getPackageManager();
-                    final List<ResolveInfo> matches = pm.queryIntentActivities(intent, 0);
-                    ResolveInfo best = null;
-                    for (final ResolveInfo info : matches) {
-                        if (info.activityInfo.packageName.endsWith(".gm") || info.activityInfo.name.toLowerCase().contains("gmail")) {
-                            best = info;
-                            break;
-                        }
-                    }
-                    if (best != null) {
-                        intent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
-                    }
-                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Momspresso");
-                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml(mContext.getString(R.string.check_out_momvlog) + getShareUrl(responseData)));
 
-                    try {
-                        mContext.startActivity(intent);
-//                        Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
-                    } catch (Exception e) {
-                        Intent i = new Intent(Intent.ACTION_SEND);
-                        i.setType("plain/text");
-                        i.putExtra(Intent.EXTRA_EMAIL, new String[]{});
-                        i.putExtra(Intent.EXTRA_SUBJECT, "");
-                        i.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.check_out_momvlog) + getShareUrl(responseData));
-                        try {
-                            mContext.startActivity(Intent.createChooser(i, "Send mail..."));
-//                            Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
-                        } catch (android.content.ActivityNotFoundException ex) {
-                            Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-                        }
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+
+                    if (StringUtils.isNullOrEmpty(getShareUrl(responseData))) {
+
+                    } else {
+                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, getShareUrl(responseData));
+                        mContext.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+                        Utils.pushShareArticleEvent(mContext, "DetailVideoScreen", userDynamoId + "", responseData.getId(), responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName(), "CommonShare");
                     }
+
+
                 }
             });
 
@@ -306,7 +285,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         whatsappIntent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.check_out_momvlog) + getShareUrl(responseData));
                         try {
                             mContext.startActivity(whatsappIntent);
-//                            Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Whatsapp");
+                            Utils.pushShareArticleEvent(mContext, "DetailVideoScreen", userDynamoId + "", responseData.getId(), responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName(), "Whatsapp");
                         } catch (android.content.ActivityNotFoundException ex) {
                             Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
                         }
@@ -320,20 +299,20 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 }
             });
 
+            comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((ParallelFeedActivity) mContext).openViewCommentDialog(responseData.getCommentUri(), getShareUrl(responseData), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName());
+                }
+            });
+
             three_dot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    popupmenuoption(three_dot, responseData.getId(), responseData.isBookmarked());
                     PopupWindow popupwindow_obj = popupDisplay(responseData.getId(), responseData.isBookmarked());
                     popupwindow_obj.showAsDropDown(three_dot, -40, 18);
                 }
             });
-
-            /*if (followUnfollowText != null && !followUnfollowText.isEmpty()) {
-                followText.setText(followUnfollowText);
-                followText.setEnabled(enableDisableFollow);
-                followUnfollowText = null;
-            }*/
 
             Glide.with(itemView.getContext())
                     .load(responseData.getThumbnail()).apply(new RequestOptions().optionalCenterCrop())
@@ -363,30 +342,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
     }
 
-    private void popupmenuoption(ImageView three_dot, String vidId, boolean isBookmarked) {
-        final PopupMenu popup = new PopupMenu(mContext, three_dot);
-        popup.getMenuInflater().inflate(R.menu.menu_parallel_feed, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                int i = item.getItemId();
-                if (i == R.id.bookmark) {
-                    if (isBookmarked) {
-
-                    }
-                    return true;
-                }
-                return true;
-            }
-
-        });
-        popup.show();
-    }
-
     public PopupWindow popupDisplay(String vidId, boolean isBookmarked) {
 
         final PopupWindow popupWindow = new PopupWindow(mContext);
 
-        // inflate your layout or dynamically add view
         LayoutInflater inflater = (LayoutInflater) ((ParallelFeedActivity) mContext).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.parallel_feed_popup, null);
@@ -603,14 +562,5 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         public void onClick(View v) {
 
         }
-    }
-
-    public void setLikeIcon(int recommendStatus) {
-        if (recommendStatus == 1) {
-            mHolder.heart.setImageResource(R.drawable.ic_recommended);
-        } else {
-            mHolder.heart.setImageResource(R.drawable.ic_likes);
-        }
-//        notifyDataSetChanged();
     }
 }

@@ -51,6 +51,7 @@ public class VlogsListingAndDetailResult {
         isFollowed = followed;
     }
 
+
     public String getId() {
         return id;
     }

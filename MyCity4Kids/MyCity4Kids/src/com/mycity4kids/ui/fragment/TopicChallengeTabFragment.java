@@ -35,7 +35,6 @@ public class TopicChallengeTabFragment extends BaseFragment implements View.OnCl
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
-    // private ChallengeRecyclerAdapter.RecyclerViewClickListener recyclerViewClickListener;
 
     @Nullable
     @Override
@@ -47,15 +46,6 @@ public class TopicChallengeTabFragment extends BaseFragment implements View.OnCl
         }
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
-
-      /*  JSONObject data = new JSONObject((Map) selectedTopic);
-        JSONArray accounts = null;
-        try {
-            accounts = data.getJSONArray("data");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        List<Topics> accountList = new Gson().fromJson(accounts.toString(), new TypeToken<ArrayList<Topics>>() {}.getType());*/
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_challenge);
         llm = new LinearLayoutManager(getActivity());
         recyclerAdapter = new ChallengeRecyclerAdapter(this, getActivity(), challengeId, Display_Name, activeImageUrl);
@@ -63,26 +53,6 @@ public class TopicChallengeTabFragment extends BaseFragment implements View.OnCl
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setListData(selectedTopic);
         recyclerView.setAdapter(recyclerAdapter);
-        // ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(recyclerAdapter.currentPosition(), 200);
-       /* recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) //check for scroll down
-                {
-                    visibleItemCount = llm.getChildCount();
-                    totalItemCount = llm.getItemCount();
-                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
-
-                    if (!isReuqestRunning && !isLastPageReached) {
-                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                            isReuqestRunning = true;
-                            recyclerAdapter.setListData(selectedTopic);
-                            recyclerAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            }
-        });*/
 
 
         return view;
@@ -111,7 +81,6 @@ public class TopicChallengeTabFragment extends BaseFragment implements View.OnCl
                 intent.putExtra("topics", articledatamodal.getParentName());
                 intent.putExtra("parentId", articledatamodal.getParentId());
                 intent.putExtra("StringUrl", activeImageUrl);
-                //    intent.putExtra("Data",articledatamodal);
                 startActivity(intent);
 
 

@@ -53,8 +53,12 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/three_dot"
+            android:layout_alignParentRight="true"
             android:background="@drawable/rounded_corner"
-            android:padding="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:text="Follow"
             android:textColor="#CCFFFFFF" />
 
@@ -65,6 +69,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:padding="5dp"
+            android:visibility="gone"
             android:src="@drawable/ic_more_vert_black_24dp"
             android:tint="#CCFFFFFF" />
     </RelativeLayout>
@@ -76,6 +81,7 @@
         android:layout_below="@+id/item_top_layout"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:letterSpacing="-0.02"
         android:lineSpacingExtra="5sp"
@@ -143,6 +149,7 @@
             android:layout_width="5dp"
             android:layout_height="5dp"
             android:layout_centerVertical="true"
+            android:alpha="0.8"
             android:layout_toRightOf="@+id/viewsCount"
             android:background="@drawable/dot" />
 
@@ -174,8 +181,8 @@
 
         <ImageView
             android:id="@+id/share"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/heart"
@@ -184,23 +191,26 @@
 
         <ImageView
             android:id="@+id/whatsapp"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/share"
             android:src="@drawable/ic_whats_app"
+            android:alpha="0.85"
             android:tint="@color/white" />
 
         <ImageView
             android:id="@+id/comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_toLeftOf="@+id/commentCount"
             android:src="@drawable/ic_comments"
-            android:visibility="gone" />
+            android:layout_centerVertical="true"
+            android:alpha="0.9"
+            android:layout_marginRight="10dp"
+            android:tint="@color/white"/>
+
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/commentCount"
@@ -209,7 +219,6 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:drawableLeft="@drawable/ic_comments"
             android:drawablePadding="@dimen/space_10"
             android:textColor="@color/white"
             android:tint="@color/white" />

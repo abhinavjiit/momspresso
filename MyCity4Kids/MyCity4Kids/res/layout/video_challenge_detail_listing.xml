@@ -207,7 +207,8 @@
                 fab:fab_addButtonPlusIconColor="@color/transparent"
                 fab:fab_addButtonStrokeVisible="false"
                 fab:fab_labelStyle="@style/menu_labels_style"
-                fab:fab_labelsPosition="left">
+                fab:fab_labelsPosition="left"
+                android:visibility="gone">
 
                 <com.getbase.floatingactionbutton.FloatingActionButton
                     android:id="@+id/recentSortFAB"
@@ -243,7 +244,8 @@
             android:layout_gravity="right|bottom"
             fab:fab_colorNormal="@color/fab.white"
             fab:fab_colorPressed="@color/fab.white"
-            fab:fab_icon="@drawable/ic_flip" />
+            fab:fab_icon="@drawable/ic_flip"
+            android:visibility="gone"/>
 
 
         <!--    <ImageView

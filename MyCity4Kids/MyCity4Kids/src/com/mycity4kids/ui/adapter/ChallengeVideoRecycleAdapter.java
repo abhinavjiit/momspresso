@@ -36,11 +36,12 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
     private ArrayList<String> rules;
 
 
-    public ChallengeVideoRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mcontext, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl) {
+    public ChallengeVideoRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mcontext, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> rules) {
         this.challengeId = challengeId;
         this.Display_Name = Display_Name;
         this.activeImageUrl = activeImageUrl;
         this.activeStreamUrl = activeStreamUrl;
+        this.rules = rules;
         mInflator = (LayoutInflater) mcontext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.recyclerViewClickListener = recyclerViewClickListener;
         this.mcontext = mcontext;
@@ -78,10 +79,10 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                     //  holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE
                     //  );
                     holder.noChallengeAddedText.setVisibility(View.GONE);
-                    holder.useThePictureTextView.setVisibility(View.VISIBLE);
+                    holder.useThePictureTextView.setVisibility(View.GONE);
                     holder.useThePictureTextView.setText(R.string.use_picture_word_to_upload_one);
                     holder.StorytextViewLayout.setVisibility(View.VISIBLE);
-                    holder.yourStoryTextView.setVisibility(View.VISIBLE);
+                    holder.yourStoryTextView.setVisibility(View.GONE);
                     holder.yourStoryTextView.setText(R.string.choose_challenge_label);
                     holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                     holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
@@ -96,6 +97,9 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                                     Display_Name.add(articleDataModelsNew.getChild().get(i).getDisplay_name());
                                     holder.storyTitleTextView.setVisibility(View.GONE);
                                     holder.titleTextUnderLine.setVisibility(View.GONE);
+                                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.getChild().get(i).getDisplay_name())) {
+                                        holder.challengeNameTextMomVlog.setText(articleDataModelsNew.getChild().get(i).getDisplay_name());
+                                    }
                                     //if (3 == (articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getType())) {
                                     holder.imageBody.setVisibility(View.VISIBLE);
 //                                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules())) {
@@ -138,6 +142,9 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                                 // holder.storyTitleTextView.setText(R.string.previous_week_challenge);
                                 holder.storyTitleTextView.setVisibility(View.GONE);
                                 holder.titleTextUnderLine.setVisibility(View.GONE);
+                                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.getChild().get(j).getDisplay_name())) {
+                                    holder.challengeNameTextMomVlog.setText(articleDataModelsNew.getChild().get(j).getDisplay_name());
+                                }
                                 holder.storytitle.setText(articleDataModelsNew.getChild().get(j).getDisplay_name());
                                 //  if (3 == (articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getType())) {
                                 holder.imageBody.setVisibility(View.VISIBLE);
@@ -158,10 +165,12 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                                 //  }
                             } else if (articleDataModelsNew.getChild().get(j).getExtraData() == null) {
                                 n++;
-                            } else if (articleDataModelsNew.getChild().get(j).getPublicVisibility().equals("0")) {
+                            } /*else if (articleDataModelsNew.getChild().get(j).getPublicVisibility().equals("0")) {
                                 n++;
                                 break;
-                            }
+                            }*/
+                        } else {
+                            m--;
                         }
                     }
                     break;
@@ -199,7 +208,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
         private TextView previousAndThisWeekTextView;
         private TextView yourStoryTextView;
         private LinearLayout StorytextViewLayout;
-        private TextView useThePictureTextView, noChallengeAddedText, liveTextViewVideoChallenge;
+        private TextView useThePictureTextView, noChallengeAddedText, liveTextViewVideoChallenge, challengeNameTextMomVlog;
 
 
         public ChallengeViewHolder(View itemView, ChallengeVideoRecycleAdapter.RecyclerViewClickListener recyclerViewClickListener) {
@@ -219,6 +228,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
             StorytextViewLayout = (LinearLayout) itemView.findViewById(R.id.whats_your_story_text_linear_layout);
             useThePictureTextView = (TextView) itemView.findViewById(R.id.use_the_picture_textView);
             liveTextViewVideoChallenge = (TextView) itemView.findViewById(R.id.liveTextViewVideoChallenge);
+            challengeNameTextMomVlog = (TextView) itemView.findViewById(R.id.challengeNameTextMomVlog);
             getStartedTextView.setOnClickListener(this);
             mainView.setOnClickListener(this);
 

@@ -40,10 +40,11 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     private Toolbar toolbar;
     private String jsonMyObject;
     private String selectedId;
+    String screen;
     private String selected_Name;
     private String selectedActiveUrl;
     private String selectedStreamUrl;
-    String challengeRules;
+    String challengeRules = "";
     private int pos;
     private Topics topic;
     private ArrayList<String> challengeId = new ArrayList<>();
@@ -92,6 +93,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         activeUrl = intent.getStringArrayListExtra("StringUrl");
         parentId = intent.getStringExtra("parentId");
         parentName = intent.getStringExtra("topics");
+        screen = intent.getStringExtra("screenName");
         activeStreamUrl = intent.getStringArrayListExtra("StreamUrl");
         rules = intent.getStringArrayListExtra("rules");
 
@@ -116,7 +118,9 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             ToastUtils.showToast(this, "server problem,please refresh your app");
         }
         if (rules != null && rules.size() != 0) {
-            challengeRules = rules.get(pos);
+            if (rules.size() > pos) {
+                challengeRules = rules.get(pos);
+            }
         }
         try {
             Picasso.with(this).load(selectedActiveUrl)
@@ -124,22 +128,32 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         } catch (Exception e) {
             thumbNail.setImageResource(R.drawable.default_article);
         }
+        tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_txt)));
+        tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.all_videos_toolbar_title)));
 
-        tabs.addTab(tabs.newTab().setText("ABOUT"));
-        tabs.addTab(tabs.newTab().setText("VIDEOS"));
 
         videoChallengePagerAdapter = new VideoChallengePagerAdapter(getSupportFragmentManager(), selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl, challengeRules);
         viewPager.setAdapter(videoChallengePagerAdapter);
+        if (screen.equals("creation")) {
+            viewPager.setCurrentItem(0);
+            saveTextView.setVisibility(View.VISIBLE);
+        } else {
+            viewPager.setCurrentItem(1);
+            saveTextView.setVisibility(View.VISIBLE);
+        }
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 2 || tab.getPosition() == 1) {
-                    saveTextView.setVisibility(View.GONE);
+                    saveTextView.setVisibility(View.VISIBLE);
                 } else {
                     saveTextView.setVisibility(View.VISIBLE);
                 }
+                tabs.setSelectedTabIndicatorColor(getResources().getColor(R.color.app_red));
+                tabs.setTabTextColors(getResources().getColor(R.color.grey), getResources().getColor(R.color.app_red));
+
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -150,24 +164,29 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 2 || tab.getPosition() == 1) {
+                    saveTextView.setVisibility(View.VISIBLE);
+                } else {
+                    saveTextView.setVisibility(View.VISIBLE);
+                }
+                viewPager.setCurrentItem(tab.getPosition());
+                tabs.setSelectedTabIndicatorColor(getResources().getColor(R.color.app_red));
+                tabs.setTabTextColors(getResources().getColor(R.color.grey), getResources().getColor(R.color.app_red));
 
             }
         });
         thumbNail.setOnClickListener(this);
-        saveTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(NewVideoChallengeActivity.this, ChooseVideoCategoryActivity.class);
-                if (selected_Name != null && !selected_Name.isEmpty() && selectedId != null && !selectedId.isEmpty()) {
-                    intent.putExtra("selectedId", selectedId);
-                    intent.putExtra("selectedName", selected_Name);
-                    intent.putExtra("comingFrom", "Challenge");
-                    startActivity(intent);
+        saveTextView.setOnClickListener(view -> {
+            Intent intent1 = new Intent(NewVideoChallengeActivity.this, ChooseVideoCategoryActivity.class);
+            if (selected_Name != null && !selected_Name.isEmpty() && selectedId != null && !selectedId.isEmpty()) {
+                intent1.putExtra("selectedId", selectedId);
+                intent1.putExtra("selectedName", selected_Name);
+                intent1.putExtra("comingFrom", "Challenge");
+                startActivity(intent1);
 
-                } else {
-                    ToastUtils.showToast(NewVideoChallengeActivity.this, "something went wrong at the server");
+            } else {
+                ToastUtils.showToast(NewVideoChallengeActivity.this, "something went wrong at the server");
 
-                }
             }
         });
 

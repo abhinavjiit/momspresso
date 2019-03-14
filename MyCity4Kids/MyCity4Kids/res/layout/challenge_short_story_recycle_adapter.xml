@@ -156,7 +156,6 @@
                     android:layout_height="200dp"
                     android:layout_below="@id/whats_your_story_text_linear_layout"
                     android:adjustViewBounds="true"
-                    android:foreground="@drawable/gradient_in_video_challenge_image"
                     android:scaleType="fitXY"
                     android:src="@drawable/groups_generic"
                     android:visibility="visible" />
