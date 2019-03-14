@@ -196,7 +196,7 @@ public class SuggestedTopicsActivity extends BaseActivity {
             final SuggestedTopicsPagerAdapter adapter = new SuggestedTopicsPagerAdapter(getSupportFragmentManager(), languagesTabLayout.getTabCount(), languageConfigModelArrayList, languageNameList);
             languagesViewPager.setAdapter(adapter);
             languagesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(languagesTabLayout));
-         /*   lang = SharedPrefUtils.getAppLocale(this);
+          /*  lang = SharedPrefUtils.getAppLocale(this);
             for (int i = 0; i < retMap.size(); i++) {
                 if (lang.equals(retMap.get(i).getTag())) {
                     tabPosition = i;
@@ -205,9 +205,6 @@ public class SuggestedTopicsActivity extends BaseActivity {
             }*/
 
 
-/*
-            languagesViewPager.setCurrentItem(tabPosition);
-*/
             languagesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {

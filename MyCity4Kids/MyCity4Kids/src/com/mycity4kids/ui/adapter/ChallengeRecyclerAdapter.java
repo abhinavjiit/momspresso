@@ -46,7 +46,7 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
     @Override
     public ChallengeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ChallengeViewHolder viewHolder = null;
-        View view = mInflator.inflate(R.layout.challenge_recyler_adapter, parent, false);
+        View view = mInflator.inflate(R.layout.challenge_short_story_recycle_adapter, parent, false);
         viewHolder = new ChallengeViewHolder(view, recyclerViewClickListener);
         return viewHolder;
     }

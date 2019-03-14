@@ -10,6 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/ic_info"
+            android:drawableTint="@color/app_red"
+            android:text="CHALLENGE RULES"
+            android:textColor="@color/app_red"
+            android:textSize="22sp" />
+
+
         <ImageView
             android:id="@+id/closeEditorImageView"
             android:layout_width="wrap_content"
@@ -24,11 +37,12 @@
     </RelativeLayout>
 
     <WebView
+
         android:id="@+id/videoChallengeRulesWebView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="65dp"
         android:layout_marginRight="10dp"
         android:autoLink="web"
         android:background="@color/white_color"

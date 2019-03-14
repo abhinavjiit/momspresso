@@ -186,24 +186,29 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/saveTextView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/update_profile_bg"
-        android:elevation="4dp"
-        android:gravity="center"
-        android:padding="15dp"
-        android:text="@string/add_article_or_video.upload_video"
-        android:textColor="@color/white"
-        android:textSize="17sp"
-        android:visibility="gone"
-        app:fontName="oswald_regular.ttf" />
+        android:layout_gravity="bottom">
 
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/saveTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/update_profile_bg"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@string/add_article_or_video.upload_video"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:visibility="visible"
+            app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

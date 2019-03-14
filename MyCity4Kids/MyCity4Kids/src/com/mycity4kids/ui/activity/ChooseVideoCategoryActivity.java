@@ -30,7 +30,6 @@ import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -408,12 +407,14 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             case R.id.topicContainer:
                 Intent intent = new Intent(this, NewVideoChallengeActivity.class);
                 intent.putExtra("Display_Name", Display_Name);
+                intent.putExtra("screenName", "creation");
                 intent.putExtra("challenge", challengeId);
                 intent.putExtra("position", position);
                 intent.putExtra("StreamUrl", activeStreamUrl);
                 intent.putExtra("topics", articledatamodelsnew.getParentName());
                 intent.putExtra("parentId", articledatamodelsnew.getParentId());
                 intent.putExtra("StringUrl", activeImageUrl);
+                intent.putExtra("rules", info);
                 intent.putExtra("Topic", new Gson().toJson(articledatamodelsnew));
                 startActivity(intent);
                 break;

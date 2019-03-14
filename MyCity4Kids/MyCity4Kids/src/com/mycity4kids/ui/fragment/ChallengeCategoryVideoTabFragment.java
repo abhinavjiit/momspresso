@@ -85,6 +85,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
 
                 Intent intent = new Intent(getActivity(), NewVideoChallengeActivity.class);
                 intent.putExtra("Display_Name", Display_Name);
+                intent.putExtra("screenName","MomVlogs");
                 intent.putExtra("challenge", challengeId);
                 intent.putExtra("position", position);
                 intent.putExtra("StreamUrl", activeStreamUrl);

@@ -39,19 +39,19 @@ public class VideoChallengePagerAdapter extends FragmentPagerAdapter {
         bundle.putString("selected_Name", selected_Name);
         bundle.putString("selectedActiveUrl", selectedActiveUrl);
         bundle.putString("selectedStreamUrl", selectedStreamUrl);
-        bundle.putString(" challengeRules ", challengeRules);
+        bundle.putString("challengeRules", challengeRules);
         bundle.putParcelable("topics", topic);
 
         switch (position) {
 
-            case 1:
+            case 0:
                 if (discription == null) {
                     discription = new VideoChallengeDiscription();
                 }
                 discription.setArguments(bundle);
 
                 return discription;
-            case 0:
+            case 1:
                 if (listing == null) {
                     listing = new VideoChallengeListing();
                 }
