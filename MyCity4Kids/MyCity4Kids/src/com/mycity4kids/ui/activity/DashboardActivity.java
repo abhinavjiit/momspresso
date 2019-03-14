@@ -630,11 +630,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
 
-    private void getUsersData(){
+    private void getUsersData() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
         String userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
-        if(!userId.isEmpty()){
+        if (!userId.isEmpty()) {
             Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(userId);
             call.enqueue(userDetailsResponseListener);
         }
@@ -650,7 +650,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             try {
                 UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if(responseData.getData()!=null && responseData.getData().get(0)!=null && responseData.getData().get(0).getResult()!=null){
+                    if (responseData.getData() != null && responseData.getData().get(0) != null && responseData.getData().get(0).getResult() != null) {
                         SharedPrefUtils.setIsRewardsAdded(DashboardActivity.this, responseData.getData().get(0).getResult().getRewardsAdded());
                     }
                 }

@@ -245,7 +245,7 @@
                 android:textColor="@color/app_light_black" />
 
             <LinearLayout
-                android:id="@+id/linearLayout"
+                android:id="@+id/linearRewardsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:layout_below="@+id/userbioTextView"
