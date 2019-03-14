@@ -33,6 +33,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
     private ArrayList<String> Display_Name = new ArrayList<String>();
     private ArrayList<String> activeImageUrl = new ArrayList<String>();
     private ArrayList<String> activeStreamUrl = new ArrayList<String>();
+    private ArrayList<String> rules = new ArrayList<>();
 
     private ChallengeVideoRecycleAdapter recyclerAdapter;
     private String jsonMyObject;
@@ -52,7 +53,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_challenge);
         llm = new LinearLayoutManager(getActivity());
-        recyclerAdapter = new ChallengeVideoRecycleAdapter(this, getActivity(), challengeId, Display_Name, activeImageUrl, activeStreamUrl);
+        recyclerAdapter = new ChallengeVideoRecycleAdapter(this, getActivity(), challengeId, Display_Name, activeImageUrl, activeStreamUrl, rules);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(recyclerAdapter);
