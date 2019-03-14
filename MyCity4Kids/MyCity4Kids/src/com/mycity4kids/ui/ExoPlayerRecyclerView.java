@@ -118,7 +118,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         this.recyclerView = recyclerView;
     }
 
-    public void setVideoInfoList(Context mContext,ArrayList<VlogsListingAndDetailResult> videoInfoList) {
+    public void setVideoInfoList(Context mContext, ArrayList<VlogsListingAndDetailResult> videoInfoList) {
         this.mContext = mContext;
         this.videoInfoList = videoInfoList;
 
@@ -289,7 +289,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                    playVideo(false);
+                    if (playPosition < videoInfoList.size() - 1)
+                        playVideo(false);
                 }
             }
 
