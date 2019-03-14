@@ -36,11 +36,12 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
     private ArrayList<String> rules;
 
 
-    public ChallengeVideoRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mcontext, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl) {
+    public ChallengeVideoRecycleAdapter(RecyclerViewClickListener recyclerViewClickListener, Context mcontext, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl,ArrayList<String> rules) {
         this.challengeId = challengeId;
         this.Display_Name = Display_Name;
         this.activeImageUrl = activeImageUrl;
         this.activeStreamUrl = activeStreamUrl;
+        this.rules=rules;
         mInflator = (LayoutInflater) mcontext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.recyclerViewClickListener = recyclerViewClickListener;
         this.mcontext = mcontext;

@@ -50,6 +50,8 @@ public class SuggestedTopicsActivity extends BaseActivity {
     private ViewPager languagesViewPager;
     private ArrayList<String> languageKeyList;
     private Toolbar toolbar;
+    int tabPosition = 0;
+    String lang;
 
     @Nullable
     @Override
@@ -194,6 +196,18 @@ public class SuggestedTopicsActivity extends BaseActivity {
             final SuggestedTopicsPagerAdapter adapter = new SuggestedTopicsPagerAdapter(getSupportFragmentManager(), languagesTabLayout.getTabCount(), languageConfigModelArrayList, languageNameList);
             languagesViewPager.setAdapter(adapter);
             languagesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(languagesTabLayout));
+         /*   lang = SharedPrefUtils.getAppLocale(this);
+            for (int i = 0; i < retMap.size(); i++) {
+                if (lang.equals(retMap.get(i).getTag())) {
+                    tabPosition = i;
+                }
+
+            }*/
+
+
+/*
+            languagesViewPager.setCurrentItem(tabPosition);
+*/
             languagesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
@@ -202,6 +216,7 @@ public class SuggestedTopicsActivity extends BaseActivity {
 
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
+
 
                 }
 
