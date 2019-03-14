@@ -159,7 +159,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         TextView userHandle, followText, commentCount, viewsCount, likeCount;
         public RelativeLayout videoCell;
         public FrameLayout videoLayout;
-        public ImageView mCover, heart, share, whatsapp, three_dot;
+        public ImageView mCover, heart, share, whatsapp, three_dot, comment;
         public ProgressBar mProgressBar;
         public final View parent;
         ImageView userImage;
@@ -176,6 +176,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mProgressBar = itemView.findViewById(R.id.progressBar);
             followText = itemView.findViewById(R.id.follow_textview);
             commentCount = itemView.findViewById(R.id.commentCount);
+            comment = itemView.findViewById(R.id.comment);
             viewsCount = itemView.findViewById(R.id.viewsCount);
             likeCount = itemView.findViewById(R.id.viewsLike);
             heart = itemView.findViewById(R.id.heart);
@@ -283,6 +284,13 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 }
             });
             commentCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((ParallelFeedActivity) mContext).openViewCommentDialog(responseData.getCommentUri(), getShareUrl(responseData), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName());
+                }
+            });
+
+            comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ((ParallelFeedActivity) mContext).openViewCommentDialog(responseData.getCommentUri(), getShareUrl(responseData), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName());
