@@ -827,35 +827,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         } else {
             shortStoryDraftOrPublishRequest.setLang("0");
         }
-   /*     if (runningrequest.equals("challenge")) {
-            ArrayList<Map<String, String>> list2 = new ArrayList<>();
-            Map map1 = new HashMap();
 
-            map1.put(challengeId, challengeName);
-
-            //  Map<String, String> map2 = new HashMap<>();
-            // map2.put(challengeId, challengeName);
-            //list.add(map2);
-            list2.add(map1);
-
-            shortStoryDraftOrPublishRequest.setTags(list2);
-        } else if ("draftList".equals(source)) {
-            if (!flag) {
-                ArrayList<Map<String, String>> list2 = new ArrayList<>();
-                if ((!listDraft.isEmpty())) {
-                    Map map1 = new HashMap();
-                    map1.put(key, value);
-                    list2.add(map1);
-                }
-                shortStoryDraftOrPublishRequest.setTags(list2);
-            } else {
-                ArrayList<Map<String, String>> list2 = new ArrayList<>();
-                Map map1 = new HashMap();
-                map1.put(currentActiveChallengeId, currentActiveChalleneg);
-                list2.add(map1);
-                shortStoryDraftOrPublishRequest.setTags(list2);
-            }
-        }*/
         if (draftId1.isEmpty()) {
             Call<ArticleDraftResponse> call = shortStoryAPI.saveOrPublishShortStory(shortStoryDraftOrPublishRequest);
             call.enqueue(saveDraftBeforePublishResponseListener);
