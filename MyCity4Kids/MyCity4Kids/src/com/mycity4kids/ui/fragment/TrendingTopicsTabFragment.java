@@ -33,6 +33,7 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -321,7 +322,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         MixPanelUtils.pushMomVlogClickEvent(mixpanel, videoIndex, "Trending-" + trendingTopicData.getDisplay_name());
         if (trendingTopicData.getArticleList().get(position).getCarouselVideoList() != null && !trendingTopicData.getArticleList().get(position).getCarouselVideoList().isEmpty()) {
             VlogsListingAndDetailResult result = trendingTopicData.getArticleList().get(position).getCarouselVideoList().get(videoIndex);
-            Intent intent = new Intent(getActivity(), MomsVlogDetailActivity.class);
+            Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
             intent.putExtra(Constants.VIDEO_ID, result.getId());
             intent.putExtra(Constants.STREAM_URL, result.getUrl());
             intent.putExtra(Constants.AUTHOR_ID, result.getAuthor().getId());

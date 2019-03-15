@@ -1,12 +1,17 @@
 package com.mycity4kids.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -24,6 +29,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsShortStoriesPagerAdapter;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
@@ -53,11 +59,57 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
     private ArrayList<Topics> subTopicsList;
     private Toolbar toolbar;
     private TextView toolbarTitleTextView;
+    private LinearLayout layoutBottomSheet,bottom_sheet;
+    private BottomSheetBehavior sheetBehavior;
+    private TextView textHeaderUpdate,textUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_listing_activity);
+
+        layoutBottomSheet= (LinearLayout)findViewById(R.id.bottom_sheet);
+        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+        textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
+        textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
+        bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
+
+        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(ShortStoriesListingContainerActivity.this);
+        if(!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")){
+            bottom_sheet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    } else {
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    }
+                }
+            });
+
+            textUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(ShortStoriesListingContainerActivity.this,EditProfileNewActivity.class));
+                }
+            });
+
+            textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(ShortStoriesListingContainerActivity.this,EditProfileNewActivity.class));
+                }
+            });
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bottom_sheet.setVisibility(View.GONE);
+                }
+            },10000);
+        }else{
+            bottom_sheet.setVisibility(View.GONE);
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -195,19 +247,13 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
 
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
 
-                        //DO NOT REMOVE below commented check -- showInMenu 00 from backend --might be used to show/hide in future
                         if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu()) || AppConstants.SHORT_STORY_CHALLENGE_ID.equals(responseData.getData().get(i).getChild().get(k).getId())) {
-                            //Adding All subcategories
                             responseData.getData().get(i).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());
                             responseData.getData().get(i).getChild().get(k)
                                     .setParentName(responseData.getData().get(i).getTitle());
-
-                            // create duplicate entry for subcategories with no child
                             if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
                                 ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
-                                //adding exact same object adds the object recursively producing stackoverflow exception when writing for Parcel.
-                                //So need to create different object with same params
                                 Topics dupChildTopic = new Topics();
                                 dupChildTopic.setChild(new ArrayList<Topics>());
                                 dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());

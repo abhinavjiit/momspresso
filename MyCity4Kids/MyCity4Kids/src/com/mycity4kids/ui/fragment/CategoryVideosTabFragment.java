@@ -36,6 +36,7 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VlogsListingAdapter;
 import com.mycity4kids.utils.MixPanelUtils;
 
@@ -70,13 +71,10 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private String videoCategory;
     private MixpanelAPI mixpanel;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = getActivity().getLayoutInflater().inflate(R.layout.funny_videos_tab_fragment, container, false);
-
         rootLayout = view.findViewById(R.id.rootLayout);
         listView = (ListView) view.findViewById(R.id.vlogsListView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
@@ -162,7 +160,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(getActivity(), MomsVlogDetailActivity.class);
+                Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
                 if (adapterView.getAdapter() instanceof VlogsListingAdapter) {
                     MixPanelUtils.pushMomVlogClickEvent(mixpanel, i, "" + videoCategory);
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);

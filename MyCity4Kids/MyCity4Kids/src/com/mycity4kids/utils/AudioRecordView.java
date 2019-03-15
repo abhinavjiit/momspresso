@@ -76,6 +76,10 @@ public class AudioRecordView extends FrameLayout {
 
     }
 
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     private View imageViewAudio, imageViewLockArrow, imageViewLock, imageViewMic, dustin, dustin_cover, imageViewStop, imageViewSend;
     private View layoutDustin, imageViewAttachment, layoutRecording, layoutOne, layoutTwo;
     private View layoutSlideCancel, layoutLock;

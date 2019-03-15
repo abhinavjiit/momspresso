@@ -38,6 +38,7 @@ import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
 import com.mycity4kids.instagram.InstagramApp
 import com.mycity4kids.interfaces.IFacebookUser
+import com.mycity4kids.models.city.City
 import com.mycity4kids.models.request.LoginRegistrationRequest
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.SetupBlogData
@@ -155,6 +156,32 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         fetchRewardsData()
 
 
+//        /*write here*/
+//        var cityList = ArrayList<City>()
+//        var city = City("dehradun", 0.0, 0.0, 7)
+//        var city1 = City("dehradun", 0.0, 0.0, 7)
+//        var city2 = City("dehradun", 0.0, 0.0, 7)
+//        var city3 = City("rishikesh", 0.0, 0.0, 7)
+//        var city4 = City("rishikesh", 0.0, 0.0, 7)
+//        var city5 = City("srinagar", 0.0, 0.0, 7)
+//        var city6 = City("srinagar", 0.0, 0.0, 7)
+//        cityList.add(city)
+//        cityList.add(city1)
+//        cityList.add(city2)
+//        cityList.add(city3)
+//        cityList.add(city4)
+//        cityList.add(city5)
+//        cityList.add(city6)
+
+
+        //var groupData = cityList.groupBy { it -> it.cityName }
+
+//        cityList.stream().filter {
+//
+//        }
+        //Log.e("group data", Gson().toJson(groupData))
+
+        /**/
         return containerView
     }
 
@@ -231,6 +258,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     private fun setValuesForSocial(platformName: Constants.SocialPlatformName, token: String) {
         if (apiGetResponse.socialAccounts != null && apiGetResponse.socialAccounts!!.isNotEmpty()) {
+
             var socialAccountsListNotContainsGivenPlatform = ArrayList<SocialAccountObject>(apiGetResponse.socialAccounts!!.filter { it -> !it.platform_name.equals(platformName.name) })
             var socialAccountsListByGivenPlatform = apiGetResponse.socialAccounts!!.filter { it -> it.platform_name.equals(platformName.name) }
             if (socialAccountsListByGivenPlatform.isNotEmpty()) {

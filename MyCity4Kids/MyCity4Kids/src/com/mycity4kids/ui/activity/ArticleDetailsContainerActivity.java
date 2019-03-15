@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -67,10 +68,15 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private RelativeLayout guideOverlay;
     private Toolbar guidetoolbar;
 
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_details_container);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         preferredLang = SharedPrefUtils.getLanguageFilters(this);
         Utils.pushOpenScreenEvent(this, "DetailArticleScreen", userDynamoId + "");

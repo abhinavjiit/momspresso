@@ -31,19 +31,6 @@
 
         </FrameLayout>
 
-    <!--    <ImageView
-
-            android:id="@+id/ChallengeNameImage"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-<<<<<<< HEAD
-            android:layout_below="@id/ChallengeNameText"
-=======
->>>>>>> design changes in video challenges
-            android:background="@drawable/short_story_border_bg"
-            android:src="@drawable/groups_generic"
-            android:visibility="visible" />-->
-
         <ImageView
             android:id="@+id/videoIndicatorImageView"
             android:layout_width="70dp"

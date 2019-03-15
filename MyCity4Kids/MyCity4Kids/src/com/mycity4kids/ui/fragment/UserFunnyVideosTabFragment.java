@@ -37,6 +37,7 @@ import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.activity.UserPublishedContentActivity;
 import com.mycity4kids.ui.activity.VideoTrimmerActivity;
@@ -139,7 +140,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(getActivity(), MomsVlogDetailActivity.class);
+                Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
                 if (adapterView.getAdapter() instanceof MyFunnyVideosListingAdapter) {
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
                     switch (parentingListData.getPublication_status()) {

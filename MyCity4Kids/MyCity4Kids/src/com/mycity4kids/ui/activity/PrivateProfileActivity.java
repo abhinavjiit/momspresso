@@ -1,9 +1,11 @@
 package com.mycity4kids.ui.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,6 +23,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -32,6 +36,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.googlecode.mp4parser.authoring.tracks.TextTrackImpl;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -71,6 +76,7 @@ import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.fragment.UserBioDialogFragment;
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.RoundedHorizontalProgressBar;
@@ -99,7 +105,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private ArrayList<LanguageRanksModel> multipleRankList = new ArrayList<>();
 
     private ImageView imgProfile;
-    private LinearLayout followerContainer, followingContainer, rankContainer;
+    private LinearLayout followerContainer, followingContainer, rankContainer, linearRewardsHeader;
     private TextView followingCountTextView, followerCountTextView, rankCountTextView;
     private TextView rankLanguageTextView;
     private TextView authorNameTextView, authorTypeTextView;
@@ -114,8 +120,9 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private TextView editProfileTextView;
     private RelativeLayout menuCoachmark;
     private LinearLayout publishCoachmark1, publishCoachmark2;
-    private TextView publishedSectionTextView1;
+    private TextView publishedSectionTextView1, textHeaderUpdate;
     private String isRewardsAdded;
+    private RelativeLayout relative_profile_progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,7 +172,48 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         publishedSectionTextView1 = (TextView) findViewById(R.id.publishedSectionTextView1);
         publishCoachmark1 = (LinearLayout) findViewById(R.id.publishCoachmark1);
         publishCoachmark2 = (LinearLayout) findViewById(R.id.publishCoachmark2);
-        ((TextView)findViewById(R.id.profileCompletionLabel)).setOnClickListener(new View.OnClickListener() {
+        linearRewardsHeader = (LinearLayout) findViewById(R.id.linearRewardsHeader);
+        textHeaderUpdate = (TextView) findViewById(R.id.textHeaderUpdate);
+        relative_profile_progress = (RelativeLayout) findViewById(R.id.relative_profile_progress);
+
+        textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(PrivateProfileActivity.this, RewardsContainerActivity.class));
+            }
+        });
+
+        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(PrivateProfileActivity.this);
+        if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
+            linearRewardsHeader.setVisibility(View.VISIBLE);
+            relative_profile_progress.setVisibility(View.INVISIBLE);
+        } else {
+            relative_profile_progress.setVisibility(View.VISIBLE);
+            linearRewardsHeader.setVisibility(View.INVISIBLE);
+        }
+
+        linearRewardsHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(PrivateProfileActivity.this);
+                dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_rewards_sheet);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+
+                dialog.findViewById(R.id.textUpdate).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(PrivateProfileActivity.this, RewardsContainerActivity.class));
+                        dialog.cancel();
+                    }
+                });
+
+                dialog.show();
+            }
+        });
+
+        ((TextView) findViewById(R.id.profileCompletionLabel)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
@@ -196,14 +244,9 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         publishedSectionTextView1.setOnClickListener(this);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
-
-//        authorTypeTextView.setText("" + SharedPrefUtils.getCurrentCityModel(this).getName());
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
             Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
-
-//            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).into(target);
-//            GaussianBlur.with(this).put(R.drawable.groups_generic, blurImageView);
         }
 
         if (!SharedPrefUtils.isCoachmarksShownFlag(this, "Profile")) {
@@ -245,7 +288,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             try {
                 UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if(responseData.getData()!=null && responseData.getData().get(0)!=null && responseData.getData().get(0).getResult()!=null){
+                    if (responseData.getData() != null && responseData.getData().get(0) != null && responseData.getData().get(0).getResult() != null) {
                         isRewardsAdded = responseData.getData().get(0).getResult().getRewardsAdded();
                     }
                     if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
@@ -335,11 +378,6 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                         authorBioTextView.setText(responseData.getData().get(0).getResult().getUserBio());
                         authorBioTextView.setVisibility(View.VISIBLE);
                         makeTextViewResizable(authorBioTextView, 2, "See More", true, responseData.getData().get(0).getResult().getUserBio());
-//                        authorBioTextView.setTrimCollapsedText(getString(R.string.search_show_more));
-//                        authorBioTextView.setTrimLines(2);
-//                        authorBioTextView.setColorClickableText(R.color.app_red);
-//                        authorBioTextView.setTrimMode(0);
-
                     }
                     if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
                         //token already expired or yet to connect using facebook
@@ -433,18 +471,17 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 break;
             case R.id.editProfileImageView:
                 Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
-                intent.putExtra("isRewardAdded", isRewardsAdded);
+                intent.putExtra("isRewardAdded", false);
                 startActivity(intent);
                 break;
             case R.id.editProfileTextView:
                 Intent intent1 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
-                intent1.putExtra("isRewardAdded", isRewardsAdded);
+                intent1.putExtra("isRewardAdded", false);
                 startActivity(intent1);
                 break;
             case R.id.updateProfileTextView: {
                 Intent intent2 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
-                intent2.putExtra("isRewardAdded", isRewardsAdded);
-                intent2.putExtra("isComingFromReward", true);
+                intent2.putExtra("isRewardAdded", false);
                 startActivity(intent2);
                 break;
             }
@@ -462,29 +499,6 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
 //                break;
             case R.id.settingImageView:
             case R.id.imgProfile:
-//                if (Build.VERSION.SDK_INT >= 23) {
-//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-//                            != PackageManager.PERMISSION_GRANTED
-//                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-//                            != PackageManager.PERMISSION_GRANTED
-//                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                            != PackageManager.PERMISSION_GRANTED) {
-//                        Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
-//                        requestCameraAndStoragePermissions();
-//                    } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-//                            != PackageManager.PERMISSION_GRANTED
-//                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-//                            == PackageManager.PERMISSION_GRANTED
-//                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                            == PackageManager.PERMISSION_GRANTED) {
-//                        Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
-//                        requestCameraPermission();
-//                    } else {
-//                        chooseImageOptionPopUp(imgProfile);
-//                    }
-//                } else {
-//                    chooseImageOptionPopUp(imgProfile);
-//                }
                 break;
             case R.id.publishedSectionTextView:
                 Intent articleIntent = new Intent(this, UserPublishedContentActivity.class);
@@ -526,9 +540,6 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                     Intent intent6 = new Intent(this, RankingActivity.class);
                     startActivity(intent6);
                 }
-//                if (rankingSectionTextView.getVisibility() == View.VISIBLE) {
-
-//                }
                 break;
             case R.id.rankingSectionTextView: {
                 Intent intent7 = new Intent(this, RankingActivity.class);

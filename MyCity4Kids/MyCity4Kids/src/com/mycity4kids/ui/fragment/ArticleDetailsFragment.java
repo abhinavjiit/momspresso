@@ -13,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -54,6 +56,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.googlecode.mp4parser.authoring.tracks.TextTrackImpl;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.DateTimeUtils;
@@ -247,6 +250,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private ArrayList<Topics> shortStoriesTopicList1 = new ArrayList<>();
     ArticleDetailResult responseData;
     private ImageView badge;
+    BottomSheetBehavior sheetBehavior;
+    LinearLayout layoutBottomSheet;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -257,8 +262,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mInflater = inflater;
         fragmentView = inflater.inflate(R.layout.article_details_fragment, container, false);
-        userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
+        userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         deepLinkURL = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);
         try {
             mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
@@ -286,6 +292,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             badge = (ImageView) fragmentView.findViewById(R.id.badge);
             mWebChromeClient = new MyWebChromeClient();
             mWebView.setWebChromeClient(mWebChromeClient);
+            facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
+
             facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
 
             if ((AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(getActivity())))) {
@@ -428,12 +436,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
 
 
-//            YouTubePlayerSupportFragment youTubePlayerFragment =
-//                    (YouTubePlayerSupportFragment) getChildFragmentManager().findFragmentById(R.id.youtube_fragment);
-//            youTubePlayerFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
             mYouTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
             if (getUserVisibleHint()) {
-//                Log.d ("TAG", "Committing transaction, URL : " + getArguments().getString(KeyConstant.KEY_VIDEO_URL));
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commit();
                 mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
@@ -457,18 +461,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
 
                 if (bundle.getBoolean("fromNotification")) {
-//                    Utils.pushEventNotificationClick(getActivity(), GTMEventType.NOTIFICATION_CLICK_EVENT, userDynamoId, "Notification Popup", "article_details");
-//                    Utils.pushOpenArticleEvent(getActivity(), GTMEventType.ARTICLE_DETAILS_CLICK_EVENT, "Notification", userDynamoId + "", articleId, "-1" + "~Notification", "Notification");
                 } else {
                     from = bundle.getString(Constants.ARTICLE_OPENED_FROM);
                     String index = bundle.getString(Constants.ARTICLE_INDEX);
                     String screen = bundle.getString(Constants.FROM_SCREEN);
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            mScrollView.fullScroll(View.FOCUS_DOWN);
-//                        }
-//                    }, 3000);
                 }
 
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -768,33 +764,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             nativeAdIcon,
                             clickableViews);
 
-//                    // Create native UI using the ad metadata.
-//                    AdIconView nativeAdIcon = (AdIconView) adView.findViewById(R.id.native_ad_icon);
-//                    TextView nativeAdTitle = (TextView) adView.findViewById(R.id.native_ad_title);
-//                    MediaView nativeAdMedia = (MediaView) adView.findViewById(R.id.native_ad_media);
-//                    TextView nativeAdSocialContext = (TextView) adView.findViewById(R.id.native_ad_social_context);
-//                    TextView nativeAdBody = (TextView) adView.findViewById(R.id.native_ad_body);
-//                    Button nativeAdCallToAction = (Button) adView.findViewById(R.id.native_ad_call_to_action);
-//
-//                    // Set the Text.
-//                    nativeAdTitle.setText(nativeAd.getAdTitle());
-//                    nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
-//                    nativeAdBody.setText(nativeAd.getAdBody());
-//                    nativeAdCallToAction.setText(nativeAd.getAdCallToAction());
-//
-//                    // Add the AdChoices icon
-//                    LinearLayout adChoicesContainer = (LinearLayout) fragmentView.findViewById(R.id.ad_choices_container);
-//                    AdChoicesView adChoicesView = new AdChoicesView(getActivity(), nativeAd, true);
-//                    adChoicesContainer.addView(adChoicesView);
-//
-//                    // Register the Title and CTA button to listen for clicks.
-//                    List<View> clickableViews = new ArrayList<>();
-//                    clickableViews.add(nativeAdTitle);
-//                    clickableViews.add(nativeAdCallToAction);
-//                    clickableViews.add(nativeAdIcon);
-//                    clickableViews.add(nativeAdSocialContext);
-//                    clickableViews.add(nativeAdBody);
-//                    nativeAd.registerViewForInteraction(nativeAdContainer, nativeAdMedia, nativeAdIcon, clickableViews);
                 }
             }
 
@@ -975,12 +944,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         youTubeId = AppUtils.extractYoutubeIdForMomspresso(video.getVideoUrl());
                         if (youTubePlayer != null)
                             youTubePlayer.cueVideo(youTubeId);
-//                        videoWebView.setVisibility(View.VISIBLE);
                         cover_image.setVisibility(View.INVISIBLE);
                         bodyDesc = bodyDesc.replace(video.getKey(), "");
-//                        String vUrl = "<html><head></head><body><p style='text-align:center'><iframe src=http:" + video.getVideoUrl() +
-//                                "\" ></iframe></p></body></html>";
-//                        videoWebView.loadDataWithBaseURL("", vUrl, "text/html", "utf-8", "");
                     } else if (bodyDescription.contains(video.getKey())) {
                         String vURL = video.getVideoUrl().replace("http:", "").replace("https:", "");
                         bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + vURL + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
@@ -1008,9 +973,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             mWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
             mWebView.getSettings().setJavaScriptEnabled(true);
-
-//            videoWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-//            videoWebView.getSettings().setJavaScriptEnabled(true);
         } else {
             if (null != videoList && !videoList.isEmpty()) {
                 for (VideoData video : videoList) {
@@ -1535,22 +1497,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (ab.isShowing()) {
                 ((ArticleDetailsContainerActivity) getActivity()).hideMainToolbar();
             }
-//            if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
-//                hideBottomToolbar();
-//            }
-//            if (!isArticleDetailEndReached && commentFloatingActionButton.getVisibility() == View.VISIBLE) {
-//                hideFloatingActionButton();
-//            }
         } else if (scrollState == ScrollState.DOWN) {
             if (!ab.isShowing()) {
                 ((ArticleDetailsContainerActivity) getActivity()).showMainToolbar();
             }
-//            if (bottomToolbarLL.getVisibility() != View.VISIBLE) {
-//                showBottomToolbar();
-//            }
-//            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
-//                showFloatingActionButton();
-//            }
         }
     }
 
@@ -1580,32 +1530,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                 });
     }
-
-//    public void hideFloatingActionButton() {
-//        commentFloatingActionButton.animate()
-//                .translationY(commentFloatingActionButton.getHeight())
-//                .setInterpolator(new LinearInterpolator())
-//                .setDuration(180)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(Animator animation) {
-//                        commentFloatingActionButton.setVisibility(View.INVISIBLE);
-//                    }
-//                });
-//    }
-//
-//    public void showFloatingActionButton() {
-//        commentFloatingActionButton.animate()
-//                .translationY(0)
-//                .setInterpolator(new LinearInterpolator())
-//                .setDuration(180)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(Animator animation) {
-//                        commentFloatingActionButton.setVisibility(View.VISIBLE);
-//                    }
-//                });
-//    }
 
     public String getArticleContent() {
         if (detailData == null || detailData.getBody() == null) {
@@ -1744,13 +1668,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (youTubeInitializationResult.isUserRecoverableError()) {
             youTubeInitializationResult.getErrorDialog(getActivity(), RECOVERY_REQUEST).show();
         }
-
-        // Retry initialization if user performed a recovery action
-        // getYouTubePlayerProvider().initialize(DeveloperKey.DEVELOPER_KEY, this);
-
-          /*  String error = "ERROR";//String.format(getString(R.string.player_error), errorReason.toString());
-            Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_LONG).show();*/
-
     }
 
 

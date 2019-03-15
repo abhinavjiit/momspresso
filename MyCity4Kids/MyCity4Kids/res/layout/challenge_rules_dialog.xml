@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/ic_info"
+            android:drawableTint="@color/app_red"
+            android:text="CHALLENGE RULES"
+            android:textColor="@color/app_red"
+            android:textSize="22sp" />
+
+
+        <ImageView
+            android:id="@+id/closeEditorImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp"
+            android:src="@drawable/cross_icon_back"
+            android:tint="@color/app_red" />
+    </RelativeLayout>
+
+    <WebView
+
+        android:id="@+id/videoChallengeRulesWebView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginRight="10dp"
+        android:autoLink="web"
+        android:background="@color/white_color"
+        android:ellipsize="end"
+        android:visibility="visible" />
+
+
+</FrameLayout>

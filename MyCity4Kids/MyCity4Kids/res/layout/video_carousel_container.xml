@@ -106,7 +106,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/article_listing.article_image"
                                 android:layout_alignParentTop="true"
-                                android:layout_centerInParent="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginTop="0dp"
                                 android:contentDescription="@string/author_img"
                                 android:scaleType="fitCenter" />
 

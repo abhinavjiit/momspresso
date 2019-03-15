@@ -268,7 +268,7 @@
     </string-array>
 
     <string name="onboarding.desc_1">എല്ലാ അമ്മമാർക്കും ഒരു കഥ ഉണ്ട്. എന്താണ് താങ്കളുടെ കഥ? എഴുത്തായോ വീഡിയോ ആയോ ഷെയർ ചെയ്യൂ</string>
-    <string name="onboarding.desc_2">ഇംഗ്ലീഷ്, ഹിന്ദി, ബംഗ്ലാ, മറാത്തി, തമിഴ്, തെലുങ്ക്, മലയാളം, കന്നഡ എന്നവയിൽ നിന്ന് തെരഞ്ഞെടുക്കൂ</string>
+    <string name="onboarding.desc_2">ഇനി ഇംഗ്ലീഷ്, ഹിന്ദി, ബംഗ്ലാ, മറാഠി, തമിഴ്, തെലുങ്ക്, കന്നഡ, മലയാളം എന്നീ ഭാഷകളിൽ നിന്ന് തിരഞ്ഞെടുക്കൂ</string>
     <string name="onboarding.desc_3">മംസ്പ്രെസ്സോ ടീവി താങ്കൾക്കായി എത്തിക്കുന്നു, മനോഹരവും ഉപയോഗപ്രദവും രസകരവുമായ വിഡിയോകൾ. എല്ലാം ഒരു സ്ഥലത്ത്!</string>
     <string name="onboarding.desc_4">അമ്മമാരുടെ ഈ സമൂഹത്തെ ശക്തമാക്കുക. നിങ്ങളുടെ ചോദ്യങ്ങൾ പങ്കിടൂ, അതു വഴി മറ്റുള്ളവരെ സഹായിക്കൂ </string>
 
@@ -950,4 +950,13 @@
     <string name="rewards_tab_detail">പ്രതിഫലങ്ങൾ</string>
     <string name="rewards_add_child">കുട്ടിയെ ചേർക്കുക</string>
     <string name="rewards_kid_detail">കുട്ടിയെ കുറിച്ച്</string>
+    <string name="rewards_participating_earn_completing_profile"> പ്രൊഫൈൽ പൂരിപ്പിക്കൂ, ഇതിൽ പങ്ക് ചേരൂ, സമ്പാദിക്കാൻ തുടങ്ങൂ!</string>
+    <string name="rewards_momspresso">മോംസ്പ്രേസ്സോ റീവാർഡുകൾ</string>
+
+
+
+    //new Video Challenge Ui Strings
+    <string name="video_challenge_live_text">LIVE</string>
+    <string name="video_challenge_text">CHALLENGES</string>
+    <string name="choose_video_categories_text">CATEGORIES</string>
 </resources>

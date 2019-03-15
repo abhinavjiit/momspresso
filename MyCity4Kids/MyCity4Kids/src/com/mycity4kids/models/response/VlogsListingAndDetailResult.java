@@ -20,6 +20,37 @@ public class VlogsListingAndDetailResult {
     private String view_count;
     private ArrayList<String> category_id;
     private String thumbnail;
+    private String like_count;
+    private String comment_count;
+    private Boolean isLiked = false;
+    private boolean isBookmarked = false;
+    private boolean isFollowed = false;
+
+    public Boolean getLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(Boolean liked) {
+        isLiked = liked;
+    }
+
+
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
+    }
+
+    public boolean isFollowed() {
+        return isFollowed;
+    }
+
+    public void setFollowed(boolean followed) {
+        isFollowed = followed;
+    }
+
 
     public String getId() {
         return id;
@@ -115,6 +146,22 @@ public class VlogsListingAndDetailResult {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getLike_count() {
+        return like_count;
+    }
+
+    public void setLike_count(String like_count) {
+        this.like_count = like_count;
+    }
+
+    public String getComment_count() {
+        return comment_count;
+    }
+
+    public void setComment_count(String comment_count) {
+        this.comment_count = comment_count;
     }
 
     public class Author {

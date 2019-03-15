@@ -6,7 +6,6 @@
     android:layout_margin="5dp"
     android:background="@drawable/short_story_border_bg">
 
-
     <ImageView
         android:id="@+id/addMomVlogImageView"
         android:layout_width="match_parent"

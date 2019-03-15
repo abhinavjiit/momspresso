@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="127"
+    android:versionCode="128"
     android:versionName="9.9.1">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
@@ -82,7 +82,7 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        -->
+
         <activity
             android:name=".filechooser.com.ipaulpro.afilechooser.FileChooserActivity"
             android:enabled="@bool/use_activity"
@@ -364,6 +364,9 @@
             android:name=".ui.activity.ArticleListingActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.ArticleDetailsContainerActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.CityBestArticleListingActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -404,7 +407,7 @@
             android:name=".ui.activity.AppSettingsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.ArticleDetailsContainerActivity"
+            android:name=".ui.rewards.activity.RewardsContainerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
             android:screenOrientation="portrait" />
         <activity
@@ -455,7 +458,7 @@
         <activity
             android:name=".ui.activity.GroupSettingsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.LeaveGroupActivity" />q
+        <activity android:name=".ui.activity.LeaveGroupActivity" />
         <activity android:name=".ui.activity.EditGroupActivity" />
         <activity
             android:name=".ui.activity.AddShortStoryActivity"
@@ -546,6 +549,13 @@
         <activity
             android:name=".ui.activity.HeaderChallengeVideoPlayActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.videochallengenewui.activity.NewVideoChallengeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ParallelFeedActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.rankingTheme" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"
@@ -580,6 +590,7 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".ui.videochallengenewui.activity.ExoplayerVideoChallengePlayViewActivity" />
 
         <receiver android:name=".reminders.CancelNotificationReceiver" />
 
@@ -652,14 +663,16 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.rewards.activity.RewardsContainerActivity"
-            android:screenOrientation="portrait">
+
+     <!--   <activity
+            android:name=".ui.rewards.activity.RewardsContainerActivity"
+            android:screenOrientation="portrait"></activity>-->
+
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.MAIN" />-->
+        <!--<category android:name="android.intent.category.LAUNCHER" />-->
+        <!--</intent-filter>-->
 
 
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
     </application>
 </manifest>

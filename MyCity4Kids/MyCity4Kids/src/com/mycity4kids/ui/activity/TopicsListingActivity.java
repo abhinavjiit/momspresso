@@ -1,6 +1,9 @@
 package com.mycity4kids.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +30,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
@@ -59,11 +63,58 @@ public class TopicsListingActivity extends BaseActivity {
     private ArrayList<Topics> subTopicsList;
     private Toolbar toolbar;
     private TextView toolbarTitleTextView;
+    private LinearLayout layoutBottomSheet,bottom_sheet;
+    private BottomSheetBehavior sheetBehavior;
+    private TextView textHeaderUpdate,textUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_listing_activity);
+
+        layoutBottomSheet= (LinearLayout)findViewById(R.id.bottom_sheet);
+        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+        textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
+        textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
+        bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
+
+        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(TopicsListingActivity.this);
+        if(!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")){
+            bottom_sheet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    } else {
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    }
+                }
+            });
+
+            textUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(TopicsListingActivity.this,EditProfileNewActivity.class));
+                }
+            });
+
+            textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(TopicsListingActivity.this,EditProfileNewActivity.class));
+                }
+            });
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bottom_sheet.setVisibility(View.GONE);
+                }
+            },10000);
+        }else{
+            bottom_sheet.setVisibility(View.GONE);
+        }
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);

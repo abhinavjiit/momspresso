@@ -44,7 +44,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     private String paginationValue = "";
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
-
     private ProgressBar progressBar;
     private TextView noBlogsTextView;
     private ListView notificationListView;

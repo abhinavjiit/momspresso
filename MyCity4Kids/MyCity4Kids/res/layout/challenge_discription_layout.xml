@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp">
+
+        <LinearLayout
+            android:id="@+id/discriptionLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/infoImage"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="1dp"
+                    android:tint="@color/app_red"
+                    app:srcCompat="@drawable/ic_info" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/challengeRuleWithInfoIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:text="DISCRIPTION"
+                    android:textColor="@color/app_red"
+                    android:textSize="20sp"
+                    app:fontName="oswald_regular.ttf"
+
+                    />
+
+            </LinearLayout>
+
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Thank you for your interest in this question. Because it has attracted low-quality or spam answers that had to be removed, posting an answer now requires."
+                android:textColor="@color/app_grey"
+                android:textSize="14sp"
+                app:fontName="oswald.ttf" />
+
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Challenges Rule"
+                android:textColor="@color/app_dark_black"
+                android:textSize="16sp"
+                app:fontName="oswald_regular.ttf" />
+
+
+            <LinearLayout
+                android:id="@+id/challengeRuleLinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <WebView
+            android:id="@+id/videoChallengeRulesWebView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:autoLink="web"
+            android:background="@color/white_color"
+            android:ellipsize="end" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/submitStoryText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/discriptionLinearLayout"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/update_profile_bg"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingTop="7dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="7dp"
+            android:text="@string/add"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
+
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -32,9 +32,6 @@ public class TopicsShortStoriesPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 
         Bundle bundle = new Bundle();
-//        switch (position) {
-
-//            case 0:
         if (!subTopicsList.get(position).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
             bundle.putString("currentSubTopic", new Gson().toJson(subTopicsList.get(position)));
             TopicsShortStoriesTabFragment tab1 = new TopicsShortStoriesTabFragment();
@@ -46,14 +43,6 @@ public class TopicsShortStoriesPagerAdapter extends FragmentStatePagerAdapter {
             tab2.setArguments(bundle);
             return tab2;
         }
-//            case 1:
-//                TabFragment2 tab2 = new TabFragment2();
-//                return tab2;
-//            case 2:
-//                TabFragment3 tab3 = new TabFragment3();
-//                return tab3;
-//            default:
-//                return null;
     }
 
     @Override

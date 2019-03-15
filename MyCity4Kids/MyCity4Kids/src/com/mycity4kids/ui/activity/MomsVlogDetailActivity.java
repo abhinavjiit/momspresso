@@ -163,6 +163,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
     private String taggedCategories;
     private MixpanelAPI mixpanel;
 
+
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
@@ -232,6 +233,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
         bookmarkArticleTextView.setOnClickListener(this);
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        facebookShareTextView.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_facebook_svg), null, null);
 
         likeArticleTextView.setEnabled(false);
         bookmarkArticleTextView.setEnabled(false);

@@ -62,6 +62,7 @@ import com.kelltontech.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
+import com.mycity4kids.animation.MyCityAnimationsUtil;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -84,6 +85,7 @@ import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
@@ -109,6 +111,7 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 
@@ -120,6 +123,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -155,6 +159,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<Topics> subTopicsList;
     public boolean filter = false;
     Tracker t;
+    Topics videoChallengeTopics;
     private String TAG = "PhoneDetails";
     private String deepLinkUrl;
     private String mToolbarTitle = "";
@@ -207,9 +212,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout chooseLayout;
     private RelativeLayout chooseLayoutVideo;
     private View overLayChooseVideo;
+    private String isRewardsAdded;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
     }
 
     private Bundle extras;
@@ -608,6 +615,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         findActiveChallenge();
         findActiveVideoChallenge();
+
+        getUsersData();
     }
 
     private void loadAllDrafts() {
@@ -619,6 +628,44 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         //  Call<ResponseBody> call = draftAPI.getAllDrafts("0");
         call.enqueue(draftsResponseCallback);
     }
+
+
+    private void getUsersData() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
+        String userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
+        if (!userId.isEmpty()) {
+            Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(userId);
+            call.enqueue(userDetailsResponseListener);
+        }
+    }
+
+    private Callback<UserDetailResponse> userDetailsResponseListener = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            removeProgressDialog();
+            if (response == null || null == response.body()) {
+                return;
+            }
+            try {
+                UserDetailResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if (responseData.getData() != null && responseData.getData().get(0) != null && responseData.getData().get(0).getResult() != null) {
+                        SharedPrefUtils.setIsRewardsAdded(DashboardActivity.this, responseData.getData().get(0).getResult().getRewardsAdded());
+                    }
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
 
  /*   Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
@@ -858,7 +905,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
-                Intent intent1 = new Intent(DashboardActivity.this, MomsVlogDetailActivity.class);
+                Intent intent1 = new Intent(DashboardActivity.this, ParallelFeedActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.VIDEO_ID, articleId);
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
@@ -1672,7 +1719,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.videoContainer: {
                 hideCreateContentView();
-                chooseLayoutVideo.setVisibility(View.VISIBLE);
+                mDrawerLayout.closeDrawers();
+                if (videoChallengeTopics == null) {
+                    findActiveVideoChallenge();
+                } else {
+                    MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                    Intent cityIntent = new Intent(this, ChooseVideoCategoryActivity.class);
+                    cityIntent.putExtra("comingFrom", "createDashboardIcon");
+                    cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
+                    //   cityIntent.putExtra("currentChallengesTopic", videoChallengeTopics);*/
+                    startActivity(cityIntent);
+                }
+                //  chooseLayoutVideo.setVisibility(View.VISIBLE);
                /* MixPanelUtils.pushAddMomVlogClickEvent(mMixpanel, "BottomSheet");
                 Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
                 startActivity(intent);*/
@@ -1843,6 +1901,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 if (num_of_categorys != 0) {
                     for (int j = 0; j < num_of_categorys; j++) {
                         if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+
+
+                            videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+                          /*  num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                            for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                    if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                        if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                            videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                            videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                            videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                            videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                                            break;
+=======
                             num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
                             if (num_of_challeneges != 0) {
                                 for (int k = num_of_challeneges - 1; k >= 0; k--) {
@@ -1855,10 +1927,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                                 videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
                                                 break;
                                             }
+>>>>>>> 6a282990b0111ad5b1c3ea6bf3092f25dea644fe
                                         }
                                     }
                                 }
-                            }
+                            }*/
                         }
                     }
                 }
@@ -1883,6 +1956,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (num_of_categorys != 0) {
                         for (int j = 0; j < num_of_categorys; j++) {
                             if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+
+                                videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+
+                               /* num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                    if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                        if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                            if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                                                break;
+=======
                                 num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
                                 if (num_of_challeneges != 0) {
                                     for (int k = num_of_challeneges - 1; k >= 0; k--) {
@@ -1895,10 +1982,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                                     videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
                                                     break;
                                                 }
+>>>>>>> 6a282990b0111ad5b1c3ea6bf3092f25dea644fe
                                             }
                                         }
                                     }
-                                }
+                                }*/
                             }
                         }
                     }
@@ -1936,6 +2024,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 if (num_of_categorys != 0) {
                                     for (int j = 0; j < num_of_categorys; j++) {
                                         if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.VIDEO_CHALLENGE_ID)) {
+
+                                            videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+
+                                           /* num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
+                                            for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                                if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                                    if (videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                                        if ("1".equals(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                            videoChallengeId.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                            videoDisplay_Name.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                            videoImageUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                            videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
+                                                            break;
+=======
                                             num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
                                             if (num_of_challeneges != 0) {
                                                 for (int k = num_of_challeneges - 1; k >= 0; k--) {
@@ -1948,10 +2050,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                                                 videoStreamUrl.add(videoTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getVideoUrl());
                                                                 break;
                                                             }
+>>>>>>> 6a282990b0111ad5b1c3ea6bf3092f25dea644fe
                                                         }
                                                     }
                                                 }
-                                            }
+                                            }*/
                                         }
                                     }
                                 }
@@ -2423,7 +2526,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderVlogDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getId())) {
-            Intent intent = new Intent(DashboardActivity.this, MomsVlogDetailActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, ParallelFeedActivity.class);
 //            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             intent.putExtra(Constants.VIDEO_ID, data.getId());
             intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);

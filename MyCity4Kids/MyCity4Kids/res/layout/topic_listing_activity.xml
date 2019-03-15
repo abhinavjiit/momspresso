@@ -1,45 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/home_bg"
     android:clickable="true">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <RelativeLayout
-            android:id="@+id/toolbarRelativeLayout"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:theme="@style/ToolbarTheme"
+            app:titleTextAppearance="@style/ToolbarTheme.Title">
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/toolbarTitleTextView"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/toolbarRelativeLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/home_screen.select_an_option.title"
-                android:textColor="@color/home.toolbar.titlecolor"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
+                android:visibility="visible">
 
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/toolbarTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/home_screen.select_an_option.title"
+                    android:textColor="@color/home.toolbar.titlecolor"
+                    android:textSize="20sp"
+                    app:fontName="oswald_regular.ttf" />
+            </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
 
     <LinearLayout
         android:id="@+id/tabContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
@@ -55,35 +62,26 @@
             app:tabSelectedTextColor="@color/topic_articles.tabbar_text"
             app:tabTextAppearance="@style/CustomTabText"
             app:tabTextColor="@color/topic_articles.tabbar_text" />
+
+        <FrameLayout
+            android:id="@+id/topLayerGuideLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/toolbar"
+            android:layout_alignBottom="@+id/tabContainer"
+            android:background="@color/dark_transparent"
+            android:clickable="true"
+            android:elevation="6dp"
+            android:visibility="gone" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/topLayerGuideLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tabContainer"
-        android:layout_alignTop="@+id/toolbar"
-        android:background="@color/dark_transparent"
-        android:clickable="true"
-        android:elevation="6dp"
-        android:visibility="gone" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/tabContainer" />
-    <!--
-        <RelativeLayout
-            android:id="@+id/chooseRecentPopularContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible">
+    <include layout="@layout/rewards_bottom_sheet"/>
 
-            <include layout="@layout/recent_popular_popup_momvlog_layout" />
-
-
-        </RelativeLayout>-->
-
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

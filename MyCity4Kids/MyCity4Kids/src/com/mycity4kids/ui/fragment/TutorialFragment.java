@@ -102,19 +102,19 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         switch (mPosition + 1) {
             case 1:
                 tutorial_desc_1.setVisibility(View.VISIBLE);
-                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.onboarding_1));
+                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.onboarding_1));
                 break;
             case 2:
                 tutorial_desc_2.setVisibility(View.VISIBLE);
-                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.onboarding_2));
+                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.onboarding_2));
                 break;
             case 3:
                 tutorial_desc_3.setVisibility(View.VISIBLE);
-                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.onboarding_3));
+                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.onboarding_3));
                 break;
             case 4:
                 tutorial_desc_4.setVisibility(View.VISIBLE);
-                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.onboarding_4));
+                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.onboarding_4));
                 break;
         }
     }
