@@ -480,9 +480,10 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 startActivity(intent1);
                 break;
             case R.id.updateProfileTextView: {
-                Intent intent2 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
-                intent2.putExtra("isRewardAdded", false);
-                startActivity(intent2);
+                startActivity(new Intent(PrivateProfileActivity.this,RewardsContainerActivity.class));
+//                Intent intent2 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
+//                intent2.putExtra("isRewardAdded", false);
+//                startActivity(intent2);
                 break;
             }
             case R.id.menuImageView:

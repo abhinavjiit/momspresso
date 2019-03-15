@@ -164,43 +164,46 @@ public class CategorySyncService extends IntentService {
     }
 
     private boolean writeResponseBodyToDisk(ResponseBody body, String filename) {
-        try {
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
+        if(body!=null){
             try {
-                byte[] fileReader = new byte[4096];
+                InputStream inputStream = null;
+                OutputStream outputStream = null;
+                try {
+                    byte[] fileReader = new byte[4096];
 
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
+                    long fileSize = body.contentLength();
+                    long fileSizeDownloaded = 0;
 
-                inputStream = body.byteStream();
-                outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+                    inputStream = body.byteStream();
+                    outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
 
-                while (true) {
-                    int read = inputStream.read(fileReader);
-                    if (read == -1) {
-                        break;
+                    while (true) {
+                        int read = inputStream.read(fileReader);
+                        if (read == -1) {
+                            break;
+                        }
+                        outputStream.write(fileReader, 0, read);
+                        fileSizeDownloaded += read;
+                        Log.d("dAWDdawwdawd", "file download: " + fileSizeDownloaded + " of " + fileSize);
                     }
-                    outputStream.write(fileReader, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.d("dAWDdawwdawd", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
 
-                outputStream.flush();
-                return true;
+                    outputStream.flush();
+                    return true;
+                } catch (IOException e) {
+                    return false;
+                } finally {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                }
             } catch (IOException e) {
                 return false;
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
-                if (outputStream != null) {
-                    outputStream.close();
-                }
             }
-        } catch (IOException e) {
-            return false;
         }
+        return false;
     }
 }

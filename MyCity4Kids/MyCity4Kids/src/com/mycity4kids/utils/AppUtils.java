@@ -411,47 +411,50 @@ public class AppUtils {
     }
 
     public static boolean writeResponseBodyToDisk(Context mContext, String fileName, ResponseBody body) {
-        try {
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
+        if(body!=null) {
             try {
-                byte[] fileReader = new byte[4096];
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
+                InputStream inputStream = null;
+                OutputStream outputStream = null;
+                try {
+                    byte[] fileReader = new byte[4096];
+                    long fileSize = body.contentLength();
+                    long fileSizeDownloaded = 0;
 
-                inputStream = body.byteStream();
-                outputStream = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
+                    inputStream = body.byteStream();
+                    outputStream = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
 
-                while (true) {
-                    int read = inputStream.read(fileReader);
-                    if (read == -1) {
-                        break;
+                    while (true) {
+                        int read = inputStream.read(fileReader);
+                        if (read == -1) {
+                            break;
+                        }
+                        outputStream.write(fileReader, 0, read);
+                        fileSizeDownloaded += read;
+                        Log.d("AppUtils", "file download: " + fileSizeDownloaded + " of " + fileSize);
                     }
-                    outputStream.write(fileReader, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.d("AppUtils", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
 
-                outputStream.flush();
-                return true;
+                    outputStream.flush();
+                    return true;
+                } catch (IOException e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4KException", Log.getStackTraceString(e));
+                    return false;
+                } finally {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                }
             } catch (IOException e) {
                 Crashlytics.logException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 return false;
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
-                if (outputStream != null) {
-                    outputStream.close();
-                }
             }
-        } catch (IOException e) {
-            Crashlytics.logException(e);
-            Log.d("MC4KException", Log.getStackTraceString(e));
-            return false;
         }
+        return false;
     }
 
     public static LanguageConfigModel getLangModelForLanguage(Context mContext, String key) {

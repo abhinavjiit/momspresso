@@ -1044,7 +1044,7 @@
     <string name="rewards_working_status">Working Status</string>
     <string name="rewards_working">Working</string>
     <string name="rewards_non_working">Non-working</string>
-    <string name="rewards_language">Language</string>
+    <string name="rewards_language">Preferred languages</string>
     <string name="rewards_number_of_kids">Number of kids</string>
     <string name="rewards_interest">Interests</string>
     <string name="rewards_link_social">Link Social Accounts</string>
@@ -1057,11 +1057,9 @@
     <string name="rewards_expected_date">Expected date</string>
     <string name="rewards_mobile_number_verified">Mobile number is verified</string>
     <string name="rewards_have_children">Do you have children?</string>
-    <string name="rewards_add_child">Add Child</string>
+    <string name="rewards_add_child">Add More</string>
     <string name="rewards_kid_detail">Kid detail</string>
     <string name="app_name">Momspresso</string>
-    <string name="rewards_momspresso">Momspresso Rewards</string>
-    <string name="rewards_participating_earn_completing_profile">Participate and earn now by completing your profile!</string>
 
 
     //new Video Challenge Ui Strings
