@@ -146,6 +146,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private int updateLikePos;
     private int updateFollowPos;
     private int changeFollowUnfollowTextPos;
+    private int startIndex = 0, page = 0;
 
 
     private VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI;
@@ -183,6 +184,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private boolean firstTime = true;
     private PlaybackControlView controlView;
     public String urlString;
+    private boolean fromLoadMore = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -356,7 +358,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 updateUIfromResponse(responseData.getData().getResult());
                 authorId = responseData.getData().getResult().getAuthor().getId();
 //                hitBookmarkFollowingStatusAPI(videoId);
-                hitRelatedArticleAPI(0);
+                hitRelatedArticleAPI(startIndex);
                 commentURL = responseData.getData().getResult().getCommentUri();
                 commentMainUrl = responseData.getData().getResult().getCommentUri();
                 if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
@@ -390,7 +392,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void hitRelatedArticleAPI(int startIndex) {
-
+        Log.d("startIndex ----- ", "" + startIndex);
         if (detailData.getCategory_id() != null && !detailData.getCategory_id().isEmpty()) {
             taggedCategories = detailData.getCategory_id().get(0);
         }
@@ -435,7 +437,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
                     }
 
-                    dataList.addAll(0, dataListHeader);
+                    if (!fromLoadMore)
+                        dataList.addAll(0, dataListHeader);
 
                     /*for (int i = 0; i < dataList.size(); i++) {
                         followPos = i;
@@ -451,6 +454,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     recyclerViewFeed.setOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
                         @Override
                         public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                            fromLoadMore = true;
                             hitRelatedArticleAPI(totalItemsCount);
                         }
                     });
@@ -1283,19 +1287,19 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     };
 
 
-    public void openViewCommentDialog(String commentMainUrl, String shareUrl, String authorId, String author) {
+    public void openViewCommentDialog(String commentMainUrl, String shareUrl, String authorId, String author, String vidId) {
         try {
 
             ViewAllCommentsDialogFragment commentFrag = new ViewAllCommentsDialogFragment();
             Bundle _args = new Bundle();
             _args.putString("mycityCommentURL", commentMainUrl);
             _args.putString("fbCommentURL", shareUrl);
-            _args.putString(Constants.ARTICLE_ID, videoId);
+            _args.putString(Constants.ARTICLE_ID, vidId);
             _args.putString(Constants.AUTHOR, authorId + "~" + author);
             commentFrag.setArguments(_args);
             FragmentManager fm = getSupportFragmentManager();
             commentFrag.show(fm, "ViewAllComments");
-            mExoPlayerView.getPlayer().setPlayWhenReady(false);             //bug fixed
+//            mExoPlayerView.getPlayer().setPlayWhenReady(false);             //bug fixed
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));

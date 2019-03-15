@@ -287,8 +287,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         // Measures bandwidth during playback. Can be null if not required.
         DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
         String uriString = videoInfoList.get(targetPosition).getUrl();
-//        String uriString = "https://androidwave.com/media/androidwave-video-6.mp4";
-        System.out.println("uriString----" + uriString);
         if (uriString != null) {
 //            MediaSource mVideoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
 //                    .createMediaSource(Uri.parse(uriString));
@@ -338,7 +336,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
         screenDefaultHeight = point.y;
         videoSurfaceView = new SimpleExoPlayerView(appContext);
-//        videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
         videoSurfaceView.setFastForwardIncrementMs(5000);
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
