@@ -90,14 +90,14 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(ShortStoriesListingContainerActivity.this,EditProfileNewActivity.class));
+                    startActivity(new Intent(ShortStoriesListingContainerActivity.this,RewardsContainerActivity.class));
                 }
             });
 
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(ShortStoriesListingContainerActivity.this,EditProfileNewActivity.class));
+                    startActivity(new Intent(ShortStoriesListingContainerActivity.this,RewardsContainerActivity.class));
                 }
             });
 

@@ -171,7 +171,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         public ImageView mCover, heart, share, whatsapp, three_dot;
         public ProgressBar mProgressBar;
         public final View parent;
-        ImageView userImage;
+        ImageView userImage,comment;
 
 
         public ViewHolder(View itemView) {

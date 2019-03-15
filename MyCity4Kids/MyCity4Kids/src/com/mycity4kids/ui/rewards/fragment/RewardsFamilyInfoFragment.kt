@@ -557,16 +557,73 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                     }
                 }
                 apiGetResponse.kidsInfo = kidsList
+
+                if (!RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
+                        if (apiGetResponse.kidsInfo.isNullOrEmpty()) {
+                            var kidsInfoResponse = KidsInfoResponse()
+                            kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
+                                0
+                            } else {
+                                1
+                            }
+                            kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
+                            apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
+                        }
+                } else {
+                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                    return false
+                }
             } else {
-                Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
-                return false
+                if (!RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
+                    var kidsInfoLocal = ArrayList<KidsInfoResponse>()
+                    var kidsInfoResponse = KidsInfoResponse()
+                    kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
+                        0
+                    } else {
+                        1
+                    }
+                    kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
+                    kidsInfoLocal.add(kidsInfoResponse)
+                    apiGetResponse.kidsInfo = kidsInfoLocal
+                } else {
+                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                    return false
+                }
             }
         }
 
+
+
+//        if (!RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
+//            if (linearKidsDetail.childCount > 0) {
+//                if (apiGetResponse.kidsInfo.isNullOrEmpty()) {
+//                    var kidsInfoResponse = KidsInfoResponse()
+//                    kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
+//                        0
+//                    } else {
+//                        1
+//                    }
+//                    kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
+//                    apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
+//                }
+//            } else {
+//                var kidsInfoLocal = ArrayList<KidsInfoResponse>()
+//                var kidsInfoResponse = KidsInfoResponse()
+//                kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
+//                    0
+//                } else {
+//                    1
+//                }
+//                kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
+//                kidsInfoLocal.add(kidsInfoResponse)
+//                apiGetResponse.kidsInfo = kidsInfoLocal
+//            }
+//        } else {
+//            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+//        }
+
         apiGetResponse.latitude = 28.7041
         apiGetResponse.longitude = 77.1025
-
-
         return true
     }
 
@@ -608,7 +665,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
 
         textDOB.setOnClickListener {
-            RewardsFamilyInfoFragment.textDOB = it as TextView
+            RewardsFamilyInfoFragment.textView = it as TextView
             showDatePickerDialog(true)
         }
 

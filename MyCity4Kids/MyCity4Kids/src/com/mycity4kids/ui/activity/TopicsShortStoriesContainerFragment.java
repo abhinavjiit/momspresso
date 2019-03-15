@@ -88,14 +88,14 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(getActivity(),EditProfileNewActivity.class));
+                    startActivity(new Intent(getActivity(),RewardsContainerActivity.class));
                 }
             });
 
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(getActivity(),EditProfileNewActivity.class));
+                    startActivity(new Intent(getActivity(),RewardsContainerActivity.class));
                 }
             });
 

@@ -29,6 +29,7 @@ import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.VideoTopicsPagerAdapter;
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
@@ -87,14 +88,14 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(CategoryVideosListingActivity.this,EditProfileNewActivity.class));
+                    startActivity(new Intent(CategoryVideosListingActivity.this, RewardsContainerActivity.class));
                 }
             });
 
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(CategoryVideosListingActivity.this,EditProfileNewActivity.class));
+                    startActivity(new Intent(CategoryVideosListingActivity.this,RewardsContainerActivity.class));
                 }
             });
 

@@ -427,13 +427,13 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     if (dataList == null) {
                         return;
                     }
-                    for (int i = 0; i < dataList.size(); i++) {
-                        if (dataList.get(i).getId().equals(videoId)) {
-                            dataList.remove(i);
-                            break;
-                        }
-
-                    }
+//                    for (int i = 0; i < dataList.size(); i++) {
+//                        if (dataList.get(i).getId().equals(videoId)) {
+//                            dataList.remove(i);
+//                            break;
+//                        }
+//
+//                    }
 
                     dataList.addAll(0, dataListHeader);
 
@@ -451,6 +451,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                     recyclerViewFeed.setOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
                         @Override
                         public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                            Log.e("total item count -> ", totalItemsCount + " " );
                             hitRelatedArticleAPI(totalItemsCount);
                         }
                     });
@@ -468,76 +469,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                         });
                         firstTime = false;
                     }
-                    /*if (dataList.size() == 0) {
-                    } else {
-                        recentAuthorArticles.setVisibility(View.VISIBLE);
 
-                        if (dataList.size() >= 3) {
-                            try {
-                                Picasso.with(ParallelFeedActivity.this).load(dataList.get(0).getThumbnail()).
-                                        placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
-                            } catch (Exception e) {
-                                relatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
-                            }
-
-                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList.get(0));
-
-                            try {
-                                Picasso.with(ParallelFeedActivity.this).load(dataList.get(1).getThumbnail()).
-                                        placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
-                            } catch (Exception e) {
-                                relatedArticles2.getArticleImageView().setImageResource(R.drawable.default_article);
-                            }
-
-                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(dataList.get(1));
-
-                            try {
-                                Picasso.with(ParallelFeedActivity.this).load(dataList.get(2).getThumbnail()).
-                                        placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
-                            } catch (Exception e) {
-                                relatedArticles3.getArticleImageView().setImageResource(R.drawable.default_article);
-                            }
-
-                            relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                            relatedArticles3.setTag(dataList.get(2));
-                        } else if (dataList.size() == 2) {
-                            try {
-                                Picasso.with(ParallelFeedActivity.this).load(dataList.get(0).getThumbnail()).
-                                        placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
-                            } catch (Exception e) {
-                                relatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
-                            }
-
-                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList.get(0));
-
-                            try {
-                                Picasso.with(ParallelFeedActivity.this).load(dataList.get(1).getThumbnail()).
-                                        placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
-                            } catch (Exception e) {
-                                relatedArticles2.getArticleImageView().setImageResource(R.drawable.default_article);
-                            }
-
-                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(dataList.get(1));
-                            relatedArticles3.setVisibility(View.GONE);
-                        } else if (dataList.size() == 1) {
-
-                            try {
-                                Picasso.with(ParallelFeedActivity.this).load(dataList.get(0).getThumbnail()).
-                                        placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
-                            } catch (Exception e) {
-                                relatedArticles1.getArticleImageView().setImageResource(R.drawable.default_article);
-                            }
-
-                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList.get(0));
-                            relatedArticles2.setVisibility(View.GONE);
-                            relatedArticles3.setVisibility(View.GONE);
-                        }
-                    }*/
                 } else {
                     showToast(getString(R.string.server_went_wrong));
                 }

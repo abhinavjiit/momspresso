@@ -94,14 +94,14 @@ public class TopicsListingActivity extends BaseActivity {
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(TopicsListingActivity.this,EditProfileNewActivity.class));
+                    startActivity(new Intent(TopicsListingActivity.this,RewardsContainerActivity.class));
                 }
             });
 
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(TopicsListingActivity.this,EditProfileNewActivity.class));
+                    startActivity(new Intent(TopicsListingActivity.this,RewardsContainerActivity.class));
                 }
             });
 

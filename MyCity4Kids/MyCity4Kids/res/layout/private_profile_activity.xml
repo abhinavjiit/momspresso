@@ -244,114 +244,10 @@
                 android:paddingRight="16dp"
                 android:textColor="@color/app_light_black" />
 
-            <LinearLayout
-                android:id="@+id/linearRewardsHeader"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_below="@+id/userbioTextView"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/ic_rewards_bottom_header"
-                android:orientation="horizontal"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <LinearLayout
-                    android:id="@+id/header"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_weight=".7"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.mycity4kids.widget.CustomFontTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:background="@drawable/shape_blue"
-                            android:gravity="center"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:text="NEW"
-                            android:textColor="@color/white"
-                            android:textSize="12sp"
-                            app:fontName="oswald_regular.ttf" />
-
-                        <com.mycity4kids.widget.CustomFontTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:paddingLeft="5dp"
-                            android:paddingRight="5dp"
-                            android:text="Momspresso Rewards"
-                            android:textColor="@color/app_red"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            app:fontName="oswald_regular.ttf" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.mycity4kids.widget.CustomFontTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:paddingLeft="5dp"
-                            android:paddingRight="5dp"
-                            android:text="Participate and earn now by completing your profile!"
-                            android:textColor="@color/black"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            app:fontName="oswald.ttf" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight=".3">
-
-                    <com.mycity4kids.widget.CustomFontTextView
-                        android:id="@+id/textHeaderUpdate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="2"
-                        android:background="@drawable/update_profile_bg"
-                        android:gravity="center"
-                        android:paddingLeft="12dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="12dp"
-                        android:paddingBottom="7dp"
-                        android:text="@string/update"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:fontName="oswald_regular.ttf" />
-                </LinearLayout>
-            </LinearLayout>
-
-
             <RelativeLayout
                 android:id="@+id/relative_profile_progress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:layout_below="@+id/userbioTextView"
                 android:background="@drawable/shape_round_rectangle"
                 android:visibility="invisible">
@@ -388,9 +284,9 @@
                     android:id="@+id/updateProfileTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/profileCompletionLabel"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="12dp"
                     android:background="@drawable/update_profile_bg"
                     android:paddingLeft="20dp"
                     android:paddingTop="6dp"
@@ -423,6 +319,115 @@
                     android:text="@string/rewards_participate"
                     app:fontName="oswald.ttf" />
             </RelativeLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linearRewardsHeader"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_below="@+id/userbioTextView"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/ic_rewards_bottom_header"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/header"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight=".7"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.mycity4kids.widget.CustomFontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/shape_blue"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="NEW"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            app:fontName="oswald_regular.ttf" />
+
+                        <com.mycity4kids.widget.CustomFontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:text="@string/momspresso_rewards"
+                            android:textColor="@color/app_red"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:fontName="oswald_regular.ttf" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.mycity4kids.widget.CustomFontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:text="@string/rewards_participate"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:fontName="oswald.ttf" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+
+                    android:layout_weight=".3">
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/textHeaderUpdate"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="2"
+                        android:background="@drawable/update_profile_bg"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="12dp"
+                        android:paddingBottom="7dp"
+                        android:text="@string/update"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:fontName="oswald_regular.ttf" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/statsCountContainer"
