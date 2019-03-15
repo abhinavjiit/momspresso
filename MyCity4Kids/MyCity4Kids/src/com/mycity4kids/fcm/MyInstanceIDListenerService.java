@@ -1,6 +1,7 @@
 package com.mycity4kids.fcm;
 
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -31,6 +32,14 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
         SharedPrefUtils.setDeviceToken(this, refreshedToken);
         Log.e("token in preferences", SharedPrefUtils.getDeviceToken(this));
         Intent intent = new Intent(this, PushTokenService.class);
-        startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                startForegroundService(intent);
+            } catch (IllegalArgumentException e) {
+                startService(intent);
+            }
+        } else {
+            startService(intent);
+        }
     }
 }

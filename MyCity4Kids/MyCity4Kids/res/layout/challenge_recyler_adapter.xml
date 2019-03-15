@@ -60,11 +60,6 @@
                     android:id="@+id/storyTitleTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:paddingLeft="14dp"
-                    android:paddingTop="14dp"
-                    android:paddingRight="14dp"
-                    android:paddingBottom="14dp"
                     android:text=""
                     android:textColor="@color/short_story.light_black_color"
                     android:textSize="18sp"
@@ -76,7 +71,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_below="@+id/storyTitleTextView"
-                    android:layout_marginLeft="14dp"
                     android:background="@color/common_underline"
                     android:visibility="gone" />
 
@@ -94,7 +88,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:paddingLeft="14dp"
                     android:text="jnvkjsjkbfdjk"
                     android:textSize="18sp"
                     android:visibility="gone"
@@ -108,9 +101,6 @@
                     android:layout_below="@id/storytitle"
                     android:background="@color/app_blue"
                     android:gravity="center"
-                    android:paddingLeft="14dp"
-                    android:paddingTop="14dp"
-                    android:paddingRight="14dp"
                     android:text="RAIN"
                     android:textColor="@color/white"
                     android:textSize="50dp"
@@ -123,14 +113,12 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:orientation="vertical"
-                    android:paddingBottom="5dp"
                     android:visibility="gone">
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/your_100_word_story_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
                         android:text="@string/what_is_your_story"
                         android:textColor="@color/greytxt_color"
                         android:textSize="18sp"
@@ -142,7 +130,6 @@
                         android:id="@+id/use_the_picture_textView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
                         android:text="@string/use_picture_word_to_write_one"
                         android:textColor="@color/app_grey"
                         android:textSize="14sp"
@@ -157,7 +144,7 @@
                     android:layout_below="@id/whats_your_story_text_linear_layout"
                     android:adjustViewBounds="true"
                     android:foreground="@drawable/gradient_in_video_challenge_image"
-                    android:scaleType="fitXY"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/groups_generic"
                     android:visibility="visible" />
 
@@ -206,7 +193,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/bodylinear_layout"
                 android:background="@color/white"
-                android:padding="14dp"
                 android:text="Get Started"
                 android:textColor="@color/app_blue"
                 android:textSize="16sp"

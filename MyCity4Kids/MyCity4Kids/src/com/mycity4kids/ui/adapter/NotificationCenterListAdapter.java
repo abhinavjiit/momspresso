@@ -203,6 +203,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
                     mContext.startActivity(intent);
 
+
                     //https://www.momspresso.com/new-videos/v1/videos-91556df5-a531-412c-946b-3219dcfa30cb/playlist.m3u8
                     try {
                         JSONObject jsonObject = new JSONObject();
@@ -622,7 +623,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     }
                 }
             });
-        }else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_MOMSIGHT_REWARDS.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING.equals(nType)) {
+        } else if ((StringUtils.isNullOrEmpty(nType) && AppConstants.NOTIFICATION_NOTIFY_TYPE_MOMSIGHT_REWARDS.equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_MOMSIGHT_REWARD_LISTING.equals(nType)) {
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
