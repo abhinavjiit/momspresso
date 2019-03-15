@@ -146,7 +146,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private int updateLikePos;
     private int updateFollowPos;
     private int changeFollowUnfollowTextPos;
-    private int startIndex = 0, page = 0;
 
 
     private VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI;
@@ -358,7 +357,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 updateUIfromResponse(responseData.getData().getResult());
                 authorId = responseData.getData().getResult().getAuthor().getId();
 //                hitBookmarkFollowingStatusAPI(videoId);
-                hitRelatedArticleAPI(startIndex);
+                hitRelatedArticleAPI(0);
                 commentURL = responseData.getData().getResult().getCommentUri();
                 commentMainUrl = responseData.getData().getResult().getCommentUri();
                 if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
