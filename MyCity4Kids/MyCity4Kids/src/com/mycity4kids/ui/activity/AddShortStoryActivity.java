@@ -58,10 +58,8 @@ import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ShortStoryTopicsRecyclerAdapter;
@@ -141,8 +139,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String runningrequest;
     private RelativeLayout challengeHeader, topicheaderlayout, chooseLayout;
     private TextView challenegActiveText, challengeheadertext, shortstoryheadertext;
-    private String currentActiveChallenge;
-    private String currentActiveChallengeId;
+    private String currentActiveChallenge = "";
+    private String currentActiveChallengeId = "";
     private View overlayLayout;
     private String ssTopicsText;
     private TextView topicHeading;
@@ -425,8 +423,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
             ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
             createTopicsData(res);
-            // recyclerView.setAdapter(adapter);
-            //    adapter.setListData(ssTopicsList);
         } catch (FileNotFoundException e) {
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
@@ -466,8 +462,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
     private void getImageUrlShow(String key, String value) {
         if (key != null && value != null) {
-            selectedTopic = subTopicsList.get(subTopicsList.size() - 1);
-            //     String h = selectedTopic.getChild().get(selectedTopic.getChild().size() - 1).getId();
+            for (int i = 0; i < subTopicsList.size() - 1; i++) {
+                if ("category-743892a865774baf9c20cbcc5c01d35f".equals(subTopicsList.get(i).getId())) {
+                    selectedTopic = subTopicsList.get(i);
+                    break;
+                }
+            }            //     String h = selectedTopic.getChild().get(selectedTopic.getChild().size() - 1).getId();
             for (int j = selectedTopic.getChild().size() - 1; j >= 0; j--) {
                 if (key.equals(selectedTopic.getChild().get(j).getId())) {
                     if (value.equals(selectedTopic.getChild().get(j).getDisplay_name())) {
@@ -518,8 +518,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     subTopicsList.addAll(shortStoriesTopicList.get(i).getChild());
                 }
             }
+            for (int i = 0; i < subTopicsList.size() - 1; i++) {
+                if ("category-743892a865774baf9c20cbcc5c01d35f".equals(subTopicsList.get(i).getId())) {
+                    selectedTopic = subTopicsList.get(i);
+                    break;
+                }
+            }
 
-            selectedTopic = subTopicsList.get(subTopicsList.size() - 1);
             for (int j = selectedTopic.getChild().size() - 1; j >= 0; j--) {
                 if ("1".equals(selectedTopic.getChild().get(j).getPublicVisibility())) {
                     if ("1".equals(selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
@@ -559,7 +564,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                                 subTopicsList.addAll(shortStoriesTopicList.get(i).getChild());
                             }
                         }
-                        selectedTopic = subTopicsList.get(subTopicsList.size() - 1);
+                        for (int i = 0; i < subTopicsList.size() - 1; i++) {
+                            if ("category-743892a865774baf9c20cbcc5c01d35f".equals(subTopicsList.get(i).getId())) {
+                                selectedTopic = subTopicsList.get(i);
+                                break;
+                            }
+                        }
                         for (int j = selectedTopic.getChild().size() - 1; j >= 0; j--) {
                             if ("1".equals(selectedTopic.getChild().get(j).getPublicVisibility())) {
                                 if ("1".equals(selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
@@ -817,35 +827,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         } else {
             shortStoryDraftOrPublishRequest.setLang("0");
         }
-   /*     if (runningrequest.equals("challenge")) {
-            ArrayList<Map<String, String>> list2 = new ArrayList<>();
-            Map map1 = new HashMap();
 
-            map1.put(challengeId, challengeName);
-
-            //  Map<String, String> map2 = new HashMap<>();
-            // map2.put(challengeId, challengeName);
-            //list.add(map2);
-            list2.add(map1);
-
-            shortStoryDraftOrPublishRequest.setTags(list2);
-        } else if ("draftList".equals(source)) {
-            if (!flag) {
-                ArrayList<Map<String, String>> list2 = new ArrayList<>();
-                if ((!listDraft.isEmpty())) {
-                    Map map1 = new HashMap();
-                    map1.put(key, value);
-                    list2.add(map1);
-                }
-                shortStoryDraftOrPublishRequest.setTags(list2);
-            } else {
-                ArrayList<Map<String, String>> list2 = new ArrayList<>();
-                Map map1 = new HashMap();
-                map1.put(currentActiveChallengeId, currentActiveChalleneg);
-                list2.add(map1);
-                shortStoryDraftOrPublishRequest.setTags(list2);
-            }
-        }*/
         if (draftId1.isEmpty()) {
             Call<ArticleDraftResponse> call = shortStoryAPI.saveOrPublishShortStory(shortStoryDraftOrPublishRequest);
             call.enqueue(saveDraftBeforePublishResponseListener);
@@ -1093,9 +1075,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         Log.d("ShortStory", "Path = " + path);
 
         if (path != null) {
-            imageUriTemp = Uri.parse(path);
-        } else {
-            path = MediaStore.Images.Media.insertImage(getContentResolver(), finalBitmap, "Title", null);
             imageUriTemp = Uri.parse(path);
         }
         if (imageUriTemp != null) {

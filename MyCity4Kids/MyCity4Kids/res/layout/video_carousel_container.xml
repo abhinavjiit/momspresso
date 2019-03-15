@@ -109,7 +109,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginTop="0dp"
                                 android:contentDescription="@string/author_img"
-                                android:scaleType="fitCenter" />
+                                android:scaleType="centerCrop" />
 
                             <View
                                 android:id="@+id/viewIdConatainer"
@@ -288,7 +288,7 @@
                                 android:layout_alignParentTop="true"
                                 android:layout_centerInParent="true"
                                 android:contentDescription="@string/author_img"
-                                android:scaleType="fitCenter" />
+                                android:scaleType="centerCrop" />
 
                             <View
                                 android:id="@+id/card2"
@@ -1211,7 +1211,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerInParent="true"
                         android:contentDescription="@string/author_img"
-                        android:scaleType="fitXY" />
+                        android:scaleType="centerCrop" />
 
                     <View
                         android:id="@+id/viewEleven"
