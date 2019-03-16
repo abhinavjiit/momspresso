@@ -49,6 +49,7 @@ public class SuggestedTopicsActivity extends BaseActivity {
     private ArrayList<String> languageNameList = new ArrayList<>();
     private ViewPager languagesViewPager;
     private ArrayList<String> languageKeyList;
+    private ArrayList<String> languageTagList;
     private Toolbar toolbar;
     int tabPosition = 0;
     String lang;
@@ -176,6 +177,7 @@ public class SuggestedTopicsActivity extends BaseActivity {
             );
             Log.d("Map", "" + retMap.toString());
             ArrayList<ArrayList<String>> languageConfigModelArrayList = new ArrayList<>();
+            languageTagList = new ArrayList<>();
             languageKeyList = new ArrayList<>();
             if (response.getData().get(0).getResult().get("0") != null && !response.getData().get(0).getResult().get("0").isEmpty()) {
                 languagesTabLayout.addTab(languagesTabLayout.newTab().setText("ENGLISH"));
@@ -189,13 +191,25 @@ public class SuggestedTopicsActivity extends BaseActivity {
                     languageNameList.add(entry.getValue().getDisplay_name().toUpperCase());
                     languageConfigModelArrayList.add(response.getData().get(0).getResult().get(entry.getKey()));
                     languageKeyList.add(entry.getKey());
+                    languageTagList.add(entry.getValue().getTag());
+                }
+            }
+            lang = SharedPrefUtils.getAppLocale(this);
+            for (int i = 0; i < languageTagList.size(); i++) {
+                if (lang.equals(languageTagList.get(i))) {
+                    tabPosition = i + 1;
+                    break;
                 }
             }
 
             AppUtils.changeTabsFont(this, languagesTabLayout);
             final SuggestedTopicsPagerAdapter adapter = new SuggestedTopicsPagerAdapter(getSupportFragmentManager(), languagesTabLayout.getTabCount(), languageConfigModelArrayList, languageNameList);
             languagesViewPager.setAdapter(adapter);
+
+            languagesViewPager.setCurrentItem(tabPosition);
+
             languagesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(languagesTabLayout));
+
           /*  lang = SharedPrefUtils.getAppLocale(this);
             for (int i = 0; i < retMap.size(); i++) {
                 if (lang.equals(retMap.get(i).getTag())) {
@@ -219,6 +233,7 @@ public class SuggestedTopicsActivity extends BaseActivity {
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
+                    languagesViewPager.setCurrentItem(tab.getPosition());
 
                 }
             });
