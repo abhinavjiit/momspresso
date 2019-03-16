@@ -105,6 +105,9 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
 //                                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules())) {
 //                                        rules.add(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules());
 //                                    }
+                                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules())) {
+                                        rules.add(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules());
+                                    }
                                     try {
                                         Glide.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
                                        /* Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
