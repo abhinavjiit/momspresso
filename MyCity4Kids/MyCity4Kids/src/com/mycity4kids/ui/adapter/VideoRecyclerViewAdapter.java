@@ -399,13 +399,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                             addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
                                     viewMore, userBio), TextView.BufferType.SPANNABLE);
                 } else {
-//                    int lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
-//                    String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
-//                    tv.setText(text);
-//                    tv.setMovementMethod(LinkMovementMethod.getInstance());
-//                    tv.setText(
-//                            addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, lineEndIndex, expandText,
-//                                    viewMore,userBio), TextView.BufferType.SPANNABLE);
                 }
             }
         });

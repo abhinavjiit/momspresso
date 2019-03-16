@@ -18,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.daimajia.easing.linear.Linear
 import com.google.api.client.util.DateTime
 import com.google.gson.Gson
 import com.kelltontech.network.Response
@@ -164,6 +165,8 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     private lateinit var textAddChild: TextView
     private lateinit var radioGroupAreMother: RadioGroup
     private lateinit var layoutDynamicNumberOfKids: LinearLayout
+    private lateinit var textDeleteChild: TextView
+    private lateinit var linearKidsEmptyView: LinearLayout
 
     companion object {
 
@@ -307,11 +310,23 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
 
         if (apiGetResponse.kidsInfo != null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
-            (apiGetResponse.kidsInfo!!).forEach {
-                if (it != null && it.dob != null && it.gender != null) {
-                    createKidsDetailDynamicView(it.gender!!, AppUtils.convertTimestampToDate(it.dob))
+            for (i in 0..apiGetResponse.kidsInfo!!.size - 1) {
+                if (i == 0 && apiGetResponse.kidsInfo!!.size == 1) {
+                    createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob), false)
+                } else {
+                    createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob))
                 }
             }
+
+//            (apiGetResponse.kidsInfo!!).forEach {
+//                if (it != null && it.dob != null && it.gender != null) {
+//
+//                }
+//            }
+            linearKidsEmptyView.visibility = View.GONE
+        } else {
+            textDeleteChild.visibility = View.GONE
+            linearKidsEmptyView.visibility = View.VISIBLE
         }
     }
 
@@ -341,6 +356,20 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         layoutDynamicNumberOfKids = containerView.findViewById(R.id.layoutDynamicNumberOfKids)
         RewardsFamilyInfoFragment.textKidsDOB = containerView.findViewById(R.id.textKidsDOB)
         RewardsFamilyInfoFragment.textDOB = containerView.findViewById(R.id.textDOB)
+        textDeleteChild = containerView.findViewById(R.id.textDeleteChild)
+        linearKidsEmptyView = containerView.findViewById(R.id.linearKidsEmptyView)
+
+        textDeleteChild.setOnClickListener {
+            if (linearKidsDetail.childCount > 0) {
+                if (linearKidsDetail.childCount == 1) {
+                    linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild).visibility = View.GONE
+                    linearKidsEmptyView.visibility = View.GONE
+                } else {
+                    linearKidsEmptyView.visibility = View.GONE
+                }
+
+            }
+        }
 
         (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
@@ -359,7 +388,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             } else {
 
             }
-
         }
 
         textEditInterest.setOnClickListener {
@@ -401,7 +429,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         genderList.add("Male")
         genderList.add("Female")
 
-
         val spinAdapter = CustomSpinnerAdapter(activity, genderList)
         spinnerGender.adapter = spinAdapter
         spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -429,7 +456,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         editExpectedDate.setOnClickListener {
             RewardsFamilyInfoFragment.textView = editExpectedDate
-            showDatePickerDialog(false)
+            showDatePickerDialog(false,true)
         }
 
         containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
@@ -458,8 +485,9 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                             linearKidsDetail.removeAllViews()
                             layoutNumberOfKids.visibility = View.GONE
                             linearKidsDetail.visibility = View.GONE
-                            layoutDynamicNumberOfKids.visibility = View.GONE
+                            linearKidsEmptyView.visibility = View.GONE
                             textAddChild.visibility = View.GONE
+                            layoutDynamicNumberOfKids.visibility = View.GONE
                         }
 
                         R.id.radioYes -> {
@@ -467,6 +495,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                             spinnernumberOfKids.setSelection(0)
                             layoutNumberOfKids.visibility = View.VISIBLE
                             linearKidsDetail.visibility = View.VISIBLE
+                            linearKidsEmptyView.visibility = View.VISIBLE
                             layoutDynamicNumberOfKids.visibility = View.VISIBLE
                         }
 
@@ -475,9 +504,21 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     }
 
     private fun validateChildData(): Boolean {
-        if (RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
+        Log.e("text value", " " + RewardsFamilyInfoFragment.textKidsDOB.text + " " + linearKidsEmptyView.visibility)
+        if (linearKidsEmptyView.visibility == View.VISIBLE && RewardsFamilyInfoFragment.textKidsDOB.text.isBlank()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
             return false
+        } else if (linearKidsEmptyView.visibility == View.GONE) {
+            linearKidsEmptyView.visibility = View.VISIBLE
+            textDeleteChild.visibility = View.VISIBLE
+            if (linearKidsDetail.childCount > 0) {
+                for (i in 0..linearKidsDetail.childCount - 1) {
+                    linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild).visibility = View.VISIBLE
+                }
+            }
+            return false
+        } else if (linearKidsEmptyView.visibility == View.VISIBLE) {
+            textDeleteChild.visibility = View.VISIBLE
         }
 
         return true
@@ -557,8 +598,9 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                     }
                 }
                 apiGetResponse.kidsInfo = kidsList
-
-                if (!RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
+                Log.e("dob text is ", RewardsFamilyInfoFragment.textKidsDOB.text.toString())
+                if (linearKidsEmptyView.visibility == View.VISIBLE) {
+                    if (!RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
                         if (apiGetResponse.kidsInfo.isNullOrEmpty()) {
                             var kidsInfoResponse = KidsInfoResponse()
                             kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
@@ -569,9 +611,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                             kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
                             apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
                         }
-                } else {
-                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
-                    return false
+                    } else {
+                        Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                        return false
+                    }
                 }
             } else {
                 if (!RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
@@ -590,58 +633,52 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                     return false
                 }
             }
+        } else {
+            apiGetResponse.kidsInfo = null
         }
-
-
-
-//        if (!RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
-//            if (linearKidsDetail.childCount > 0) {
-//                if (apiGetResponse.kidsInfo.isNullOrEmpty()) {
-//                    var kidsInfoResponse = KidsInfoResponse()
-//                    kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
-//                        0
-//                    } else {
-//                        1
-//                    }
-//                    kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
-//                    apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
-//                }
-//            } else {
-//                var kidsInfoLocal = ArrayList<KidsInfoResponse>()
-//                var kidsInfoResponse = KidsInfoResponse()
-//                kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
-//                    0
-//                } else {
-//                    1
-//                }
-//                kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
-//                kidsInfoLocal.add(kidsInfoResponse)
-//                apiGetResponse.kidsInfo = kidsInfoLocal
-//            }
-//        } else {
-//            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
-//        }
 
         apiGetResponse.latitude = 28.7041
         apiGetResponse.longitude = 77.1025
         return true
     }
 
-    fun createKidsDetailDynamicView(gender: Int? = null, date: String = "") {
+    fun createKidsDetailDynamicView(gender: Int? = null, date: String = "", shouldDelteShow: Boolean = true) {
         val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val indexView = inflater.inflate(R.layout.dynamic_child_view, null)
         var textHeader = indexView.findViewById<TextView>(R.id.textHeader)
         var textDelete = indexView.findViewById<TextView>(R.id.textDeleteChild)
-        textDelete.visibility = View.VISIBLE
+        if (shouldDelteShow) {
+            textDelete.visibility = View.VISIBLE
+        } else {
+            textDelete.visibility = View.GONE
+        }
+
         textDelete.setOnClickListener {
             for (i in 0..linearKidsDetail.childCount) {
-                if (linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild) == it) {
-                    linearKidsDetail.removeViewAt(i)
-                    break
+                if (linearKidsEmptyView.visibility == View.VISIBLE) {
+                    if (linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild) == it) {
+                        linearKidsDetail.removeViewAt(i)
+                        break
+                    }
+                } else {
+                    if (linearKidsDetail.childCount == 1) {
+                        textDelete.visibility = View.GONE
+                    } else {
+                        if (linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textDeleteChild) == it) {
+                            linearKidsDetail.removeViewAt(i)
+                            break
+                        }
+                    }
                 }
             }
+            if (linearKidsEmptyView.visibility == View.GONE && linearKidsDetail.childCount == 1) {
+                linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild).visibility = View.GONE
+            } else if (linearKidsEmptyView.visibility == View.VISIBLE && linearKidsDetail.childCount == 0) {
+                textDeleteChild.visibility = View.GONE
+            }
+
         }
         var spinnerGender = indexView.findViewById<Spinner>(R.id.spinnerGender)
         var textDOB = indexView.findViewById<TextView>(R.id.textKidsDOB)
@@ -666,7 +703,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         textDOB.setOnClickListener {
             RewardsFamilyInfoFragment.textView = it as TextView
-            showDatePickerDialog(true)
+            showDatePickerDialog(true, false)
         }
 
         if (gender != null && !date.isNullOrEmpty()) {
@@ -690,6 +727,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         internal var current_month = c.get(Calendar.MONTH)
         internal var current_day = c.get(Calendar.DAY_OF_MONTH)
         var isShowTillCurrent: Boolean = false
+        var isShowFutureOnly: Boolean = false
 
 
         @SuppressLint("NewApi")
@@ -699,10 +737,15 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
             if (arguments != null) {
                 isShowTillCurrent = arguments.getBoolean("is_show_current_only", false)
+                isShowFutureOnly = arguments.getBoolean("is_show_future_only", false)
             }
             dlg.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             if (isShowTillCurrent) {
                 dlg.datePicker.maxDate = c.timeInMillis
+            }
+
+            if(isShowFutureOnly){
+                dlg.datePicker.minDate = c.timeInMillis
             }
 
             return dlg
@@ -744,10 +787,11 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
     }
 
-    fun showDatePickerDialog(isShowTillCurrent: Boolean) {
+    fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false) {
         val newFragment = DatePickerFragment()
         var bundle = Bundle()
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)
+        bundle.putBoolean("is_show_future_only", isShowFutureDate)
         newFragment.arguments = bundle
         newFragment.show(activity.supportFragmentManager, "datePicker")
     }
