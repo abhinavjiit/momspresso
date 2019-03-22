@@ -5,16 +5,13 @@ import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.ArticleReadTimeRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
-import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.request.UploadVideoRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
-import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
-import com.mycity4kids.models.response.HomeVideosListingResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
@@ -58,6 +55,7 @@ public interface VlogsListingAndDetailsAPI {
                                             @Query("sort") int sort,
                                             @Query("type") int type,
                                             @Query("category_id") String categoryId);
+
 
     @POST("v2/videos/")
     Call<ResponseBody> publishHomeVideo(@Body UploadVideoRequest uploadVideoRequest/*@Query("start") int start,

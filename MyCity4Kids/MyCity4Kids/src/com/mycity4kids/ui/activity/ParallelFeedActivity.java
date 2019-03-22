@@ -457,7 +457,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                         @Override
                         public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                             fromLoadMore = true;
-                            hitRelatedArticleAPI(endIndex+1);
+                            hitRelatedArticleAPI(endIndex + 1);
                         }
                     });
 
