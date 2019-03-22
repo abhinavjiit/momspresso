@@ -290,6 +290,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 mediaPostViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
                 mediaPostViewHolder.commentLayout.setVisibility(View.VISIBLE);
                 mediaPostViewHolder.postCommentsTextView.setVisibility(View.GONE);
+                mediaPostViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
+
             }
             mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             if (postList.get(position).getIsAnnon() == 1) {

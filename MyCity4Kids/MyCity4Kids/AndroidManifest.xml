@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="131"
-    android:versionName="10.1.1">
+    android:versionCode="132"
+    android:versionName="10.2.0">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -664,9 +664,9 @@
         </receiver>
 
 
-     <!--   <activity
-            android:name=".ui.rewards.activity.RewardsContainerActivity"
-            android:screenOrientation="portrait"></activity>-->
+        <!--   <activity
+               android:name=".ui.rewards.activity.RewardsContainerActivity"
+               android:screenOrientation="portrait"></activity>-->
 
         <!--<intent-filter>-->
         <!--<action android:name="android.intent.action.MAIN" />-->
