@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -51,6 +54,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
+import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
@@ -63,7 +67,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -176,7 +179,16 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
             textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             textPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
-            textPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+            if (postList.get(position).getResponseCount() != 0) {
+                textPostViewHolder.commentLayout.setVisibility(View.GONE);
+                textPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+            } else {
+                textPostViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
+                textPostViewHolder.commentLayout.setVisibility(View.VISIBLE);
+                textPostViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
+                textPostViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
+
+            }
             textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             if (postList.get(position).getIsAnnon() == 1) {
                 textPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
@@ -249,7 +261,15 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             }
 
             audioCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getFormattedDateGroups(postList.get(position).getCreatedAt()));
-            audioCommentViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+            if (postList.get(position).getResponseCount() != 0) {
+                audioCommentViewHolder.commentLayout.setVisibility(View.GONE);
+                audioCommentViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+            } else {
+                audioCommentViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
+                audioCommentViewHolder.commentLayout.setVisibility(View.VISIBLE);
+                audioCommentViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
+                audioCommentViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
+            }
             audioCommentViewHolder.upvoteCommentCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             audioCommentViewHolder.downvoteCommentCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
         } else if (holder instanceof MediaPostViewHolder) {
@@ -263,7 +283,14 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
             mediaPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             mediaPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
-            mediaPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+            if (postList.get(position).getResponseCount() != 0) {
+                mediaPostViewHolder.commentLayout.setVisibility(View.GONE);
+                mediaPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+            } else {
+                mediaPostViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
+                mediaPostViewHolder.commentLayout.setVisibility(View.VISIBLE);
+                mediaPostViewHolder.postCommentsTextView.setVisibility(View.GONE);
+            }
             mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             if (postList.get(position).getIsAnnon() == 1) {
                 mediaPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
@@ -290,7 +317,15 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             textPollPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             textPollPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
-            textPollPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+            if (postList.get(position).getResponseCount() != 0) {
+                textPollPostViewHolder.commentLayout.setVisibility(View.GONE);
+                textPollPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+            } else {
+                textPollPostViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
+                textPollPostViewHolder.commentLayout.setVisibility(View.VISIBLE);
+                textPollPostViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
+                textPollPostViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
+            }
             if (postList.get(position).getIsAnnon() == 1) {
                 textPollPostViewHolder.usernameTextView.setText(mContext.getString(R.string.groups_anonymous));
                 textPollPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
@@ -362,7 +397,15 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             }
             imageHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             imageHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
-            imageHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+            if (postList.get(position).getResponseCount() != 0) {
+                imageHolder.commentLayout.setVisibility(View.GONE);
+                imageHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
+            } else {
+                imageHolder.beTheFirstOne.setVisibility(View.VISIBLE);
+                imageHolder.commentLayout.setVisibility(View.VISIBLE);
+                imageHolder.postCommentsTextView.setVisibility(View.VISIBLE);
+                imageHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
+            }
             Map<String, String> imageMap = (Map<String, String>) postList.get(position).getPollOptions();
             imageHolder.lastOptionsContainer.setVisibility(View.GONE);
             imageHolder.option3Container.setVisibility(View.GONE);
@@ -537,12 +580,14 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView postDataTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
         LinearLayout upvoteContainer, downvoteContainer;
-        TextView postCommentsTextView;
+        TextView postCommentsTextView, typeHere, beTheFirstOne;
         ImageView postSettingImageView;
         ImageView shareTextView;
+        RelativeLayout commentLayout;
 
         TextPostViewHolder(View view) {
             super(view);
+            commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -554,6 +599,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
+            typeHere = (TextView) view.findViewById(R.id.typeHere);
+            beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -561,21 +608,59 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            commentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                 /*   Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                    intent.putExtra("pollOptions", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);*/
+                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                    FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                    Bundle _args = new Bundle();
+                    // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                    _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    _args.putInt("postId", postList.get(getAdapterPosition()).getId());
+                    addGpPostCommentReplyDialogFragment.setArguments(_args);
+                    addGpPostCommentReplyDialogFragment.setCancelable(true);
+                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                }
+            });
+
 
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("groupItem", selectedGroup);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+
+                    if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
+
+                        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                        Bundle _args = new Bundle();
+                        // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                        _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        _args.putInt("postId", postList.get(getAdapterPosition()).getId());
+                        addGpPostCommentReplyDialogFragment.setArguments(_args);
+                        addGpPostCommentReplyDialogFragment.setCancelable(true);
+                        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                    } else {
+                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                        intent.putExtra("groupItem", selectedGroup);
+                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
+                        intent.putExtra("postData", postList.get(getAdapterPosition()));
+                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                    }
                 }
             });
-            view.setOnClickListener(new View.OnClickListener() {
+          /*  view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
@@ -587,7 +672,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
                     ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
                 }
-            });
+            });*/
         }
 
         @Override
@@ -604,15 +689,17 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         ImageView shareTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
         LinearLayout upvoteContainer, downvoteContainer;
-        TextView postCommentsTextView;
+        TextView postCommentsTextView, beTheFirstOne;
         ImageView postSettingImageView;
         private BubblePageIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
         private GroupMediaPostViewPagerAdapter mViewPagerAdapter;
+        RelativeLayout commentLayout;
 
         MediaPostViewHolder(View view) {
             super(view);
+            commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -627,6 +714,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             dotIndicatorView = (BubblePageIndicator) view.findViewById(R.id.dotIndicatorView);
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
+            beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
 
             mViewPagerAdapter = new GroupMediaPostViewPagerAdapter(mContext);
             postDataViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -653,22 +741,59 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            commentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                 /*   Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                    intent.putExtra("pollOptions", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);*/
+                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                    FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                    Bundle _args = new Bundle();
+                    // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                    _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    _args.putInt("postId", postList.get(getAdapterPosition()).getId());
+                    addGpPostCommentReplyDialogFragment.setArguments(_args);
+                    addGpPostCommentReplyDialogFragment.setCancelable(true);
+                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                }
+            });
 
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_MEDIA);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getMediaUrls();
-                    intent.putExtra("mediaUrls", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+
+                    if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
+
+                        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                        Bundle _args = new Bundle();
+                        // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                        _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        _args.putInt("postId", postList.get(getAdapterPosition()).getId());
+                        addGpPostCommentReplyDialogFragment.setArguments(_args);
+                        addGpPostCommentReplyDialogFragment.setCancelable(true);
+                        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                    } else {
+                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                        intent.putExtra("postType", AppConstants.POST_TYPE_MEDIA);
+                        intent.putExtra("postData", postList.get(getAdapterPosition()));
+                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getMediaUrls();
+                        intent.putExtra("mediaUrls", linkedTreeMap);
+                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                    }
                 }
             });
-            view.setOnClickListener(new View.OnClickListener() {
+            /*view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
@@ -681,7 +806,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
                     ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
                 }
-            });
+            });*/
         }
 
         @Override
@@ -703,12 +828,15 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView upvoteCommentCountTextView, downvoteCommentCountTextView;
         LinearLayout upvoteCommentContainer, downvoteCommentContainer;
         RelativeLayout audiotRootView;
-        TextView postCommentsTextView;
+        TextView postCommentsTextView, beTheFirstOne;
         ImageView postSettingImageView;
         ImageView shareTextView;
+        RelativeLayout commentLayout;
+
 
         public AudioCommentViewHolder(View view) {
             super(view);
+            commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             media = (ImageView) view.findViewById(R.id.media);
             audiotRootView = view.findViewById(R.id.commentRootView);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
@@ -726,11 +854,40 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
+            beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
 
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
+
+                        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                        Bundle _args = new Bundle();
+                        // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                        _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        _args.putInt("postId", postList.get(getAdapterPosition()).getId());
+                        addGpPostCommentReplyDialogFragment.setArguments(_args);
+                        addGpPostCommentReplyDialogFragment.setCancelable(true);
+                        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                    } else {
+
+                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                        intent.putExtra("postData", postList.get(getAdapterPosition()));
+                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                        intent.putExtra("pollOptions", linkedTreeMap);
+                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                    }
+                }
+            });
+            commentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                 /*   Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
                     intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
                     intent.putExtra("postData", postList.get(getAdapterPosition()));
                     LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
@@ -738,7 +895,16 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
                     intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);*/
+                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                    FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                    Bundle _args = new Bundle();
+                    // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                    _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    _args.putInt("postId", postList.get(getAdapterPosition()).getId());
+                    addGpPostCommentReplyDialogFragment.setArguments(_args);
+                    addGpPostCommentReplyDialogFragment.setCancelable(true);
+                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
                 }
             });
 
@@ -820,7 +986,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
         ImageView postSettingImageView;
-        TextView pollQuestionTextView;
+        TextView pollQuestionTextView, beTheFirstOne;
         ImageView shareTextView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
@@ -828,9 +994,11 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView pollOption1ProgressTextView, pollOption2ProgressTextView, pollOption3ProgressTextView, pollOption4ProgressTextView;
         TextView totalVoteCountTextView;
         RelativeLayout option3Container, option4Container;
+        RelativeLayout commentLayout;
 
         TextPollPostViewHolder(View view) {
             super(view);
+            commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -861,6 +1029,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             totalVoteCountTextView = (TextView) view.findViewById(R.id.totalVoteCountTextView);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+            beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
+
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -872,18 +1042,34 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+
+                    if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
+
+                        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                        Bundle _args = new Bundle();
+                        // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                        _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        _args.putInt("postId", postList.get(getAdapterPosition()).getId());
+                        addGpPostCommentReplyDialogFragment.setArguments(_args);
+                        addGpPostCommentReplyDialogFragment.setCancelable(true);
+                        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                    } else {
+
+
+                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                        intent.putExtra("postData", postList.get(getAdapterPosition()));
+                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                        intent.putExtra("pollOptions", linkedTreeMap);
+                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                    }
                 }
             });
-            view.setOnClickListener(new View.OnClickListener() {
+         /*   view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
@@ -896,8 +1082,30 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
                     ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
                 }
+            });*/
+            commentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                 /*   Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                    intent.putExtra("pollOptions", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);*/
+                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                    FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                    Bundle _args = new Bundle();
+                    // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                    _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    _args.putInt("postId", postList.get(getAdapterPosition()).getId());
+                    addGpPostCommentReplyDialogFragment.setArguments(_args);
+                    addGpPostCommentReplyDialogFragment.setCancelable(true);
+                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                }
             });
-
             pollOption1ProgressBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -946,8 +1154,9 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
-        TextView totalVoteCountTextView;
+        TextView totalVoteCountTextView, beTheFirstOne;
         LinearLayout lastOptionsContainer;
+        RelativeLayout commentLayout;
         RelativeLayout option1Container, option2Container, option3Container, option4Container;
 
         ImagePollPostViewHolder(View view) {
@@ -981,6 +1190,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             option2Container = (RelativeLayout) view.findViewById(R.id.option2Container);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+            beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
+            commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -988,22 +1199,58 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            commentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                 /*   Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                    intent.putExtra("pollOptions", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);*/
+                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                    FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                    Bundle _args = new Bundle();
+                    // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                    _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    _args.putInt("postId", postList.get(getAdapterPosition()).getId());
+                    addGpPostCommentReplyDialogFragment.setArguments(_args);
+                    addGpPostCommentReplyDialogFragment.setCancelable(true);
+                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                }
+            });
 
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                    if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
+
+                        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                        Bundle _args = new Bundle();
+                        // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                        _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        _args.putInt("postId", postList.get(getAdapterPosition()).getId());
+                        addGpPostCommentReplyDialogFragment.setArguments(_args);
+                        addGpPostCommentReplyDialogFragment.setCancelable(true);
+                        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                    } else {
+                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                        intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
+                        intent.putExtra("postData", postList.get(getAdapterPosition()));
+                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                        intent.putExtra("pollOptions", linkedTreeMap);
+                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                    }
                 }
             });
-            view.setOnClickListener(new View.OnClickListener() {
+           /* view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
@@ -1016,7 +1263,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
                     ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
                 }
-            });
+            });*/
 
             option1Container.setOnClickListener(new View.OnClickListener() {
                 @Override

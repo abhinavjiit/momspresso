@@ -4,9 +4,9 @@ import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -38,15 +39,18 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdatePostSettingsRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
+import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.GroupDetailResponse;
+import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
@@ -73,7 +77,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimerTask;
 
@@ -92,12 +95,16 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
     private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "POLLS"};
-
     private int categoryIndex = 0;
     private int nextPageNumber = 1;
     private int totalPostCount;
     private int skip = 0;
+    private ArrayList<GroupPostCommentResult> completeResponseList;
+    private int postId;
     private int limit = 10;
+    SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout shareGroupImageViewLinearLayoutContainer;
+    static int toastShownTimes;
     private String postType;
     private boolean isRequestRunning = false;
     private boolean isLastPageReached = false;
@@ -157,6 +164,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         closeImageView = (ImageView) findViewById(R.id.closeImageView);
         noPostsTextView = (TextView) findViewById(R.id.noPostsTextView);
         groupNameTextView = (TextView) findViewById(R.id.groupNameTextView);
+        shareGroupImageViewLinearLayoutContainer = (LinearLayout) findViewById(R.id.shareGroupImageViewLinearLayoutContainer);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
         clearSearchImageView = (ImageView) findViewById(R.id.clearSearchImageView);
         groupSettingsImageView = (ImageView) findViewById(R.id.groupSettingsImageView);
@@ -200,6 +208,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
 
+
         addPostFAB.setOnClickListener(this);
         pollContainer.setOnClickListener(this);
         postContainer.setOnClickListener(this);
@@ -216,6 +225,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         pinPostTextView.setOnClickListener(this);
         clearSearchImageView.setOnClickListener(this);
         shareGroupImageView.setOnClickListener(this);
+        shareGroupImageViewLinearLayoutContainer.setOnClickListener(this);
 
         String[] sections = {
                 getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions), getString(R.string.onboarding_desc_array_tutorial_1_blogs),
@@ -223,6 +233,19 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         };
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        toastShownTimes = SharedPrefUtils.getToastAnonymous(this);
+        if (toastShownTimes < 3) {
+
+            Toast toast = Toast.makeText(this, getResources().getString(R.string.group_detail_activity_toast_text), Toast.LENGTH_LONG);
+            LinearLayout toastLayout = (LinearLayout) toast.getView();
+            TextView toastTV = (TextView) toastLayout.getChildAt(0);
+            toastTV.setTextSize(16);
+            toast.show();
+            toastShownTimes++;
+            SharedPrefUtils.toastAnonymous(this, toastShownTimes);
+
+        }
 
         setUpTabLayout(sections);
 
@@ -263,6 +286,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 }
             }
         });
+
 
         toolbarTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -546,9 +570,117 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    public void addComment(String content, Map<String, String> image, int groupId, int postId) {
+        this.postId = postId;
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("groupId", "" + groupId);
+            jsonObject.put("postId", "" + postId);
+            mixpanel.track("CreateGroupComment", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();
+        addGpPostCommentOrReplyRequest.setGroupId(groupId);
+        addGpPostCommentOrReplyRequest.setPostId(postId);
+        if (SharedPrefUtils.isUserAnonymous(this)) {
+            addGpPostCommentOrReplyRequest.setIsAnnon(1);
+        }
+        addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        addGpPostCommentOrReplyRequest.setContent(content);
+        addGpPostCommentOrReplyRequest.setMediaUrls(image);
+        Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
+        call.enqueue(addCommentResponseListener);
+    }
+
+    private Callback<AddGpPostCommentReplyResponse> addCommentResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
+        @Override
+        public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                showToast("Failed to add comment. Please try again");
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+
+                                TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
+                                tab1.select();
+
+                                if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab1.getTag().toString())) {
+                                    isRequestRunning = false;
+                                    isLastPageReached = false;
+                                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+                                    postList.clear();
+                                    skip = 0;
+                                    limit = 10;
+                                    getGroupPosts();
+                                }
+                                if (AppConstants.GROUP_SECTION_PHOTOS.equalsIgnoreCase(tab1.getTag().toString())) {
+                                    isRequestRunning = false;
+                                    isLastPageReached = false;
+                                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+                                    postList.clear();
+                                    skip = 0;
+                                    limit = 10;
+                                    postType = AppConstants.POST_TYPE_MEDIA_KEY;
+                                    getFilteredGroupPosts();
+                                }
+                                if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab1.getTag().toString())) {
+                                    isRequestRunning = false;
+                                    isLastPageReached = false;
+                                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+                                    postList.clear();
+                                    skip = 0;
+                                    limit = 10;
+                                    postType = AppConstants.POST_TYPE_POLL_KEY;
+                                    getFilteredGroupPosts();
+                                }
+
+
+                            }
+                        }, 1000);
+
+
+                    }
+
+                } else {
+                    showToast("Failed to add comment. Please try again");
+                }
+            } catch (Exception e) {
+                showToast("Failed to add comment. Please try again");
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
+            showToast("Failed to add comment. Please try again");
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.shareGroupImageViewLinearLayoutContainer:
             case R.id.shareGroupImageView: {
                 MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                 try {
@@ -1083,6 +1215,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
+
                 if (AppConstants.GROUP_SECTION_ABOUT.equalsIgnoreCase(tab.getTag().toString())) {
                     recyclerView.setAdapter(groupAboutRecyclerAdapter);
                 } else if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab.getTag().toString())) {
@@ -1701,4 +1835,34 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             groupsGenericPostRecyclerAdapter.releasePlayer();
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
+        tab1.select();
+       /* if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+            isRequestRunning = false;
+            isLastPageReached = false;
+            recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+            postList.clear();
+            skip = 0;
+            limit = 10;
+            getGroupPosts();
+        }*/
+
+    }
+
+    public void reStoreData() {
+        if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+          /*  isRequestRunning = false;
+            isLastPageReached = false;
+            recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+            postList.clear();
+            skip = 0;
+            limit = 10;
+            getGroupPosts();*/
+        }
+    }
+
 }

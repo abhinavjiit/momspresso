@@ -15,15 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-        <!--<com.lid.lib.LabelImageView-->
-        <!--android:id="@+id/groupImageView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="110dp"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--android:src="@drawable/default_article"-->
-        <!--app:label_backgroundColor="#C2185B"-->
-        <!--app:label_orientation="LEFT_TOP"-->
-        <!--app:label_text="@string/new_label" />-->
+
 
         <ImageView
             android:id="@+id/groupImageView"
@@ -61,6 +53,31 @@
             android:textColor="@color/explore_listing.explore_categories.category_name"
             android:textSize="18sp"
             app:fontName="oswald_regular.ttf" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/groupImageView">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"
+                android:background="@drawable/group_badge_round"
+                android:elevation="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:shadowColor="#48000000"
+                android:shadowDx="-2"
+                android:shadowDy="-2"
+                android:shadowRadius="4"
+                android:text="10"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:visibility="visible"
+                app:fontName="oswald_regular.ttf" />
+        </LinearLayout>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

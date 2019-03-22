@@ -32,6 +32,7 @@ public class GroupResult implements Parcelable {
     private Map<String, String> questionnaire;
     private int memberCount;
     private AdminMembers adminMembers;
+    private int highlight;
 
     protected GroupResult(Parcel in) {
         id = in.readInt();
@@ -53,6 +54,7 @@ public class GroupResult implements Parcelable {
         annonAllowed = in.readInt();
         dmAllowed = in.readInt();
         sentiment = in.readString();
+        highlight = in.readInt();
     }
 
     public static final Creator<GroupResult> CREATOR = new Creator<GroupResult>() {
@@ -117,6 +119,14 @@ public class GroupResult implements Parcelable {
 
     public String getUrl() {
         return url;
+    }
+
+    public int getHighlight() {
+        return highlight;
+    }
+
+    public void setHighlight(int highlight) {
+        this.highlight = highlight;
     }
 
     public void setUrl(String url) {
@@ -261,6 +271,7 @@ public class GroupResult implements Parcelable {
         dest.writeInt(annonAllowed);
         dest.writeInt(dmAllowed);
         dest.writeString(sentiment);
+        dest.writeInt(highlight);
     }
 
     public class AdminMembers {

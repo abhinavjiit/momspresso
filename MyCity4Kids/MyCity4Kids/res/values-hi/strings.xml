@@ -926,4 +926,13 @@
     <string name="choose_video_categories_text">CATEGORIES</string>
 
 
+    //groupdetail Activity toast String
+    <string name="group_detail_activity_toast_text">You can also post anonymously </string>
+    <string name="group_add_comment_text">ADD COMMENT</string>
+    <string name="group_invite_text">आमंत्रित करें</string>
+
+    //tooltip groups
+    <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+
+
 </resources>

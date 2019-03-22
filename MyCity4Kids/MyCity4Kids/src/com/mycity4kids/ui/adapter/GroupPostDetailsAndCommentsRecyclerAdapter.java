@@ -822,6 +822,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView upvoteCountTextView, downvoteCountTextView;
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
+        ;
         ImageView postSettingImageView, shareTextView;
 
         TextPostViewHolder(View view) {
@@ -837,6 +838,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
+
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);

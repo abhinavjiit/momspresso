@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
@@ -65,6 +67,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
     private HeaderGridView gridview;
 
     View gridViewHeader;
+    Tracker t;
     private ParentTopicsGridAdapter adapter;
     private View view;
     private EditText searchTopicsEditText;
@@ -278,6 +281,13 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             }
             break;
             case R.id.forYouTextView: {
+
+              /*  Tracker t = ((BaseApplication) getActivity().getApplication()).getTracker(BaseApplication.TrackerName.APP_TRACKER);
+                if (t != null) {
+
+                    t.setScreenName("For You");
+                    t.send(new HitBuilders.EventBuilder().setCategory("ForYouTextClick").setAction("click").setLabel("foryou").build());
+                }*/
                 Utils.pushOpenScreenEvent(getActivity(), "ForYouScreen", dynamoUserId + "");
                 Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "ForYouScreen");
                 Intent intent = new Intent(getActivity(), ArticleListingActivity.class);

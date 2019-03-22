@@ -7,6 +7,8 @@
     <color name="app_blue">#507cbe</color>
     <color name="app_pink">#FF4081</color>
     <color name="app_red">#D54058</color>
+    <color name="app_red_50_opacity">#80D54058</color>
+
     <color name="app_cyan">#39B47E</color>
     <color name="app_trans_red">#D54058</color>
     <color name="sign_in_out_text_red_color">#FF9BA8</color>
@@ -466,4 +468,5 @@
     <color name="line_button">#565758</color>
     <color name="black_translucent">#50000000</color>
     <color name="black_63">#a1000000</color>
+    <color name="gray_group_comment_container_border">#d7d7d7</color>
 </resources>

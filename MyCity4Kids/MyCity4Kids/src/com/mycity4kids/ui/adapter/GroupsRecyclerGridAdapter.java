@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kelltontech.utils.StringUtils;
 import com.lid.lib.LabelImageView;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
@@ -62,7 +64,17 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
 
     @Override
     public void onBindViewHolder(GroupsViewHolder holder, int position) {
-//        holder.groupImageView.setText(groupsDataList.get(position));
+        if (groupsDataList.get(position).getHighlight() != 0) {
+            holder.badge.setVisibility(View.VISIBLE);
+            if (groupsDataList.get(position).getHighlight() > 30) {
+                holder.badge.setText("30+");
+            } else {
+                holder.badge.setText(String.valueOf(groupsDataList.get(position).getHighlight()));
+            }
+        } else {
+            holder.badge.setVisibility(View.GONE);
+        }
+
         try {
             Picasso.with(mContext).load(groupsDataList.get(position).getHeaderImage())
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.groupImageView);
@@ -81,8 +93,8 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
     }
 
     public class GroupsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView groupsNameTextView;
-        ImageView groupImageView;
+        TextView groupsNameTextView, badge;
+        ImageView groupImageView, hightLightImageView;
         LabelImageView groupNewLabelImageView;
 
         GroupsViewHolder(View view) {
@@ -90,6 +102,8 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
             groupImageView = (ImageView) view.findViewById(R.id.groupImageView);
             groupsNameTextView = (TextView) view.findViewById(R.id.groupNameTextView);
             groupNewLabelImageView = (LabelImageView) view.findViewById(R.id.groupNewLabelImageView);
+            //  hightLightImageView = (ImageView) view.findViewById(R.id.highlights);
+            badge = (TextView) view.findViewById(R.id.badge);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

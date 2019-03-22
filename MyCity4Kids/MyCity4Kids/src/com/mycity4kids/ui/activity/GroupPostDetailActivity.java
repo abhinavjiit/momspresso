@@ -134,6 +134,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private int deleteCommentPos;
     private int deleteReplyPos;
     private String memberType;
+    RelativeLayout commentLayout;
     private int responseId;
     private TaskFragment mTaskFragment;
     private MediaPlayer mMediaplayer;
@@ -158,7 +159,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         deletePostTextView = (TextView) findViewById(R.id.deletePostTextView);
         blockUserTextView = (TextView) findViewById(R.id.blockUserTextView);
         pinPostTextView = (TextView) findViewById(R.id.pinPostTextView);
-
+        commentLayout = (RelativeLayout) findViewById(R.id.commentLayout);
         reportPostTextView = (TextView) findViewById(R.id.reportPostTextView);
         openAddCommentDialog = (FloatingActionButton) findViewById(R.id.openAddCommentDialog);
 
@@ -183,6 +184,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         deletePostTextView.setOnClickListener(this);
         blockUserTextView.setOnClickListener(this);
         pinPostTextView.setOnClickListener(this);
+        commentLayout.setOnClickListener(this);
 
         completeResponseList = new ArrayList<>();
         completeResponseList.add(new GroupPostCommentResult()); // Empty element for Header position
@@ -251,10 +253,12 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     }
 
                     if (postData.getDisableComments() == 1) {
+                        commentLayout.setVisibility(View.GONE);
                         openAddCommentDialog.setVisibility(View.GONE);
                         commentDisableFlag = true;
                     } else {
-                        openAddCommentDialog.setVisibility(View.VISIBLE);
+                        commentLayout.setVisibility(View.VISIBLE);
+                        openAddCommentDialog.setVisibility(View.GONE);
                         commentDisableFlag = false;
                     }
 
@@ -922,7 +926,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     updateUserPostPreferences("disableNotif");
                 }
                 break;
-            case R.id.openAddCommentDialog: {
+            case R.id.openAddCommentDialog:
+            case R.id.commentLayout: {
                 AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
@@ -1130,7 +1135,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     } else {
                         commentToggleTextView.setText(getString(R.string.groups_disable_comment));
                         commentDisableFlag = false;
-                        openAddCommentDialog.setVisibility(View.VISIBLE);
+                        commentLayout.setVisibility(View.VISIBLE);
+                        openAddCommentDialog.setVisibility(View.GONE);
                     }
                 } else {
 
@@ -1823,7 +1829,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     public void processImage(Uri imageUri) {
         android.app.FragmentManager fm = getFragmentManager();
-        mTaskFragment=null;
+        mTaskFragment = null;
         mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
         if (mTaskFragment == null) {
             mTaskFragment = new TaskFragment();
@@ -1883,5 +1889,12 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
             groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
     }
 }

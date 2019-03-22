@@ -34,6 +34,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,6 +76,7 @@ import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
@@ -95,6 +97,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -118,8 +121,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private static String PERMISSION_AUDIO_RECORD = Manifest.permission.RECORD_AUDIO;
     private boolean permissionToRecordAccepted = false;
 
-//    private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
-
+    //    private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
+    static int TOOLTIP_SHOW_TIMES;
     private static final int REQUEST_INIT_PERMISSION = 1;
     private HashMap<ImageView, String> imageUrlHashMap = new HashMap<>();
     private HashMap<ImageView, String> audioUrlHashMap = new HashMap<>();
@@ -246,19 +249,16 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
         mFileName += "/audiorecordtest.m4a";
 
-        commentReplyEditText.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                if (commentReplyEditText.hasFocus()) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                        case MotionEvent.ACTION_SCROLL:
-                            v.getParent().requestDisallowInterceptTouchEvent(false);
-                            return true;
-                    }
+        commentReplyEditText.setOnTouchListener((v, event) -> {
+            if (commentReplyEditText.hasFocus()) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_SCROLL:
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        return true;
                 }
-                return false;
             }
+            return false;
         });
 
         commentReplyEditText.addTextChangedListener(new TextWatcher() {
@@ -320,6 +320,26 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             anonymousCheckbox.setChecked(true);
         } else {
             anonymousCheckbox.setChecked(false);
+        }
+
+        TOOLTIP_SHOW_TIMES = SharedPrefUtils.getTooltipCount(getContext());
+
+        if (TOOLTIP_SHOW_TIMES < 3) {
+            new SimpleTooltip.Builder(getContext())
+                    .anchorView(audioRecordView)
+                    .backgroundColor(getResources().getColor(R.color.app_red))
+                    .text("TRY AUDIO POST")
+                    .textColor(getResources().getColor(R.color.white))
+                    .arrowColor(getResources().getColor(R.color.app_red))
+                    .gravity(Gravity.TOP)
+                    .arrowWidth(40)
+                    .animated(true)
+                    .transparentOverlay(true)
+                    .build()
+                    .show();
+            TOOLTIP_SHOW_TIMES++;
+            SharedPrefUtils.toolTipChecking(getContext(), TOOLTIP_SHOW_TIMES);
+
         }
 
         if (commentOrReplyData == null) {
@@ -470,6 +490,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             audioSeekBar.setProgress(0);
             audioTimeElapsedComment.setVisibility(View.GONE);
         }
+        TOOLTIP_SHOW_TIMES = 3;
+        SharedPrefUtils.toolTipChecking(getContext(), TOOLTIP_SHOW_TIMES);
         startRecording();
     }
 
@@ -604,9 +626,18 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         }
                     } else {
                         if (commentOrReplyData == null) {
-                            if (getActivity() instanceof GroupPostDetailActivity)
+                            if (getActivity() instanceof GroupPostDetailActivity )
                                 ((GroupPostDetailActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap);
-                        } else {
+
+
+                       if(getActivity() instanceof  GroupDetailsActivity)
+                       {
+                           ((GroupDetailsActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap,groupId,postId);
+                           ((GroupDetailsActivity) getActivity()).reStoreData();
+
+                       }
+                        }
+                        else {
                             if (getActivity() instanceof GroupPostDetailActivity)
                                 ((GroupPostDetailActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), mediaMap);
                             else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity)
@@ -614,6 +645,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         }
                     }
                     dismiss();
+
                     commentReplyEditText.setVisibility(View.VISIBLE);
                 }
                 break;
@@ -711,6 +743,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 } else {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
+                SharedPrefUtils.toolTipChecking(getContext(), 3);
+
                 break;
             case R.id.playAudioImageView:
                 playComment();
@@ -856,8 +890,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private boolean isValid(Map<String, String> image) {
 
         if (StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString()) && image.isEmpty()) {
-            if (isAdded()){
-                if (isLocked){
+            if (isAdded()) {
+                if (isLocked) {
                     Toast.makeText(getActivity(), R.string.stop_recording, Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();

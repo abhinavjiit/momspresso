@@ -112,7 +112,8 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/anonymousTextView"
         android:padding="10dp"
-        android:src="@drawable/ic_incognito" />
+        android:src="@drawable/ic_incognito"
+        android:tooltipText="kbdjvkjdbfvjkdbfsvjksdbu"/>
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/anonymousTextView"
@@ -122,6 +123,7 @@
         android:layout_alignBottom="@+id/anonymousImageView"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/anonymousCheckbox"
+        android:tooltipText="cvdvfdffsdsdfsfdwfwefwefwefweefe"
         android:gravity="center_vertical"
         android:paddingRight="10dp"
         android:text="@string/groups.anonymous" />
@@ -163,7 +165,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+       />
 
 
     <!--<ImageView

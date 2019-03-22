@@ -527,10 +527,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
             for (int j = selectedTopic.getChild().size() - 1; j >= 0; j--) {
                 if ("1".equals(selectedTopic.getChild().get(j).getPublicVisibility())) {
-                    if ("1".equals(selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
-                        currentActiveChallengeId = selectedTopic.getChild().get(j).getId();
-                        currentActiveChallenge = selectedTopic.getChild().get(j).getDisplay_name();
-                        break;
+                    if (selectedTopic != null && selectedTopic.getChild() != null && selectedTopic.getChild().get(j) != null && selectedTopic.getChild().get(j).getExtraData() != null && selectedTopic.getChild().get(j).getExtraData().get(0) != null && selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge() != null && selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive() != null) {
+                        if ("1".equals(selectedTopic.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
+                            currentActiveChallengeId = selectedTopic.getChild().get(j).getId();
+                            currentActiveChallenge = selectedTopic.getChild().get(j).getDisplay_name();
+                            break;
+                        }
                     }
                 }
             }
