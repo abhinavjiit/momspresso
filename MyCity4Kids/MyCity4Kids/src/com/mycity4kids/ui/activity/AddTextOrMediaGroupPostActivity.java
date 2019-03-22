@@ -825,6 +825,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
         if (recordTime < 1) {
             resetIcons();
+            mRecorder.release();
+            mRecorder = null;
             Toast.makeText(this, R.string.hold_to_release, Toast.LENGTH_SHORT).show();
         } else if (recordTime >= 4) {
             stopRecording();
@@ -836,6 +838,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         } else {
             audioRecordView.disableClick(false);
             resetIcons();
+            mRecorder.release();
+            mRecorder = null;
             Toast.makeText(this, R.string.please_hold_for_3_seconds, Toast.LENGTH_SHORT).show();
         }
     }

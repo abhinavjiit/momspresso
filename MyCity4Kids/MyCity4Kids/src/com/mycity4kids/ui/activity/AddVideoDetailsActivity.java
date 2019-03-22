@@ -87,7 +87,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private String duration;
     private String thumbnailTime;
     private SharedPreferences pref;
-    private String comingFrom, challengeId, challengeName;
+    private String comingFrom, challengeId, challengeName,extension;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -332,6 +332,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         intt.putExtra("categoryId", categoryId);
         intt.putExtra("duration", duration);
         intt.putExtra("thumbnailTime", thumbnailTime);
+        intt.putExtra("extension",originalUri.getPath().substring(originalUri.getPath().lastIndexOf(".")));
         if (comingFrom.equals("Challenge")) {
             intt.putExtra("ChallengeId", challengeId);
             intt.putExtra("ChallengeName", challengeName);
@@ -341,6 +342,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             intt.putExtra("comingFrom", "notFromChallenge");
         }
         startActivity(intt);
+        removeProgressDialog();
     }
 
     private void getBlogPage() {
