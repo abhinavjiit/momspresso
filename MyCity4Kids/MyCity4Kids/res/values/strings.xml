@@ -1073,7 +1073,7 @@
     <string name="group_add_comment_text">ADD COMMENT</string>
     <string name="group_invite_text">Invite</string>
     <string name="group_comment_type_here_text">Type here</string>
-    <string name="group_comment_be_the_first_text">Be the first one</string>
+    <string name="group_comment_be_the_first_text">Be the first one to comment</string>
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>

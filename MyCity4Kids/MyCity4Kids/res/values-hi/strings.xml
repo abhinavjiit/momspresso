@@ -921,7 +921,7 @@
 
 
     //new Video Challenge Ui Strings
-    <string name="video_challenge_live_text">LIVE</string>
+    <string name="video_challenge_live_text">LIVE</string>l
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
 
@@ -930,6 +930,8 @@
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
     <string name="group_add_comment_text">ADD COMMENT</string>
     <string name="group_invite_text">आमंत्रित करें</string>
+    <string name="group_comment_type_here_text">Type here</string>
+    <string name="group_comment_be_the_first_text">सबसे पहले कमेंट करें</string>
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
