@@ -72,7 +72,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private TusClient client;
     private TextView status, okayTextView, mTxtPercentage, mTxtVideoSize, mTxtVideoName, mTxtVideoExtension;
     private FirebaseAuth mAuth;
-    private UploadTask uploadTask;
+//    private UploadTask uploadTask;
     private boolean isUploading = false;
     private Uri contentURI;
     private String title;
@@ -88,6 +88,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private int statusProgress = 0;
     private String extension;
     private ImageView mImgCancelUpload;
+    private com.google.firebase.storage.UploadTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +121,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         mTxtVideoSize = (TextView) findViewById(R.id.video_size);
         mTxtVideoName = (TextView) findViewById(R.id.video_name);
         mTxtVideoExtension = (TextView) findViewById(R.id.video_extension);
-        mImgCancelUpload = (ImageView)findViewById(R.id.cancel_upload);
+        mImgCancelUpload = (ImageView) findViewById(R.id.cancel_upload);
 
         okayTextView.setOnClickListener(this);
         mImgCancelUpload.setOnClickListener(this);
@@ -170,7 +171,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         suffixName = System.currentTimeMillis();
 //        Uri file = Uri.fromFile(file2);
         final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/" + file2.getLastPathSegment() + "_" + suffixName);
-        com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2);
+        uploadTask = riversRef.putFile(file2);
 
 // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -415,7 +416,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             @Override
             public void onButtonCLick(int buttonId) {
                 if (uploadTask != null) {
-                    uploadTask.cancel(true);
+//                    uploadTask.cancel(true);
+                    uploadTask.cancel();
                 }
                 finish();
             }
@@ -480,8 +482,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             showAlertDialog("Momspresso", getString(R.string.video_progress_progress_lost_msg), new OnButtonClicked() {
                 @Override
                 public void onButtonCLick(int buttonId) {
-                    if (isUploading) {
-                        uploadTask.cancel(true);
+                    if (uploadTask != null && isUploading) {
+//                        uploadTask.cancel(true);
+                        uploadTask.cancel();
                         finish();
                     }
                 }
@@ -518,8 +521,9 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                     showAlertDialog("Momspresso", getString(R.string.video_progress_progress_lost_msg), new OnButtonClicked() {
                         @Override
                         public void onButtonCLick(int buttonId) {
-                            if (isUploading) {
-                                uploadTask.cancel(true);
+                            if (uploadTask != null && isUploading) {
+//                                uploadTask.cancel(true);
+                                uploadTask.cancel();
                                 finish();
                             }
                         }
