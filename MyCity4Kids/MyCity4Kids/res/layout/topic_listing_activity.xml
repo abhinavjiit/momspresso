@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/home_bg"
@@ -35,7 +36,22 @@
                     android:textColor="@color/home.toolbar.titlecolor"
                     android:textSize="20sp"
                     app:fontName="oswald_regular.ttf" />
+
+                <ImageView
+                    android:id="@+id/imageSortBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_flip"
+                    android:tint="@color/greytxt_color" />
             </RelativeLayout>
+
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
@@ -78,10 +94,22 @@
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
     </LinearLayout>
 
+    <include layout="@layout/rewards_bottom_sheet" />
 
-    <include layout="@layout/rewards_bottom_sheet"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="right|bottom"
+        android:src="@drawable/ic_plus"
+        app:backgroundTint="@color/app_red"
+        app:fab_colorNormal="@color/app_red"
+        app:fab_colorPressed="@color/app_red"
+        app:rippleColor="@color/app_red" />
 
 </android.support.design.widget.CoordinatorLayout>

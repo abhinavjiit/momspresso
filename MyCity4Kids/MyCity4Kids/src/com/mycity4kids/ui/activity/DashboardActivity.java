@@ -43,7 +43,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -114,11 +113,9 @@ import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -126,7 +123,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -2113,7 +2109,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 shortStoriesTopicList = new ArrayList<Topics>();
                 if (res != null) {
                     for (int i = 0; i < res.getData().size(); i++) {
-                        if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                        if (res.getData()!=null && res.getData().get(i)!=null && res.getData().get(i).getId()!=null && AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
                             shortStoriesTopicList.add(res.getData().get(i));
                         }
                     }

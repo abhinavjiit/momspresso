@@ -52,7 +52,7 @@
                 android:layout_weight=".5"
                 android:background="@drawable/btn_background_selector"
                 android:padding="10dp"
-                android:src="@drawable/plus_home_icon" />
+                android:src="@drawable/ic_plus" />
         </LinearLayout>
 
         <LinearLayout

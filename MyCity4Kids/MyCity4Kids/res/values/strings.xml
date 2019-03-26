@@ -1066,5 +1066,6 @@
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="dialog_header_choose_sort_type">Sort by</string>
 
 </resources>
