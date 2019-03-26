@@ -25,6 +25,18 @@ public class VlogsListingAndDetailResult {
     private Boolean isLiked = false;
     private boolean isBookmarked = false;
     private boolean isFollowed = false;
+    private boolean is_gold = false;
+
+
+
+
+    public boolean isIs_gold() {
+        return is_gold;
+    }
+
+    public void setIs_gold(boolean is_gold) {
+        this.is_gold = is_gold;
+    }
 
     public Boolean getLiked() {
         return isLiked;
