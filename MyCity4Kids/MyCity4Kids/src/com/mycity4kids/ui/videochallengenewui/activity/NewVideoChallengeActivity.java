@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -34,7 +35,8 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     RelativeLayout mainMediaFrameLayout;
     SimpleExoPlayerView exoplayerChallengeDetailListing;
     LinearLayout submitButtonLinearLayout;
-    TextView challengeNameText, submitStoryText, toolbarTitleTextView, saveTextView;
+    TextView challengeNameText, submitStoryText, toolbarTitleTextView;
+    FloatingActionButton saveTextView;
     TabLayout tabs;
     private ViewPager viewPager;
     private Toolbar toolbar;
@@ -61,7 +63,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_video_listing_detail);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.mainprofile_parent_layout);
-        saveTextView = (TextView) findViewById(R.id.saveTextView);
+        saveTextView = (FloatingActionButton) findViewById(R.id.saveTextView);
         appBarLayout = (AppBarLayout) findViewById(R.id.id_appbar);
         challengeHeaderRelative = (RelativeLayout) findViewById(R.id.challengeHeaderRelative);
         mainMediaFrameLayout = (RelativeLayout) findViewById(R.id.main_media_frame);

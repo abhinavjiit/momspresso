@@ -5,6 +5,7 @@ import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -13,7 +14,6 @@ import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,9 +29,11 @@ import android.support.v7.app.AppCompatDelegate;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
@@ -90,13 +92,12 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-
-import static com.facebook.accountkit.internal.AccountKitController.getApplicationContext;
 
 /**
  * Created by hemant on 24/4/18.
@@ -115,19 +116,21 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
     public static final int ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_IMAGE_CAMERA_ACTIVITY_REQUEST_CODE = 1112;
-
+    SharedPreferences.Editor editor;
     private TaskFragment mTaskFragment;
     private GroupResult selectedGroup;
     private LinkedHashMap<ImageView, String> imageUrlHashMap = new LinkedHashMap<>();
     private Uri imageUri;
     private File photoFile;
+    static int count;
+    static int TOOLTIP_SHOW_TIMES;
     private String mCurrentPhotoPath, absoluteImagePath;
     private boolean isRequestRunning = false;
-
     private View mLayout;
     private EditText postContentEditText;
     private ImageView addMediaImageView, anonymousImageView;
     private ImageView postImageView;
+    SharedPreferences sharedpreferences;
     private TextView publishTextView;
     private TextView imageCameraTextView, imageGalleryTextView, cancelTextView;
     private RelativeLayout chooseMediaTypeContainer;
@@ -136,7 +139,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     private TextView anonymousTextView;
     private CheckBox anonymousCheckbox;
     private TextView addMediaTextView;
-
     private MediaPlayer mMediaplayer;
     private Uri downloadUri;
     private AudioRecordView audioRecordView;
@@ -205,7 +207,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
 
         mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
         mFileName += "/audiorecordtest.m4a";
-
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         audioRecordView.setRecordingListener(this);
         chooseMediaTypeContainer.setOnClickListener(this);
         addMediaImageView.setOnClickListener(this);
@@ -255,7 +258,29 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         } else {
             anonymousCheckbox.setChecked(false);
         }
+        TOOLTIP_SHOW_TIMES = SharedPrefUtils.getTooltipCount(this);
+
+        if (TOOLTIP_SHOW_TIMES < 3) {
+            new SimpleTooltip.Builder(this)
+                    .anchorView(audioRecordView)
+                    .backgroundColor(getResources().getColor(R.color.app_red))
+                    .text(getResources().getString(R.string.add_text_or_media_group_post_activity_tooltip_text))
+                    .textColor(getResources().getColor(R.color.white))
+                    .arrowColor(getResources().getColor(R.color.app_red))
+                    .gravity(Gravity.TOP)
+                    .arrowWidth(40)
+                    .animated(true)
+                    .transparentOverlay(true)
+                    .build()
+                    .show();
+            TOOLTIP_SHOW_TIMES++;
+            SharedPrefUtils.toolTipChecking(this, TOOLTIP_SHOW_TIMES);
+
+        }
+
+
     }
+
 
     @Override
     protected void updateUi(Response response) {
@@ -318,6 +343,10 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                 } else {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
+
+                SharedPrefUtils.toolTipChecking(this, 3);
+
+
                 break;
             case R.id.publishTextView:
                 if (!isRequestRunning && validateParams()) {
@@ -776,6 +805,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             audioSeekBar.setProgress(0);
             audioTimeElapsedComment.setVisibility(View.GONE);
         }
+        TOOLTIP_SHOW_TIMES = 3;
+        SharedPrefUtils.toolTipChecking(this, TOOLTIP_SHOW_TIMES);
+
         startRecording();
     }
 
@@ -793,6 +825,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
         if (recordTime < 1) {
             resetIcons();
+            mRecorder.release();
+            mRecorder = null;
             Toast.makeText(this, R.string.hold_to_release, Toast.LENGTH_SHORT).show();
         } else if (recordTime >= 4) {
             stopRecording();
@@ -804,6 +838,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         } else {
             audioRecordView.disableClick(false);
             resetIcons();
+            mRecorder.release();
+            mRecorder = null;
             Toast.makeText(this, R.string.please_hold_for_3_seconds, Toast.LENGTH_SHORT).show();
         }
     }

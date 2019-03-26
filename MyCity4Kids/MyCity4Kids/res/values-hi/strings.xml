@@ -258,7 +258,7 @@
 
     <string-array name="onboarding_title_array">
         <item>अपना ब्लॉग बनाएं</item>
-        <item>6 भाषाओं में से किसी भी भाषा  में ब्लॉग का आनंद लें</item>
+        <item>8 भाषाओं में से किसी भी भाषा  में ब्लॉग का आनंद लें</item>
         <item>वीडियो देखें</item>
         <item>सपोर्ट ग्रुप्स  के साथ, आप अकेले नहीं हैं</item>
     </string-array>
@@ -921,9 +921,20 @@
 
 
     //new Video Challenge Ui Strings
-    <string name="video_challenge_live_text">LIVE</string>
+    <string name="video_challenge_live_text">LIVE</string>l
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
+
+
+    //groupdetail Activity toast String
+    <string name="group_detail_activity_toast_text">You can also post anonymously </string>
+    <string name="group_add_comment_text">ADD COMMENT</string>
+    <string name="group_invite_text">आमंत्रित करें</string>
+    <string name="group_comment_type_here_text">Type here</string>
+    <string name="group_comment_be_the_first_text">सबसे पहले कमेंट करें</string>
+
+    //tooltip groups
+    <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
 
 
 </resources>

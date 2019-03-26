@@ -67,10 +67,11 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
         articleDataModelsNew = mParentingLists;
         for (int i = 0; i < articleDataModelsNew.getChild().size(); i++) {
             if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
-                // if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
-                count++;
-
-                //}
+                if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
+                    if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
+                        count++;
+                    }
+                }
             }
         }
     }
@@ -123,36 +124,37 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                 for (int j = m - n; j >= 0; j--) {
                     if ("1".equals(articleDataModelsNew.getChild().get(j).getPublicVisibility())) {
                         if (articleDataModelsNew.getChild().get(j).getExtraData() != null) {
-                            holder.rootView.setVisibility(View.VISIBLE);
-                            //if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
-                            if (position != 1) {
-                                holder.previousAndThisWeekTextView.setVisibility(View.GONE);
-                            } else {
-                                holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
-                            }
-                            if (position == 1) {
-                                holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
-                                holder.previousAndThisWeekTextView.setText(R.string.previous_week_challenge);
-                            } else {
-                                holder.previousAndThisWeekTextView.setVisibility(View.GONE);
-                            }
-                            challengeId.add(articleDataModelsNew.getChild().get(j).getId());
-                            Display_Name.add(articleDataModelsNew.getChild().get(j).getDisplay_name());
-                            holder.storyTitleTextView.setVisibility(View.GONE);
-                            holder.titleTextUnderLine.setVisibility(View.GONE);
-                            holder.storytitle.setText(articleDataModelsNew.getChild().get(j).getDisplay_name());
-                            if (articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()!=null && !articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl().isEmpty()) {
-                                holder.imageBody.setVisibility(View.VISIBLE);
-                                try {
-                                    Glide.with(mcontext).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
-                                    activeImageUrl.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl());
-                                } catch (Exception e) {
-                                    holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
+                            if ("1".equals(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getActive())) {
+                                holder.rootView.setVisibility(View.VISIBLE);
+                                if (position != 1) {
+                                    holder.previousAndThisWeekTextView.setVisibility(View.GONE);
+                                } else {
+                                    holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                                 }
-                                n++;
-                                break;
-                            } else {
-                                holder.imageBody.setVisibility(View.GONE);
+                                if (position == 1) {
+                                    holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
+                                    holder.previousAndThisWeekTextView.setText(R.string.previous_week_challenge);
+                                } else {
+                                    holder.previousAndThisWeekTextView.setVisibility(View.GONE);
+                                }
+                                challengeId.add(articleDataModelsNew.getChild().get(j).getId());
+                                Display_Name.add(articleDataModelsNew.getChild().get(j).getDisplay_name());
+                                holder.storyTitleTextView.setVisibility(View.GONE);
+                                holder.titleTextUnderLine.setVisibility(View.GONE);
+                                holder.storytitle.setText(articleDataModelsNew.getChild().get(j).getDisplay_name());
+                                if (articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl() != null && !articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl().isEmpty()) {
+                                    holder.imageBody.setVisibility(View.VISIBLE);
+                                    try {
+                                        Glide.with(mcontext).load(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
+                                        activeImageUrl.add(articleDataModelsNew.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl());
+                                    } catch (Exception e) {
+                                        holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
+                                    }
+                                    n++;
+                                    break;
+                                } else {
+                                    holder.imageBody.setVisibility(View.GONE);
+                                }
                             }
                         } else if (articleDataModelsNew.getChild().get(j).getExtraData() == null) {
                             n++;

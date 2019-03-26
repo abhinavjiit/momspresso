@@ -174,6 +174,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private MixpanelAPI mixpanel;
     ArrayList<VlogsListingAndDetailResult> dataList = new ArrayList<>();
     ArrayList<VlogsListingAndDetailResult> dataListHeader = new ArrayList<>();
+    ArrayList<VlogsListingAndDetailResult> finalDataList = new ArrayList<>();
     ExoPlayerRecyclerView recyclerViewFeed;
     private int followPos;
 
@@ -184,6 +185,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private PlaybackControlView controlView;
     public String urlString;
     private boolean fromLoadMore = false;
+    private int endIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -398,8 +400,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
 //        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 4, 0, 3, taggedCategories);
 //        callRecentVideoArticles.enqueue(recentArticleResponseCallback);
-
-        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(startIndex, startIndex + 10, 1, 3, null);
+        Log.d("startIndex", "" + startIndex + "," + (startIndex + 10));
+        endIndex = startIndex + 10;
+        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(startIndex, endIndex, 1, 3, taggedCategories);
         callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
     }
 
@@ -454,7 +457,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                         @Override
                         public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                             fromLoadMore = true;
-                            hitRelatedArticleAPI(totalItemsCount);
+                            hitRelatedArticleAPI(endIndex + 1);
                         }
                     });
 

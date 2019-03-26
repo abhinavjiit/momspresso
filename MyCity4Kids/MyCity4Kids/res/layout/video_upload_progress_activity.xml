@@ -41,19 +41,95 @@
             android:layout_height="1dp"
             android:layout_below="@+id/status"
             android:layout_marginTop="40dp"
-            android:background="@color/common_underline" />
+            android:background="@color/common_underline"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/progress_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/status"
+            android:padding="@dimen/space_10"
+            android:background="@color/black_15">
+
+            <TextView
+                android:id="@+id/video_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/video_extension"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/video_name"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/video_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/video_name"
+                android:textColor="@color/app_red"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/cancel_upload"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/space_5"
+                app:srcCompat="@drawable/ic_close_video" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/video_name"
+                android:layout_marginTop="@dimen/space_10"
+                android:gravity="center_vertical">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+                    android:layout_width="260dp"
+                    android:layout_height="8dp"
+                    android:layout_marginRight="@dimen/space_10"
+                    android:progressDrawable="@drawable/progress_bar" />
+
+                <TextView
+                    android:id="@+id/percentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/space_10"
+                    android:layout_toRightOf="@+id/progressBar"
+                    android:text="50"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
 
         <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/donot_kill_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/view11"
+            android:layout_below="@+id/progress_layout"
+            android:layout_centerHorizontal="true"
             android:layout_marginStart="0dp"
             android:layout_marginLeft="0dp"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:text="@string/video_progress.uploading_msg"
             android:textColor="@color/video_progress.uploading_msg"
             app:fontName="oswald.ttf" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -109,9 +185,9 @@
         <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/underline2"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:gravity="center"
             android:padding="20dp"
             android:text="@string/video_progress.success_msg"
@@ -126,10 +202,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="51dp"
             android:gravity="center"
-            android:paddingBottom="14dp"
             android:paddingLeft="60dp"
-            android:paddingRight="60dp"
             android:paddingTop="14dp"
+            android:paddingRight="60dp"
+            android:paddingBottom="14dp"
             android:text="@string/video_progress.okay"
             android:textColor="@color/video_progress.okay"
             android:textSize="18sp"

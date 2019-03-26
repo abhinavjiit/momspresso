@@ -768,4 +768,31 @@ public class SharedPrefUtils {
         _editor.remove("groupId-" + groupId + "~" + "postId-" + postId + "~" + "commentId" + parentId);
         _editor.commit();
     }
+
+
+    public static void toolTipChecking(Context pContext, int count) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putInt("count", count);
+        _editor.commit();
+    }
+
+    public static int getTooltipCount(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (_sharedPref.getInt("count", 0));
+        //return (_sharedPref.getString("groupId-" + groupId, ""));
+    }
+
+    public static void toastAnonymous(Context pContext, int count) {
+        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref1.edit();
+        _editor.putInt("count", count);
+        _editor.apply();
+    }
+
+    public static int getToastAnonymous(Context pContext) {
+        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (_sharedPref1.getInt("count", 0));
+        //return (_sharedPref.getString("groupId-" + groupId, ""));
+    }
 }

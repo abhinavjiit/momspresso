@@ -5,7 +5,6 @@ import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -61,7 +60,6 @@ import com.kelltontech.utils.ToastUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
-import com.mycity4kids.animation.MyCityAnimationsUtil;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -79,14 +77,12 @@ import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.UserDetailResponse;
-import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
@@ -110,7 +106,6 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
-import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
@@ -120,7 +115,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import okhttp3.ResponseBody;
@@ -1948,7 +1942,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     videoDisplay_Name = new ArrayList<>();
                     videoImageUrl = new ArrayList<>();
                     videoStreamUrl = new ArrayList<>();
-                    num_of_categorys = videoTopicList.get(0).getChild().size();
+                    if (videoTopicList.get(0).getChild().size() != 0) {
+                        num_of_categorys = videoTopicList.get(0).getChild().size();
+                    }
                     if (num_of_categorys != 0) {
                         for (int j = 0; j < num_of_categorys; j++) {
                             if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {

@@ -66,6 +66,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     FrameLayout frameLayout;
     private View rootLayout;
+    Topics topic;
     private int sortType = 0;
     private int nextPageNumber;
     private int limit = 10;
@@ -94,8 +95,10 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         funnyvideosshimmer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_funny_videos_article);
         frameLayout.getBackground().setAlpha(0);
 
-        videoCategory = getArguments().getString("video_category_id");
-        Topics topic = getArguments().getParcelable("currentSubTopic");
+        if (getArguments() != null) {
+            videoCategory = getArguments().getString("video_category_id");
+            topic = getArguments().getParcelable("currentSubTopic");
+        }
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 

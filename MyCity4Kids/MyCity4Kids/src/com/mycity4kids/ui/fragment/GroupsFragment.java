@@ -37,7 +37,6 @@ import com.mycity4kids.ui.adapter.GroupsRecyclerGridAdapter;
 import com.mycity4kids.widget.NoScrollGridLayoutManager;
 import com.mycity4kids.widget.SpacesItemDecoration;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

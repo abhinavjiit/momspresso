@@ -1,16 +1,23 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.KeyguardManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +54,7 @@ import com.mycity4kids.ui.TusUpload;
 import com.mycity4kids.ui.TusUploader;
 import com.mycity4kids.utils.MixPanelUtils;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
@@ -62,9 +70,10 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private Toolbar mToolbar;
     RelativeLayout uploadFinishContainer, uploadingContainer;
     private TusClient client;
-    private TextView status, okayTextView;
+    private TextView status, okayTextView, mTxtPercentage, mTxtVideoSize, mTxtVideoName, mTxtVideoExtension;
     private FirebaseAuth mAuth;
-    private UploadTask uploadTask;
+//    private UploadTask uploadTask;
+    private boolean isUploading = false;
     private Uri contentURI;
     private String title;
     private String categoryId, challengeId, challengeName, comingFrom;
@@ -73,13 +82,20 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private MixpanelAPI mixpanel;
     private long suffixName;
     private String jsonMyObject;
+    private ProgressBar mProgressBar;
+    private ProgressDialog progressdialog;
+    private Handler handler = new Handler();
+    private int statusProgress = 0;
+    private String extension;
+    private ImageView mImgCancelUpload;
+    private com.google.firebase.storage.UploadTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_upload_progress_activity);
         Utils.pushOpenScreenEvent(this, "VideoUploadScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mAuth = FirebaseAuth.getInstance();
 
         contentURI = getIntent().getParcelableExtra("uri");
@@ -87,6 +103,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         categoryId = getIntent().getStringExtra("categoryId");
         duration = getIntent().getStringExtra("duration");
         thumbnailTime = getIntent().getStringExtra("thumbnailTime");
+        extension = getIntent().getStringExtra("extension");
+
 
         comingFrom = getIntent().getStringExtra("comingFrom");
         if (comingFrom.equals("Challenge")) {
@@ -98,8 +116,15 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         uploadFinishContainer = (RelativeLayout) findViewById(R.id.uploadFinishContainer);
         status = (TextView) findViewById(R.id.status);
         okayTextView = (TextView) findViewById(R.id.okayTextView);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mTxtPercentage = (TextView) findViewById(R.id.percentage);
+        mTxtVideoSize = (TextView) findViewById(R.id.video_size);
+        mTxtVideoName = (TextView) findViewById(R.id.video_name);
+        mTxtVideoExtension = (TextView) findViewById(R.id.video_extension);
+        mImgCancelUpload = (ImageView) findViewById(R.id.cancel_upload);
 
         okayTextView.setOnClickListener(this);
+        mImgCancelUpload.setOnClickListener(this);
 
         uploadingContainer.setVisibility(View.VISIBLE);
         uploadFinishContainer.setVisibility(View.GONE);
@@ -142,17 +167,19 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com");
 
         final StorageReference storageRef = storage.getReference();
-
+//        extension = file2.substring(uri.lastIndexOf("."));
         suffixName = System.currentTimeMillis();
 //        Uri file = Uri.fromFile(file2);
         final StorageReference riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "/path/to/" + file2.getLastPathSegment() + "_" + suffixName);
-        com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2);
+        uploadTask = riversRef.putFile(file2);
 
 // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener(new OnFailureListener() {
+
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
+                isUploading = false;
                 MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
                 createRowForFailedAttempt(exception.getMessage());
 
@@ -164,6 +191,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                 riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        isUploading = false;
                         Uri downloadUri = uri;
                         publishVideo(uri);
                     }
@@ -177,6 +205,20 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             @Override
             public void onProgress(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
                 Log.e("video uplo to firebase=", "Bytes uploaded: " + taskSnapshot.getBytesTransferred());
+                isUploading = true;
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                double mb = (double) taskSnapshot.getTotalByteCount() / (1024 * 1024);
+                DecimalFormat df = new DecimalFormat();
+                df.setMaximumFractionDigits(2);
+                int currentprogress = (int) progress;
+                mTxtVideoSize.setText("(" + df.format(mb) + "MB)");
+                mTxtVideoName.setText("UPLOADING " + contentURI.getLastPathSegment() + "_" + suffixName + "." + extension);
+//                mTxtVideoExtension.setText("." + extension);
+
+                mTxtPercentage.setText(currentprogress + "%");
+                mProgressBar.setProgress(currentprogress);
+//                progressBar.setProgress(currentprogress);
             }
         });
     }
@@ -224,11 +266,11 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response == null || response.body() == null) {
-                if(response.errorBody()!=null){
+                if (response.errorBody() != null) {
                     MixPanelUtils.pushVideoPublishSuccessEvent(mixpanel, title);
                     uploadingContainer.setVisibility(View.GONE);
                     uploadFinishContainer.setVisibility(View.VISIBLE);
-                }else if (response != null && response.raw() != null) {
+                } else if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -374,7 +416,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
             @Override
             public void onButtonCLick(int buttonId) {
                 if (uploadTask != null) {
-                    uploadTask.cancel(true);
+//                    uploadTask.cancel(true);
+                    uploadTask.cancel();
                 }
                 finish();
             }
@@ -435,12 +478,15 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
 
     @Override
     public void onBackPressed() {
-        if (null != uploadTask && uploadTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (isUploading) {
             showAlertDialog("Momspresso", getString(R.string.video_progress_progress_lost_msg), new OnButtonClicked() {
                 @Override
                 public void onButtonCLick(int buttonId) {
-                    uploadTask.cancel(true);
-                    finish();
+                    if (uploadTask != null && isUploading) {
+//                        uploadTask.cancel(true);
+                        uploadTask.cancel();
+                        finish();
+                    }
                 }
             });
         } else {
@@ -468,6 +514,21 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
+                break;
+
+            case R.id.cancel_upload:
+                if (isUploading) {
+                    showAlertDialog("Momspresso", getString(R.string.video_progress_progress_lost_msg), new OnButtonClicked() {
+                        @Override
+                        public void onButtonCLick(int buttonId) {
+                            if (uploadTask != null && isUploading) {
+//                                uploadTask.cancel(true);
+                                uploadTask.cancel();
+                                finish();
+                            }
+                        }
+                    });
+                }
                 break;
         }
     }

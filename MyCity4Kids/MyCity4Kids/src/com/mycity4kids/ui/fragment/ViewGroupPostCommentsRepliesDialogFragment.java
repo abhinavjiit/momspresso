@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,7 +73,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
     private RecyclerView repliesRecyclerView;
     private TextView toolbarTitleTextView;
     private ProgressDialog mProgressDialog;
-
+    private RelativeLayout commentLayout;
     private GroupPostCommentRepliesRecyclerAdapter groupPostCommentRepliesRecyclerAdapter;
     private int childCount;
     private FloatingActionButton openAddReplyDialog;
@@ -90,6 +91,8 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
         repliesRecyclerView = (RecyclerView) rootView.findViewById(R.id.repliesRecyclerView);
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
         openAddReplyDialog = (FloatingActionButton) rootView.findViewById(R.id.openAddReplyDialog);
+        commentLayout = (RelativeLayout) rootView.findViewById(R.id.commentLayout);
+
 
         Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.back_arroow);
         upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal), PorterDuff.Mode.SRC_ATOP);
@@ -101,7 +104,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                 dismiss();
             }
         });
-
+        commentLayout.setOnClickListener(this);
         openAddReplyDialog.setOnClickListener(this);
 
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -120,9 +123,11 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
         }
 
         if (commentDisableFlag) {
+            commentLayout.setVisibility(View.GONE);
             openAddReplyDialog.setVisibility(View.GONE);
         } else {
-            openAddReplyDialog.setVisibility(View.VISIBLE);
+            commentLayout.setVisibility(View.VISIBLE);
+            openAddReplyDialog.setVisibility(View.GONE);
         }
 
         repliesList.add(data);
@@ -493,6 +498,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.commentLayout:
             case R.id.openAddReplyDialog:
                 ((GroupPostDetailActivity) getActivity()).openAddCommentReplyDialog(data);
                 break;
