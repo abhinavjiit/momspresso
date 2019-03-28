@@ -791,6 +791,7 @@
     <string name="groups.pin_post">PIN THIS POST TO TOP</string>
     <string name="groups.unpin_post">UNPIN THIS POST</string>
     <string name="groups.all_groups">ALL GROUPS</string>
+    <string name="groups.other_groups">OTHER GROUPS</string>
     <string name="groups.groups">GROUPS</string>
     <string name="groups.reported_by">Reported By</string>
     <string name="groups.persons">Persons</string>

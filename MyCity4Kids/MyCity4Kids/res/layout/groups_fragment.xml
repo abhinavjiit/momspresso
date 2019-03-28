@@ -67,7 +67,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="20dp"
             android:padding="10dp"
-            android:text="@string/groups.all_groups"
+            android:text="@string/groups.other_groups"
             android:textColor="@color/groups.light_black_color"
             android:textSize="16sp"
             android:visibility="gone"

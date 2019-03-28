@@ -64,6 +64,8 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     private LinkedTreeMap<String, String> selectedQuestionnaire;
     private TextView toolbarTitle;
     private MixpanelAPI mixpanel;
+    ArrayList<GroupResult> joinList;
+    ArrayList<GroupResult> remainList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,10 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
 
         final boolean isMember = getIntent().getBooleanExtra("isMember", false);
+        if (!isMember) {
+            joinList = new ArrayList<>();
+            joinList = getIntent().getParcelableArrayListExtra("joinedList");
+        }
 
 
         setSupportActionBar(toolbar);
@@ -275,6 +281,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             } else {
                 groupList.addAll(dataList);
             }
+
             adapter.setNewListData(groupList);
             skip = skip + limit;
             if (skip >= totalGroupCount) {
@@ -295,8 +302,8 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         if (isMember) {
             selectedGroup = groupList.get(position);
         } else {
-            selectedGroup = groupList.get(position);
-            selectedQuestionnaire = (LinkedTreeMap<String, String>) groupList.get(position).getQuestionnaire();
+            selectedGroup = remainList.get(position);
+            selectedQuestionnaire = (LinkedTreeMap<String, String>) remainList.get(position).getQuestionnaire();
         }
         groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
@@ -367,4 +374,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 }

@@ -14,7 +14,7 @@ import java.nio.channels.FileChannel;
  */
 public class DatabaseUtil {
 
-    public static final void exportDb(){
+    public static final void exportDb() {
         try {
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();
@@ -37,4 +37,6 @@ public class DatabaseUtil {
             e.printStackTrace();
         }
     }
+
+
 }

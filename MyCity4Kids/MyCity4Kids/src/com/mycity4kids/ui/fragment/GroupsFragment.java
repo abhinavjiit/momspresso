@@ -262,6 +262,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             case R.id.seeAllGpTextView: {
                 Intent intent = new Intent(getActivity(), GroupsListingActivity.class);
                 intent.putExtra("isMember", false);
+                intent.putParcelableArrayListExtra("joinedList", joinedGroupList);
                 startActivity(intent);
             }
             break;
