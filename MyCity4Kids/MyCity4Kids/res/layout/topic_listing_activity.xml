@@ -102,14 +102,14 @@
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="right|bottom"
+        android:layout_marginRight="10dp"
         android:src="@drawable/ic_plus"
         app:backgroundTint="@color/app_red"
         app:fab_colorNormal="@color/app_red"
+        android:layout_marginVertical="100dp"
         app:fab_colorPressed="@color/app_red"
+        app:layout_anchorGravity="end|bottom"
+        app:layout_anchor="@id/bottom_sheet"
         app:rippleColor="@color/app_red" />
 
 </android.support.design.widget.CoordinatorLayout>

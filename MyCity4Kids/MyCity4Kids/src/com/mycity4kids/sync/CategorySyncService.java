@@ -160,7 +160,6 @@ public class CategorySyncService extends IntentService {
                          }
                      }
         );
-
     }
 
     private boolean writeResponseBodyToDisk(ResponseBody body, String filename) {
