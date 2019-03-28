@@ -50,7 +50,7 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
         signupTextView = (CustomFontTextView) view.findViewById(R.id.signupTextView);
 
         if (BuildConfig.DEBUG) {
-            mEmailId.setText("blog@mc4k.com");
+            mEmailId.setText("android@mc4k.com");
         }
         mEmailId.addTextChangedListener(mTextWatcher);
         mPassword.addTextChangedListener(mTextWatcher);
@@ -102,8 +102,8 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
         if (isDataValid()) {
             String emailId = mEmailId.getText().toString().trim();
             String password = mPassword.getText().toString().trim();
-            if (BuildConfig.DEBUG && emailId.equals("blog@mc4k.com")) {
-                password = "password";
+            if (BuildConfig.DEBUG && emailId.equals("android@mc4k.com")) {
+                password = "android";
             }
             ((ActivityLogin) getActivity()).loginRequest(emailId, password);
         }

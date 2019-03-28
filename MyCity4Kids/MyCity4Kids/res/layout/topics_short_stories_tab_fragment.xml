@@ -207,6 +207,7 @@
                 app:fab_addButtonPlusIconColor="@color/white_color"
                 app:fab_addButtonStrokeVisible="false"
                 app:fab_labelStyle="@style/menu_labels_style"
+                android:visibility="gone"
                 app:fab_labelsPosition="left">
 
                 <com.getbase.floatingactionbutton.FloatingActionButton

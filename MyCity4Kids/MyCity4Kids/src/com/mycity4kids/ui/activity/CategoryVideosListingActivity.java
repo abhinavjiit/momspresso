@@ -1,21 +1,27 @@
 package com.mycity4kids.ui.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.crashlytics.android.Crashlytics;
+import com.facebook.FacebookRequestError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
@@ -29,16 +35,16 @@ import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.VideoTopicsPagerAdapter;
+import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
+import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,22 +64,23 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     private ArrayList<Topics> subTopicsList;
     private Toolbar toolbar;
     private TextView toolbarTitleTextView;
-    public ImageView recentPopularSortingImage;
-    private LinearLayout layoutBottomSheet,bottom_sheet;
+    public ImageView recentPopularSortingImage, imageSortBy;
+    private LinearLayout layoutBottomSheet, bottom_sheet;
     private BottomSheetBehavior sheetBehavior;
-    private TextView textHeaderUpdate,textUpdate;
+    private TextView textHeaderUpdate, textUpdate;
+    private android.support.design.widget.FloatingActionButton fabAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_listing_activity);
-        layoutBottomSheet= (LinearLayout)findViewById(R.id.bottom_sheet);
+        layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(CategoryVideosListingActivity.this);
-        if(!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")){
+        if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -95,7 +102,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(CategoryVideosListingActivity.this,RewardsContainerActivity.class));
+                    startActivity(new Intent(CategoryVideosListingActivity.this, RewardsContainerActivity.class));
                 }
             });
 
@@ -104,8 +111,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 public void run() {
                     bottom_sheet.setVisibility(View.GONE);
                 }
-            },10000);
-        }else{
+            }, 10000);
+        } else {
             bottom_sheet.setVisibility(View.GONE);
         }
 
@@ -114,6 +121,27 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
         viewPager = (ViewPager) findViewById(R.id.pager);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
+        fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
+        imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
+
+        imageSortBy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = pagerAdapter.getCurrentFragment();//.get(viewPager.getCurrentItem());
+                if(fragment!=null && fragment instanceof CategoryVideosTabFragment){
+                    ((CategoryVideosTabFragment)fragment).showSortedByDialog();
+                }
+            }
+        });
+
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CategoryVideosListingActivity.this, ChooseVideoCategoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -197,6 +225,17 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+
+                Fragment fragment = pagerAdapter.getItem(tab.getPosition());
+                if(fragment!=null){
+                    if(fragment instanceof ChallengeCategoryVideoTabFragment){
+                        fabAdd.setVisibility(View.GONE);
+                        imageSortBy.setVisibility(View.GONE);
+                    }else{
+                        fabAdd.setVisibility(View.VISIBLE);
+                        imageSortBy.setVisibility(View.VISIBLE);
+                    }
+                }
             }
 
             @Override

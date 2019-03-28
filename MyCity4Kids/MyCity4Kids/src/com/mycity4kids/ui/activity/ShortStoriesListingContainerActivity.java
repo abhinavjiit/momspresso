@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,6 +31,9 @@ import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsShortStoriesPagerAdapter;
+import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
+import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
+import com.mycity4kids.ui.fragment.TopicChallengeTabFragment;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
@@ -62,6 +68,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
     private LinearLayout layoutBottomSheet,bottom_sheet;
     private BottomSheetBehavior sheetBehavior;
     private TextView textHeaderUpdate,textUpdate;
+    private ImageView imageSortBy;
+    private android.support.design.widget.FloatingActionButton fabAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +81,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
+        fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(ShortStoriesListingContainerActivity.this);
         if(!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")){
@@ -115,6 +124,26 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tablayoutLayer = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
+
+        imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
+
+        imageSortBy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = pagerAdapter.getCurrentFragment();//.get(viewPager.getCurrentItem());
+                if(fragment!=null && fragment instanceof TopicsShortStoriesTabFragment){
+                    ((TopicsShortStoriesTabFragment)fragment).showSortedByDialog();
+                }
+            }
+        });
+
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ShortStoriesListingContainerActivity.this, ChooseVideoCategoryActivity.class);
+                startActivity(intent);
+            }
+        });
 
         parentTopicId = getIntent().getStringExtra("parentTopicId");
 
@@ -206,6 +235,16 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                Fragment fragment = pagerAdapter.getItem(tab.getPosition());
+                if(fragment!=null){
+                    if(fragment instanceof TopicChallengeTabFragment){
+                        fabAdd.setVisibility(View.GONE);
+                        imageSortBy.setVisibility(View.GONE);
+                    }else{
+                        fabAdd.setVisibility(View.VISIBLE);
+                        imageSortBy.setVisibility(View.VISIBLE);
+                    }
+                }
             }
 
             @Override
