@@ -925,4 +925,9 @@
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="dialog_header_choose_sort_type">வரிசைப்படுத்து</string>
+    <string name="rewards_instagram_handler">இன்ஸ்டாக்ராம் ஹான்டிலை சேர்க்கவும்</string>
+    <string name="rewards_facebook_handler">"ஃபேஸ்புக்கை இணைக்கவும் "</string>
+    <string name="add_youtube">யூட்யூப் சேனல் லிங்க்கை சேர்க்கவும்</string>
+    <string name="add_twitter">ட்விட்டர் ஹான்டிலை சேர்க்கவும்</string>
 </resources>

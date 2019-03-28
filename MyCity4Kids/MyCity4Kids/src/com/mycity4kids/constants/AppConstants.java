@@ -555,7 +555,7 @@ public class AppConstants {
     public static final String SEARCH_ITEM_TYPE_TOPIC = "topic";
     public static final int MAX_ALLOWED_CHILD_COUNT = 8;
 
-    public static final String DEBUGGING_USER_ID = "6f57d7cb01fa46c89bf85e3d2ade7de3-ef20fd7764c14c728e90673a21f95790-e21c692a6bc949a6b908ff2042214ac1";
+    public static final String DEBUGGING_USER_ID = "4347159ff74b46e4ae43df01a0b405c0";
 
     public static final String FB_AD_PLACEMENT_ARTICLE_LISTING = "206155642763202_1712332575478827";
     public static final String FB_AD_PLACEMENT_USER_ARTICLE = "206155642763202_1712333168812101";

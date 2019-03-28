@@ -918,4 +918,9 @@
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="dialog_header_choose_sort_type">క్రమీకరించు</string>
+    <string name="rewards_instagram_handler">Instagram హ్యాండిల్ జోడించండి</string>
+    <string name="rewards_facebook_handler">Facebook కనెక్ట్ చేయండి</string>
+    <string name="add_youtube">YouTube ఛానెల్ లింక్ చేయండి</string>
+    <string name="add_twitter">Twitter హ్యాండిల్ జోడించండి</string>
 </resources>

@@ -1009,9 +1009,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="add_website">ADD WEBSITE</string>
-    <string name="add_youtube">YOUTUBE</string>
-    <string name="add_twitter">TWITTER</string>
-    <string name="add_facebook">FACEBOOK</string>
+    <string name="add_youtube">Enter your Youtube channel link</string>
+    <string name="add_twitter">Enter your Twitter handle</string>
     <string name="kids_number">"KID %d DETAIL</string>
 
     <string name="hold_to_release">Hold to record, Release to send</string>
@@ -1079,5 +1078,7 @@
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="rewards_instagram_handler">Enter your Instagram handle</string>
+    <string name="rewards_facebook_handler">Connect your Facebook</string>
 
 </resources>

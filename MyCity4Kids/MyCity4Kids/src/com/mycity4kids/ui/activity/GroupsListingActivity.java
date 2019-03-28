@@ -35,6 +35,7 @@ import com.mycity4kids.widget.SpacesItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,10 +53,9 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     private ArrayList<GroupResult> groupList;
     private boolean isLastPageReached;
     private int skip = 0;
-    private int limit = 10;
+    private int limit = 20;
     private int totalGroupCount;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
-
     private Toolbar toolbar;
     private RecyclerView recyclerGridView;
     private TextView noGroupsTextView;
@@ -64,7 +64,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     private LinkedTreeMap<String, String> selectedQuestionnaire;
     private TextView toolbarTitle;
     private MixpanelAPI mixpanel;
-    ArrayList<GroupResult> joinList;
+    ArrayList<GroupResult> joinList =null;
     ArrayList<GroupResult> remainList = new ArrayList<>();
 
     @Override
@@ -82,7 +82,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
 
         final boolean isMember = getIntent().getBooleanExtra("isMember", false);
         if (!isMember) {
-            joinList = new ArrayList<>();
             joinList = getIntent().getParcelableArrayListExtra("joinedList");
         }
 
@@ -282,7 +281,11 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 groupList.addAll(dataList);
             }
 
-            adapter.setNewListData(groupList);
+            List<GroupResult> listOutput =
+                    groupList.stream()
+                            .filter(e -> joinList.stream().map(GroupResult::getId).noneMatch(id -> id.equals(e.getId())))
+                            .collect(Collectors.toList());
+            adapter.setNewListData((ArrayList<GroupResult>) listOutput);
             skip = skip + limit;
             if (skip >= totalGroupCount) {
                 isLastPageReached = true;
@@ -302,8 +305,8 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         if (isMember) {
             selectedGroup = groupList.get(position);
         } else {
-            selectedGroup = remainList.get(position);
-            selectedQuestionnaire = (LinkedTreeMap<String, String>) remainList.get(position).getQuestionnaire();
+            selectedGroup = groupList.get(position);
+            selectedQuestionnaire = (LinkedTreeMap<String, String>) groupList.get(position).getQuestionnaire();
         }
         groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
@@ -374,6 +377,4 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 }

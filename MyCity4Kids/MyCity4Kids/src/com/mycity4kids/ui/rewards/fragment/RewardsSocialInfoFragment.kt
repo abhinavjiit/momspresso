@@ -132,7 +132,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         }
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -154,32 +153,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
         /*fetch data from server*/
         fetchRewardsData()
-
-
-//        /*write here*/
-//        var cityList = ArrayList<City>()
-//        var city = City("dehradun", 0.0, 0.0, 7)
-//        var city1 = City("dehradun", 0.0, 0.0, 7)
-//        var city2 = City("dehradun", 0.0, 0.0, 7)
-//        var city3 = City("rishikesh", 0.0, 0.0, 7)
-//        var city4 = City("rishikesh", 0.0, 0.0, 7)
-//        var city5 = City("srinagar", 0.0, 0.0, 7)
-//        var city6 = City("srinagar", 0.0, 0.0, 7)
-//        cityList.add(city)
-//        cityList.add(city1)
-//        cityList.add(city2)
-//        cityList.add(city3)
-//        cityList.add(city4)
-//        cityList.add(city5)
-//        cityList.add(city6)
-
-
-        //var groupData = cityList.groupBy { it -> it.cityName }
-
-//        cityList.stream().filter {
-//
-//        }
-        //Log.e("group data", Gson().toJson(groupData))
 
         /**/
         return containerView
