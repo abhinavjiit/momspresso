@@ -92,6 +92,9 @@ public interface VlogsListingAndDetailsAPI {
     @POST("v1/users/deleteBookmark/")
     Call<AddBookmarkResponse> deleteBookmark(@Body DeleteBookmarkRequest body);
 
+    @POST("/v1/users/isBookmarkVideo/")
+    Call<ArticleDetailResponse> checkBookmarkVideoStatus(@Body ArticleDetailRequest body);
+
     @GET("v1/recommend/related/{articleId}")
     Call<ArticleListingResponse> getCategoryRelatedArticles(@Path("articleId") String articleId);
 
