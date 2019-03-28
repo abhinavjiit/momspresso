@@ -323,6 +323,38 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/postAudioContainer"
+            android:layout_width="150dp"
+            android:layout_height="110dp"
+            android:layout_above="@+id/postContainer"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/audioImageView"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/circular_image_bg"
+                android:scaleType="center"
+                app:srcCompat="@drawable/ic_audio_record"
+                android:tint="@color/white"
+                android:visibility="visible" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/audioTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Audio"
+                android:textColor="@color/white"
+                android:visibility="visible"
+                app:fontName="oswald.ttf" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/uploadMediaLL"
             android:layout_width="150dp"
             android:layout_height="110dp"
