@@ -96,6 +96,7 @@ public class VlogsListingAdapter extends BaseAdapter {
             if (view == null) {
                 addVlogViewHolder = new AddVlogViewHolder();
                 view = mInflator.inflate(R.layout.add_momvlog_list_item, null);
+                addVlogViewHolder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
                 addVlogViewHolder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 addVlogViewHolder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 addVlogViewHolder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
@@ -135,6 +136,13 @@ public class VlogsListingAdapter extends BaseAdapter {
             } catch (Exception e) {
                 addVlogViewHolder.articleImageView.setImageResource(R.drawable.default_article);
             }
+            if (articleDataModelsNew.get(position).isIs_gold()) {
+                addVlogViewHolder.goldLogo.setVisibility(View.VISIBLE);
+            } else {
+                addVlogViewHolder.goldLogo.setVisibility(View.GONE);
+
+
+            }
 
             addVlogViewHolder.addMomVlogImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -151,6 +159,7 @@ public class VlogsListingAdapter extends BaseAdapter {
             if (view == null) {
                 holder = new ViewHolder();
                 view = mInflator.inflate(R.layout.video_listing_item, null);
+                holder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
                 holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
@@ -184,6 +193,12 @@ public class VlogsListingAdapter extends BaseAdapter {
             } catch (Exception e) {
                 holder.articleImageView.setImageResource(R.drawable.default_article);
             }
+            if (articleDataModelsNew.get(position).isIs_gold()) {
+                holder.goldLogo.setVisibility(View.VISIBLE);
+            } else {
+                holder.goldLogo.setVisibility(View.GONE);
+
+            }
             return view;
         }
     }
@@ -196,10 +211,12 @@ public class VlogsListingAdapter extends BaseAdapter {
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
+        ImageView goldLogo;
     }
 
     class AddVlogViewHolder {
         ImageView addMomVlogImageView;
+        ImageView goldLogo;
         TextView txvArticleTitle;
         TextView txvAuthorName;
         ImageView articleImageView;

@@ -39,12 +39,10 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
 import com.mycity4kids.utils.MixPanelUtils;
@@ -234,7 +232,7 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
         nextPageNumber = 1;
         hitArticleListingApi();
 
-        articlesListingAdapter = new VideoChallengeDetailListingAdapter(getActivity(), selectedId,topic);
+        articlesListingAdapter = new VideoChallengeDetailListingAdapter(getActivity(), selectedId, topic);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
