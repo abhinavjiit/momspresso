@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
@@ -55,6 +54,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private String likeStatus;
     private boolean isRecommendRequestRunning;
     private String userDynamoId;
+    private String bookmarkStatus;
 
     //    private List<VideoInfo> mInfoList;
     private ArrayList<VlogsListingAndDetailResult> mInfoList;
@@ -75,13 +75,18 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         notifyItemChanged(updatePos, mHolder.followText);
     }
 
-    public void updateList(ArrayList<VlogsListingAndDetailResult> infoList){
+    public void updateList(ArrayList<VlogsListingAndDetailResult> infoList) {
         mInfoList = infoList;
     }
 
     public void setList(int updatePos, ArrayList<VlogsListingAndDetailResult> infoList) {
         mInfoList = infoList;
         notifyItemChanged(updatePos, mHolder.heart);
+    }
+
+    public void setBookmark(int updatePos, ArrayList<VlogsListingAndDetailResult> infoList) {
+        mInfoList = infoList;
+        notifyItemChanged(updatePos, mHolder.mImgBookmark);
     }
 
 
@@ -152,7 +157,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         TextView userHandle, followText, commentCount, viewsCount, likeCount;
         public RelativeLayout videoCell;
         public RelativeLayout videoLayout;
-        public ImageView mCover, heart, share, whatsapp, three_dot, comment;
+        public ImageView mCover, heart, share, whatsapp, three_dot, comment, mImgBookmark;
         public ProgressBar mProgressBar;
         public final View parent;
         ImageView userImage;
@@ -176,6 +181,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             share = itemView.findViewById(R.id.share);
             whatsapp = itemView.findViewById(R.id.whatsapp);
             three_dot = itemView.findViewById(R.id.three_dot);
+            mImgBookmark = itemView.findViewById(R.id.bookmark);
             parent = itemView;
         }
 
@@ -190,15 +196,21 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             VlogsListingAndDetailResult responseData = mInfoList.get(position);
 
             if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
-                heart.setImageResource(R.drawable.ic_recommended);
+                heart.setImageResource(R.drawable.ic_likevideofilled);
             } else {
-                heart.setImageResource(R.drawable.ic_likes);
+                heart.setImageResource(R.drawable.ic_likevideo);
+            }
+
+            if (responseData.getIs_bookmark() != null && responseData.getIs_bookmark().equals("1")) {
+                mImgBookmark.setImageResource(R.drawable.ic_bookmarked);
+            } else {
+                mImgBookmark.setImageResource(R.drawable.ic_bookmark);
             }
 
             if (responseData.isFollowed()) {
-                followText.setText(R.string.ad_following_author);
+                followText.setText("Following");
             } else {
-                followText.setText(R.string.ad_follow_author);
+                followText.setText("Follow");
             }
 
             if (responseData.isBookmarked()) {
@@ -241,6 +253,19 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         likeStatus = "1";
                         ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
                     }
+                }
+            });
+
+            mImgBookmark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (responseData.getIs_bookmark() != null && responseData.getIs_bookmark().equals("1")) {
+                        bookmarkStatus = "0";
+                    } else {
+                        bookmarkStatus = "1";
+                    }
+                    ((ParallelFeedActivity) mContext).addRemoveBookmark(bookmarkStatus,position,responseData.getId());
+
                 }
             });
 

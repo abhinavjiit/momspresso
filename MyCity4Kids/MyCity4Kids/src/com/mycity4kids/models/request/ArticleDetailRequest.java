@@ -5,6 +5,7 @@ package com.mycity4kids.models.request;
  */
 public class ArticleDetailRequest {
     private String articleId;
+    private String contentType;
 
     public String getArticleId() {
         return articleId;
@@ -12,5 +13,13 @@ public class ArticleDetailRequest {
 
     public void setArticleId(String articleId) {
         this.articleId = articleId;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }
