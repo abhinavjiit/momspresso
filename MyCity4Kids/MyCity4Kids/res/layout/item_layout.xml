@@ -61,7 +61,8 @@
             android:paddingBottom="5dp"
             android:text="Follow"
             android:textAllCaps="false"
-            android:textColor="#CCFFFFFF"
+            android:alpha="0.8"
+            android:textColor="#FFFFFF"
             android:textSize="11sp"
             app:fontName="open_sans.ttf"/>
 
@@ -217,8 +218,8 @@
 
         <ImageView
             android:id="@+id/comment"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/commentCount"
