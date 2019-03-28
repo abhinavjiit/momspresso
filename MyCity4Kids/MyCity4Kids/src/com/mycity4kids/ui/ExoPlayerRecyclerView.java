@@ -56,6 +56,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
+import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.VideoPlayerConfig;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -302,6 +303,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             // Prepare the player with the source.
             player.prepare(mVideoSource);
             player.setPlayWhenReady(true);
+            ((ParallelFeedActivity) mContext).hitUpdateViewCountAPI(videoInfoList.get(targetPosition).getId());
+            ((ParallelFeedActivity) mContext).pushMomVlogViewEvent();
         }
 
 

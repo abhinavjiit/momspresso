@@ -1,14 +1,12 @@
 package com.mycity4kids.models.request;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by hemant on 28/7/16.
  */
 public class RecommendUnrecommendArticleRequest {
     private String articleId;
     private String status;
+    private String type;
 
     public String getArticleId() {
         return articleId;
@@ -24,5 +22,13 @@ public class RecommendUnrecommendArticleRequest {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

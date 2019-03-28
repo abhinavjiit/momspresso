@@ -22,6 +22,8 @@ public class VlogsListingAndDetailResult {
     private String thumbnail;
     private String like_count;
     private String comment_count;
+    private String is_liked;
+    private String is_bookmark;
     private Boolean isLiked = false;
     private boolean isBookmarked = false;
     private boolean isFollowed = false;
@@ -162,6 +164,22 @@ public class VlogsListingAndDetailResult {
 
     public void setComment_count(String comment_count) {
         this.comment_count = comment_count;
+    }
+
+    public String getIs_liked() {
+        return is_liked;
+    }
+
+    public void setIs_liked(String is_liked) {
+        this.is_liked = is_liked;
+    }
+
+    public String getIs_bookmark() {
+        return is_bookmark;
+    }
+
+    public void setIs_bookmark(String is_bookmark) {
+        this.is_bookmark = is_bookmark;
     }
 
     public class Author {

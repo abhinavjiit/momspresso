@@ -59,6 +59,7 @@
                 android:ellipsize="middle"
                 android:singleLine="true"
                 android:textColor="#333333"
+                android:text="Please wait..."
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -110,7 +111,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/space_10"
                     android:layout_toRightOf="@+id/progressBar"
-                    android:text="50"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:textStyle="bold" />

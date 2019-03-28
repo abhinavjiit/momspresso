@@ -132,7 +132,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private TabLayout groupPostTabLayout;
     private RelativeLayout addPostContainer;
     private FloatingActionButton addPostFAB;
-    private LinearLayout postContainer;
+    private LinearLayout postContainer, postAudioContainer;
     private LinearLayout pollContainer;
     private ImageView closeImageView;
     private TextView noPostsTextView;
@@ -160,6 +160,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         addPostContainer = (RelativeLayout) findViewById(R.id.addPostContainer);
         addPostFAB = (FloatingActionButton) findViewById(R.id.addPostFAB);
         postContainer = (LinearLayout) findViewById(R.id.postContainer);
+        postAudioContainer = (LinearLayout) findViewById(R.id.postAudioContainer);
         pollContainer = (LinearLayout) findViewById(R.id.pollContainer);
         closeImageView = (ImageView) findViewById(R.id.closeImageView);
         noPostsTextView = (TextView) findViewById(R.id.noPostsTextView);
@@ -212,6 +213,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         addPostFAB.setOnClickListener(this);
         pollContainer.setOnClickListener(this);
         postContainer.setOnClickListener(this);
+        postAudioContainer.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
         savePostTextView.setOnClickListener(this);
         notificationToggleTextView.setOnClickListener(this);
@@ -724,6 +726,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 startActivityForResult(intent, 1111);
             }
             break;
+            case R.id.postAudioContainer: {
+                Intent intent = new Intent(GroupDetailsActivity.this, AddAudioGroupPostActivity.class);
+                intent.putExtra("groupItem", selectedGroup);
+                startActivityForResult(intent, 1111);
+            }
+            break;
+
             case R.id.pollContainer: {
                 Intent intent = new Intent(GroupDetailsActivity.this, AddPollGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);

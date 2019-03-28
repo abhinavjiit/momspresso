@@ -2,15 +2,8 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -20,17 +13,13 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -44,28 +33,16 @@ import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.VideoInfo;
-import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
-import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
-import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.BaseViewHolder;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
-import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.utils.GenericFileProvider;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -82,9 +59,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     //    private List<VideoInfo> mInfoList;
     private ArrayList<VlogsListingAndDetailResult> mInfoList;
 
-    public VideoRecyclerViewAdapter(Context mContext, ArrayList<VlogsListingAndDetailResult> infoList) {
+    public VideoRecyclerViewAdapter(Context mContext) {
         this.mContext = mContext;
-        mInfoList = infoList;
         userDynamoId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
     }
 
@@ -97,6 +73,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     public void setListUpdate(int updatePos, ArrayList<VlogsListingAndDetailResult> infoList) {
         mInfoList = infoList;
         notifyItemChanged(updatePos, mHolder.followText);
+    }
+
+    public void updateList(ArrayList<VlogsListingAndDetailResult> infoList){
+        mInfoList = infoList;
     }
 
     public void setList(int updatePos, ArrayList<VlogsListingAndDetailResult> infoList) {
@@ -135,6 +115,10 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         holder.onBind(position);
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -205,7 +189,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
             VlogsListingAndDetailResult responseData = mInfoList.get(position);
 
-            if (responseData.getLiked()) {
+            if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
                 heart.setImageResource(R.drawable.ic_recommended);
             } else {
                 heart.setImageResource(R.drawable.ic_likes);
@@ -241,10 +225,16 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 }
             });
 
+            userImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((ParallelFeedActivity) mContext).openPublicProfile(responseData.getAuthor().getUserType(), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + responseData.getAuthor().getLastName());
+                }
+            });
             heart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (responseData.getLiked()) {
+                    if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
                         likeStatus = "0";
                         ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
                     } else {
@@ -309,14 +299,39 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             three_dot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PopupWindow popupwindow_obj = popupDisplay(responseData.getId(), responseData.isBookmarked());
-                    popupwindow_obj.showAsDropDown(three_dot, -40, 18);
+                    if (responseData.getIs_bookmark() != null) {
+                        PopupWindow popupwindow_obj = popupDisplay(responseData.getId(), responseData.getIs_bookmark());
+                        popupwindow_obj.showAsDropDown(three_dot, -40, 18);
+                    }
                 }
             });
 
-            Glide.with(itemView.getContext())
-                    .load(responseData.getThumbnail()).apply(new RequestOptions().optionalCenterCrop())
-                    .into(mCover);
+//            Glide.with(itemView.getContext())
+//                    .load(responseData.getThumbnail()).apply(new RequestOptions().optionalCenterCrop())
+//                    .into(mCover);
+
+            Glide.with(mContext)
+                    .asBitmap()
+                    .load(responseData.getThumbnail())
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap,
+                                                    Transition<? super Bitmap> transition) {
+                            int w = bitmap.getWidth();
+                            int h = bitmap.getHeight();
+                            Log.e("width and height", w + " * " + h);
+
+                            float ratio = ((float) h / (float) w);
+//                            mCover.getLayoutParams().height = heightInDp;
+//                            mCover.getLayoutParams().width = widthInDp;
+                            videoLayout.getLayoutParams().height = Math.round(ratio * mContext.getResources().getDisplayMetrics().widthPixels);
+                            videoLayout.getLayoutParams().width = Math.round(mContext.getResources().getDisplayMetrics().widthPixels);
+
+                            mCover.setImageBitmap(bitmap);
+                            Log.e("from ratio", w + "   " + h + "   " + videoLayout.getLayoutParams().height + " * " + videoLayout.getLayoutParams().width);
+                        }
+                    });
+
 
 //            Glide.with(itemView.getContext().getApplicationContext())
 //                    .asBitmap()
@@ -342,7 +357,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         }
     }
 
-    public PopupWindow popupDisplay(String vidId, boolean isBookmarked) {
+    public PopupWindow popupDisplay(String vidId, String isBookmarked) {
 
         final PopupWindow popupWindow = new PopupWindow(mContext);
 
@@ -352,7 +367,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         ImageView imageView = view.findViewById(R.id.popup_bookmark);
         TextView textView = view.findViewById(R.id.bookmark_text);
-        if (isBookmarked) {
+        if (isBookmarked.equals("1")) {
             textView.setText("Bookmarked");
             imageView.setImageResource(R.drawable.ic_bookmarked);
         } else {

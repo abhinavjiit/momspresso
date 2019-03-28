@@ -60,7 +60,6 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.VideoInfo;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
@@ -146,6 +145,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private int updateLikePos;
     private int updateFollowPos;
     private int changeFollowUnfollowTextPos;
+//    private int nextPageNumber;
 
 
     private VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI;
@@ -173,6 +173,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private String taggedCategories;
     private MixpanelAPI mixpanel;
     ArrayList<VlogsListingAndDetailResult> dataList = new ArrayList<>();
+    ArrayList<VlogsListingAndDetailResult> finalList = new ArrayList<>();
     ArrayList<VlogsListingAndDetailResult> dataListHeader = new ArrayList<>();
     ArrayList<VlogsListingAndDetailResult> finalDataList = new ArrayList<>();
     ExoPlayerRecyclerView recyclerViewFeed;
@@ -227,116 +228,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             vlogsListingAndDetailsAPI = retro.create(VlogsListingAndDetailsAPI.class);
             hitArticleDetailsS3API();
         }
+        mAdapter = new VideoRecyclerViewAdapter(ParallelFeedActivity.this);
         mixpanel.timeEvent("Player_Start");
-
-        /*if (firstTime) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    recyclerViewFeed.playVideo(false);
-                }
-            });
-            firstTime = false;
-        }*/
         recyclerViewFeed.scrollToPosition(0);
-
-        /*mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
-        mScrollView = (ObservableScrollView) findViewById(R.id.scroll_view);
-        mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
-        trendingArticles = (LinearLayout) findViewById(R.id.trendingArticles);
-        recentAuthorArticles = (LinearLayout) findViewById(R.id.recentAuthorArticles);
-        relatedArticles1 = (RelatedArticlesView) findViewById(R.id.relatedArticles1);
-        relatedArticles2 = (RelatedArticlesView) findViewById(R.id.relatedArticles2);
-        relatedArticles3 = (RelatedArticlesView) findViewById(R.id.relatedArticles3);
-        trendingRelatedArticles1 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles1);
-        trendingRelatedArticles2 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles2);
-        trendingRelatedArticles3 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles3);
-        bottomToolbarLL = (LinearLayout) findViewById(R.id.bottomToolbarLL);
-        facebookShareTextView = (CustomFontTextView) findViewById(R.id.facebookShareTextView);
-        whatsappShareTextView = (CustomFontTextView) findViewById(R.id.whatsappShareTextView);
-        emailShareTextView = (CustomFontTextView) findViewById(R.id.emailShareTextView);
-        likeArticleTextView = (CustomFontTextView) findViewById(R.id.likeTextView);
-        bookmarkArticleTextView = (CustomFontTextView) findViewById(R.id.bookmarkTextView);
-        tagsLayout = (FlowLayout) findViewById(R.id.tagsLayout);
-        articleViewCountTextView = (TextView) findViewById(R.id.articleViewCountTextView);
-        authorImageView = (ImageView) findViewById(R.id.user_image);
-        article_title = (TextView) findViewById(R.id.article_title);
-        authorTypeTextView = (TextView) findViewById(R.id.blogger_type);
-        authorNameTextView = (TextView) findViewById(R.id.user_name);
-        articleCreatedDateTextView = (TextView) findViewById(R.id.article_date);
-        followClick = (TextView) findViewById(R.id.follow_click);
-        mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
-        backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
-        viewCommentsTextView = ((TextView) findViewById(R.id.viewCommentsTextView));
-
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.app_logo);
-
-        findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
-
-        followClick.setOnClickListener(this);
-        viewCommentsTextView.setOnClickListener(this);
-        backNavigationImageView.setOnClickListener(this);
-        authorNameTextView.setOnClickListener(this);
-        authorImageView.setOnClickListener(this);
-        relatedArticles1.setOnClickListener(this);
-        relatedArticles2.setOnClickListener(this);
-        relatedArticles3.setOnClickListener(this);
-        trendingRelatedArticles1.setOnClickListener(this);
-        trendingRelatedArticles2.setOnClickListener(this);
-        trendingRelatedArticles3.setOnClickListener(this);
-        facebookShareTextView.setOnClickListener(this);
-        whatsappShareTextView.setOnClickListener(this);
-        emailShareTextView.setOnClickListener(this);
-        likeArticleTextView.setOnClickListener(this);
-        bookmarkArticleTextView.setOnClickListener(this);
-
-        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-
-        likeArticleTextView.setEnabled(false);
-        bookmarkArticleTextView.setEnabled(false);
-        likeArticleTextView.setTextColor(ContextCompat.getColor(this, R.color.grey));
-        bookmarkArticleTextView.setTextColor(ContextCompat.getColor(this, R.color.grey));
-        setTextViewDrawableColor(likeArticleTextView, R.color.grey);
-        setTextViewDrawableColor(bookmarkArticleTextView, R.color.grey);
-        mScrollView.setScrollViewCallbacks(this);
-        followClick.setEnabled(false);
-
-        if (savedInstanceState != null) {
-            mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
-            mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
-            mExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
-        }
-
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            streamUrl = bundle.getString(Constants.STREAM_URL);
-            videoId = bundle.getString(Constants.VIDEO_ID);//"videos-67496bfa-b77d-466f-9d18-94e0f98f17c6"
-            authorId = bundle.getString(Constants.AUTHOR_ID, "");
-            if (bundle.getBoolean("fromNotification")) {
-                Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "video_details");
-            } else {
-                String listingType = bundle.getString(Constants.ARTICLE_OPENED_FROM);
-                String index = bundle.getString(Constants.ARTICLE_INDEX);
-                String screen = bundle.getString(Constants.FROM_SCREEN);
-                Utils.pushViewArticleEvent(this, screen, userDynamoId + "", videoId, listingType, index + "", author);
-            }
-
-            if (!ConnectivityUtils.isNetworkEnabled(this)) {
-                showToast(getString(R.string.error_network));
-                return;
-            }
-            showProgressDialog(getString(R.string.fetching_data));
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            vlogsListingAndDetailsAPI = retro.create(VlogsListingAndDetailsAPI.class);
-            hitArticleDetailsS3API();
-        }
-
-        scrollBounds = new Rect();
-        mScrollView.getHitRect(scrollBounds);
-        mixpanel.timeEvent("Player_Start");*/
     }
 
     private void hitArticleDetailsS3API() {
@@ -359,6 +253,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 updateUIfromResponse(responseData.getData().getResult());
                 authorId = responseData.getData().getResult().getAuthor().getId();
 //                hitBookmarkFollowingStatusAPI(videoId);
+//                nextPageNumber = 1;
                 hitRelatedArticleAPI(0);
                 commentURL = responseData.getData().getResult().getCommentUri();
                 commentMainUrl = responseData.getData().getResult().getCommentUri();
@@ -398,6 +293,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             taggedCategories = detailData.getCategory_id().get(0);
         }
 
+//        int from = (nextPageNumber - 1) * limit;
 //        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 4, 0, 3, taggedCategories);
 //        callRecentVideoArticles.enqueue(recentArticleResponseCallback);
         Log.d("startIndex", "" + startIndex + "," + (startIndex + 10));
@@ -406,7 +302,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
     }
 
-    private void hitUpdateViewCountAPI(String userId) {
+    public void hitUpdateViewCountAPI(String videoId) {
         Call<ResponseBody> callUpdateViewCount = vlogsListingAndDetailsAPI.updateViewCount(videoId);
         callUpdateViewCount.enqueue(updateViewCountResponseCallback);
     }
@@ -439,41 +335,19 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
                     }
 
-                    if (!fromLoadMore)
+                    if (!fromLoadMore) {
                         dataList.addAll(0, dataListHeader);
-
-                    /*for (int i = 0; i < dataList.size(); i++) {
-                        followPos = i;
-                        hitBookmarkFollowingStatusAPI(dataList.get(i).getId());
-                        hitRecommendedStatusAPI(dataList.get(i).getId());
-                    }*/
-
-                    recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, dataList);
-                    mAdapter = new VideoRecyclerViewAdapter(ParallelFeedActivity.this, dataList);
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ParallelFeedActivity.this, VERTICAL, false);
-                    recyclerViewFeed.setLayoutManager(linearLayoutManager);
-                    Drawable dividerDrawable = ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.divider_drawable);
-                    recyclerViewFeed.setOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
-                        @Override
-                        public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                            fromLoadMore = true;
-                            hitRelatedArticleAPI(endIndex + 1);
-                        }
-                    });
-
-
-                    recyclerViewFeed.addItemDecoration(new DividerItemDecoration(dividerDrawable));
-                    recyclerViewFeed.setItemAnimator(new DefaultItemAnimator());
-                    recyclerViewFeed.setAdapter(mAdapter);
-                    if (firstTime) {
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                recyclerViewFeed.playVideo(false);
-                            }
-                        });
-                        firstTime = false;
+                        finalList = dataList;
+                        setRecycler();
+                    } else {
+                        finalList.addAll(dataList);
+//                        recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+//                        mAdapter.updateList(finalList);
                     }
+                    recyclerViewFeed.setVideoInfoList(ParallelFeedActivity.this, finalList);
+                    mAdapter.updateList(finalList);
+//                    mAdapter.notifyDataSetChanged();
+//                    nextPageNumber = nextPageNumber + 1;
 
                 } else {
                     showToast(getString(R.string.server_went_wrong));
@@ -491,6 +365,32 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         }
     };
 
+    private void setRecycler(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ParallelFeedActivity.this, VERTICAL, false);
+        recyclerViewFeed.setLayoutManager(linearLayoutManager);
+        Drawable dividerDrawable = ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.divider_drawable);
+        recyclerViewFeed.setOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                fromLoadMore = true;
+                hitRelatedArticleAPI(endIndex + 1);
+            }
+        });
+
+
+        recyclerViewFeed.addItemDecoration(new DividerItemDecoration(dividerDrawable));
+        recyclerViewFeed.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewFeed.setAdapter(mAdapter);
+        if (firstTime) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewFeed.playVideo(false);
+                }
+            });
+            firstTime = false;
+        }
+    }
     private Callback<VlogsListingResponse> recentArticleResponseCallback = new Callback<VlogsListingResponse>() {
         @Override
         public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
@@ -631,9 +531,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
                 mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
             }
-
-//            initExoPlayer();
-
             if (mExoPlayerFullscreen) {
                 ((ViewGroup) recyclerViewFeed.getParent()).removeView(recyclerViewFeed);
                 mFullScreenDialog.addContentView(recyclerViewFeed, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -656,16 +553,12 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         if (isFollowing) {
             isFollowing = false;
             dataList.get(updateFollowPos).setFollowed(false);
-//            mAdapter.setText(updateFollowPos, getString(R.string.ad_follow_author));
-//            followClick.setText(getString(R.string.ad_follow_author));
             Utils.pushFollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
             dataList.get(updateFollowPos).setFollowed(true);
-//            mAdapter.setText(updateFollowPos, getString(R.string.ad_following_author));
-//            followClick.setText(getString(R.string.ad_following_author));
             Utils.pushUnfollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
@@ -686,9 +579,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
                 } else {
                     dataList.get(updateFollowPos).setFollowed(false);
-//                    mAdapter.setText(updateFollowPos, getString(R.string.ad_follow_author));
-//                    mAdapter.notifyItemChanged(changeFollowUnfollowTextPos);
-//                    followClick.setText(getString(R.string.ad_follow_author));
                     isFollowing = false;
                 }
                 mAdapter.setListUpdate(updateFollowPos, dataList);
@@ -720,9 +610,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
                 } else {
                     dataList.get(updateFollowPos).setFollowed(true);
-//                    mAdapter.setText(updateFollowPos, getString(R.string.ad_following_author));
-//                    mAdapter.notifyItemChanged(changeFollowUnfollowTextPos);
-//                    followClick.setText(getString(R.string.ad_following_author));
                     isFollowing = true;
                 }
                 mAdapter.setListUpdate(updateFollowPos, dataList);
@@ -755,15 +642,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 } else {
                     if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
                         dataList.get(followPos).setFollowed(false);
-//                        mAdapter.setTextFromResponse(true, getString(R.string.ad_follow_author));
-//                        followClick.setEnabled(true);
-//                        followClick.setText(getString(R.string.ad_follow_author));
                         isFollowing = false;
                     } else if ("1".equals(responseData.getData().getResult().getIsFollowed())) {
                         dataList.get(followPos).setFollowed(true);
-//                            mAdapter.setTextFromResponse(false, getString(R.string.ad_following_author));
-//                        followClick.setEnabled(true);
-//                        followClick.setText(getString(R.string.ad_following_author));
                         isFollowing = true;
                     } else if ("0".equals(responseData.getData().getResult().getBookmarkStatus())) {
                         dataList.get(followPos).setBookmarked(true);
@@ -1069,9 +950,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
         }
 
-
-//        initExoPlayer();
-
         if (mExoPlayerFullscreen) {
             ((ViewGroup) recyclerViewFeed.getParent()).removeView(recyclerViewFeed);
             mFullScreenDialog.addContentView(recyclerViewFeed, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -1084,14 +962,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onPause() {
         super.onPause();
-
-        /*if (recyclerViewFeed != null && recyclerViewFeed.videoSurfaceView != null) {
-
-            mResumeWindow = recyclerViewFeed.player.getCurrentWindowIndex();
-            mResumePosition = Math.max(0, recyclerViewFeed.player.getContentPosition());
-            recyclerViewFeed.onPausePlayer();
-        }*/
-
         recyclerViewFeed.player.setVolume(0F);
 
         if (mFullScreenDialog != null)
@@ -1101,16 +971,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onRestart() {
         super.onRestart();
-
         recyclerViewFeed.player.setVolume(1F);
-
-        /*boolean haveResumePosition = mResumeWindow != C.INDEX_UNSET;
-
-        if (haveResumePosition) {
-            recyclerViewFeed.player.seekTo(mResumeWindow, mResumePosition);
-        }
-
-        recyclerViewFeed.setPlayer(urlString, haveResumePosition);*/
     }
 
     @Override
@@ -1131,6 +992,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(vidId);
         recommendUnrecommendArticleRequest.setStatus(likeStatus);
+        recommendUnrecommendArticleRequest.setType("video");
         Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = vlogsListingAndDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
         recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
     }
@@ -1150,20 +1012,13 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     if (likeStatus.equals("1")) {
-                        dataList.get(updateLikePos).setLiked(true);
+                        dataList.get(updateLikePos).setIs_liked("1");
                     } else {
-                        dataList.get(updateLikePos).setLiked(false);
+                        dataList.get(updateLikePos).setIs_liked("0");
                     }
 
                     mAdapter.setList(updateLikePos, dataList);
                     showToast("" + responseData.getReason());
-//                    if (null != responseData.getData() && !responseData.getData().isEmpty()) {
-//                        ((ShortStoryContainerActivity) getActivity()).showToast(responseData.getReason());
-//                        headerModel.getSsResult().setLikeCount("" + (Integer.parseInt(headerModel.getSsResult().getLikeCount()) + 1));
-//                        adapter.notifyDataSetChanged();
-//                    } else {
-//                        ((ShortStoryContainerActivity) getActivity()).showToast(responseData.getReason());
-//                    }
                 } else {
                     showToast(getString(R.string.server_went_wrong));
                 }
@@ -1200,17 +1055,10 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             if ("0".equals(recommendationFlag)) {
                 recommendStatus = 0;
                 dataList.get(followPos).setFollowed(false);
-//                Drawable top = ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_recommend);
-//                likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
             } else {
                 recommendStatus = 1;
                 dataList.get(followPos).setFollowed(true);
-//                Drawable top = ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_recommended);
-//                likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
             }
-//            mAdapter.setLikeIcon(recommendStatus);
-
-
         }
 
         @Override
@@ -1236,6 +1084,27 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
+    public void pushMomVlogViewEvent(){
+        MixPanelUtils.pushMomVlogViewEvent(mixpanel,"ParallelFeed");
+    }
+
+    public void openPublicProfile(String authorType,String authorId, String author){
+        /*if (AppConstants.USER_TYPE_USER.equals(authorType)) {
+            return;
+        }*/
+        if (userDynamoId.equals(authorId)) {
+            Intent profileIntent = new Intent(this, DashboardActivity.class);
+            profileIntent.putExtra("TabType", "profile");
+            startActivity(profileIntent);
+        } else {
+            Intent intentnn = new Intent(this, PublicProfileActivity.class);
+            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId);
+            intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + author);
+            intentnn.putExtra(Constants.FROM_SCREEN, "Video Details");
+            startActivity(intentnn);
         }
     }
 
@@ -1271,25 +1140,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-        /*ActionBar ab = getSupportActionBar();
-        if (ab == null) {
-            return;
-        }
-        if (scrollState == ScrollState.UP) {
-            if (ab.isShowing()) {
-                hideMainToolbar();
-            }
-            if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
-                hideToolbar();
-            }
-        } else if (scrollState == ScrollState.DOWN) {
-            if (!ab.isShowing()) {
-                showMainToolbar();
-            }
-            if (bottomToolbarLL.getVisibility() != View.VISIBLE) {
-                showToolbar();
-            }
-        }*/
+
     }
 
     public void hideMainToolbar() {
@@ -1321,78 +1172,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
-    private void prepareVideoList() {
-        VideoInfo videoInfo = new VideoInfo();
-        videoInfo.setId(1);
-        videoInfo.setUserHandle("@h.pandya");
-        videoInfo.setTitle("Do you think the concept of marriage will no longer exist in the future?");
-        videoInfo.setCoverUrl("https://androidwave.com/media/images/exo-player-in-recyclerview-in-android-1.png");
-        videoInfo.setUrl("https://androidwave.com/media/androidwave-video-1.mp4");
-
-        VideoInfo videoInfo2 = new VideoInfo();
-        videoInfo2.setId(2);
-        videoInfo2.setUserHandle("@hardik.patel");
-        videoInfo2.setTitle("If my future husband doesn't cook food as good as my mother should I scold him?");
-        videoInfo2.setCoverUrl("https://androidwave.com/media/images/exo-player-in-recyclerview-in-android-2.png");
-        videoInfo2.setUrl("https://androidwave.com/media/androidwave-video-2.mp4");
-
-        VideoInfo videoInfo3 = new VideoInfo();
-        videoInfo3.setId(3);
-        videoInfo3.setUserHandle("@arun.gandhi");
-        videoInfo3.setTitle("Give your opinion about the Ayodhya temple controversy.");
-        videoInfo3.setCoverUrl("https://androidwave.com/media/images/exo-player-in-recyclerview-in-android-3.png");
-        videoInfo3.setUrl("https://androidwave.com/media/androidwave-video-3.mp4");
-
-        VideoInfo videoInfo4 = new VideoInfo();
-        videoInfo4.setId(4);
-        videoInfo4.setUserHandle("@sachin.patel");
-        videoInfo4.setTitle("When did kama founders find sex offensive to Indian traditions");
-        videoInfo4.setCoverUrl("https://androidwave.com/media/images/exo-player-in-recyclerview-in-android-4.png");
-        videoInfo4.setUrl("https://androidwave.com/media/androidwave-video-6.mp4");
-
-        VideoInfo videoInfo5 = new VideoInfo();
-        videoInfo5.setId(5);
-        videoInfo5.setUserHandle("@monika.sharma");
-        videoInfo5.setTitle("When did you last cry in front of someone?");
-        videoInfo5.setCoverUrl("https://androidwave.com/media/images/exo-player-in-recyclerview-in-android-5.png");
-        videoInfo5.setUrl("https://androidwave.com/media/androidwave-video-5.mp4");
-
-        /*videoInfoList.add(videoInfo);
-        videoInfoList.add(videoInfo2);
-        videoInfoList.add(videoInfo3);
-        videoInfoList.add(videoInfo4);
-        videoInfoList.add(videoInfo5);
-        videoInfoList.add(videoInfo);
-        videoInfoList.add(videoInfo2);
-        videoInfoList.add(videoInfo3);
-        videoInfoList.add(videoInfo4);
-        videoInfoList.add(videoInfo5);*/
-
-    }
-
-//    @Override
-//    protected void onPause() {
-//        new Handler(Looper.getMainLooper()).post(new Runnable() {
-//            @Override
-//            public void run() {
-//                recyclerViewFeed.onPausePlayer();
-//            }
-//        });
-//        super.onPause();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        new Handler(Looper.getMainLooper()).post(new Runnable() {
-//            @Override
-//            public void run() {
-//                recyclerViewFeed.onRestartPlayer();
-//            }
-//        });
-//        super.onResume();
-//    }
 
     @Override
     protected void onDestroy() {

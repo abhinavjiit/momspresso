@@ -453,6 +453,9 @@
             android:name=".ui.activity.AddTextOrMediaGroupPostActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.AddAudioGroupPostActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.GroupsListingActivity"
             android:screenOrientation="portrait" />
         <activity
