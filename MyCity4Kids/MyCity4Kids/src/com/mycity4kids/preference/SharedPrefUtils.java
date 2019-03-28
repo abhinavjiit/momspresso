@@ -18,6 +18,7 @@ import java.util.Locale;
  * @author deepanker.chaudhary
  */
 public class SharedPrefUtils {
+
     /**
      * Preference Name
      */

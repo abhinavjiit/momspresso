@@ -191,24 +191,22 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom">
 
-        <com.mycity4kids.widget.CustomFontTextView
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/saveTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="25dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/update_profile_bg"
             android:elevation="4dp"
-            android:gravity="center"
             android:padding="15dp"
-            android:text="@string/add_article_or_video.upload_video"
-            android:textColor="@color/white"
-            android:textSize="17sp"
+            android:src="@drawable/ic_plus"
             android:visibility="visible"
-            app:fontName="oswald_regular.ttf" />
+            android:layout_margin="@dimen/space_20"
+            app:backgroundTint="@color/app_red" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

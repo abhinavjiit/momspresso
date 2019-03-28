@@ -1,7 +1,10 @@
 package com.mycity4kids.ui.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -141,9 +145,10 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         guideOverlay.setOnClickListener(this);
         writeArticleCell.setOnClickListener(this);
         frameLayout.setVisibility(View.VISIBLE);
-        fabSort.setVisibility(View.VISIBLE);
+        //fabSort.setVisibility(View.VISIBLE);
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
+        fabMenu.setVisibility(View.GONE);
         fabSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -342,7 +347,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 0;
                 nextPageNumber = 1;
-                hitFilteredTopicsArticleListingApi(0);
+                hitFilteredTopicsArticleListingApi(sortType);
                 break;
             case R.id.popularSortFAB:
                 fabMenu.collapse();
@@ -350,9 +355,27 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 recyclerAdapter.notifyDataSetChanged();
                 sortType = 1;
                 nextPageNumber = 1;
-                hitFilteredTopicsArticleListingApi(1);
+                hitFilteredTopicsArticleListingApi(sortType);
                 break;
         }
+    }
+
+    public void hitArticleListingSortByRecent() {
+        fabMenu.collapse();
+        mDatalist.clear();
+        recyclerAdapter.notifyDataSetChanged();
+        sortType = 0;
+        nextPageNumber = 1;
+        hitFilteredTopicsArticleListingApi(0);
+    }
+
+    public void hitArticleListingSortByPopular() {
+        fabMenu.collapse();
+        mDatalist.clear();
+        recyclerAdapter.notifyDataSetChanged();
+        sortType = 1;
+        nextPageNumber = 1;
+        hitFilteredTopicsArticleListingApi(sortType);
     }
 
     @Override
@@ -776,4 +799,40 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         }
     };
+
+
+    public void showSortedByDialog() {
+        if(getActivity()!=null){
+            final Dialog dialog = new Dialog(getActivity());
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_sort_by);
+            dialog.setCancelable(true);
+            dialog.findViewById(R.id.linearSortByPopular).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hitArticleListingSortByPopular();
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.findViewById(R.id.linearSortByRecent).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hitArticleListingSortByRecent();
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.findViewById(R.id.textUpdate).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+        }
+
+    }
 }

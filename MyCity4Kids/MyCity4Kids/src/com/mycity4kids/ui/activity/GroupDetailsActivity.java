@@ -1872,6 +1872,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             limit = 10;
             getGroupPosts();*/
         }
+
     }
 
 }

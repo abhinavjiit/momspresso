@@ -791,6 +791,7 @@
     <string name="groups.pin_post">PIN THIS POST TO TOP</string>
     <string name="groups.unpin_post">UNPIN THIS POST</string>
     <string name="groups.all_groups">ALL GROUPS</string>
+    <string name="groups.other_groups">OTHER GROUPS</string>
     <string name="groups.groups">GROUPS</string>
     <string name="groups.reported_by">Reported By</string>
     <string name="groups.persons">Persons</string>
@@ -1035,7 +1036,7 @@
     <string name="rewards.social.instagram_connected">INSTAGRAM CONNECTED</string>
     <string name="rewards_participate">Participate and earn now by completing your profile!</string>
     <string name="rewards_personal_header">We need this information to get in touch with you</string>
-    <string name="rewards_welcome">Welcome to the Momspresso Rewards!</string>
+    <string name="rewards_welcome">Welcome to Momspresso Rewards!</string>
     <string name="rewards_description">Leading brands host campaigns in the form of surveys, e-commerce reviews, sponsored blogs and others on a regular basis. We need some information from you to determine your eligibility for these campaigns. Participation in these campaigns involves a monetary benefit and hence Momspresso Rewards.</string>
     <string name="rewards_start_now">START NOW</string>
     <string name="rewards_family_header">We need this information below to determine your eligibility for various campaigns</string>
@@ -1066,6 +1067,7 @@
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="dialog_header_choose_sort_type">Sort by</string>
 
 
     //groupdetail Activity toast String
