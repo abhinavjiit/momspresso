@@ -2,18 +2,15 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
@@ -23,13 +20,9 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.squareup.picasso.Picasso;
 
-import org.apmem.tools.layouts.FlowLayout;
-
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -96,6 +89,7 @@ public class VlogsListingAdapter extends BaseAdapter {
             if (view == null) {
                 addVlogViewHolder = new AddVlogViewHolder();
                 view = mInflator.inflate(R.layout.add_momvlog_list_item, null);
+                addVlogViewHolder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
                 addVlogViewHolder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
                 addVlogViewHolder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 addVlogViewHolder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
@@ -144,6 +138,13 @@ public class VlogsListingAdapter extends BaseAdapter {
 
             }
 
+            if (articleDataModelsNew.get(position).getWinner() != 0) {
+                addVlogViewHolder.winnerLayout.setVisibility(View.VISIBLE);
+            } else {
+                addVlogViewHolder.winnerLayout.setVisibility(View.GONE);
+
+            }
+
             addVlogViewHolder.addMomVlogImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -159,6 +160,7 @@ public class VlogsListingAdapter extends BaseAdapter {
             if (view == null) {
                 holder = new ViewHolder();
                 view = mInflator.inflate(R.layout.video_listing_item, null);
+                holder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
                 holder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
                 holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
@@ -199,11 +201,18 @@ public class VlogsListingAdapter extends BaseAdapter {
                 holder.goldLogo.setVisibility(View.GONE);
 
             }
+            if (articleDataModelsNew.get(position).getWinner() != 0) {
+                holder.winnerLayout.setVisibility(View.VISIBLE);
+            } else {
+                holder.winnerLayout.setVisibility(View.GONE);
+
+            }
             return view;
         }
     }
 
     class ViewHolder {
+        RelativeLayout winnerLayout;
         TextView txvArticleTitle;
         TextView txvAuthorName;
         ImageView articleImageView;
@@ -215,6 +224,7 @@ public class VlogsListingAdapter extends BaseAdapter {
     }
 
     class AddVlogViewHolder {
+        RelativeLayout winnerLayout;
         ImageView addMomVlogImageView;
         ImageView goldLogo;
         TextView txvArticleTitle;

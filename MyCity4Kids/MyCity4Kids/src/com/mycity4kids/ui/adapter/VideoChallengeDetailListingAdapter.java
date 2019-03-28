@@ -145,6 +145,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 addVlogViewHolder = new AddVlogViewHolderChallenge();
                 view = mInflator.inflate(R.layout.add_momvlog_list_item, null);
                 addVlogViewHolder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
+                addVlogViewHolder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
+
                 addVlogViewHolder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 addVlogViewHolder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 addVlogViewHolder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
@@ -189,6 +191,12 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             } else {
                 addVlogViewHolder.goldLogo.setVisibility(View.GONE);
             }
+            if (articleDataModelsNew.get(position).getWinner() != 0) {
+                addVlogViewHolder.winnerLayout.setVisibility(View.VISIBLE);
+            } else {
+                addVlogViewHolder.winnerLayout.setVisibility(View.GONE);
+
+            }
 
             addVlogViewHolder.addMomVlogImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -205,6 +213,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             if (view == null) {
                 holder = new ViewHolderChallenge();
                 view = mInflator.inflate(R.layout.video_listing_item, null);
+                holder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
+
                 holder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
                 holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
@@ -244,6 +254,12 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             } else {
                 holder.goldLogo.setVisibility(View.GONE);
             }
+            if (articleDataModelsNew.get(position).getWinner() != 0) {
+                holder.winnerLayout.setVisibility(View.VISIBLE);
+            } else {
+                holder.winnerLayout.setVisibility(View.GONE);
+
+            }
 
             return view;
         }
@@ -253,6 +269,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
 
     class ViewHolderChallenge {
+        RelativeLayout winnerLayout;
+
         ImageView goldLogo;
         TextView txvArticleTitle;
         TextView txvAuthorName;
@@ -264,6 +282,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     }
 
     class AddVlogViewHolderChallenge {
+        RelativeLayout winnerLayout;
+
         ImageView goldLogo;
         ImageView addMomVlogImageView;
         TextView txvArticleTitle;

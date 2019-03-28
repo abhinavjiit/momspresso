@@ -37,6 +37,7 @@
                 card_view:fontName="oswald_regular.ttf" />
 
             <RelativeLayout
+                android:id="@+id/winnerLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txvArticleTitle"
