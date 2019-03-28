@@ -291,7 +291,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             } else {
                 mediaPostViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
                 mediaPostViewHolder.commentLayout.setVisibility(View.VISIBLE);
-                mediaPostViewHolder.postCommentsTextView.setVisibility(View.GONE);
+                mediaPostViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
                 mediaPostViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
 
             }
