@@ -470,4 +470,6 @@
     <color name="black_translucent">#50000000</color>
     <color name="black_63">#a1000000</color>
     <color name="gray_group_comment_container_border">#d7d7d7</color>
+    <color name="gold_color_video_listing">#ffcd00</color>
+    <color name="background_color_gold_logo_video_listing">#363636</color>
 </resources>
