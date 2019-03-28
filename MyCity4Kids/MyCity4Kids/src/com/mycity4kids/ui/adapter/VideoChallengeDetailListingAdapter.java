@@ -4,10 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -16,25 +14,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
@@ -44,13 +28,10 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
-import com.mycity4kids.ui.activity.HeaderChallengeVideoPlayActivity;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
@@ -86,23 +67,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         this.topics = topics;
         this.selectedId = selectedId;
 
-        //  intiExoPlayer();
+
     }
-
-  /*  private void intiExoPlayer() {
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-        LoadControl loadControl = new DefaultLoadControl();
-        player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mContext), trackSelector, loadControl);
-        daUri = Uri.parse(selectedStreamUrl);
-        userAgent = Util.getUserAgent(mContext, getApplicationContext().getApplicationInfo().packageName);
-        httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
-        dataSourceFactory = new DefaultDataSourceFactory(mContext, null, httpDataSourceFactory);
-        mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
-        player.prepare(mVideoSource);
-
-    }*/
 
 
     public void setListData(ArrayList<VlogsListingAndDetailResult> mParentingLists) {
@@ -162,18 +128,11 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 videoChallengeHeaderView = (VideoChallengeHeaderView) view.getTag();
             }
 
-           /* videoChallengeHeaderView.mExoPlayerView.setPlayer(player);
-            player.setPlayWhenReady(true);*/
-            // videoChallengeHeaderView.challengeNameText.setText(selected_Name);
             videoChallengeHeaderView.submitButtonVideoChallenge.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, ChooseVideoCategoryActivity.class);
-                    /*if (selected_Name != null && !selected_Name.isEmpty() && selectedId != null && !selectedId.isEmpty()) {
-                        intent.putExtra("selectedId", selectedId);
-                        intent.putExtra("selectedName", selected_Name);
-                        intent.putExtra("comingFrom", "Challenge");
-                    }*/
+
                     mContext.startActivity(intent);
                 }
             });
@@ -185,6 +144,9 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             if (view == null) {
                 addVlogViewHolder = new AddVlogViewHolderChallenge();
                 view = mInflator.inflate(R.layout.add_momvlog_list_item, null);
+                addVlogViewHolder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
+                addVlogViewHolder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
+
                 addVlogViewHolder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 addVlogViewHolder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 addVlogViewHolder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
@@ -224,6 +186,17 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             } catch (Exception e) {
                 addVlogViewHolder.articleImageView.setImageResource(R.drawable.default_article);
             }
+            if (articleDataModelsNew.get(position).isIs_gold()) {
+                addVlogViewHolder.goldLogo.setVisibility(View.VISIBLE);
+            } else {
+                addVlogViewHolder.goldLogo.setVisibility(View.GONE);
+            }
+            if (articleDataModelsNew.get(position).getWinner() != 0) {
+                addVlogViewHolder.winnerLayout.setVisibility(View.VISIBLE);
+            } else {
+                addVlogViewHolder.winnerLayout.setVisibility(View.GONE);
+
+            }
 
             addVlogViewHolder.addMomVlogImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -240,6 +213,9 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             if (view == null) {
                 holder = new ViewHolderChallenge();
                 view = mInflator.inflate(R.layout.video_listing_item, null);
+                holder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
+
+                holder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
                 holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
@@ -273,6 +249,17 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             } catch (Exception e) {
                 holder.articleImageView.setImageResource(R.drawable.default_article);
             }
+            if (articleDataModelsNew.get(position).isIs_gold()) {
+                holder.goldLogo.setVisibility(View.VISIBLE);
+            } else {
+                holder.goldLogo.setVisibility(View.GONE);
+            }
+            if (articleDataModelsNew.get(position).getWinner() != 0) {
+                holder.winnerLayout.setVisibility(View.VISIBLE);
+            } else {
+                holder.winnerLayout.setVisibility(View.GONE);
+
+            }
 
             return view;
         }
@@ -282,6 +269,9 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
 
     class ViewHolderChallenge {
+        RelativeLayout winnerLayout;
+
+        ImageView goldLogo;
         TextView txvArticleTitle;
         TextView txvAuthorName;
         ImageView articleImageView;
@@ -292,6 +282,9 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     }
 
     class AddVlogViewHolderChallenge {
+        RelativeLayout winnerLayout;
+
+        ImageView goldLogo;
         ImageView addMomVlogImageView;
         TextView txvArticleTitle;
         TextView txvAuthorName;

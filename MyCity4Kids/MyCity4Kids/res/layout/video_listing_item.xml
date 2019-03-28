@@ -1,195 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/short_story_border_bg">
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@drawable/short_story_border_bg">
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp"
+        card_view:cardCornerRadius="0dp"
+        card_view:cardElevation="0dp">
 
-        <android.support.v7.widget.CardView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="4dp"
-            card_view:cardCornerRadius="0dp"
-            card_view:cardElevation="0dp">
+            android:orientation="vertical">
 
-            <RelativeLayout
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/txvArticleTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_toLeftOf="@+id/forYouInfoLL"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:padding="10dp"
+                android:singleLine="false"
+                android:text="@string/title"
+                android:textColor="@color/article_listing.title"
+                android:textSize="14sp"
+                card_view:fontName="oswald_regular.ttf" />
+
+            <RelativeLayout
+                android:id="@+id/winnerLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txvArticleTitle"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/articleImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/article_listing.article_image"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/author_img"
+                    android:scaleType="centerCrop" />
 
                 <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/txvArticleTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/forYouInfoLL"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:padding="10dp"
-                    android:singleLine="false"
-                    android:text="@string/title"
-                    android:textColor="@color/article_listing.title"
-                    android:textSize="14sp"
-                    card_view:fontName="oswald_regular.ttf" />
-
-                <RelativeLayout
+                    android:id="@+id/winner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txvArticleTitle"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="4dp">
+                    android:layout_alignRight="@id/thumbNail"
+                    android:layout_alignBottom="@id/articleImageView"
+                    android:layout_margin="@dimen/space_10"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/update_profile_bg"
+                    android:drawableLeft="@drawable/ic_winner_cup"
+                    android:drawableTint="@color/white"
+                    android:paddingLeft="7dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="7dp"
+                    android:paddingBottom="3dp"
+                    android:text="WINNER"
+                    android:textColor="#fff"
+                    app:fontName="oswald.ttf" />
 
-                    <ImageView
-                        android:id="@+id/articleImageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/article_listing.article_image"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/author_img"
-                        android:scaleType="centerCrop" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/article_listing.article_image"
-                        android:layout_alignParentTop="true"
-                        android:background="#80000000"
-                        android:visibility="gone" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/article_listing.article_image"
+                    android:layout_alignParentTop="true"
+                    android:background="#80000000"
+                    android:visibility="gone" />
 
-                    <ImageView
-                        android:id="@+id/videoIndicatorImageView"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="60dp"
-                        android:src="@drawable/ic_videos"
-                        android:visibility="visible" />
+                <ImageView
+                    android:id="@+id/videoIndicatorImageView"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="60dp"
+                    android:src="@drawable/ic_videos"
+                    android:visibility="visible" />
 
-                    <!--<org.apmem.tools.layouts.FlowLayout-->
-                    <!--android:id="@+id/flowLayout"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="24dp"-->
-                    <!--android:layout_alignBottom="@+id/articleImageView"-->
-                    <!--android:layout_marginBottom="2dp"-->
-                    <!--android:paddingLeft="10dp"-->
-                    <!--android:paddingRight="10dp">-->
+                <!--<org.apmem.tools.layouts.FlowLayout-->
+                <!--android:id="@+id/flowLayout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:layout_alignBottom="@+id/articleImageView"-->
+                <!--android:layout_marginBottom="2dp"-->
+                <!--android:paddingLeft="10dp"-->
+                <!--android:paddingRight="10dp">-->
 
-                    <!--<LinearLayout-->
-                    <!--android:id="@+id/popularSubcatLL_1"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="5dp"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:layout_marginRight="2dp"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:background="@drawable/topics_transparent_bg"-->
-                    <!--android:clickable="true">-->
+                <!--<LinearLayout-->
+                <!--android:id="@+id/popularSubcatLL_1"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:layout_marginRight="2dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:background="@drawable/topics_transparent_bg"-->
+                <!--android:clickable="true">-->
 
-                    <!--<TextView-->
-                    <!--android:id="@+id/popularSubcatTextView_1"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:fontFamily="sans-serif-light"-->
-                    <!--android:gravity="center"-->
-                    <!--android:paddingBottom="1dp"-->
-                    <!--android:paddingLeft="4dp"-->
-                    <!--android:paddingRight="4dp"-->
-                    <!--android:text=""-->
-                    <!--android:textAllCaps="true"-->
-                    <!--android:textColor="@color/white_color"-->
-                    <!--android:textSize="9sp" />-->
-                    <!--</LinearLayout>-->
+                <!--<TextView-->
+                <!--android:id="@+id/popularSubcatTextView_1"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:fontFamily="sans-serif-light"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="1dp"-->
+                <!--android:paddingLeft="4dp"-->
+                <!--android:paddingRight="4dp"-->
+                <!--android:text=""-->
+                <!--android:textAllCaps="true"-->
+                <!--android:textColor="@color/white_color"-->
+                <!--android:textSize="9sp" />-->
+                <!--</LinearLayout>-->
 
-                    <!--<LinearLayout-->
-                    <!--android:id="@+id/popularSubcatLL_2"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="5dp"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:layout_marginRight="2dp"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:layout_toRightOf="@+id/popularSubcatLL_1"-->
-                    <!--android:background="@drawable/topics_transparent_bg"-->
-                    <!--android:clickable="true">-->
+                <!--<LinearLayout-->
+                <!--android:id="@+id/popularSubcatLL_2"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:layout_marginRight="2dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_toRightOf="@+id/popularSubcatLL_1"-->
+                <!--android:background="@drawable/topics_transparent_bg"-->
+                <!--android:clickable="true">-->
 
-                    <!--<TextView-->
-                    <!--android:id="@+id/popularSubcatTextView_2"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:fontFamily="sans-serif-light"-->
-                    <!--android:gravity="center"-->
-                    <!--android:paddingBottom="1dp"-->
-                    <!--android:paddingLeft="4dp"-->
-                    <!--android:paddingRight="4dp"-->
-                    <!--android:text=""-->
-                    <!--android:textAllCaps="true"-->
-                    <!--android:textColor="@color/white_color"-->
-                    <!--android:textSize="9sp" />-->
-                    <!--</LinearLayout>-->
+                <!--<TextView-->
+                <!--android:id="@+id/popularSubcatTextView_2"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:fontFamily="sans-serif-light"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="1dp"-->
+                <!--android:paddingLeft="4dp"-->
+                <!--android:paddingRight="4dp"-->
+                <!--android:text=""-->
+                <!--android:textAllCaps="true"-->
+                <!--android:textColor="@color/white_color"-->
+                <!--android:textSize="9sp" />-->
+                <!--</LinearLayout>-->
 
-                    <!--<LinearLayout-->
-                    <!--android:id="@+id/popularSubcatLL_3"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="5dp"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:layout_marginRight="2dp"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:layout_toRightOf="@+id/popularSubcatLL_2"-->
-                    <!--android:background="@drawable/topics_transparent_bg"-->
-                    <!--android:clickable="true">-->
+                <!--<LinearLayout-->
+                <!--android:id="@+id/popularSubcatLL_3"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:layout_marginRight="2dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_toRightOf="@+id/popularSubcatLL_2"-->
+                <!--android:background="@drawable/topics_transparent_bg"-->
+                <!--android:clickable="true">-->
 
-                    <!--<TextView-->
-                    <!--android:id="@+id/popularSubcatTextView_3"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:fontFamily="sans-serif-light"-->
-                    <!--android:gravity="center"-->
-                    <!--android:paddingBottom="1dp"-->
-                    <!--android:paddingLeft="4dp"-->
-                    <!--android:paddingRight="4dp"-->
-                    <!--android:text=""-->
-                    <!--android:textAllCaps="true"-->
-                    <!--android:textColor="@color/white_color"-->
-                    <!--android:textSize="9sp" />-->
-                    <!--</LinearLayout>-->
+                <!--<TextView-->
+                <!--android:id="@+id/popularSubcatTextView_3"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:fontFamily="sans-serif-light"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="1dp"-->
+                <!--android:paddingLeft="4dp"-->
+                <!--android:paddingRight="4dp"-->
+                <!--android:text=""-->
+                <!--android:textAllCaps="true"-->
+                <!--android:textColor="@color/white_color"-->
+                <!--android:textSize="9sp" />-->
+                <!--</LinearLayout>-->
 
-                    <!--<LinearLayout-->
-                    <!--android:id="@+id/popularSubcatLL_4"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="5dp"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:layout_marginRight="2dp"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:layout_toRightOf="@+id/popularSubcatLL_3"-->
-                    <!--android:background="@drawable/topics_transparent_bg"-->
-                    <!--android:clickable="true">-->
+                <!--<LinearLayout-->
+                <!--android:id="@+id/popularSubcatLL_4"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:layout_marginRight="2dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_toRightOf="@+id/popularSubcatLL_3"-->
+                <!--android:background="@drawable/topics_transparent_bg"-->
+                <!--android:clickable="true">-->
 
-                    <!--<TextView-->
-                    <!--android:id="@+id/popularSubcatTextView_4"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:fontFamily="sans-serif-light"-->
-                    <!--android:gravity="center"-->
-                    <!--android:paddingBottom="1dp"-->
-                    <!--android:paddingLeft="4dp"-->
-                    <!--android:paddingRight="4dp"-->
-                    <!--android:text=""-->
-                    <!--android:textAllCaps="true"-->
-                    <!--android:textColor="@color/white_color"-->
-                    <!--android:textSize="9sp" />-->
-                    <!--</LinearLayout>-->
-                    <!--</org.apmem.tools.layouts.FlowLayout>-->
+                <!--<TextView-->
+                <!--android:id="@+id/popularSubcatTextView_4"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:fontFamily="sans-serif-light"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="1dp"-->
+                <!--android:paddingLeft="4dp"-->
+                <!--android:paddingRight="4dp"-->
+                <!--android:text=""-->
+                <!--android:textAllCaps="true"-->
+                <!--android:textColor="@color/white_color"-->
+                <!--android:textSize="9sp" />-->
+                <!--</LinearLayout>-->
+                <!--</org.apmem.tools.layouts.FlowLayout>-->
+                <RelativeLayout
+                    android:id="@+id/relativeUserCountNameViews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/articleImageView"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/txvAuthorName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/articleImageView"
                         android:layout_gravity="bottom"
                         android:clickable="true"
                         android:gravity="bottom"
@@ -202,6 +229,7 @@
                         android:textColor="@color/article_listing.author_name"
                         android:textSize="12sp"
                         card_view:fontName="open_sans.ttf" />
+
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/viewCountTextView"
@@ -255,57 +283,82 @@
 
 
                     <ImageView
-                        android:id="@+id/bookmarkArticleImageView"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_alignTop="@+id/txvAuthorName"
+                        android:id="@+id/goldLogo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignRight="@+id/recommendCountTextView"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
-                        android:paddingTop="5dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="@dimen/space_5"
+                        android:background="@drawable/border_for_gold_logo_video_listing"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="2dp"
                         android:paddingRight="10dp"
-                        android:src="@drawable/ic_bookmark"
-                        android:visibility="gone" />
+                        android:paddingBottom="2dp"
+                        android:tint="@color/gold_color_video_listing"
+                        android:visibility="visible"
+                        card_view:srcCompat="@drawable/ic_star_gold_videos" />
+
                 </RelativeLayout>
 
-                <LinearLayout
-                    android:id="@+id/forYouInfoLL"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+
+                <ImageView
+                    android:id="@+id/bookmarkArticleImageView"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_alignTop="@+id/relativeUserCountNameViews"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:orientation="horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="12dp"
+                    android:paddingTop="5dp"
                     android:paddingRight="10dp"
-                    android:paddingBottom="12dp"
-                    android:visibility="gone">
+                    android:src="@drawable/ic_bookmark"
+                    android:visibility="gone" />
 
-                    <ImageView
-                        android:id="@+id/one"
-                        android:layout_width="6dp"
-                        android:layout_height="6dp"
-                        android:src="@drawable/white_filled_bg"
-                        android:tag="1"
-                        android:tint="@color/onboarding.already_member" />
 
-                    <ImageView
-                        android:id="@+id/two"
-                        android:layout_width="6dp"
-                        android:layout_height="6dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:src="@drawable/white_filled_bg"
-                        android:tag="2"
-                        android:tint="@color/onboarding.already_member" />
-
-                    <ImageView
-                        android:id="@+id/three"
-                        android:layout_width="6dp"
-                        android:layout_height="6dp"
-                        android:src="@drawable/white_filled_bg"
-                        android:tag="3"
-                        android:tint="@color/onboarding.already_member" />
-                </LinearLayout>
             </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
-    </FrameLayout>
+            <LinearLayout
+                android:id="@+id/forYouInfoLL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingTop="12dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="12dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/one"
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:src="@drawable/white_filled_bg"
+                    android:tag="1"
+                    android:tint="@color/onboarding.already_member" />
+
+                <ImageView
+                    android:id="@+id/two"
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/white_filled_bg"
+                    android:tag="2"
+                    android:tint="@color/onboarding.already_member" />
+
+                <ImageView
+                    android:id="@+id/three"
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:src="@drawable/white_filled_bg"
+                    android:tag="3"
+                    android:tint="@color/onboarding.already_member" />
+
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</FrameLayout>

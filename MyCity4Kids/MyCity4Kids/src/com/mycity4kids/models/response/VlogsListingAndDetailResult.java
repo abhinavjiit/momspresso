@@ -28,8 +28,16 @@ public class VlogsListingAndDetailResult {
     private boolean isBookmarked = false;
     private boolean isFollowed = false;
     private boolean is_gold = false;
+    private int winner = 0;
 
 
+    public int getWinner() {
+        return winner;
+    }
+
+    public void setWinner(int winner) {
+        this.winner = winner;
+    }
 
 
     public boolean isIs_gold() {
