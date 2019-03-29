@@ -626,18 +626,16 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         }
                     } else {
                         if (commentOrReplyData == null) {
-                            if (getActivity() instanceof GroupPostDetailActivity )
+                            if (getActivity() instanceof GroupPostDetailActivity)
                                 ((GroupPostDetailActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap);
 
 
-                       if(getActivity() instanceof  GroupDetailsActivity)
-                       {
-                           ((GroupDetailsActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap,groupId,postId);
-                           ((GroupDetailsActivity) getActivity()).reStoreData();
+                            if (getActivity() instanceof GroupDetailsActivity) {
+                                ((GroupDetailsActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap, groupId, postId);
+                                ((GroupDetailsActivity) getActivity()).reStoreData();
 
-                       }
-                        }
-                        else {
+                            }
+                        } else {
                             if (getActivity() instanceof GroupPostDetailActivity)
                                 ((GroupPostDetailActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), mediaMap);
                             else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity)
@@ -1115,8 +1113,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         }
                         if (getActivity() instanceof GroupDetailsActivity) {
                             ((GroupDetailsActivity) getActivity()).processImage(imageUri);
-                        }
-                        else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                        } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
 //                            ((ViewGroupPostCommentsRepliesActivity) getActivity()).processImage();
                         }
 
@@ -1337,30 +1334,37 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     }
 
     private void addImageToContainer(String url) {
-        RelativeLayout rl = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.image_post_upload_item, null);
-        ImageView uploadedIV = (ImageView) rl.findViewById(R.id.addImageOptionImageView);
-        final ImageView removeIV = (ImageView) rl.findViewById(R.id.removeItemImageView);
-        mediaContainer.addView(rl);
-        imageUrlHashMap.put(removeIV, url);
-        audioRecordView.setVisibility(View.GONE);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        addMediaImageView.setLayoutParams(params);
-        Picasso.with(getActivity()).load(url).error(R.drawable.default_article).into(uploadedIV);
-        removeIV.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-            @Override
-            public void onClick(View v) {
-                imageUrlHashMap.remove(removeIV);
-                mediaContainer.removeView((View) removeIV.getParent());
-                audioRecordView.setVisibility(View.VISIBLE);
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
-                params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                params.addRule(RelativeLayout.LEFT_OF, R.id.recordingView);
-                addMediaImageView.setLayoutParams(params);
-            }
-        });
+        try {
+            RelativeLayout rl = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.image_post_upload_item, null, false);
+
+            ImageView uploadedIV = (ImageView) rl.findViewById(R.id.addImageOptionImageView);
+            final ImageView removeIV = (ImageView) rl.findViewById(R.id.removeItemImageView);
+            mediaContainer.addView(rl);
+            imageUrlHashMap.put(removeIV, url);
+            audioRecordView.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            addMediaImageView.setLayoutParams(params);
+            Picasso.with(getActivity()).load(url).error(R.drawable.default_article).into(uploadedIV);
+            removeIV.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+                @Override
+                public void onClick(View v) {
+                    imageUrlHashMap.remove(removeIV);
+                    mediaContainer.removeView((View) removeIV.getParent());
+                    audioRecordView.setVisibility(View.VISIBLE);
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addMediaImageView.getLayoutParams();
+                    params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    params.addRule(RelativeLayout.LEFT_OF, R.id.recordingView);
+                    addMediaImageView.setLayoutParams(params);
+                }
+            });
+        } catch (Exception e) {
+            Log.e("Crash", e.toString());
+            Toast.makeText(getContext(), "something went wrong", Toast.LENGTH_SHORT).show();
+        }
     }
+
 
     private void addAudioToContainer(String url) {
         RelativeLayout rl = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.audio_post_upload_item, null);

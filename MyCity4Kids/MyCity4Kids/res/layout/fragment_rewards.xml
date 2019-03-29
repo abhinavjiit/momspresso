@@ -11,14 +11,21 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
 
+
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
+            android:src="@drawable/ic_rewards_header"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:src="@drawable/ic_rewards_header"/>
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:alpha=".5"
+            android:background="@drawable/gradient_in_video_challenge_image" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/text1"
@@ -35,11 +42,11 @@
             android:id="@+id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView2"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="@string/rewards_description"
-            android:layout_below="@+id/imageView2"
-            android:textSize="14sp"
-            android:layout_marginTop="10dp"
+            android:textSize="16sp"
             app:fontName="oswald.ttf" />
 
         <TextView
@@ -81,10 +88,16 @@
             android:layout_alignEnd="@+id/imageView2"
             android:layout_alignRight="@+id/imageView2"
             android:layout_alignBottom="@+id/imageView2"
-            android:gravity="bottom|center"
             android:layout_marginBottom="10dp"
+            android:elevation="10dp"
+            android:gravity="bottom|center"
+            android:shadowColor="@color/app_red"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="5"
             android:text="@string/rewards_welcome"
             android:textColor="@color/white"
+            android:textSize="18sp"
             app:fontName="oswald_regular.ttf" />
 
     </RelativeLayout>
