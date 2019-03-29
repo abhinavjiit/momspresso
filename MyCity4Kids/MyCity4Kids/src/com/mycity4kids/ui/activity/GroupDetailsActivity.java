@@ -2,8 +2,11 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -38,6 +41,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
@@ -66,8 +70,10 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupBlogsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
+import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment;
+import com.mycity4kids.ui.fragment.TaskFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -75,6 +81,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -90,7 +97,7 @@ import retrofit2.Retrofit;
  */
 
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
-        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener, ShareBlogInDiscussionDialogFragment.IForYourArticleRemove {
+        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener, ShareBlogInDiscussionDialogFragment.IForYourArticleRemove,TaskFragment.TaskCallbacks {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
@@ -98,6 +105,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private int categoryIndex = 0;
     private int nextPageNumber = 1;
     private int totalPostCount;
+    private static final String TAG_TASK_FRAGMENT = "task_fragment";
+    private TaskFragment mTaskFragment;
     private int skip = 0;
     private ArrayList<GroupPostCommentResult> completeResponseList;
     private int postId;
@@ -1874,5 +1883,43 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
 
     }
+    public void processImage(Uri imageUri) {
+        android.app.FragmentManager fm = getFragmentManager();
+        mTaskFragment = null;
+        mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+        if (mTaskFragment == null) {
+            mTaskFragment = new TaskFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("uri", imageUri);
+            mTaskFragment.setArguments(bundle);
+            fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+        } else {
+            showToast("You can add only 1 image in comments");
+        }
+    }
 
+    @Override
+    public void onPreExecute() {
+        showProgressDialog(getString(R.string.please_wait));
+    }
+
+    @Override
+    public void onCancelled() {
+        removeProgressDialog();
+    }
+
+    @Override
+    public void onPostExecute(Bitmap image) {
+        android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("Add Comment");
+        if (prev == null) {
+
+        } else {
+            String path = MediaStore.Images.Media.insertImage(getContentResolver(), image, "Title", null);
+            Uri imageUriTemp = Uri.parse(path);
+            File file2 = FileUtils.getFile(this, imageUriTemp);
+            removeProgressDialog();
+            ((AddGpPostCommentReplyDialogFragment) prev).sendUploadProfileImageRequest(file2);
+        }
+
+    }
 }

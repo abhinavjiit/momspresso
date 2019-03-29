@@ -1112,7 +1112,11 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     try {
                         if (getActivity() instanceof GroupPostDetailActivity) {
                             ((GroupPostDetailActivity) getActivity()).processImage(imageUri);
-                        } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
+                        }
+                        if (getActivity() instanceof GroupDetailsActivity) {
+                            ((GroupDetailsActivity) getActivity()).processImage(imageUri);
+                        }
+                        else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
 //                            ((ViewGroupPostCommentsRepliesActivity) getActivity()).processImage();
                         }
 
