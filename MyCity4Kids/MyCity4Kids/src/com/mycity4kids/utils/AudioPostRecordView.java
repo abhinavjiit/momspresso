@@ -403,7 +403,7 @@ public class AudioPostRecordView extends FrameLayout {
 
         userBehaviour = UserBehaviour.NONE;
 
-        imageViewAudio.animate().scaleX(1.4f).scaleY(1.4f).translationX(0).translationY(0).setDuration(100).setInterpolator(new LinearInterpolator()).start();
+        imageViewAudio.animate().scaleX(1f).scaleY(1f).translationX(0).translationY(0).setDuration(100).setInterpolator(new LinearInterpolator()).start();
         layoutSlideCancel.setTranslationX(0);
         layoutSlideCancel.setVisibility(View.GONE);
 //        baseCardView.setVisibility(View.GONE);
@@ -492,7 +492,7 @@ public class AudioPostRecordView extends FrameLayout {
                         audioTotalTime++;
                         if (audioTotalTime == 4) {
                             layoutLock.setVisibility(View.VISIBLE);
-                            imageViewAudio.animate().scaleXBy(1f).scaleYBy(1f).setDuration(200).setInterpolator(new OvershootInterpolator()).start();
+                            imageViewAudio.animate().scaleXBy(1.4f).scaleYBy(1.4f).setDuration(200).setInterpolator(new OvershootInterpolator()).start();
                         }
                     }
                 });
