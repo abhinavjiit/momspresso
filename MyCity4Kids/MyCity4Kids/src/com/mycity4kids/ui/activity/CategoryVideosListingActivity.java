@@ -108,10 +108,12 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 @Override
                 public void run() {
                     bottom_sheet.setVisibility(View.GONE);
+                    fabAdd.setVisibility(View.VISIBLE);
                 }
             }, 10000);
         } else {
             bottom_sheet.setVisibility(View.GONE);
+            fabAdd.setVisibility(View.VISIBLE);
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
