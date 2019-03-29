@@ -77,6 +77,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
+        fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(CategoryVideosListingActivity.this);
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +122,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
         viewPager = (ViewPager) findViewById(R.id.pager);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
-        fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
+
         imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
 
         imageSortBy.setOnClickListener(new View.OnClickListener() {
