@@ -969,4 +969,9 @@
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="dialog_header_choose_sort_type">ವಿಂಗಡಿಸು</string>
+    <string name="rewards_instagram_handler">ಇನ್‍ ಸ್ಟಾಗ್ರಾಂ ಹ್ಯಾಂಡಲ್‍ ಗೆ ಸೇರಿಸಿ</string>
+    <string name="rewards_facebook_handler">ಫೇಸ್ಬುಕ್ ಜೊತೆ ಸಂಪರ್ಕಿಸಿ</string>
+    <string name="add_youtube">ಯುಟ್ಯೂಬ್‍ ಚಾನಲ್ ಲಿಂಕ್ ಅನ್ನು ಸೇರಿಸಿ</string>
+    <string name="add_twitter">ಟ್ವಿಟರ್‍ ಹ್ಯಾಂಡಲ್‍ ಗೆ ಸೇರಿಸಿ</string>
 </resources>

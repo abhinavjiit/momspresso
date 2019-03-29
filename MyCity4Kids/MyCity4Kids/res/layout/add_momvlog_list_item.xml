@@ -375,7 +375,7 @@
                             card_view:fontName="open_sans.ttf" />
 
 
-                        <ImageView
+                        <com.mycity4kids.widget.CustomFontTextView
                             android:id="@+id/goldLogo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -383,15 +383,19 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/border_for_gold_logo_video_listing"
-                            android:gravity="center"
-                            android:paddingLeft="20dp"
-                            android:paddingTop="2dp"
+                            android:layout_marginTop="@dimen/space_5"
+                            android:text=" Gold"
+                            android:textAllCaps="true"
+                            android:gravity="center_vertical"
+                            android:textColor="@color/gold_color_video_listing"
+                            android:drawableLeft="@drawable/ic_star_gold_videos"
+                            android:paddingLeft="5dp"
                             android:paddingRight="10dp"
-                            android:paddingBottom="2dp"
+                            android:background="@drawable/border_for_gold_logo_video_listing"
+                            android:drawableTint="@color/gold_color_video_listing"
                             android:tint="@color/gold_color_video_listing"
                             android:visibility="visible"
-                            card_view:srcCompat="@drawable/ic_star_gold_videos" />
+                            card_view:fontName="oswald.ttf"/>
 
                     </RelativeLayout>
 

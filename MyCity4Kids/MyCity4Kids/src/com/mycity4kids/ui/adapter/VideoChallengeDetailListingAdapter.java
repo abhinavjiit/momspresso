@@ -144,7 +144,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
             if (view == null) {
                 addVlogViewHolder = new AddVlogViewHolderChallenge();
                 view = mInflator.inflate(R.layout.add_momvlog_list_item, null);
-                addVlogViewHolder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
+                addVlogViewHolder.goldLogo = (TextView) view.findViewById(R.id.goldLogo);
                 addVlogViewHolder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
 
                 addVlogViewHolder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
@@ -215,7 +215,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 view = mInflator.inflate(R.layout.video_listing_item, null);
                 holder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
 
-                holder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
+                holder.goldLogo = (TextView) view.findViewById(R.id.goldLogo);
                 holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
@@ -271,7 +271,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     class ViewHolderChallenge {
         RelativeLayout winnerLayout;
 
-        ImageView goldLogo;
+        TextView goldLogo;
         TextView txvArticleTitle;
         TextView txvAuthorName;
         ImageView articleImageView;
@@ -284,7 +284,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     class AddVlogViewHolderChallenge {
         RelativeLayout winnerLayout;
 
-        ImageView goldLogo;
+        TextView goldLogo;
         ImageView addMomVlogImageView;
         TextView txvArticleTitle;
         TextView txvAuthorName;

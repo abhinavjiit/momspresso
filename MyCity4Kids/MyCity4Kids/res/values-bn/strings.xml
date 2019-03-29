@@ -918,5 +918,10 @@
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="dialog_header_choose_sort_type">ক্রমানুসার</string>
+    <string name="rewards_instagram_handler">ইনস্টাগ্রাম হ্যান্ডেল যোগ করুন</string>
+    <string name="rewards_facebook_handler">ফেসবুকে সংযোগ করুন</string>
+    <string name="add_youtube">"ইউটিউব চ্যানেলের লিঙ্ক যোগ করুন "</string>
+    <string name="add_twitter">টুইটার হ্যান্ডেল যোগ করুন</string>
 
 </resources>

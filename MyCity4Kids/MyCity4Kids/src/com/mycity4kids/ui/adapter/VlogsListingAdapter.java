@@ -90,7 +90,7 @@ public class VlogsListingAdapter extends BaseAdapter {
                 addVlogViewHolder = new AddVlogViewHolder();
                 view = mInflator.inflate(R.layout.add_momvlog_list_item, null);
                 addVlogViewHolder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
-                addVlogViewHolder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
+                addVlogViewHolder.goldLogo = (TextView) view.findViewById(R.id.goldLogo);
                 addVlogViewHolder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 addVlogViewHolder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 addVlogViewHolder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
@@ -161,7 +161,7 @@ public class VlogsListingAdapter extends BaseAdapter {
                 holder = new ViewHolder();
                 view = mInflator.inflate(R.layout.video_listing_item, null);
                 holder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
-                holder.goldLogo = (ImageView) view.findViewById(R.id.goldLogo);
+                holder.goldLogo = (TextView) view.findViewById(R.id.goldLogo);
                 holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
@@ -220,13 +220,13 @@ public class VlogsListingAdapter extends BaseAdapter {
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        ImageView goldLogo;
+        TextView goldLogo;
     }
 
     class AddVlogViewHolder {
         RelativeLayout winnerLayout;
         ImageView addMomVlogImageView;
-        ImageView goldLogo;
+        TextView goldLogo;
         TextView txvArticleTitle;
         TextView txvAuthorName;
         ImageView articleImageView;
