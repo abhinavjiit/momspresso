@@ -37,7 +37,6 @@
                 card_view:fontName="oswald_regular.ttf" />
 
             <RelativeLayout
-                android:id="@+id/winnerLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txvArticleTitle"
@@ -52,25 +51,37 @@
                     android:contentDescription="@string/author_img"
                     android:scaleType="centerCrop" />
 
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/winner"
+                <RelativeLayout
+                    android:id="@+id/winnerLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@id/thumbNail"
                     android:layout_alignBottom="@id/articleImageView"
-                    android:layout_margin="@dimen/space_10"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/update_profile_bg"
-                    android:drawableLeft="@drawable/ic_winner_cup"
-                    android:drawableTint="@color/white"
-                    android:paddingLeft="7dp"
-                    android:paddingTop="3dp"
-                    android:paddingRight="7dp"
-                    android:paddingBottom="3dp"
-                    android:text="WINNER"
-                    android:textColor="#fff"
-                    app:fontName="oswald.ttf" />
+                    android:background="@drawable/update_profile_bg">
+
+                    <ImageView
+                        android:id="@+id/imageWinner"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/space_5"
+                        android:tint="@color/white"
+                        card_view:srcCompat="@drawable/ic_winner_cup" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/winner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="@dimen/space_5"
+                        android:layout_toRightOf="@+id/imageWinner"
+                        android:text="WINNER"
+                        android:textColor="#fff"
+                        android:textSize="14sp"
+                        app:fontName="oswald.ttf" />
+                </RelativeLayout>
 
 
                 <View
@@ -282,7 +293,7 @@
                         card_view:fontName="open_sans.ttf" />
 
 
-                    <ImageView
+                    <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/goldLogo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -291,14 +302,18 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginTop="@dimen/space_5"
-                        android:background="@drawable/border_for_gold_logo_video_listing"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="2dp"
+                        android:text=" Gold"
+                        android:textAllCaps="true"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/gold_color_video_listing"
+                        android:drawableLeft="@drawable/ic_star_gold_videos"
+                        android:paddingLeft="5dp"
                         android:paddingRight="10dp"
-                        android:paddingBottom="2dp"
+                        android:background="@drawable/border_for_gold_logo_video_listing"
+                        android:drawableTint="@color/gold_color_video_listing"
                         android:tint="@color/gold_color_video_listing"
                         android:visibility="visible"
-                        card_view:srcCompat="@drawable/ic_star_gold_videos" />
+                        card_view:fontName="oswald.ttf"/>
 
                 </RelativeLayout>
 

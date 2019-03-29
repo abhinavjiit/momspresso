@@ -59,10 +59,8 @@ import retrofit2.Retrofit;
 
 public class VideoChallengeListing extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     private static final int RECOVERY_REQUEST = 1;
-
     private RelativeLayout mLodingView;
     private ProgressDialog mProgressDialog;
-
     private ObservableScrollView mScrollView;
     private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
     private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
@@ -77,7 +75,6 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
     private TextView authorTypeTextView, authorNameTextView;
     private TextView article_title;
     private TextView articleCreatedDateTextView;
-
     private VlogsListingAndDetailResult detailData;
     private String videoId;
     private String commentURL = "";
