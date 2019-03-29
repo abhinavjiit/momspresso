@@ -57,6 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@id/thumbNail"
                     android:layout_alignBottom="@id/articleImageView"
+                    android:layout_margin="@dimen/space_10"
                     android:background="@drawable/update_profile_bg">
 
                     <ImageView
