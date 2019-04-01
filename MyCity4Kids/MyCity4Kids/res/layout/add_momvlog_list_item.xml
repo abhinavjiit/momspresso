@@ -72,6 +72,7 @@
                         android:id="@+id/winnerLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/space_10"
                         android:layout_alignRight="@id/thumbNail"
                         android:layout_alignBottom="@id/articleImageView"
                         android:background="@drawable/update_profile_bg">
@@ -388,7 +389,6 @@
                             android:textAllCaps="true"
                             android:gravity="center_vertical"
                             android:textColor="@color/gold_color_video_listing"
-                            android:drawableLeft="@drawable/ic_star_gold_videos"
                             android:paddingLeft="5dp"
                             android:paddingRight="10dp"
                             android:background="@drawable/border_for_gold_logo_video_listing"

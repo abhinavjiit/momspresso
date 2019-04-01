@@ -2,6 +2,9 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,6 +102,14 @@ public class VlogsListingAdapter extends BaseAdapter {
                 addVlogViewHolder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
                 addVlogViewHolder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
                 addVlogViewHolder.addMomVlogImageView = (ImageView) view.findViewById(R.id.addMomVlogImageView);
+                /*addVlogViewHolder.goldLogo.setCompoundDrawablesWithIntrinsicBounds(mContext.getResources().getDrawable(R.drawable.ic_star_gold_videos), null, null, null);
+                DrawableCompat.setTint();*/
+
+                Drawable drawable = mContext.getResources().getDrawable(R.drawable.ic_star_gold_videos);
+                drawable = DrawableCompat.wrap(drawable);
+                DrawableCompat.setTint(drawable, mContext.getResources().getColor(R.color.gold_color_video_listing));
+                DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
+                addVlogViewHolder.goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
                 if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(mContext))) {
                     addVlogViewHolder.addMomVlogImageView.setImageResource(R.drawable.add_mom_vlog_hi);
                 } else {
@@ -170,6 +181,11 @@ public class VlogsListingAdapter extends BaseAdapter {
                 holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
                 holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
                 holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
+                Drawable drawable = mContext.getResources().getDrawable(R.drawable.ic_star_gold_videos);
+                drawable = DrawableCompat.wrap(drawable);
+                DrawableCompat.setTint(drawable, mContext.getResources().getColor(R.color.gold_color_video_listing));
+                DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
+                holder.goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
                 Log.d("SetTag", "VLOGSetTag = " + position);
                 view.setTag(holder);
             } else {
