@@ -18,6 +18,7 @@
             android:id="@+id/ChallengeNameImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/groups_generic"
             android:visibility="gone" />
 
