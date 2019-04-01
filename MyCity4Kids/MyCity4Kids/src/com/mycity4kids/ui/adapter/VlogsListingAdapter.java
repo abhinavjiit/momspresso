@@ -121,9 +121,10 @@ public class VlogsListingAdapter extends BaseAdapter {
             }
 
             addVlogViewHolder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
-            addVlogViewHolder.viewCountTextView.setVisibility(View.GONE);
-            addVlogViewHolder.commentCountTextView.setVisibility(View.GONE);
-            addVlogViewHolder.recommendCountTextView.setVisibility(View.GONE);
+            addVlogViewHolder.viewCountTextView.setText(articleDataModelsNew.get(position).getView_count());
+            addVlogViewHolder.commentCountTextView.setText(articleDataModelsNew.get(position).getComment_count());
+            addVlogViewHolder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLike_count());
+
 
             try {
                 String userName = articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName();
@@ -191,9 +192,9 @@ public class VlogsListingAdapter extends BaseAdapter {
                 holder = (ViewHolder) view.getTag();
             }
             holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
-            holder.viewCountTextView.setVisibility(View.GONE);
-            holder.commentCountTextView.setVisibility(View.GONE);
-            holder.recommendCountTextView.setVisibility(View.GONE);
+            holder.viewCountTextView.setText(articleDataModelsNew.get(position).getView_count());
+            holder.commentCountTextView.setText(articleDataModelsNew.get(position).getComment_count());
+            holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLike_count());
 
             try {
                 String userName = articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName();

@@ -180,6 +180,23 @@
             android:text="@string/app_settings"
             android:textAllCaps="true"
             app:fontName="oswald.ttf" />
+
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/langTextView"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@+id/settingTextView"
+            android:drawablePadding="20dp"
+            android:drawableTint="#d54058"
+            android:gravity="center_vertical"
+            android:paddingBottom="12dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="16dp"
+            android:paddingTop="12dp"
+            android:text="English"
+            android:textAllCaps="true"
+            app:fontName="oswald.ttf"  />
     </RelativeLayout>
 
 </ScrollView>
