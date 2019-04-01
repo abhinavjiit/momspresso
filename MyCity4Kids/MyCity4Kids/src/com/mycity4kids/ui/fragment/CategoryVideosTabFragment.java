@@ -7,8 +7,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,8 +40,6 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
-import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VlogsListingAdapter;
 import com.mycity4kids.utils.MixPanelUtils;
@@ -55,6 +53,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
+
 public class CategoryVideosTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private VlogsListingAdapter articlesListingAdapter;
@@ -77,6 +76,11 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private ShimmerFrameLayout funnyvideosshimmer;
     private String videoCategory;
     private MixpanelAPI mixpanel;
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+    }
 
     @Nullable
     @Override
@@ -355,7 +359,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     }
 
     public void showSortedByDialog() {
-        if(getActivity()!=null){
+        if (getActivity() != null) {
             final Dialog dialog = new Dialog(getActivity());
             dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.dialog_sort_by);

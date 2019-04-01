@@ -80,6 +80,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
+        fabAdd.setVisibility(View.GONE);
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(ShortStoriesListingContainerActivity.this);
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
@@ -112,12 +113,12 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
                 @Override
                 public void run() {
                     bottom_sheet.setVisibility(View.GONE);
-                    fabAdd.setVisibility(View.VISIBLE);
+                    fabAdd.setVisibility(View.GONE);
                 }
             }, 10000);
         } else {
             bottom_sheet.setVisibility(View.GONE);
-            fabAdd.setVisibility(View.VISIBLE);
+            fabAdd.setVisibility(View.GONE);
 
         }
 
@@ -242,7 +243,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
                         fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.GONE);
                     } else {
-                        fabAdd.setVisibility(View.VISIBLE);
+                        fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.VISIBLE);
                     }
                 }

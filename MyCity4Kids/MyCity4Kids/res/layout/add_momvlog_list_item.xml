@@ -389,7 +389,6 @@
                             android:textAllCaps="true"
                             android:gravity="center_vertical"
                             android:textColor="@color/gold_color_video_listing"
-                            android:drawableLeft="@drawable/ic_star_gold_videos"
                             android:paddingLeft="5dp"
                             android:paddingRight="10dp"
                             android:background="@drawable/border_for_gold_logo_video_listing"

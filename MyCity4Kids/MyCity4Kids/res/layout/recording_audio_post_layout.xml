@@ -78,6 +78,7 @@
             android:id="@+id/imageAudio"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:tint="@color/white"
             android:background="@drawable/circular_image_bg"
             app:srcCompat="@drawable/ic_audio_record" />
 
