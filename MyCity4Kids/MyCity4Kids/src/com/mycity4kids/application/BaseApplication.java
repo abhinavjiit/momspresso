@@ -1,5 +1,6 @@
 package com.mycity4kids.application;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -74,6 +75,8 @@ public class BaseApplication extends Application {
     private static ArrayList<Topics> shortStoryTopicList;
     private static HashMap<Topics, List<Topics>> topicsMap;
     private static HashMap<String, Topics> selectedTopicsMap;
+
+    private Activity dashboardActivity;
 
     /*
      * Google Analytics configuration values.
@@ -172,6 +175,14 @@ public class BaseApplication extends Application {
 
     public static void setFirstSwipe(boolean firstSwipe) {
         isFirstSwipe = firstSwipe;
+    }
+
+    public Activity getDashboardActivity() {
+        return dashboardActivity;
+    }
+
+    public void setDashboardActivity(Activity dashboardActivity) {
+        this.dashboardActivity = dashboardActivity;
     }
 
     public enum TrackerName {
