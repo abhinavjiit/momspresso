@@ -42,6 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -108,15 +109,18 @@ import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -1791,7 +1795,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawers();
                 Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-                startActivity(intent);
+                startActivityForResult(intent, 1234);
             }
             break;
             case R.id.groupsTextView: {
@@ -1830,6 +1834,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Intent ssintent = new Intent(this, AddShortStoryActivity.class);
             ssintent.putExtra("selectedrequest", shortstory);
             startActivity(ssintent);
+            chooseLayout.setVisibility(View.GONE);
+
         }
 
         if (v.getId() == R.id.write_challenge) {
@@ -1846,6 +1852,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent.putExtra("parentId", shortStoriesTopicList.get(0).getId());
                 intent.putExtra("StringUrl", ImageUrl);
                 startActivity(intent);
+                chooseLayout.setVisibility(View.GONE);
+
             } else {
                 findActiveChallenge();
                 //ToastUtils.showToast(this, "server problem, please reopen your app");
@@ -2105,7 +2113,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 shortStoriesTopicList = new ArrayList<Topics>();
                 if (res != null) {
                     for (int i = 0; i < res.getData().size(); i++) {
-                        if (res.getData()!=null && res.getData().get(i)!=null && res.getData().get(i).getId()!=null && AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                        if (res.getData() != null && res.getData().get(i) != null && res.getData().get(i).getId() != null && AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
                             shortStoriesTopicList.add(res.getData().get(i));
                         }
                     }
@@ -2229,11 +2237,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 hideCreateContentView();
                 return;
             }
-            if (chooseLayout.getVisibility() == View.VISIBLE) {
+          /*  if (chooseLayout.getVisibility() == View.VISIBLE) {
                 chooseLayout.setVisibility(View.INVISIBLE);
 
                 return;
-            }
+            }*/
 
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
                 finish();
@@ -2253,6 +2261,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         try {
             switch (requestCode) {
+                case 1234:
+                    chooseLayout.setVisibility(View.VISIBLE);
+                    chooseStoryChallengeLayout.setVisibility(View.VISIBLE);
+                    overLayViewChooseStory.setVisibility(View.VISIBLE);
+                    chooseOptionLayout.setVisibility(View.VISIBLE);
+                    rootChooseLayout.setVisibility(View.VISIBLE);
+                    break;
+
                 case Constants.OPEN_GALLERY:
                     break;
                 case Constants.TAKE_PICTURE:
@@ -2937,4 +2953,5 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         }
     }
+
 }

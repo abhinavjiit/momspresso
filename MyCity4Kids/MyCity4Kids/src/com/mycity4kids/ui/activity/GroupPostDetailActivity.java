@@ -39,6 +39,7 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
@@ -138,7 +139,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private int responseId;
     private TaskFragment mTaskFragment;
     private MediaPlayer mMediaplayer;
-
+    private String userDynamoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +167,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         groupId = getIntent().getIntExtra("groupId", 0);
         postId = getIntent().getIntExtra("postId", 0);
         responseId = getIntent().getIntExtra("responseId", 0);
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -442,6 +444,44 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
+/*
+
+            case R.id.commentorUsernameTextView:
+            case R.id.commentorImageView:
+
+
+                if (postData.getIsAnnon() == 0) {
+
+                    if (userDynamoId.equals(postData.getUserId())) {
+                        Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+                        startActivity(pIntent);
+                    } else {
+                        Intent intentnn = new Intent(this, PublicProfileActivity.class);
+                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postData.getUserId());
+                        intentnn.putExtra(AppConstants.AUTHOR_NAME, postData.getUserInfo().getFirstName() + " " + postData.getUserInfo().getLastName());
+                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                    }
+                }
+            case R.id.userImageView:
+            case R.id.usernameTextView:
+
+                if (completeResponseList.get(position).getIsAnnon() == 0) {
+
+                    if (userDynamoId.equals(completeResponseList.get(position).getUserId())) {
+                        Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+                        startActivity(pIntent);
+                    } else {
+                        Intent intentnn = new Intent(this, PublicProfileActivity.class);
+                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, completeResponseList.get(position).getUserId());
+                        intentnn.putExtra(AppConstants.AUTHOR_NAME, completeResponseList.get(position).getUserInfo().getFirstName() + " " + completeResponseList.get(position - 1).getUserInfo().getLastName());
+                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                    }
+                }
+*/
+
+
             case R.id.commentDataTextView:
             case R.id.commentRootView: {
                 GpPostCommentOptionsDialogFragment commentOptionsDialogFragment = new GpPostCommentOptionsDialogFragment();

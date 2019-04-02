@@ -97,7 +97,7 @@ import retrofit2.Retrofit;
  */
 
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
-        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener, ShareBlogInDiscussionDialogFragment.IForYourArticleRemove,TaskFragment.TaskCallbacks {
+        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener, ShareBlogInDiscussionDialogFragment.IForYourArticleRemove, TaskFragment.TaskCallbacks {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
@@ -128,7 +128,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private int groupId;
     private String commaSepCategoryList = "";
     private String source;
-
+    private String userDynamoId;
     private Handler handler = new Handler();
 
     private Animation slideAnim, fadeAnim;
@@ -198,6 +198,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         groupId = getIntent().getIntExtra("groupId", 0);
         memberType = getIntent().getStringExtra(AppConstants.GROUP_MEMBER_TYPE);
         source = getIntent().getStringExtra("source");
+
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
@@ -1433,9 +1435,27 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.userImageView:
             case R.id.usernameTextView: {
-//                Intent intent = new Intent(GroupDetailsActivity.this, GroupDetailsActivity.class);
-//                intent.putExtra("groupItem", selectedGroup);
-//                startActivity(intent);
+
+                if (postList.get(position).getIsAnnon() == 0) {
+
+                    if (userDynamoId.equals(postList.get(position).getUserId())) {
+//                    MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+//                    Bundle mBundle0 = new Bundle();
+//                    fragment0.setArguments(mBundle0);
+//                    if (isAdded())
+//                        ((ShortStoriesListingContainerActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+                        Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+                        startActivity(pIntent);
+                    } else {
+                        Intent intentnn = new Intent(this, PublicProfileActivity.class);
+                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
+                        intentnn.putExtra(AppConstants.AUTHOR_NAME, postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                    }
+                }
+
+
                 break;
             }
             case R.id.postSettingImageView:
@@ -1883,6 +1903,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
 
     }
+
     public void processImage(Uri imageUri) {
         android.app.FragmentManager fm = getFragmentManager();
         mTaskFragment = null;

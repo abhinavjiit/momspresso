@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -51,6 +52,8 @@ import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
+import com.mycity4kids.ui.activity.PrivateProfileActivity;
+import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
@@ -197,6 +200,46 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
+            textPostViewHolder.userImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (groupPostResult.getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, groupPostResult.getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
+            textPostViewHolder.usernameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (groupPostResult.getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, groupPostResult.getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
         } else if (holder instanceof AudioCommentViewHeaderHolder) {
             AudioCommentViewHeaderHolder audioCommentViewHolder = (AudioCommentViewHeaderHolder) holder;
 
@@ -216,6 +259,46 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     audioCommentViewHolder.media.setVisibility(View.GONE);
                 }
             } else {
+                audioCommentViewHolder.commentorImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        if (groupPostResult.getIsAnnon() == 0) {
+
+                            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {
+                                Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                                mContext.startActivity(pIntent);
+                            } else {
+                                Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, groupPostResult.getUserId());
+                                intentnn.putExtra(AppConstants.AUTHOR_NAME, groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                                intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                                ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                            }
+                        }
+                    }
+                });
+                audioCommentViewHolder.commentorUsernameTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        if (groupPostResult.getIsAnnon() == 0) {
+
+                            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {
+                                Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                                mContext.startActivity(pIntent);
+                            } else {
+                                Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, groupPostResult.getUserId());
+                                intentnn.putExtra(AppConstants.AUTHOR_NAME, groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                                intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                                ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                            }
+                        }
+                    }
+                });
                 audioCommentViewHolder.commentorUsernameTextView.setText(groupPostResult.getUserInfo().getFirstName()
                         + " " + groupPostResult.getUserInfo().getLastName());
                 try {
@@ -236,6 +319,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     audioCommentViewHolder.commentDateTextView.setVisibility(View.VISIBLE);
                     audioCommentViewHolder.media.setVisibility(View.GONE);
                 }
+
             }
             if (!StringUtils.isNullOrEmpty(groupPostResult.getContent())) {
                 audioCommentViewHolder.commentDataTextView.setVisibility(View.VISIBLE);
@@ -284,6 +368,48 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     mediaPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
+
+            mediaPostViewHolder.userImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (groupPostResult.getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, groupPostResult.getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
+
+            mediaPostViewHolder.usernameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (groupPostResult.getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, groupPostResult.getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
             initializeViews((MediaPostViewHolder) holder, position);
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
@@ -310,6 +436,46 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     textPollPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
+            textPollPostViewHolder.userImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (groupPostResult.getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, groupPostResult.getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
+            textPollPostViewHolder.usernameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (groupPostResult.getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, groupPostResult.getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
             textPollPostViewHolder.option3Container.setVisibility(View.GONE);
             textPollPostViewHolder.option4Container.setVisibility(View.GONE);
             Map<String, String> optionsMap = (Map<String, String>) groupPostResult.getPollOptions();
@@ -371,6 +537,46 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
+            imageHolder.userImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (groupPostResult.getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, groupPostResult.getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
+            imageHolder.usernameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (groupPostResult.getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(groupPostResult.getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, groupPostResult.getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
             imageHolder.lastOptionsContainer.setVisibility(View.GONE);
             imageHolder.option3Container.setVisibility(View.GONE);
             imageHolder.option4Container.setVisibility(View.GONE);
@@ -432,6 +638,46 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     audioCommentViewHolder.media.setVisibility(View.GONE);
                 }
             } else {
+                audioCommentViewHolder.commentorImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        if (postCommentsList.get(position).getIsAnnon() == 0) {
+
+                            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(postCommentsList.get(position).getUserId())) {
+                                Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                                mContext.startActivity(pIntent);
+                            } else {
+                                Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postCommentsList.get(position).getUserId());
+                                intentnn.putExtra(AppConstants.AUTHOR_NAME, postCommentsList.get(position).getUserInfo().getFirstName() + " " + postCommentsList.get(position).getUserInfo().getLastName());
+                                intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                                ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                            }
+                        }
+                    }
+                });
+                audioCommentViewHolder.commentorUsernameTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        if (postCommentsList.get(position).getIsAnnon() == 0) {
+
+                            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(postCommentsList.get(position).getUserId())) {
+                                Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                                mContext.startActivity(pIntent);
+                            } else {
+                                Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postCommentsList.get(position).getUserId());
+                                intentnn.putExtra(AppConstants.AUTHOR_NAME, postCommentsList.get(position).getUserInfo().getFirstName() + " " + postCommentsList.get(position).getUserInfo().getLastName());
+                                intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                                ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                            }
+                        }
+                    }
+                });
                 audioCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
                         + " " + postCommentsList.get(position).getUserInfo().getLastName());
                 try {
@@ -507,6 +753,46 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     rootCommentViewHolder.media.setVisibility(View.GONE);
                 }
             } else {
+                rootCommentViewHolder.commentorImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        if (postCommentsList.get(position).getIsAnnon() == 0) {
+
+                            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(postCommentsList.get(position).getUserId())) {
+                                Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                                mContext.startActivity(pIntent);
+                            } else {
+                                Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postCommentsList.get(position).getUserId());
+                                intentnn.putExtra(AppConstants.AUTHOR_NAME, postCommentsList.get(position).getUserInfo().getFirstName() + " " + postCommentsList.get(position).getUserInfo().getLastName());
+                                intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                                ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                            }
+                        }
+                    }
+                });
+                rootCommentViewHolder.commentorUsernameTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        if (postCommentsList.get(position).getIsAnnon() == 0) {
+
+                            if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(postCommentsList.get(position).getUserId())) {
+                                Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                                mContext.startActivity(pIntent);
+                            } else {
+                                Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postCommentsList.get(position).getUserId());
+                                intentnn.putExtra(AppConstants.AUTHOR_NAME, postCommentsList.get(position).getUserInfo().getFirstName() + " " + postCommentsList.get(position).getUserInfo().getLastName());
+                                intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                                ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                            }
+                        }
+                    }
+                });
                 rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
                         + " " + postCommentsList.get(position).getUserInfo().getLastName());
                 try {
