@@ -509,6 +509,9 @@
         <activity
             android:name=".ui.activity.LeafNodeTopicArticlesActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.NotificationActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".ui.activity.PrivateProfileActivity" />
         <activity
             android:name=".ui.activity.NewEditorPostActivity"

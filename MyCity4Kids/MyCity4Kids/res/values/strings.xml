@@ -1082,5 +1082,6 @@
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
     <string name="rewards_instagram_handler">Enter your Instagram handle</string>
     <string name="rewards_facebook_handler">Connect your Facebook</string>
+    <string name="notification">Notification</string>
 
 </resources>
