@@ -40,7 +40,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
 
     private NotificationCenterListAdapter notificationCenterListAdapter;
     private ArrayList<NotificationCenterResult> notificationCenterResultArrayList;
-
     private String paginationValue = "";
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;

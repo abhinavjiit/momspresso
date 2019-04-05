@@ -110,11 +110,10 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
 
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-
-//    private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
-
+    private static String[] PERMISSIONS_INIT_FOR_AUDIO = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+    private static final int REQUEST_INIT_PERMISSION_FOR_AUDIO = 2;
     private static final int REQUEST_INIT_PERMISSION = 1;
-
     public static final int ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_IMAGE_CAMERA_ACTIVITY_REQUEST_CODE = 1112;
     SharedPreferences.Editor editor;
@@ -725,8 +724,21 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
-        if (requestCode == REQUEST_INIT_PERMISSION) {
+        if (requestCode == REQUEST_INIT_PERMISSION_FOR_AUDIO) {
+            // We have requested multiple permissions for contacts, so all of them need to be
+            // checked.
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                // All required permissions have been granted, display contacts fragment.
+                Snackbar.make(mLayout, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else if (requestCode == REQUEST_INIT_PERMISSION) {
             Log.i("Permissions", "Received response for storage permissions request.");
 
             // We have requested multiple permissions for contacts, so all of them need to be
@@ -747,6 +759,8 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -1211,29 +1225,68 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     }
 
     private void requestAudioPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-
-            //When permission is not granted by user, show them message why this permission is needed.
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-                Toast.makeText(this, R.string.audio_permission, Toast.LENGTH_SHORT).show();
-
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO_PERMISSION);
-
-            } else {
-                // Show user dialog to grant permission to record audio
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.RECORD_AUDIO},
-                        REQUEST_RECORD_AUDIO_PERMISSION);
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionsForAudio();
             }
         }
-       /* //If permission is granted, then go ahead recording audio
-        else if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.RECORD_AUDIO)
-                == PackageManager.PERMISSION_GRANTED) {
+    }
 
-            //Go ahead with recording audio now
-            startRecording();
-        }*/
+    private void requestPermissionsForAudio() {
+        // BEGIN_INCLUDE(contacts_permission_request)
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.RECORD_AUDIO)) {
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_audio_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissionsForAudio();
+                        }
+                    })
+                    .show();
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example, if the request has been denied previously.
+            Log.i("Permissions",
+                    "Displaying storage permission rationale to provide additional context.");
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissionsForAudio();
+                        }
+                    })
+                    .show();
+        } else {
+            requestUngrantedPermissionsForAudio();
+        }
+    }
+
+    private void requestUngrantedPermissionsForAudio() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        for (int i = 0; i < PERMISSIONS_INIT_FOR_AUDIO.length; i++) {
+            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT_FOR_AUDIO[i]) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(PERMISSIONS_INIT_FOR_AUDIO[i]);
+            }
+        }
+        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+        ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION_FOR_AUDIO);
     }
 
     @Override

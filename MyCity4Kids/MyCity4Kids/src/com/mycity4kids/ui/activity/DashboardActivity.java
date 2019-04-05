@@ -42,6 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -108,15 +109,18 @@ import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -203,6 +207,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout chooseLayoutVideo;
     private View overLayChooseVideo;
     private String isRewardsAdded;
+    private int lastActivieIndex = -1;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -502,14 +507,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 addFragment(fragment0, mBundle0, true);
                                 break;
                             case R.id.action_notification:
-                                hideCreateContentView();
-                                if (topFragment instanceof NotificationFragment) {
-                                    return true;
-                                }
-                                NotificationFragment fragment = new NotificationFragment();
-                                Bundle mBundle = new Bundle();
-                                fragment.setArguments(mBundle);
-                                addFragment(fragment, mBundle, true);
+                                MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                                Intent cityIntent = new Intent(DashboardActivity.this, CategoryVideosListingActivity.class);
+                                cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
+                                startActivity(cityIntent);
+//                                hideCreateContentView();
+//                                if (topFragment instanceof NotificationFragment) {
+//                                    return true;
+//                                }
+//                                NotificationFragment fragment = new NotificationFragment();
+//                                Bundle mBundle = new Bundle();
+//                                fragment.setArguments(mBundle);
+//                                addFragment(fragment, mBundle, true);
                                 break;
                             case R.id.action_home:
                                 hideCreateContentView();
@@ -629,6 +638,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             call.enqueue(userDetailsResponseListener);
         }
     }
+
 
     private Callback<UserDetailResponse> userDetailsResponseListener = new Callback<UserDetailResponse>() {
         @Override
@@ -1336,8 +1346,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         }
                     }
                 }
-
-
             }
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
@@ -1372,12 +1380,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 for (int k = 0; k < num_of_challeneges; k++) {
                                     if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
                                         if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
-                                            //if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
                                             deepLinkchallengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
                                             deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
                                             deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
                                             break;
-                                            //}
                                         }
                                     }
                                 }
@@ -1772,11 +1778,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 SharedPrefUtils.setCoachmarksShownFlag(this, "home", true);
                 break;
             case R.id.videosTextView: {
-                mDrawerLayout.closeDrawers();
-                MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
-                Intent cityIntent = new Intent(this, CategoryVideosListingActivity.class);
-                cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
-                startActivity(cityIntent);
+//                mDrawerLayout.closeDrawers();
+//                MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+//                Intent cityIntent = new Intent(this, CategoryVideosListingActivity.class);
+//                cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
+//                startActivity(cityIntent);
             }
             break;
             case R.id.momspressoTextView: {
@@ -1891,8 +1897,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 if (num_of_categorys != 0) {
                     for (int j = 0; j < num_of_categorys; j++) {
                         if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
-
-
                             videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
                           /*  num_of_challeneges = videoTopicList.get(0).getChild().get(j).getChild().size();
                             for (int k = num_of_challeneges - 1; k >= 0; k--) {
@@ -2105,7 +2109,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 shortStoriesTopicList = new ArrayList<Topics>();
                 if (res != null) {
                     for (int i = 0; i < res.getData().size(); i++) {
-                        if (res.getData()!=null && res.getData().get(i)!=null && res.getData().get(i).getId()!=null && AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                        if (res.getData() != null && res.getData().get(i) != null && res.getData().get(i).getId() != null && AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
                             shortStoriesTopicList.add(res.getData().get(i));
                         }
                     }
@@ -2197,10 +2201,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             });
         }
-
-
     }
-
 
     private void hideCreateContentView() {
         createContentContainer.setVisibility(View.INVISIBLE);
@@ -2231,7 +2232,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             if (chooseLayout.getVisibility() == View.VISIBLE) {
                 chooseLayout.setVisibility(View.INVISIBLE);
-
                 return;
             }
 

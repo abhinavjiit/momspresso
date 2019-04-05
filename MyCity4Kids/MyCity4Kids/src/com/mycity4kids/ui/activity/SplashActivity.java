@@ -348,7 +348,6 @@ public class SplashActivity extends BaseActivity {
                 /**
                  * this will call every time on splash:
                  */
-
                 versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
                 mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");
                 versionApiModel.setAppUpdateVersion(version);
@@ -378,7 +377,6 @@ public class SplashActivity extends BaseActivity {
             mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");
             versionApiModel.setAppUpdateVersion(version);
             if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
-
                 _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);

@@ -316,6 +316,7 @@
     <string name="permision_available_camera">Camera Permission has been granted. Preview can now be opened.</string>
     <string name="permissions_not_granted">Required permissions were not granted.</string>
     <string name="permission_camera_rationale">Camera permission is needed to show the camera preview.</string>
+    <string name="permission_audio_rationale">Audio permission is needed to record Audio.</string>
     <string name="permission_storage_rationale">Storage permission is needed to pick files.</string>
     <string name="permission_location_rationale">Location permission is required to show relevant events and articles.</string>
     <string name="permission_phone_state_rationale">Phone state permission is required to keep you updated with latest content via notifications.</string>
@@ -1080,5 +1081,6 @@
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
     <string name="rewards_instagram_handler">Enter your Instagram handle</string>
     <string name="rewards_facebook_handler">Connect your Facebook</string>
+    <string name="rewards_participate_and_earn"><![CDATA[Participate & Earn]]></string>
 
 </resources>

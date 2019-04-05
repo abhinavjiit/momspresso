@@ -1,9 +1,6 @@
 package com.mycity4kids.ui.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
@@ -21,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
-import com.facebook.FacebookRequestError;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
@@ -128,8 +124,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             @Override
             public void onClick(View view) {
                 Fragment fragment = pagerAdapter.getCurrentFragment();//.get(viewPager.getCurrentItem());
-                if(fragment!=null && fragment instanceof CategoryVideosTabFragment){
-                    ((CategoryVideosTabFragment)fragment).showSortedByDialog();
+                if (fragment != null && fragment instanceof CategoryVideosTabFragment) {
+                    ((CategoryVideosTabFragment) fragment).showSortedByDialog();
                 }
             }
         });
@@ -227,11 +223,11 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 viewPager.setCurrentItem(tab.getPosition());
 
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
-                if(fragment!=null){
-                    if(fragment instanceof ChallengeCategoryVideoTabFragment){
+                if (fragment != null) {
+                    if (fragment instanceof ChallengeCategoryVideoTabFragment) {
                         fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         fabAdd.setVisibility(View.VISIBLE);
                         imageSortBy.setVisibility(View.VISIBLE);
                     }
