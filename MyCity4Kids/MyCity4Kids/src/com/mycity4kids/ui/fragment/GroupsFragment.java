@@ -149,7 +149,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                 call = groupsAPI.getTop4SuggestedGroups(groupIdList);
                 break;
         }
-
         call.enqueue(groupListResponseCallback);
     }
 

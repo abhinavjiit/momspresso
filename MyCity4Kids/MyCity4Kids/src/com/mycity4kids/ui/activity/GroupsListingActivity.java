@@ -48,7 +48,6 @@ import retrofit2.Retrofit;
 public class GroupsListingActivity extends BaseActivity implements GroupsRecyclerGridAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
 
     private GroupsRecyclerGridAdapter adapter;
-
     private boolean isReuqestRunning = false;
     private ArrayList<GroupResult> groupList;
     private boolean isLastPageReached;
@@ -85,7 +84,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             joinList = getIntent().getParcelableArrayListExtra("joinedList");
         }
 
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -117,7 +115,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                             } else {
                                 getAllGroupListApi(skip, limit);
                             }
-
                         }
                     }
                 }

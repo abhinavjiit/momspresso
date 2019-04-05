@@ -54,10 +54,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -167,9 +163,9 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     private lateinit var layoutDynamicNumberOfKids: LinearLayout
     private lateinit var textDeleteChild: TextView
     private lateinit var linearKidsEmptyView: LinearLayout
+    private lateinit var editKidsName : EditText
 
     companion object {
-
         lateinit var textView: TextView
         private lateinit var textDOB: TextView
         private lateinit var textKidsDOB: TextView
@@ -181,7 +177,13 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
                     }
                 }
+
+        fun dummy(){
+
+        }
     }
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -335,6 +337,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         radioGroupWorkingStatus = containerView.findViewById(R.id.radioGroupWorkingStatus)
         genderSpinner = containerView.findViewById(R.id.genderSpinner)
         spinnerGender = containerView.findViewById(R.id.spinnerGender)
+        editKidsName = containerView.findViewById(R.id.editKidsName)
         layoutNumberOfKids = containerView.findViewById(R.id.layoutNumberOfKids)
         layoutMotherExptectedDate = containerView.findViewById(R.id.layoutExptectedDateOfDelivery)
         linearKidsDetail = containerView.findViewById(R.id.linearKidsDetail)
@@ -594,6 +597,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                             1
                         }
                         kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString())
+                        kidsInfoResponse.name = linearKidsDetail.getChildAt(i).findViewById<EditText>(R.id.editKidsName).text.toString()
                         kidsList.add(kidsInfoResponse)
                     }
                 }
@@ -609,6 +613,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                                 1
                             }
                             kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
+                            kidsInfoResponse.name = editKidsName.text.toString()
                             apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
                         }
                     } else {
@@ -626,6 +631,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                         1
                     }
                     kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
+                    kidsInfoResponse.name = editKidsName.text.toString()
                     kidsInfoLocal.add(kidsInfoResponse)
                     apiGetResponse.kidsInfo = kidsInfoLocal
                 } else {
@@ -649,6 +655,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         val indexView = inflater.inflate(R.layout.dynamic_child_view, null)
         var textHeader = indexView.findViewById<TextView>(R.id.textHeader)
         var textDelete = indexView.findViewById<TextView>(R.id.textDeleteChild)
+        var editKidsName = indexView.findViewById<EditText>(R.id.editKidsName)
         if (shouldDelteShow) {
             textDelete.visibility = View.VISIBLE
         } else {

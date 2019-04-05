@@ -94,13 +94,6 @@ public class SplashActivity extends BaseActivity {
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
-//    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
-//            Manifest.permission.WRITE_EXTERNAL_STORAGE};
-//
-//    private static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-//
-//    private static String[] PERMISSIONS_READ_PHONE_STATE = {Manifest.permission.READ_PHONE_STATE};
-
     private boolean isLocationScreen = false;
     private String _deepLinkURL;
     private int isFirstLaunch = 0;
@@ -325,12 +318,10 @@ public class SplashActivity extends BaseActivity {
             /**
              * this will call every time on splash:
              */
-
             versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
             mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");
             versionApiModel.setAppUpdateVersion(version);
             if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
-
                 _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
@@ -489,7 +480,6 @@ public class SplashActivity extends BaseActivity {
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
         ) {
-
             // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_location_rationale,
                     Snackbar.LENGTH_INDEFINITE)

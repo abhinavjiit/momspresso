@@ -53,8 +53,6 @@ class RewardsContainerActivity : BaseActivity(),
         initializeXMLComponents()
 
         /*add fragement to container*/
-//        addSocialFragment()
-        //addFamilyFragment()
         addProfileFragment()
 
 
@@ -80,6 +78,9 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     private fun addFamilyFragment() {
+
+        RewardsFamilyInfoFragment.newInstance()
+        RewardsFamilyInfoFragment.dummy();
         rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(R.id.container, rewardsFamilyInfoFragment,
                 RewardsFamilyInfoFragment::class.java.simpleName)
