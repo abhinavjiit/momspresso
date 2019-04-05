@@ -210,10 +210,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:drawableRight="@drawable/arrow_right"
+
+                android:layout_marginRight="8dp"
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/app_red"
-
                 android:gravity="center"
                 android:paddingRight="10dp"
                 android:text="HINDI"
@@ -221,6 +221,16 @@
                 android:textColor="@color/app_red"
                 android:textSize="14sp"
                 app:fontName="oswald.ttf" />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingTop="1dp"
+                android:src="@drawable/arrow_right"
+                android:tint="@color/app_red" />
+
 
 
         </RelativeLayout>
