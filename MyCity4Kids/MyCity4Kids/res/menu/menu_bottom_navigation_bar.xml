@@ -13,9 +13,9 @@
         android:icon="@drawable/selector_write_blog_tab"
         android:title="@string/navigation_bar.create" />
     <item
-        android:id="@+id/action_notification"
-        android:icon="@drawable/selector_notification_tab"
-        android:title="@string/navigation_bar.notifications" />
+        android:id="@+id/action_momVlog"
+        android:icon="@drawable/selector_mom_vlog"
+        android:title="@string/myprofile.section.videos_label" />
     <item
         android:id="@+id/action_location"
         android:icon="@drawable/selector_events_tab"

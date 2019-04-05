@@ -159,11 +159,11 @@
                             android:id="@+id/notification"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/selector_notification_tab"
                             android:paddingLeft="10dp"
                             android:paddingTop="10dp"
                             android:paddingRight="10dp"
-                            android:paddingBottom="10dp" />
+                            android:paddingBottom="10dp"
+                            android:src="@drawable/selector_notification_tab" />
 
                     </LinearLayout>
                 </RelativeLayout>
@@ -1695,7 +1695,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible">
-
         <include layout="@layout/choose_challenge_story_layout" />
 
 
@@ -1708,8 +1707,6 @@
         android:visibility="invisible">
 
         <include layout="@layout/video_container_choose_option_challenge" />
-
-
     </RelativeLayout>
 
 </FrameLayout>
