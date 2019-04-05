@@ -123,8 +123,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
 
         guideOverlay.setOnClickListener(this);
         writeArticleCell.setOnClickListener(this);
-        frameLayout.setVisibility(View.VISIBLE);
-        fabSort.setVisibility(View.VISIBLE);
+        frameLayout.setVisibility(View.GONE);
+        fabSort.setVisibility(View.GONE);
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
         fabSort.setOnClickListener(new View.OnClickListener() {

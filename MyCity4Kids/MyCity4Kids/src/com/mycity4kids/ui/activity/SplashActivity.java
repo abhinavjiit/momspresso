@@ -501,29 +501,7 @@ public class SplashActivity extends BaseActivity {
      * permission, otherwise it is requested directly.
      */
     private void requestLocationAndStoragePermissions() {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                || ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(mLayout, R.string.permission_storage_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions();
-                        }
-                    })
-                    .show();
-        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {

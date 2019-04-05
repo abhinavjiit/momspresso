@@ -204,6 +204,7 @@
             app:fab_addButtonColorPressed="@color/fab.white"
             app:fab_addButtonPlusIconColor="@color/white_color"
             app:fab_addButtonStrokeVisible="false"
+            android:visibility="gone"
             app:fab_labelStyle="@style/menu_labels_style"
             app:fab_labelsPosition="left">
 

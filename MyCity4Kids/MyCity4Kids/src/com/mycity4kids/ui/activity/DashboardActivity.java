@@ -522,19 +522,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 fragment0.setArguments(mBundle0);
                                 addFragment(fragment0, mBundle0, true);
                                 break;
-                            case R.id.action_notification:
+                            case R.id.action_momVlog:
                                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
                                 Intent cityIntent = new Intent(DashboardActivity.this, CategoryVideosListingActivity.class);
                                 cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                                 startActivity(cityIntent);
-//                                hideCreateContentView();
-//                                if (topFragment instanceof NotificationFragment) {
-//                                    return true;
-//                                }
-//                                NotificationFragment fragment = new NotificationFragment();
-//                                Bundle mBundle = new Bundle();
-//                                fragment.setArguments(mBundle);
-//                                addFragment(fragment, mBundle, true);
                                 break;
                             case R.id.action_home:
                                 hideCreateContentView();
@@ -1800,11 +1792,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 SharedPrefUtils.setCoachmarksShownFlag(this, "home", true);
                 break;
             case R.id.videosTextView: {
-//                mDrawerLayout.closeDrawers();
-//                MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
-//                Intent cityIntent = new Intent(this, CategoryVideosListingActivity.class);
-//                cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
-//                startActivity(cityIntent);
+                mDrawerLayout.closeDrawers();
+                MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                Intent cityIntent = new Intent(this, CategoryVideosListingActivity.class);
+                cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
+                startActivity(cityIntent);
             }
             break;
             case R.id.momspressoTextView: {
@@ -2734,7 +2726,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 searchAllImageView.setVisibility(View.GONE);
                 notificationImg.setVisibility(View.GONE);
-                menu.findItem(R.id.action_notification).setChecked(true);
+                menu.findItem(R.id.action_momVlog).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (null != topFragment && topFragment instanceof SuggestedTopicsFragment) {
                 Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

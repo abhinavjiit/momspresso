@@ -131,7 +131,6 @@ public class TopicsListingActivity extends BaseActivity {
         try {
             allTopicsList = BaseApplication.getTopicList();
             allTopicsMap = BaseApplication.getTopicsMap();
-
             if (allTopicsList == null || allTopicsMap == null) {
                 FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -181,15 +180,12 @@ public class TopicsListingActivity extends BaseActivity {
             allCategoryLabel = getString(R.string.all_categories_label);
             mainTopic.setDisplay_name(allCategoryLabel);
             mainTopic.setTitle(allCategoryLabel);
-
             Topics childTopic = new Topics();
             childTopic.setId(parentTopicId);
             childTopic.setDisplay_name(allCategoryLabel);
             childTopic.setTitle(allCategoryLabel);
-
             ArrayList<Topics> aa = new ArrayList<Topics>();
             aa.add(childTopic);
-
             mainTopic.setChild(aa);
             subTopicsList.add(mainTopic);
         }
@@ -213,7 +209,6 @@ public class TopicsListingActivity extends BaseActivity {
                 }
             }
         });
-//        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         AppUtils.changeTabsFont(this, tabLayout);
 
         pagerAdapter = new TopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
