@@ -2,13 +2,8 @@ package com.mycity4kids.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -18,15 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.google.android.exoplayer2.C;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -46,7 +40,6 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
@@ -56,19 +49,9 @@ import com.mycity4kids.R;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoRecyclerViewAdapter;
-import com.mycity4kids.utils.MixPanelUtils;
-import com.mycity4kids.utils.VideoPlayerConfig;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.http.Url;
 
 public class ExoPlayerRecyclerView extends RecyclerView {
     private static final String TAG = "ExoPlayerRecyclerView";
@@ -86,6 +69,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private ProgressBar mProgressBar;
     private Context appContext;
     private Context mContext;
+    private String uriString;
+    private MediaSource mVideoSource;
 
 
     /**
@@ -241,13 +226,13 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         //int  heightInDp = appContext.getResources().getDisplayMetrics().density;
                         //int widthInDp = Math.round(bitmap.getWidth() / appContext.getResources().getDisplayMetrics().density);
 
-                        float ratio = ((float)h / (float)w);
+                        float ratio = ((float) h / (float) w);
 //                            mCover.getLayoutParams().height = heightInDp;
 //                            mCover.getLayoutParams().width = widthInDp;
                         frameLayout.getLayoutParams().height = Math.round(ratio * appContext.getResources().getDisplayMetrics().widthPixels);
                         frameLayout.getLayoutParams().width = Math.round(appContext.getResources().getDisplayMetrics().widthPixels);
 
-                        Log.e("from ratio", w + "   " + h  + "   "+ frameLayout.getLayoutParams().height + " * " + frameLayout.getLayoutParams().width);
+                        Log.e("from ratio", w + "   " + h + "   " + frameLayout.getLayoutParams().height + " * " + frameLayout.getLayoutParams().width);
                     }
                 });
 
@@ -282,16 +267,13 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         videoSurfaceView.setPlayer(player);
 
 
-
-
-
         // Measures bandwidth during playback. Can be null if not required.
         DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
-        String uriString = videoInfoList.get(targetPosition).getUrl();
+        uriString = videoInfoList.get(targetPosition).getUrl();
         if (uriString != null) {
 //            MediaSource mVideoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
 //                    .createMediaSource(Uri.parse(uriString));
-            MediaSource mVideoSource;
+
 
             String userAgent = Util.getUserAgent(appContext, appContext.getApplicationInfo().packageName);
             DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
@@ -308,6 +290,27 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         }
 
 
+    }
+
+    public void restart(boolean haveResumePosition, int mResumeWindow, long mResumePosition) {
+
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+        LoadControl loadControl = new DefaultLoadControl();
+
+        player = ExoPlayerFactory.newSimpleInstance(appContext, trackSelector, loadControl);
+
+        player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+        videoSurfaceView.setUseController(true);
+        videoSurfaceView.setPlayer(player);
+        scrollScreen();
+
+        if (haveResumePosition) {
+            player.seekTo(mResumeWindow, mResumePosition);
+        }
+        player.prepare(mVideoSource);
+        player.setPlayWhenReady(true);
     }
 
     private int getVisibleVideoSurfaceHeight(int playPosition) {
@@ -354,7 +357,10 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         // Bind the player to the view.
         videoSurfaceView.setUseController(true);
         videoSurfaceView.setPlayer(player);
+        scrollScreen();
+    }
 
+    public void scrollScreen() {
         addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -468,95 +474,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
             }
         });
-
-       /* player.addListener(new Player().EventListener() {
-            @Override
-            public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
-
-            }
-
-            @Override
-            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-            }
-
-            @Override
-            public void onLoadingChanged(boolean isLoading) {
-
-            }
-
-            @Override
-            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                switch (playbackState) {
-
-                    case Player.STATE_BUFFERING:
-                        videoSurfaceView.setAlpha(0.5f);
-                        System.out.println("playingposition-----" + playPosition);
-                        Log.e(TAG, "onPlayerStateChanged: Buffering ");
-                        if (mProgressBar != null) {
-                            mProgressBar.setVisibility(VISIBLE);
-                            videoCell.setBackgroundColor(getResources().getColor(R.color.black));
-                        }
-
-                        break;
-                    case Player.STATE_ENDED:
-                        player.seekTo(0);
-                        if (playPosition < videoInfoList.size() - 1) {
-                            recyclerView.smoothScrollToPosition(playPosition + 1);
-                            playVideo(true);
-                        }
-                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
-                        break;
-                    case Player.STATE_IDLE:
-                        videoCell.setBackgroundColor(getResources().getColor(R.color.cool_grey));
-                        break;
-                    case Player.STATE_READY:
-                        Log.e(TAG, "onPlayerStateChanged: Ready ");
-                        System.out.println("playingposition-----" + playPosition);
-                        if (mProgressBar != null) {
-                            mProgressBar.setVisibility(GONE);
-                        }
-                        videoCell.setBackgroundColor(getResources().getColor(R.color.black));
-                        videoSurfaceView.setVisibility(VISIBLE);
-                        videoSurfaceView.setAlpha(1);
-                        mCoverImage.setVisibility(GONE);
-
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            @Override
-            public void onRepeatModeChanged(int repeatMode) {
-
-            }
-
-            @Override
-            public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-
-            }
-
-            @Override
-            public void onPlayerError(ExoPlaybackException error) {
-
-            }
-
-            @Override
-            public void onPositionDiscontinuity(int reason) {
-
-            }
-
-            @Override
-            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-            }
-
-            @Override
-            public void onSeekProcessed() {
-
-            }
-        });*/
     }
 
     public SimpleExoPlayerView getSimpleExo() {

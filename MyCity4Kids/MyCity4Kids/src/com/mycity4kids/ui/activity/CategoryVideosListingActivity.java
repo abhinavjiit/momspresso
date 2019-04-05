@@ -12,11 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,11 +36,13 @@ import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,6 +77,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
+        fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(CategoryVideosListingActivity.this);
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
@@ -106,10 +109,12 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 @Override
                 public void run() {
                     bottom_sheet.setVisibility(View.GONE);
+                    fabAdd.setVisibility(View.VISIBLE);
                 }
             }, 10000);
         } else {
             bottom_sheet.setVisibility(View.GONE);
+            fabAdd.setVisibility(View.VISIBLE);
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -117,7 +122,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
         viewPager = (ViewPager) findViewById(R.id.pager);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
-        fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
+
         imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
 
         imageSortBy.setOnClickListener(new View.OnClickListener() {

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="133"
-    android:versionName="10.2.1">
+    android:versionCode="134"
+    android:versionName="10.2.2">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -507,6 +507,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.LeafNodeTopicArticlesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.NotificationActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.activity.PrivateProfileActivity" />
         <activity

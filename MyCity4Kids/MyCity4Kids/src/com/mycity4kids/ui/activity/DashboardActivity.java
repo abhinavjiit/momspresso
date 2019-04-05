@@ -162,7 +162,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar, toolbar0, toolbar1, toolbar2;
     private TextView toolbarTitleTextView;
-    private ImageView searchAllImageView;
+    private ImageView searchAllImageView,notificationImg;
     private BottomNavigationViewEx bottomNavigationView;
     private RelativeLayout toolbarRelativeLayout;
     private RelativeLayout rootLayout;
@@ -222,6 +222,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_dashboard);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
+        ((BaseApplication) getApplication()).setDashboardActivity(this);
+
         t = ((BaseApplication) getApplication()).getTracker(
                 BaseApplication.TrackerName.APP_TRACKER);
         // Enable Display Features.
@@ -275,6 +277,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         toolbarRelativeLayout = (RelativeLayout) mToolbar.findViewById(R.id.toolbarRelativeLayout);
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
         searchAllImageView = (ImageView) mToolbar.findViewById(R.id.searchAllImageView);
+        notificationImg = (ImageView) mToolbar.findViewById(R.id.notification);
         selectOptToolbarTitle = (TextView) findViewById(R.id.selectOptToolbarTitle);
         langTextView = (TextView) findViewById(R.id.langTextView);
 //        readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
@@ -355,6 +358,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         downArrowImageView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
+        notificationImg.setOnClickListener(this);
         toolbarTitleTextView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
         overlayView.setOnClickListener(this);
@@ -439,6 +443,34 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onDrawerClosed(View drawerView) {
 
+                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_english));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
+                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_hindi));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
+                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_marathi));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
+                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_bengali));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
+                } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_tamil));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
+                } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_telegu));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
+                } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_kannada));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
+                } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_malayalam));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
+                } else {
+                    langTextView.setText(getString(R.string.language_label_english));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
+                }
             }
 
             @Override
@@ -453,34 +485,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         usernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
         coachUsernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
 
-        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(this))) {
-            langTextView.setText(getString(R.string.language_label_english));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-        } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(this))) {
-            langTextView.setText(getString(R.string.language_label_hindi));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
-        } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(this))) {
-            langTextView.setText(getString(R.string.language_label_marathi));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
-        } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
-            langTextView.setText(getString(R.string.language_label_bengali));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
-        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(this))) {
-            langTextView.setText(getString(R.string.language_label_tamil));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
-        } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
-            langTextView.setText(getString(R.string.language_label_telegu));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
-        } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(this))) {
-            langTextView.setText(getString(R.string.language_label_kannada));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
-        } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(this))) {
-            langTextView.setText(getString(R.string.language_label_malayalam));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-        } else {
-            langTextView.setText(getString(R.string.language_label_english));
-            selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-        }
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.hamburger_menu);
@@ -1742,6 +1746,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(pIntent);
                 break;
             case R.id.langTextView: {
+                mDrawerLayout.closeDrawers();
                 ChangePreferredLanguageDialogFragment changePreferredLanguageDialogFragment = new ChangePreferredLanguageDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
@@ -1768,6 +1773,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     searchIntent.putExtra(Constants.TAB_POSITION, 0);
                     startActivity(searchIntent);
                 }
+                break;
+            case R.id.notification:
+                hideCreateContentView();
+                Intent notificationIntent = new Intent(this,NotificationActivity.class);
+                startActivity(notificationIntent);
                 break;
             case R.id.firstCoachmark:
                 firstCoachmark.setVisibility(View.GONE);
@@ -2648,6 +2658,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         transparentLayerToolbar.setVisibility(View.GONE);
         transparentLayerNavigation.setVisibility(View.GONE);
         searchAllImageView.setVisibility(View.VISIBLE);
+        notificationImg.setVisibility(View.VISIBLE);
         selectOptToolbarTitle.setVisibility(View.GONE);
         toolbarTitleTextView.setVisibility(View.VISIBLE);
         downArrowImageView.setVisibility(View.INVISIBLE);
@@ -2698,6 +2709,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 searchAllImageView.setVisibility(View.GONE);
+                notificationImg.setVisibility(View.GONE);
                 menu.findItem(R.id.action_notification).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (null != topFragment && topFragment instanceof SuggestedTopicsFragment) {
@@ -2763,6 +2775,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 searchAllImageView.setVisibility(View.GONE);
+                notificationImg.setVisibility(View.GONE);
             } else if (null != topFragment && topFragment instanceof FragmentHomeCategory) {
                 Utils.pushOpenScreenEvent(this, "ResourceListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_kids_res_title));
@@ -2770,6 +2783,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 searchAllImageView.setVisibility(View.GONE);
+                notificationImg.setVisibility(View.GONE);
             }
         }
 

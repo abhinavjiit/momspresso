@@ -30,21 +30,10 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
@@ -78,7 +67,6 @@ import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
@@ -192,6 +180,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private boolean fromLoadMore = false;
     private int endIndex;
     private String bookmarkId;
+    private boolean isFromPause = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -920,21 +909,22 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void initExoPlayer() {
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-        LoadControl loadControl = new DefaultLoadControl();
-        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this), trackSelector, loadControl);
-        mExoPlayerView.setPlayer(player);
+//        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+//        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+//        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+//        LoadControl loadControl = new DefaultLoadControl();
+//        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this), trackSelector, loadControl);
+//        mExoPlayerView.setPlayer(player);
 
         boolean haveResumePosition = mResumeWindow != C.INDEX_UNSET;
-
+        recyclerViewFeed.restart(haveResumePosition, mResumeWindow, mResumePosition);
+/*
         if (haveResumePosition) {
             mExoPlayerView.getPlayer().seekTo(mResumeWindow, mResumePosition);
         }
 
         player.prepare(mVideoSource);
-        mExoPlayerView.getPlayer().setPlayWhenReady(true);
+        mExoPlayerView.getPlayer().setPlayWhenReady(true);*/
     }
 
     @Override
@@ -955,29 +945,42 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             mVideoSource = new HlsMediaSource(daUri, dataSourceFactory, 1, null, null);
 
         }
-
-        if (mExoPlayerFullscreen) {
-            ((ViewGroup) recyclerViewFeed.getParent()).removeView(recyclerViewFeed);
-            mFullScreenDialog.addContentView(recyclerViewFeed, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_fullscreen_skrink));
-            mFullScreenDialog.show();
+        if (isFromPause) {
+            initExoPlayer();
+            isFromPause = false;
         }
+
+//        if (mExoPlayerFullscreen) {
+//            ((ViewGroup) recyclerViewFeed.getParent()).removeView(recyclerViewFeed);
+//            mFullScreenDialog.addContentView(recyclerViewFeed, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//            mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.ic_fullscreen_skrink));
+//            mFullScreenDialog.show();
+//        }
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        recyclerViewFeed.player.setVolume(0F);
+//        recyclerViewFeed.player.setVolume(0F);
+        isFromPause = true;
+
+        if ((ViewGroup) recyclerViewFeed.getSimpleExo().getParent() != null && (recyclerViewFeed.getSimpleExo().getPlayer()) != null) {
+
+            mResumeWindow = recyclerViewFeed.getSimpleExo().getPlayer().getCurrentWindowIndex();
+            mResumePosition = Math.max(0, recyclerViewFeed.getSimpleExo().getPlayer().getContentPosition());
+            recyclerViewFeed.getSimpleExo().getPlayer().release();
+        }
+
 
         if (mFullScreenDialog != null)
-            mFullScreenDialog.dismiss();
+            closeFullscreenDialog();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        recyclerViewFeed.player.setVolume(1F);
+//        recyclerViewFeed.player.setVolume(1F);
     }
 
     @Override

@@ -31,8 +31,6 @@ import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsShortStoriesPagerAdapter;
-import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
-import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
 import com.mycity4kids.ui.fragment.TopicChallengeTabFragment;
 import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
@@ -65,9 +63,9 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
     private ArrayList<Topics> subTopicsList;
     private Toolbar toolbar;
     private TextView toolbarTitleTextView;
-    private LinearLayout layoutBottomSheet,bottom_sheet;
+    private LinearLayout layoutBottomSheet, bottom_sheet;
     private BottomSheetBehavior sheetBehavior;
-    private TextView textHeaderUpdate,textUpdate;
+    private TextView textHeaderUpdate, textUpdate;
     private ImageView imageSortBy;
     private android.support.design.widget.FloatingActionButton fabAdd;
 
@@ -76,15 +74,16 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_listing_activity);
 
-        layoutBottomSheet= (LinearLayout)findViewById(R.id.bottom_sheet);
+        layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
+        fabAdd.setVisibility(View.GONE);
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(ShortStoriesListingContainerActivity.this);
-        if(!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")){
+        if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -99,14 +98,14 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(ShortStoriesListingContainerActivity.this,RewardsContainerActivity.class));
+                    startActivity(new Intent(ShortStoriesListingContainerActivity.this, RewardsContainerActivity.class));
                 }
             });
 
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(ShortStoriesListingContainerActivity.this,RewardsContainerActivity.class));
+                    startActivity(new Intent(ShortStoriesListingContainerActivity.this, RewardsContainerActivity.class));
                 }
             });
 
@@ -114,10 +113,13 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
                 @Override
                 public void run() {
                     bottom_sheet.setVisibility(View.GONE);
+                    fabAdd.setVisibility(View.GONE);
                 }
-            },10000);
-        }else{
+            }, 10000);
+        } else {
             bottom_sheet.setVisibility(View.GONE);
+            fabAdd.setVisibility(View.GONE);
+
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -131,8 +133,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Fragment fragment = pagerAdapter.getCurrentFragment();//.get(viewPager.getCurrentItem());
-                if(fragment!=null && fragment instanceof TopicsShortStoriesTabFragment){
-                    ((TopicsShortStoriesTabFragment)fragment).showSortedByDialog();
+                if (fragment != null && fragment instanceof TopicsShortStoriesTabFragment) {
+                    ((TopicsShortStoriesTabFragment) fragment).showSortedByDialog();
                 }
             }
         });
@@ -236,12 +238,12 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
-                if(fragment!=null){
-                    if(fragment instanceof TopicChallengeTabFragment){
+                if (fragment != null) {
+                    if (fragment instanceof TopicChallengeTabFragment) {
                         fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.GONE);
-                    }else{
-                        fabAdd.setVisibility(View.VISIBLE);
+                    } else {
+                        fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.VISIBLE);
                     }
                 }

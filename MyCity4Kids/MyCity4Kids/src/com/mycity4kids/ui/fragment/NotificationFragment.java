@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -25,7 +27,10 @@ import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.NotificationActivity;
 import com.mycity4kids.ui.adapter.NotificationCenterListAdapter;
+
+import org.jsoup.Connection;
 
 import java.util.ArrayList;
 
@@ -46,6 +51,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     private ProgressBar progressBar;
     private TextView noBlogsTextView;
     private ListView notificationListView;
+    private DashboardActivity mContext;
 
     @Nullable
     @Override
@@ -54,6 +60,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
+        mContext = (DashboardActivity) BaseApplication.getInstance().getDashboardActivity();
 
         notificationCenterResultArrayList = new ArrayList<>();
         notificationListView = (ListView) view.findViewById(R.id.notificationListView);
@@ -166,7 +173,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                     if (notificationCenterResultArrayList != null && !notificationCenterResultArrayList.isEmpty()) {
                         SharedPrefUtils.setLastNotificationIdForUnreadFlag(BaseApplication.getAppContext(), notificationCenterResultArrayList.get(0).getId());
                         if (isAdded()) {
-                            ((DashboardActivity) getActivity()).showHideNotificationCenterMark(false);
+                            mContext.showHideNotificationCenterMark(false);
                         }
                     }
                 } else {
