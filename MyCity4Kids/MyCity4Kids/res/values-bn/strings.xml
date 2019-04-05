@@ -924,4 +924,6 @@
     <string name="add_youtube">"ইউটিউব চ্যানেলের লিঙ্ক যোগ করুন "</string>
     <string name="add_twitter">টুইটার হ্যান্ডেল যোগ করুন</string>
 
+    <string name="language">ভাষা</string>
+
 </resources>

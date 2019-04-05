@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -70,7 +71,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     private String userDynamoId;
     private String articleId, author, titleSlug, blogSlug, userType;
-    private FloatingActionButton addCommentFAB;
+    private RelativeLayout addCommentFAB;
     private RecyclerView commentsRecyclerView;
     private ArticleCommentsRecyclerAdapter articleCommentsRecyclerAdapter;
     private ArticleDetailsAPI articleDetailsAPI;
@@ -87,7 +88,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 false);
         currentActivity = getActivity().getClass().getSimpleName();
         Log.i("CURRENT Activity ", currentActivity);
-        addCommentFAB = (FloatingActionButton) rootView.findViewById(R.id.addCommentFAB);
+        addCommentFAB = (RelativeLayout) rootView.findViewById(R.id.addCommentFAB);
         commentsRecyclerView = (RecyclerView) rootView.findViewById(R.id.commentsRecyclerView);
         noCommentsTextView = (TextView) rootView.findViewById(R.id.noCommentsTextView);
 

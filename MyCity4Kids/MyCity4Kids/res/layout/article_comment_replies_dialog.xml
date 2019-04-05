@@ -14,18 +14,86 @@
         android:paddingBottom="80dp" />
 
     <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addCommentFAB"
+        android:id="@+id/addCommentFAB1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="right|bottom"
-        android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
         app:fab_colorNormal="@color/short_story.blue"
         app:fab_colorPressed="@color/short_story.blue"
         app:fab_icon="@drawable/ic_add_comments" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:elevation="5dp">
+
+        <RelativeLayout
+            android:id="@+id/addCommentFAB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="@dimen/space_20"
+            android:background="@drawable/group_post_comment_round_corner_layout"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/typeHere"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/space_10"
+                android:padding="5dp"
+                android:text="@string/group_comment_type_here_text"
+                android:textColor="@color/groups.grey"
+                android:textSize="18sp"
+                android:visibility="visible"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/beTheFirstOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/space_10"
+                android:text="Be the first one"
+                android:textColor="@color/groups.grey"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/audio"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:padding="4dp"
+                app:srcCompat="@drawable/ic_audio_record" />
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="40dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:src="@drawable/ic_add_image" />
+
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/noCommentsTextView"

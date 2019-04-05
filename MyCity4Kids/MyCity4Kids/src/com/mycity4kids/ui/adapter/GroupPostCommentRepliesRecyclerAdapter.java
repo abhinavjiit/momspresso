@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -35,10 +36,14 @@ import com.google.firebase.storage.StorageReference;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.GroupPostCommentResult;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
+import com.mycity4kids.ui.activity.PrivateProfileActivity;
+import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -168,6 +173,48 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     commentsViewHolder.media.setVisibility(View.GONE);
                 }
             }
+
+            commentsViewHolder.commentorImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (repliesList.get(position).getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, repliesList.get(position).getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, repliesList.get(position).getUserInfo().getFirstName() + " " + repliesList.get(position).getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
+
+            commentsViewHolder.commentorUsernameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (repliesList.get(position).getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, repliesList.get(position).getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, repliesList.get(position).getUserInfo().getFirstName() + " " + repliesList.get(position).getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
             commentsViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount() + " " + localizedHelpful);
             commentsViewHolder.downvoteCommentCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
@@ -242,6 +289,47 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                 updateNonPlayingView(audioCommentViewHolder);
             }
 
+            audioCommentViewHolder.commentorImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (repliesList.get(position).getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, repliesList.get(position).getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, repliesList.get(position).getUserInfo().getFirstName() + " " + repliesList.get(position).getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
+
+            audioCommentViewHolder.commentorUsernameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (repliesList.get(position).getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, repliesList.get(position).getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, repliesList.get(position).getUserInfo().getFirstName() + " " + repliesList.get(position).getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
             audioCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getFormattedDateGroups(repliesList.get(position).getCreatedAt()));
             if (repliesList.get(position).getChildData() == null || repliesList.get(position).getChildData().isEmpty()) {
                 audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
@@ -292,6 +380,48 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     repliesViewHolder.mediaview.setVisibility(View.GONE);
                 }
             }
+
+            repliesViewHolder.commentorImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (repliesList.get(position).getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, repliesList.get(position).getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, repliesList.get(position).getUserInfo().getFirstName() + " " + repliesList.get(position).getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
+
+            repliesViewHolder.commentorUsernameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    if (repliesList.get(position).getIsAnnon() == 0) {
+
+                        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(repliesList.get(position).getUserId())) {
+                            Intent pIntent = new Intent(mContext, PrivateProfileActivity.class);
+                            mContext.startActivity(pIntent);
+                        } else {
+                            Intent intentnn = new Intent(mContext, PublicProfileActivity.class);
+                            intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, repliesList.get(position).getUserId());
+                            intentnn.putExtra(AppConstants.AUTHOR_NAME, repliesList.get(position).getUserInfo().getFirstName() + " " + repliesList.get(position).getUserInfo().getLastName());
+                            intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                            ((Activity) mContext).startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                        }
+                    }
+                }
+            });
             repliesViewHolder.upvoteReplyCountTextView.setText(repliesList.get(position).getHelpfullCount() + " " + localizedHelpful);
             repliesViewHolder.downvoteReplyCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());

@@ -79,7 +79,7 @@ public class ViewAllCommentsDialogFragment extends DialogFragment implements Vie
     private void addCommentTabs() {
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
 
-        tabLayout.addTab(tabLayout.newTab().setText(BaseApplication.getAppContext().getString(R.string.app_name)));
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.app_name)));
 //        tabLayout.addTab(tabLayout.newTab().setText(BaseApplication.getAppContext().getString(R.string.ad_bottom_bar_facebook)));
 
         AppUtils.changeTabsFont(getActivity(), tabLayout);

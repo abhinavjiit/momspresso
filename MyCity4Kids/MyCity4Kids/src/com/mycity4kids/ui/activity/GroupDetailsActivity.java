@@ -97,7 +97,7 @@ import retrofit2.Retrofit;
  */
 
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
-        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener, ShareBlogInDiscussionDialogFragment.IForYourArticleRemove,TaskFragment.TaskCallbacks {
+        GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener, ShareBlogInDiscussionDialogFragment.IForYourArticleRemove, TaskFragment.TaskCallbacks {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
@@ -128,7 +128,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private int groupId;
     private String commaSepCategoryList = "";
     private String source;
-
+    private String userDynamoId;
     private Handler handler = new Handler();
 
     private Animation slideAnim, fadeAnim;
@@ -198,6 +198,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         groupId = getIntent().getIntExtra("groupId", 0);
         memberType = getIntent().getStringExtra(AppConstants.GROUP_MEMBER_TYPE);
         source = getIntent().getStringExtra("source");
+
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
@@ -622,17 +624,31 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             try {
                 if (response.isSuccessful()) {
-                    if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
-                        final Handler handler = new Handler();
+
+                    for (int i = 0; i < postList.size(); i++) {
+                        if (postList.get(i).getId() == postId) {
+                            postList.get(i).setResponseCount(1);
+                            groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+
+
+
+
+
+                  /*  if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+                        TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
+                        tab1.select();*/
+                      /*  final Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
 
 
-                                TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
-                                tab1.select();
 
-                                if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab1.getTag().toString())) {
+
+                             *//*   if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab1.getTag().toString())) {
                                     isRequestRunning = false;
                                     isLastPageReached = false;
                                     recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
@@ -660,14 +676,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                                     limit = 10;
                                     postType = AppConstants.POST_TYPE_POLL_KEY;
                                     getFilteredGroupPosts();
-                                }
+                                }*//*
 
 
                             }
-                        }, 1000);
+                        }, 1000);*/
 
 
-                    }
+                    //}
 
                 } else {
                     showToast("Failed to add comment. Please try again");
@@ -1433,9 +1449,27 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.userImageView:
             case R.id.usernameTextView: {
-//                Intent intent = new Intent(GroupDetailsActivity.this, GroupDetailsActivity.class);
-//                intent.putExtra("groupItem", selectedGroup);
-//                startActivity(intent);
+
+                if (postList.get(position).getIsAnnon() == 0) {
+
+                    if (userDynamoId.equals(postList.get(position).getUserId())) {
+//                    MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+//                    Bundle mBundle0 = new Bundle();
+//                    fragment0.setArguments(mBundle0);
+//                    if (isAdded())
+//                        ((ShortStoriesListingContainerActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+                        Intent pIntent = new Intent(this, PrivateProfileActivity.class);
+                        startActivity(pIntent);
+                    } else {
+                        Intent intentnn = new Intent(this, PublicProfileActivity.class);
+                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
+                        intentnn.putExtra(AppConstants.AUTHOR_NAME, postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                    }
+                }
+
+
                 break;
             }
             case R.id.postSettingImageView:
@@ -1857,32 +1891,19 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
-        TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
-        tab1.select();
-       /* if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
-            isRequestRunning = false;
-            isLastPageReached = false;
-            recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
-            postList.clear();
-            skip = 0;
-            limit = 10;
-            getGroupPosts();
-        }*/
+     /*   TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
+        tab1.select();*/
+
 
     }
 
     public void reStoreData() {
-        if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
-          /*  isRequestRunning = false;
-            isLastPageReached = false;
-            recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
-            postList.clear();
-            skip = 0;
-            limit = 10;
-            getGroupPosts();*/
-        }
+      /*  if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+
+        }*/
 
     }
+
     public void processImage(Uri imageUri) {
         android.app.FragmentManager fm = getFragmentManager();
         mTaskFragment = null;
@@ -1922,4 +1943,5 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
 
     }
+
 }

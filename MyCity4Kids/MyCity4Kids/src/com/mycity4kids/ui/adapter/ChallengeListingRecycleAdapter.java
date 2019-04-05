@@ -38,7 +38,6 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
         this.recyclerViewClickListener = recyclerViewClickListener;
         this.pos = pos;
         this.ActiveUrl = ActiveUrl;
-        //    this.datamodal = datamodal;
     }
 
     public void setListData(ArrayList<ArticleListingResult> mParentingLists) {
@@ -55,18 +54,14 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
 
     @Override
     public void onBindViewHolder(ChallengeListingViewHolder holder, int position) {
-        // if (pos == 0) {
         if (position == 0) {
             holder.rootview.setVisibility(View.GONE);
-            //   holder.mainView.setVisibility(View.VISIBLE);
             holder.challengeHeaderText.setVisibility(View.VISIBLE);
-            //   holder.ChallengeNameText.setText(selected_Name);
-            //   int i = datamodal.getChild().size() - 1;
+
             if (ActiveUrl != null) {
                 holder.challengeNameImage.setVisibility(View.VISIBLE);
                 try {
-                  /*  Picasso.with(mContext).load(ActiveUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                            .fit().into(holder.challengeNameImage);*/
+
                     Glide.with(mContext).load(ActiveUrl).into(holder.challengeNameImage);
 
                 } catch (Exception e) {
@@ -84,37 +79,12 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
             viewListingResult(holder, position - 1);
 
         }
-      /*   else {
-            holder.challengeHeaderText.setVisibility(View.GONE);
-            holder.mainView.setVisibility(View.VISIBLE);
-            viewListingResult(holder, position);
-        }*/
+
 
     }
 
     private void viewListingResult(ChallengeListingViewHolder holder, int position) {
-//        if (position == 0) {
-//            switch (position % 6) {
-//                case 0:
-//                    holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
-//                    break;
-//                case 1:
-//                    holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_2));
-//                    break;
-//                case 2:
-        //                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_3));
-//                    break;
-//                case 3:
-//                    holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_4));
-//                    break;
-//                case 4:
-//                    holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_5));
-//                    break;
-//                case 5:
-//                    holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
-//                    break;
-        //}
-        // } else {
+
 
         switch (((position) % 6)) {
             case 0:

@@ -974,4 +974,6 @@
     <string name="rewards_facebook_handler">ഫേസ്ബുക്ക് കണക്ട് ചെയ്യൂ</string>
     <string name="add_youtube">യു ട്യൂബ് ചാനൽ ലിങ്ക് ചേർക്കൂ</string>
     <string name="add_twitter">ട്വിറ്റർ ഹാൻഡിൽ ചേർക്കൂ</string>
+    <string name="language">LANGUAGE</string>
+
 </resources>

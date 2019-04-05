@@ -974,4 +974,6 @@
     <string name="rewards_facebook_handler">ಫೇಸ್ಬುಕ್ ಜೊತೆ ಸಂಪರ್ಕಿಸಿ</string>
     <string name="add_youtube">ಯುಟ್ಯೂಬ್‍ ಚಾನಲ್ ಲಿಂಕ್ ಅನ್ನು ಸೇರಿಸಿ</string>
     <string name="add_twitter">ಟ್ವಿಟರ್‍ ಹ್ಯಾಂಡಲ್‍ ಗೆ ಸೇರಿಸಿ</string>
+    <string name="language">LANGUAGE</string>
+
 </resources>

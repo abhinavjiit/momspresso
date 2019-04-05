@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,7 +50,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 25/5/17.
  */
-public class ShortStoriesListingContainerActivity extends BaseActivity {
+public class ShortStoriesListingContainerActivity extends BaseActivity implements View.OnClickListener {
 
     //    private View view;
     private TabLayout tabLayout;
@@ -80,7 +81,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
-        fabAdd.setVisibility(View.GONE);
+
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(ShortStoriesListingContainerActivity.this);
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
@@ -113,12 +114,12 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
                 @Override
                 public void run() {
                     bottom_sheet.setVisibility(View.GONE);
-                    fabAdd.setVisibility(View.GONE);
+                    fabAdd.setVisibility(View.VISIBLE);
                 }
             }, 10000);
         } else {
             bottom_sheet.setVisibility(View.GONE);
-            fabAdd.setVisibility(View.GONE);
+            fabAdd.setVisibility(View.VISIBLE);
 
         }
 
@@ -139,19 +140,20 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
             }
         });
 
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ShortStoriesListingContainerActivity.this, ChooseVideoCategoryActivity.class);
-                startActivity(intent);
-            }
-        });
 
         parentTopicId = getIntent().getStringExtra("parentTopicId");
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setResult(Activity.RESULT_OK);
+                finish();
+            }
+        });
+
 
         toolbarTitleTextView.setText(getString(R.string.article_listing_type_short_story_label));
         try {
@@ -243,7 +245,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
                         fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.GONE);
                     } else {
-                        fabAdd.setVisibility(View.GONE);
+                        fabAdd.setVisibility(View.VISIBLE);
                         imageSortBy.setVisibility(View.VISIBLE);
                     }
                 }
@@ -372,4 +374,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity {
         return true;
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
 }

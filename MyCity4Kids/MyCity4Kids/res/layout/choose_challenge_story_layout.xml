@@ -4,7 +4,7 @@
     android:id="@+id/root_choose_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="invisible">
+    android:visibility="visible">
 
 
     <View
@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:alpha="0.75"
         android:background="#121212"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/choose_option_layout"
@@ -23,7 +23,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/write_story"

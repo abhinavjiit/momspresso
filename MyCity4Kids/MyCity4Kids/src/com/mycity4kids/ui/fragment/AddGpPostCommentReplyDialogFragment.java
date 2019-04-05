@@ -640,7 +640,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
                             if (getActivity() instanceof GroupDetailsActivity) {
                                 ((GroupDetailsActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap, groupId, postId);
-                                ((GroupDetailsActivity) getActivity()).reStoreData();
 
                             }
                         } else {

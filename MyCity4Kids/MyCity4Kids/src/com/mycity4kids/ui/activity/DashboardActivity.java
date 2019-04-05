@@ -162,7 +162,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar, toolbar0, toolbar1, toolbar2;
     private TextView toolbarTitleTextView;
-    private ImageView searchAllImageView,notificationImg;
+    private ImageView searchAllImageView, notificationImg;
     private BottomNavigationViewEx bottomNavigationView;
     private RelativeLayout toolbarRelativeLayout;
     private RelativeLayout rootLayout;
@@ -200,7 +200,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout rootChooseLayout;
     private View overLayViewChooseStory;
     private LinearLayout chooseOptionLayout;
-    private TextView writeStoryText, TakeChallengetext, uploadVideo, uploadChallenge;
+    private TextView writeStoryText, TakeChallengetext, uploadVideo, uploadChallenge, selectedLangTextView;
     private TopicsResponse res;
     private int num_of_categorys;
     private RelativeLayout chooseLayout;
@@ -280,6 +280,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         notificationImg = (ImageView) mToolbar.findViewById(R.id.notification);
         selectOptToolbarTitle = (TextView) findViewById(R.id.selectOptToolbarTitle);
         langTextView = (TextView) findViewById(R.id.langTextView);
+        selectedLangTextView = (TextView) findViewById(R.id.selectedLangtext);
 //        readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
         selectedlangGuideTextView = (TextView) findViewById(R.id.selectedlangGuideTextView);
         groupCoachmark = (RelativeLayout) findViewById(R.id.groupCoachmark);
@@ -437,45 +438,56 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     drawerContainer.requestLayout();
                     drawerSettingsContainer.requestLayout();
                     drawerProfileCoachmark.setVisibility(View.VISIBLE);
+
                 }
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
 
-                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_english));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_hindi));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
-                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_marathi));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
-                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_bengali));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
-                } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_tamil));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
-                } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_telegu));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
-                } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_kannada));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
-                } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_malayalam));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                } else {
-                    langTextView.setText(getString(R.string.language_label_english));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-                }
+
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
 
+                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_english));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
+                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_hindi));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
+                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_marathi));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
+                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_bengali));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
+                } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_tamil));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
+                } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_telegu));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
+                } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    selectedLangTextView.setText(getString(R.string.language_label_kannada));
+                    langTextView.setText(getString(R.string.language_label_kannada));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
+                } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_malayalam));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
+                } else {
+                    langTextView.setText(getString(R.string.language_label_english));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
+                }
             }
         });
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
@@ -1776,7 +1788,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.notification:
                 hideCreateContentView();
-                Intent notificationIntent = new Intent(this,NotificationActivity.class);
+                Intent notificationIntent = new Intent(this, NotificationActivity.class);
                 startActivity(notificationIntent);
                 break;
             case R.id.firstCoachmark:
@@ -1807,7 +1819,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawers();
                 Intent intent = new Intent(this, ShortStoriesListingContainerActivity.class);
                 intent.putExtra("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
-                startActivity(intent);
+                startActivityForResult(intent, 1234);
             }
             break;
             case R.id.groupsTextView: {
@@ -1846,6 +1858,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Intent ssintent = new Intent(this, AddShortStoryActivity.class);
             ssintent.putExtra("selectedrequest", shortstory);
             startActivity(ssintent);
+            chooseLayout.setVisibility(View.GONE);
+
         }
 
         if (v.getId() == R.id.write_challenge) {
@@ -1862,6 +1876,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent.putExtra("parentId", shortStoriesTopicList.get(0).getId());
                 intent.putExtra("StringUrl", ImageUrl);
                 startActivity(intent);
+                chooseLayout.setVisibility(View.GONE);
+
             } else {
                 findActiveChallenge();
                 //ToastUtils.showToast(this, "server problem, please reopen your app");
@@ -2240,10 +2256,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 hideCreateContentView();
                 return;
             }
-            if (chooseLayout.getVisibility() == View.VISIBLE) {
+          /*  if (chooseLayout.getVisibility() == View.VISIBLE) {
                 chooseLayout.setVisibility(View.INVISIBLE);
                 return;
-            }
+            }*/
 
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
                 finish();
@@ -2263,6 +2279,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         try {
             switch (requestCode) {
+                case 1234:
+                    chooseLayout.setVisibility(View.VISIBLE);
+                    chooseStoryChallengeLayout.setVisibility(View.VISIBLE);
+                    overLayViewChooseStory.setVisibility(View.VISIBLE);
+                    chooseOptionLayout.setVisibility(View.VISIBLE);
+                    rootChooseLayout.setVisibility(View.VISIBLE);
+                    break;
+
                 case Constants.OPEN_GALLERY:
                     break;
                 case Constants.TAKE_PICTURE:
@@ -2951,4 +2975,5 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         }
     }
+
 }

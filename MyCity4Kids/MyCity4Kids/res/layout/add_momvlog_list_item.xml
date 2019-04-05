@@ -72,9 +72,9 @@
                         android:id="@+id/winnerLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/space_10"
                         android:layout_alignRight="@id/thumbNail"
                         android:layout_alignBottom="@id/articleImageView"
+                        android:layout_margin="@dimen/space_10"
                         android:background="@drawable/update_profile_bg">
 
                         <ImageView
@@ -385,17 +385,18 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginTop="@dimen/space_5"
-                            android:text=" Gold"
-                            android:textAllCaps="true"
-                            android:gravity="center_vertical"
-                            android:textColor="@color/gold_color_video_listing"
-                            android:paddingLeft="5dp"
-                            android:paddingRight="10dp"
                             android:background="@drawable/border_for_gold_logo_video_listing"
                             android:drawableTint="@color/gold_color_video_listing"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="5dp"
+
+                            android:paddingRight="10dp"
+                            android:text=" Gold"
+                            android:textAllCaps="true"
+                            android:textColor="@color/gold_color_video_listing"
                             android:tint="@color/gold_color_video_listing"
                             android:visibility="visible"
-                            card_view:fontName="oswald.ttf"/>
+                            card_view:fontName="oswald.ttf" />
 
                     </RelativeLayout>
 

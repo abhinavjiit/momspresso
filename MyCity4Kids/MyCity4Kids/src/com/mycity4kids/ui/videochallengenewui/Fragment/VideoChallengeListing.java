@@ -58,73 +58,18 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 public class VideoChallengeListing extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
-    private static final int RECOVERY_REQUEST = 1;
+
     private RelativeLayout mLodingView;
     private ProgressDialog mProgressDialog;
-    private ObservableScrollView mScrollView;
-    private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
-    private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
-    private LinearLayout trendingArticles;
-    private LinearLayout recentAuthorArticles;
-    private FlowLayout tagsLayout;
-    private TextView articleViewCountTextView;
-    private Toolbar mToolbar;
-    private ImageView authorImageView;
-    private TextView followClick;
-    private Rect scrollBounds;
-    private TextView authorTypeTextView, authorNameTextView;
-    private TextView article_title;
-    private TextView articleCreatedDateTextView;
-    private VlogsListingAndDetailResult detailData;
-    private String videoId;
-    private String commentURL = "";
-    private String commentMainUrl;
-    boolean isArticleDetailEndReached = false;
-    private String authorId;
-    private String titleSlug;
-    private String authorType, author;
-    private String shareUrl = "";
-    private String deepLinkURL;
-    private Boolean isFollowing = false;
-    long duration;
-    private VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI;
-    private CustomFontTextView facebookShareTextView, whatsappShareTextView, emailShareTextView, likeArticleTextView, bookmarkArticleTextView;
-    private String userDynamoId;
-    private ImageView backNavigationImageView;
-    private LinearLayout bottomToolbarLL;
-    private TextView viewCommentsTextView;
 
-    private final String STATE_RESUME_WINDOW = "resumeWindow";
-    private final String STATE_RESUME_POSITION = "resumePosition";
-    private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
 
-    private MediaSource mVideoSource;
-    private boolean mExoPlayerFullscreen = false;
-    SimpleExoPlayer player;
-    private FrameLayout mFullScreenButton;
-    private ImageView mFullScreenIcon;
-    private Dialog mFullScreenDialog;
-
-    private int mResumeWindow;
-    private long mResumePosition;
-    String streamUrl = "";
-    private String taggedCategories;
     private MixpanelAPI mixpanel;
 
     private VideoChallengeDetailListingAdapter articlesListingAdapter;
     private String selectedId;
-    private String selected_Name;
-    private String selectedActiveUrl;
-    private String selectedStreamUrl;
-    private int pos;
+
     private com.mycity4kids.models.Topics topic;
 
-    private String parentName, parentId;
-    private String ActiveUrl;
-    private ArrayList<String> challengeId = new ArrayList<>();
-    private ArrayList<String> activeUrl = new ArrayList<>();
-    private ArrayList<String> activeStreamUrl = new ArrayList<>();
-    private ArrayList<String> Display_Name = new ArrayList<>();
     private ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
     FloatingActionsMenu fabMenu;
     ListView listView;
@@ -132,19 +77,14 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
     TextView noBlogsTextView;
     FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     FrameLayout frameLayout;
-    private RelativeLayout rootLayout, writeAtricleCell;
     private int sortType = 0;
     private int nextPageNumber;
     private int limit = 10;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
-    private String fromScreen;
     private ShimmerFrameLayout funnyvideosshimmer;
     private String videoCategory;
-    private TextView toolbarTitleText;
-    private String Topics;
-    private String jsonMyObject;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
