@@ -592,11 +592,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
             break;
             case R.id.authorNameTextView:
                 if (userDynamoId.equals(mDatalist.get(position).getUserId())) {
-//                    MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
-//                    Bundle mBundle0 = new Bundle();
-//                    fragment0.setArguments(mBundle0);
-//                    if (isAdded())
-//                        ((ShortStoriesListingContainerActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+
                     Intent pIntent = new Intent(this, PrivateProfileActivity.class);
                     startActivity(pIntent);
                 } else {
@@ -610,12 +606,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
 
             case R.id.submit_story_text:
                 chooseLayout.setVisibility(View.VISIBLE);
-             /*   Intent intent1 = new Intent(this, AddShortStoryActivity.class);
-                intent1.putExtra("selectedrequest", challenge);
-                intent1.putExtra("challengeId", selectedId);
-                intent1.putExtra("challengeName", selected_Name);
-                intent1.putExtra("Url", ActiveUrl);
-                startActivity(intent1);*/
+
         }
     }
 
@@ -647,15 +638,6 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
             try {
                 RecommendUnrecommendArticleResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//                    if (!responseData.getData().isEmpty()) {
-//                        for (int i = 0; i < mDatalist.size(); i++) {
-//                            if (responseData.getData().get(0).equals(mDatalist.get(i).getId())) {
-//                                mDatalist.get(i).setLikesCount("" + (Integer.parseInt(mDatalist.get(i).getLikesCount()) + 1));
-//                                mDatalist.get(i).setLiked(true);
-//                                recyclerAdapter.notifyDataSetChanged();
-//                            }
-//                        }
-//                    }
                     if (likeStatus.equals("1")) {
                         if (!responseData.getData().isEmpty()) {
                             mDatalist.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount()) + 1));
@@ -668,23 +650,16 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
                         mDatalist.get(currentShortStoryPosition).setLiked(false);
                     }
                     challengeListingRecycleAdapter.notifyDataSetChanged();
-                   /* if (isAdded()) {
-                        ((ShortStoriesListingContainerActivity) getActivity()).showToast("" + responseData.getReason());
-                    }
-*/
+
                     showToast("" + responseData.getReason());
                 } else {
-                    /*if (isAdded())
-                        ((ShortStoriesListingContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                */
+
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.server_went_wrong));
-                /*if (isAdded())
-                    ((ShortStoriesListingContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
-            */
+
             }
         }
 

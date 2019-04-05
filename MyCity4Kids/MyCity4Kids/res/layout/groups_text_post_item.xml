@@ -38,10 +38,30 @@
         android:maxLines="1"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:text=""
+        android:text="test"
         android:textColor="@color/ad.comment.username"
         android:textSize="14sp"
         app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/userTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/usernameTextView"
+        android:background="@drawable/user_tag_round_layout"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingBottom="3dp"
+        android:paddingTop="2dp"
+        android:paddingRight="10dp"
+        android:text="test"
+        android:textColor="#80828f"
+        android:textSize="10sp" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/postDateTextView"
@@ -54,7 +74,7 @@
         android:inputType="textMultiLine"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:text=""
+        android:text="date"
         android:textColor="@color/ad.comment.body"
         android:textSize="12sp"
         app:fontName="open_sans.ttf" />
@@ -220,10 +240,10 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/space_10"
             android:text="@string/group_comment_be_the_first_text"
-            app:fontName="oswald.ttf"
             android:textColor="@color/groups.grey"
             android:textSize="12sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:fontName="oswald.ttf" />
 
         <ImageView
             android:id="@+id/audio"

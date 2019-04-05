@@ -6,10 +6,10 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
     android:background="@color/white_color"
-    android:paddingBottom="4dp"
     android:paddingLeft="10dp"
+    android:paddingTop="8dp"
     android:paddingRight="10dp"
-    android:paddingTop="8dp">
+    android:paddingBottom="4dp">
 
     //Change View hierarchy with caution. getParent method is in use in the class file
 
@@ -56,13 +56,33 @@
             app:fontName="oswald_regular.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/userTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/usernameTextView"
+            android:background="@drawable/user_tag_round_layout"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingBottom="3dp"
+            android:paddingTop="2dp"
+            android:paddingRight="10dp"
+            android:text="test"
+            android:textColor="#80828f"
+            android:textSize="10sp" />
+
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/commentDateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_alignLeft="@+id/commentorUsernameTextView"
-            android:layout_alignStart="@+id/commentorUsernameTextView"
             android:layout_below="@+id/commentorUsernameTextView"
+            android:layout_alignStart="@+id/commentorUsernameTextView"
+            android:layout_alignLeft="@+id/commentorUsernameTextView"
+            android:layout_marginLeft="4dp"
             android:layout_marginTop="2dp"
             android:inputType="textMultiLine"
             android:paddingLeft="5dp"
@@ -95,14 +115,15 @@
             android:id="@+id/postSettingImageView"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:src="@drawable/ic_more"
             android:tint="@color/app_red" />
+
         <ImageView
             android:id="@+id/media"
             android:layout_width="match_parent"
@@ -119,9 +140,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/commentorImageView"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="2dp"
             android:layout_marginRight="2dp"
-            android:layout_marginTop="15dp"
             android:gravity="start"
             android:text=""
             android:textColor="@color/groups.grey"
@@ -165,8 +186,8 @@
             android:layout_below="@+id/playAudioLayout"
             android:layout_alignStart="@+id/playAudioLayout"
             android:layout_alignLeft="@+id/playAudioLayout"
-            android:layout_marginTop="16dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="16dp"
             android:background="?attr/selectableItemBackgroundBorderless">
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -244,8 +265,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/timerLayout"
-            android:layout_marginRight="5dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/addCommentImageView"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
@@ -261,8 +282,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/timerLayout"
-            android:layout_marginRight="4dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="4dp"
             android:layout_toLeftOf="@+id/shareTextView"
             android:padding="5dp"
             android:src="@drawable/ic_comments"
@@ -272,15 +293,15 @@
             android:id="@+id/shareTextView"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/timerLayout"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:paddingBottom="5dp"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp"
             android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
             android:src="@drawable/ic_share_white"
             android:tint="@color/app_red" />
 
@@ -294,14 +315,15 @@
         android:layout_marginTop="10dp"
         android:background="@color/grey_light"
         android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/commentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/relativeMainContainer"
         android:layout_marginTop="@dimen/space_10"
-        android:visibility="gone"
-        android:background="@drawable/group_post_comment_round_corner_layout">
+        android:background="@drawable/group_post_comment_round_corner_layout"
+        android:visibility="gone">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/typeHere"
@@ -321,10 +343,10 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/space_10"
             android:text="@string/group_comment_be_the_first_text"
-            app:fontName="oswald.ttf"
             android:textColor="@color/groups.grey"
             android:textSize="12sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:fontName="oswald.ttf" />
 
         <ImageView
             android:id="@+id/audio"

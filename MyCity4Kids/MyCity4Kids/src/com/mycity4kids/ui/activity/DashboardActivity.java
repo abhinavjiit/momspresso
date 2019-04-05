@@ -162,7 +162,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar, toolbar0, toolbar1, toolbar2;
     private TextView toolbarTitleTextView;
-    private ImageView searchAllImageView,notificationImg;
+    private ImageView searchAllImageView, notificationImg;
     private BottomNavigationViewEx bottomNavigationView;
     private RelativeLayout toolbarRelativeLayout;
     private RelativeLayout rootLayout;
@@ -200,7 +200,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout rootChooseLayout;
     private View overLayViewChooseStory;
     private LinearLayout chooseOptionLayout;
-    private TextView writeStoryText, TakeChallengetext, uploadVideo, uploadChallenge;
+    private TextView writeStoryText, TakeChallengetext, uploadVideo, uploadChallenge, selectedLangTextView;
     private TopicsResponse res;
     private int num_of_categorys;
     private RelativeLayout chooseLayout;
@@ -279,6 +279,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         notificationImg = (ImageView) mToolbar.findViewById(R.id.notification);
         selectOptToolbarTitle = (TextView) findViewById(R.id.selectOptToolbarTitle);
         langTextView = (TextView) findViewById(R.id.langTextView);
+        selectedLangTextView = (TextView) findViewById(R.id.selectedLangtext);
 //        readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
         selectedlangGuideTextView = (TextView) findViewById(R.id.selectedlangGuideTextView);
         groupCoachmark = (RelativeLayout) findViewById(R.id.groupCoachmark);
@@ -436,45 +437,56 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     drawerContainer.requestLayout();
                     drawerSettingsContainer.requestLayout();
                     drawerProfileCoachmark.setVisibility(View.VISIBLE);
+
                 }
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
 
-                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_english));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_hindi));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
-                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_marathi));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
-                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_bengali));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
-                } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_tamil));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
-                } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_telegu));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
-                } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_kannada));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
-                } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_malayalam));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                } else {
-                    langTextView.setText(getString(R.string.language_label_english));
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-                }
+
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
 
+                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_english));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
+                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_hindi));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
+                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_marathi));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
+                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_bengali));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
+                } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_tamil));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
+                } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_telegu));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
+                } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    selectedLangTextView.setText(getString(R.string.language_label_kannada));
+                    langTextView.setText(getString(R.string.language_label_kannada));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
+                } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_malayalam));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
+                } else {
+                    langTextView.setText(getString(R.string.language_label_english));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_english));
+                }
             }
         });
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
@@ -1774,7 +1786,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.notification:
                 hideCreateContentView();
-                Intent notificationIntent = new Intent(this,NotificationActivity.class);
+                Intent notificationIntent = new Intent(this, NotificationActivity.class);
                 startActivity(notificationIntent);
                 break;
             case R.id.firstCoachmark:

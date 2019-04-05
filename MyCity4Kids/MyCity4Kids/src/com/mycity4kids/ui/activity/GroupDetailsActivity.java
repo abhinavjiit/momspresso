@@ -624,17 +624,31 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             try {
                 if (response.isSuccessful()) {
-                    if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
-                        final Handler handler = new Handler();
+
+                    for (int i = 0; i < postList.size(); i++) {
+                        if (postList.get(i).getId() == postId) {
+                            postList.get(i).setResponseCount(1);
+                            groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+
+
+
+
+
+                  /*  if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+                        TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
+                        tab1.select();*/
+                      /*  final Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
 
 
-                                TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
-                                tab1.select();
 
-                                if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab1.getTag().toString())) {
+
+                             *//*   if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab1.getTag().toString())) {
                                     isRequestRunning = false;
                                     isLastPageReached = false;
                                     recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
@@ -662,14 +676,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                                     limit = 10;
                                     postType = AppConstants.POST_TYPE_POLL_KEY;
                                     getFilteredGroupPosts();
-                                }
+                                }*//*
 
 
                             }
-                        }, 1000);
+                        }, 1000);*/
 
 
-                    }
+                    //}
 
                 } else {
                     showToast("Failed to add comment. Please try again");
@@ -1877,30 +1891,16 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
-        TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
-        tab1.select();
-       /* if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
-            isRequestRunning = false;
-            isLastPageReached = false;
-            recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
-            postList.clear();
-            skip = 0;
-            limit = 10;
-            getGroupPosts();
-        }*/
+     /*   TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
+        tab1.select();*/
+
 
     }
 
     public void reStoreData() {
-        if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
-          /*  isRequestRunning = false;
-            isLastPageReached = false;
-            recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
-            postList.clear();
-            skip = 0;
-            limit = 10;
-            getGroupPosts();*/
-        }
+      /*  if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+
+        }*/
 
     }
 
@@ -1943,4 +1943,5 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
 
     }
+
 }

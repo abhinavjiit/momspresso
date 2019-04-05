@@ -220,6 +220,17 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     }
                 }
             });
+            if (groupPostResult.getIsAnnon() == 1) {
+                textPostViewHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null && groupPostResult.getUserInfo().getUserTag().get(0) != null) {
+                    if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
+                        textPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
+                    } else {
+                        textPostViewHolder.userTag.setVisibility(View.GONE);
+                    }
+                }
+            }
             textPostViewHolder.usernameTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -242,6 +253,18 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             });
         } else if (holder instanceof AudioCommentViewHeaderHolder) {
             AudioCommentViewHeaderHolder audioCommentViewHolder = (AudioCommentViewHeaderHolder) holder;
+
+            if (groupPostResult.getIsAnnon() == 1) {
+                audioCommentViewHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null && groupPostResult.getUserInfo().getUserTag().get(0) != null) {
+                    if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
+                        audioCommentViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
+                    } else {
+                        audioCommentViewHolder.userTag.setVisibility(View.GONE);
+                    }
+                }
+            }
 
             if (groupPostResult.getIsAnnon() == 1) {
                 audioCommentViewHolder.commentorUsernameTextView.setText(mContext.getString(R.string.groups_anonymous));
@@ -346,6 +369,18 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
 
+            if (groupPostResult.getIsAnnon() == 1) {
+                mediaPostViewHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null && groupPostResult.getUserInfo().getUserTag().get(0) != null) {
+                    if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
+                        mediaPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
+                    } else {
+                        mediaPostViewHolder.userTag.setVisibility(View.GONE);
+                    }
+                }
+            }
+
             mediaPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
             Linkify.addLinks(mediaPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -413,6 +448,19 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             initializeViews((MediaPostViewHolder) holder, position);
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
+
+
+            if (groupPostResult.getIsAnnon() == 1) {
+                textPollPostViewHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null && groupPostResult.getUserInfo().getUserTag().get(0) != null) {
+                    if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
+                        textPollPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
+                    } else {
+                        textPollPostViewHolder.userTag.setVisibility(View.GONE);
+                    }
+                }
+            }
 
             textPollPostViewHolder.pollQuestionTextView.setText(groupPostResult.getContent());
             Linkify.addLinks(textPollPostViewHolder.pollQuestionTextView, Linkify.WEB_URLS);
@@ -513,6 +561,18 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             }
         } else if (holder instanceof ImagePollPostViewHolder) {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
+
+            if (groupPostResult.getIsAnnon() == 1) {
+                imageHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null && groupPostResult.getUserInfo().getUserTag().get(0) != null) {
+                    if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
+                        imageHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
+                    } else {
+                        imageHolder.userTag.setVisibility(View.GONE);
+                    }
+                }
+            }
 
             imageHolder.pollQuestionTextView.setText(groupPostResult.getContent());
             Linkify.addLinks(imageHolder.pollQuestionTextView, Linkify.WEB_URLS);
@@ -1107,7 +1167,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView postDataTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
         LinearLayout upvoteContainer, downvoteContainer;
-        TextView postCommentsTextView;
+        TextView postCommentsTextView, userTag;
         ;
         ImageView postSettingImageView, shareTextView;
 
@@ -1124,6 +1184,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
+            userTag = (TextView) view.findViewById(R.id.userTag);
 
 
             userImageView.setOnClickListener(this);
@@ -1151,7 +1212,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         ImageView postSettingImageView, shareTextView;
         private BubblePageIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
-        private TextView indexTextView;
+        private TextView indexTextView, userTag;
         private GroupMediaPostViewPagerAdapter mViewPagerAdapter;
 
         MediaPostViewHolder(View view) {
@@ -1170,6 +1231,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
+            userTag = (TextView) view.findViewById(R.id.userTag);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -1218,7 +1280,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
         TextView pollResult1TextView, pollResult2TextView, pollResult3TextView, pollResult4TextView;
         TextView pollOption1ProgressTextView, pollOption2ProgressTextView, pollOption3ProgressTextView, pollOption4ProgressTextView;
-        TextView totalVoteCountTextView;
+        TextView totalVoteCountTextView, userTag;
         RelativeLayout option3Container, option4Container;
 
         TextPollPostViewHolder(View view) {
@@ -1253,6 +1315,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
             totalVoteCountTextView = (TextView) view.findViewById(R.id.totalVoteCountTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
+            userTag = (TextView) view.findViewById(R.id.userTag);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -1304,7 +1367,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
         ImageView postSettingImageView;
-        TextView pollQuestionTextView;
+        TextView pollQuestionTextView, userTag;
         ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
@@ -1343,6 +1406,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
             totalVoteCountTextView = (TextView) view.findViewById(R.id.totalVoteCountTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
+            userTag = (TextView) view.findViewById(R.id.userTag);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -1393,7 +1457,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         ImageView media;
         TextView commentorUsernameTextView, headerAudioTimeElapsed;
         TextView commentDataTextView;
-        TextView commentDateTextView;
+        TextView commentDateTextView, userTag;
         View underlineView;
         SeekBar headerAudioSeekBar;
         TextView upvoteCommentCountTextView, downvoteCommentCountTextView;
@@ -1422,6 +1486,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
+            userTag = (TextView) view.findViewById(R.id.userTag);
 
             commentDataTextView.setOnLongClickListener(this);
             view.setOnLongClickListener(this);

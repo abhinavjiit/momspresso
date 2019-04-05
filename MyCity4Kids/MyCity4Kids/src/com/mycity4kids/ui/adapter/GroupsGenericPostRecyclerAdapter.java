@@ -204,8 +204,33 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
+            if (postList.get(position).getIsAnnon() == 1) {
+                textPostViewHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (postList != null && postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                    if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
+                        textPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                    } else {
+                        textPostViewHolder.userTag.setVisibility(View.GONE);
+                    }
+                }
+            }
+
         } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
+
+            if (postList.get(position).getIsAnnon() == 1) {
+                audioCommentViewHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (postList != null && postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                    if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
+                        audioCommentViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                    } else {
+                        audioCommentViewHolder.userTag.setVisibility(View.GONE);
+                    }
+                }
+            }
+
 
             if (postList.get(position).getIsAnnon() == 1) {
                 audioCommentViewHolder.commentorUsernameTextView.setText(mContext.getString(R.string.groups_anonymous));
@@ -277,6 +302,17 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
 
+            if (postList.get(position).getIsAnnon() == 1) {
+                mediaPostViewHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (postList != null && postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                    if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
+                        mediaPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                    } else {
+                        mediaPostViewHolder.userTag.setVisibility(View.GONE);
+                    }
+                }
+            }
             mediaPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(mediaPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -311,6 +347,19 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             initializeViews((MediaPostViewHolder) holder, position);
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
+
+            if (postList.get(position).getIsAnnon() == 1) {
+                textPollPostViewHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (postList != null && postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                    if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
+                        textPollPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                    } else {
+                        textPollPostViewHolder.userTag.setVisibility(View.GONE);
+                    }
+                }
+            }
+
 
             textPollPostViewHolder.pollQuestionTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(textPollPostViewHolder.pollQuestionTextView, Linkify.WEB_URLS);
@@ -379,7 +428,17 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             }
         } else {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
-
+            if (postList.get(position).getIsAnnon() == 1) {
+                imageHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (postList != null && postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                    if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
+                        imageHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                    } else {
+                        imageHolder.userTag.setVisibility(View.GONE);
+                    }
+                }
+            }
             imageHolder.pollQuestionTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(imageHolder.pollQuestionTextView, Linkify.WEB_URLS);
             imageHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -581,7 +640,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         ImageView userImageView;
         TextView usernameTextView;
         TextView postDateTextView;
-        TextView postDataTextView;
+        TextView postDataTextView, userTag;
         TextView upvoteCountTextView, downvoteCountTextView;
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView, typeHere, beTheFirstOne;
@@ -605,6 +664,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             typeHere = (TextView) view.findViewById(R.id.typeHere);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
+            userTag = (TextView) view.findViewById(R.id.userTag);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -691,7 +751,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView postDateTextView;
         TextView postDataTextView;
         ImageView shareTextView;
-        TextView upvoteCountTextView, downvoteCountTextView;
+        TextView upvoteCountTextView, downvoteCountTextView, userTag;
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView, beTheFirstOne;
         ImageView postSettingImageView;
@@ -719,6 +779,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
+            userTag = (TextView) view.findViewById(R.id.userTag);
+
 
             mViewPagerAdapter = new GroupMediaPostViewPagerAdapter(mContext);
             postDataViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -829,7 +891,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView commentDateTextView;
         View underlineView;
         SeekBar audioSeekBar;
-        TextView upvoteCommentCountTextView, downvoteCommentCountTextView;
+        TextView upvoteCommentCountTextView, downvoteCommentCountTextView, userTag;
         LinearLayout upvoteCommentContainer, downvoteCommentContainer;
         RelativeLayout audiotRootView;
         TextView postCommentsTextView, beTheFirstOne;
@@ -859,6 +921,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
+            userTag = (TextView) view.findViewById(R.id.userTag);
+
 
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -990,7 +1054,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
         ImageView postSettingImageView;
-        TextView pollQuestionTextView, beTheFirstOne;
+        TextView pollQuestionTextView, beTheFirstOne, userTag;
         ImageView shareTextView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
@@ -1034,6 +1098,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
+            userTag = (TextView) view.findViewById(R.id.userTag);
 
 
             userImageView.setOnClickListener(this);
@@ -1153,7 +1218,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
         ImageView postSettingImageView;
-        TextView pollQuestionTextView;
+        TextView pollQuestionTextView, userTag;
         ImageView shareTextView;
         ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
@@ -1196,6 +1261,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
+            userTag = (TextView) view.findViewById(R.id.userTag);
+
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);

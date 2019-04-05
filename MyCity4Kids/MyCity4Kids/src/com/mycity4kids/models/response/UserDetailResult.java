@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,9 +34,11 @@ public class UserDetailResult implements Parcelable {
     private SocialTokens socialTokens;
     private String isLangSelection = "0";
     private String subscriptionEmail;
+
     private Map<String, String> langSubscription;
     private String totalArticles;
     private String totalArticlesViews;
+    private ArrayList<String> userTag;
 
     public String getRewardsAdded() {
         return rewardsAdded;
@@ -73,6 +76,7 @@ public class UserDetailResult implements Parcelable {
         gender = in.readString();
         blogTitleSlug = in.readString();
         rewardsAdded = in.readString();
+        userTag = in.createStringArrayList();
     }
 
     public static final Creator<UserDetailResult> CREATOR = new Creator<UserDetailResult>() {
@@ -246,6 +250,15 @@ public class UserDetailResult implements Parcelable {
         this.userBio = userBio;
     }
 
+    public ArrayList<String> getUserTag() {
+        return userTag;
+    }
+
+    public void setUserTag(ArrayList<String> userTag) {
+        this.userTag = userTag;
+    }
+
+
     public String getSessionId() {
         return sessionId;
     }
@@ -349,6 +362,7 @@ public class UserDetailResult implements Parcelable {
         parcel.writeString(gender);
         parcel.writeString(blogTitleSlug);
         parcel.writeString(rewardsAdded);
+        parcel.writeStringList(userTag);
     }
 
     public class SocialTokens {

@@ -923,4 +923,7 @@
     <string name="rewards_facebook_handler">Facebook కనెక్ట్ చేయండి</string>
     <string name="add_youtube">YouTube ఛానెల్ లింక్ చేయండి</string>
     <string name="add_twitter">Twitter హ్యాండిల్ జోడించండి</string>
+
+    <string name="language">LANGUAGE</string>
+
 </resources>

@@ -940,6 +940,8 @@
     <string name="rewards_facebook_handler">फेसबुक का लिंक एड करें</string>
     <string name="add_youtube">यूट्यूब चैनल का लिंक जोड़ें</string>
     <string name="add_twitter">ट्विटर हैंडल डालें</string>
+    <string name="language">भाषा</string>
+
 
 
 </resources>
