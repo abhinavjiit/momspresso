@@ -1815,6 +1815,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 1111) {
+
                 if (data != null && data.getParcelableExtra("postDatas") != null) {
                     GroupPostResult currentPost = data.getParcelableExtra("postDatas");
                     for (int i = 0; i < postList.size(); i++) {
@@ -1825,6 +1826,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                             break;
                         }
                     }
+                  /*
+                    if(data!=null )
+                    {
+
+                    }*/
                 } else {
                     MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                     try {

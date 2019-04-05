@@ -1913,7 +1913,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
             groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
         }
-        //   setResult(RESULT_OK,);
+     /*   Intent intent = new Intent();
+        intent.putExtra("commentCount", completeResponseList.size());
+        setResult(RESULT_OK, intent);*/
+
     }
 
     @Override
