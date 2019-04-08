@@ -637,6 +637,7 @@ public class AppConstants {
     public static final String PUBLIC_VISIBILITY = "1";
     public static final String PUBLIC_INVISIBILITY = "0";
 
+
     enum SocialPlatformName {
 
     }

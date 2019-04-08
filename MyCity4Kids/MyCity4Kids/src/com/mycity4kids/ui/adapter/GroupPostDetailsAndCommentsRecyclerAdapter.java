@@ -223,7 +223,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 textPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null && groupPostResult.getUserInfo().getUserTag().get(0) != null) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         textPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -372,7 +372,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 mediaPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null && groupPostResult.getUserInfo().getUserTag().get(0) != null) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         mediaPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -453,7 +453,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 textPollPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null && groupPostResult.getUserInfo().getUserTag().get(0) != null) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         textPollPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -565,7 +565,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 imageHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null && groupPostResult.getUserInfo().getUserTag().get(0) != null) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         imageHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -675,7 +675,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else {
                 hideImagePollVotingData(imageHolder);
             }
-        } else if (holder instanceof AudioCommentViewHolder) {
+        } else if (holder instanceof AudioCommentViewHolder)  {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
 
             if (postCommentsList.get(position).getIsAnnon() == 1) {
