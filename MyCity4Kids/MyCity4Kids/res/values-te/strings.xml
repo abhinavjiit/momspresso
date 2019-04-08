@@ -926,5 +926,6 @@
 
     <string name="language">LANGUAGE</string>
     <string name="about_video">విషయం</string>
+    <string name="myprofile.section.mom_bottom_label">మామ్ వీలాగ్స్</string>
 
 </resources>

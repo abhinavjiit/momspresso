@@ -926,5 +926,6 @@
 
     <string name="language">ভাষা</string>
     <string name="about_video">চ্যালেঞ্জ সংক্রান্ত তথ্য</string>
+    <string name="myprofile.section.mom_bottom_label">"মায়েদের ভিডিও ব্লগস "</string>
 
 </resources>

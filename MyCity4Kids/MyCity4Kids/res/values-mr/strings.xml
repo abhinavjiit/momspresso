@@ -929,5 +929,6 @@
     <string name="add_twitter">ट्विटर हँडल जोडा</string>
     <string name="language">भाषा</string>
     <string name="about_video">विषयी</string>
+    <string name="myprofile.section.mom_bottom_label">मॉम वलॉग्स</string>
 
 </resources>

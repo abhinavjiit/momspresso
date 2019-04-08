@@ -218,13 +218,9 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
                     startActivity(intent);
-
                 }
-
             }
         });
-
-
         return view;
     }
 
@@ -234,12 +230,11 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
             removeProgressDialog();
             return;
         }
-
         int from = (nextPageNumber - 1) * limit;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
         Log.d("VIDEO CATEGORY", "--" + videoCategory);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(from, from + limit - 1, sortType, 3, selectedId);
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsListForWinner(from, from + limit - 1, sortType, 3, selectedId,"winner");
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
 
@@ -293,7 +288,6 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
             funnyvideosshimmer.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
-//            showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -332,7 +326,6 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
-//            showToast(getString(R.string.error_network));
             return;
         }
 
