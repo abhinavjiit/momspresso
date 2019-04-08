@@ -23,12 +23,8 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
 
     private ArrayList<String> titleList;
     private View view;
-    private TextView signinTextView;
-    private TextView getStartedTextView;
     private RelativeLayout lnrRoot;
     private TextView tutorial_desc_1, tutorial_desc_2, tutorial_desc_3, tutorial_desc_4;
-//    private ImageView one, two, three, four;
-
     private int mPosition;
     private ArrayList<Integer> pagerImagesList;
     private TextView txvTitle;
@@ -40,9 +36,6 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
 
         initilaize();
         view = inflater.inflate(R.layout.fragment_tutorial, container, false);
-
-//        signinTextView = (TextView) view.findViewById(R.id.signinTextView);
-//        getStartedTextView = (TextView) view.findViewById(R.id.getStartedTextView);
         txvTitle = (TextView) view.findViewById(R.id.txvTitle);
         onboardingImageView = (ImageView) view.findViewById(R.id.onboardingImageView);
 
@@ -50,16 +43,10 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         tutorial_desc_2 = (TextView) view.findViewById(R.id.tutorial_desc_2);
         tutorial_desc_3 = (TextView) view.findViewById(R.id.tutorial_desc_3);
         tutorial_desc_4 = (TextView) view.findViewById(R.id.tutorial_desc_4);
-
-
-//        signinTextView.setOnClickListener(this);
-//        getStartedTextView.setOnClickListener(this);
-
         return view;
     }
 
     private void initilaize() {
-
         titleList = new ArrayList<String>();
         String[] titleArray = getResources().getStringArray(R.array.onboarding_title_array);
 
@@ -83,10 +70,6 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         mPosition = getArguments().getInt(AppConstants.SLIDER_POSITION);
         lnrRoot = (RelativeLayout) view.findViewById(R.id.lnrRoot);
-//        one = (ImageView) view.findViewById(R.id.one);
-//        two = (ImageView) view.findViewById(R.id.two);
-//        three = (ImageView) view.findViewById(R.id.three);
-//        four = (ImageView) view.findViewById(R.id.four);
 
         setImageInPager();
     }
@@ -121,20 +104,6 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-//            case R.id.signinTextView: {
-//                Intent intent = new Intent(getActivity(), ActivityLogin.class);
-//                intent.putExtra(AppConstants.LAUNCH_FRAGMENT, AppConstants.FRAGMENT_SIGNIN);
-//                startActivity(intent);
-//            }
-//            break;
-//            case R.id.getStartedTextView: {
-//                Intent intent = new Intent(getActivity(), ActivityLogin.class);
-//                intent.putExtra(AppConstants.LAUNCH_FRAGMENT, AppConstants.FRAGMENT_SIGNUP);
-//                startActivity(intent);
-//            }
-//            break;
-        }
     }
 
 }

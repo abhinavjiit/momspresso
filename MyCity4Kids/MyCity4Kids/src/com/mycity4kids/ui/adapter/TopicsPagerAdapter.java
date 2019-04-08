@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.mycity4kids.models.Topics;
@@ -17,6 +18,18 @@ import java.util.ArrayList;
 public class TopicsPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
     private ArrayList<Topics> subTopicsList;
+    private Fragment currentFragment ;
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        if (getCurrentFragment() != object) {
+            currentFragment = ((Fragment) object);
+        }
+        super.setPrimaryItem(container, position, object);
+    }
+
+    public Fragment getCurrentFragment(){
+        return currentFragment;
+    }
 
     public TopicsPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<Topics> subTopicsList) {
         super(fm);
@@ -27,13 +40,11 @@ public class TopicsPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
-
         bundle.putString("currentSubTopic", new Gson().toJson(subTopicsList.get(position)));
-
-                bundle.putString("currentSubTopic", new Gson().toJson(subTopicsList.get(position)));
-
+        bundle.putString("currentSubTopic", new Gson().toJson(subTopicsList.get(position)));
         TopicsArticlesTabFragment tab1 = new TopicsArticlesTabFragment();
         tab1.setArguments(bundle);
+        currentFragment = tab1;
         return tab1;
     }
 

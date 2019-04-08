@@ -58,28 +58,6 @@ public class ArticleDraftController extends BaseController {
                 serviceRequest.setUrl(AppConstants.BLOG_DATA_URL);
                 break;
             }
-          /*  case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST: {
-                serviceRequest.setPostData(setRequestParameters(requestData));
-                serviceRequest.setUrl(AppConstants.IMAGE_EDITOR_UPLOAD_URL);
-                break;
-            }
-
-            case AppConstants.FILE_UPLOAD_REQ: {
-                serviceRequest.setPostData(setRequestParameters(requestData));
-                serviceRequest.setUrl(AppConstants.FILE_UPLOAD_URL);
-                break;
-            }
-            case AppConstants.UPLOAD_BUSINESS_IMAGE_REQUEST: {
-                serviceRequest.setPostData(createUploadBusinessImageEntity(requestData));
-                serviceRequest.setUrl(AppConstants.UPLOAD_BUSINESS_IMAGE_URL);
-                break;
-            }
-            case AppConstants.FILE_UPLOAD_REQ_TASK: {
-                serviceRequest.setPostData(
-                        setRequestParameters(requestData));
-                serviceRequest.setUrl(AppConstants.FILE_UPLOAD_URL_TASK);
-                break;
-            }*/
         }
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.setDefaultRequestTimeOut(0);
@@ -97,11 +75,7 @@ public class ArticleDraftController extends BaseController {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
             ArticleDraftRequest articleDraftRequest = (ArticleDraftRequest) pRequestModel;
-            //nameValuePairs.add(new BasicNameValuePair("user_id", imgUploadRq.getUser_id() ));
-            //nameValuePairs.add(new BasicNameValuePair("sessionId", imgUploadRq.getSessionId() ));
-            //nameValuePairs.add(new BasicNameValuePair("profileId", imgUploadRq.getProfileId() ));
             nameValuePairs.add(new BasicNameValuePair("userId", articleDraftRequest.getUser_id()));
-            // nameValuePairs.add(new BasicNameValuePair("type", imgUploadRq.getType()));
             nameValuePairs.add(new BasicNameValuePair("title", articleDraftRequest.getTitle()));
             nameValuePairs.add(new BasicNameValuePair("body", articleDraftRequest.getBody()));
             nameValuePairs.add(new BasicNameValuePair("id", articleDraftRequest.getId()));
@@ -109,7 +83,6 @@ public class ArticleDraftController extends BaseController {
             nameValuePairs.add(new BasicNameValuePair("sourceId", articleDraftRequest.getSourceId()));
 
             Log.i("DraftReuest", nameValuePairs.toString());
-//            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
         } catch (Exception e) {
             Log.e(LOG_TAG, "setRequestParameters", e);
         }

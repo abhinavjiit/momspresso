@@ -47,11 +47,6 @@ public class BusinessListController extends BaseController {
                 serviceRequest.setResponseController(this);
                 serviceRequest.setContext(context);
                 serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-                //Log.d("check", "request url " + AppConstants.BUSINESS_LISTING_URLNEW + getQueryString(requestData));
-
-                //serviceRequest.setUrl(AppConstants.BUSINESS_LISTING_URLNEW + getQueryString(requestData));
-                //serviceRequest.setUrl("http://54.169.17.138/apilistings/lists?"+ getQueryString(requestData));requestData
-                Log.d("check", " kidsresurl" + AppConstants.BUSINESSLISTINGURLTMP + getQueryString(requestData));
                 serviceRequest.setUrl(AppConstants.BUSINESSLISTINGURLTMP + getQueryString(requestData));
                 HttpClientConnection connection = HttpClientConnection.getInstance();
                 connection.addRequest(serviceRequest);
@@ -112,14 +107,9 @@ public class BusinessListController extends BaseController {
         switch (response.getDataType()) {
             case AppConstants.BUSINESS_LIST_REQUEST:
                 try {
-                    Log.d("Events Response ", "" + response);
                     String responseData = new String(response.getResponseData());
                     BusinessListResponse businessList = new Gson().fromJson(responseData, BusinessListResponse.class);
                     response.setResponseObject(businessList);
-                /*if(businessList.getResponseCode() == AppConstants.HTTP_RESPONSE_SUCCESS){
-                    sendResponseToScreen(response);
-				}*/
-
                     sendResponseToScreen(response);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -154,8 +144,6 @@ public class BusinessListController extends BaseController {
             case AppConstants.BUSINESS_SEARCH_LISTING_REQUESTEVENTNEW:
                 try {
                     String responseData = new String(response.getResponseData());
-//                    Log.d("check", "request url " + responseData);
-                    //Log.i("BusinessSearchList Response", responseData);
                     BusinessListResponse businessList = new Gson().fromJson(responseData, BusinessListResponse.class);
                     response.setResponseObject(businessList);
                     sendResponseToScreen(response);
@@ -167,8 +155,6 @@ public class BusinessListController extends BaseController {
             case AppConstants.BOOKMARKED_RESOURCE_LIST_REQUEST:
                 try {
                     String responseData = new String(response.getResponseData());
-//                    Log.d("check", "request url " + responseData);
-                    //Log.i("BusinessSearchList Response", responseData);
                     BusinessListResponse businessList = new Gson().fromJson(responseData, BusinessListResponse.class);
                     response.setResponseObject(businessList);
                     sendResponseToScreen(response);
@@ -206,10 +192,6 @@ public class BusinessListController extends BaseController {
         if (!StringUtils.isNullOrEmpty(businessModel.getPage())) {
             builder.append("&page=").append(businessModel.getPage());
         }
-        /**
-         * now this value contains all sorting List Values; no need extra field-subcategory,zone id
-         * age group,activities,dateby,etc.
-         */
         if (!StringUtils.isNullOrEmpty(businessModel.getTotalFilterValues())) {
             builder.append(businessModel.getTotalFilterValues());
         }
@@ -371,31 +353,9 @@ public class BusinessListController extends BaseController {
             builder.append("&longitude=").append(businessModel.getLongitude());
         }
 
-		/*if (! StringUtils.isNullOrEmpty(businessModel.getSort_by())) {
-            builder.append("&sort=").append(businessModel.getSort_by());
-		}*/
-
-		/*if (! StringUtils.isNullOrEmpty(businessModel.getTotalFilterValues())) {
-            builder.append(businessModel.getTotalFilterValues());
-		}*/
-
-		/*if (! StringUtils.isNullOrEmpty(businessModel.getPage())) {
-            builder.append("&page=").append(businessModel.getPage());
-		}*/
-		/*if (! StringUtils.isNullOrEmpty(businessModel.getLatitude())) {
-			builder.append("&latitude=").append(businessModel.getLatitude());
-		}
-		if (! StringUtils.isNullOrEmpty(businessModel.getLongitude())) {
-			builder.append("&longitude=").append(businessModel.getLongitude());
-		}*/
         if (!StringUtils.isNullOrEmpty(businessModel.getLongitude())) {
             builder.append("&type=event");
         }
-		/*String device_id=DataUtils.getDeviceId(getActivity());
-		if (! StringUtils.isNullOrEmpty(device_id)) {
-			builder.append("&imei_no=").append(device_id);
-		}*/
-
         builder.append("&pincode=").append(SharedPrefUtils.getpinCode(getActivity()));
 
         return builder.toString().replace(" ", "%20");

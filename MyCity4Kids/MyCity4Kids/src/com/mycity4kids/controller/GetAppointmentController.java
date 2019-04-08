@@ -27,14 +27,9 @@ public class GetAppointmentController extends BaseController {
 
     @Override
     public ServiceRequest getData(int requestType, Object requestData) {
-        //VersionApiModel _versionAPiModel = (VersionApiModel) requestData;
-
         ServiceRequest serviceRequest = new ServiceRequest();
-        //serviceRequest.setHttpHeaders(header, header);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
         serviceRequest.setContext(context);
-        //serviceRequest.setRequestData(requestData);
-        //serviceRequest.setPostData(setRequestParameters((LoginRequest)requestData));
         serviceRequest.setDataType(requestType);
         serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, new String[]{"application/json"});
         serviceRequest.setResponseController(this);
@@ -42,7 +37,6 @@ public class GetAppointmentController extends BaseController {
         serviceRequest.setUrl(AppConstants.GET_APPOITMENT_URL + getAppendUrl(requestType));
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);
-
         return serviceRequest;
     }
 

@@ -127,47 +127,6 @@ public class TableAppointmentData extends BaseTable {
 
     }
 
-
-//    public void AddAppoitmentDetail(BaseModel pModel) {
-//        AppoitmentDataModel.AppointmentDetail appointmentModel = (AppoitmentDataModel.AppointmentDetail) pModel;
-//
-//
-////        if (getDataByAppointment(appointmentModel.getId()).getId() > 0) {
-////
-////            deleteAppointment(appointmentModel.getId());
-////        }
-//
-//        try {
-//            mWritableDatabase.beginTransaction();
-//            ContentValues _contentValue = new ContentValues();
-//            _contentValue.put(APPOINTMENT_NAME, appointmentModel.getAppointment_name());
-//            _contentValue.put(EVENT_ID, appointmentModel.getId());
-//            _contentValue.put(EXTERNAL_EVENT_ID, appointmentModel.getExternal_id());
-//            _contentValue.put(API_EVENT_ID, appointmentModel.getApi_event_id());
-//            _contentValue.put(LOCATION, appointmentModel.getLocality());
-//            _contentValue.put(IS_RECURRING, appointmentModel.getIs_recurring());
-//            _contentValue.put(STARTTIME, appointmentModel.getStarttime());
-//            _contentValue.put(ENDTIME, appointmentModel.getEndtime());
-//            _contentValue.put(REMINDER, appointmentModel.getReminder());
-//            _contentValue.put(REPEAT, appointmentModel.getRepeate());
-//            _contentValue.put(REPEAT_FREQUENCY, appointmentModel.getRepeate_frequency());
-//            _contentValue.put(REPEAT_NUM, appointmentModel.getRepeate_num());
-//            _contentValue.put(REPEAT_UNTIL, appointmentModel.getRepeate_untill());
-//            _contentValue.put(SYNC, 1);
-//            _contentValue.put(USER_ID, appointmentModel.getUser_id());
-//
-//            mWritableDatabase.insert(APPOINTMENT_TABLE, null, _contentValue);
-//
-//            mWritableDatabase.setTransactionSuccessful();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//
-//        } finally {
-//            mWritableDatabase.endTransaction();
-//        }
-//
-//    }
-
     @Override
     protected ArrayList<BaseModel> getAllData(String pSelection, String[] pSelectionArgs) {
         return null;
@@ -651,39 +610,6 @@ public class TableAppointmentData extends BaseTable {
                                 appointmentModel.setAttendee(attendeeList);
 
                                 allData.add(appointmentModel);
-
-//                                ArrayList<AttendeeModel> attendeeList = new ArrayList<>();
-//                                try {
-//                                    String CREATE_QUERY_ATTENDEE = "select userkid_id ,server_id, type,kt.colorCode as kidcolor,kt.name as kidname,ad.colorCode as usercolorcode,ad.name as username from attendeeTable at LEFT JOIN kidsTable kt  ON at.userkid_id == kt.kid_id LEFT JOIN adultTable ad ON at.userkid_id == ad.USERID where event_id = " + appointmentModel.getEventId();
-//
-//                                    _cursorAttendee = mWritableDatabase.rawQuery(CREATE_QUERY_ATTENDEE, null);
-//                                    while (_cursorAttendee.moveToNext()) {
-//
-//                                        AttendeeModel attendee = new AttendeeModel();
-//                                        attendee.setAppoitmentId(appointmentModel.getEventId());
-//                                        attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
-//                                        attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
-//
-//                                        String type_uk = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
-//
-//                                        if (type_uk.equals("user")) {
-//                                            attendee.setName(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("username")));
-//                                            attendee.setColorCode(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("usercolorcode")));
-//                                        } else if (type_uk.equals("kid")) {
-//                                            attendee.setName(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("kidname")));
-//                                            attendee.setColorCode(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("kidcolor")));
-//                                        }
-//
-//                                        attendeeList.add(attendee);
-//                                    }
-//                                } catch (Exception e) {
-//                                    Log.e("", "" + e);
-//                                } finally {
-//                                    closeCursor(_cursorAttendee);
-//                                }
-//                                appointmentModel.setAttendee(attendeeList);
-//
-//                                allData.add(appointmentModel);
                             } while (_cursor_inner.moveToNext());
 
                         }

@@ -1,7 +1,10 @@
 package com.mycity4kids.ui.fragment;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -158,7 +162,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             }
         });
 
-
         Bundle extras = getArguments();
         if (extras != null) {
             jsonMyObject = extras.getString("currentSubTopic");
@@ -166,47 +169,19 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
         selectedTopic = currentSubTopic;
 
-
-       /* if (getArguments() != null) {
-
-
-            currentSubTopic = (Topics) getArguments().getParcelable("currentSubTopic");
-            selectedTopic = currentSubTopic;
-        }
-*/
-
-        /* if (getArguments() != null) {*/
-
-
-       /* Bundle extras = getArguments();
-        if (extras != null) {
-            jsonMyObject = extras.getString("currentSubTopic");
-        }
-        currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);
-        selectedTopic = currentSubTopic;*/
-          /*  currentSubTopic = (Topics) getArguments().getParcelable("currentSubTopic");
-            selectedTopic = currentSubTopic;*/
-
-
-
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         mDatalist = new ArrayList<>();
-//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(mDatalist);
         recyclerView.setAdapter(recyclerAdapter);
-
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
         int lineCount = 0;
         int width = displayMetrics.widthPixels;
-        Log.d("\nsearchName", "*********" + currentSubTopic.getDisplay_name() + " measured width = " + width);
 
         headerRL = (RelativeLayout) view.findViewById(R.id.headerRL);
         if (currentSubTopic.getChild().size() == 1 && currentSubTopic.getChild().get(0).getId().equals(currentSubTopic.getId())) {
@@ -528,7 +503,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 sortType = 0;
                 nextPageNumber = 1;
                 getGroupIdForCurrentCategory();
-//                hitFilteredTopicsArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
                 shimmerFrameLayout.startShimmerAnimation();
@@ -539,20 +513,31 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 sortType = 1;
                 nextPageNumber = 1;
                 getGroupIdForCurrentCategory();
-//                hitFilteredTopicsArticleListingApi(1);
                 break;
         }
     }
 
-//    @Override
-//    public void onFinishToLoadAds() {
-//
-//    }
-//
-//    @Override
-//    public void onErrorToLoadAd() {
-//
-//    }
+    private void hitArticleListingSortByRecent(){
+        shimmerFrameLayout.startShimmerAnimation();
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        fabMenu.collapse();
+        mDatalist.clear();
+        recyclerAdapter.notifyDataSetChanged();
+        sortType = 0;
+        nextPageNumber = 1;
+        getGroupIdForCurrentCategory();
+    }
+
+    private void hitArticleListingSortByPopular(){
+        shimmerFrameLayout.startShimmerAnimation();
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        fabMenu.collapse();
+        mDatalist.clear();
+        recyclerAdapter.notifyDataSetChanged();
+        sortType = 1;
+        nextPageNumber = 1;
+        getGroupIdForCurrentCategory();
+    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
@@ -648,6 +633,41 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 startActivity(intent);
             }
         }
+    }
+
+    public void showSortedByDialog() {
+        if (getActivity() != null) {
+            final Dialog dialog = new Dialog(getActivity());
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_sort_by);
+            dialog.setCancelable(true);
+            dialog.findViewById(R.id.linearSortByPopular).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hitArticleListingSortByPopular();
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.findViewById(R.id.linearSortByRecent).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hitArticleListingSortByRecent();
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.findViewById(R.id.textUpdate).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+        }
+
     }
 
     @Override

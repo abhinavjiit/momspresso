@@ -62,7 +62,6 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     private LinearLayout childInfoContainer;
     private static TextView dobTextView;
     EditText aboutEditText;
-    private int mYear, mMonth, mDay;
     LinearLayout aboutprofilemaincontainer;
     private UserDetailResult userDetail;
     private ArrayList<CityInfoItem> cityList;
@@ -76,20 +75,14 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_about_layout, container, false);
-
         aboutEditText = (EditText) view.findViewById(R.id.aboutEditText);
         aboutprofilemaincontainer = (LinearLayout) view.findViewById(R.id.main_profile_About_layout);
         childInfoContainer = (LinearLayout) view.findViewById(R.id.childInfoContainer);
         addNewKidTextView = (TextView) view.findViewById(R.id.addNewKidTextView);
         kidNameEditText = (EditText) view.findViewById(R.id.kidNameEditText);
         kidsDOBTextView = (TextView) view.findViewById(R.id.kidsDOBTextView);
-//      deleteKidTextView = (TextView) view.findViewById(R.id.deleteKidTextView);
-//      maleRadioButton = (RadioButton) view.findViewById(R.id.maleRadioButton);
-//      femaleRadioButton = (RadioButton) view.findViewById(R.id.femaleRadioButton);
-//      genderRadioGroup = (RadioGroup) view.findViewById(R.id.genderRadioGroup);
         addKidContainer = (RelativeLayout) view.findViewById(R.id.addKidContainer);
         genderSpinner = (AppCompatSpinner) view.findViewById(R.id.genderSpinner);
-
         userDetail = getArguments().getParcelable("userDetail");
         cityList = getArguments().getParcelableArrayList("cityList");
 
@@ -115,22 +108,6 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
 
             }
         });
-
-//        aboutEditText.setOnTouchListener(new View.OnTouchListener() {
-//
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (aboutEditText.hasFocus()) {
-//                    v.getParent().requestDisallowInterceptTouchEvent(true);
-//                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-//                        case MotionEvent.ACTION_SCROLL:
-//                            v.getParent().requestDisallowInterceptTouchEvent(false);
-//                            return true;
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-        //Setting the ArrayAdapter data on the Spinner
 
         kidsDOBTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,10 +188,6 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     }
 
     private boolean validateKidsInfo() {
-//        if (kidNameEditText.getText() == null || kidNameEditText.getText().toString().isEmpty()) {
-//            Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_empty_name_kid), Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
         if (StringUtils.isNullOrEmpty(kidsDOBTextView.getText().toString()) || !DateTimeUtils.isValidDate(kidsDOBTextView.getText().toString())) {
             Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date), Toast.LENGTH_SHORT).show();
             return false;

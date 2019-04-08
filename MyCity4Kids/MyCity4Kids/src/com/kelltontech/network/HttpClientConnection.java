@@ -177,11 +177,7 @@ public class HttpClientConnection extends Thread {
             notifyError("Device is out of network coverage.", null);
             return;
         }
-
-//        HttpClient httpClient = getHttpclient();
         HttpClient httpClient = new DefaultHttpClient();
-//        HttpClient httpClient = HttpClientFactory.getThreadSafeClient();
-        //	httpClient.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
         int requestTimeOut = currentRequest.getRequestTimeOut();
         if (requestTimeOut <= 0) {
             requestTimeOut = defaultRequestTimeOut;

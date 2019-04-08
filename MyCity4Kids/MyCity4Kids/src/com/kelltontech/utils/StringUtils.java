@@ -93,54 +93,6 @@ public abstract class StringUtils {
         return output;
     }
 
-//	public static String replaceSpecialCharacters(String str) {
-//		// http://www.utexas.edu/learn/html/spchar.html
-//		// above url is used for html special characters.
-//
-//		if (str == null)
-//			return null;
-//		if (str.trim().equals(""))
-//			return "";
-//
-//		String[] htmlSpecialcharArray = { "&ndash;", "&mdash;", "&iexcl;",
-//				"&iquest;", "&quot;", "&ldquo;", "&rdquo;", "&lsquo;",
-//				"&rsquo;", "&laquo;", "&raquo;", "&nbsp;", "&amp;", "&cent;",
-//				"&copy;", "&divide;", "&gt;", "&lt;", "&micro;", "&middot;",
-//				"&para;", "&plusmn;", "&euro;", "&pound;", "&reg;", "&sect;",
-//				"&trade;", "&yen;", "&aacute;", "&Aacute;", "&agrave;",
-//				"&Agrave;", "&acirc;", "&Acirc;", "&aring;", "&Aring;",
-//				"&atilde;", "&Atilde;", "&auml;", "&Auml;", "&aelig;",
-//				"&AElig;", "&ccedil;", "&Ccedil;", "&eacute;", "&Eacute;",
-//				"&egrave;", "&Egrave;", "&ecirc;", "&Ecirc;", "&euml;",
-//				"&Euml;", "&iacute;", "&Iacute;", "&igrave;", "&Igrave;",
-//				"&icirc;", "&Icirc;", "&iuml;", "&Iuml;", "&ntilde;",
-//				"&Ntilde;", "&oacute;", "&Oacute;", "&ograve;", "&Ograve;",
-//				"&ocirc;", "&Ocirc;", "&oslash;", "&Oslash;", "&otilde;",
-//				"&Otilde;", "&ouml;", "&Ouml;", "&szlig;", "&uacute;",
-//				"&Uacute;", "&ugrave;", "&Ugrave;", "&ucirc;", "&Ucirc;",
-//				"&uuml;", "&Uuml;", "&yuml;", "&sbquo;&not;", "&Atilde;",
-//				"&uml;", "&brvbar;", "&bdquo;", "&sup1;", "&ordf;", "&#039;" };
-//
-//		String[] stringSpecialcharArray = { "ñ", "ó", "°", "ø", "\"", "ì",
-//				"ì", "ë", "í", "´", "ª", " ", "And", "¢", "©", "˜",
-//				">", "<", "µ", "∑", "∂", "±", "Ä", "£", "Æ", "ß",
-//				"ô", "•", "·", "¡", "‡", "¿", "‚", "¬", "Â", "≈",
-//				"„", "√", "‰", "ƒ", "Ê", "∆", "�?", "«", "È",
-//				"…", "Ë", "»", "�?", " ", "Î", "À", "Ì", "Õ", "�?",
-//				"Ã", "Ó", "Œ", "Ô", "œ", "Ò", "—", "Û", "�?", "Ú",
-//				"“", "Ù", "‘", "¯", "ÿ", "ı", "’", "ˆ", "÷", "ﬂ",
-//				"˙", "�?�", "˘", "Ÿ", "˚", "€", "¸", "‹", "ˇ", "¨",
-//				"~", "U", "b", "q", "s", "o", "'" };
-//
-//		// replce special charaters one by one
-//		int len = htmlSpecialcharArray.length;
-//		for (int index = 0; index < len; index++) {
-//			str = replaceOld(str, htmlSpecialcharArray[index],
-//					stringSpecialcharArray[index]);
-//		}
-//		return str;
-//	}
-
     public static String stripSpecialCharacters(String str) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < str.length(); i++) {

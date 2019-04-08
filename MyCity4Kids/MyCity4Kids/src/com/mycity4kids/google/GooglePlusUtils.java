@@ -30,13 +30,10 @@ public class GooglePlusUtils implements GoogleApiClient.ConnectionCallbacks, Goo
     public GooglePlusUtils(Activity pActivity, IPlusClient plusClientInterface) {
         mPlusClientInterface = plusClientInterface;
         mActivity = pActivity;
-        //	mConnectionResult=new ConnectionResult(0, mActivity.getApplicationContext());
         mPlusClient = new GoogleApiClient.Builder(mActivity, this, this)
                 .addApi(Plus.API)
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .addScope(Plus.SCOPE_PLUS_PROFILE)
-//        .addScope(Scopes.PLUS_ME)
-//	    .setActions(MomentUtil.ACTIONS)
                 .build();
     }
 
@@ -116,17 +113,5 @@ public class GooglePlusUtils implements GoogleApiClient.ConnectionCallbacks, Goo
             mPlusClientInterface.onGooglePlusLoginFailed();
         }
     }
-
-//	@Override
-//	public void onAccessRevoked(ConnectionResult status) {
-//		 if (status.isSuccess()) {
-//	        //    mSignInStatus.setText(R.string.revoke_access_status);
-//	        } else {
-//	         //   mSignInStatus.setText(R.string.revoke_access_error_status);
-//	            mPlusClient.disconnect();
-//	        }
-//	        mPlusClient.connect();
-//
-//	}
 
 }

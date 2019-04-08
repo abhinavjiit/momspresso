@@ -92,9 +92,6 @@ public class AppConstants {
     public static final String SIGN_UP_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/registration/";
     public static final String CITY_BY_PINCODE_URL = STAGING_INTERNAL_SERVER_URL + "apiservices/get_city_id?";
 
-    //public static final String LOGIN_URL = "http://192.168.13.55/mycity4kids/users/login";
-    //public static final String SIGN_UP_URL = "http://192.168.13.55/mycity4kids/users/registration";
-
     public static final String FORGOT_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/forgotpassword";
     public static final String IMAGE_UPLOAD_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/familyimageupload";
     public static final String IMAGE_EDITOR_UPLOAD_URL = STAGING_INTERNAL_SERVER_URL + "apiblogs" + "/uploadImage";
@@ -112,9 +109,6 @@ public class AppConstants {
     public static final String EDIT_TASK_URL = STAGING_INTERNAL_SERVER_URL + "apitasks/add/";
     public static final String DELETE_TASK_URL = STAGING_INTERNAL_SERVER_URL + "apitasks/delete/";
     public static final String DELETE_TASK_LIST_URL = STAGING_INTERNAL_SERVER_URL + "apitasks/delete_list";
-//    public static final String DELETE_SELECTED_TASK_URL = LOCAL_URL_2 + "apitasks/delete/";
-//
-
     public static final String CREATE_TASKLIST_URL = STAGING_INTERNAL_SERVER_URL + "apitasks/create_list/";
 
     public static final String LOGOUT_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/logout/";

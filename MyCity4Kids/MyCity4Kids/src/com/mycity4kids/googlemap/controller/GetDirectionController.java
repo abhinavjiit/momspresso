@@ -41,7 +41,6 @@ public class GetDirectionController extends BaseController {
         } else {
             serviceRequest.setUrl(AppConstants.GET_GOOGLE_COMMON_URL + url);
         }
-        //	serviceRequest.setUrl("http://maps.googleapis.com/maps/api/directions/json?origin=" + latLng.latitude + "," + latLng.longitude + "&destination=" + _mapDetails.getLatitude()+","+_mapDetails.getLongitude() + "&sensor=false&units=metric&mode=driving");
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);
 

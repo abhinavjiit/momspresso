@@ -62,7 +62,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     private ArrayList<Topics> subTopicsList;
     private Toolbar toolbar;
     private TextView toolbarTitleTextView;
-    public ImageView recentPopularSortingImage, imageSortBy;
+    public ImageView imageSortBy;
     private LinearLayout layoutBottomSheet, bottom_sheet;
     private BottomSheetBehavior sheetBehavior;
     private TextView textHeaderUpdate, textUpdate;

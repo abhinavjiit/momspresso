@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +31,7 @@ import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsPagerAdapter;
+import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
 import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
@@ -49,37 +52,34 @@ import retrofit2.Retrofit;
  * Created by hemant on 25/5/17.
  */
 public class TopicsListingActivity extends BaseActivity {
-
-    //    private View view;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private FrameLayout topLayerGuideLayout;
-
     private TopicsPagerAdapter pagerAdapter;
-
     private HashMap<Topics, List<Topics>> allTopicsMap;
     private ArrayList<Topics> allTopicsList;
     private String parentTopicId;
     private ArrayList<Topics> subTopicsList;
     private Toolbar toolbar;
     private TextView toolbarTitleTextView;
-    private LinearLayout layoutBottomSheet,bottom_sheet;
+    private LinearLayout layoutBottomSheet, bottom_sheet;
     private BottomSheetBehavior sheetBehavior;
-    private TextView textHeaderUpdate,textUpdate;
+    private TextView textHeaderUpdate, textUpdate;
+    public ImageView imageSortBy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_listing_activity);
 
-        layoutBottomSheet= (LinearLayout)findViewById(R.id.bottom_sheet);
+        layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(TopicsListingActivity.this);
-        if(!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")){
+        if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -94,14 +94,14 @@ public class TopicsListingActivity extends BaseActivity {
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(TopicsListingActivity.this,RewardsContainerActivity.class));
+                    startActivity(new Intent(TopicsListingActivity.this, RewardsContainerActivity.class));
                 }
             });
 
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(TopicsListingActivity.this,RewardsContainerActivity.class));
+                    startActivity(new Intent(TopicsListingActivity.this, RewardsContainerActivity.class));
                 }
             });
 
@@ -110,11 +110,22 @@ public class TopicsListingActivity extends BaseActivity {
                 public void run() {
                     bottom_sheet.setVisibility(View.GONE);
                 }
-            },10000);
-        }else{
+            }, 10000);
+        } else {
             bottom_sheet.setVisibility(View.GONE);
         }
 
+        imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
+
+        imageSortBy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = pagerAdapter.getCurrentFragment();//.get(viewPager.getCurrentItem());
+                if (fragment != null && fragment instanceof TopicsArticlesTabFragment){
+                    ((TopicsArticlesTabFragment) fragment).showSortedByDialog();
+                }
+            }
+        });
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);

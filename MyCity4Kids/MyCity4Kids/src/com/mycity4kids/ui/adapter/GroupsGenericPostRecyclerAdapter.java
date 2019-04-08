@@ -675,15 +675,6 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                 /*   Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);*/
                     AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                     FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
                     Bundle _args = new Bundle();
@@ -724,19 +715,6 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     }
                 }
             });
-          /*  view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("groupItem", selectedGroup);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
-                }
-            });*/
         }
 
         @Override
@@ -810,15 +788,6 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                 /*   Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);*/
                     AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                     FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
                     Bundle _args = new Bundle();
@@ -859,20 +828,6 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     }
                 }
             });
-            /*view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_MEDIA);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getMediaUrls();
-                    intent.putExtra("mediaUrls", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
-                }
-            });*/
         }
 
         @Override
@@ -955,19 +910,9 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                 /*   Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);*/
                     AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                     FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
                     Bundle _args = new Bundle();
-                    // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
                     _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
                     _args.putInt("postId", postList.get(getAdapterPosition()).getId());
                     addGpPostCommentReplyDialogFragment.setArguments(_args);
@@ -1262,8 +1207,6 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             userTag = (TextView) view.findViewById(R.id.userTag);
-
-
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
@@ -1273,19 +1216,9 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                 /*   Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);*/
                     AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                     FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
                     Bundle _args = new Bundle();
-                    // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
                     _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
                     _args.putInt("postId", postList.get(getAdapterPosition()).getId());
                     addGpPostCommentReplyDialogFragment.setArguments(_args);
@@ -1321,20 +1254,6 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     }
                 }
             });
-           /* view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
-                }
-            });*/
 
             option1Container.setOnClickListener(new View.OnClickListener() {
                 @Override
