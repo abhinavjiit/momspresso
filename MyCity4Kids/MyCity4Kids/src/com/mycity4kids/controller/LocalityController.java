@@ -24,14 +24,11 @@ public class LocalityController extends BaseController {
     @Override
     public ServiceRequest getData(int requestType, Object requestData) {
         ServiceRequest serviceRequest = new ServiceRequest();
-        //serviceRequest.setHttpHeaders(header, header);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
         serviceRequest.setRequestData(requestData);
-        //serviceRequest.setPostData(setRequestParameters((LoginRequest)requestData));
         serviceRequest.setContext(context);
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
-        //serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
         serviceRequest.setUrl("http://54.251.100.249/webservices/users/login?emailId=lifelover.w@gmail.com&password=01167c442ea5ab019f8c210b7b51c6ef9f6e205f");
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);

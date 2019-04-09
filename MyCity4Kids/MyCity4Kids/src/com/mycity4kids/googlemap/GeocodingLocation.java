@@ -34,8 +34,6 @@ public class GeocodingLocation {
                     if (addressList != null && addressList.size() > 0) {
                         Address address = (Address) addressList.get(0);
                         StringBuilder sb = new StringBuilder();
-//                        sb.append(address.getLatitude()).append("\n");
-//                        sb.append(address.getLongitude()).append("\n");
                         sb.append(address.getLatitude()).append(",");
                         sb.append(address.getLongitude());
                         result = sb.toString();
@@ -48,16 +46,11 @@ public class GeocodingLocation {
                     if (result != null) {
                         message.what = 1;
                         Bundle bundle = new Bundle();
-//                        result = "Address: " + locationAddress +
-//                                "\n\nLatitude and Longitude :\n" + result;
-
                         bundle.putString("address", result);
                         message.setData(bundle);
                     } else {
                         message.what = 1;
                         Bundle bundle = new Bundle();
-//                        result = "Address: " + locationAddress +
-//                                "\n Unable to get Latitude and Longitude for this address location.";
                         result = "0,0";
 
                         bundle.putString("address", result);

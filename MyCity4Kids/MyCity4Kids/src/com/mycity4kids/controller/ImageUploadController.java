@@ -110,13 +110,9 @@ public class ImageUploadController extends BaseController {
         try {
             ImageUploadRequest imgUploadRq = (ImageUploadRequest) pRequestModel;
             nameValuePairs.add(new BasicNameValuePair("user_id", imgUploadRq.getUser_id()));
-            /*nameValuePairs.add(new BasicNameValuePair("sessionId", imgUploadRq.getSessionId() ));
-            nameValuePairs.add(new BasicNameValuePair("profileId", imgUploadRq.getProfileId() ));*/
             nameValuePairs.add(new BasicNameValuePair("file", imgUploadRq.getFile()));
-            //nameValuePairs.add(new BasicNameValuePair("type", imgUploadRq.getType()));
             nameValuePairs.add(new BasicNameValuePair("imageType", imgUploadRq.getImageType()));
             Log.i("imageUpload", nameValuePairs.toString());
-//            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
         } catch (Exception e) {
             Log.e(LOG_TAG, "setRequestParameters", e);
         }

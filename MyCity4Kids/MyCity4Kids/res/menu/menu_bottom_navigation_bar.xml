@@ -15,7 +15,7 @@
     <item
         android:id="@+id/action_momVlog"
         android:icon="@drawable/selector_mom_vlog"
-        android:title="@string/myprofile.section.videos_label" />
+        android:title="@string/myprofile.section.mom_bottom_label" />
     <item
         android:id="@+id/action_location"
         android:icon="@drawable/selector_events_tab"

@@ -44,11 +44,7 @@ public class ForgotPasswordController extends BaseController {
             serviceRequest.setPostData(setRequestParameters((String) requestData));
             serviceRequest.setDataType(requestType);
             serviceRequest.setResponseController(this);
-            Log.i("Forgot", "requestData - " + requestData);
-            // serviceRequest.setHttpHeaders(new String[]{HTTP.CONTENT_TYPE},
-            // new String[]{"application/x-www-form-urlencoded"});
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-            // serviceRequest.setUrl("http://54.251.100.249/webservices/users/login?emailId=lifelover.w@gmail.com&password=01167c442ea5ab019f8c210b7b51c6ef9f6e205f");
             serviceRequest.setUrl(AppConstants.FORGOT_URL);
             HttpClientConnection connection = HttpClientConnection
                     .getInstance();
@@ -142,9 +138,6 @@ public class ForgotPasswordController extends BaseController {
         try {
             nameValuePairs.add(new BasicNameValuePair("emailId", emailId));
             encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
-
-            // encodedEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
-            // "application/x-www-form-urlencoded"));
         } catch (Exception e) {
             // TODO: handle exception
         }

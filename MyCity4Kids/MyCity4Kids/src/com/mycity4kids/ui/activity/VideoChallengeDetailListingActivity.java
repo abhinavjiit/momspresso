@@ -146,9 +146,6 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
     private String Topics;
     private String jsonMyObject;
 
-
-    ;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

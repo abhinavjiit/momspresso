@@ -255,8 +255,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
             funnyvideosshimmer.stopShimmerAnimation();
             funnyvideosshimmer.setVisibility(View.GONE);
             Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-//            showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -385,8 +383,6 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
-//                        startActivity(new Intent(PrivateProfileActivity.this, RewardsContainerActivity.class));
-//                        dialog.cancel();
                 }
             });
 

@@ -900,7 +900,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 String authorId = notificationExtras.getString("userId");
                 String blogSlug = notificationExtras.getString("blogSlug");
                 String titleSlug = notificationExtras.getString("titleSlug");
-
                 Intent intent1 = new Intent(DashboardActivity.this, ArticleDetailsContainerActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.ARTICLE_ID, articleId);
@@ -2872,7 +2871,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 .setBadgePadding(5, true)
                 .setBadgeGravity(Gravity.TOP | Gravity.END)
                 .setGravityOffset(25, 12, true)
-                .bindTarget(bottomNavigationView.getBottomNavigationItemView(position));
+                .bindTarget(notificationImg);
         if (number.equals("0")) {
             badge.hide(false);
         }

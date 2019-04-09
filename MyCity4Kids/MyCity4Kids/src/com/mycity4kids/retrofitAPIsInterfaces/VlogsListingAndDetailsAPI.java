@@ -56,6 +56,14 @@ public interface VlogsListingAndDetailsAPI {
                                             @Query("type") int type,
                                             @Query("category_id") String categoryId);
 
+    @GET("v2/videos/")
+    Call<VlogsListingResponse> getVlogsListForWinner(@Query("start") int start,
+                                                     @Query("end") int end,
+                                                     @Query("sort") int sort,
+                                                     @Query("type") int type,
+                                                     @Query("category_id") String categoryId,
+                                                     @Query("order_by") String orderBy);
+
 
     @POST("v2/videos/")
     Call<ResponseBody> publishHomeVideo(@Body UploadVideoRequest uploadVideoRequest/*@Query("start") int start,

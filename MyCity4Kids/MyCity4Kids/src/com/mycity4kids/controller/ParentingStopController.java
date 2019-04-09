@@ -40,8 +40,6 @@ public class ParentingStopController extends BaseController {
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.PARENTING_STOP_ARTICLE_URL + getAppendUrl(requestType, requestData));
-//            Log.e("All article URL", serviceRequest.getUrl());
-
             HttpClientConnection connection = HttpClientConnection.getInstance();
             connection.addRequest(serviceRequest);
         } else if (requestType == AppConstants.PARENTING_STOP_BLOGS_REQUEST) {
@@ -52,7 +50,6 @@ public class ParentingStopController extends BaseController {
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.PARENTING_STOP_BLOGS_URL + getAppendUrl(requestType, requestData));
-
             HttpClientConnection connection = HttpClientConnection.getInstance();
             connection.addRequest(serviceRequest);
         } else if (requestType == AppConstants.TOP_PICKS_REQUEST) {
@@ -61,7 +58,6 @@ public class ParentingStopController extends BaseController {
             serviceRequest.setDataType(requestType);
             serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
-            //	serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, "");
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.PARENTING_NEW_TOP_PICKS_URL + getAppendUrl(requestType, requestData));
 
@@ -73,7 +69,6 @@ public class ParentingStopController extends BaseController {
             serviceRequest.setDataType(requestType);
             serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
-            //	serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, "");
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_ALL_ARTICLE_URL + getAppendUrl(requestType, requestData));
 
@@ -87,7 +82,6 @@ public class ParentingStopController extends BaseController {
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_ALL_ARTICLE_URL + getAppendUrl(requestType, requestData));
-
             HttpClientConnection connection = HttpClientConnection.getInstance();
             connection.addRequest(serviceRequest);
         } else if (requestType == AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST) {
@@ -111,10 +105,6 @@ public class ParentingStopController extends BaseController {
         switch (response.getDataType()) {
             case AppConstants.PARENTING_STOP_ARTICLES_REQUEST:
                 try {
-//                    String responseData = new String(response.getResponseData());
-//                    Log.i("Articles Response", responseData);
-//                    CommonParentingResponse articleResponse = new Gson().fromJson(responseData, CommonParentingResponse.class);
-//                    response.setResponseObject(articleResponse);
                     String responseData = new String(response.getResponseData());
                     String removeHtmlData = StringEscapeUtils.unescapeHtml4(responseData);
                     Log.i("Article Response", removeHtmlData);
@@ -200,30 +190,6 @@ public class ParentingStopController extends BaseController {
                 }
                 break;
 
-		/*case AppConstants.TOP_PICKS_REQUEST:
-            try {
-				String responseData=new String(response.getResponseData());
-
-				//String responseEncode=URLDecoder.decode(responseData,"UTF-8");
-
-				//String responseEncode=URLEncoder.encode(responseData,"UTF-8");
-				//	String newString = new String(responseData.getBytes("US-ASCII"), "US-ASCII");
-				//  Integer value=	responseData.indexOf("\\r\\n");
-				//  Log.i("htmlCOntent", ""+value);
-				//responseData = responseData.replaceAll("\\n", "<br/>");
-				//	responseData = responseData.replaceAll("\\r", " ");
-				//	responseData = StringUtils.replaceSpecialCharacters(responseData);
-				//	Log.i("Top Picks Response", responseEncode);
-				String responseEncode1=StringEscapeUtils.unescapeHtml4(responseData);
-				Log.i("Top Picks Response", responseEncode1);
-				ParentingResponse _response=new Gson().fromJson(responseEncode1, ParentingResponse.class);
-				response.setResponseObject(_response);
-
-				sendResponseToScreen(response);
-			} catch (Exception e) {
-				sendResponseToScreen(null);
-			}
-			break;*/
             default:
                 break;
         }
@@ -299,24 +265,13 @@ public class ParentingStopController extends BaseController {
 
             case AppConstants.NEW_ALL_ARTICLES_REQUEST:
                 builder.append("city_id=").append(parentingModel.getCity_id());
-
-//                if (!StringUtils.isNullOrEmpty(parentingModel.getAuthorId())) {
-//                    builder.append("author_id").append(parentingModel.getPage());
-//                }
                 if (!StringUtils.isNullOrEmpty(parentingModel.getPage())) {
                     builder.append("&page=").append(parentingModel.getPage());
                 }
                 if (!StringUtils.isNullOrEmpty(pincode)) {
                     builder.append("&pincode=").append(pincode);
                 }
-//                if (!StringUtils.isNullOrEmpty(parentingModel.getSoty_by())) {
-//                    builder.append("&sort=").append(parentingModel.getSoty_by());
                 builder.append("&sort=").append("all");
-//                }
-
-//                if (!StringUtils.isNullOrEmpty(device_id)) {
-//                    builder.append("&imei_no=").append(device_id);
-//                }
                 break;
             case AppConstants.ARTICLES_TODAY_REQUEST:
                 builder.append("city_id=").append(parentingModel.getCity_id());
@@ -342,29 +297,6 @@ public class ParentingStopController extends BaseController {
                 break;
         }
 
-		
-		/*if(requestType==AppConstants.PARENTING_STOP_ARTICLES_REQUEST || requestType==AppConstants.PARENTING_STOP_BLOGS_REQUEST|| requestType==AppConstants.TOP_PICKS_REQUEST){
-
-			builder.append("city_id=").append(parentingModel.getCity_id());
-			if (! StringUtils.isNullOrEmpty(parentingModel.getPage())) {
-				builder.append("&page=").append(parentingModel.getPage());
-			}
-			if(! StringUtils.isNullOrEmpty(parentingModel.getSoty_by())){
-				builder.append("&sort=").append(parentingModel.getSoty_by());
-			}
-		}else if(requestType==AppConstants.PARENTING_STOP_BLOGGER_REQUEST){
-			builder.append("city_id=").append(parentingModel.getCity_id());
-
-			if (! StringUtils.isNullOrEmpty(parentingModel.getAuthorId())) {
-				builder.append("author_id").append(parentingModel.getPage());
-			}
-			if (! StringUtils.isNullOrEmpty(parentingModel.getPage())) {
-				builder.append("&page=").append(parentingModel.getPage());
-			}
-			if(! StringUtils.isNullOrEmpty(parentingModel.getSoty_by())){
-				builder.append("&sort=").append(parentingModel.getSoty_by());
-			}
-		}*/
         return builder.toString().replace(" ", "%20");
 
     }

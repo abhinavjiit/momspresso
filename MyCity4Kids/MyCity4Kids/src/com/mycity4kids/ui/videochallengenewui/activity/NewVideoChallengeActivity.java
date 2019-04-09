@@ -87,8 +87,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             jsonMyObject = extras.getString("Topic");
         }
         topic = new Gson().fromJson(jsonMyObject, Topics.class);
-
-
         pos = intent.getIntExtra("position", 0);
         challengeId = intent.getStringArrayListExtra("challenge");
         Display_Name = intent.getStringArrayListExtra("Display_Name");
@@ -130,7 +128,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         } catch (Exception e) {
             thumbNail.setImageResource(R.drawable.default_article);
         }
-        tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_txt)));
+        tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_video)));
         tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.all_videos_toolbar_title)));
 
 
@@ -188,7 +186,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
 
             } else {
                 ToastUtils.showToast(NewVideoChallengeActivity.this, "something went wrong at the server");
-
             }
         });
 

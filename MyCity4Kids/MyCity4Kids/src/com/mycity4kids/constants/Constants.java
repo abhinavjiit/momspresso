@@ -464,42 +464,6 @@ public class Constants {
         }
     }
 
-//    public enum TypeOfLanguagesCodes {
-//        LOCALE_ENGLISH("0", "en"), LOCALE_HINDI("1","hi"), LOCALE_MARATHI("2","mr"), LOCALE_BENGALI("3","bn"), LOCALE_TAMIL("4","ta"), LOCALE_TELUGU("5","te"),
-//        LOCALE_KANNADA("6","kn"), LOCALE_MALAYALAM("7","ml");
-//        private final String name;
-//        private final String id;
-//
-//        TypeOfLanguagesCodes(String i, String name) {
-//            this.name=name;
-//            this.id=i;
-//        }
-//
-//        public String getId(){
-//            return this.id;
-//        }
-//
-//        public String getName(){
-//            return this.name;
-//        }
-//
-//        public static String findById(String id) {
-//            for (TypeOfLanguagesCodes typeOfLanguagesCodes : TypeOfLanguagesCodes.values()) {
-//                if (id == typeOfLanguagesCodes.getId())
-//                    return typeOfLanguagesCodes.name;
-//            }
-//            return "";
-//        }
-//
-//        public static String findByName(String name) {
-//            for (TypeOfLanguagesCodes typeOfLanguagesCodes : TypeOfLanguagesCodes.values()) {
-//                if (name == typeOfLanguagesCodes.getName())
-//                    return typeOfLanguagesCodes.id;
-//            }
-//            return "";
-//        }
-//    }
-
     public enum PopListRequestType {
         INTEREST,
         DURABLES,

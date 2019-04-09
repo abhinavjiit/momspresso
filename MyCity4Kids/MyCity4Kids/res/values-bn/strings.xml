@@ -236,14 +236,13 @@
     <string name="permission_phone_state_rationale">আপনাকে সর্বশেষ বিষয়্গুলি সমন্ধে বিজ্ঞপ্তি জানাতে ফোনের অনুমতির প্রয়োজন</string>
     <string name="permision_available_init">সমস্ত প্রয়োজনীয় অনুমতি দেওয়া হল</string>
     <string name="permission_calendar_rationale">মনে রাখতে ক্যালেন্ডারের অনুমতি নিন</string>
-    <string name="permission_storage_story">Storage permission is required for publishing story.</string>
+    <!--<string name="permission_storage_story">Storage permission is required for publishing story.</string>-->
 
     <string name="home.toolbar.title">ট্রেন্ডিং</string>
     <string name="explore_listing.explore_categories.title">শ্রেনী বিশ্লেষণ করুন</string>
     <string name="explore_listing.explore_categories.meet_contributor">আমাদের লেখকেরা</string>
 
     <string name="home_screen.trending.title">ট্রেন্ডিং</string>
-    <string name="home_screen.notification.title">বিজ্ঞপ্তি</string>
     <string name="home_screen.suggested_topic.title">প্রস্তাবিত বিষয়গুলি</string>
     <string name="home_screen.profile.title">আমার অ্যাকাউন্ট</string>
     <string name="home_screen.select_an_option.title">আবিষ্কার</string>
@@ -376,7 +375,6 @@
     <string name="app_settings.tabbar.edit_prefs">পছন্দগুলি এডিট করুন</string>
     <string name="app_settings.tabbar.lang_prefs">পছন্দের ভাষাগুলি</string>
     <string name="app_settings.tabbar.change_password">পাসওয়ার্ড বদলান</string>
-    <string name="app_settings.tabbar.edit_profile">প্রোফাইল এডিট করুন</string>
 
     <string name="app_settings.edit_profile.hint_fn">নামের প্রথম অংশ</string>
     <string name="app_settings.edit_profile.hint_ln">নামের শেষ অংশ</string>
@@ -689,74 +687,91 @@
     <!--<string name="groups.anonymous">ANONYMOUS</string>-->
     <!--<string name="groups.membership_request_msg">We have received your request for joining this group. Your membership will be confirmed once it is approved by the moderators of this group.</string>-->
 
-    <string name="groups.moderator_invitation">Invite To Be a Moderator</string>
-    <string name="groups.unblock_member">Unblock Member</string>
-    <string name="groups.block_member">Block Member</string>
-    <string name="groups.remove_post">Remove Post</string>
-    <string name="groups.save_post">Save Post</string>
-    <string name="groups.delete_post">Delete Post</string>
-    <string name="groups.turn_notification_on">Turn On Notification</string>
-    <string name="groups.turn_notification_off">Turn Off Notification</string>
-    <string name="groups.enable_comment">Enable Comments</string>
-    <string name="groups.disable_comment">Disable Comments</string>
-    <string name="groups.report_post">Report This Post</string>
-    <string name="groups.block_this_user">Block This User</string>
-    <string name="groups.pin_post">Pin This Post To Top</string>
-    <string name="groups.unpin_post">Unpin This post</string>
-    <string name="groups.all_groups">সকল বিভাগ</string>
-    <string name="groups.groups">GROUPS</string>
-    <string name="groups.reported_by">Reported By</string>
-    <string name="groups.persons">Persons</string>
-    <string name="groups.no_action">No Action</string>
-    <string name="groups.block_user">Block User</string>
-    <string name="groups.hide_content">Hide Content</string>
-    <string name="groups.invite_members">INVITE MEMBERS</string>
-    <string name="groups.invite_family">You can invite your friends and family to this group</string>
-    <string name="groups.disable_notification">DISABLE NOTIFICATIONS</string>
-    <string name="groups.disable_notification_this_gp">Disable notifications from this group</string>
-    <string name="groups.leave_group">LEAVE GROUP</string>
-    <string name="groups.exit_gp">You can choose to exit group at any point in time</string>
-    <string name="groups.sure_leave_gp">Are you sure you want to leave this group</string>
-    <string name="groups.leave">Leave</string>
-    <string name="groups.membership_req">MEMBERSHIP REQUEST</string>
-    <string name="groups.now_member_gp">You are now member of the group</string>
-    <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
-    <string name="groups.support_groups">সাপোর্ট গ্ৰুপ</string>
-    <string name="groups.post_helpful">Helpful</string>
-    <string name="groups.post_nothelpful">Not Helpful</string>
-    <string name="groups.summary">SUMMARY</string>
-    <string name="groups.add_image">ADD IMAGE</string>
-    <string name="groups.image_poll">IMAGE POLL</string>
-    <string name="groups.text_poll">TEXT POLL</string>
-    <string name="groups.anonymous">ANONYMOUS</string>
-    <string name="groups.anyone_join">Anyone can join</string>
-    <string name="groups.closed_gp">Closed group</string>
-    <string name="groups.invitation_only_gp">Invitation only group</string>
-    <string name="groups.created">Created</string>
-    <string name="groups.member_label">MEMBERS</string>
-    <string name="groups.sections.about">ABOUT</string>
-    <string name="groups.sections.discussions">DISCUSSION</string>
+
+
+
+
+    <string name="groups.moderator_invitation">মডারেটর হওয়ার জন্য আমন্ত্রণ করুন</string>
+    <string name="groups.unblock_member">সদস্যকে আনব্লক করুন </string>
+    <string name="groups.block_member">সদস্যকে ব্লক করুন</string>
+    <string name="groups.remove_post">পোস্টটিকে সরান </string>
+    <string name="groups.save_post">পোস্টটিকে সেভ করুন</string>
+    <string name="groups.delete_post">পোস্টটি কে সরান</string>
+    <string name="groups.turn_notification_on">নোটিফিকেশন অন করুন</string>
+    <string name="groups.turn_notification_off">নোটিফিকেশন অফ করুন</string>
+    <string name="groups.enable_comment">কমেন্টস সক্রিয় করুন </string>
+    <string name="groups.disable_comment">কমেন্টস নিষ্ক্রিয় করুন</string>
+    <string name="groups.report_post">এই পোস্ট কে রিপোর্ট করুন</string>
+    <string name="groups.block_this_user">এই ব্যবহারকারী কে ব্লক করুন</string>
+    <string name="groups.pin_post">পোস্টটিকে পেজের শীর্ষে পিন করুন</string>
+    <string name="groups.unpin_post">এই পোস্টটি কে আনপিন  করুন</string>
+    <string name="groups.all_groups">সকল গ্রুপ</string>
+    <string name="groups.groups">গ্রুপ</string>
+    <string name="groups.join_label">আপনি যে সকল গ্রুপের  সদস্য</string>
+    <string name="groups.reported_content">যে বস্তুটিকে রিপোর্ট করা হয়েছে</string>
+    <string name="groups.reported_by">যাদের দ্বারা রিপোর্ট হয়েছে</string>
+    <string name="groups.persons">ব্যক্তিসকল</string>
+    <string name="groups.no_action">কোনো আচরণ নয়</string>
+    <string name="groups.block_user">ব্যবহারকারী কে ব্লক করুন</string>
+    <string name="groups.hide_content">বিষয়টিকে আড়াল করুন</string>
+    <string name="groups.invite_members">সদস্যদের আমন্ত্রিত করুন</string>
+    <string name="groups.invite_family">আপনি আপনার বন্ধু ও পরিজনকে এই গ্রুপে যোগদান করতে আমন্ত্রিত করতে পারেন</string>
+    <string name="groups.disable_notification">নোটিফিকেশন নিষ্ক্রিয় করা হয়েছে</string>
+    <string name="groups.disable_notification_this_gp">এই গ্রুপ থেকে নোটিফিকেশন নিষ্ক্রিয় করুন</string>
+    <string name="groups.leave_group">গ্রুপ ত্যাগ করুন</string>
+    <string name="groups.exit_gp">আপনি যেকোনো সময়ে গ্রুপ ত্যাগ করার সিদ্ধান্ত নিতে পারেন</string>
+    <string name="groups.sure_leave_gp">আপনি নিশ্চিত যে আপনি গ্রুপ ছাড়তে আগ্রহী</string>
+    <string name="groups.view_all_reported">এই গ্রুপের সকল রিপোর্টেড কনটেন্ট এখানে দেখুন</string>
+    <string name="groups.leave">ত্যাগ করুন</string>
+    <string name="groups.membership_req">সদস্য হওয়ার অনুরোধ</string>
+    <string name="groups.now_member_gp">আপনি এখন এই গ্রুপের সদস্য</string>
+    <string name="groups.approval_req_sent">আপনার অনুরোধ অনুমোদনের জন্য গ্রুপ অ্যাডমিনের কাছে পাঠানো হয়েছে</string>
+    <string name="groups.support_groups">সাপোর্ট গ্রুপ</string>
+    <string name="groups.post_helpful">সাহায্যকারী</string>
+    <string name="groups.post_nothelpful">সাহায্যকারী নয়</string>
+    <string name="groups.add_image">ইমেজ যোগ করুন</string>
+    <string name="groups.image_poll">ইমেজ পোল</string>
+    <string name="groups.text_poll">টেক্সট পোল</string>
+    <string name="groups.anonymous">অজ্ঞাতনামা</string>
+    <string name="groups.anyone_join">যেকোনো ব্যক্তি যোগ দিতে পারেন</string>
+    <string name="groups.closed_gp">সংরক্ষিত গ্রুপ</string>
+    <string name="groups.invitation_only_gp">একমাত্র আমন্ত্রনের দ্বারা যোগ দিতে পারেন যে গ্রুপে</string>
+    <string name="groups.member_label">সদস্য</string>
+    <string name="groups.sections.discussions">আলোচনা</string>
+    <string name="groups.sections.photos">ফটো</string>
+    <string name="groups.sections.polls">পোল</string>
+    <string name="groups.membership_pending">সদস্যপদ মুলতুবি রাখা আছে</string>
+    <string name="groups.leave_be_back">এটি সাময়িক, আমি ফিরে আসবো</string>
+    <string name="groups.spend_time">আমি অধিক সময় ব্যতীত করছি মম্স্প্রেস্সো ব্যবহার করে.</string>
+    <string name="groups.not_useful">আমার কাছে মম্স্প্রেস্সো উপযোগী নয়.</string>
+    <string name="groups.how_to_use">আমি  বুঝতে পারছিনা  কিভাবে মম্স্প্রেস্সো ব্যবহার  করবো</string>
+    <string name="groups.user_blocked_msg">আপনাকে এই গ্রুপ থেকে ব্লক করা হয়েছে</string>
+    <string name="groups.user_membership_rejected_msg">এই গ্রুপ থেকে আপনার সদস্যপদ অস্বীকার করা হয়েছে</string>
+    <string name="groups.join_group">গ্রুপে যোগদান করুন</string>
+    <string name="groups.ask_something">এখানে প্রশ্ন করুন ...</string>
+    <string name="groups.edit_post">পোস্ট এডিট করুন</string>
+    <string name="groups.total_votes">সমগ্র ভোট সংখ্যা: %1$s</string>
+    <string name="groups.enable.notification">নোটিফিকেশন সক্রিয় করুন </string>
+    <string name="groups.disable.notification">নোটিফিকেশন নিস্ক্রিয় করুন</string>
+    <string name="groups.posts">নপোস্টস</string>
+    <string name="groups.join_support_gp">সাপোর্ট গ্রুপে যোগদান করুন</string>
+    <string name="groups.not_alone">#আপনি একা নন</string>
+    <string name="permission_storage_story">গল্প পাবলিশ করার জন্য স্টোরেজের অনুমতি পাওয়া প্রয়োজনীয়.</string>
+    <string name="app_settings.tabbar.edit_profile">প্রোফাইল এডিট করুন</string>
+    <string name="home_screen.notification.title">নোটিফিকেশন</string>
     <string name="groups.sections.blogs">ব্লগস</string>
-    <string name="groups.sections.photos">PHOTOS</string>
+    <string name="groups.search_in">খুঁজুন</string>
+    <string name="no_story.be_first">এই ক্যাটাগরির প্রথম গল্পটি আপনি লিখুন</string>
+    <string name="groups.sections.about">তথ্য সংক্রান্ত</string>
+    <string name="groups.post_label">পোস্টস</string>
+
+    <string name="groups.summary">SUMMARY</string>
+    <string name="groups.created">Created</string>
     <string name="groups.sections.videos">VIDEOS</string>
     <string name="groups.sections.top_posts">TOP POSTS</string>
-    <string name="groups.sections.polls">POLLS</string>
-    <string name="groups.search_in">Search</string>
     <string name="groups.join_form">JOINING FORM</string>
-    <string name="groups.membership_pending">Membership Pending</string>
     <string name="groups.why_leave">Please let us know why you are leaving.</string>
-    <string name="groups.leave_be_back">This is temporary. I\'ll be back.</string>
-    <string name="groups.spend_time">I spend too much time using Momspresso.</string>
-    <string name="groups.not_useful">I don\'t find Momspresso useful.</string>
-    <string name="groups.how_to_use">I don\'t understand how to use Momspresso</string>
-    <string name="groups.user_blocked_msg">You have been blocked from this group</string>
-    <string name="groups.user_membership_rejected_msg">Your membership has been rejected for this group</string>
-    <string name="groups.join_group">JOIN GROUP</string>
-    <string name="groups.ask_something">Ask something ...</string>
-    <string name="groups.post_label">POST</string>
-    <string name="groups.edit_post">EDIT POST</string>
 
-    <string name="no_story.be_first">এই ক্যাটাগরির প্রথম গল্পটি আপনি লিখুন</string>
 
     <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
@@ -796,7 +811,7 @@
     <string name="create_content">প্রত্যেক মায়ের জীবনে একটা গল্প আছে। আপনার জীবনেও কি এমন কোন গল্প আছে? আপনার গল্পটিকে ব্লগের মাধ্যমে, ১০০শব্দের গল্প হিসাবে বা ভিডিও হিসাবে পোস্ট করে সকলের সাথে ভাগ করে নিন |</string>
     <string name="write_about_yourself">Write about yourself</string>
     <string name="child_details">বাচ্চা সংক্রান্ত তথ্য</string>
-    <string name="add_child_details">Add Child Details</string>
+    <string name="add_child_details"> সন্তানের বিষয়ে বিশদে জানান</string>
     <string name="contact_details">যোগাযোগের তথ্য</string>
 
     <string name="navigation_bar.home">হোম</string>
@@ -813,7 +828,7 @@
     <string name="coachmark.edit_profile"> ব্লগার মিটিং এবং স্পনসর্ড আর্টিকেলগুলিতে আপডেট থাকার জন্য আপনার প্রোফাইলটি এডিট এবং আপডেট করুন।</string>
     <string name="coachmark.app_setting">আপনি এক জায়গায় আপনার অ্যাপ্লিকেশন এবং পছন্দের ভাষা এডিট করতে পারেন। নোটিফিকেশন এবং বিভাগ দেখার জন্য এখানে সাবস্ক্রাইব করুন।</string>
     <string name="coachmark.publish">আপনার প্রকাশিত আর্টিকেল ,গল্প, এবং মম ভ্লগস এক জায়গায় দেখুন। ডিসকভার : আবিষ্কার</string>
-    <string name="mobile">MOBILE NO</string>
+    <string name="mobile">মোবাইল নম্বর</string>
     <string name="continue_writing">লিখতে থাকুন (ড্রাফট)</string>
     <string name="app_settings">অ্যাপ সেটিংস</string>
     <string name="create_new">নতুন করে তৈরী করুন</string>
@@ -911,10 +926,10 @@
 
     //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
-    <string name="group_add_comment_text">ADD COMMENT</string>
-    <string name="group_invite_text">Invite</string>
+    <string name="group_add_comment_text">কমেন্টস লিখুন</string>
+    <string name="group_invite_text">আমন্ত্রণ</string>
     <string name="group_comment_type_here_text">Type here</string>
-    <string name="group_comment_be_the_first_text">Be the first one to comment</string>
+    <string name="group_comment_be_the_first_text">আপনি প্রথম কমেন্টটি লিখুন</string>
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
@@ -925,7 +940,11 @@
     <string name="add_twitter">টুইটার হ্যান্ডেল যোগ করুন</string>
 
     <string name="language">ভাষা</string>
+
     <string name="group_comment_start_type_here_text">Start Typing</string>
 
+
+    <string name="about_video">চ্যালেঞ্জ সংক্রান্ত তথ্য</string>
+    <string name="myprofile.section.mom_bottom_label">"মায়েদের ভিডিও ব্লগস "</string>
 
 </resources>

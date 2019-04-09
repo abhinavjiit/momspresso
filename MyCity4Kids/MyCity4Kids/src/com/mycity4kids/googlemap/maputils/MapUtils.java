@@ -181,18 +181,7 @@ public class MapUtils {
 			
 		}
 		latLngs[endLatList.size()] = new LatLng(Double.parseDouble(endLatList.get(endLatList.size() -1)), Double.parseDouble(endLngList.get(endLngList.size() -1)));
-		/*latLngs[0] = getLocation(context);
-		
-		for(int i=0; i< endLatList.size(); i++){
-			
-			LatLng endLatLng = new LatLng(Double.parseDouble(endLatList.get(i)), Double.parseDouble(endLngList.get(i)));
-			
-			
-			latLngs[i+1] = endLatLng;
-//			latLngs[i + 1] = startLatLng;
-			
-		}*/
-		
+
 		return latLngs;
 	}
 

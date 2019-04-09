@@ -51,40 +51,6 @@ public class ParentingFilterController extends BaseController {
     @Override
     public void handleResponse(Response response) {
         switch (response.getDataType()) {
-//            case AppConstants.PARENTING_STOP_ARTICLES_REQUEST:
-//                try {
-//                    String responseData = new String(response.getResponseData());
-//                    Log.i("Articles Response", responseData);
-//                    CommonParentingResponse articleResponse = new Gson().fromJson(responseData, CommonParentingResponse.class);
-//                    response.setResponseObject(articleResponse);
-////                    String responseData = new String(response.getResponseData());
-////                    String removeHtmlData = StringEscapeUtils.unescapeHtml4(responseData);
-////                    Log.i("Article Response", removeHtmlData);
-////                    CommonParentingResponse articleBlogResponse = new Gson().fromJson(removeHtmlData, CommonParentingResponse.class);
-////                    response.setResponseObject(articleBlogResponse);
-//
-//                    sendResponseToScreen(response);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    sendResponseToScreen(null);
-//                }
-//
-//                break;
-//            case AppConstants.TOP_PICKS_REQUEST:
-//            case AppConstants.PARENTING_STOP_BLOGS_REQUEST:
-//                try {
-//                    String responseData = new String(response.getResponseData());
-//                    String removeHtmlData = StringEscapeUtils.unescapeHtml4(responseData);
-//                    Log.i("Article OR Blogs Or TopPics Response", removeHtmlData);
-//                    CommonParentingResponse articleBlogResponse = new Gson().fromJson(removeHtmlData, CommonParentingResponse.class);
-//                    response.setResponseObject(articleBlogResponse);
-//
-//                    sendResponseToScreen(response);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    sendResponseToScreen(null);
-//                }
-//                break;
 
             case AppConstants.PARENTING_FILTER_LIST:
                 try {

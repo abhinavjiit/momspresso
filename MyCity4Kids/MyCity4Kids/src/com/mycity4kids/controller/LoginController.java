@@ -42,7 +42,6 @@ public class LoginController extends BaseController {
     @Override
     public ServiceRequest getData(int requestType, Object requestData) {
         ServiceRequest serviceRequest = new ServiceRequest();
-        //	serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
         serviceRequest.setContext(activity);
@@ -51,13 +50,9 @@ public class LoginController extends BaseController {
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-        //	serviceRequest.setUrl("http://54.251.100.249/webservices/apiusers/login?emailId=saur1234234123233@gmail.com&password=123456");
-        //	serviceRequest.setUrl(AppConstants.LOGIN_URL+getAppendUrl(requestType,_requestModel));
         serviceRequest.setUrl(AppConstants.NEW_LOGIN_URL);
-
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);
-
         return serviceRequest;
     }
 
@@ -68,8 +63,6 @@ public class LoginController extends BaseController {
             case AppConstants.NEW_LOGIN_REQUEST:
                 try {
                     String responseData = new String(response.getResponseData());
-                /*String[] data=responseData.split("-->");
-                String finalData=data[1].trim();*/
                     Log.i("Login Response", responseData);
                     UserResponse _loginResponse = new Gson().fromJson(responseData, UserResponse.class);
                     response.setResponseObject(_loginResponse);
@@ -175,18 +168,9 @@ public class LoginController extends BaseController {
         try {
             String value;
             value = _prefs.getString("isLoggedIn", "false");
-
             mSavedUser.setLoggedIn(Boolean.parseBoolean(value));
-
-            //value = _prefs.getString("emailId", "");
-            //value = _prefs.getString("password", "");
-
-
             value = _prefs.getString("userId", "");
-
             mSavedUser.getResult().setUserId(value);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -198,7 +182,6 @@ public class LoginController extends BaseController {
     public static void clearLoginStatus(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(SAVED_USER_DETAILS, Context.MODE_PRIVATE);
         Editor editor = prefs.edit();
-
         editor.putString("emailId", "");
         editor.putString("password", "");
         editor.putString("isLoggedIn", "");

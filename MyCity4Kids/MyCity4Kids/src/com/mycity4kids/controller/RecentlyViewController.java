@@ -76,32 +76,10 @@ public class RecentlyViewController extends BaseController {
     }
 
     private String getAppendUrl(Object pRequestData) {
-//		String device_id=DataUtils.getDeviceId(getActivity());
-//		GPSTracker getCurrentLocation = new GPSTracker(getActivity());
-//		double _latitude = getCurrentLocation.getLatitude();
-//		double _longitude = getCurrentLocation.getLongitude();
-//
-//		//String type=(String)pRequestData;
-//		UserTable _table=new UserTable((BaseApplication)getActivity().getApplicationContext());
-//		int userId=_table.getUserId();
-        /*if(userId<=0){
-            RecentlyViewedActivity _activity=	(RecentlyViewedActivity)getActivity();
-			_activity.showToast("User should be logged in");
-			return "";
-		}
-*/
         ExternalEventModel _requestModel = (ExternalEventModel) pRequestData;
         fromEvents = _requestModel.isfromEvents();
 
         StringBuilder builder = new StringBuilder();
-//		if (! StringUtils.isNullOrEmpty(""+userId)) {
-//			builder.append("user_id=").append(userId);
-//		}
-//
-//
-//		if (! StringUtils.isNullOrEmpty(device_id)) {
-//			builder.append("&imei_no=").append(device_id);
-//		}
         builder.append("&user_id=").append(SharedPrefUtils.getUserDetailModel(context).getId());
         builder.append("&type=").append(_requestModel.isfromEvents() ? "events" : "business");
         return builder.toString().replace(" ", "%20");

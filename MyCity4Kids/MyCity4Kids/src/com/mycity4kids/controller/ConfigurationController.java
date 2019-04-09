@@ -28,13 +28,10 @@ public class ConfigurationController extends BaseController {
     @Override
     public ServiceRequest getData(int requestType, Object requestData) {
         VersionApiModel _versionAPiModel = (VersionApiModel) requestData;
-
         ServiceRequest serviceRequest = new ServiceRequest();
-        //serviceRequest.setHttpHeaders(header, header);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
         serviceRequest.setRequestData(requestData);
         serviceRequest.setContext(context);
-        //serviceRequest.setPostData(setRequestParameters((LoginRequest)requestData));
         serviceRequest.setDataType(requestType);
         serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, new String[]{"application/json"});
         serviceRequest.setResponseController(this);
@@ -84,7 +81,6 @@ public class ConfigurationController extends BaseController {
 
                 try {
                     String responseData = new String(response.getResponseData());
-                    //Log.i("MyProfileLocationSearchResponse", responseData);
                     ConfigurationApiModel _configurationResponse = new Gson().fromJson(responseData, ConfigurationApiModel.class);
                     response.setResponseObject(_configurationResponse);
 

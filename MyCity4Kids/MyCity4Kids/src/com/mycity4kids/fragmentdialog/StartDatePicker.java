@@ -40,7 +40,6 @@ public class StartDatePicker extends DialogFragment implements DatePickerDialog.
         } else {
 
             fired = true;
-            //  String date= String.valueOf(year)+"-"+String.valueOf(month + 1)+"-"+String.valueOf(day);
             String date = String.valueOf(day) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(year);
             iGetDate.getDateValue(date);
         }

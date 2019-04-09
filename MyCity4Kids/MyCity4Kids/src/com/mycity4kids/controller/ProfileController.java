@@ -52,10 +52,6 @@ public class ProfileController extends BaseController {
                 serviceRequest.setUrl(AppConstants.VIEW_PROFILE_URL);
                 break;
             case AppConstants.SAVE_PROFILE_REQUEST:
-
-//			JSONObject postJson = (JSONObject) requestData;
-//			Log.d(LOG_TAG, "Save Profille: Json" + postJson.toString());
-//			serviceRequest.setPostData(new ByteArrayEntity(postJson.toString().getBytes()));
                 serviceRequest.setPostData(setSaveProfileReqParams(requestData));
                 serviceRequest.setUrl(AppConstants.SAVE_PROFILE_URL);
                 break;
@@ -122,25 +118,6 @@ public class ProfileController extends BaseController {
             }
 
             Log.i("Save Profile: Json", new Gson().toJson(nameValuePairs));
-
-/*			KidsInformation[] stockArr = new KidsInformation[kidsInformationList.size()];
-			stockArr = kidsInformationList.toArray(stockArr);
-			String finalValue=stockArr.toString();
-			nameValuePairs.add(new BasicNameValuePair("KidsInfo", finalValue));*/
-			/*for (KidsInformation kidsInfo : kidsInformationList) {
-				List<NameValuePair> kidData = new ArrayList<NameValuePair>();
-				kidData.add(new BasicNameValuePair("name", kidsInfo.getName()));
-				kidData.add(new BasicNameValuePair("gender", kidsInfo.getGender()));
-				kidData.add(new BasicNameValuePair("dob", kidsInfo.getDob()));
-				String kid = new Gson().toJson(kidData);
-				kid.replace("\", " ");
-				nameValuePairs.add(new BasicNameValuePair("KidsInformation[]", ));
-			}
-			
-			String s = new Gson().toJson(nameValuePairs);
-			Log.i("Save Profile: Json", s);
-			Log.i("Save Profile", nameValuePairs.toString());*/
-            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
 
         } catch (Exception e) {
             Log.e(LOG_TAG, "setSaveProfileReqParams", e);

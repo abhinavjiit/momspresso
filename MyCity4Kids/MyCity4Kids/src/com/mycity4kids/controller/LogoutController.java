@@ -91,10 +91,6 @@ public class LogoutController extends BaseController {
         try {
             SharedPrefUtils.setProfileImgUrl(context, "");
             SharedPrefUtils.setAppointmentTimeSatmp(context, 0);
-
-            //UserTable userTable = new UserTable((BaseApplication)((Activity)context).getApplication()) ;
-            //	userTable.deleteAll();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,11 +105,7 @@ public class LogoutController extends BaseController {
         try {
             nameValuePairs.add(new BasicNameValuePair("userId", "" + SharedPrefUtils.getUserDetailModel(mActivity).getId()));
             encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
-            //	String finalData=sessionId+"="+sessionId;T
-
             System.out.println("logout  data " + nameValuePairs.toString());
-            // encodedEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
-            // "application/x-www-form-urlencoded"));
         } catch (Exception e) {
             // TODO: handle exception
         }
