@@ -181,17 +181,14 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
             textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             textPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
-            if (postList != null && postList.size() != 0) {
-                if (postList.get(position).getResponseCount() != 0) {
-                    textPostViewHolder.commentLayout.setVisibility(View.GONE);
-                    textPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
-                }
+            if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
+                textPostViewHolder.commentLayout.setVisibility(View.GONE);
+                textPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {
                 textPostViewHolder.beTheFirstOne.setVisibility(View.VISIBLE);
                 textPostViewHolder.commentLayout.setVisibility(View.VISIBLE);
                 textPostViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
                 textPostViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
-
             }
             textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             if (postList.get(position).getIsAnnon() == 1) {

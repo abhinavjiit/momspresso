@@ -925,5 +925,7 @@
     <string name="add_twitter">টুইটার হ্যান্ডেল যোগ করুন</string>
 
     <string name="language">ভাষা</string>
+    <string name="group_comment_start_type_here_text">Start Typing</string>
+
 
 </resources>

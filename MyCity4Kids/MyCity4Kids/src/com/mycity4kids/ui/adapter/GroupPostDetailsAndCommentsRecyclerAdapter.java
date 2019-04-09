@@ -257,7 +257,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 audioCommentViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null && groupPostResult.getUserInfo().getUserTag().get(0) != null) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         audioCommentViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {

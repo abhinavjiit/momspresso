@@ -1405,7 +1405,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     SharedPrefUtils.clearSavedReplyData(GroupPostDetailActivity.this, groupId, postId, groupPostResponse.getData().getResult().getParentId());
                     groupPostCommentResult.setUserInfo(userDetailResult);
                     completeResponseList.add(groupPostCommentResult);
-                    postData.setResponseCount(completeResponseList.size() - 1);
+                    postData.setResponseCount(postData.getResponseCount() + 1);
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(completeResponseList.size());
                 } else {
@@ -1542,6 +1542,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                             break;
                         }
                     }
+         //           postData.setResponseCount(postData.getResponseCount() + 1);
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
                 } else {
                     showToast("Failed to add reply. Please try again");
@@ -1686,7 +1687,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         viewGroupPostCommentsRepliesDialogFragment.dismiss();
                     }
 
-                    postData.setResponseCount(completeResponseList.size() - 1);
+                    postData.setResponseCount(postData.getResponseCount() - 1);
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
 //                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "reply");
                 } else {
@@ -1916,12 +1917,17 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void onBackPressed() {
+
+
+        Intent intent = new Intent();
+        intent.putExtra("completeResponseList", completeResponseList);
+        intent.putExtra("postId", postId);
+        setResult(RESULT_OK, intent);
+
         super.onBackPressed();
         if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
             groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
         }
-
-
     }
 
     @Override
@@ -1931,10 +1937,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
             groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
         }
-        Intent intent = new Intent();
-        intent.putExtra("completeResponseList", completeResponseList);
-        intent.putExtra("postId", postId);
-        setResult(RESULT_OK, intent);
+
     }
 
     @Override

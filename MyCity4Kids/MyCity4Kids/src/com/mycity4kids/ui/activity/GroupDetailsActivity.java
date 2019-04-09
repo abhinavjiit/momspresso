@@ -1828,7 +1828,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     }
 
                 }
-             /*   if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1) {
+                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1) {
                     ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
                     int postId = data.getIntExtra("postId", -1);
 
@@ -1842,7 +1842,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     }
 
 
-                }*/
+                }
                 else {
                     MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                     try {

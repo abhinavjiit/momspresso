@@ -179,7 +179,7 @@
         android:clickable="true"
         android:gravity="bottom"
         android:padding="5dp"
-        android:text="20 Comments"
+        android:text="Comments"
         android:textColor="@color/app_red"
         android:textSize="12sp"
         app:fontName="oswald.ttf" />
