@@ -17,6 +17,8 @@
     <string name="please_wait">कृपया थांबा ...</string>
     <string name="no_result_txt">निकाल उपलब्ध नाही</string>
     <string name="went_wrong">काहीतरी चुकलंय </string>
+    <string name="group_comment_start_type_here_text">Start Typing</string>
+
     <string name="server_went_wrong">सर्वर मध्ये काहीतरी चुकलंय </string>
     <string name="no_data">डेटा उपलब्ध नाही </string>
     <string name="toast_network_error">Device is out of network coverage.</string>

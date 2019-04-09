@@ -975,7 +975,11 @@
     <string name="add_youtube">ಯುಟ್ಯೂಬ್‍ ಚಾನಲ್ ಲಿಂಕ್ ಅನ್ನು ಸೇರಿಸಿ</string>
     <string name="add_twitter">ಟ್ವಿಟರ್‍ ಹ್ಯಾಂಡಲ್‍ ಗೆ ಸೇರಿಸಿ</string>
     <string name="language">LANGUAGE</string>
+
+    <string name="group_comment_start_type_here_text">Start Typing</string>
+
     <string name="about_video">ಸುಮಾರು</string>
     <string name="myprofile.section.mom_bottom_label">ಮಾಮ್ ವ್ಲೋಗ್ಸ್</string>
+
 
 </resources>

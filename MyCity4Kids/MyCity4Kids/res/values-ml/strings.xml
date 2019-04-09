@@ -13,6 +13,8 @@
     <string name="write_review_prompt">What would you like to review?</string>
 
     <string name="loading_txt">Loading&#8230;</string>
+    <string name="group_comment_start_type_here_text">Start Typing</string>
+
 
     <string name="subcategoryName">subCategory</string>
     <string name="location_info">To get personalized recommendations, Please select your preferred location</string>

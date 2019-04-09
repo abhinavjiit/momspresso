@@ -17,7 +17,7 @@ public class VideoChallengePagerAdapter extends FragmentPagerAdapter {
     private String selectedStreamUrl;
     private Topics topic;
     String challengeRules;
-    VideoChallengeDiscription discription;
+    private VideoChallengeDiscription discription;
     VideoChallengeListing listing;
 
     public VideoChallengePagerAdapter(FragmentManager fm, String selected_Name, String selectedActiveUrl, String selectedId, Topics topic, String selectedStreamUrl, String challengeRules) {

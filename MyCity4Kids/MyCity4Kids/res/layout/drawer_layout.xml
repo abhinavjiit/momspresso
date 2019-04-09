@@ -185,6 +185,7 @@
             android:layout_below="@+id/divider2"
             android:layout_marginTop="16dp">
 
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/selectedLangtext"
                 android:layout_width="match_parent"
@@ -209,20 +210,37 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:drawableRight="@drawable/arrow_right"
+                android:layout_marginRight="33dp"
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/app_red"
-
                 android:gravity="center"
                 android:paddingRight="10dp"
                 android:text="HINDI"
                 android:textAllCaps="true"
                 android:textColor="@color/app_red"
                 android:textSize="14sp"
+                android:visibility="visible"
                 app:fontName="oswald.ttf" />
 
+            <ImageView
+                android:id="@+id/langImageRightArrow"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="25dp"
+                android:paddingTop="1dp"
+                android:src="@drawable/arrow_right"
+                android:tint="@color/app_red"
+                android:visibility="visible" />
+
+            <View
+                android:id="@+id/langView"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
 
         </RelativeLayout>
+
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/settingTextView"

@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -39,7 +40,6 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
@@ -723,11 +723,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
             try {
                 if (response.isSuccessful()) {
+
+
                     GroupsActionResponse groupsActionResponse = response.body();
                     if (groupsActionResponse.getData().getResult().size() == 1) {
                         if (groupsActionResponse.getData().getResult().get(0).getResponseId() == 0) {
                             if (postData.getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
-                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                if (groupsActionResponse.getData().getResult().get(0).getType().equals(AppConstants.PUBLIC_VISIBILITY)) {
                                     postData.setHelpfullCount(postData.getHelpfullCount() + 1);
                                 } else {
                                     postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
@@ -1042,11 +1044,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             try {
                 if (response.isSuccessful()) {
                     GroupPostResponse updatePostResponse = response.body();
+
 //                    if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
 //                        pinPostTextView.setText(getString(R.string.groups_unpin_post));
 //                    } else {
 //                        pinPostTextView.setText(getString(R.string.groups_pin_post));
 //                    }
+
                     setResult(RESULT_OK);
                     onBackPressed();
                 } else {
@@ -1401,6 +1405,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     SharedPrefUtils.clearSavedReplyData(GroupPostDetailActivity.this, groupId, postId, groupPostResponse.getData().getResult().getParentId());
                     groupPostCommentResult.setUserInfo(userDetailResult);
                     completeResponseList.add(groupPostCommentResult);
+                    postData.setResponseCount(postData.getResponseCount() + 1);
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(completeResponseList.size());
                 } else {
@@ -1537,6 +1542,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                             break;
                         }
                     }
+         //           postData.setResponseCount(postData.getResponseCount() + 1);
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
                 } else {
                     showToast("Failed to add reply. Please try again");
@@ -1680,6 +1686,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     if (viewGroupPostCommentsRepliesDialogFragment != null) {
                         viewGroupPostCommentsRepliesDialogFragment.dismiss();
                     }
+
+                    postData.setResponseCount(postData.getResponseCount() - 1);
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
 //                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "reply");
                 } else {
@@ -1909,11 +1917,17 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void onBackPressed() {
+
+
+        Intent intent = new Intent();
+        intent.putExtra("completeResponseList", completeResponseList);
+        intent.putExtra("postId", postId);
+        setResult(RESULT_OK, intent);
+
         super.onBackPressed();
         if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
             groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
         }
-        //   setResult(RESULT_OK,);
     }
 
     @Override
@@ -1923,6 +1937,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
             groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
         }
+
     }
 
     @Override

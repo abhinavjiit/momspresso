@@ -172,7 +172,24 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
+            if (postList.get(position).getIsAnnon() == 1) {
+                textPostViewHolder.userTag.setVisibility(View.GONE);
+            } else {
+                if (postList != null && postList.size() != 0) {
+                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
+                            textPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                            textPostViewHolder.userTag.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        textPostViewHolder.userTag.setVisibility(View.GONE);
+                    }
 
+                } else {
+                    textPostViewHolder.userTag.setVisibility(View.GONE);
+
+                }
+            }
             textPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(textPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -181,7 +198,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
             textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             textPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
-            if (postList.get(position).getResponseCount() != 0) {
+            if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPostViewHolder.commentLayout.setVisibility(View.GONE);
                 textPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {
@@ -189,7 +206,6 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 textPostViewHolder.commentLayout.setVisibility(View.VISIBLE);
                 textPostViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
                 textPostViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
-
             }
             textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             if (postList.get(position).getIsAnnon() == 1) {
@@ -204,17 +220,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
-            if (postList.get(position).getIsAnnon() == 1) {
-                textPostViewHolder.userTag.setVisibility(View.GONE);
-            } else {
-                if (postList != null && postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
-                    if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
-                        textPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
-                    } else {
-                        textPostViewHolder.userTag.setVisibility(View.GONE);
-                    }
-                }
-            }
+
 
         } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
@@ -222,12 +228,20 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             if (postList.get(position).getIsAnnon() == 1) {
                 audioCommentViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (postList != null && postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
-                    if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
-                        audioCommentViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                if (postList != null && postList.size() != 0) {
+                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                            audioCommentViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                            audioCommentViewHolder.userTag.setVisibility(View.VISIBLE);
+
+                        }
                     } else {
                         audioCommentViewHolder.userTag.setVisibility(View.GONE);
                     }
+
+                } else {
+                    audioCommentViewHolder.userTag.setVisibility(View.GONE);
+
                 }
             }
 
@@ -288,7 +302,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             }
 
             audioCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getFormattedDateGroups(postList.get(position).getCreatedAt()));
-            if (postList.get(position).getResponseCount() != 0) {
+            if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 audioCommentViewHolder.commentLayout.setVisibility(View.GONE);
                 audioCommentViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {
@@ -305,12 +319,20 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             if (postList.get(position).getIsAnnon() == 1) {
                 mediaPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (postList != null && postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
-                    if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
-                        mediaPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                if (postList != null && postList.size() != 0) {
+                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                            mediaPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                            mediaPostViewHolder.userTag.setVisibility(View.VISIBLE);
+
+                        }
                     } else {
                         mediaPostViewHolder.userTag.setVisibility(View.GONE);
                     }
+
+                } else {
+                    mediaPostViewHolder.userTag.setVisibility(View.GONE);
+
                 }
             }
             mediaPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
@@ -321,7 +343,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
             mediaPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             mediaPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
-            if (postList.get(position).getResponseCount() != 0) {
+            if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 mediaPostViewHolder.commentLayout.setVisibility(View.GONE);
                 mediaPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {
@@ -351,12 +373,20 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             if (postList.get(position).getIsAnnon() == 1) {
                 textPollPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (postList != null && postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
-                    if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
-                        textPollPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                if (postList != null && postList.size() != 0) {
+                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                            textPollPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                            textPollPostViewHolder.userTag.setVisibility(View.VISIBLE);
+
+                        }
                     } else {
                         textPollPostViewHolder.userTag.setVisibility(View.GONE);
                     }
+
+                } else {
+                    textPollPostViewHolder.userTag.setVisibility(View.GONE);
+
                 }
             }
 
@@ -370,7 +400,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             textPollPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             textPollPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
-            if (postList.get(position).getResponseCount() != 0) {
+            if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPollPostViewHolder.commentLayout.setVisibility(View.GONE);
                 textPollPostViewHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {
@@ -431,12 +461,20 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             if (postList.get(position).getIsAnnon() == 1) {
                 imageHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (postList != null && postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
-                    if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
-                        imageHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                if (postList != null && postList.size() != 0) {
+                    if (postList.get(position) != null && postList.get(position).getUserInfo() != null && postList.get(position).getUserInfo().getUserTag() != null) {
+                        if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
+                            imageHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
+                            imageHolder.userTag.setVisibility(View.VISIBLE);
+
+                        }
                     } else {
                         imageHolder.userTag.setVisibility(View.GONE);
                     }
+
+                } else {
+                    imageHolder.userTag.setVisibility(View.GONE);
+
                 }
             }
             imageHolder.pollQuestionTextView.setText(postList.get(position).getContent());
@@ -460,7 +498,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             }
             imageHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             imageHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
-            if (postList.get(position).getResponseCount() != 0) {
+            if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 imageHolder.commentLayout.setVisibility(View.GONE);
                 imageHolder.postCommentsTextView.setText(postList.get(position).getResponseCount() + " " + localizedComment);
             } else {

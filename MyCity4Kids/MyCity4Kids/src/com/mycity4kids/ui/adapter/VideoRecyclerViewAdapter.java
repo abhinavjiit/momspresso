@@ -264,7 +264,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     } else {
                         bookmarkStatus = "1";
                     }
-                    ((ParallelFeedActivity) mContext).addRemoveBookmark(bookmarkStatus,position,responseData.getId());
+                    ((ParallelFeedActivity) mContext).addRemoveBookmark(bookmarkStatus, position,responseData.getAuthor().getId(), responseData.getId());
 
                 }
             });

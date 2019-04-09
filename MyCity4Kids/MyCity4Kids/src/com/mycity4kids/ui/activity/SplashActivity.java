@@ -365,7 +365,7 @@ public class SplashActivity extends BaseActivity {
                     navigateToNextScreen(true);
                 }
             }
-        }else{
+        } else {
             versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
             mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");
             versionApiModel.setAppUpdateVersion(version);
