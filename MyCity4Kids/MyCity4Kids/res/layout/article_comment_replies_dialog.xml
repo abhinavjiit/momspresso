@@ -32,20 +32,19 @@
     <RelativeLayout
         android:id="@+id/rLayout"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:background="#f0f0f0"
-        android:elevation="5dp"
-       >
+        android:elevation="5dp">
 
 
         <RelativeLayout
             android:id="@+id/addCommentFAB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="@dimen/space_10"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
             android:background="@drawable/rectangular_border"
             android:gravity="center_vertical"
             android:visibility="visible">
@@ -56,8 +55,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/space_10"
-                android:padding="15dp"
                 android:gravity="center_vertical"
+                android:padding="14dp"
                 android:text="@string/group_comment_start_type_here_text"
                 android:textColor="#a1a4a8"
                 android:textSize="20sp"
