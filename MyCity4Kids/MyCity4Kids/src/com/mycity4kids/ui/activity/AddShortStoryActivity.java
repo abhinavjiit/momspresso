@@ -176,11 +176,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         chooseoptionradioButton.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-
-
                 ssTopicsText = ssTopicsList.get(i).getDisplay_name();
-
-
             }
         });
 
@@ -221,7 +217,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             tagsJson = getIntent().getStringExtra("tag");
             getTagListFromJason(tagsJson);
             updateTagListFromJson(tagsJson);
-
             recyclerView.setVisibility(View.GONE);
         }
 
@@ -768,6 +763,14 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             ssTopicsList.get(i).setIsSelected(false);
         }
         ssTopicsList.get(position).setIsSelected(true);
+
+        if(ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.VICHAAR_SAGAR_CATEGORY_ID)){
+            storyTitleEditText.setText(getString(R.string.story_text_title_hindi));
+            storyBodyEditText.setText(getString(R.string.story_text_description_hindi));
+        }else{
+            storyTitleEditText.setText(getString(R.string.short_s_add_title_hint));
+            storyBodyEditText.setText(getString(R.string.short_s_add_body_hint));
+        }
         adapter.notifyDataSetChanged();
     }
 

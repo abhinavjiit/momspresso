@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -196,7 +197,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private WebView mWebView;
     private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
     private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
-//    private FloatingActionButton commentFloatingActionButton;
+   private FloatingActionButton commentFloatingActionButton;
 
     private MyWebChromeClient mWebChromeClient = null;
     private View mCustomView;

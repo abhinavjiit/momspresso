@@ -4,6 +4,8 @@
     <string name="app_name">மாம்ஸ்ப்ரெஸ்ஸோ</string>
     <string name="unknown_person">தெரியாத</string>
     <string name="resend_email">ஈ-மெயிலை மீண்டும் அனுப்பவும்</string>
+    <string name="group_comment_start_type_here_text">Start Typing</string>
+
 
     <string name="write_review_prompt">நீங்கள் எதை விமர்சனம் செய்ய விரும்புகிறீர்கள்?</string>
 
@@ -933,4 +935,5 @@
 
     <string name="add_twitter">ட்விட்டர் ஹான்டிலை சேர்க்கவும்</string>
     <string name="about_video">இதைப் பற்றி</string>
+    <string name="myprofile.section.mom_bottom_label">மாம் விலாக்ஸ்</string>
 </resources>

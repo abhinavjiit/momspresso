@@ -16,6 +16,8 @@
     <string name="error_network">పరికరం నెట్వర్క్ కవరేజ్ లో లేదు</string>
     <string name="please_wait">దయచేసి వేచి ఉండండి...</string>
     <string name="no_result_txt">ఎలాంటి ఫలితం దొరకలేదు</string>
+    <string name="group_comment_start_type_here_text">Start Typing</string>
+
     <string name="went_wrong">ఎదో తప్పు జరిగింది</string>
     <string name="server_went_wrong">సర్వర్ దగ్గర ఎదో తప్పు జరిగింది</string>
     <string name="no_data">డేటా దొరకలేదు</string>
@@ -926,5 +928,6 @@
 
     <string name="language">LANGUAGE</string>
     <string name="about_video">విషయం</string>
+    <string name="myprofile.section.mom_bottom_label">మామ్ వీలాగ్స్</string>
 
 </resources>

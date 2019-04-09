@@ -1815,6 +1815,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 1111) {
+
                 if (data != null && data.getParcelableExtra("postDatas") != null) {
                     GroupPostResult currentPost = data.getParcelableExtra("postDatas");
                     for (int i = 0; i < postList.size(); i++) {
@@ -1825,7 +1826,24 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                             break;
                         }
                     }
-                } else {
+
+                }
+                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1) {
+                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
+                    int postId = data.getIntExtra("postId", -1);
+
+                    for (int i = 0; i < postList.size(); i++) {
+
+                        if (postList.get(i).getId() == postId) {
+                            postList.get(i).setResponseCount(completeCommentResponseList.size()-1);
+                            groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+
+
+                }
+                else {
                     MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                     try {
                         JSONObject jsonObject = new JSONObject();

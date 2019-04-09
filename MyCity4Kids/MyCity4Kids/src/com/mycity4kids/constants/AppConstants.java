@@ -627,9 +627,10 @@ public class AppConstants {
     public static final String SHORT_STORY_CHALLENGE_ID = "category-743892a865774baf9c20cbcc5c01d35f";
 
     public static final String VIDEO_CHALLENGE_ID = "category-ee7ea82543bd4bc0a8dad288561f2beb";
-
+    public static final String VICHAAR_SAGAR_CATEGORY_ID = "category-8dcc26eb81de4042b225f82ec8e88cd3";
     public static final String PUBLIC_VISIBILITY = "1";
     public static final String PUBLIC_INVISIBILITY = "0";
+
 
     enum SocialPlatformName {
 
