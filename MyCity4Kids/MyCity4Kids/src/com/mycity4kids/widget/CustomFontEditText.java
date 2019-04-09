@@ -3,6 +3,7 @@ package com.mycity4kids.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
@@ -11,7 +12,7 @@ import com.mycity4kids.R;
 /**
  * Created by hemant on 17/3/16.
  */
-public class CustomFontEditText extends EditText {
+public class CustomFontEditText extends AppCompatEditText {
     public CustomFontEditText(Context context) {
         super(context);
         init(null);
