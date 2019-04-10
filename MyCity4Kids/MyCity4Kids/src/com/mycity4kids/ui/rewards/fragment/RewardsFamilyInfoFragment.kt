@@ -177,12 +177,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
                     }
                 }
-
-        fun dummy(){
-
-        }
     }
-
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -239,7 +234,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 checkJoint.isChecked = true
             }
         }
-
         if (apiGetResponse.preferred_languages != null && apiGetResponse.preferred_languages!!.size > 0) {
             floatingLanguage.removeAllViews()
             textEditLanguage.visibility = View.VISIBLE
@@ -314,17 +308,12 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         if (apiGetResponse.kidsInfo != null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
             for (i in 0..apiGetResponse.kidsInfo!!.size - 1) {
                 if (i == 0 && apiGetResponse.kidsInfo!!.size == 1) {
-                    createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob), false)
+                    createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob),apiGetResponse.kidsInfo!!.get(i).name!!, false)
                 } else {
-                    createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob))
+                    createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob),apiGetResponse.kidsInfo!!.get(i).name!!)
                 }
             }
 
-//            (apiGetResponse.kidsInfo!!).forEach {
-//                if (it != null && it.dob != null && it.gender != null) {
-//
-//                }
-//            }
             linearKidsEmptyView.visibility = View.GONE
         } else {
             textDeleteChild.visibility = View.GONE
@@ -605,7 +594,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                 Log.e("dob text is ", RewardsFamilyInfoFragment.textKidsDOB.text.toString())
                 if (linearKidsEmptyView.visibility == View.VISIBLE) {
                     if (!RewardsFamilyInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
-                        if (apiGetResponse.kidsInfo.isNullOrEmpty()) {
+                        //if (apiGetResponse.kidsInfo.isNullOrEmpty()) {
                             var kidsInfoResponse = KidsInfoResponse()
                             kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
                                 0
@@ -615,7 +604,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                             kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textKidsDOB.text.toString())
                             kidsInfoResponse.name = editKidsName.text.toString()
                             apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
-                        }
+                        //}
                     } else {
                         Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
                         return false
@@ -648,7 +637,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         return true
     }
 
-    fun createKidsDetailDynamicView(gender: Int? = null, date: String = "", shouldDelteShow: Boolean = true) {
+    fun createKidsDetailDynamicView(gender: Int? = null, date: String = "",name:String = "", shouldDelteShow: Boolean = true) {
         val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -716,11 +705,16 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         if (gender != null && !date.isNullOrEmpty()) {
             textDOB.text = date
             spinnerGender.setSelection(gender)
+            if(!name.isNullOrEmpty()){
+                editKidsName.setText(name)
+            }
         } else {
             textDOB.text = RewardsFamilyInfoFragment.textKidsDOB.text
             spinnerGender.setSelection(this.spinnerGender.selectedItemPosition)
+            editKidsName.text = this.editKidsName.text
             this.spinnerGender.setSelection(0)
             RewardsFamilyInfoFragment.textKidsDOB.text = ""
+            this.editKidsName.setText("")
         }
 
         linearKidsDetail.addView(indexView)
@@ -803,7 +797,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         newFragment.show(activity.supportFragmentManager, "datePicker")
     }
 
-    /*fetch data from server*/
+    /*send data to server*/
     private fun postDataofRewardsToServer() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
 //        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
@@ -821,7 +815,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
                 override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
-                        //apiGetResponse = response.data!!.result
                         submitListener.FamilyOnSubmit()
                     } else {
 

@@ -80,7 +80,6 @@ class RewardsContainerActivity : BaseActivity(),
     private fun addFamilyFragment() {
 
         RewardsFamilyInfoFragment.newInstance()
-        RewardsFamilyInfoFragment.dummy();
         rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(R.id.container, rewardsFamilyInfoFragment,
                 RewardsFamilyInfoFragment::class.java.simpleName)
