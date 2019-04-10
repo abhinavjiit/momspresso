@@ -932,5 +932,6 @@
     <string name="language">भाषा</string>
     <string name="about_video">विषयी</string>
     <string name="myprofile.section.mom_bottom_label">मॉम वलॉग्स</string>
+    <string name="all_videos.toolbar.title.homepage">Videos</string>
 
 </resources>

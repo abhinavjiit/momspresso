@@ -980,6 +980,8 @@
 
     <string name="about_video">ಸುಮಾರು</string>
     <string name="myprofile.section.mom_bottom_label">ಮಾಮ್ ವ್ಲೋಗ್ಸ್</string>
+    <string name="all_videos.toolbar.title.homepage">Videos</string>
+
 
 
 </resources>

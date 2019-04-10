@@ -36,6 +36,7 @@ import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.utils.MixPanelUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -67,6 +68,13 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     private BottomSheetBehavior sheetBehavior;
     private TextView textHeaderUpdate, textUpdate;
     private android.support.design.widget.FloatingActionButton fabAdd;
+    private Topics videoChallengeTopics;
+    private ArrayList<String> videoChallengeId;
+    private ArrayList<String> videoImageUrl, videoStreamUrl;
+    private ArrayList<Topics> videoTopicList;
+    ArrayList<String> Display_Name, videoDisplay_Name;
+    private int num_of_categorys;
+    private TopicsResponse res;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,12 +142,18 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 }
             }
         });
-
+        findActiveVideoChallenge();
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CategoryVideosListingActivity.this, ChooseVideoCategoryActivity.class);
-                startActivity(intent);
+                if (videoChallengeTopics == null) {
+                    findActiveVideoChallenge();
+                } else {
+                    Intent cityIntent = new Intent(CategoryVideosListingActivity.this, ChooseVideoCategoryActivity.class);
+                    cityIntent.putExtra("comingFrom", "createDashboardIcon");
+                    cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
+                    startActivity(cityIntent);
+                }
             }
         });
 
@@ -363,5 +377,106 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
         }
 
+    }
+
+    private void findActiveVideoChallenge() {
+        try {
+            if (videoTopicList != null && videoTopicList.size() != 0) {
+                videoChallengeId = new ArrayList<>();
+                videoDisplay_Name = new ArrayList<>();
+                videoImageUrl = new ArrayList<>();
+                videoStreamUrl = new ArrayList<>();
+                num_of_categorys = videoTopicList.get(0).getChild().size();
+                if (num_of_categorys != 0) {
+                    for (int j = 0; j < num_of_categorys; j++) {
+                        if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+                            videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+                        }
+                    }
+                }
+            }
+            if (videoTopicList == null || videoTopicList.size() == 0) {
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                res = gson.fromJson(fileContent, TopicsResponse.class);
+                videoTopicList = new ArrayList<Topics>();
+                if (res != null) {
+                    for (int i = 0; i < res.getData().size(); i++) {
+                        if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
+                            videoTopicList.add(res.getData().get(i));
+                        }
+                    }
+                    videoChallengeId = new ArrayList<>();
+                    videoDisplay_Name = new ArrayList<>();
+                    videoImageUrl = new ArrayList<>();
+                    videoStreamUrl = new ArrayList<>();
+                    if (videoTopicList.get(0).getChild().size() != 0) {
+                        num_of_categorys = videoTopicList.get(0).getChild().size();
+                    }
+                    if (num_of_categorys != 0) {
+                        for (int j = 0; j < num_of_categorys; j++) {
+                            if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+
+                                videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            caller.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+                    try {
+                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        res = gson.fromJson(fileContent, TopicsResponse.class);
+                        videoTopicList = new ArrayList<Topics>();
+                        if (res != null) {
+                            for (int i = 0; i < res.getData().size(); i++) {
+                                if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
+                                    videoTopicList.add(res.getData().get(i));
+                                }
+                            }
+                            if (videoTopicList.size() != 0 && videoTopicList != null) {
+                                videoChallengeId = new ArrayList<>();
+                                videoDisplay_Name = new ArrayList<>();
+                                videoImageUrl = new ArrayList<>();
+                                videoStreamUrl = new ArrayList<>();
+                                num_of_categorys = videoTopicList.get(0).getChild().size();
+                                if (num_of_categorys != 0) {
+                                    for (int j = 0; j < num_of_categorys; j++) {
+                                        if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.VIDEO_CHALLENGE_ID)) {
+
+                                            videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (FileNotFoundException e) {
+                        Crashlytics.logException(e);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            });
+        }
     }
 }

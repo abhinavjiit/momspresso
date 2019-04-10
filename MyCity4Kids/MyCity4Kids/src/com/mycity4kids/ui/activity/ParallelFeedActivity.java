@@ -124,7 +124,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private String commentURL = "";
     private String commentMainUrl;
     boolean isArticleDetailEndReached = false;
-    private String authorId;
+    private String authorId, bookmarkAuthorId;
     private String titleSlug;
     private String authorType, author;
     private String shareUrl = "";
@@ -277,7 +277,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI bookmarFollowingStatusAPI = retro.create(VlogsListingAndDetailsAPI.class);
 
-        Call<ArticleDetailResponse> callBookmark = bookmarFollowingStatusAPI.checkFollowingBookmarkStatus(vidId, authorId);
+        Call<ArticleDetailResponse> callBookmark = bookmarFollowingStatusAPI.checkFollowingBookmarkStatus(vidId, bookmarkAuthorId);
         callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
     }
 
@@ -632,6 +632,15 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             }
             ArticleDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                bookmarkId = responseData.getData().getResult().getBookmarkId();
+                delete();
+            } else {
+                showToast(getString(R.string.server_went_wrong));
+            }
+
+
+            /*ArticleDetailResponse responseData = response.body();
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (SharedPrefUtils.getUserDetailModel(ParallelFeedActivity.this).getDynamoId().equals(authorId)) {
                     followClick.setVisibility(View.INVISIBLE);
                 } else {
@@ -649,7 +658,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                 }
             } else {
                 showToast(getString(R.string.server_went_wrong));
-            }
+            }*/
         }
 
         @Override
@@ -1202,8 +1211,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    public void addRemoveBookmark(String bookmarkStatus, int pos, String videoId) {
+    public void addRemoveBookmark(String bookmarkStatus, int pos,String authorId, String videoId) {
         updateBookmarkPos = pos;
+        bookmarkAuthorId = authorId;
         this.bookmarkStatus = bookmarkStatus;
         if (bookmarkStatus.equals("1")) {
             ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
@@ -1214,13 +1224,14 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
             Utils.pushBookmarkArticleEvent(this, "DetailArticleScreen", userDynamoId + "", bookmarkStatus, authorId + "~" + author);
 
         } else {
-            hitBookmarkVideoStatusAPI(videoId);
+            hitBookmarkFollowingStatusAPI(videoId);
+//            hitBookmarkVideoStatusAPI(videoId,bookmarkId);
         }
 
     }
 
 
-    private void hitBookmarkVideoStatusAPI(String videoId) {
+    private void hitBookmarkVideoStatusAPI(String videoId,String authorId) {
         ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
         articleDetailRequest.setArticleId(videoId);
 
