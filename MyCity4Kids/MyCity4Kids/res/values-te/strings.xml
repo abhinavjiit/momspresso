@@ -930,6 +930,8 @@
     <string name="about_video">విషయం</string>
     <string name="myprofile.section.mom_bottom_label">మామ్ వీలాగ్స్</string>
     <string name="all_videos.toolbar.title.homepage">Videos</string>
+    <string name="moderation_message">100WordStory under moderation.\n
+Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
 
 </resources>

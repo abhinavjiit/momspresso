@@ -304,6 +304,7 @@
                     app:fontName="open_sans.ttf" />
 
                 <RelativeLayout
+                    android:id="@+id/rl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tagsSubtitleTextView">
@@ -334,6 +335,28 @@
                         android:textSize="14sp"
                         app:fontName="oswald_regular.ttf" />
                 </RelativeLayout>
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/viewCommentsTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rl"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/follow_topic_author_bg"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/ad.comments.view_comment"
+                    android:textColor="@color/app_red"
+                    android:textSize="16sp"
+                    app:fontName="oswald_regular.ttf" />
             </RelativeLayout>
 
             <View
@@ -381,13 +404,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:alpha=".2"
-                        android:background="@color/black"
-                       />
+                        android:background="@color/black" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                     >
+                        android:layout_height="match_parent">
 
                         <com.mycity4kids.widget.CustomFontTextView
                             android:id="@+id/groupHeadingTextView"
@@ -589,7 +610,7 @@
                 android:background="#f2f2f2" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/viewCommentsTextView"
+                android:id="@+id/viewCommentsTextView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/trendingArticles"
@@ -608,13 +629,14 @@
                 android:text="@string/ad.comments.view_comment"
                 android:textColor="@color/app_red"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="oswald_regular.ttf" />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:layout_below="@+id/viewCommentsTextView" />
+                android:layout_below="@+id/viewCommentsTextView1" />
         </RelativeLayout>
     </com.mycity4kids.observablescrollview.ObservableScrollView>
 

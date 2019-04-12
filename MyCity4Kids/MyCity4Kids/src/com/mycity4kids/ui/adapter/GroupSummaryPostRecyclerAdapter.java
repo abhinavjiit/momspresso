@@ -30,7 +30,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
 import com.squareup.picasso.Picasso;
@@ -142,15 +141,17 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             ((HeaderViewHolder) holder).memberCountTextView.setText(groupDetails.getMemberCount() + " " + mContext.getString(R.string.groups_member_label));
             ((HeaderViewHolder) holder).groupDescTextView.setText(groupDetails.getDescription());
             if (groupDetails.getAdminMembers().getData() != null && !groupDetails.getAdminMembers().getData().isEmpty()) {
-
+                modeList = "";
                 for (int i = 0; i < groupDetails.getAdminMembers().getData().size(); i++) {
+
                     if (StringUtils.isNullOrEmpty(modeList)) {
                         if (modeList == null) {
                             modeList = Strings.nullToEmpty(modeList);
                         }
-                        modeList = modeList + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getFirstName() + " "
+                        modeList = groupDetails.getAdminMembers().getData().get(i).getUserInfo().getFirstName() + " "
                                 + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getLastName();
                     } else {
+
                         modeList = modeList + ", " + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getFirstName() + " "
                                 + groupDetails.getAdminMembers().getData().get(i).getUserInfo().getLastName();
                     }

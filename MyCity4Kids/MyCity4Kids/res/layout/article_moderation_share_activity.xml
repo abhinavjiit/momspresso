@@ -93,7 +93,7 @@
                 android:gravity="center"
                 android:paddingLeft="40dp"
                 android:paddingRight="40dp"
-                android:text="@string/moderation_or_share.publish_message"
+                android:text="@string/moderation_message"
                 android:textColor="@color/moderation_or_share.publish_message"
                 android:textSize="18sp"
                 app:fontName="oswald.ttf" />

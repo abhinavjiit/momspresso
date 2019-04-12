@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.adapter;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -237,8 +235,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                             audioCommentViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             audioCommentViewHolder.userTag.setVisibility(View.VISIBLE);
 
-                        }
-                        else {
+                        } else {
                             audioCommentViewHolder.userTag.setVisibility(View.GONE);
 
                         }
@@ -332,7 +329,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                             mediaPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             mediaPostViewHolder.userTag.setVisibility(View.VISIBLE);
 
-                        }else {
+                        } else {
                             mediaPostViewHolder.userTag.setVisibility(View.GONE);
 
                         }
@@ -389,7 +386,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                             textPollPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             textPollPostViewHolder.userTag.setVisibility(View.VISIBLE);
 
-                        }else {
+                        } else {
                             textPollPostViewHolder.userTag.setVisibility(View.GONE);
 
                         }
@@ -480,7 +477,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                             imageHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             imageHolder.userTag.setVisibility(View.VISIBLE);
 
-                        }else {
+                        } else {
                             imageHolder.userTag.setVisibility(View.GONE);
 
                         }

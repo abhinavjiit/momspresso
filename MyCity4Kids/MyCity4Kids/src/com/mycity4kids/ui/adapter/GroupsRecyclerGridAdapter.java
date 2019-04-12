@@ -92,7 +92,7 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
 //        holder.groupsNameTextView.setSelected(position == selectedPosition);
     }
 
-    public class GroupsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class GroupsViewHolder extends RecyclerView.ViewHolder {
         TextView groupsNameTextView, badge;
         ImageView groupImageView, hightLightImageView;
         LabelImageView groupNewLabelImageView;
@@ -107,15 +107,11 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    groupsDataList.get(getAdapterPosition()).setHighlight(0);
                     mListener.onRecyclerItemClick(v, getAdapterPosition(), isMember);
                     notifyDataSetChanged();
                 }
             });
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition(), isMember);
         }
     }
 
