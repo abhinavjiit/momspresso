@@ -10,6 +10,7 @@ public class SearchResult {
     private ArrayList<SearchAuthorResult> author;
     private ArrayList<SearchBlogResult> blog;
     private ArrayList<SearchTopicResult> topic;
+    private ArrayList<SearchVideoResult> video;
 
     public ArrayList<SearchArticleResult> getArticle() {
         return article;
@@ -41,5 +42,13 @@ public class SearchResult {
 
     public void setTopic(ArrayList<SearchTopicResult> topic) {
         this.topic = topic;
+    }
+
+    public ArrayList<SearchVideoResult> getVideo() {
+        return video;
+    }
+
+    public void setVideo(ArrayList<SearchVideoResult> video) {
+        this.video = video;
     }
 }
