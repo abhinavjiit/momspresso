@@ -17,24 +17,38 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.utils.StringUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
+import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.squareup.picasso.Picasso;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
@@ -61,6 +75,14 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     public DefaultDataSourceFactory dataSourceFactory;
     public boolean isPaused = false;
     private Topics topics;
+    Topics videoChallengeTopics;
+    private ArrayList<Topics> shortStoriesTopicList;
+    private ArrayList<Topics> videoTopicList;
+    private ArrayList<String> challengeId, videoChallengeId;
+    private ArrayList<String> ImageUrl, videoImageUrl, videoStreamUrl;
+    ArrayList<String> Display_Name, videoDisplay_Name;
+    private TopicsResponse res;
+    private int num_of_categorys;
 
 
     public VideoChallengeDetailListingAdapter(Context pContext, String selectedId, Topics topics) {
@@ -70,7 +92,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         this.topics = topics;
         this.selectedId = selectedId;
 
-
+        findActiveVideoChallenge();
     }
 
 
@@ -212,8 +234,16 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                     MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, topics.getDisplay_name());
-                    Intent intent = new Intent(mContext, ChooseVideoCategoryActivity.class);
-                    mContext.startActivity(intent);
+                    if (videoChallengeTopics == null) {
+                        findActiveVideoChallenge();
+                    } else {
+                        Intent cityIntent = new Intent(mContext, ChooseVideoCategoryActivity.class);
+                        cityIntent.putExtra("comingFrom", "createDashboardIcon");
+                        cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
+                        mContext.startActivity(cityIntent);
+                    }
+//                    Intent intent = new Intent(mContext, ChooseVideoCategoryActivity.class);
+//                    mContext.startActivity(intent);
                 }
             });
             return view;
@@ -281,10 +311,110 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
     }
 
+    private void findActiveVideoChallenge() {
+        try {
+            if (videoTopicList != null && videoTopicList.size() != 0) {
+                videoChallengeId = new ArrayList<>();
+                videoDisplay_Name = new ArrayList<>();
+                videoImageUrl = new ArrayList<>();
+                videoStreamUrl = new ArrayList<>();
+                num_of_categorys = videoTopicList.get(0).getChild().size();
+                if (num_of_categorys != 0) {
+                    for (int j = 0; j < num_of_categorys; j++) {
+                        if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+                            videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+                        }
+                    }
+                }
+            }
+            if (videoTopicList == null || videoTopicList.size() == 0) {
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                res = gson.fromJson(fileContent, TopicsResponse.class);
+                videoTopicList = new ArrayList<Topics>();
+                if (res != null) {
+                    for (int i = 0; i < res.getData().size(); i++) {
+                        if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
+                            videoTopicList.add(res.getData().get(i));
+                        }
+                    }
+                    videoChallengeId = new ArrayList<>();
+                    videoDisplay_Name = new ArrayList<>();
+                    videoImageUrl = new ArrayList<>();
+                    videoStreamUrl = new ArrayList<>();
+                    if (videoTopicList.get(0).getChild().size() != 0) {
+                        num_of_categorys = videoTopicList.get(0).getChild().size();
+                    }
+                    if (num_of_categorys != 0) {
+                        for (int j = 0; j < num_of_categorys; j++) {
+                            if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+
+                                videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            caller.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+                    try {
+                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                        res = gson.fromJson(fileContent, TopicsResponse.class);
+                        videoTopicList = new ArrayList<Topics>();
+                        if (res != null) {
+                            for (int i = 0; i < res.getData().size(); i++) {
+                                if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
+                                    videoTopicList.add(res.getData().get(i));
+                                }
+                            }
+                            if (videoTopicList.size() != 0 && videoTopicList != null) {
+                                videoChallengeId = new ArrayList<>();
+                                videoDisplay_Name = new ArrayList<>();
+                                videoImageUrl = new ArrayList<>();
+                                videoStreamUrl = new ArrayList<>();
+                                num_of_categorys = videoTopicList.get(0).getChild().size();
+                                if (num_of_categorys != 0) {
+                                    for (int j = 0; j < num_of_categorys; j++) {
+                                        if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.VIDEO_CHALLENGE_ID)) {
+
+                                            videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (FileNotFoundException e) {
+                        Crashlytics.logException(e);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            });
+        }
+    }
+
 
     class ViewHolderChallenge {
         RelativeLayout winnerLayout;
-
         TextView goldLogo;
         TextView txvArticleTitle;
         TextView txvAuthorName;
@@ -297,7 +427,6 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
     class AddVlogViewHolderChallenge {
         RelativeLayout winnerLayout;
-
         TextView goldLogo;
         ImageView addMomVlogImageView;
         TextView txvArticleTitle;
@@ -319,9 +448,6 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         FrameLayout mFullScreenButton;
         ImageView mFullScreenIcon;
         Dialog mFullScreenDialog;
-
     }
-
-
 }
 

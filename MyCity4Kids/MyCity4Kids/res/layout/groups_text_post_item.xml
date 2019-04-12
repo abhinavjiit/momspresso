@@ -38,7 +38,7 @@
         android:maxLines="1"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:text="test"
+        android:text=""
         android:textColor="@color/ad.comment.username"
         android:textSize="14sp"
         app:fontName="oswald_regular.ttf" />
@@ -56,12 +56,13 @@
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:paddingLeft="10dp"
-        android:paddingBottom="3dp"
         android:paddingTop="2dp"
         android:paddingRight="10dp"
-        android:text="test"
+        android:paddingBottom="3dp"
+        android:text=""
         android:textColor="#80828f"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        android:visibility="gone" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/postDateTextView"

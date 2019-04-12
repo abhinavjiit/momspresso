@@ -62,7 +62,7 @@ public interface VlogsListingAndDetailsAPI {
                                                      @Query("sort") int sort,
                                                      @Query("type") int type,
                                                      @Query("category_id") String categoryId,
-                                                     @Query("order_by") String orderBy);
+                                                     @Query("$order_by") String orderBy);
 
 
     @POST("v2/videos/")
@@ -78,10 +78,8 @@ public interface VlogsListingAndDetailsAPI {
     Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("articleId") String articleId,
                                                              @Query("authorId") String authorId);
 
-
     @GET
     Call<ResponseBody> getComments(@Url String url);
-
 
     @GET("v1/comments/fb/{articleId}")
     Call<FBCommentResponse> getFBComments(@Path("articleId") String articleId,

@@ -180,6 +180,9 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         if (postList.get(position).getUserInfo().getUserTag().size() != 0) {
                             textPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             textPostViewHolder.userTag.setVisibility(View.VISIBLE);
+                        } else {
+                            textPostViewHolder.userTag.setVisibility(View.GONE);
+
                         }
                     } else {
                         textPostViewHolder.userTag.setVisibility(View.GONE);
@@ -233,6 +236,10 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
                             audioCommentViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             audioCommentViewHolder.userTag.setVisibility(View.VISIBLE);
+
+                        }
+                        else {
+                            audioCommentViewHolder.userTag.setVisibility(View.GONE);
 
                         }
                     } else {
@@ -325,6 +332,9 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                             mediaPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             mediaPostViewHolder.userTag.setVisibility(View.VISIBLE);
 
+                        }else {
+                            mediaPostViewHolder.userTag.setVisibility(View.GONE);
+
                         }
                     } else {
                         mediaPostViewHolder.userTag.setVisibility(View.GONE);
@@ -378,6 +388,9 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
                             textPollPostViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             textPollPostViewHolder.userTag.setVisibility(View.VISIBLE);
+
+                        }else {
+                            textPollPostViewHolder.userTag.setVisibility(View.GONE);
 
                         }
                     } else {
@@ -466,6 +479,9 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
                             imageHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             imageHolder.userTag.setVisibility(View.VISIBLE);
+
+                        }else {
+                            imageHolder.userTag.setVisibility(View.GONE);
 
                         }
                     } else {

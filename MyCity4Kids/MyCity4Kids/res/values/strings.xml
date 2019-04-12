@@ -646,6 +646,7 @@
     <string name="explore.events.upcoming_lbl">UPCOMING EVENTS</string>
 
     <string name="all_videos.toolbar.title">VIDEOS</string>
+    <string name="all_videos.toolbar.title.homepage">Videos</string>
     <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO TV</string>
     <string name="all_videos.tabbar.funny_label">MOM VLOGS</string>
     <string name="all_videos.funny_videos.no_videos">No mom vlogs added.</string>

@@ -59,7 +59,8 @@
         android:paddingTop="2dp"
         android:paddingRight="10dp"
         android:paddingBottom="3dp"
-        android:text="test"
+        android:text=""
+        android:visibility="gone"
         android:textColor="#80828f"
         android:textSize="10sp" />
 

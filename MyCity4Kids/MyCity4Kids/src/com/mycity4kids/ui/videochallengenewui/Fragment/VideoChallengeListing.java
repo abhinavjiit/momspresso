@@ -58,22 +58,15 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 public class VideoChallengeListing extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
-
     private RelativeLayout mLodingView;
     private ProgressDialog mProgressDialog;
-
-
     private MixpanelAPI mixpanel;
-
     private VideoChallengeDetailListingAdapter articlesListingAdapter;
     private String selectedId;
-
     private com.mycity4kids.models.Topics topic;
-
     private ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
     FloatingActionsMenu fabMenu;
     ListView listView;
-
     TextView noBlogsTextView;
     FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     FrameLayout frameLayout;
@@ -234,7 +227,7 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
         Log.d("VIDEO CATEGORY", "--" + videoCategory);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsListForWinner(from, from + limit - 1, sortType, 3, selectedId,"winner");
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsListForWinner(from, from + limit - 1, sortType, 3, selectedId,"-winner");
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
 
@@ -247,7 +240,6 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-//                showToast("Something went wrong from server");
                 return;
             }
             try {

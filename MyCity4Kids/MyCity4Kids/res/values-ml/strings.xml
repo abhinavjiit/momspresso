@@ -979,5 +979,7 @@
     <string name="language">LANGUAGE</string>
     <string name="about_video">ഇതിനെക്കുറിച്ച്</string>
     <string name="myprofile.section.mom_bottom_label">അമ്മമാരുടെ വിലോഗുകൾ</string>
+    <string name="all_videos.toolbar.title.homepage">Videos</string>
+
 
 </resources>
