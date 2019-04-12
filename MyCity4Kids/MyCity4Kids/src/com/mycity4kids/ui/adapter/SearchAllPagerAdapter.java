@@ -14,6 +14,7 @@ import com.mycity4kids.ui.fragment.SearchAllArticlesAndTopicsTabFragment;
 import com.mycity4kids.ui.fragment.SearchAllArticlesTabFragment;
 import com.mycity4kids.ui.fragment.SearchAllAuthorsTabFragment;
 import com.mycity4kids.ui.fragment.SearchAllTopicsTabFragment;
+import com.mycity4kids.ui.fragment.SearchAllVideosTabFragment;
 
 /**
  * Created by hemant on 19/4/16.
@@ -26,6 +27,7 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
     private SearchAllArticlesTabFragment mArticlefragment;
     private SearchAllAuthorsTabFragment mAuthorsFragment;
     private SearchAllTopicsTabFragment mSearchAllTopicsTabFragment;
+    private SearchAllVideosTabFragment mSearchAllVideosTabFragment;
     String searchName = "";
 
     int currentPosition = 0;
@@ -45,7 +47,7 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -59,8 +61,10 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
             return activity.getString(R.string.search_article_topic_tab_label);
         } else if (position == 1) {
             return activity.getString(R.string.search_author_tab_label);
-        } else {
+        } else if (position == 2){
             return activity.getString(R.string.search_topic_label);
+        } else {
+            return activity.getString(R.string.search_video_label);
         }
     }
 
@@ -90,6 +94,13 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
                 bundle.putString(Constants.SEARCH_PARAM, searchName);
                 mSearchAllTopicsTabFragment.setArguments(bundle);
                 return mSearchAllTopicsTabFragment;
+            case 3:
+                if (mSearchAllVideosTabFragment == null) {
+                    mSearchAllVideosTabFragment = new SearchAllVideosTabFragment();
+                }
+                bundle.putString(Constants.SEARCH_PARAM, searchName);
+                mSearchAllVideosTabFragment.setArguments(bundle);
+                return mSearchAllVideosTabFragment;
 
         }
 
@@ -114,6 +125,12 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
         }
         mSearchAllTopicsTabFragment.refreshAllTopics(searchText);
         mSearchAllTopicsTabFragment.resetOnceLoadedFlag(searchText);
+
+        if (null == mSearchAllVideosTabFragment) {
+            mSearchAllVideosTabFragment = new SearchAllVideosTabFragment();
+        }
+        mSearchAllVideosTabFragment.refreshAllArticles(searchText);
+        mSearchAllVideosTabFragment.resetOnceLoadedFlag(searchText);
     }
 
 }

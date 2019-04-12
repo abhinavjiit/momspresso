@@ -53,6 +53,8 @@ public class SearchAllArticlesTopicsListingAdapter extends RecyclerView.Adapter<
                 return 2;
             case AppConstants.SEARCH_ITEM_TYPE_TOPIC:
                 return 3;
+            case AppConstants.SEARCH_ITEM_TYPE_VIDEO:
+                return 4;
 
         }
         return 2;
