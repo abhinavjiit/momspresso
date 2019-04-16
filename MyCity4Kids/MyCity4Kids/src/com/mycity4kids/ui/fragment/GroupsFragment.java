@@ -46,6 +46,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by hemant on 10/4/18.
  */
@@ -278,7 +280,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
-    public void onRecyclerItemClick(View view, int position, boolean isMember) {
+    public void onRecyclerItemClick(View view, int position, boolean isMember, ArrayList<GroupResult> groupsDataList) {
 
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         if (isMember) {
@@ -287,6 +289,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             selectedGroup = allGroupList.get(position);
             selectedQuestionnaire = (LinkedTreeMap<String, String>) allGroupList.get(position).getQuestionnaire();
         }
+        groupsDataList.get(position).setHighlight(0);
         groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
 
@@ -350,4 +353,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     public void onMembershipStatusFetchFail() {
 
     }
+
+
 }

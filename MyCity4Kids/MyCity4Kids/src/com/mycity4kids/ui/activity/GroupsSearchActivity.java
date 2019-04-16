@@ -227,7 +227,7 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    public void onRecyclerItemClick(View view, int position, boolean isMember) {
+    public void onRecyclerItemClick(View view, int position, boolean isMember,ArrayList<GroupResult> groupsDataList) {
         selectedGroup = groupList.get(position);
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         groupMembershipStatus.checkMembershipStatus(groupList.get(position).getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());

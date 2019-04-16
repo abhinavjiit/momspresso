@@ -161,6 +161,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
         fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
         RadioGroup chooseoptionradioButton = (RadioGroup) findViewById(R.id.reportReasonRadioGroup);
         RadioGroup.LayoutParams rprms;
+
         ssTopicsList = new ArrayList<>();
         guideOverlay.setOnClickListener(this);
         writeArticleCell.setOnClickListener(this);
@@ -478,7 +479,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
                 // No results for search
 //                noBlogsTextView.setVisibility(View.VISIBLE);
 //                noBlogsTextView.setText(getString(R.string.no_articles_found));
-               // writeArticleCell.setVisibility(View.VISIBLE);
+                // writeArticleCell.setVisibility(View.VISIBLE);
                 mDatalist = dataList;
                 challengeListingRecycleAdapter.setListData(mDatalist);
                 challengeListingRecycleAdapter.notifyDataSetChanged();

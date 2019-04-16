@@ -203,55 +203,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof AdViewHolder) {
-//            try {
-//                AdViewHolder viewHolder = (AdViewHolder) holder;
-//                addArticleItem(viewHolder.txvArticleTitle, viewHolder.forYouInfoLL, viewHolder.viewCountTextView, viewHolder.commentCountTextView,
-//                        viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView, viewHolder.videoIndicatorImageView
-//                        , viewHolder.bookmarkArticleImageView, viewHolder.watchLaterImageView, articleDataModelsNew.get(position), position, viewHolder);
-//                if (position <= 80 && adList.get((position / 8) - 1) == null) {
-//                    NativeAd fbAd = feedNativeAd.getAd();
-//                    adList.set((position / 8) - 1, fbAd);
-//                }
-//                NativeAd fbAd;
-//                if (position < 80) {
-//                    fbAd = adList.get(((position / 8) % 10) - 1);
-//                } else {
-//                    fbAd = adList.get(((position / 8) % 10));
-//                }
-//
-//                if (fbAd == null) {
-//                    ((AdViewHolder) holder).adContainerView.setVisibility(View.GONE);
-//                    return;
-//                }
-//                ((AdViewHolder) holder).adContainerView.setVisibility(View.VISIBLE);
-//                ((AdViewHolder) holder).nativeAdTitle.setText(fbAd.getAdTitle());
-//                ((AdViewHolder) holder).nativeAdSocialContext.setText(fbAd.getAdSocialContext());
-//                ((AdViewHolder) holder).nativeAdBody.setText(fbAd.getAdBody());
-//                ((AdViewHolder) holder).nativeAdCallToAction.setText(fbAd.getAdCallToAction());
-//
-//                // Download and display the ad icon.
-//                NativeAd.Image adIcon = fbAd.getAdIcon();
-//                NativeAd.downloadAndDisplayImage(adIcon, ((AdViewHolder) holder).nativeAdIcon);
-//
-//                // Download and display the cover image.
-//                ((AdViewHolder) holder).nativeAdMedia.setNativeAd(fbAd);
-//
-//                // Add the AdChoices icon
-//                if (!isAdChoiceAdded) {
-//                    AdChoicesView adChoicesView = new AdChoicesView(mContext, fbAd, true);
-//                    ((AdViewHolder) holder).adChoicesContainer.addView(adChoicesView);
-//                    isAdChoiceAdded = true;
-//                }
-//
-//                // Register the Title and CTA button to listen for clicks.
-//                List<View> clickableViews = new ArrayList<>();
-//                clickableViews.add(((AdViewHolder) holder).nativeAdTitle);
-//                clickableViews.add(((AdViewHolder) holder).nativeAdCallToAction);
-//                fbAd.registerViewForInteraction(((AdViewHolder) holder).adContainerView);
-//            } catch (Exception e) {
-//
-//            }
-        } else if (holder instanceof HeaderViewHolder) {
+
+        }
+
+        else if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
             addArticleItem(viewHolder.txvArticleTitle, viewHolder.forYouInfoLL, viewHolder.viewCountTextView, viewHolder.commentCountTextView,
                     viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView, viewHolder.videoIndicatorImageView
@@ -264,7 +219,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     , viewHolder.bookmarkArticleImageView, viewHolder.watchLaterImageView, articleDataModelsNew.get(position), position, viewHolder);
 
 
-
         } else if (holder instanceof JoinGroupViewHolder) {
             if (StringUtils.isNullOrEmpty(heading) || StringUtils.isNullOrEmpty(subHeading)) {
                 ((JoinGroupViewHolder) holder).groupHeadingTextView.setText("");
@@ -274,6 +228,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 ((JoinGroupViewHolder) holder).groupHeadingTextView.setText(heading);
                 ((JoinGroupViewHolder) holder).groupSubHeadingTextView.setText(subHeading);
                 ((JoinGroupViewHolder) holder).joinGroupTextView.setVisibility(View.VISIBLE);
+
             }
 
             try {
