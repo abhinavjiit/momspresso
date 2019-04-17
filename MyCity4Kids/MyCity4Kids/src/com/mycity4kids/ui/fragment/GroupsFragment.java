@@ -280,7 +280,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
-    public void onRecyclerItemClick(View view, int position, boolean isMember, ArrayList<GroupResult> groupsDataList) {
+    public void onRecyclerItemClick(View view, int position, boolean isMember) {
 
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         if (isMember) {
@@ -289,7 +289,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             selectedGroup = allGroupList.get(position);
             selectedQuestionnaire = (LinkedTreeMap<String, String>) allGroupList.get(position).getQuestionnaire();
         }
-        groupsDataList.get(position).setHighlight(0);
         groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }
 

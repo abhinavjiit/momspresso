@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
+import static android.view.View.GONE;
+
 //import com.facebook.widget.FacebookDialog;
 
 /**
@@ -45,6 +48,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     private String source;
     private String authorId, authorName;
     private String title, body;
+    private RelativeLayout shareContainerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +65,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
 
         LinearLayout moderationContainer = (LinearLayout) findViewById(R.id.moderationContainer);
         LinearLayout publishContainer = (LinearLayout) findViewById(R.id.publishContainer);
-
+        shareContainerLayout = (RelativeLayout) findViewById(R.id.shareContainerLayout);
         ImageView fImageView = (ImageView) findViewById(R.id.facebookImageView);
         ImageView gImageView = (ImageView) findViewById(R.id.googlePlusImageView);
         ImageView whatsappImageView = (ImageView) findViewById(R.id.whatsappImageView);
@@ -72,17 +76,28 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
 
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             moderationContainer.setVisibility(View.VISIBLE);
-            publishContainer.setVisibility(View.GONE);
+            publishContainer.setVisibility(GONE);
         } else {
-            moderationContainer.setVisibility(View.GONE);
+            moderationContainer.setVisibility(GONE);
             publishContainer.setVisibility(View.VISIBLE);
         }
 
         if ("addStory".equals(source)) {
+            if (shareUrl.equals("https://www.momspresso.com/parenting/topic/short-stories")) {
+
+
+                moderationContainer.setVisibility(View.VISIBLE);
+                publishContainer.setVisibility(GONE);
+                shareContainerLayout.setVisibility(GONE);
+            } else {
+                moderationContainer.setVisibility(GONE);
+                publishContainer.setVisibility(View.VISIBLE);
+            }
             instagramImageView.setVisibility(View.VISIBLE);
         } else {
-            instagramImageView.setVisibility(View.GONE);
+            instagramImageView.setVisibility(GONE);
         }
+
 
         fImageView.setOnClickListener(this);
         gImageView.setOnClickListener(this);

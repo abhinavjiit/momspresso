@@ -763,10 +763,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         }
         ssTopicsList.get(position).setIsSelected(true);
 
-        if(ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.VICHAAR_SAGAR_CATEGORY_ID)){
+        if (ssTopicsList.get(position).getId().equalsIgnoreCase(AppConstants.VICHAAR_SAGAR_CATEGORY_ID)) {
             storyTitleEditText.setText(getString(R.string.story_text_title_hindi));
             storyBodyEditText.setHint(getString(R.string.story_text_description_hindi));
-        }else{
+        } else {
             storyTitleEditText.setText("");
             storyTitleEditText.setHint(R.string.short_s_add_title_hint);
             storyBodyEditText.setHint(R.string.short_s_add_body_hint);

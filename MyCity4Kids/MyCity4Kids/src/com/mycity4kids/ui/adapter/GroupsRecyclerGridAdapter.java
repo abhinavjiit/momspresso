@@ -109,8 +109,8 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
                 @Override
                 public void onClick(View v) {
 
-                  //groupsDataList.get(getAdapterPosition()).setHighlight(0);
-                  mListener.onRecyclerItemClick(v, getAdapterPosition(), isMember,groupsDataList);
+                  groupsDataList.get(getAdapterPosition()).setHighlight(0);
+                  mListener.onRecyclerItemClick(v, getAdapterPosition(), isMember);
                     notifyDataSetChanged();
 
                 }
@@ -119,7 +119,7 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
     }
 
     public interface RecyclerViewClickListener {
-        void onRecyclerItemClick(View view, int position, boolean isMember,ArrayList<GroupResult> groupsDataList);
+        void onRecyclerItemClick(View view, int position, boolean isMember);
     }
 
 }

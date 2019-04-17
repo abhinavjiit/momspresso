@@ -67,10 +67,10 @@
                 android:layout_marginTop="18dp"
                 android:background="@drawable/unfollow_topic_author_bg"
                 android:gravity="center"
-                android:paddingBottom="14dp"
                 android:paddingLeft="60dp"
-                android:paddingRight="60dp"
                 android:paddingTop="14dp"
+                android:paddingRight="60dp"
+                android:paddingBottom="14dp"
                 android:text="@string/moderation_or_share.okay"
                 android:textColor="@color/moderation_or_share.okay"
                 android:textSize="18sp"
@@ -93,18 +93,19 @@
                 android:gravity="center"
                 android:paddingLeft="40dp"
                 android:paddingRight="40dp"
-                android:text="@string/moderation_message"
+                android:text="@string/moderation_or_share.publish_message"
                 android:textColor="@color/moderation_or_share.publish_message"
                 android:textSize="18sp"
                 app:fontName="oswald.ttf" />
 
             <RelativeLayout
+                android:id="@+id/shareContainerLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/shareTextView"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
 
