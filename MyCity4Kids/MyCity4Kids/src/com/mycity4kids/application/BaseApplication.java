@@ -68,7 +68,7 @@ public class BaseApplication extends Application {
     private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
     private static BaseApplication mInstance;
-    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit;
+    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit,rewardsRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;
@@ -492,6 +492,13 @@ public class BaseApplication extends Application {
             createRetrofitInstance(SharedPrefUtils.getBaseURL(this));
         }
         return retrofit;
+    }
+
+    public Retrofit getRewardsRetrofit() {
+        if (null == rewardsRetrofit) {
+            createRetrofitInstance(SharedPrefUtils.getRewardsBaseURL(this));
+        }
+        return rewardsRetrofit;
     }
 
     public Retrofit getGroupsRetrofit() {

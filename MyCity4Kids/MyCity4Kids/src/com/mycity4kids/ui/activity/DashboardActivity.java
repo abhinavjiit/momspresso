@@ -186,7 +186,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout actionItemContainer, articleContainer, videoContainer, storyContainer;
     private View overlayView;
     private RelativeLayout createContentContainer;
-    private TextView usernameTextView, coachUsernameTextView, videosTextView, shortStoryTextView, momspressoTextView, groupsTextView, bookmarksTextView, settingTextView;
+    private TextView usernameTextView, coachUsernameTextView, videosTextView, shortStoryTextView, momspressoTextView, groupsTextView, bookmarksTextView, settingTextView, rewardsTextView;
     private LinearLayout drawerTopContainer, drawerContainer;
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
@@ -303,6 +303,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         shortStoryTextView = (TextView) findViewById(R.id.shortStoryTextView);
         momspressoTextView = (TextView) findViewById(R.id.momspressoTextView);
         groupsTextView = (TextView) findViewById(R.id.groupsTextView);
+        rewardsTextView = (TextView) findViewById(R.id.rewardsTextView);
         bookmarksTextView = (TextView) findViewById(R.id.bookmarksTextView);
         settingTextView = (TextView) findViewById(R.id.settingTextView);
         usernameTextView = (TextView) findViewById(R.id.usernameTextView);
@@ -371,6 +372,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         shortStoryTextView.setOnClickListener(this);
         momspressoTextView.setOnClickListener(this);
         groupsTextView.setOnClickListener(this);
+        rewardsTextView.setOnClickListener(this);
         bookmarksTextView.setOnClickListener(this);
         videosTextView.setOnClickListener(this);
         settingTextView.setOnClickListener(this);
@@ -1851,6 +1853,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Bundle mBundle = new Bundle();
                 fragment.setArguments(mBundle);
                 addFragment(fragment, mBundle, true);
+            }
+            break;
+            case R.id.rewardsTextView: {
+                mDrawerLayout.closeDrawers();
+                Intent cityIntent = new Intent(this, RewardCampaignActivity.class);
+                startActivity(cityIntent);
             }
             break;
             case R.id.bookmarksTextView: {

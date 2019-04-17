@@ -1010,6 +1010,7 @@
     <string name="working">Working</string>
     <string name="save_continue"><![CDATA[SAVE & CONTINUE]]></string>
     <string name="momspresso_rewards">MOMSPRESSO REWARDS</string>
+    <string name="rewards_program">REWARDS PROGRAM</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="add_website">ADD WEBSITE</string>
@@ -1092,6 +1093,7 @@
     <string name="about_video">About</string>
     <string name="story_text_title_hindi">विचारसागर</string>
     <string name="story_text_description_hindi">यहाँ आप सुविचार (कोट्स) लिख सकते हैं.</string>
+    <string name="campaign_name">Campaign Name \n Facebook Campaign</string>
 
 
 </resources>

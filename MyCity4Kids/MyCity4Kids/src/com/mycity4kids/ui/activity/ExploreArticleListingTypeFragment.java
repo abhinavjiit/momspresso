@@ -81,7 +81,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             forYouTextView, /*videosTextView,*/
             recentTextView;
     private TextView continueTextView;
-    private RelativeLayout videosContainer, storyContainer, groupsContainer, momsTVContainer;
+    private RelativeLayout videosContainer, storyContainer, groupsContainer, momsTVContainer, rewardsContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,11 +121,13 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         storyContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.storyContainer);
         groupsContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.groupsContainer);
         momsTVContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.momsTVContainer);
+        rewardsContainer = (RelativeLayout) gridViewHeader.findViewById(R.id.rewardsContainer);
 
         videosContainer.setOnClickListener(this);
         storyContainer.setOnClickListener(this);
         groupsContainer.setOnClickListener(this);
         momsTVContainer.setOnClickListener(this);
+        rewardsContainer.setOnClickListener(this);
         try {
             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -271,6 +273,14 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 Intent intent = new Intent(getActivity(), ArticleListingActivity.class);
                 intent.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
                 startActivity(intent);
+            }
+            break;
+            case R.id.rewardsContainer: {
+                Utils.pushOpenScreenEvent(getActivity(), "RewardsScreen", dynamoUserId + "");
+                Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "RewardsScreen");
+                /*Intent cityIntent = new Intent(getActivity(), CategoryVideosListingActivity.class);
+                cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
+                startActivity(cityIntent);*/
             }
             break;
 //            case R.id.shortStoryTextView:

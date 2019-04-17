@@ -14,6 +14,7 @@ public class AppConstants {
 
     //            public static final String LIVE_URL = "http://52.220.87.141/";
     public static final String LIVE_URL = "https://api.momspresso.com/";
+    public static final String DEV_REWARDS_URL = "devapi.momspresso.com/";
 
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
 

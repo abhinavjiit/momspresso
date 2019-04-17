@@ -409,6 +409,11 @@ public class SharedPrefUtils {
         return _sharedPref.getString("BASE_URL", AppConstants.LIVE_URL);
     }
 
+    public static String getRewardsBaseURL(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString("BASE_URL", AppConstants.DEV_REWARDS_URL);
+    }
+
     public static void setPhoenixFirstLaunch(Context context, boolean flag) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();

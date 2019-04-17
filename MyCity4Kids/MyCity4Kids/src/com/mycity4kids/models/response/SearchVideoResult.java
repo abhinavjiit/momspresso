@@ -6,6 +6,7 @@ public class SearchVideoResult {
     private String  title_slug;
     private String created_at;
     private VideoAuthor author;
+    private String imageUrl;
 
     public String getTitle() {
         return title;
@@ -47,4 +48,11 @@ public class SearchVideoResult {
         this.author = author;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
