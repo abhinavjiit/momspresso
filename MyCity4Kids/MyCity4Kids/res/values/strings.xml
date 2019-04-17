@@ -590,6 +590,9 @@
     <string name="moderation_or_share.way_to_go">WAY TO GO!</string>
     <string name="moderation_or_share.moderation_message">Your article is up for moderation. You\'ll receive an email within 24 hours regarding the status of the blog</string>
     <string name="moderation_or_share.publish_message">Congrats! Your blog has been published.\n Share it with your friends and family.</string>
+    <string name="moderation_message">100WordStory under moderation.\n
+Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
+
     <string name="moderation_or_share.later">MAYBE LATER</string>
     <string name="moderation_or_share.okay">OKAY</string>
     <string name="moderation_or_share.gplus_fail">Unable to share with google plus.</string>

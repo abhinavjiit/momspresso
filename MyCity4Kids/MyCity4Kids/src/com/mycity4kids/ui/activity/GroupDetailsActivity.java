@@ -1180,6 +1180,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         if (groupsGenericPostRecyclerAdapter != null) {
             groupsGenericPostRecyclerAdapter.releasePlayer();
         }
+
+
+
     }
 
     @Override
@@ -1835,15 +1838,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     for (int i = 0; i < postList.size(); i++) {
 
                         if (postList.get(i).getId() == postId) {
-                            postList.get(i).setResponseCount(completeCommentResponseList.size()-1);
+                            postList.get(i).setResponseCount(completeCommentResponseList.size() - 1);
                             groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
                             break;
                         }
                     }
 
 
-                }
-                else {
+                } else {
                     MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                     try {
                         JSONObject jsonObject = new JSONObject();

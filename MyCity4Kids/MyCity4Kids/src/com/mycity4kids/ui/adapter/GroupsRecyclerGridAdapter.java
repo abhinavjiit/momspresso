@@ -2,6 +2,7 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.media.Image;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -92,7 +93,7 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
 //        holder.groupsNameTextView.setSelected(position == selectedPosition);
     }
 
-    public class GroupsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class GroupsViewHolder extends RecyclerView.ViewHolder {
         TextView groupsNameTextView, badge;
         ImageView groupImageView, hightLightImageView;
         LabelImageView groupNewLabelImageView;
@@ -107,15 +108,13 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onRecyclerItemClick(v, getAdapterPosition(), isMember);
+
+                  groupsDataList.get(getAdapterPosition()).setHighlight(0);
+                  mListener.onRecyclerItemClick(v, getAdapterPosition(), isMember);
                     notifyDataSetChanged();
+
                 }
             });
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition(), isMember);
         }
     }
 
