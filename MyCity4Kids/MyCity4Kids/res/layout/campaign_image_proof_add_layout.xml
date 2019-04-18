@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <!--<ImageView-->
+            <!--android:id="@+id/menuImageView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:paddingBottom="10dp"-->
+            <!--android:paddingRight="10dp"-->
+            <!--android:paddingTop="10dp"-->
+            <!--android:src="@drawable/hamburger_menu" />-->
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/reward_campaign_add_proof"
+                android:textColor="@color/home.toolbar.titlecolor"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/selectOptToolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_toStartOf="@+id/rightContainerLL"
+                android:layout_toLeftOf="@+id/rightContainerLL"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/home_screen.select_an_option.title"
+                android:textColor="@color/select_option.toolbar.titlecolor"
+                android:textSize="20sp"
+                android:visibility="gone"
+                app:fontName="oswald_regular.ttf" />
+
+            <ImageView
+                android:id="@+id/downArrowImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/toolbarTitle"
+                android:layout_toRightOf="@+id/toolbarTitle"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="15dp"
+                android:src="@drawable/arrow_bluexxhdpidown"
+                android:tint="#507cbe"
+                android:visibility="gone" />
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/rightContainerLL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+
+                android:orientation="horizontal">
+
+
+
+            </com.mycity4kids.widget.CustomFontEditText>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+
+</LinearLayout>

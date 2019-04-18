@@ -1099,4 +1099,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_name">Campaign Name \n Facebook Campaign</string>
 
 
+
+    //rewardsCampaignString
+    <string name="reward_campaign_add_proof">ADD PROOF</string>
+
+
 </resources>

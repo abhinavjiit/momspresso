@@ -267,6 +267,11 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             if (response == null || response.body() == null) {
                 if (response.errorBody() != null) {
+                    if(response.code()==409)
+                    {
+                        showToast("This title already exists. Kindly write a new title.");
+                        finish();
+                    }
                     MixPanelUtils.pushVideoPublishSuccessEvent(mixpanel, title);
                     uploadingContainer.setVisibility(View.GONE);
                     uploadFinishContainer.setVisibility(View.VISIBLE);
