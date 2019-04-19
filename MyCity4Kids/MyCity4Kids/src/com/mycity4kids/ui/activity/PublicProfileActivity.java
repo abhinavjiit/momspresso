@@ -200,6 +200,7 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
                             break;
                         case AppConstants.USER_TYPE_USER:
                             authorTypeTextView.setText(getString(R.string.author_type_user));
+                            break;
                         case AppConstants.USER_TYPE_COLLABORATION:
                             authorTypeTextView.setText(getString(R.string.author_type_collaboration));
 //                            if (AppConstants.DEBUGGING_USER_ID.contains(userId)) {
