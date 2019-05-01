@@ -23,8 +23,8 @@ class RewardsTabFragment : Fragment() {
 
         textStartReward = containerView.findViewById(R.id.textStartReward)
 
-        if(arguments.containsKey("isRewardsAdded")){
-            isRewardsAdded = arguments.getString("isRewardsAdded", "0")
+        if(arguments!!.containsKey("isRewardsAdded")){
+            isRewardsAdded = arguments!!.getString("isRewardsAdded", "0")
             if(isRewardsAdded.equals("1")){
                 textStartReward.setText(resources.getString(R.string.update))
             }else{

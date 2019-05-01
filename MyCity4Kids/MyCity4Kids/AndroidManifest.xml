@@ -671,6 +671,10 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".ui.campaign.activity.CampaignContainerActivity"
+                   android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+                </activity>
+
 
         <!--   <activity
                android:name=".ui.rewards.activity.RewardsContainerActivity"

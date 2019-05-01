@@ -720,8 +720,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                         }
                     })
                     .show();
-        }
-        else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

@@ -42,6 +42,7 @@ import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.widget.FeedNativeAd;
 
@@ -56,7 +57,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TrendingTopicsAllTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 1;
     private int limit = 10;
@@ -182,8 +183,23 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                 }
             }
 
+
         });
+
+        getGroupIdForCurrentCategory();
+
         return view;
+    }
+
+    private void getGroupIdForCurrentCategory() {
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap("", this, "listing");
+        groupIdCategoryMap.getGroupIdForCurrentCategory();
+    }
+
+    @Override
+    public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
+        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
+        recyclerAdapter.notifyDataSetChanged();
     }
 
     private void getCarouselVideos() {

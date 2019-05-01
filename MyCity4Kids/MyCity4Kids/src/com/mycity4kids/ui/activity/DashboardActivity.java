@@ -88,6 +88,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.adapter.UserAllDraftsRecyclerAdapter;
+import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
@@ -1857,7 +1858,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.rewardsTextView: {
                 mDrawerLayout.closeDrawers();
-                Intent cityIntent = new Intent(this, RewardCampaignActivity.class);
+                Intent cityIntent = new Intent(this, CampaignContainerActivity.class);
                 startActivity(cityIntent);
             }
             break;

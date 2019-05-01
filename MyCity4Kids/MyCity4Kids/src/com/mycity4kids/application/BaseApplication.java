@@ -68,7 +68,7 @@ public class BaseApplication extends Application {
     private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
     private static BaseApplication mInstance;
-    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit,rewardsRetrofit;
+    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit,campaignRewards;
     private static OkHttpClient client, customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;
@@ -238,6 +238,70 @@ public class BaseApplication extends Application {
 
     protected static void setInstance(BaseApplication mInstance) {
         BaseApplication.mInstance = mInstance;
+    }
+
+    public Retrofit getCampaignRetrofit() {
+        if (null == campaignRewards) {
+            createRetrofitInstanceForCampaign(AppConstants.DEV_REWARDS_URL);
+        }
+        return campaignRewards;
+    }
+
+    public Retrofit createRetrofitInstanceForCampaign(String base_url) {
+        Interceptor mainInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                HttpUrl originalHttpUrl = original.url();
+                Request.Builder requestBuilder = original.newBuilder();
+
+                requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
+                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder.addHeader("agent", "android");
+                requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
+                requestBuilder.addHeader("model", Build.MODEL);
+                requestBuilder.addHeader("source", "2");
+                requestBuilder.addHeader("appVersion", appVersion);
+                requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
+                requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
+                requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            }
+        };
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+// set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        if (BuildConfig.DEBUG) {
+            client = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .addInterceptor(logging)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        } else {
+            client = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        }
+
+        campaignRewards = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .addConverterFactory(buildGsonConverter())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(client)
+                .build();
+
+        return campaignRewards;
     }
 
     @Override
@@ -492,13 +556,6 @@ public class BaseApplication extends Application {
             createRetrofitInstance(SharedPrefUtils.getBaseURL(this));
         }
         return retrofit;
-    }
-
-    public Retrofit getRewardsRetrofit() {
-        if (null == rewardsRetrofit) {
-            createRetrofitInstance(SharedPrefUtils.getRewardsBaseURL(this));
-        }
-        return rewardsRetrofit;
     }
 
     public Retrofit getGroupsRetrofit() {

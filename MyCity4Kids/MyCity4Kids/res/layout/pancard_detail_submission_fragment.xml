@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/enterPanCardDetailsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="31dp"
+            android:text="Please enter your PAN card details"
+            android:textColor="#515151"/>
+        <!-- <EditText
+             android:id=""
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@+id/enterPanCardDetailsTextView"
+             android:layout_marginLeft="30dp"
+             android:layout_marginTop="@dimen/space_10"
+             android:layout_marginRight="30dp"
+             android:background="@drawable/campaign_border_round_rectangular_layout"
+             android:paddingLeft="@dimen/space_15"
+             android:paddingTop="@dimen/space_10"
+             android:paddingBottom="@dimen/space_10"
+             android:textAllCaps="true"
+             android:textColor="#515151"
+             android:textSize="18sp"
+             app:fontFamily="sans-serif" />-->
+        <!-- <com.mycity4kids.widget.CustomFontEditText
+             android:id="@+id/panCardDetailEditTextView"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@+id/enterPanCardDetailsTextView"
+             android:layout_marginLeft="30dp"
+             android:layout_marginTop="@dimen/space_10"
+             android:layout_marginRight="30dp"
+             android:background="@drawable/campaign_border_round_rectangular_layout"
+             android:paddingLeft="@dimen/space_15"
+             android:paddingTop="@dimen/space_10"
+             android:paddingBottom="@dimen/space_10"
+             android:textAllCaps="true"
+             android:textColor="#515151"
+             android:textSize="18sp"
+             app:fontFamily="sans-serif" />-->
+        <com.mycity4kids.widget.CustomFontEditText
+            android:id="@+id/panCardDetailEditTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/enterPanCardDetailsTextView"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/campaign_border_round_rectangular_layout"
+            android:hint=""
+            android:inputType="textNoSuggestions"
+            android:paddingStart="15dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:textColor="@color/app_light_black"
+            android:textSize="16dp"
+            app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/textView9"
+        android:layout_width="317dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment."
+        android:textColor="#4A4A4A"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="28dp"
+        android:text="NOTE :"
+        android:textColor="@color/app_red"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/submitTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/shape_red_fill"
+        android:paddingLeft="80dp"
+        android:paddingTop="@dimen/space_10"
+        android:paddingRight="80dp"
+        android:paddingBottom="@dimen/space_10"
+        android:text="SAVE  CONTINUE"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:fontName="oswald_regular.ttf"
+        app:layout_constraintBottom_toTopOf="@+id/textView11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="28dp"
+        android:gravity="center_horizontal"
+        android:text="Maybe Later"
+        android:textColor="@color/app_red"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="parent" />
+</android.support.constraint.ConstraintLayout>

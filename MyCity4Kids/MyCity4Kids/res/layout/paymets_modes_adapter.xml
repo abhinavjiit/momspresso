@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/one"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F9F9F9">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/selectOptionPaymentTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="@dimen/space_20"
+            android:gravity="center_horizontal"
+            android:text="@string/select_payment_method"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:visibility="visible"
+            app:fontName="oswald_regular.ttf" />
+
+        <RelativeLayout
+            android:id="@+id/defaultdataRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selectOptionPaymentTextView"
+            android:layout_marginTop="30dp"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:id="@+id/imageRadioButtonContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/defaultRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+
+
+                    android:buttonTint="@color/app_red" />
+
+                <ImageView
+                    android:id="@+id/paymentDefaultModeImageView"
+                    android:layout_width="250dp"
+                    android:layout_height="65dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/campaign_border_round_rectangular_layout"
+                    android:padding="15dp" />
+
+                <TextView
+                    android:id="@+id/defaultEditTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="26dp"
+                    android:text="Edit"
+                    android:textColor="@color/app_red"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="38dp"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/defaultEditTextView"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/space_20"
+                    android:layout_marginRight="24dp"
+                    android:background="@color/app_red" />
+
+
+            </RelativeLayout>
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/tagTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageRadioButtonContainer"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_marginBottom="@dimen/space_10"
+                android:gravity="center_horizontal"
+                android:text="9956XXXXX56"
+                android:textColor="#4A4A4A"
+                android:textSize="16sp"
+                app:fontName="oswald_regular.ttf" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tagTextView"
+                android:layout_marginTop="@dimen/space_10"
+                android:orientation="horizontal">
+
+
+                <View
+                    android:id="@+id/leftView"
+                    android:layout_width="150dp"
+                    android:layout_height="1dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/space_5"
+                    android:layout_marginTop="@dimen/space_10"
+                    android:background="#E5E5E5" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/or"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="@dimen/space_20"
+                    android:text="OR"
+                    android:textColor="#4A4A4A"
+                    android:textSize="16sp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <View
+                    android:id="@+id/rightView"
+                    android:layout_width="150dp"
+                    android:layout_height="1dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/space_10"
+                    android:layout_marginRight="@dimen/space_5"
+                    android:background="#E5E5E5" />
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/imageRadioButtonContainerNonDefault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/defaultdataRelativeLayout"
+            android:layout_marginTop="30dp"
+            android:gravity="center">
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/nonDefaultRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:backgroundTint="@color/app_red"
+                android:buttonTint="@color/app_red" />
+
+            <ImageView
+                android:id="@+id/nonDefaultModeImageView"
+                android:layout_width="250dp"
+                android:layout_height="65dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/campaign_border_round_rectangular_layout"
+                android:elevation="@dimen/space_10"
+                android:padding="15dp"
+
+
+                />
+
+            <TextView
+                android:id="@+id/nonDefaultEditTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="26dp"
+                android:text="Edit"
+                android:textColor="@color/app_red"
+                android:textSize="20sp"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/viewBaseLine"
+                android:layout_width="38dp"
+                android:layout_height="1dp"
+                android:layout_below="@id/nonDefaultEditTextView"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/space_20"
+                android:layout_marginRight="24dp"
+                android:background="@color/app_red"
+                android:visibility="gone" />
+
+
+        </RelativeLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/accountNumberTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageRadioButtonContainerNonDefault"
+            android:layout_marginTop="@dimen/space_15"
+            android:gravity="center"
+            android:text="fbvfvfbfubvifbvufbuvbefbvebfuyvbefyuvbuyebv"
+            android:textSize="16sp"
+            app:fontName="oswald_regular.ttf" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

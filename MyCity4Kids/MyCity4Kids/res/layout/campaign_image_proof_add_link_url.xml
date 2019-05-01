@@ -45,7 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/headerTextViewContainer"
-        android:background="@color/app_nav_bg"
+        android:background="#EB3955"
+        android:alpha="0.3"
         android:gravity="center">
 
         <com.mycity4kids.widget.CustomFontEditText
@@ -57,10 +58,10 @@
             android:layout_marginRight="12dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/article_listing_item_border_bg"
-            android:fontFamily="sans-serif-light"
+            android:fontFamily="sans-serif"
             android:hint="Enter page link or Url"
             android:paddingLeft="12dp"
-            android:textColor="@color/ad.author_name.text"
+            android:textColor="#AFAFAF"
             android:textSize="14sp"
 
             />

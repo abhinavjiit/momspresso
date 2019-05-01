@@ -472,4 +472,14 @@
     <color name="gray_group_comment_container_border">#d7d7d7</color>
     <color name="gold_color_video_listing">#ffcd00</color>
     <color name="background_color_gold_logo_video_listing">#363636</color>
+
+    <color name="campagin.submission.open">#17AF49</color>
+    <color name="campagin.subscribe.now">#4A90E2</color>
+    <color name="campaign.subscribed">#67A2E6</color>
+    <color name="campaign.submission.full">#F69C47</color>
+    <color name="campaign.expired">#9B9B9B</color>
+    <color name="campaign.list.buttons">#D03F56</color>
+    <color name="campaign.515151">#515151</color>
+
+    <color name="black_64">#A6000000</color>
 </resources>

@@ -141,8 +141,8 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 .requestEmail().requestScopes(Scope(Scopes.PLUS_ME))
                 .build()
 
-        mGoogleApiClient = GoogleApiClient.Builder(activity)
-                .enableAutoManage(activity, this)
+        mGoogleApiClient = GoogleApiClient.Builder(activity!!)
+                .enableAutoManage(activity!!, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build()
         callbackManager = CallbackManager.Factory.create()
