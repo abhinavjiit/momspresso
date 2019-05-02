@@ -25,6 +25,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
     private var panNumber: String? = null
     private lateinit var submitTextView: TextView
     private lateinit var panCardDetailEditTextView: EditText
+    private var isComingFromRewards : Boolean =false
     override fun updateUi(response: Response?) {
 
     }
@@ -32,10 +33,10 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(isComingFromRewards : Boolean = false) =
                 PanCardDetailsSubmissionFragment().apply {
                     arguments = Bundle().apply {
-
+                        this.putBoolean("isComingFromRewards",isComingFromRewards)
                     }
 
                 }
@@ -44,17 +45,24 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.pancard_detail_submission_fragment, container, false)
+
+
+        if (arguments != null) {
+            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
+                arguments.getBoolean("isComingFromRewards")
+            } else{
+                false
+            }
+        }
+
         panCardDetailEditTextView = view.findViewById(R.id.panCardDetailEditTextView)
         submitTextView = view.findViewById(R.id.submitTextView)
-
         fetchPanNumber()
         submitTextView.setOnClickListener(this)
         return view
     }
 
     private fun fetchPanNumber() {
-
-
         showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getPanNumber().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
             override fun onComplete() {

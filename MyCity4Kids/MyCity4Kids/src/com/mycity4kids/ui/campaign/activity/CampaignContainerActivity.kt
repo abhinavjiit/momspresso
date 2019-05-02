@@ -60,7 +60,7 @@ class CampaignContainerActivity : AppCompatActivity() {
 
 
     private fun addPaymantMode() {
-        var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance()
+        var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = false)
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignPaymentModesFragment,
                 CampaignPaymentModesFragment::class.java.simpleName)
                 .commit()

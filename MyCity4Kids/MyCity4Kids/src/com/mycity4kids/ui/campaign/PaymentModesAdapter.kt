@@ -29,13 +29,8 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (position == 0) {
             holder.selectOptionPaymentTextView.visibility = View.VISIBLE
-
-
         } else {
-
             holder.selectOptionPaymentTextView.visibility = View.GONE
-
-
         }
         Picasso.with(context.context).load(paymentMode[position].icon).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                 .fit().into(holder.nonDefaultModeImageView)
@@ -54,9 +49,6 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
                 holder.viewBaseLine.visibility = View.INVISIBLE
 
             }
-
-
-
             holder.nonDefaultRadioButton.setOnClickListener {
                 clickListener.onRadioButton(position)
             }
@@ -74,7 +66,6 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView), View.OnClickListener {
         override fun onClick(p0: View?) {
-
         }
 
         init {

@@ -56,6 +56,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.event_details_activity.*
+import kotlinx.android.synthetic.main.fragment_rewards_family_info.*
 import org.apmem.tools.layouts.FlowLayout
 import java.security.MessageDigest
 import java.util.*
@@ -113,6 +114,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     private lateinit var editYoutube: EditText
     private lateinit var spinnerProfession: AppCompatSpinner
     private lateinit var spinnerHouseHold: AppCompatSpinner
+    private lateinit var textlater: TextView
     private var householdList = ArrayList<String>()
     private var professionList = ArrayList<String>()
     private var mGoogleApiClient: GoogleApiClient? = null
@@ -123,11 +125,12 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     private var callbackManager: CallbackManager? = null
     private var facebookAuthToken: String? = null
     private var instagramAuthToken: String? = null
+    private var isComingFromRewards = false
 
     companion object {
-        fun newInstance(isSkippablePages : Boolean) = RewardsSocialInfoFragment().apply {
+        fun newInstance(isComingFromRewards : Boolean = false) = RewardsSocialInfoFragment().apply {
             arguments = Bundle().apply {
-                this.putBoolean("isSkippable",skippablePages)
+                this.putBoolean("isComingFromRewards",isComingFromRewards)
             }
         }
     }
@@ -136,6 +139,14 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_social_info, container, false)
+
+        if (arguments != null){
+            isComingFromRewards = if(arguments.containsKey("isComingFromRewards")){
+                arguments.getBoolean("isComingFromRewards")
+            }else{
+                false
+            }
+        }
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().requestScopes(Scope(Scopes.PLUS_ME))
@@ -293,6 +304,17 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         editTwitter = containerView.findViewById(R.id.editTwitter)
         editWebsite = containerView.findViewById(R.id.editWebsite)
         editYoutube = containerView.findViewById(R.id.editYoutube)
+        textlater = containerView.findViewById(R.id.textlater)
+
+        if (isComingFromRewards) {
+            textlater.visibility = View.VISIBLE
+        } else {
+            textlater.visibility = View.GONE
+        }
+
+        textlater.setOnClickListener {
+            submitListener.socialOnSubmitListener()
+        }
 
         layoutInstagram.setOnClickListener {
             //AuthenticateWithInstagram()

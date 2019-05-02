@@ -8,6 +8,8 @@ import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.facebook.FacebookUtils
 import com.mycity4kids.interfaces.IFacebookEvent
+import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
+import com.mycity4kids.ui.campaign.fragment.PanCardDetailsSubmissionFragment
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsFamilyInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
@@ -16,7 +18,11 @@ import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
 class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
         RewardsSocialInfoFragment.SubmitListener,
-        RewardsFamilyInfoFragment.SubmitListener, IFacebookEvent {
+        RewardsFamilyInfoFragment.SubmitListener,CampaignPaymentModesFragment.SubmitListener, IFacebookEvent {
+    override fun onPaymentModeDone() {
+
+    }
+
     override fun onFacebookEventReceived(response: String?) {
         if (rewardsSocialInfoFragment != null) {
             rewardsSocialInfoFragment!!.updateFaceBookView()
@@ -31,7 +37,8 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     override fun socialOnSubmitListener() {
-        this@RewardsContainerActivity.finish()
+        addPaymentModesFragment()
+//        this@RewardsContainerActivity.finish()
     }
 
     override fun profileOnSaveAndContinue() {
@@ -42,6 +49,8 @@ class RewardsContainerActivity : BaseActivity(),
     private var rewardsPersonalInfoFragment: RewardsPersonalInfoFragment? = null
     private var rewardsFamilyInfoFragment: RewardsFamilyInfoFragment? = null
     private var rewardsSocialInfoFragment: RewardsSocialInfoFragment? = null
+    private var paymentModesFragment: CampaignPaymentModesFragment? = null
+    private var panCardDetailsSubmissionFragment: PanCardDetailsSubmissionFragment? = null
     private var pageLimit: Int? = null
     private var skippablePages = false
 
@@ -49,7 +58,7 @@ class RewardsContainerActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rewards_container)
 
-        pageLimit = intent.getIntExtra("", 5)
+        pageLimit = intent.getIntExtra("pageLimit", 5)
         skippablePages = intent.getBooleanExtra("isSkippable", false)
 
         callbackManager = CallbackManager.Factory.create()
@@ -74,8 +83,8 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     private fun addProfileFragment() {
-        if (pageLimit!! <= 1) {
-            rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance(isSkippablePages = skippablePages)
+        if (pageLimit!! >= 1) {
+            rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance(isComingFromRewards = true)
             supportFragmentManager.beginTransaction().replace(R.id.container, rewardsPersonalInfoFragment,
                     RewardsPersonalInfoFragment::class.java.simpleName)
                     .commit()
@@ -86,8 +95,8 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     private fun addFamilyFragment() {
-        if (pageLimit!! <= 2) {
-            rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance(isSkippablePages = skippablePages)
+        if (pageLimit!! >= 2) {
+            rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance(isComingFromRewards = true)
             supportFragmentManager.beginTransaction().replace(R.id.container, rewardsFamilyInfoFragment,
                     RewardsFamilyInfoFragment::class.java.simpleName)
                     .commit()
@@ -97,8 +106,8 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     private fun addSocialFragment() {
-        if (pageLimit!! <= 3) {
-            rewardsSocialInfoFragment = RewardsSocialInfoFragment.newInstance(isSkippablePages = skippablePages)
+        if (pageLimit!! >= 3) {
+            rewardsSocialInfoFragment = RewardsSocialInfoFragment.newInstance(isComingFromRewards = true)
             supportFragmentManager.beginTransaction().replace(R.id.container, rewardsSocialInfoFragment,
                     RewardsSocialInfoFragment::class.java.simpleName)
                     .commit()
@@ -106,6 +115,32 @@ class RewardsContainerActivity : BaseActivity(),
             finish()
         }
     }
+
+    private fun addPaymentModesFragment() {
+        if (pageLimit!! >= 4) {
+            paymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = true)
+            supportFragmentManager.beginTransaction().replace(R.id.container, paymentModesFragment,
+                    CampaignPaymentModesFragment::class.java.simpleName)
+                    .commit()
+        } else {
+            finish()
+        }
+    }
+
+    private fun addPancardDetailFragment() {
+        if (pageLimit!! >= 5) {
+            panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = true)
+            supportFragmentManager.beginTransaction().replace(R.id.container, panCardDetailsSubmissionFragment,
+                    PanCardDetailsSubmissionFragment::class.java.simpleName)
+                    .commit()
+        } else {
+            finish()
+        }
+    }
+
+    /*
+    * 1 payemtnModeFragment
+    * 2 pancardDetailSubmission*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

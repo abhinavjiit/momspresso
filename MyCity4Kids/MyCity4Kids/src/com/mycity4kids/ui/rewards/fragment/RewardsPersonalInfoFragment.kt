@@ -101,10 +101,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     companion object {
         @JvmStatic
-        fun newInstance(isSkippablePages : Boolean) =
+        fun newInstance(isComingFromRewards : Boolean=false) =
                 RewardsPersonalInfoFragment().apply {
                     arguments = Bundle().apply {
-                        this.putBoolean("isSkippable",isSkippablePages)
+                        this.putBoolean("isComingFromRewards",isComingFromRewards)
                     }
                 }
     }

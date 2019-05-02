@@ -23,39 +23,8 @@
             android:layout_marginLeft="32dp"
             android:layout_marginTop="31dp"
             android:text="Please enter your PAN card details"
-            android:textColor="#515151"/>
-        <!-- <EditText
-             android:id=""
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_below="@+id/enterPanCardDetailsTextView"
-             android:layout_marginLeft="30dp"
-             android:layout_marginTop="@dimen/space_10"
-             android:layout_marginRight="30dp"
-             android:background="@drawable/campaign_border_round_rectangular_layout"
-             android:paddingLeft="@dimen/space_15"
-             android:paddingTop="@dimen/space_10"
-             android:paddingBottom="@dimen/space_10"
-             android:textAllCaps="true"
-             android:textColor="#515151"
-             android:textSize="18sp"
-             app:fontFamily="sans-serif" />-->
-        <!-- <com.mycity4kids.widget.CustomFontEditText
-             android:id="@+id/panCardDetailEditTextView"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_below="@+id/enterPanCardDetailsTextView"
-             android:layout_marginLeft="30dp"
-             android:layout_marginTop="@dimen/space_10"
-             android:layout_marginRight="30dp"
-             android:background="@drawable/campaign_border_round_rectangular_layout"
-             android:paddingLeft="@dimen/space_15"
-             android:paddingTop="@dimen/space_10"
-             android:paddingBottom="@dimen/space_10"
-             android:textAllCaps="true"
-             android:textColor="#515151"
-             android:textSize="18sp"
-             app:fontFamily="sans-serif" />-->
+            android:textColor="#515151" />
+
         <com.mycity4kids.widget.CustomFontEditText
             android:id="@+id/panCardDetailEditTextView"
             android:layout_width="match_parent"

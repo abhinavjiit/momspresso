@@ -176,11 +176,12 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                 }
                 2 -> {
                     addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString(), account_number = addUpiEditTextView.text.toString())
-
+                }
+                3 -> {
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString(), account_number = accountNumberEditTextView.text.toString(), account_ifsc_code = ifscEditTextView.text.toString(), account_name = addAccountHolderNameEditTextView.text.toString())
                 }
                 else -> {
-                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString(), account_number = accountNumberEditTextView.text.toString(), account_ifsc_code = ifscEditTextView.text.toString(), account_name = addAccountHolderNameEditTextView.text.toString())
-
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString(), account_number = addMobileNumberEditText.text.toString())
                 }
 
             }
@@ -196,7 +197,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
                 override fun onNext(t: BaseResponseGeneric<DefaultData>) {
                     if (comingFrom.equals("firstTime")) {
-                        var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance()
+                        var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = false)
                         (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
                                 CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
                                 .commit()
