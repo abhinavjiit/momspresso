@@ -15,6 +15,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.models.campaignmodels.ProofPostModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -105,6 +106,14 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                     }
 
                     override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
+
+
+                        var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
+                        (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
+                                CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
+                                .commit()
+
+
                     }
 
                     override fun onError(e: Throwable) {

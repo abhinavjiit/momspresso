@@ -10,7 +10,7 @@
         android:id="@+id/recyclerPaymentModesOption"
         android:name="com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment"
         android:layout_width="match_parent"
-        android:layout_height="578dp"
+        android:layout_height="625dp"
         android:background="#F9F9F9"
         app:layout_constraintBottom_toTopOf="@+id/relativeBottom"
         app:layout_constraintTop_toTopOf="parent"
@@ -50,7 +50,5 @@
             android:textSize="15sp" />
 
     </RelativeLayout>
-
-
 </android.support.constraint.ConstraintLayout>
 

@@ -34,6 +34,9 @@ public class CampaignDataListResult {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("name_slug")
+    @Expose
+    private String nameSlug;
     @SerializedName("recm_order")
     @Expose
     private Object recmOrder;
@@ -114,6 +117,14 @@ public class CampaignDataListResult {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNameSlug() {
+        return nameSlug;
+    }
+
+    public void setNameSlug(String nameSlug) {
+        this.nameSlug = nameSlug;
     }
 
     public Object getRecmOrder() {

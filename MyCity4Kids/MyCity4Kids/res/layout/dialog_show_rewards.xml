@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_shadow_rectangle"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/space_28"
+    android:paddingBottom="@dimen/space_28"
+    android:paddingLeft="@dimen/space_40"
+    android:paddingRight="@dimen/space_40">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/dialog_based_on_profile"
+        android:textColor="@color/campaign_515151"
+        android:textSize="18sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/sub_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_5"
+        android:gravity="center"
+        android:text="@string/dialog_you_can_get_reward_of"
+        android:textColor="@color/grey_faded"
+        android:textSize="10sp"
+        app:fontName="open_sans.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/show_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_5"
+        android:gravity="center"
+        android:text="Rs.500"
+        android:textColor="@color/campaign_list_buttons"
+        android:textSize="35sp"
+        app:fontName="oswald_regular.ttf" />
+
+</LinearLayout>

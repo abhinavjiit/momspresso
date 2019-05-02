@@ -18,6 +18,9 @@ class CampaignDetailResult {
     @SerializedName("brand_id")
     @Expose
     var brandId: Int? = null
+    @SerializedName("campaign_status")
+    @Expose
+    var campaignStatus: Int? = null
     @SerializedName("created_time")
     @Expose
     var createdTime: Int? = null
@@ -63,6 +66,9 @@ class CampaignDetailResult {
     @SerializedName("name")
     @Expose
     var name: String? = null
+    @SerializedName("name_slug")
+    @Expose
+    var nameSlug: String? = null
     @SerializedName("po_number")
     @Expose
     var poNumber: String? = null
