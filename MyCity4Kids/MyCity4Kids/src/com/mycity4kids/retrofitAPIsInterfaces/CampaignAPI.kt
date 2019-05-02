@@ -1,9 +1,13 @@
 package com.mycity4kids.retrofitAPIsInterfaces
 
+import com.mycity4kids.models.BaseResponseModel
 import com.mycity4kids.models.campaignmodels.*
+import com.mycity4kids.models.request.CampaignParticipate
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.ui.campaign.*
+import com.mycity4kids.ui.campaign.PaymentModeListModal
 import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.*
@@ -46,6 +50,11 @@ interface CampaignAPI {
     @POST("rewards/v1/campaigns/proofs/")
     fun postProofToServer(@Body proofPostModel: ProofPostModel)
             : Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
+
+
+    @POST("rewards/v1/campaigns/participate/")
+    fun postRegisterCampaign(@Body body: CampaignParticipate)
+            : Call<ParticipateCampaignResponse>
 
     @POST("/payments/v1/account/")
     fun addAccountDetail(@Body addAccountDetailModal: AddAccountDetailModal)

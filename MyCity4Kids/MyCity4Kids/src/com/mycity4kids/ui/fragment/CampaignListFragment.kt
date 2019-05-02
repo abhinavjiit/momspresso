@@ -1,13 +1,14 @@
 package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.crashlytics.android.Crashlytics
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
@@ -18,20 +19,23 @@ import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.adapter.RewardCampaignAdapter
-import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
-import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
-import kotlinx.android.synthetic.main.reward_campaign.*
 import retrofit2.Call
 import retrofit2.Callback
+import java.text.SimpleDateFormat
+import java.util.*
+import java.text.ParseException
+
 
 class CampaignListFragment : BaseFragment() {
 
-    private lateinit var saveAndContinueListener: SaveAndContinueListener
+    //    private lateinit var saveAndContinueListener: SaveAndContinueListener
     private var campaignList = mutableListOf<CampaignDataListResult>()
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: RewardCampaignAdapter
     private lateinit var apiGetResponse: CampaignDataListResult
+    private lateinit var backIcon: ImageView
     private lateinit var containerView: View
+    private lateinit var recyclerView: RecyclerView
 
     override fun updateUi(response: Response?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -54,11 +58,45 @@ class CampaignListFragment : BaseFragment() {
 
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.reward_campaign, container, false)
-        fetchCampaignList();
+        backIcon = containerView.findViewById(R.id.back)
+        recyclerView = containerView.findViewById(R.id.recyclerView)
         linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = linearLayoutManager
+        adapter = RewardCampaignAdapter(campaignList, activity)
+        recyclerView.adapter = adapter
+        fetchCampaignList()
+        backIcon.setOnClickListener {
+            activity!!.onBackPressed()
+        }
+        System.out.println("-------" + getCurrentDateTime())
+        System.out.println("currentTimeMillis-------" + System.currentTimeMillis())
+        System.out.println("-------" + getCurrentDateTime().toString("yyyy/MM/dd"))
+        getMilliFromDate(getCurrentDateTime().toString("yyyy/MM/dd"))
         return containerView
     }
 
+    fun Date.toString(format: String, locale: Locale = Locale.getDefault()): String {
+        val formatter = SimpleDateFormat(format, locale)
+        return formatter.format(this)
+    }
+
+    fun getCurrentDateTime(): Date {
+        return Calendar.getInstance().time
+    }
+
+    fun getMilliFromDate(dateFormat: String): Long {
+        var date = Date()
+        val formatter = SimpleDateFormat("dd/MM/yyyy")
+        try {
+            date = formatter.parse(dateFormat)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        println("Today is $date")
+        return date.time
+    }
+/*
     fun initiatelistner(id:Int){
         saveAndContinueListener.pushCampaignDetail(id)
     }
@@ -72,9 +110,9 @@ class CampaignListFragment : BaseFragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is CampaignContainerActivity) {
-            //saveAndContinueListener = context
+            saveAndContinueListener = context
         }
-    }
+    }*/
 
     private fun fetchCampaignList() {
         showProgressDialog(resources.getString(R.string.please_wait))
@@ -130,9 +168,7 @@ class CampaignListFragment : BaseFragment() {
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
-                    recyclerView.layoutManager = linearLayoutManager
-                    //adapter = RewardCampaignAdapter(campaignList, activity)
-                    recyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
 //                    if (isAdded)
 //                        (activity as ArticleDetailsContainerActivity).showToast(responseData.reason)
                 } else {

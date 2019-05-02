@@ -24,7 +24,7 @@ class CampaignContainerActivity : AppCompatActivity() {
         //    campaignListFragment()
 
         //      addAddProofFragment()
-        addPaymantMode()
+//        addPaymantMode()
 
         //campaignListFragment()
 
