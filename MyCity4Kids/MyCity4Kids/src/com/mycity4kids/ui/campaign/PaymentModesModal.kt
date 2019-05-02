@@ -22,8 +22,8 @@ data class PaymentModesModal(
             parcel.readByte() != 0.toByte(),
             parcel.readString(),
             parcel.readInt(),
-            parcel.readParcelable(Exists::class.java.classLoader)) {
-    }
+            parcel.readParcelable(Exists::class.java.classLoader))
+
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(type_id)
