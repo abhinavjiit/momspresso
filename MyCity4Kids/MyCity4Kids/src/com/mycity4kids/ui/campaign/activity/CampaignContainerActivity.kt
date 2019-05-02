@@ -24,15 +24,15 @@ class CampaignContainerActivity : AppCompatActivity() {
         //    campaignListFragment()
 
         //      addAddProofFragment()
-        addPaymantMode()
+//        addPaymantMode()
 
         //campaignListFragment()
 
         // addAddProofFragment()
 
-        campaignListFragment()
+//        campaignListFragment()
 
-//        addAddProofFragment()
+        addAddProofFragment(15, emptyList<Int>() as ArrayList<Int>)
 
     }
 

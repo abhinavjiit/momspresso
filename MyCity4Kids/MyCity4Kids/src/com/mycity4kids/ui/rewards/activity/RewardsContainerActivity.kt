@@ -42,10 +42,15 @@ class RewardsContainerActivity : BaseActivity(),
     private var rewardsPersonalInfoFragment: RewardsPersonalInfoFragment? = null
     private var rewardsFamilyInfoFragment: RewardsFamilyInfoFragment? = null
     private var rewardsSocialInfoFragment: RewardsSocialInfoFragment? = null
+    private var pageLimit: Int? = null
+    private var skippablePages = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rewards_container)
+
+        pageLimit = intent.getIntExtra("", 5)
+        skippablePages = intent.getBooleanExtra("isSkippable", false)
 
         callbackManager = CallbackManager.Factory.create()
 
@@ -54,8 +59,6 @@ class RewardsContainerActivity : BaseActivity(),
 
         /*add fragement to container*/
         addProfileFragment()
-
-
     }
 
     private fun initializeXMLComponents() {
@@ -71,26 +74,37 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     private fun addProfileFragment() {
-        rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance()
-        supportFragmentManager.beginTransaction().replace(R.id.container, rewardsPersonalInfoFragment,
-                RewardsPersonalInfoFragment::class.java.simpleName)
-                .commit()
+        if (pageLimit!! <= 1) {
+            rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance(isSkippablePages = skippablePages)
+            supportFragmentManager.beginTransaction().replace(R.id.container, rewardsPersonalInfoFragment,
+                    RewardsPersonalInfoFragment::class.java.simpleName)
+                    .commit()
+        } else {
+            finish()
+        }
+
     }
 
     private fun addFamilyFragment() {
-
-        RewardsFamilyInfoFragment.newInstance()
-        rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance()
-        supportFragmentManager.beginTransaction().replace(R.id.container, rewardsFamilyInfoFragment,
-                RewardsFamilyInfoFragment::class.java.simpleName)
-                .commit()
+        if (pageLimit!! <= 2) {
+            rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance(isSkippablePages = skippablePages)
+            supportFragmentManager.beginTransaction().replace(R.id.container, rewardsFamilyInfoFragment,
+                    RewardsFamilyInfoFragment::class.java.simpleName)
+                    .commit()
+        } else {
+            finish()
+        }
     }
 
     private fun addSocialFragment() {
-        rewardsSocialInfoFragment = RewardsSocialInfoFragment.newInstance()
-        supportFragmentManager.beginTransaction().replace(R.id.container, rewardsSocialInfoFragment,
-                RewardsSocialInfoFragment::class.java.simpleName)
-                .commit()
+        if (pageLimit!! <= 3) {
+            rewardsSocialInfoFragment = RewardsSocialInfoFragment.newInstance(isSkippablePages = skippablePages)
+            supportFragmentManager.beginTransaction().replace(R.id.container, rewardsSocialInfoFragment,
+                    RewardsSocialInfoFragment::class.java.simpleName)
+                    .commit()
+        } else {
+            finish()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

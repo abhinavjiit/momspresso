@@ -920,7 +920,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("momsights_screen")) {
-
                 Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
                 startActivity(intent1);
                 try {

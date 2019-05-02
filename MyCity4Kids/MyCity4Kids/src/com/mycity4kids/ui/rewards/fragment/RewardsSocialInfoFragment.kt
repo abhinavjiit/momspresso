@@ -125,9 +125,9 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     private var instagramAuthToken: String? = null
 
     companion object {
-        fun newInstance() = RewardsSocialInfoFragment().apply {
+        fun newInstance(isSkippablePages : Boolean) = RewardsSocialInfoFragment().apply {
             arguments = Bundle().apply {
-
+                this.putBoolean("isSkippable",skippablePages)
             }
         }
     }

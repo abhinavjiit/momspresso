@@ -171,10 +171,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         private lateinit var textKidsDOB: TextView
 
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(isSkippablePages : Boolean) =
                 RewardsFamilyInfoFragment().apply {
                     arguments = Bundle().apply {
-
+                        this.putBoolean("isSkippable",isSkippablePages)
                     }
                 }
     }
