@@ -30,7 +30,7 @@ class CampaignContainerActivity : AppCompatActivity() {
 
         // addAddProofFragment()
 
-        campaignListFragment()
+        //campaignListFragment()
 
 //        addAddProofFragment()
 

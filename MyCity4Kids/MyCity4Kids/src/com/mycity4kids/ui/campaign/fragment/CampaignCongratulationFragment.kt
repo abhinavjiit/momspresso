@@ -1,0 +1,63 @@
+package com.mycity4kids.ui.campaign.fragment
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import com.kelltontech.network.Response
+import com.kelltontech.ui.BaseFragment
+import com.mycity4kids.R
+import com.mycity4kids.utils.AppUtils
+
+class CampaignCongratulationFragment : BaseFragment() {
+
+    private lateinit var whatsappShareImageView: ImageView
+    private lateinit var facebookShareImageView: ImageView
+
+    private lateinit var genricShareImageView: ImageView
+
+    override fun updateUi(response: Response?) {
+    }
+
+
+    companion object {
+        @JvmStatic
+        fun newInstance() =
+                CampaignCongratulationFragment().apply {
+                    arguments = Bundle().apply {
+
+                    }
+
+                }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.campaign_congratulation_layout, container, false)
+        whatsappShareImageView = view.findViewById(R.id.whatsappShareImageView)
+        facebookShareImageView = view.findViewById(R.id.facebookShareImageView)
+        genricShareImageView = view.findViewById(R.id.genricShareImageView)
+
+        whatsappShareImageView.setOnClickListener {
+
+            //  val shareUrl=
+
+//AppUtils.shareStoryWithWhatsApp(activity,)
+
+
+        }
+        facebookShareImageView.setOnClickListener {
+
+
+        }
+        genricShareImageView.setOnClickListener {
+
+
+        }
+
+
+        return view
+    }
+
+}
