@@ -12,7 +12,9 @@ import com.mycity4kids.ui.fragment.CampaignListFragment
 class CampaignContainerActivity : AppCompatActivity() {
 
     private lateinit var toolbarTitle: TextView
-
+    private var totalPay: Int = 0
+    private var name: String? = null
+    private var id: Int = 0
     private var campaignDetailFragment: CampaignDetailFragment? = null
     private var campaignListFragment: CampaignListFragment? = null
 
@@ -75,6 +77,13 @@ class CampaignContainerActivity : AppCompatActivity() {
                 .commit()
     }
 
+    /*fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>) {
+        var campaignAddProofFragment = CampaignAddProofFragment.newInstance(id, deliverableTypeList)
+        supportFragmentManager.beginTransaction().replace(R.id.container, campaignAddProofFragment,
+                CampaignAddProofFragment::class.java.simpleName)
+                .commit()
+    }*/
+
     /*private fun addAddProofFragment() {
         var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignPaymentModesFragment,
@@ -88,4 +97,30 @@ class CampaignContainerActivity : AppCompatActivity() {
         } else
             super.onBackPressed()
     }
+
+
+    fun setTotalPayOut(totalPayOut: Int) {
+        totalPay = totalPayOut
+    }
+
+    fun getTotalPayOut(): Int {
+        return totalPay
+    }
+
+    fun setNameSlug(nameSlug: String) {
+        name = nameSlug
+    }
+
+    fun getNameSlug(): String {
+        return name!!
+    }
+
+    fun setIdCamp(Id: Int) {
+        id = Id
+    }
+
+    fun getIdCamp(): Int {
+        return id
+    }
+
 }

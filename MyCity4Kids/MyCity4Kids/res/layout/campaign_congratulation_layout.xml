@@ -1,23 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        />
 
     <RelativeLayout
         android:id="@+id/headerRelativeLayout"
@@ -26,14 +13,22 @@
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/congratulationHeaderImageView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:src="@drawable/congratulations_screen_illustration" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="20dp"
+
+            android:layout_height="20dp"
+            android:layout_margin="@dimen/space_10"
+            android:src="@drawable/cross_icon_back"
+            android:tint="@color/black" />
 
 
     </RelativeLayout>
@@ -120,7 +115,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/space_5"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="22dp"
         android:text="Payment Completed "
         android:textSize="16sp"
         app:fontName="oswald.ttf"
@@ -177,21 +172,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="@dimen/space_10"
         app:layout_constraintTop_toBottomOf="@id/l">
 
 
         <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/whatsappShareImageView"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_marginRight="@dimen/space_20"
             app:srcCompat="@drawable/ic_whatsapp_camp" />
 
         <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/facebookShareImageView"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_marginRight="@dimen/space_20"
@@ -199,6 +196,7 @@
             app:srcCompat="@drawable/ic_facebook_camp" />
 
         <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/genricShareImageView"
             android:layout_width="38dp"
             android:layout_height="38dp"
             app:srcCompat="@drawable/ic_share_camp" />

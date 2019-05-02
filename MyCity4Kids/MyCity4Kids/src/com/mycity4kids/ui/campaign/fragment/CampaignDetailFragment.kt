@@ -34,6 +34,7 @@ import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.adapter.CampaignDetailAdapter
+import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
@@ -197,6 +198,8 @@ class CampaignDetailFragment : BaseFragment() {
 
 
     private fun setClickAction() {
+
+
         if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_apply_now)) {
             if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
                 val intent = Intent(context, RewardsContainerActivity::class.java)
@@ -231,6 +234,15 @@ class CampaignDetailFragment : BaseFragment() {
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_view_other)) {
             Toast.makeText(context, context!!.resources.getString(R.string.detail_bottom_view_other), Toast.LENGTH_SHORT).show()
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_submit_proof)) {
+            if (apiGetResponse != null && apiGetResponse!!.totalPayout != null && apiGetResponse!!.id != null && apiGetResponse!!.nameSlug != null) {
+                /*  (activity as CampaignContainerActivity).setTotalPayOut(apiGetResponse!!.totalPayout!!)
+                  (activity as CampaignContainerActivity).setIdCamp(apiGetResponse!!.id!!)
+                  (activity as CampaignContainerActivity).setNameSlug(apiGetResponse!!.nameSlug!!)*/
+                (activity as CampaignContainerActivity).setTotalPayOut(12)
+                (activity as CampaignContainerActivity).setIdCamp(1)
+                (activity as CampaignContainerActivity).setNameSlug("abhinav")
+            }
+
             Toast.makeText(context, context!!.resources.getString(R.string.detail_bottom_submit_proof), Toast.LENGTH_SHORT).show()
         }
     }
