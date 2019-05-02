@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/dialog_based_on_profile"
-        android:textColor="@color/campaign.515151"
+        android:textColor="@color/campaign_515151"
         android:textSize="18sp"
         app:fontName="oswald_regular.ttf" />
 
@@ -41,7 +41,7 @@
         android:layout_marginTop="@dimen/space_5"
         android:gravity="center"
         android:text="Rs.500"
-        android:textColor="@color/campaign.list.buttons"
+        android:textColor="@color/campaign_list_buttons"
         android:textSize="35sp"
         app:fontName="oswald_regular.ttf" />
 

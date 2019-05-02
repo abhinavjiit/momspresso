@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ShareCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -73,6 +74,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var applicationStatus: TextView
     private lateinit var bottomLayout: RelativeLayout
     private lateinit var isRewardAdded: String
+    private lateinit var parentConstraint: ConstraintLayout
 
     override fun updateUi(response: Response?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -125,6 +127,7 @@ class CampaignDetailFragment : BaseFragment() {
         bottomLayout = containerView.findViewById(R.id.bottom_button)
         appliedTag = containerView.findViewById(R.id.applied_tag)
         applicationStatus = containerView.findViewById(R.id.application_status)
+        parentConstraint = containerView.findViewById(R.id.parentConstraint)
     }
 
     private fun fetchCampaignDetail() {
@@ -141,6 +144,7 @@ class CampaignDetailFragment : BaseFragment() {
 
             override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                    parentConstraint.visibility = View.VISIBLE
                     apiGetResponse = response.data!!.result
                     setResponseData()
                 } else {
@@ -160,7 +164,7 @@ class CampaignDetailFragment : BaseFragment() {
         Picasso.with(context).load(apiGetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg)
         brandName.setText(apiGetResponse!!.brandDetails!!.name)
         campaignName.setText(apiGetResponse!!.name)
-        amount.setText("Rs. " + apiGetResponse!!.amount)
+        amount.setText("Rs. " + apiGetResponse!!.totalPayout)
         startDateText.setText(getDate(apiGetResponse!!.startTime!!, "dd MMM YYYY"))
         endDateText.setText(getDate(apiGetResponse!!.endTime!!, "dd MMM YYYY"))
         val readBuilder = StringBuilder()
@@ -305,12 +309,14 @@ class CampaignDetailFragment : BaseFragment() {
             labelText.setText(context!!.resources.getString(R.string.label_campaign_not_eligible))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
         } else if (status == 6) {
+            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_rejected))
+            applicationStatus.setBackgroundResource(R.drawable.campaign_rejected)
             Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_reject), Toast.LENGTH_SHORT).show()
             labelText.setText(context!!.resources.getString(R.string.label_campaign_reject))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_view_other))
         } else if (status == 7) {
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_completed))
-            applicationStatus.setBackgroundResource(R.drawable.campaign_subscribed)
+            applicationStatus.setBackgroundResource(R.drawable.campaign_completed)
             labelText.setText(context!!.resources.getString(R.string.label_campaign_completed))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward))
         }

@@ -19,11 +19,12 @@ import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.adapter.RewardCampaignAdapter
+import com.mycity4kids.utils.EndlessScrollListener
 import retrofit2.Call
 import retrofit2.Callback
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.text.ParseException
 
 
 class CampaignListFragment : BaseFragment() {
@@ -36,6 +37,7 @@ class CampaignListFragment : BaseFragment() {
     private lateinit var backIcon: ImageView
     private lateinit var containerView: View
     private lateinit var recyclerView: RecyclerView
+    private var endIndex: Int = 0
 
     override fun updateUi(response: Response?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -64,10 +66,17 @@ class CampaignListFragment : BaseFragment() {
         recyclerView.layoutManager = linearLayoutManager
         adapter = RewardCampaignAdapter(campaignList, activity)
         recyclerView.adapter = adapter
-        fetchCampaignList()
+        fetchCampaignList(0)
         backIcon.setOnClickListener {
             activity!!.onBackPressed()
         }
+
+        recyclerView.setOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                fetchCampaignList(endIndex + 1)
+            }
+        })
+
         System.out.println("-------" + getCurrentDateTime())
         System.out.println("currentTimeMillis-------" + System.currentTimeMillis())
         System.out.println("-------" + getCurrentDateTime().toString("yyyy/MM/dd"))
@@ -96,62 +105,15 @@ class CampaignListFragment : BaseFragment() {
         println("Today is $date")
         return date.time
     }
-/*
-    fun initiatelistner(id:Int){
-        saveAndContinueListener.pushCampaignDetail(id)
-    }
 
-
-    interface SaveAndContinueListener {
-        fun pushCampaignDetail(id: Int)
-    }
-
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (context is CampaignContainerActivity) {
-            saveAndContinueListener = context
-        }
-    }*/
-
-    private fun fetchCampaignList() {
+    private fun fetchCampaignList(startIndex: Int) {
         showProgressDialog(resources.getString(R.string.please_wait))
+        endIndex = startIndex + 10
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         val retro = BaseApplication.getInstance().campaignRetrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
-        val call = campaignAPI.getCampaignList(userId, 1, 20)
+        val call = campaignAPI.getCampaignList(userId, startIndex, endIndex)
         call.enqueue(getCampaignList)
-
-
-        /*BaseApplication.getInstance().getCampaignRetrofit().create(CampaignAPI::class.java).getCampaignList(userId,1, 10).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<AllCampaignDataResponse>> {
-            override fun onComplete() {
-                removeProgressDialog()
-            }
-
-            override fun onSubscribe(d: Disposable) {
-
-            }
-
-            override fun onNext(response: BaseResponseGeneric<AllCampaignDataResponse>) {
-                if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                    apiGetResponse = response.data!!.result
-                    campaignList.add(apiGetResponse)
-                    recyclerView.layoutManager = linearLayoutManager
-                    adapter = RewardCampaignAdapter(campaignList, activity)
-                    recyclerView.adapter = adapter
-//                    adapter.updateList(campaignList)
-//                    adapter.notifyDataSetChanged()
-                    *//*setting values to components*//*
-//                    setValuesToComponents()
-                } else {
-
-                }
-            }
-
-            override fun onError(e: Throwable) {
-                removeProgressDialog()
-            }
-        })*/
     }
 
     private val getCampaignList = object : Callback<AllCampaignDataResponse> {
@@ -160,8 +122,6 @@ class CampaignListFragment : BaseFragment() {
             if (response == null || null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
                 Crashlytics.logException(nee)
-//                if (isAdded)
-//                    (activity as CampaignContainerActivity).showToast(getString(R.string.server_went_wrong))
                 return
             }
             try {
@@ -169,17 +129,11 @@ class CampaignListFragment : BaseFragment() {
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
                     adapter.notifyDataSetChanged()
-//                    if (isAdded)
-//                        (activity as ArticleDetailsContainerActivity).showToast(responseData.reason)
                 } else {
-//                    if (isAdded)
-//                        (activity as ArticleDetailsContainerActivity).showToast(responseData.reason)
                 }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
                 Log.d("MC4kException", Log.getStackTraceString(e))
-//                if (isAdded)
-//                    (activity as ArticleDetailsContainerActivity).showToast(getString(R.string.went_wrong))
             }
         }
 
@@ -187,8 +141,6 @@ class CampaignListFragment : BaseFragment() {
             removeProgressDialog()
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
-//            if (isAdded)
-//                (activity as ArticleDetailsContainerActivity).showToast(getString(R.string.went_wrong))
         }
     }
 

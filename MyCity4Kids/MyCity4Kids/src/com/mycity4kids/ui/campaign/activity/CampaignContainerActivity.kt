@@ -36,10 +36,11 @@ class CampaignContainerActivity : AppCompatActivity() {
 
     }
 
+
     private fun campaignListFragment() {
         campaignListFragment = CampaignListFragment.newInstance()
-        supportFragmentManager.beginTransaction().replace(R.id.container, campaignListFragment,
-                CampaignListFragment::class.java.simpleName)
+        supportFragmentManager.beginTransaction().add(R.id.container, campaignListFragment,
+                CampaignListFragment::class.java.simpleName).addToBackStack("campaignListFragment")
                 .commit()
     }
 
@@ -47,7 +48,7 @@ class CampaignContainerActivity : AppCompatActivity() {
     fun addCampaginDetailFragment(id: Int) {
         campaignDetailFragment = CampaignDetailFragment.newInstance(id)
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignDetailFragment,
-                CampaignDetailFragment::class.java.simpleName)
+                CampaignDetailFragment::class.java.simpleName).addToBackStack("campaignDetailFragment")
                 .commit()
     }
 
@@ -59,17 +60,18 @@ class CampaignContainerActivity : AppCompatActivity() {
      }*/
 
 
+    fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>) {
+        var campaignAddProofFragment = CampaignAddProofFragment.newInstance(id, deliverableTypeList)
+        supportFragmentManager.beginTransaction().replace(R.id.container, campaignAddProofFragment,
+                CampaignAddProofFragment::class.java.simpleName).addToBackStack("campaignAddProofFragment")
+                .commit()
+    }
+
+
     private fun addPaymantMode() {
         var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignPaymentModesFragment,
                 CampaignPaymentModesFragment::class.java.simpleName)
-                .commit()
-    }
-
-    fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>) {
-        var campaignAddProofFragment = CampaignAddProofFragment.newInstance(id,deliverableTypeList)
-        supportFragmentManager.beginTransaction().replace(R.id.container, campaignAddProofFragment,
-                CampaignAddProofFragment::class.java.simpleName)
                 .commit()
     }
 
@@ -79,4 +81,11 @@ class CampaignContainerActivity : AppCompatActivity() {
                 CampaignPaymentModesFragment::class.java.simpleName)
                 .commit()
     }*/
+    override fun onBackPressed() {
+        val fragmentManager = supportFragmentManager
+        if (fragmentManager.backStackEntryCount == 1) {
+            finish()
+        } else
+            super.onBackPressed()
+    }
 }

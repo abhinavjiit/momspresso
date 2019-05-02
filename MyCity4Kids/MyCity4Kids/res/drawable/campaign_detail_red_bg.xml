@@ -4,7 +4,7 @@
 
     <corners
         android:radius="@dimen/space_4" />
-    <solid android:color="@color/campaign.list.buttons" />
+    <solid android:color="@color/campaign_list_buttons" />
 
 
 </shape>

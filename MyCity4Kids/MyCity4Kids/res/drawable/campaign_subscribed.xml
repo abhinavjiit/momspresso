@@ -4,7 +4,7 @@
 
     <corners
         android:radius="@dimen/space_10" />
-    <solid android:color="@color/campaign.subscribed" />
+    <solid android:color="@color/campaign_subscribed" />
 
 
 </shape>

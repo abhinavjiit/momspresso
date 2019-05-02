@@ -63,4 +63,6 @@
     <dimen name="space_28">28dp</dimen>
     <dimen name="space_40">40dp</dimen>
     <dimen name="space_4">4dp</dimen>
+    <dimen name="space_2">2dp</dimen>
+    <dimen name="space_50">50dp</dimen>
 </resources>

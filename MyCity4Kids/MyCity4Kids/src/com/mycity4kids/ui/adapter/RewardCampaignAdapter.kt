@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter
 
 import android.support.v4.app.FragmentActivity
+import android.support.v4.app.ShareCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         return RewardHolder(LayoutInflater.from(context).inflate(R.layout.campaign_list_recycler_adapter, parent, false))
     }
 
-    fun updateList(campaignList: List<CampaignDataListResult>){
+    fun updateList(campaignList: List<CampaignDataListResult>) {
         campaignNewList = campaignList
     }
 
@@ -39,8 +40,8 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
 
         //3
         init {
-
             view.setOnClickListener(this)
+            (view.share).setOnClickListener(this)
         }
 
         fun bindPhoto(campaignList: CampaignDataListResult) {
@@ -56,7 +57,20 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         //4
         override fun onClick(v: View) {
             //val context = itemView.context
-            (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
+            if (v == (view.share)) {
+                val shareIntent = ShareCompat.IntentBuilder
+                        .from(context)
+                        .setType("text/plain")
+                        .setChooserTitle("Share URL")
+                        .setText("https://www.momspresso.com/" + campaignList!!.nameSlug + "/" + campaignList!!.id)
+                        .intent
+
+                if (shareIntent.resolveActivity(context!!.packageManager) != null) {
+                    context!!.startActivity(shareIntent)
+                }
+            } else {
+                (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
+            }
         }
 
         fun setTextAndColor(status: Int) {
@@ -65,36 +79,65 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_expired)
                 (view.end_date).setText(context!!.resources.getString(R.string.end_date))
                 (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM YYYY"))
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_expired_background))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
             } else if (status == 1) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
                 (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
                 (view.end_date).setText(context!!.resources.getString(R.string.start_date))
                 (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 2) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_submission_open))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscription_open)
                 (view.end_date).setText(context!!.resources.getString(R.string.end_date))
                 (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM YYYY"))
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 3) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_applied))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscribed)
                 (view.end_date).setText(context!!.resources.getString(R.string.start_date))
                 (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
             } else if (status == 4) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_application_full))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_submission_full)
                 (view.end_date).setText(context!!.resources.getString(R.string.start_date))
                 (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 5) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_expired))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_expired)
                 (view.end_date).setText(context!!.resources.getString(R.string.end_date))
                 (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
-            } else if (status == 7) {
-                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_completed))
-                (view.submission_status).setBackgroundResource(R.drawable.campaign_subscribed)
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_expired_background))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
+            } else if (status == 6) {
+                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_rejected))
+                (view.submission_status).setBackgroundResource(R.drawable.campaign_rejected)
                 (view.end_date).setText(context!!.resources.getString(R.string.end_date))
                 (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+            } else if (status == 7) {
+                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_completed))
+                (view.submission_status).setBackgroundResource(R.drawable.campaign_completed)
+                (view.end_date).setText(context!!.resources.getString(R.string.end_date))
+                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             }
         }
 

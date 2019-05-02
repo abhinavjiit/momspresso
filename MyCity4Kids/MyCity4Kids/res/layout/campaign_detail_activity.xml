@@ -2,8 +2,10 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parentConstraint"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:visibility="gone">
 
 
     <android.support.v7.widget.Toolbar
@@ -138,7 +140,7 @@
                 android:layout_marginLeft="@dimen/space_7"
                 android:layout_marginTop="@dimen/space_7"
                 android:text="Nestle India"
-                android:textColor="@color/campaign.515151"
+                android:textColor="@color/campaign_515151"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:fontName="oswald.ttf"
@@ -176,7 +178,7 @@
                 android:layout_marginEnd="@dimen/space_20"
                 android:layout_marginRight="@dimen/space_20"
                 android:text="Rs.1000"
-                android:textColor="@color/campaign.list.buttons"
+                android:textColor="@color/campaign_list_buttons"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:fontName="oswald_regular.ttf"
@@ -289,7 +291,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/space_5"
                     android:text="READ THIS FIRST"
-                    android:textColor="@color/campaign.515151"
+                    android:textColor="@color/campaign_515151"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     app:fontName="oswald_regular.ttf"
@@ -299,7 +301,7 @@
                     android:id="@+id/read_this_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/campaign.list.buttons"
+                    android:textColor="@color/campaign_list_buttons"
                     android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="@id/read_this_box" />
             </LinearLayout>
@@ -337,7 +339,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="14dp"
                 android:text="DESCRIPTION"
-                android:textColor="@color/campaign.515151"
+                android:textColor="@color/campaign_515151"
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -370,7 +372,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="14dp"
                 android:text="Lorem ipsum, or lipsum as it is sometimes known, Is dummy text used in laying out print, graphic or Web designs. The passage is attributed to anis Dummy text used in laying out Graphic or Web designs. The passage is attributed to an Dummy tex"
-                android:textColor="@color/campaign.515151"
+                android:textColor="@color/campaign_515151"
                 android:textSize="11sp"
                 app:fontName="open_sans.ttf"
                 app:layout_constraintEnd_toEndOf="@id/img"
@@ -410,7 +412,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="14dp"
                 android:text="DELIVERABLE TERMS"
-                android:textColor="@color/campaign.515151"
+                android:textColor="@color/campaign_515151"
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -428,7 +430,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="14dp"
                 android:text="Lorem ipsum, or lipsum as it is sometimes known, Is dummy text used in laying out print, graphic or Web designs. The passage is attributed to anis Dummy text used in laying out Graphic or Web designs. The passage is attributed to an Dummy tex"
-                android:textColor="@color/campaign.515151"
+                android:textColor="@color/campaign_515151"
                 android:textSize="11sp"
                 app:fontName="open_sans.ttf"
                 app:layout_constraintEnd_toEndOf="parent"

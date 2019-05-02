@@ -3,8 +3,8 @@
     android:shape="rectangle">
 
     <corners
-        android:radius="@dimen/space_10" />
-    <solid android:color="@color/campaign_expired" />
+        android:radius="@dimen/space_4" />
+    <solid android:color="@color/campaign_expired_background" />
 
 
 </shape>
