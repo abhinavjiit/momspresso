@@ -17,7 +17,6 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
     : RecyclerView.Adapter<PaymentModesAdapter.ViewHolder>() {
 
     private var paymentMode: List<PaymentModesModal> = paymentModeList
-    // private var dataDefault: DefaultData? = dataDefaultData
     private var clickListener = context as ClickListener
 
 
@@ -64,100 +63,10 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
             holder.nonDefaultEditTextView.setOnClickListener {
 
 
-                clickListener.onCellClick(paymentMode[position].type_id,position)
+                clickListener.onCellClick(paymentMode[position].type_id, position)
             }
         }
 
-
-        /* if (position == 0) {
-             holder.selectOptionPaymentTextView.visibility = View.VISIBLE
-         } else {
-             holder.selectOptionPaymentTextView.visibility = View.GONE
-
-         }
-         holder.nonDefaultRadioButton.isSelected = allPaymentDataAdapter.available!![position].isChecked
-
-         if (paymentMode[position].isDefault) {
-
-             holder.accountNumberTextView.visibility = View.VISIBLE
-             holder.accountNumberTextView.text = allPaymentDataAdapter.default!!.account_number
-         } else {
-             holder.accountNumberTextView.visibility = View.GONE
-         }
-
-         holder.nonDefaultRadioButton.setOnClickListener {
-             allPaymentDataAdapter.available!![position].isChecked = true
-
-
-             notifyDataSetChanged()
-         }
-         Picasso.with(context.context).load(paymentMode[position].icon).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                 .fit().into(holder.nonDefaultModeImageView)
-         holder.nonDefaultModeImageView.setOnClickListener {
-
-
-             clickListener.onCellClick(paymentMode[position].type_id)
-         }*/
-
-        /*if (position == 0) {
-            if (allPaymentDataAdapter.default == null) {
-
-            }
-
-
-
-            holder.selectOptionPaymentTextView.visibility = View.VISIBLE
-            if (dataDefault != null && dataDefault!!.account_type != null && dataDefault!!.account_type!!.icon != null) {
-                holder.defaultdataRelativeLayout.visibility = View.VISIBLE
-                Picasso.with(context.context).load(dataDefault!!.account_type!!.icon).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                        .fit().into(holder.paymentDefaultModeImageView)
-                holder.tagTextView.text = dataDefault!!.account_number
-                holder.defaultRadioButton.isSelected = dataDefault!!.account_type!!.isChecked
-
-                holder.paymentDefaultModeImageView.setOnClickListener()
-                {
-                    dataDefault!!.account_type!!.isChecked = true
-                    notifyDataSetChanged()
-                    clickListener.onCellClick(dataDefault!!.account_type!!.id) *//*pass your payment id here*//*
-
-
-                }
-
-            } else {
-                holder.defaultdataRelativeLayout.visibility = View.GONE
-            }
-
-            holder.nonDefaultRadioButton.isSelected = paymentMode[position].isChecked
-
-            val item = paymentMode[position].icon
-            Picasso.with(context.context).load(item).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                    .fit().into(holder.nonDefaultModeImageView)
-
-            holder.nonDefaultModeImageView.setOnClickListener()
-            {
-                paymentMode[position].isChecked = true
-                notifyDataSetChanged()
-                clickListener.onCellClick(paymentMode[position].id)
-
-            }
-
-        } else {
-            holder.selectOptionPaymentTextView.visibility = View.GONE
-            holder.nonDefaultRadioButton.isSelected = paymentMode[position].isChecked
-
-            val item = paymentMode[position].icon
-            Picasso.with(context.context).load(item).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                    .fit().into(holder.nonDefaultModeImageView)
-            holder.defaultdataRelativeLayout.visibility = View.GONE
-            holder.nonDefaultModeImageView.setOnClickListener()
-            {
-                paymentMode[position].isChecked = true
-                notifyDataSetChanged()
-
-                clickListener.onCellClick(paymentMode[position].id)
-            }
-
-        }*/
 
     }
 
@@ -186,7 +95,7 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
     }
 
     interface ClickListener {
-        fun onCellClick(paymentModeId: Int,position: Int)
+        fun onCellClick(paymentModeId: Int, position: Int)
         fun onRadioButton(position: Int)
 
     }
