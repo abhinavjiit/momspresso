@@ -411,7 +411,7 @@ public class AppUtils {
     }
 
     public static boolean writeResponseBodyToDisk(Context mContext, String fileName, ResponseBody body) {
-        if(body!=null) {
+        if (body != null) {
             try {
                 InputStream inputStream = null;
                 OutputStream outputStream = null;
@@ -806,8 +806,19 @@ public class AppUtils {
         Utils.pushShareStoryEvent(topicsShortStoriesTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
     }
 
+    public static void shareStoryWithFBForCampaign(BaseFragment campaignCongratulationFragment, String shareUrl) {
+
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent content = new ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(shareUrl))
+                    .build();
+            new ShareDialog(campaignCongratulationFragment).show(content);
+        }
+        // Utils.pushShareStoryEvent(topicsShortStoriesTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
+    }
+
     public static void shareStoryWithFBC(BaseFragment topicsChallengeTabFragment, String userType, String blogSlug, String titleSlug,
-                                        String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+                                         String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
 
         if (ShareDialog.canShow(ShareLinkContent.class)) {
@@ -899,15 +910,15 @@ public class AppUtils {
         return type;
     }
 
-    public static String convertTimestampToDate(Long timestamp){
-        return new SimpleDateFormat("dd-MM-yyyy").format(new Date(timestamp*1000));
+    public static String convertTimestampToDate(Long timestamp) {
+        return new SimpleDateFormat("dd-MM-yyyy").format(new Date(timestamp * 1000));
     }
 
     public static void CopyStream(InputStream is, OutputStream os) {
         final int buffer_size = 1024;
         try {
             byte[] bytes = new byte[buffer_size];
-            for (;;) {
+            for (; ; ) {
                 int count = is.read(bytes, 0, buffer_size);
                 if (count == -1)
                     break;

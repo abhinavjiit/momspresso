@@ -9,6 +9,11 @@
         android:id="@+id/deliverable_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_15"
+        android:layout_marginLeft="@dimen/space_15"
+        android:layout_marginTop="@dimen/space_15"
+        android:layout_marginEnd="@dimen/space_15"
+        android:layout_marginRight="@dimen/space_15"
         android:text="DELIVERABLE BRIEF"
         android:textColor="@color/campaign.515151"
         android:textSize="14sp"
@@ -20,10 +25,21 @@
         android:id="@+id/deliverable_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_15"
+        android:layout_marginLeft="@dimen/space_15"
+        android:layout_marginTop="@dimen/space_5"
+        android:layout_marginEnd="@dimen/space_15"
+        android:layout_marginRight="@dimen/space_15"
         android:text="DELIVERABLE BRIEF"
         android:textColor="@color/campaign.515151"
         android:textSize="14sp"
         android:textStyle="bold"
         app:fontName="oswald_regular.ttf" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/space_15"
+        android:background="#E5E5E5" />
 
 </LinearLayout>

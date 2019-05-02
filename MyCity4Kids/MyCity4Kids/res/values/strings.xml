@@ -1099,10 +1099,49 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_name">Campaign Name \n Facebook Campaign</string>
 
 
-
     //rewardsCampaignString
     <string name="reward_campaign_add_proof">ADD PROOF</string>
     <string name="select_payment_method">SELECT YOUR \n PREFERRED METHOD OF PAYMENT</string>
 
+
+    //campaigndetails
+    <string name="campaign_details_apply_now">APPLY NOW</string>
+    <string name="campaign_details_submission_open">SUBMISSION OPEN</string>
+    <string name="campaign_details_application_full">APPLICATION FULL</string>
+    <string name="campaign_details_applied">APPLIED</string>
+    <string name="campaign_details_expired">EXPIRED</string>
+    <string name="campaign_details_completed">COMPLETED</string>
+    <string name="end_date">End Date</string>
+    <string name="start_date">Start Date</string>
+
+    <string name="label_campaign_expired">This campaign is now closed.</string>
+    <string name="label_campaign_not_eligible">Share the campaign with your friends.</string>
+    <string name="label_campaign_full">Share Momspresso Rewards with your friends.</string>
+    <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
+    <string name="label_campaign_applied">We will notify you about your eligibility for the campaign.</string>
+    <string name="label_campaign_apply">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
+    <string name="label_campaign_completed">Congratulations! Your submission is approved.</string>
+    <string name="label_campaign_not_started">Campaign starts on </string>
+    <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
+
+    <string name="toast_not_elegible">Sorry, this campaign is not available for you.</string>
+    <string name="toast_campaign_full">Oops! Entries to this campaign are now closed.</string>
+    <string name="toast_campaign_open">Thank you for applying to the campaign.</string>
+    <string name="toast_campaign_applied">Thank you for applying to the campaign.</string>
+    <string name="toast_campaign_not_started">Congratulations! Your application is approved.</string>
+    <string name="toast_campaign_started">Congratulations! Your application is approved.</string>
+    <string name="toast_campaign_reject">Sorry, we have not been able to approve your application.</string>
+
+    <string name="detail_bottom_apply_now">APPLY NOW</string>
+    <string name="detail_bottom_applied">APPLIED</string>
+    <string name="detail_bottom_share">SHARE</string>
+    <string name="detail_bottom_share_momspresso_reward">SHARE MOMSPRESSO REWARDS</string>
+    <string name="detail_bottom_view_other">VIEW OTHER CAMPAIGNS</string>
+    <string name="detail_bottom_submit_proof">SUBMIT PROOF</string>
+
+
+    //campaigndetaildialog
+    <string name="dialog_based_on_profile">Based on your Profile</string>
+    <string name="dialog_you_can_get_reward_of">You can get reward of</string>
 
 </resources>
