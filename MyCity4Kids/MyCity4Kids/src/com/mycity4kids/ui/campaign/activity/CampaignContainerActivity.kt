@@ -5,11 +5,19 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import com.mycity4kids.R
 import com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment
+import com.mycity4kids.ui.campaign.fragment.CampaignCongratulationFragment
 import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
 import com.mycity4kids.ui.fragment.CampaignDetailFragment
 import com.mycity4kids.ui.fragment.CampaignListFragment
 
-class CampaignContainerActivity : AppCompatActivity() {
+class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.SubmitListener,CampaignCongratulationFragment.SubmitListener {
+    override fun congratulateScreenDone() {
+        campaignListFragment()
+    }
+
+    override fun proofSubmitDone() {
+        addPaymantMode()
+    }
 
     private lateinit var toolbarTitle: TextView
     private var totalPay: Int = 0
@@ -21,23 +29,10 @@ class CampaignContainerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campaign_container);
-        //toolbarTitle = findViewById(R.id.toolbarTitle)
 
-        //    campaignListFragment()
-
-        //      addAddProofFragment()
-//        addPaymantMode()
-
-        //campaignListFragment()
-
-        // addAddProofFragment()
-
-//        campaignListFragment()
-
-        addAddProofFragment(15, emptyList<Int>() as ArrayList<Int>)
+            campaignListFragment()
 
     }
-
 
     private fun campaignListFragment() {
         campaignListFragment = CampaignListFragment.newInstance()
@@ -53,13 +48,6 @@ class CampaignContainerActivity : AppCompatActivity() {
                 CampaignDetailFragment::class.java.simpleName).addToBackStack("campaignDetailFragment")
                 .commit()
     }
-
-    /* fun addAddProofFragment() {
-         var campaignAddProofFragment = CampaignAddProofFragment.newInstance()
-         supportFragmentManager.beginTransaction().replace(R.id.container, campaignAddProofFragment,
-                 CampaignAddProofFragment::class.java.simpleName)
-                 .commit()
-     }*/
 
 
     fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>) {
@@ -77,19 +65,6 @@ class CampaignContainerActivity : AppCompatActivity() {
                 .commit()
     }
 
-    /*fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>) {
-        var campaignAddProofFragment = CampaignAddProofFragment.newInstance(id, deliverableTypeList)
-        supportFragmentManager.beginTransaction().replace(R.id.container, campaignAddProofFragment,
-                CampaignAddProofFragment::class.java.simpleName)
-                .commit()
-    }*/
-
-    /*private fun addAddProofFragment() {
-        var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance()
-        supportFragmentManager.beginTransaction().replace(R.id.container, campaignPaymentModesFragment,
-                CampaignPaymentModesFragment::class.java.simpleName)
-                .commit()
-    }*/
     override fun onBackPressed() {
         val fragmentManager = supportFragmentManager
         if (fragmentManager.backStackEntryCount == 1) {

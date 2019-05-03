@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -46,6 +47,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.*
+
+const val REWARDS_FILL_FORM_REQUEST = 1000
 
 class CampaignDetailFragment : BaseFragment() {
 
@@ -191,19 +194,19 @@ class CampaignDetailFragment : BaseFragment() {
 
         bottomLayout.setOnClickListener {
             setClickAction()
-//            (activity as CampaignContainerActivity).addAddProofFragment(apiGetResponse!!.id!!, (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!)
+
         }
         setLabels()
     }
 
 
     private fun setClickAction() {
-
-
         if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_apply_now)) {
             if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
                 val intent = Intent(context, RewardsContainerActivity::class.java)
-                startActivity(intent)
+                intent.putExtra("isComingfromCampaign", true)
+                intent.putExtra("pageLimit", 2)
+                startActivityForResult(intent, REWARDS_FILL_FORM_REQUEST)
             } else {
                 var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
                 var participateRequest = CampaignParticipate()
@@ -234,13 +237,11 @@ class CampaignDetailFragment : BaseFragment() {
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_view_other)) {
             Toast.makeText(context, context!!.resources.getString(R.string.detail_bottom_view_other), Toast.LENGTH_SHORT).show()
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_submit_proof)) {
+            (activity as CampaignContainerActivity).addAddProofFragment(apiGetResponse!!.id!!, (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!)
             if (apiGetResponse != null && apiGetResponse!!.totalPayout != null && apiGetResponse!!.id != null && apiGetResponse!!.nameSlug != null) {
-                /*  (activity as CampaignContainerActivity).setTotalPayOut(apiGetResponse!!.totalPayout!!)
-                  (activity as CampaignContainerActivity).setIdCamp(apiGetResponse!!.id!!)
-                  (activity as CampaignContainerActivity).setNameSlug(apiGetResponse!!.nameSlug!!)*/
-                (activity as CampaignContainerActivity).setTotalPayOut(12)
-                (activity as CampaignContainerActivity).setIdCamp(1)
-                (activity as CampaignContainerActivity).setNameSlug("abhinav")
+                (activity as CampaignContainerActivity).setTotalPayOut(apiGetResponse!!.totalPayout!!)
+                (activity as CampaignContainerActivity).setIdCamp(apiGetResponse!!.id!!)
+                (activity as CampaignContainerActivity).setNameSlug(apiGetResponse!!.nameSlug!!)
             }
 
             Toast.makeText(context, context!!.resources.getString(R.string.detail_bottom_submit_proof), Toast.LENGTH_SHORT).show()
@@ -355,6 +356,17 @@ class CampaignDetailFragment : BaseFragment() {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = milliSeconds
         return formatter.format(calendar.time)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data != null && resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                REWARDS_FILL_FORM_REQUEST -> {
+                    fetchCampaignDetail()
+                }
+            }
+        }
     }
 }
 

@@ -24,14 +24,10 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
         holder.bindPhoto(deliverableList!!.get(0))
     }
 
-    //1
     inner class RewardHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        //2
         private var deliverableList: List<CampaignDetailDeliverable>? = null
 
-        //3
         init {
-
             view.setOnClickListener(this)
         }
 
@@ -43,7 +39,6 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             }
             (view.deliverable_text).setText(builder.toString())
             (view.deliverable_header).setText(deliverableList.get(position).name)
-
         }
 
         //4
@@ -61,7 +56,5 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             calendar.timeInMillis = milliSeconds
             return formatter.format(calendar.time)
         }
-
-
     }
 }

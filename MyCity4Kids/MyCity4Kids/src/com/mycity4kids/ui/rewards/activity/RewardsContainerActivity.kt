@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.rewards.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.facebook.CallbackManager
@@ -18,7 +19,7 @@ import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
 class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
         RewardsSocialInfoFragment.SubmitListener,
-        RewardsFamilyInfoFragment.SubmitListener,CampaignPaymentModesFragment.SubmitListener, IFacebookEvent {
+        RewardsFamilyInfoFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener, IFacebookEvent {
     override fun onPaymentModeDone() {
 
     }
@@ -52,14 +53,26 @@ class RewardsContainerActivity : BaseActivity(),
     private var paymentModesFragment: CampaignPaymentModesFragment? = null
     private var panCardDetailsSubmissionFragment: PanCardDetailsSubmissionFragment? = null
     private var pageLimit: Int? = null
-    private var skippablePages = false
+    private var isComingfromCampaign = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rewards_container)
 
-        pageLimit = intent.getIntExtra("pageLimit", 5)
-        skippablePages = intent.getBooleanExtra("isSkippable", false)
+        if (intent != null) {
+            if (intent.hasExtra("pageLimit")) {
+                pageLimit = intent.getIntExtra("pageLimit", 5)
+            } else {
+                pageLimit = 5
+            }
+
+            if (intent.hasExtra("isComingfromCampaign")) {
+                isComingfromCampaign = intent.getBooleanExtra("isComingfromCampaign", false)
+            } else {
+                isComingfromCampaign = false
+            }
+
+        }
 
         callbackManager = CallbackManager.Factory.create()
 
@@ -111,6 +124,8 @@ class RewardsContainerActivity : BaseActivity(),
             supportFragmentManager.beginTransaction().replace(R.id.container, rewardsSocialInfoFragment,
                     RewardsSocialInfoFragment::class.java.simpleName)
                     .commit()
+        } else if (isComingfromCampaign) {
+            setResult(Activity.RESULT_OK)
         } else {
             finish()
         }
@@ -137,10 +152,6 @@ class RewardsContainerActivity : BaseActivity(),
             finish()
         }
     }
-
-    /*
-    * 1 payemtnModeFragment
-    * 2 pancardDetailSubmission*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

@@ -24,6 +24,7 @@ import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.campaign.adapter.FaqRecyclerAdapter
 import com.mycity4kids.ui.campaign.adapter.MediaProofRecyclerAdapter
 import io.reactivex.Observer
@@ -91,6 +92,7 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
     private lateinit var addLinkOrUrlEditTextView2: TextView
     private lateinit var addLinkOrUrlEditTextView3: TextView
     private lateinit var deliverableTypeList: ArrayList<Int>
+    private lateinit var submitListener: SubmitListener
 
     companion object {
         @JvmStatic
@@ -219,6 +221,8 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
             override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
                         response.data != null && response.data!!.result != null) {
+
+                    submitListener.proofSubmitDone()
                 } else {
                 }
             }
@@ -295,5 +299,16 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
                 Toast.makeText(activity, "Canceled", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if(context is CampaignContainerActivity){
+            submitListener = context
+        }
+    }
+
+    interface SubmitListener {
+        fun proofSubmitDone()
     }
 }
