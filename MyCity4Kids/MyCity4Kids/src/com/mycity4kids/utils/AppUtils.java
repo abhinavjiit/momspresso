@@ -1,12 +1,15 @@
 package com.mycity4kids.utils;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -574,6 +577,31 @@ public class AppUtils {
         }
         return shareUrl;
     }
+    public static void shareFacebook(Activity activity, String text, String url) {
+        boolean facebookAppFound = false;
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, url);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(url));
+
+        PackageManager pm = activity.getPackageManager();
+        List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+        for (final ResolveInfo app : activityList) {
+            if ((app.activityInfo.packageName).contains("com.facebook.katana")) {
+                final ActivityInfo activityInfo = app.activityInfo;
+                final ComponentName name = new ComponentName(activityInfo.applicationInfo.packageName, activityInfo.name);
+                shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                shareIntent.setComponent(name);
+                facebookAppFound = true;
+                break;
+            }
+        }
+        if (!facebookAppFound) {
+            String sharerUrl = "https://www.facebook.com/sharer/sharer.php?u=" + url;
+            shareIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(sharerUrl));
+        }
+        activity.startActivity(shareIntent);
+    }
 
     public static void changeTabsFont(Context mContext, TabLayout tabLayout) {
         //Typeface font = Typeface.createFromAsset(getAssets(), "fonts/androidnation.ttf");
@@ -777,6 +805,27 @@ public class AppUtils {
         }
     }
 
+    public static void shareCampaignWithWhatsApp(Context mContext, String shareUrl, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
+        } else {
+            //  Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+            Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+            //whatsappIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+            whatsappIntent.setPackage("com.whatsapp");
+            whatsappIntent.setType("text/plain");
+            try {
+                mContext.startActivity(Intent.createChooser(whatsappIntent, "Share Url:"));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Whatsapp");
+        }
+    }
+
     public static void shareStoryWithInstagram(Context mContext, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
         Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
         Intent instaIntent = new Intent(Intent.ACTION_SEND);
@@ -806,7 +855,7 @@ public class AppUtils {
         Utils.pushShareStoryEvent(topicsShortStoriesTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
     }
 
-    public static void shareStoryWithFBForCampaign(BaseFragment campaignCongratulationFragment, String shareUrl) {
+    public static void shareWithFBForCampaign(BaseFragment campaignCongratulationFragment, String shareUrl) {
 
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent content = new ShareLinkContent.Builder()

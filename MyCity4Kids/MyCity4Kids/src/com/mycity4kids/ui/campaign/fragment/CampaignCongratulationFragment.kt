@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.campaign.fragment
 
 import android.os.Bundle
+import android.support.v4.app.ShareCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,20 +10,16 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.models.campaignmodels.CampaignDetailResult
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.utils.AppUtils
-import android.R.id.shareText
-import android.content.Intent.getIntent
-import android.support.v4.app.ShareCompat
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.utils.AppUtils
 
 
 class CampaignCongratulationFragment : BaseFragment() {
 
     private lateinit var whatsappShareImageView: ImageView
     private lateinit var facebookShareImageView: ImageView
-
+    private lateinit var cancel: ImageView
     private lateinit var genricShareImageView: ImageView
 
     override fun updateUi(response: Response?) {
@@ -46,13 +43,18 @@ class CampaignCongratulationFragment : BaseFragment() {
         whatsappShareImageView = view.findViewById(R.id.whatsappShareImageView)
         facebookShareImageView = view.findViewById(R.id.facebookShareImageView)
         genricShareImageView = view.findViewById(R.id.genricShareImageView)
+        cancel = view.findViewById(R.id.cancel)
+        cancel.setOnClickListener {
+
+
+        }
 
         whatsappShareImageView.setOnClickListener {
 
 
             val contentStr = String.format("Participate in this campaign. Earn upto Rs.%d \n https://www.momspresso.com/mymoney/%s/%d", /*(activity as CampaignContainerActivity).getTotalPayOut()*/12, /*(activity as CampaignContainerActivity).getNameSlug()*/"abhinav", /*(activity as CampaignContainerActivity).getIdCamp()*/1)
 
-            AppUtils.shareStoryWithWhatsApp(activity as CampaignContainerActivity, contentStr, "campaignCongo", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).name)
+            AppUtils.shareCampaignWithWhatsApp(activity as CampaignContainerActivity, contentStr, "campaignCongo", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).name)
 
 
         }
@@ -60,7 +62,7 @@ class CampaignCongratulationFragment : BaseFragment() {
 
             val contentStr = String.format("Participate in this campaign. Earn upto Rs.%d \n https://www.momspresso.com/mymoney/%s/%d", /*(activity as CampaignContainerActivity).getTotalPayOut()*/12, /*(activity as CampaignContainerActivity).getNameSlug()*/"abhinav", /*(activity as CampaignContainerActivity).getIdCamp()*/1)
 
-            AppUtils.shareStoryWithFBForCampaign(this@CampaignCongratulationFragment, contentStr)
+            AppUtils.shareFacebook(activity as CampaignContainerActivity, "share", contentStr)
 
         }
         genricShareImageView.setOnClickListener {
