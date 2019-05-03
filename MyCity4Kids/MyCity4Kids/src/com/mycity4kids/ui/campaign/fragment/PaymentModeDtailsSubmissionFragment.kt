@@ -44,6 +44,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
     private lateinit var ifscEditTextView: EditText
     private lateinit var addUpiEditTextView: EditText
     private lateinit var addMobileNumberEditText: EditText
+    private var isComingFromRewards : Boolean = false
 
 
     override fun updateUi(response: Response?) {
@@ -52,13 +53,12 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
     companion object {
         @JvmStatic
-        fun newInstance(id: Int, comingFrom: String) =
+        fun newInstance(id: Int, comingFrom: String, isComingFromRewards : Boolean = false) =
                 PaymentModeDtailsSubmissionFragment().apply {
                     arguments = Bundle().apply {
                         this.putInt("id", id)
                         this.putString("comingFrom", comingFrom)
-
-
+                        this.putBoolean("isComingFromRewards", isComingFromRewards)
                     }
 
                 }

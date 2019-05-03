@@ -168,14 +168,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     .build(activity)
             startActivityForResult(intent, REQUEST_SELECT_PLACE)
 
-//            var cityFragment = CityListingDialogFragment()
-//            cityFragment.setTargetFragment(this, 0)
-//            val _args = Bundle()
-//            _args.putParcelableArrayList("cityList", cityList)
-//            _args.putString("fromScreen", "rewards")
-//            cityFragment.setArguments(_args)
-//            val fm = childFragmentManager
-//            cityFragment.show(fm, "Replies")
         }
 
         textVerify = containerView.findViewById(R.id.textVerify)

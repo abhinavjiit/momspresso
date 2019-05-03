@@ -51,7 +51,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         if (isComingFromRewards) {
             val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
             if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
-                var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime")
+                var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime",isComingFromRewards = isComingFromRewards)
                 (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                         CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
                         .commit()
@@ -61,14 +61,14 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         } else {
             val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
             if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
-                var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime")
+                var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards)
                 (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                         CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
                         .commit()
             } else {
                 val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].id
                 postApiForDefaultPaymantMode(paymentModeId)
-                var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = false)
+                var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = isComingFromRewards)
                 (activity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
                         CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
                         .commit()
@@ -156,7 +156,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         textLater.setOnClickListener {
             submitOnClickListener.onPaymentModeDone()
         }
-
 
         // Set the adapter
         recyclerPaymentModesOption = view.findViewById<RecyclerView>(R.id.recyclerPaymentModesOption)

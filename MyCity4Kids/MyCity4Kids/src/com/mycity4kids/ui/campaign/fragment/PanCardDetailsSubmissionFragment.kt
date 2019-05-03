@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.campaign.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,10 +17,12 @@ import com.mycity4kids.models.campaignmodels.ProofPostModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.question_popup_layout_groups_detail_activity.*
 
 class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 
@@ -27,6 +30,8 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
     private lateinit var submitTextView: TextView
     private lateinit var panCardDetailEditTextView: EditText
     private var isComingFromRewards : Boolean =false
+    private lateinit var textLater : TextView
+    private lateinit var submitOnClickListener : SubmitListener
     override fun updateUi(response: Response?) {
 
     }
@@ -56,6 +61,17 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
             }
         }
 
+        textLater = view.findViewById(R.id.textLater)
+        textLater.setOnClickListener {
+            if(isComingFromRewards){
+                submitOnClickListener.onPanCardDone()
+            }else{
+                var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
+                (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
+                        CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
+                        .commit()
+            }
+        }
         panCardDetailEditTextView = view.findViewById(R.id.panCardDetailEditTextView)
         submitTextView = view.findViewById(R.id.submitTextView)
         fetchPanNumber()
@@ -106,12 +122,14 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                     }
 
                     override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
-
-
-                        var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
-                        (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
-                                CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
-                                .commit()
+                        if(isComingFromRewards){
+                            submitOnClickListener.onPanCardDone()
+                        }else{
+                            var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
+                            (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
+                                    CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
+                                    .commit()
+                        }
 
 
                     }
@@ -154,5 +172,18 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
         }
 
 
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is RewardsContainerActivity) {
+            submitOnClickListener = context
+        } else if (context is CampaignContainerActivity) {
+
+        }
+    }
+
+    interface SubmitListener {
+        fun onPanCardDone()
     }
 }
