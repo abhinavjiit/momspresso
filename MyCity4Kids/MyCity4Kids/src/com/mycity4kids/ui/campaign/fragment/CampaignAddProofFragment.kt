@@ -39,19 +39,19 @@ const val SELECT_IMAGE = 1005
 
 class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.ClickListener {
     fun onProofSubmitClick() {
-        if(!(addLinkOrUrlEditTextView1.text.isNullOrEmpty() && addLinkOrUrlEditTextView2.text.isNullOrEmpty() && addLinkOrUrlEditTextView3.text.isNullOrEmpty())){
+        if (!(addLinkOrUrlEditTextView1.text.isNullOrEmpty() && addLinkOrUrlEditTextView2.text.isNullOrEmpty() && addLinkOrUrlEditTextView3.text.isNullOrEmpty())) {
             var urlList = mutableListOf<String>()
-            if(!addLinkOrUrlEditTextView1.text.isNullOrEmpty()){
+            if (!addLinkOrUrlEditTextView1.text.isNullOrEmpty()) {
                 urlList.add(addLinkOrUrlEditTextView1.text.toString())
             }
-            if(!addLinkOrUrlEditTextView2.text.isNullOrEmpty()){
+            if (!addLinkOrUrlEditTextView2.text.isNullOrEmpty()) {
                 urlList.add(addLinkOrUrlEditTextView2.text.toString())
             }
-            if(!addLinkOrUrlEditTextView3.text.isNullOrEmpty()){
+            if (!addLinkOrUrlEditTextView3.text.isNullOrEmpty()) {
                 urlList.add(addLinkOrUrlEditTextView3.text.toString())
             }
 
-            if(!urlList.isNullOrEmpty()){
+            if (!urlList.isNullOrEmpty()) {
                 (urlList).forEach {
                     var proofPostModel = ProofPostModel(url = it, campaign_id = campaignId)
                     postProofToServer(proofPostModel)
@@ -60,7 +60,6 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
             }
         }
     }
-
 
     override fun onCellClick() {
         val intent = Intent()
@@ -87,10 +86,11 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
     private lateinit var recyclerMediaProof: RecyclerView
     private var campaignProofList: ArrayList<CampaignProofResponse> = arrayListOf()
     private var campaignId: Int = 15
-    private lateinit var textSubmit : TextView
-    private lateinit var addLinkOrUrlEditTextView1 : TextView
-    private lateinit var addLinkOrUrlEditTextView2 : TextView
-    private lateinit var addLinkOrUrlEditTextView3 : TextView
+    private lateinit var textSubmit: TextView
+    private lateinit var addLinkOrUrlEditTextView1: TextView
+    private lateinit var addLinkOrUrlEditTextView2: TextView
+    private lateinit var addLinkOrUrlEditTextView3: TextView
+    private lateinit var deliverableTypeList: ArrayList<Int>
 
     companion object {
         @JvmStatic
@@ -110,6 +110,14 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
         recyclerFaqs = view.findViewById<RecyclerView>(R.id.recyclerFaqs)
 
         recyclerFaqs.layoutManager = LinearLayoutManager(context)
+
+        if (arguments != null && arguments.containsKey("id") && arguments.containsKey("deliverableTypeList")) {
+            deliverableTypeList = arguments.getIntegerArrayList("deliverableTypeList")
+        }
+
+        if(!deliverableTypeList.isNullOrEmpty()){
+            Constants.DeliverableTypes.findUrlTypeByDeliverableTypes(deliverableTypeList.get(0).toString())
+        }
 
         textSubmit = view.findViewById<TextView>(R.id.textSubmit)
         textSubmit.setOnClickListener {
@@ -237,7 +245,7 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
             override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
                         response.data != null && response.data!!.result != null) {
-                    var campaignProofListLocal = campaignProofList.filter { it.id!=proofId }
+                    var campaignProofListLocal = campaignProofList.filter { it.id != proofId }
                     campaignProofList.clear()
                     campaignProofList.addAll(campaignProofListLocal)
                     mediaProofRecyclerAdapter.notifyDataSetChanged()

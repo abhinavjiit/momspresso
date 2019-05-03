@@ -464,6 +464,82 @@ public class Constants {
         }
     }
 
+    public enum DeliverableTypes {
+        ONE("1", "0"), TWO("2","0"), THREE("3","0"), FOUR("4","0"), FIVE("5","0"), SIX("6","0"),
+        SEVEN("7","2"), EIGHT("8","1"), NINE("9","0"), TEN("10","2"), ELEVEN("11","0");
+        private final String name;
+        private final String id;
+
+        DeliverableTypes(String i, String name) {
+            this.name=name;
+            this.id=i;
+        }
+
+        public String getId(){
+            return this.id;
+        }
+
+        public String getName(){
+            return this.name;
+        }
+
+        public static String findById(String id) {
+            for (DeliverableTypes typeOfLanguages : DeliverableTypes.values()) {
+                if (id.trim().toLowerCase().equalsIgnoreCase(typeOfLanguages.getId()))
+                    return typeOfLanguages.name;
+            }
+            return "";
+        }
+
+        public static String findUrlTypeByDeliverableTypes(String id) {
+            String name = findById(id);
+            return  UrlTypes.findById(name);
+        }
+
+        public static String findByName(String name) {
+            for (TypeOfLanguages typeOfLanguages : TypeOfLanguages.values()) {
+                if (name.trim().toLowerCase().equalsIgnoreCase(typeOfLanguages.getName()))
+                    return typeOfLanguages.id;
+            }
+            return "";
+        }
+    }
+
+    public enum UrlTypes {
+        ONE("0", "image_link"), TWO("1","website_link"), THREE("2","video_link");
+        private final String name;
+        private final String id;
+
+        UrlTypes(String i, String name) {
+            this.name=name;
+            this.id=i;
+        }
+
+        public String getId(){
+            return this.id;
+        }
+
+        public String getName(){
+            return this.name;
+        }
+
+        public static String findById(String id) {
+            for (UrlTypes urlTypes : UrlTypes.values()) {
+                if (id.trim().toLowerCase().equalsIgnoreCase(urlTypes.getId()))
+                    return urlTypes.name;
+            }
+            return "";
+        }
+
+        public static String findByName(String name) {
+            for (UrlTypes urlTypes : UrlTypes.values()) {
+                if (name.trim().toLowerCase().equalsIgnoreCase(urlTypes.getName()))
+                    return urlTypes.id;
+            }
+            return "";
+        }
+    }
+
     public enum PopListRequestType {
         INTEREST,
         DURABLES,

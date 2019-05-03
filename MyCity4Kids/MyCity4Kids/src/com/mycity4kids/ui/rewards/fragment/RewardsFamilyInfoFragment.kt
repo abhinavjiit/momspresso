@@ -171,10 +171,10 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         private lateinit var textKidsDOB: TextView
 
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(isComingFromRewards : Boolean = false) =
                 RewardsFamilyInfoFragment().apply {
                     arguments = Bundle().apply {
-
+                        this.putBoolean("isComingFromRewards",isComingFromRewards)
                     }
                 }
     }

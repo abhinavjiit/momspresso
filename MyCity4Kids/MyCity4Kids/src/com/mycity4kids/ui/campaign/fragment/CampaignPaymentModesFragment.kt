@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.campaign.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -20,6 +21,7 @@ import com.mycity4kids.ui.campaign.DefaultData
 import com.mycity4kids.ui.campaign.PaymentModeListModal
 import com.mycity4kids.ui.campaign.PaymentModesModal
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -30,59 +32,52 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
 
     private var selectedPaymantIdPosition: Int = 0
     private lateinit var saveContinueTextView: TextView
-
+    private lateinit var submitOnClickListener: CampaignPaymentModesFragment.SubmitListener
 
     override fun onRadioButton(position: Int) {
         selectedPaymantIdPosition = position
         for (i in 0..allPaymantModes!!.size - 1) {
-
             if (i == position) {
                 allPaymantModes[position].isDefault = true
             } else {
                 allPaymantModes[i].isDefault = false
-
             }
-
-
         }
         paymentModesAdapter.notifyDataSetChanged()
     }
 
 
     override fun onClick(p0: View?) {
-
-        val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
-
-        if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
-
-            var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime")
-            (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
-                    CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
-                    .commit()
-
-
+        if (isComingFromRewards) {
+            val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
+            if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
+                var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime")
+                (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
+                        CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
+                        .commit()
+            } else {
+                submitOnClickListener.onPaymentModeDone()
+            }
         } else {
-
-            val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].id
-
-
-            postApiForDefaultPaymantMode(paymentModeId)
-
-
-            var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance()
-            (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
-                    CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
-                    .commit()
+            val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
+            if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
+                var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime")
+                (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
+                        CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
+                        .commit()
+            } else {
+                val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].id
+                postApiForDefaultPaymantMode(paymentModeId)
+                var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = false)
+                (activity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
+                        CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
+                        .commit()
+            }
         }
-
     }
 
-
     private fun postApiForDefaultPaymantMode(paymentModeId: Int) {
-
         val proofPostModel = ProofPostModel(id = paymentModeId.toString())
-
-
         showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).postForDefaultAccount(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
             override fun onComplete() {
@@ -93,7 +88,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
             }
 
             override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
-
 
             }
 
@@ -107,13 +101,10 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     }
 
     override fun onCellClick(paymentModeId: Int, position: Int) {
-
         var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "comingForEdit")
-        (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
+        (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                 PanCardDetailsSubmissionFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
                 .commit()
-
-
     }
 
 
@@ -127,14 +118,16 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     private lateinit var recyclerPaymentModesOption: RecyclerView
     private var dataDefaultPaymentMode: DefaultData? = null
     private lateinit var allPaymentData: PaymentModeListModal
+    private lateinit var textLater: TextView
+    private var isComingFromRewards: Boolean = false
 
 
     companion object {
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(isComingFromRewards: Boolean = false) =
                 CampaignPaymentModesFragment().apply {
                     arguments = Bundle().apply {
-
+                        this.putBoolean("isComingFromRewards", isComingFromRewards)
                     }
 
                 }
@@ -143,6 +136,28 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.campaign_payment_modes_fragment, container, false)
+
+        if (arguments != null) {
+            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
+                arguments.getBoolean("isComingFromRewards")
+            } else {
+                false
+            }
+        }
+
+        textLater = view.findViewById(R.id.textLater)
+
+        if (isComingFromRewards) {
+            textLater.visibility = View.VISIBLE
+        } else {
+            textLater.visibility = View.GONE
+        }
+
+        textLater.setOnClickListener {
+            submitOnClickListener.onPaymentModeDone()
+        }
+
+
         // Set the adapter
         recyclerPaymentModesOption = view.findViewById<RecyclerView>(R.id.recyclerPaymentModesOption)
         saveContinueTextView = view.findViewById(R.id.saveContinueTextView)
@@ -155,6 +170,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
 
         return view
     }
+
 
     /*fetch data from server*/
     private fun fetchPaymentModes() {
@@ -172,13 +188,9 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
             override fun onNext(response: BaseResponseGeneric<PaymentModeListModal>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status
                         && response.data != null && response.data!!.result != null && response.data!!.result.available!!.isNotEmpty()) {
-
                     allPaymentData = response.data!!.result
-
-                    // nonDefaultDataPaymantModes.addAll(response.data!!.result.available as List<PaymentModesModal>)
                     if (response.data!!.result.default != null && response.data!!.result!!.default!!.account_type != null) {
                         allPaymantModes.add(0, response.data!!.result!!.default!!.account_type!!)
-                        //allPaymantModes.addAll(response.data!!.result.available as List<PaymentModesModal>)
                         allPaymantModes[0].isDefault = true
                         allPaymantModes[0].isChecked = true
                         allPaymantModes[0].accountNumber = allPaymentData.default!!.account_number
@@ -196,10 +208,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                             allPaymantModes.add(paymentMOdesModal)
                         }
                     } else {
-
                         availableList.addAll(response.data!!.result.available as List<PaymentModesModal>)
-
-
                         for (i in 0..availableList!!.size - 1) {
                             var paymentMOdesModal: PaymentModesModal? = null
                             if (availableList!!.get(i).exists != null && availableList!!.get(i).exists!!.account_number.isNotEmpty()) {
@@ -207,17 +216,9 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                             } else {
                                 paymentMOdesModal = PaymentModesModal(icon = availableList[i].icon, type_id = availableList!!.get(i).type_id, isDefault = false, accountNumber = null, id = -1)
                             }
-
                             allPaymantModes.add(paymentMOdesModal)
                         }
-
-                        // allPaymantModes.addAll(response.data!!.result.available as List<PaymentModesModal>)
                     }
-
-
-
-
-
                     paymentModesAdapter = PaymentModesAdapter(allPaymantModes, this@CampaignPaymentModesFragment)
                     recyclerPaymentModesOption.adapter = paymentModesAdapter
                     //faqRecyclerAdapter.notifyDataSetChanged()
@@ -230,6 +231,19 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                 Log.e("exception in error", e.message.toString())
             }
         })
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is RewardsContainerActivity) {
+            submitOnClickListener = context
+        } else if (context is CampaignContainerActivity) {
+
+        }
+    }
+
+    interface SubmitListener {
+        fun onPaymentModeDone()
     }
 
 }

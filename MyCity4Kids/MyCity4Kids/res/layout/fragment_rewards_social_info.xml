@@ -420,6 +420,21 @@
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/textlater"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="Maybe Later"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/app_red"
+                android:textSize="15sp" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

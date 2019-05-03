@@ -101,10 +101,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     companion object {
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(isComingFromRewards : Boolean=false) =
                 RewardsPersonalInfoFragment().apply {
                     arguments = Bundle().apply {
-
+                        this.putBoolean("isComingFromRewards",isComingFromRewards)
                     }
                 }
     }

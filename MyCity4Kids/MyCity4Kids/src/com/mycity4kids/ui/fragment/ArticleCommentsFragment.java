@@ -834,5 +834,4 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addArticleCommentReplyDialogFragment.setTargetFragment(this, 0);
         addArticleCommentReplyDialogFragment.show(fm, "Add Replies");
     }
-
 }

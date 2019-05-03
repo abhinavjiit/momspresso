@@ -1,34 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
-
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerPaymentModesOption"
         android:name="com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_height="625dp"
+        android:background="#F9F9F9"
+        app:layout_constraintBottom_toTopOf="@+id/relativeBottom"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp" />
 
-
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/saveContinueTextView"
+    <RelativeLayout
+        android:id="@+id/relativeBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/app_red"
-        android:gravity="center"
-        android:padding="@dimen/space_20"
-        android:text="SAVE AND CONTINUE"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        app:fontName="oswald_regular.ttf"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/saveContinueTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/app_red"
+            android:padding="@dimen/space_20"
+            android:gravity="center_horizontal"
+            android:text="SAVE AND CONTINUE"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/textLater"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/saveContinueTextView"
+            android:gravity="center"
+            android:text="Maybe Later"
+            android:textColor="@color/app_red"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
 

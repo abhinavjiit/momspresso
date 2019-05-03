@@ -32,9 +32,13 @@ class CampaignContainerActivity : AppCompatActivity() {
 
         // addAddProofFragment()
 
-      //  campaignListFragment()
 
-//        addAddProofFragment()
+        //  campaignListFragment()
+
+//        campaignListFragment()
+
+
+        addAddProofFragment(15, emptyList<Int>() as ArrayList<Int>)
 
     }
 
@@ -71,7 +75,7 @@ class CampaignContainerActivity : AppCompatActivity() {
 
 
     private fun addPaymantMode() {
-        var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance()
+        var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = false)
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignPaymentModesFragment,
                 CampaignPaymentModesFragment::class.java.simpleName)
                 .commit()
