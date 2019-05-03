@@ -316,11 +316,18 @@ class CampaignDetailFragment : BaseFragment() {
             labelText.setText(context!!.resources.getString(R.string.label_campaign_full))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward))
         } else if (status == 5) {
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_expired))
-            applicationStatus.setBackgroundResource(R.drawable.campaign_expired)
-            Toast.makeText(context, context!!.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_not_eligible))
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
+            if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
+                val intent = Intent(context, RewardsContainerActivity::class.java)
+                intent.putExtra("isComingfromCampaign", true)
+                intent.putExtra("pageLimit", 2)
+                startActivityForResult(intent, REWARDS_FILL_FORM_REQUEST)
+            }else{
+                applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_not_eligible))
+                applicationStatus.setBackgroundResource(R.drawable.campaign_expired)
+                Toast.makeText(context, context!!.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()
+                labelText.setText(context!!.resources.getString(R.string.label_campaign_not_eligible))
+                submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
+            }
         } else if (status == 6) {
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_rejected))
             applicationStatus.setBackgroundResource(R.drawable.campaign_rejected)

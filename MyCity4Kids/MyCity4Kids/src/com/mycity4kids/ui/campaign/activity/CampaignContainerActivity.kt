@@ -31,7 +31,6 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
         setContentView(R.layout.activity_campaign_container);
 
             campaignListFragment()
-
     }
 
     private fun campaignListFragment() {

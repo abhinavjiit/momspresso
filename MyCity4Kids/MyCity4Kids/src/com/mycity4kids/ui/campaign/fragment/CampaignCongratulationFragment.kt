@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.campaign.fragment
 
+import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.ShareCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,22 +11,18 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.models.campaignmodels.CampaignDetailResult
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.utils.AppUtils
-import android.R.id.shareText
-import android.content.Context
-import android.content.Intent.getIntent
-import android.support.v4.app.ShareCompat
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.utils.AppUtils
 
 
 class CampaignCongratulationFragment : BaseFragment() {
 
     private lateinit var whatsappShareImageView: ImageView
     private lateinit var facebookShareImageView: ImageView
+    private lateinit var cancel: ImageView
     private lateinit var genricShareImageView: ImageView
-    private lateinit var submitListener : SubmitListener
+    private lateinit var submitListener: SubmitListener
 
     override fun updateUi(response: Response?) {
     }
@@ -47,6 +45,11 @@ class CampaignCongratulationFragment : BaseFragment() {
         whatsappShareImageView = view.findViewById(R.id.whatsappShareImageView)
         facebookShareImageView = view.findViewById(R.id.facebookShareImageView)
         genricShareImageView = view.findViewById(R.id.genricShareImageView)
+        cancel = view.findViewById(R.id.cancel)
+        cancel.setOnClickListener {
+            submitListener.congratulateScreenDone()
+
+        }
 
         whatsappShareImageView.setOnClickListener {
             val contentStr = String.format("Participate in this campaign. Earn upto Rs.%d \n https://www.momspresso.com/mymoney/%s/%d", (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
@@ -54,7 +57,7 @@ class CampaignCongratulationFragment : BaseFragment() {
         }
         facebookShareImageView.setOnClickListener {
             val contentStr = String.format("Participate in this campaign. Earn upto Rs.%d \n https://www.momspresso.com/mymoney/%s/%d", (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
-            AppUtils.shareStoryWithFBForCampaign(this@CampaignCongratulationFragment, contentStr)
+            AppUtils.shareFacebook(activity as CampaignContainerActivity, "", contentStr)
         }
         genricShareImageView.setOnClickListener {
             val contentStr = String.format("Participate in this campaign. Earn upto Rs.%d \n https://www.momspresso.com/mymoney/%s/%d", (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
@@ -71,7 +74,7 @@ class CampaignCongratulationFragment : BaseFragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if(context is CampaignContainerActivity){
+        if (context is CampaignContainerActivity) {
             submitListener = context
         }
     }

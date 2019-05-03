@@ -23,8 +23,8 @@
             android:src="@drawable/congratulations_screen_illustration" />
 
         <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/cancel"
             android:layout_width="20dp"
-
             android:layout_height="20dp"
             android:layout_margin="@dimen/space_10"
             android:src="@drawable/cross_icon_back"

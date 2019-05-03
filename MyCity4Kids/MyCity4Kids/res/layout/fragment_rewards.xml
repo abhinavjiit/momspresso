@@ -3,119 +3,188 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:clipToPadding="false"
     android:paddingBottom="100dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
+        android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/imageView2"
+        <RelativeLayout
+            android:id="@+id/headerRelativeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_rewards_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:alpha=".5"
+                android:background="@drawable/gradient_in_video_challenge_image" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textAgain"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="@string/rewards_participate_and_earn"
+                android:textAllCaps="true"
+                android:textColor="#666666"
+                android:textSize="18sp"
+                android:visibility="visible"
+                app:fontName="oswald_regular.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView2"
+                android:layout_margin="12sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="12sp"
+                android:gravity="center"
+                android:text="@string/rewards_description"
+                android:textSize="16sp"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/textAgain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text2"
+                android:layout_marginLeft="12sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="12sp"
+                android:gravity="center"
+                android:text="@string/reards.description_secand_text"
+                android:textSize="16sp"
+                app:fontName="oswald.ttf" />
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="Leading brands host campaiL"
+                android:visibility="gone" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/textStartReward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/shape_red_fill"
+                android:gravity="center"
+                android:paddingLeft="40dp"
+                android:paddingTop="10dp"
+                android:paddingRight="40dp"
+                android:paddingBottom="10dp"
+                android:text="@string/rewards_start_now"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:fontName="oswald_regular.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/imageView2"
+                android:layout_alignLeft="@+id/imageView2"
+                android:layout_alignEnd="@+id/imageView2"
+                android:layout_alignRight="@+id/imageView2"
+                android:layout_alignBottom="@+id/imageView2"
+                android:layout_marginBottom="10dp"
+                android:elevation="10dp"
+                android:gravity="bottom|center"
+                android:shadowColor="@color/black"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="5"
+                android:text="@string/rewards_welcome"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:fontName="oswald_regular.ttf" />
+
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_rewards_header"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:alpha=".5"
-            android:background="@drawable/gradient_in_video_challenge_image" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/text1"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/rewards_participate_and_earn"
-            android:textColor="#666666"
-            android:textSize="18sp"
-            android:textAllCaps="true"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/textAgain"
-            android:visibility="visible"
-            app:fontName="oswald_regular.ttf" />
+            android:layout_below="@id/headerRelativeLayout"
+            android:layout_marginTop="@dimen/space_20"
+            android:background="@color/white"
+            android:orientation="vertical">
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView2"
-            android:layout_margin="12sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="12sp"
-            android:gravity="center"
-            android:text="@string/rewards_description"
-            android:textSize="16sp"
-            app:fontName="oswald.ttf" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/textAgain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text2"
-            android:layout_marginLeft="12sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="12sp"
-            android:gravity="center"
-            android:text="@string/reards.description_secand_text"
-            android:textSize="16sp"
-            app:fontName="oswald.ttf" />
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:drawableLeft="@drawable/ic_personal_info"
+                android:drawablePadding="15dp"
+                android:padding="@dimen/space_20"
 
-        <TextView
-            android:id="@+id/text3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="Leading brands host campaiL"
-            android:visibility="gone" />
+                android:text="PERSONAL INFO"
+                android:textSize="14sp"
+                app:fontName="oswald.ttf" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/textStartReward"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="4dp"
-            android:background="@drawable/shape_red_fill"
-            android:gravity="center"
-            android:paddingLeft="40dp"
-            android:paddingTop="10dp"
-            android:paddingRight="40dp"
-            android:paddingBottom="10dp"
-            android:text="@string/rewards_start_now"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:fontName="oswald_regular.ttf" />
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:drawableLeft="@drawable/ic_social_links"
+                android:drawablePadding="15dp"
+                android:padding="@dimen/space_20"
+                android:text="SOCIAL LINKS"
+                android:textSize="14sp"
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/imageView2"
-            android:layout_alignLeft="@+id/imageView2"
-            android:layout_alignEnd="@+id/imageView2"
-            android:layout_alignRight="@+id/imageView2"
-            android:layout_alignBottom="@+id/imageView2"
-            android:layout_marginBottom="10dp"
-            android:elevation="10dp"
-            android:gravity="bottom|center"
-            android:shadowColor="@color/black"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="5"
-            android:text="@string/rewards_welcome"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:fontName="oswald_regular.ttf" />
+                app:fontName="oswald.ttf" />
 
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:drawableLeft="@drawable/ic_payment_mode"
+                android:drawablePadding="15dp"
+                android:padding="@dimen/space_20"
+                android:text="PAYMENT MODE"
+                android:textSize="14sp"
+
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:drawableLeft="@drawable/ic_pan_details"
+                android:drawablePadding="15dp"
+                android:padding="@dimen/space_20"
+                android:text="PAN DETAILS"
+
+                android:textSize="14sp"
+                app:fontName="oswald.ttf" />
+
+
+        </LinearLayout>
     </RelativeLayout>
+
 </android.support.v4.widget.NestedScrollView>
