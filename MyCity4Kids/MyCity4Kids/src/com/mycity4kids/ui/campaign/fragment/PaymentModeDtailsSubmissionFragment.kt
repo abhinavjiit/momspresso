@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.campaign.fragment
 
 import android.os.Bundle
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -44,6 +45,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
     private lateinit var ifscEditTextView: EditText
     private lateinit var addUpiEditTextView: EditText
     private lateinit var addMobileNumberEditText: EditText
+    private lateinit var back: TextView
+    private lateinit var toolbar: Toolbar
 
 
     override fun updateUi(response: Response?) {
@@ -79,6 +82,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         ifscEditTextView = view.findViewById(R.id.ifscEditTextView)
         addUpiEditTextView = view.findViewById(R.id.addUpiEditTextView)
         addMobileNumberEditText = view.findViewById(R.id.addMobileNumberEditText)
+        back = view.findViewById(R.id.back)
+        toolbar = view.findViewById(R.id.toolbar)
         activity!!.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
 
@@ -103,6 +108,9 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             fetchAllBankName()
         }
         submitTextViewCampaign.setOnClickListener(this)
+        back.setOnClickListener {
+
+        }
 
         return view
     }
@@ -211,11 +219,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                     removeProgressDialog()
                     Log.e("exception in error", e.message.toString())
                 }
-
-
             })
-
-
         }
     }
 

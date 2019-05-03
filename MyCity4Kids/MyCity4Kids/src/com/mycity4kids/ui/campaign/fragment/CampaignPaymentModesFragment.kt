@@ -2,8 +2,11 @@ package com.mycity4kids.ui.campaign.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v7.app.ActionBar
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -29,10 +32,22 @@ import io.reactivex.schedulers.Schedulers
 
 class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickListener, View.OnClickListener {
 
-
+    private var mContext: Context? = null
     private var selectedPaymantIdPosition: Int = 0
     private lateinit var saveContinueTextView: TextView
     private lateinit var submitOnClickListener: CampaignPaymentModesFragment.SubmitListener
+    private lateinit var toolbar: Toolbar
+    private var columnCount = 1
+    private lateinit var actionbar: ActionBar
+    private var availableList = mutableListOf<PaymentModesModal>()
+    private var allPaymantModes = mutableListOf<PaymentModesModal>()
+    private lateinit var paymentModesAdapter: PaymentModesAdapter
+    private lateinit var recyclerPaymentModesOption: RecyclerView
+    private var dataDefaultPaymentMode: DefaultData? = null
+    private lateinit var allPaymentData: PaymentModeListModal
+    private lateinit var textLater: TextView
+    private var isComingFromRewards: Boolean = false
+    private lateinit var back: TextView
 
     override fun onRadioButton(position: Int) {
         selectedPaymantIdPosition = position
@@ -111,16 +126,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     override fun updateUi(response: Response?) {
     }
 
-    private var columnCount = 1
-    private var availableList = mutableListOf<PaymentModesModal>()
-    private var allPaymantModes = mutableListOf<PaymentModesModal>()
-    private lateinit var paymentModesAdapter: PaymentModesAdapter
-    private lateinit var recyclerPaymentModesOption: RecyclerView
-    private var dataDefaultPaymentMode: DefaultData? = null
-    private lateinit var allPaymentData: PaymentModeListModal
-    private lateinit var textLater: TextView
-    private var isComingFromRewards: Boolean = false
-
 
     companion object {
         @JvmStatic
@@ -136,6 +141,8 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.campaign_payment_modes_fragment, container, false)
+        toolbar = view.findViewById(R.id.toolbar)
+        back = view.findViewById(R.id.back)
 
         if (arguments != null) {
             isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
@@ -144,7 +151,14 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                 false
             }
         }
+        back.setOnClickListener {
+            if (isComingFromRewards) {
+                (activity as RewardsContainerActivity).onBackPressed()
+            } else {
+                (activity as CampaignContainerActivity).onBackPressed()
 
+            }
+        }
         textLater = view.findViewById(R.id.textLater)
 
         if (isComingFromRewards) {
@@ -162,8 +176,8 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         recyclerPaymentModesOption = view.findViewById<RecyclerView>(R.id.recyclerPaymentModesOption)
         saveContinueTextView = view.findViewById(R.id.saveContinueTextView)
         recyclerPaymentModesOption.layoutManager = LinearLayoutManager(context)
-        /*fetch faq data from server*/
 
+        /*fetch faq data from server*/
         fetchPaymentModes()
         saveContinueTextView.setOnClickListener(this)
 
@@ -234,10 +248,12 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     }
 
     override fun onAttach(context: Context?) {
+        mContext = context
         super.onAttach(context)
         if (context is RewardsContainerActivity) {
             submitOnClickListener = context
         } else if (context is CampaignContainerActivity) {
+
 
         }
     }
@@ -245,5 +261,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     interface SubmitListener {
         fun onPaymentModeDone()
     }
+
 
 }

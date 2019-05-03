@@ -126,11 +126,13 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     private var facebookAuthToken: String? = null
     private var instagramAuthToken: String? = null
     private var isComingFromRewards = false
+    private var isComingFromCampaign = false
 
     companion object {
-        fun newInstance(isComingFromRewards : Boolean = false) = RewardsSocialInfoFragment().apply {
+        fun newInstance(isComingFromRewards : Boolean = false, fromCampaign : Boolean = false) = RewardsSocialInfoFragment().apply {
             arguments = Bundle().apply {
                 this.putBoolean("isComingFromRewards",isComingFromRewards)
+
             }
         }
     }
@@ -143,6 +145,12 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         if (arguments != null){
             isComingFromRewards = if(arguments.containsKey("isComingFromRewards")){
                 arguments.getBoolean("isComingFromRewards")
+            }else{
+                false
+            }
+
+            isComingFromCampaign = if(arguments.containsKey("fromFromCampaign")){
+                arguments.getBoolean("fromFromCampaign")
             }else{
                 false
             }
@@ -430,7 +438,8 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
                 override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
-                        //apiGetResponse = response.data!!.result
+
+
                         submitListener.socialOnSubmitListener()
                     } else {
 

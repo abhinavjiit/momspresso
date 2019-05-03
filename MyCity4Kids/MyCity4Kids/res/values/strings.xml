@@ -1114,6 +1114,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_details_rejected">REJECTED</string>
     <string name="end_date">End Date</string>
     <string name="start_date">Start Date</string>
+    <string name="campaign_details_not_eligible">Not Eligible</string>
 
     <string name="label_campaign_expired">This campaign is now closed.</string>
     <string name="label_campaign_not_eligible">Share the campaign with your friends.</string>

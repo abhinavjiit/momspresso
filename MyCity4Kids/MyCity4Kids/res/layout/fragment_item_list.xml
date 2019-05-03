@@ -125,13 +125,14 @@
                 app:fontName="oswald.ttf" />
         </RelativeLayout>
 
-
         <RelativeLayout
+            android:id="@+id/relativeTextProof"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/headerTextViewContainer"
             android:layout_marginTop="0dp"
             android:alpha="0.3"
+            android:visibility="gone"
             android:background="#EB3955"
             android:gravity="center">
 
@@ -193,6 +194,20 @@
                 android:textSize="14sp"
                 android:visibility="visible" />
 
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeMediaProof"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/headerTextViewContainer"
+            android:layout_marginTop="0dp"
+            android:alpha="0.3"
+            android:visibility="gone"
+            android:background="#EB3955"
+            android:gravity="center">
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerMediaProof"
                 android:layout_width="match_parent"
@@ -208,7 +223,7 @@
                 android:layout_marginEnd="0dp"
                 android:layout_marginRight="0dp"
                 android:orientation="horizontal"
-                android:visibility="gone" />
+                android:visibility="visible" />
         </RelativeLayout>
     </RelativeLayout>
 
@@ -221,7 +236,6 @@
         android:text="FAQS"
         android:textColor="@color/black"
         android:textSize="20sp"
-
         app:fontName="oswald_regular.ttf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

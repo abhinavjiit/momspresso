@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.storage.FirebaseStorage
@@ -24,6 +25,7 @@ import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.campaign.adapter.FaqRecyclerAdapter
 import com.mycity4kids.ui.campaign.adapter.MediaProofRecyclerAdapter
 import io.reactivex.Observer
@@ -91,6 +93,9 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
     private lateinit var addLinkOrUrlEditTextView2: TextView
     private lateinit var addLinkOrUrlEditTextView3: TextView
     private lateinit var deliverableTypeList: ArrayList<Int>
+    private lateinit var submitListener: SubmitListener
+    private lateinit var relativeMediaProof: RelativeLayout
+    private lateinit var relativeTextProof: RelativeLayout
 
     companion object {
         @JvmStatic
@@ -115,9 +120,31 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
             deliverableTypeList = arguments.getIntegerArrayList("deliverableTypeList")
         }
 
-        if(!deliverableTypeList.isNullOrEmpty()){
-            Constants.DeliverableTypes.findUrlTypeByDeliverableTypes(deliverableTypeList.get(0).toString())
+        relativeMediaProof = view.findViewById(R.id.relativeMediaProof)
+        relativeMediaProof.setOnClickListener {
+
         }
+
+        relativeTextProof = view.findViewById(R.id.relativeTextProof)
+        relativeTextProof.setOnClickListener {
+
+        }
+
+        if (!deliverableTypeList.isNullOrEmpty()) {
+            var urlTypes = Constants.DeliverableTypes.findUrlTypeByDeliverableTypes(deliverableTypeList.get(0).toString())
+            if (!urlTypes.isNullOrEmpty()) {
+                if (urlTypes.equals("image_link", true)) {
+                    relativeMediaProof.visibility = View.VISIBLE
+                    relativeTextProof.visibility = View.GONE
+                } else if (urlTypes.equals("website_link", true)) {
+                    relativeTextProof.visibility = View.VISIBLE
+                    relativeMediaProof.visibility = View.GONE
+                } else if (urlTypes.equals("video_link", true)) {
+                }
+            }
+        }
+
+
 
         textSubmit = view.findViewById<TextView>(R.id.textSubmit)
         textSubmit.setOnClickListener {
@@ -219,6 +246,8 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
             override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
                         response.data != null && response.data!!.result != null) {
+
+                    submitListener.proofSubmitDone()
                 } else {
                 }
             }
@@ -295,5 +324,16 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
                 Toast.makeText(activity, "Canceled", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is CampaignContainerActivity) {
+            submitListener = context
+        }
+    }
+
+    interface SubmitListener {
+        fun proofSubmitDone()
     }
 }
