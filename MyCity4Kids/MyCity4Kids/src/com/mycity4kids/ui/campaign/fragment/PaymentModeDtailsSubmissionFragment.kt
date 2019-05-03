@@ -211,11 +211,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                     removeProgressDialog()
                     Log.e("exception in error", e.message.toString())
                 }
-
-
             })
-
-
         }
     }
 
