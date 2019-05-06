@@ -20,6 +20,7 @@ import com.mycity4kids.ui.campaign.AddAccountDetailModal
 import com.mycity4kids.ui.campaign.BankNameModal
 import com.mycity4kids.ui.campaign.DefaultData
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -48,6 +49,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
     private lateinit var back: TextView
     private lateinit var toolbar: Toolbar
 
+    private var isComingFromRewards: Boolean = false
+
 
     override fun updateUi(response: Response?) {
 
@@ -55,13 +58,12 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
     companion object {
         @JvmStatic
-        fun newInstance(id: Int, comingFrom: String) =
+        fun newInstance(id: Int, comingFrom: String, isComingFromRewards: Boolean = false) =
                 PaymentModeDtailsSubmissionFragment().apply {
                     arguments = Bundle().apply {
                         this.putInt("id", id)
                         this.putString("comingFrom", comingFrom)
-
-
+                        this.putBoolean("isComingFromRewards", isComingFromRewards)
                     }
 
                 }
@@ -110,8 +112,15 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         submitTextViewCampaign.setOnClickListener(this)
         back.setOnClickListener {
 
-        }
 
+            if (isComingFromRewards) {
+                (activity as RewardsContainerActivity).onBackPressed()
+            } else {
+                (activity as CampaignContainerActivity).onBackPressed()
+            }
+
+
+        }
         return view
     }
 

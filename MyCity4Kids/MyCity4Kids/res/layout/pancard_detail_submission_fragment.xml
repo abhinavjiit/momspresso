@@ -5,6 +5,34 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/back_arroow"
+            android:drawablePadding="@dimen/space_10"
+            android:drawableTint="@color/black"
+            android:text="PAN CARD DETAIL"
+            android:textColor="#515151"
+            android:textSize="20sp"
+            app:fontName="oswald_regular.ttf" />
+
+
+    </android.support.v7.widget.Toolbar>
+
+
     <RelativeLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
@@ -13,7 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/enterPanCardDetailsTextView"
@@ -44,40 +72,8 @@
             app:fontName="oswald_regular.ttf" />
     </RelativeLayout>
 
-    <!--    <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/textView9"
-            android:layout_width="317dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:text="In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment."
-            android:textColor="#4A4A4A"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
-
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/textView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="28dp"
-            android:text="NOTE :"
-            android:textColor="@color/app_red"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.2" />-->
-
     <LinearLayout
+        android:id="@+id/noteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/space_10"
@@ -120,12 +116,12 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:fontName="oswald_regular.ttf"
-        app:layout_constraintBottom_toTopOf="@+id/textView11"
+        app:layout_constraintBottom_toTopOf="@+id/textLater"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/textView11"
+        android:id="@+id/textLater"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

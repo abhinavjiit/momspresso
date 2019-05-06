@@ -19,8 +19,17 @@ import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
 class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
         RewardsSocialInfoFragment.SubmitListener,
-        RewardsFamilyInfoFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener, IFacebookEvent {
+        RewardsFamilyInfoFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener, PanCardDetailsSubmissionFragment.SubmitListener, IFacebookEvent {
+    override fun onPanCardDone() {
+        this@RewardsContainerActivity.finish()
+    }
+
     override fun onPaymentModeDone() {
+        if(pageLimit==4){
+            this@RewardsContainerActivity.finish()
+        }else{
+            addPancardDetailFragment()
+        }
 
     }
 
@@ -53,6 +62,7 @@ class RewardsContainerActivity : BaseActivity(),
     private var paymentModesFragment: CampaignPaymentModesFragment? = null
     private var panCardDetailsSubmissionFragment: PanCardDetailsSubmissionFragment? = null
     private var pageLimit: Int? = null
+    private var pageNumber: Int? = null
     private var isComingfromCampaign = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,12 +76,27 @@ class RewardsContainerActivity : BaseActivity(),
                 pageLimit = 5
             }
 
+            if (intent.hasExtra("pageNumber")) {
+                pageNumber = intent.getIntExtra("pageNumber", 2)
+            } else {
+                pageNumber = 2
+            }
+
             if (intent.hasExtra("isComingfromCampaign")) {
                 isComingfromCampaign = intent.getBooleanExtra("isComingfromCampaign", false)
             } else {
                 isComingfromCampaign = false
             }
+        }
 
+        if(pageNumber == 2){
+            addProfileFragment()
+        }else if(pageNumber == 3){
+            addSocialFragment()
+        }else if(pageNumber == 4){
+            addPaymentModesFragment()
+        }else if(pageNumber == 5){
+            addPancardDetailFragment()
         }
 
         callbackManager = CallbackManager.Factory.create()

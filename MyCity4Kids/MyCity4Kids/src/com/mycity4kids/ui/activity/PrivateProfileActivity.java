@@ -471,19 +471,16 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 break;
             case R.id.editProfileImageView:
                 Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
-                intent.putExtra("isRewardAdded", false);
+                intent.putExtra("isRewardAdded", isRewardsAdded);
                 startActivity(intent);
                 break;
             case R.id.editProfileTextView:
                 Intent intent1 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
-                intent1.putExtra("isRewardAdded", false);
+                intent1.putExtra("isRewardAdded", isRewardsAdded);
                 startActivity(intent1);
                 break;
             case R.id.updateProfileTextView: {
                 startActivity(new Intent(PrivateProfileActivity.this,RewardsContainerActivity.class));
-//                Intent intent2 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
-//                intent2.putExtra("isRewardAdded", false);
-//                startActivity(intent2);
                 break;
             }
             case R.id.menuImageView:
@@ -749,13 +746,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                             addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
                                     viewMore, userBio), TextView.BufferType.SPANNABLE);
                 } else {
-//                    int lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
-//                    String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
-//                    tv.setText(text);
-//                    tv.setMovementMethod(LinkMovementMethod.getInstance());
-//                    tv.setText(
-//                            addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, lineEndIndex, expandText,
-//                                    viewMore), TextView.BufferType.SPANNABLE);
+
                 }
             }
         });

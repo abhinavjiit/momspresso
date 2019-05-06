@@ -99,6 +99,8 @@
             android:id="@+id/upiContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+
             android:visibility="gone">
 
             <ImageView
@@ -151,7 +153,9 @@
             android:id="@+id/bankTransferContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
             android:paddingBottom="50dp"
+
             android:visibility="gone">
 
             <ImageView
