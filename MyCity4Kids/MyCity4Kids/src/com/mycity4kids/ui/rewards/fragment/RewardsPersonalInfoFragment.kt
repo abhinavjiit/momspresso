@@ -101,10 +101,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     companion object {
         @JvmStatic
-        fun newInstance(isComingFromRewards : Boolean=false) =
+        fun newInstance(isComingFromRewards: Boolean = false) =
                 RewardsPersonalInfoFragment().apply {
                     arguments = Bundle().apply {
-                        this.putBoolean("isComingFromRewards",isComingFromRewards)
+                        this.putBoolean("isComingFromRewards", isComingFromRewards)
                     }
                 }
     }
@@ -323,7 +323,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     /*fetch data from server*/
     private fun fetchRewardsData() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-//        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
@@ -358,49 +357,46 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     }
 
     private fun fetchCityData() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        //var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
-        if (!userId.isNullOrEmpty()) {
-            BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
-                override fun onComplete() {
-                    removeProgressDialog()
-                }
+        BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
+            override fun onComplete() {
+                removeProgressDialog()
+            }
 
-                override fun onSubscribe(d: Disposable) {
+            override fun onSubscribe(d: Disposable) {
 
-                }
+            }
 
-                override fun onNext(response: BaseResponseGeneric<CityConfigResultResponse>) {
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
-                        if (response.data!!.result != null && response!!.data!!.result != null && response!!.data!!.result.cityData.isNotEmpty()) {
-                            val currentCity = SharedPrefUtils.getCurrentCityModel(activity)
-                            (response!!.data!!.result.cityData).forEach {
-                                if (AppConstants.ALL_CITY_NEW_ID != it.id) {
-                                    cityList.add(it)
-                                }
-                                if (AppConstants.OTHERS_NEW_CITY_ID == it.id) {
-                                    if (currentCity.name != null && "Others" != currentCity.name && currentCity.id == AppConstants.OTHERS_CITY_ID) {
-                                        cityList.get(cityList.size - 1).cityName = ("Others(" + currentCity.name + ")")
-                                    }
-                                }
+            override fun onNext(response: BaseResponseGeneric<CityConfigResultResponse>) {
+                if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                    if (response.data!!.result != null && response!!.data!!.result != null && response!!.data!!.result.cityData.isNotEmpty()) {
+                        val currentCity = SharedPrefUtils.getCurrentCityModel(saveAndContinueListener as RewardsContainerActivity)
+                        (response!!.data!!.result.cityData).forEach {
+                            if (AppConstants.ALL_CITY_NEW_ID != it.id) {
+                                cityList.add(it)
                             }
-
-                            (cityList).forEach {
-                                val cId = Integer.parseInt(it.id!!.replace("city-", ""))
-                                it.isSelected = currentCity.id == cId
+                            if (AppConstants.OTHERS_NEW_CITY_ID == it.id) {
+                                if (currentCity.name != null && "Others" != currentCity.name && currentCity.id == AppConstants.OTHERS_CITY_ID) {
+                                    cityList.get(cityList.size - 1).cityName = ("Others(" + currentCity.name + ")")
+                                }
                             }
                         }
-                    } else {
 
+                        (cityList).forEach {
+                            val cId = Integer.parseInt(it.id!!.replace("city-", ""))
+                            it.isSelected = currentCity.id == cId
+                        }
                     }
-                }
+                } else {
 
-                override fun onError(e: Throwable) {
-                    removeProgressDialog()
                 }
-            })
-        }
+            }
+
+            override fun onError(e: Throwable) {
+                removeProgressDialog()
+            }
+        })
     }
+
 
 }
 

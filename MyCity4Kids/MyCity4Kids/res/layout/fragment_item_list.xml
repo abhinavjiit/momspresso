@@ -29,6 +29,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:drawableLeft="@drawable/back_arroow"
+                android:drawableTint="@color/black"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textColor="@color/home.toolbar.titlecolor"
@@ -131,9 +133,9 @@
             android:layout_below="@+id/headerTextViewContainer"
             android:layout_marginTop="0dp"
             android:alpha="0.3"
-            android:visibility="gone"
             android:background="#EB3955"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="visible">
 
             <com.mycity4kids.widget.CustomFontEditText
                 android:id="@+id/addLinkOrUrlEditTextView1"
@@ -203,9 +205,9 @@
             android:layout_below="@+id/headerTextViewContainer"
             android:layout_marginTop="0dp"
             android:alpha="0.3"
-            android:visibility="gone"
             android:background="#EB3955"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="gone">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerMediaProof"

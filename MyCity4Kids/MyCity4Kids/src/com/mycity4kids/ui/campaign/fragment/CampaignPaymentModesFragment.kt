@@ -16,8 +16,10 @@ import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.ProofPostModel
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.DefaultData
 import com.mycity4kids.ui.campaign.PaymentModeListModal
@@ -47,6 +49,9 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     private lateinit var textLater: TextView
     private var isComingFromRewards: Boolean = false
     private lateinit var back: TextView
+    private var source: String? = null
+    private var eventName: String? = null
+
 
     override fun onRadioButton(position: Int) {
         selectedPaymantIdPosition = position
@@ -62,6 +67,28 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
 
 
     override fun onClick(p0: View?) {
+        val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
+        when (paymentModeId) {
+            1 -> {
+
+                source = "Select_paytm"
+                eventName = "Show_paytm_detail"
+            }
+            2 -> {
+
+                source = "Select_upi"
+                eventName = "Show_upi_detail"
+            }
+            else -> {
+
+                source = "Select_bank_detail"
+                eventName = "Show_bank_detail"
+            }
+
+        }
+        Utils.campaignEvent(activity, "PayTM Detail", source, "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), eventName)
+
+
         if (isComingFromRewards) {
             val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
             if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
@@ -115,6 +142,10 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     }
 
     override fun onCellClick(paymentModeId: Int, position: Int) {
+        if (paymentModeId == 3) {
+            Utils.campaignEvent(activity, "Bank Detail", "Bank Detail", "Change_Account_Detail", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Change_bank_account_detail")
+
+        }
         var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "comingForEdit")
         (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                 PanCardDetailsSubmissionFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")

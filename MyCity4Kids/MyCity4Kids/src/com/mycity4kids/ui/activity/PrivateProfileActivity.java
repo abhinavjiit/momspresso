@@ -179,6 +179,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utils.campaignEvent(PrivateProfileActivity.this, "Rewards 1st screen", "Profile", "Update", "", "android", SharedPrefUtils.getAppLocale(PrivateProfileActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
                 startActivity(new Intent(PrivateProfileActivity.this, RewardsContainerActivity.class));
             }
         });
@@ -480,7 +481,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 startActivity(intent1);
                 break;
             case R.id.updateProfileTextView: {
-                startActivity(new Intent(PrivateProfileActivity.this,RewardsContainerActivity.class));
+                startActivity(new Intent(PrivateProfileActivity.this, RewardsContainerActivity.class));
                 break;
             }
             case R.id.menuImageView:

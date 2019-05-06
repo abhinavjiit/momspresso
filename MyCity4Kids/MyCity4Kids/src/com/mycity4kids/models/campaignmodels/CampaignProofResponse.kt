@@ -33,5 +33,5 @@ class CampaignProofResponse(
         var url: String? = null,
         @SerializedName("url_type")
         @Expose
-        var urlType: Any? = null
+        var urlType: Int? = null
 )

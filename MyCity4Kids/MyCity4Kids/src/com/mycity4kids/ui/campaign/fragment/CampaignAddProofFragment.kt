@@ -20,6 +20,7 @@ import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.*
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
@@ -55,7 +56,7 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
 
             if (!urlList.isNullOrEmpty()) {
                 (urlList).forEach {
-                    var proofPostModel = ProofPostModel(url = it, campaign_id = campaignId)
+                    var proofPostModel = ProofPostModel(url = it, campaign_id = campaignId, url_type = 1)
                     postProofToServer(proofPostModel)
                 }
 
@@ -96,6 +97,8 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
     private lateinit var submitListener: SubmitListener
     private lateinit var relativeMediaProof: RelativeLayout
     private lateinit var relativeTextProof: RelativeLayout
+    private lateinit var urlTypes: String
+    private lateinit var toolbarTitle: TextView
 
     companion object {
         @JvmStatic
@@ -113,16 +116,29 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
         val view = inflater.inflate(R.layout.fragment_item_list, container, false)
 
         recyclerFaqs = view.findViewById<RecyclerView>(R.id.recyclerFaqs)
-
+        toolbarTitle=view.findViewById(R.id.toolbarTitle)
         recyclerFaqs.layoutManager = LinearLayoutManager(context)
 
+        toolbarTitle.setOnClickListener {
+            Utils.campaignEvent(activity, "Campaign Detail", "Proof Submission", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Detail")
+
+        }
         if (arguments != null && arguments.containsKey("id") && arguments.containsKey("deliverableTypeList")) {
-            deliverableTypeList = arguments.getIntegerArrayList("deliverableTypeList")
+
+            campaignId = if (arguments.containsKey("id")) {
+                arguments.getInt("id")
+            } else {
+                0
+            }
+            deliverableTypeList = if (arguments.containsKey("deliverableTypeList")) {
+                arguments.getIntegerArrayList("deliverableTypeList")
+            } else {
+                emptyList<Int>() as ArrayList<Int>
+            }
         }
 
         relativeMediaProof = view.findViewById(R.id.relativeMediaProof)
         relativeMediaProof.setOnClickListener {
-
         }
 
         relativeTextProof = view.findViewById(R.id.relativeTextProof)
@@ -131,7 +147,7 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
         }
 
         if (!deliverableTypeList.isNullOrEmpty()) {
-            var urlTypes = Constants.DeliverableTypes.findUrlTypeByDeliverableTypes(deliverableTypeList.get(0).toString())
+            urlTypes = Constants.DeliverableTypes.findUrlTypeByDeliverableTypes(deliverableTypeList.get(0).toString())
             if (!urlTypes.isNullOrEmpty()) {
                 if (urlTypes.equals("image_link", true)) {
                     relativeMediaProof.visibility = View.VISIBLE
@@ -144,10 +160,10 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
             }
         }
 
-
-
         textSubmit = view.findViewById<TextView>(R.id.textSubmit)
         textSubmit.setOnClickListener {
+            Utils.campaignEvent(activity, "Payment Option", "Proof Submission", "Share_payment_details", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_payment_option_detail")
+
             onProofSubmitClick()
         }
 
@@ -215,10 +231,30 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
             }
 
             override fun onNext(response: BaseResponseGeneric<GetCampaignSubmissionDetailsResponse>) {
+                var websiteUrlCount = 0
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
                         response.data != null && response.data!!.result != null && !response.data!!.result.campaignProofResponse.isNullOrEmpty()) {
-                    campaignProofList.addAll(response.data!!.result!!.campaignProofResponse!!)
-                    mediaProofRecyclerAdapter.notifyDataSetChanged()
+                    if (!urlTypes.isNullOrEmpty()) {
+                        if (urlTypes.equals("image_link", true)) {
+                            relativeMediaProof.visibility = View.VISIBLE
+                            relativeTextProof.visibility = View.GONE
+                            campaignProofList.addAll(response.data!!.result!!.campaignProofResponse!!)
+                            mediaProofRecyclerAdapter.notifyDataSetChanged()
+                        } else if (urlTypes.equals("website_link", true)) {
+                            relativeTextProof.visibility = View.VISIBLE
+                            relativeMediaProof.visibility = View.GONE
+                            if (!response.data!!.result!!.campaignProofResponse.isNullOrEmpty()) {
+                                (response.data!!.result!!.campaignProofResponse)!!.forEach {
+                                    if (!it.url.isNullOrEmpty() && it.urlType != null && it.urlType == 1) {
+                                        websiteUrlCount++
+                                        setTextProofsToComponents(websiteUrlCount, it.url!!)
+                                    }
+                                }
+                            }
+                        } else if (urlTypes.equals("video_link", true)) {
+                        }
+                    }
+
                     Log.e("response", Gson().toJson(response.data!!.result.campaignProofResponse))
                 } else {
                 }
@@ -229,6 +265,21 @@ class CampaignAddProofFragment : BaseFragment(), MediaProofRecyclerAdapter.Click
                 Log.e("exception in error", e.message.toString())
             }
         })
+    }
+
+    private fun setTextProofsToComponents(websiteCount: Int, websiteUrl: String) {
+        when (websiteCount) {
+            1 -> {
+                addLinkOrUrlEditTextView1.setText(websiteUrl)
+            }
+            2 -> {
+                addLinkOrUrlEditTextView2.setText(websiteUrl)
+            }
+            3 -> {
+                addLinkOrUrlEditTextView3.setText(websiteUrl)
+            }
+        }
+
     }
 
     /*Post proof on server*/

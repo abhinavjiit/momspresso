@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
@@ -50,6 +53,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
             Picasso.with(view.context).load(campaignList.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(view.brand_img)
             (view.brand_name).setText(campaignList.brandDetails.name)
             (view.campaign_name).setText(campaignList.name)
+
             (view.amount).setText("" + campaignList.totalPayout)
             setTextAndColor(campaignList.campaignStatus)
         }
@@ -69,6 +73,9 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                     context!!.startActivity(shareIntent)
                 }
             } else {
+                Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "Click_listing_card", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+
+
                 (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
             }
         }

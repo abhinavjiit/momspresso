@@ -26,6 +26,7 @@ import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.BaseResponseModel
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.campaignmodels.CampaignDetailResult
@@ -109,6 +110,8 @@ class CampaignDetailFragment : BaseFragment() {
         backIcon = containerView.findViewById(R.id.back)
         linearLayoutManager = LinearLayoutManager(activity as Context?, LinearLayoutManager.VERTICAL, false)
         backIcon.setOnClickListener {
+
+            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             activity!!.onBackPressed()
         }
         return containerView
@@ -235,8 +238,13 @@ class CampaignDetailFragment : BaseFragment() {
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward)) {
             Toast.makeText(context, context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward), Toast.LENGTH_SHORT).show()
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_view_other)) {
+            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "View other campaigns", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+
             Toast.makeText(context, context!!.resources.getString(R.string.detail_bottom_view_other), Toast.LENGTH_SHORT).show()
-        } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_submit_proof)) {
+        }
+        else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_submit_proof)) {
+            Utils.campaignEvent(activity, "Proof Submission", "Campaign Detail", "Submit Proof", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Submission")
+
             (activity as CampaignContainerActivity).addAddProofFragment(apiGetResponse!!.id!!, (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!)
             if (apiGetResponse != null && apiGetResponse!!.totalPayout != null && apiGetResponse!!.id != null && apiGetResponse!!.nameSlug != null) {
                 (activity as CampaignContainerActivity).setTotalPayOut(apiGetResponse!!.totalPayout!!)
@@ -321,7 +329,7 @@ class CampaignDetailFragment : BaseFragment() {
                 intent.putExtra("isComingfromCampaign", true)
                 intent.putExtra("pageLimit", 2)
                 startActivityForResult(intent, REWARDS_FILL_FORM_REQUEST)
-            }else{
+            } else {
                 applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_not_eligible))
                 applicationStatus.setBackgroundResource(R.drawable.campaign_expired)
                 Toast.makeText(context, context!!.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()

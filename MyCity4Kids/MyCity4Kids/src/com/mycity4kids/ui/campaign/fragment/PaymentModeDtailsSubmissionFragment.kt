@@ -14,7 +14,9 @@ import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.AddAccountDetailModal
 import com.mycity4kids.ui.campaign.BankNameModal
@@ -48,6 +50,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
     private lateinit var addMobileNumberEditText: EditText
     private lateinit var back: TextView
     private lateinit var toolbar: Toolbar
+    private var source: String? = null
 
     private var isComingFromRewards: Boolean = false
 
@@ -100,9 +103,18 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
 
         when (paymantModeId) {
-            1 -> paytmContainer.visibility = View.VISIBLE
-            2 -> upiContainer.visibility = View.VISIBLE
-            else -> bankTransferContainer.visibility = View.VISIBLE
+            1 -> {
+                paytmContainer.visibility = View.VISIBLE
+                source = "Paytm detail"
+            }
+            2 -> {
+                upiContainer.visibility = View.VISIBLE
+                source = "UPI Detail"
+            }
+            else -> {
+                bankTransferContainer.visibility = View.VISIBLE
+                source = "Bank Detail"
+            }
 
         }
 
@@ -112,6 +124,12 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         submitTextViewCampaign.setOnClickListener(this)
         back.setOnClickListener {
 
+            if (comingFrom.equals("comingForEdit")) {
+                Utils.campaignEvent(activity, "Bank Detail", "Bank Detail", "Cancel", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Change_bank_account_detail_no")
+
+            } else {
+                Utils.campaignEvent(activity, "Payment Option", source, "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_payment_option_detail")
+            }
 
             if (isComingFromRewards) {
                 (activity as RewardsContainerActivity).onBackPressed()
@@ -184,12 +202,19 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
     override fun onClick(p0: View?) {
         if (isValid()) {
+            if (comingFrom.equals("comingForEdit")) {
+                Utils.campaignEvent(activity, "Bank Detail", "Bank Detail", "Continue", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Change_bank_account_detail_yes")
 
+            } else {
+                Utils.campaignEvent(activity, "PayTM Detail", source, "Submit", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Submit_paytm_mobile_no")
+            }
             val addAcoountDetailModal: AddAccountDetailModal
 
             when (paymantModeId) {
                 1 -> {
+
                     addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString(), account_number = addMobileNumberEditText.text.toString())
+
                 }
                 2 -> {
                     addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString(), account_number = addUpiEditTextView.text.toString())
