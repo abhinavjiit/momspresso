@@ -29,8 +29,8 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campaign_container);
-        addPaymantMode()
-        // campaignListFragment()
+        //  addPaymantMode()
+        campaignListFragment()
     }
 
     private fun campaignListFragment() {

@@ -278,6 +278,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             case R.id.rewardsContainer: {
                 Utils.pushOpenScreenEvent(getActivity(), "RewardsScreen", dynamoUserId + "");
                 Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "RewardsScreen");
+                Utils.campaignEvent(getActivity(), "Campaign Listing", "Discover", "Rewards", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Campaign_Listing");
+
                 /*Intent cityIntent = new Intent(getActivity(), CategoryVideosListingActivity.class);
                 cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                 startActivity(cityIntent);*/

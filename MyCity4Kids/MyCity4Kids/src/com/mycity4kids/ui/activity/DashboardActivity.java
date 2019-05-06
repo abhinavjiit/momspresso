@@ -1856,6 +1856,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.rewardsTextView: {
+                Utils.campaignEvent(this, "Campaign Listing", "Sidebar", "Rewards", "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Campaign_Listing");
                 mDrawerLayout.closeDrawers();
                 Intent cityIntent = new Intent(this, CampaignContainerActivity.class);
                 startActivity(cityIntent);
