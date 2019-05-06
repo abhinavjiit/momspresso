@@ -194,6 +194,7 @@
             android:paddingRight="60dp"
             android:paddingBottom="14dp"
             android:text="@string/video_progress.okay"
+
             android:textColor="@color/video_progress.okay"
             android:textSize="18sp"
             app:fontName="oswald.ttf" />

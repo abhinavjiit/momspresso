@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Toolbar
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
@@ -29,19 +30,21 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
     private var panNumber: String? = null
     private lateinit var submitTextView: TextView
     private lateinit var panCardDetailEditTextView: EditText
-    private var isComingFromRewards : Boolean =false
-    private lateinit var textLater : TextView
-    private lateinit var submitOnClickListener : SubmitListener
+    private var isComingFromRewards: Boolean = false
+    private lateinit var textLater: TextView
+    private lateinit var submitOnClickListener: SubmitListener
+    private lateinit var toolbar: android.support.v7.widget.Toolbar
+    private lateinit var back: TextView
     override fun updateUi(response: Response?) {
 
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(isComingFromRewards : Boolean = false) =
+        fun newInstance(isComingFromRewards: Boolean = false) =
                 PanCardDetailsSubmissionFragment().apply {
                     arguments = Bundle().apply {
-                        this.putBoolean("isComingFromRewards",isComingFromRewards)
+                        this.putBoolean("isComingFromRewards", isComingFromRewards)
                     }
 
                 }
@@ -50,21 +53,22 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.pancard_detail_submission_fragment, container, false)
-
+        back = view.findViewById(R.id.back)
+        toolbar = view.findViewById(R.id.toolbar)
 
         if (arguments != null) {
             isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
                 arguments.getBoolean("isComingFromRewards")
-            } else{
+            } else {
                 false
             }
         }
 
         textLater = view.findViewById(R.id.textLater)
         textLater.setOnClickListener {
-            if(isComingFromRewards){
+            if (isComingFromRewards) {
                 submitOnClickListener.onPanCardDone()
-            }else{
+            } else {
                 var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
                 (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
                         CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
@@ -75,6 +79,13 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
         submitTextView = view.findViewById(R.id.submitTextView)
         fetchPanNumber()
         submitTextView.setOnClickListener(this)
+        back.setOnClickListener {
+            if (isComingFromRewards) {
+                (activity as RewardsContainerActivity).onBackPressed()
+            } else {
+                (activity as CampaignContainerActivity).onBackPressed()
+            }
+        }
         return view
     }
 
@@ -121,9 +132,9 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                     }
 
                     override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
-                        if(isComingFromRewards){
+                        if (isComingFromRewards) {
                             submitOnClickListener.onPanCardDone()
-                        }else{
+                        } else {
                             var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
                             (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
                                     CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")

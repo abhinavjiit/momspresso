@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.campaign.fragment
 
 import android.os.Bundle
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import com.mycity4kids.ui.campaign.AddAccountDetailModal
 import com.mycity4kids.ui.campaign.BankNameModal
 import com.mycity4kids.ui.campaign.DefaultData
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -44,7 +46,10 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
     private lateinit var ifscEditTextView: EditText
     private lateinit var addUpiEditTextView: EditText
     private lateinit var addMobileNumberEditText: EditText
-    private var isComingFromRewards : Boolean = false
+    private lateinit var back: TextView
+    private lateinit var toolbar: Toolbar
+
+    private var isComingFromRewards: Boolean = false
 
 
     override fun updateUi(response: Response?) {
@@ -53,7 +58,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
     companion object {
         @JvmStatic
-        fun newInstance(id: Int, comingFrom: String, isComingFromRewards : Boolean = false) =
+        fun newInstance(id: Int, comingFrom: String, isComingFromRewards: Boolean = false) =
                 PaymentModeDtailsSubmissionFragment().apply {
                     arguments = Bundle().apply {
                         this.putInt("id", id)
@@ -79,6 +84,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         ifscEditTextView = view.findViewById(R.id.ifscEditTextView)
         addUpiEditTextView = view.findViewById(R.id.addUpiEditTextView)
         addMobileNumberEditText = view.findViewById(R.id.addMobileNumberEditText)
+        back = view.findViewById(R.id.back)
+        toolbar = view.findViewById(R.id.toolbar)
         activity!!.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
 
@@ -103,7 +110,17 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             fetchAllBankName()
         }
         submitTextViewCampaign.setOnClickListener(this)
+        back.setOnClickListener {
 
+
+            if (isComingFromRewards) {
+                (activity as RewardsContainerActivity).onBackPressed()
+            } else {
+                (activity as CampaignContainerActivity).onBackPressed()
+            }
+
+
+        }
         return view
     }
 

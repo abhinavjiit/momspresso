@@ -6,14 +6,42 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/back_arroow"
+            android:drawablePadding="@dimen/space_10"
+            android:drawableTint="@color/black"
+            android:text="PAYMENT OPTION"
+            android:textColor="#515151"
+            android:textSize="20sp"
+            app:fontName="oswald_regular.ttf" />
+
+
+    </android.support.v7.widget.Toolbar>
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerPaymentModesOption"
         android:name="com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment"
         android:layout_width="match_parent"
-        android:layout_height="625dp"
-        android:background="#F9F9F9"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10"
+        android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/relativeBottom"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -28,8 +56,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/app_red"
-            android:padding="@dimen/space_20"
             android:gravity="center_horizontal"
+            android:padding="@dimen/space_20"
             android:text="SAVE AND CONTINUE"
             android:textColor="@color/white"
             android:textSize="22sp"
@@ -39,11 +67,11 @@
             android:id="@+id/textLater"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/saveContinueTextView"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_below="@+id/saveContinueTextView"
             android:gravity="center"
             android:text="Maybe Later"
             android:textColor="@color/app_red"

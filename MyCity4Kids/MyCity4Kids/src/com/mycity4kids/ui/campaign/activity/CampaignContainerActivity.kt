@@ -10,7 +10,7 @@ import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
 import com.mycity4kids.ui.fragment.CampaignDetailFragment
 import com.mycity4kids.ui.fragment.CampaignListFragment
 
-class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.SubmitListener,CampaignCongratulationFragment.SubmitListener {
+class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener {
     override fun congratulateScreenDone() {
         campaignListFragment()
     }
@@ -34,6 +34,8 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
         arrayList.add(8)
         addAddProofFragment(15, arrayList)
             //campaignListFragment()
+        //addPaymantMode()
+        // campaignListFragment()
     }
 
     private fun campaignListFragment() {
@@ -63,7 +65,7 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
     private fun addPaymantMode() {
         var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = false)
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignPaymentModesFragment,
-                CampaignPaymentModesFragment::class.java.simpleName)
+                CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("CampaignPaymentModesFragment")
                 .commit()
     }
 
