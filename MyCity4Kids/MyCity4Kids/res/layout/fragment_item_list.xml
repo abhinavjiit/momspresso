@@ -131,7 +131,7 @@
             android:layout_below="@+id/headerTextViewContainer"
             android:layout_marginTop="0dp"
             android:alpha="0.3"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="#EB3955"
             android:gravity="center">
 

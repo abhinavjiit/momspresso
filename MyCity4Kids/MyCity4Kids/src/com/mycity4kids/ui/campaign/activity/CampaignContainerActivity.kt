@@ -30,7 +30,10 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campaign_container);
 
-            campaignListFragment()
+        var arrayList = ArrayList<Int>()
+        arrayList.add(8)
+        addAddProofFragment(15, arrayList)
+            //campaignListFragment()
     }
 
     private fun campaignListFragment() {

@@ -36,7 +36,6 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 
     }
 
-
     companion object {
         @JvmStatic
         fun newInstance(isComingFromRewards : Boolean = false) =

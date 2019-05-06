@@ -68,10 +68,7 @@
             android:text="In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment."
             android:textColor="#4A4A4A"
             android:textSize="16sp" />
-
-
     </LinearLayout>
-
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/submitTextView"
@@ -87,7 +84,7 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:fontName="oswald_regular.ttf"
-        app:layout_constraintBottom_toTopOf="@+id/textView11"
+        app:layout_constraintBottom_toTopOf="@+id/textLater"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
