@@ -1012,8 +1012,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="not_working">Not Working</string>
     <string name="working">Working</string>
     <string name="save_continue"><![CDATA[SAVE & CONTINUE]]></string>
-    <string name="momspresso_rewards">MOMSPRESSO REWARDS</string>
-    <string name="rewards_program">REWARDS PROGRAM</string>
+    <string name="momspresso_rewards">MyMoney</string>
+    <string name="rewards_program">MyMoney</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="add_website">ADD WEBSITE</string>
@@ -1043,7 +1043,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards.social.instagram_connected">INSTAGRAM CONNECTED</string>
     <string name="rewards_participate">Participate and earn now by completing your profile!</string>
     <string name="rewards_personal_header">We need this information to get in touch with you</string>
-    <string name="rewards_welcome">Welcome to Momspresso Rewards!</string>
+    <string name="rewards_welcome">Welcome to Momspresso MyMoney!</string>
     <string name="rewards_description">Leading brands host campaigns in the form of surveys, e-commerce reviews, sponsored blogs and others on a regular basis.
        </string>
     <string name="reards.description_secand_text"> We need some information from you to determine your eligibility for these campaigns. Participation in these campaigns involves a monetary benefit and hence Momspresso Rewards.</string>
@@ -1062,7 +1062,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="cannot_be_left_blank">%1$s cannot be left blank\u0020</string>
     <string name="please_enter_a_valid">Please enter a valid\u0020 %1$s</string>
     <string name="need_to_select_option">You need to select an option for\u0020 %1$s</string>
-    <string name="rewards_tab_detail">Rewards</string>
+    <string name="rewards_tab_detail">MyMoney</string>
     <string name="rewards_gender">Gender</string>
     <string name="rewards_expected_date">Expected date</string>
     <string name="rewards_mobile_number_verified">Mobile number is verified</string>

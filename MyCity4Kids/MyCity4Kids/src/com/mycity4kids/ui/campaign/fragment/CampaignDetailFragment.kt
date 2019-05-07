@@ -238,7 +238,6 @@ class CampaignDetailFragment : BaseFragment() {
                 var participateRequest = CampaignParticipate()
                 participateRequest!!.user_id = userId
                 participateRequest.campaign_id = this!!.id!!
-
                 val retro = BaseApplication.getInstance().campaignRetrofit
                 val campaignAPI = retro.create(CampaignAPI::class.java)
                 val call = campaignAPI.postRegisterCampaign(participateRequest)

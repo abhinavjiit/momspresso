@@ -183,8 +183,10 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         }
         back.setOnClickListener {
             if (isComingFromRewards) {
+                toolbar.visibility = View.GONE
                 (activity as RewardsContainerActivity).onBackPressed()
             } else {
+                toolbar.visibility = View.VISIBLE
                 (activity as CampaignContainerActivity).onBackPressed()
 
             }
