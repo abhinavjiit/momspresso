@@ -893,7 +893,8 @@
     <string name="rewards_non_working">"गैर कामकाजी "</string>
     <string name="rewards_language">"भाषा "</string>
     <string name="rewards_save_continue">"सेव करें और आगे बढ़ें "</string>
-    <string name="momspresso_rewards">"मॉम्सप्रेस्सो ईनामी योजना "</string>
+    <string name="momspresso_rewards">MyMoney</string>
+    <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
     <string name="rewards_participate">अपने प्रोफाइल को अभी भरें और ईनामी योजना में हिस्सा ले कर लाभ कमाएं !</string>
     <string name="save_continue">"सेव करें और आगे बढ़ें "</string>
     <string name="rewards_personal_header">हमें आपसे संपर्क करने के लिए इस जानकारी की आवश्यकता है.</string>

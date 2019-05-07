@@ -203,7 +203,7 @@
             android:layout_alignBottom="@+id/imageView2"
             android:gravity="bottom|center"
             android:layout_marginBottom="10dp"
-            android:text="@string/rewards_welcome"
+            android:text="@string/reward_welcome"
             android:textColor="@color/white"
             app:fontName="oswald_regular.ttf" />
     </RelativeLayout>

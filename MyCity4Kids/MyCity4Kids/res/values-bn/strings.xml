@@ -893,7 +893,7 @@
     <string name="rewards_non_working">"কর্মরতা নন "</string>
     <string name="rewards_language">"ভাষা "</string>
     <string name="rewards_save_continue">"সেভ করুন আর এগিয়ে যান "</string>
-    <string name="momspresso_rewards">মমস্প্রেস্সো রিয়ার্ডস</string>
+    <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_participate">"অংশগ্রহণ করুন আর  আপনার প্রোফাইলটি সম্পূর্ণরূপে লিখে উপার্জন করুন "</string>
     <string name="save_continue">"সেভ করুন আর এগিয়ে যান "</string>
     <string name="rewards_personal_header">"আপনার সাথে যোগাযোগ করার জন্য এই তথ্যটি জানা প্রয়োজন "</string>
@@ -912,11 +912,12 @@
     <string name="rewards_expected_date">"প্রসবের তারিখ "</string>
     <string name="rewards_mobile_number_verified">আপনার মোবাইল নম্বর কি ভেরিফায়েড?</string>
     <string name="rewards_have_children">আপনার কি সন্তান আছে?</string>
-    <string name="rewards_tab_detail">পুরস্কার</string>
+    <string name="rewards_tab_detail">MyMoney</string>
     <string name="rewards_add_child">সন্তান থাকলে লিখুন</string>
     <string name="rewards_kid_detail">সন্তানের বিবরণ</string>
     <string name="rewards_participating_earn_completing_profile">অংশগ্রহণ করুন আর  আপনার প্রোফাইলটি সম্পূর্ণরূপে লিখে উপার্জন করুন </string>
     <string name="rewards_momspresso">মমস্প্রেস্সো রিয়ার্ডস
+        <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
 
 </string>
     //new Video Challenge Ui Strings

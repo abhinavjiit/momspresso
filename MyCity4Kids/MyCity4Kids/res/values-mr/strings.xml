@@ -883,7 +883,7 @@
     <string name="rewards_non_working">नॉन- वर्किंग</string>
     <string name="rewards_language">भाषा</string>
     <string name="rewards_save_continue">जतन करा आणि सुरु ठेवा</string>
-    <string name="momspresso_rewards">मोम्सप्रेसो पुरस्कार</string>
+    <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_participate">सहभाग घ्या आपले प्रोफाइल पूर्ण करा आणि कमवा!</string>
     <string name="save_continue">जतन करा आणि सुरु ठेवा</string>
     <string name="rewards_personal_header">"तुमच्या संपर्कात रहाण्यासाठी आम्हालाही  माहिती हवी आहे. "</string>
@@ -903,13 +903,13 @@
     <string name="rewards_expected_date">अपेक्षित तारीख</string>
     <string name="rewards_mobile_number_verified">मोबाईल नंबर तपासून पहा.</string>
     <string name="rewards_have_children">तुम्हाला मुलं आहेत का?</string>
-    <string name="rewards_tab_detail">पुरस्कार</string>
+    <string name="rewards_tab_detail">MyMoney</string>
     <string name="rewards_add_child">मुलांची माहिती</string>
     <string name="rewards_kid_detail">मुलांची माहिती</string>
     <string name="rewards_participating_earn_completing_profile">सहभाग घ्या आपले प्रोफाइल पूर्ण करा आणि कमवा!</string>
     <string name="rewards_momspresso">मोम्सप्रेसो पुरस्कार</string>
 
-
+    <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>

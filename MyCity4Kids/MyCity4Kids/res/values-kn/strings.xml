@@ -928,7 +928,7 @@
     <string name="rewards_non_working">ಕೆಲಸ ಮಾಡದಿರುವುದು</string>
     <string name="rewards_language">ಭಾಷೆ</string>
     <string name="rewards_save_continue">"ಉಳಿಸಿ ಮತ್ತು ಮುಂದುವರೆಸಿ "</string>
-    <string name="momspresso_rewards">ಮೊಮ್ಸ್‍ಪ್ರೆಸ್ಸೊ ಬಹುಮಾನಗಳು</string>
+    <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_participate">ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸುವ ಮೂಲಕ ಭಾಗವಹಿಸಿ ಮತ್ತು ಗಳಿಸಿ!</string>
     <string name="save_continue">"ಉಳಿಸಿ ಮತ್ತು ಮುಂದುವರೆಸಿ "</string>
     <string name="rewards_personal_header">ನಾನಾ ಪ್ರಚಾರಾಂದೋಲನಗಳಿಗಾಗಿ ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ನಿರ್ಧರಿಸಲು ಈ ಕೆಳಗೆ ತಿಳಿಸಿರುವ ಮಾಹಿತಿಯನ್ನು ನೀವು ನಮ್ಮೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಬೇಕು.</string>
@@ -948,12 +948,12 @@
     <string name="rewards_expected_date">ನಿರೀಕ್ಷಿತ ದಿನಾಂಕ</string>
     <string name="rewards_mobile_number_verified">ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗಿದೆ</string>
     <string name="rewards_have_children">ನಿಮಗೆ ಮಕ್ಕಳಿದ್ದಾರಾ?</string>
-    <string name="rewards_tab_detail">ಬಹುಮಾನಗಳು</string>
+    <string name="rewards_tab_detail">MyMoney</string>
     <string name="rewards_add_child">ಮಕ್ಕಳನ್ನು ಸೇರಿಸಿ</string>
     <string name="rewards_kid_detail">ಮಗುವಿನ ವಿವರ</string>
     <string name="rewards_participating_earn_completing_profile">ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸುವ ಮೂಲಕ ಭಾಗವಹಿಸಿ ಮತ್ತು ಗಳಿಸಿ!</string>
     <string name="rewards_momspresso">ಮೊಮ್ಸ್‍ಪ್ರೆಸ್ಸೊ ಬಹುಮಾನಗಳು</string>
-
+    <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>

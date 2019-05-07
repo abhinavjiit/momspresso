@@ -880,7 +880,7 @@
     <string name="rewards_non_working">"నాన్ వర్కింగ్ "</string>
     <string name="rewards_language">భాష</string>
     <string name="rewards_save_continue">సేవ్ చేసి కొనసాగండి</string>
-    <string name="momspresso_rewards">"మామ్స్‌ప్రెస్సో రివార్ద్స్‌ "</string>
+    <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_participate">"మీ ప్రొఫైల్ పూర్తి చేసి పాల్గొనండి మరియు సంపాదించండి! "</string>
     <string name="save_continue">సేవ్ చేసి కొనసాగండి</string>
     <string name="rewards_personal_header">మీతో సన్నిహితంగా ఉండటానికి ఈ సమాచారం మాకు అవసరం</string>
@@ -900,12 +900,12 @@
     <string name="rewards_expected_date">డెలివరీ  తేదీ</string>
     <string name="rewards_mobile_number_verified">మొబైల్ నంబర్ ధృవీకరించబడింది</string>
     <string name="rewards_have_children">మీకు పిల్లలు ఉన్నారా?</string>
-    <string name="rewards_tab_detail">బహుమతులు</string>
+    <string name="rewards_tab_detail">MyMoney</string>
     <string name="rewards_add_child">పిల్లల సంఖ్య జోడించండి</string>
     <string name="rewards_kid_detail">పిల్లల వివరాలు</string>
     <string name="rewards_participating_earn_completing_profile">మీ ప్రొఫైల్ పూర్తి చేసి పాల్గొనండి మరియు సంపాదించండి!</string>
     <string name="rewards_momspresso">మామ్స్‌ప్రెస్సో రివార్ద్స్‌</string>
-
+    <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>

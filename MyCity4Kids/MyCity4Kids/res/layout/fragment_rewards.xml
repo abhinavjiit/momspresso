@@ -49,7 +49,7 @@
                 android:shadowDx="0"
                 android:shadowDy="1"
                 android:shadowRadius="5"
-                android:text="@string/rewards_welcome"
+                android:text="@string/reward_welcome"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 app:fontName="oswald_regular.ttf" />

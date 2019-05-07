@@ -886,7 +886,7 @@
     <string name="rewards_non_working">வேலைக்கு செல்லாதவர்</string>
     <string name="rewards_language">மொழி</string>
     <string name="rewards_save_continue">சேமி  தொடரவும்</string>
-    <string name="momspresso_rewards">மாம்ஸ்ப்ரெஸ்ஸோ வெகுமதிகள்</string>
+    <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_participate">உங்கள் சுயவிவரத்தை நிறைவு செய்வதன் மூலம் இப்போது பங்கேற்று சம்பாதிக்கலாம்!</string>
     <string name="save_continue">சேமி &amp; தொடரவும்</string>
     <string name="rewards_personal_header">உங்களுடன் தொடர்பு கொள்ள இந்தத் தகவல் எங்களுக்குத் தேவை</string>
@@ -905,12 +905,12 @@
     <string name="rewards_expected_date">எதிர்பார்க்கும் தேதி</string>
     <string name="rewards_mobile_number_verified">கைபேசி எண் சரிபார்க்கப்பட்டது</string>
     <string name="rewards_have_children">உங்களுக்கு குழந்தைகள் இருக்கிறார்களா?</string>
-    <string name="rewards_tab_detail">வெகுமதிகள்</string>
+    <string name="rewards_tab_detail">MyMoney</string>
     <string name="rewards_add_child">குழந்தையை சேர்க்கவும்</string>
     <string name="rewards_kid_detail">குழந்தையை பற்றி விவரம்</string>
     <string name="rewards_participating_earn_completing_profile">உங்கள் சுயவிவரத்தை நிறைவு செய்வதன் மூலம் இப்போது பங்கேற்று சம்பாதிக்கலாம்!</string>
     <string name="rewards_momspresso">மாம்ஸ்ப்ரெஸ்ஸோ வெகுமதிகள்</string>
-
+    <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
 
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>

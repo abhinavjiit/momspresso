@@ -15,7 +15,7 @@
     <string name="loading_txt">Loading&#8230;</string>
     <string name="group_comment_start_type_here_text">Start Typing</string>
 
-
+    <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
     <string name="subcategoryName">subCategory</string>
     <string name="location_info">To get personalized recommendations, Please select your preferred location</string>
     <string name="hint_text">What are you looking for ?</string>
@@ -929,7 +929,7 @@
     <string name="rewards_non_working">"ജോലി ചെയ്യുന്നില്ല "</string>
     <string name="rewards_language">"ഭാഷ "</string>
     <string name="rewards_save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
-    <string name="momspresso_rewards">"മോംസ്പ്രേസ്സോ റീവാർഡുകൾ "</string>
+    <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_participate">പ്രൊഫൈൽ പൂരിപ്പിക്കൂ, ഇതിൽ പങ്ക് ചേരൂ, സമ്പാദിക്കാൻ തുടങ്ങൂ!</string>
     <string name="save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
     <string name="rewards_personal_header">ഈ വിവരം ഞങ്ങൾക്ക് താങ്കളുമായി ബന്ധപ്പെടാൻ ആവശ്യമാണ്.</string>
@@ -949,7 +949,7 @@
     <string name="rewards_expected_date">"ഡ്യൂ ഡേറ്റ് "</string>
     <string name="rewards_mobile_number_verified">മൊബൈൽ നമ്പർ സ്ഥിരീകരിച്ചിരുന്നു</string>
     <string name="rewards_have_children">നിങ്ങൾക്ക് കുട്ടികളുണ്ടോ?</string>
-    <string name="rewards_tab_detail">പ്രതിഫലങ്ങൾ</string>
+    <string name="rewards_tab_detail">MyMoney</string>
     <string name="rewards_add_child">കുട്ടിയെ ചേർക്കുക</string>
     <string name="rewards_kid_detail">കുട്ടിയെ കുറിച്ച്</string>
     <string name="rewards_participating_earn_completing_profile"> പ്രൊഫൈൽ പൂരിപ്പിക്കൂ, ഇതിൽ പങ്ക് ചേരൂ, സമ്പാദിക്കാൻ തുടങ്ങൂ!</string>
