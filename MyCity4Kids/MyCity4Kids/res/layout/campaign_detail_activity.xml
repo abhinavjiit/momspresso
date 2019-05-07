@@ -5,7 +5,7 @@
     android:id="@+id/parentConstraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone">
+    android:visibility="visible">
 
 
     <android.support.v7.widget.Toolbar
@@ -60,7 +60,6 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/space_40"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -211,7 +210,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Contest Starts On"
+                android:text="@string/campaign_starts_on"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 app:fontName="oswald.ttf"
@@ -242,7 +241,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Contest Ends on"
+                android:text="@string/campaign_ends_on"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 app:fontName="oswald.ttf"
@@ -319,7 +318,7 @@
                 android:gravity="center"
                 android:paddingTop="@dimen/space_10"
                 android:paddingBottom="@dimen/space_10"
-                android:text="CLICK HERE TO SEE YOUR REWARD"
+                android:text="@string/view_mymoney"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 app:fontName="oswald_regular.ttf"
@@ -347,30 +346,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/show_reward_text" />
 
-            <ImageView
-                android:id="@+id/img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_20"
-                android:layout_marginLeft="@dimen/space_20"
-                android:layout_marginTop="@dimen/space_5"
-                android:layout_marginEnd="@dimen/space_10"
-                android:layout_marginRight="@dimen/space_10"
-                android:src="@drawable/black_dot"
-                app:layout_constraintEnd_toStartOf="@+id/desc_text"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/desc_text" />
-
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/desc_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_25"
-                android:layout_marginLeft="@dimen/space_25"
+                android:layout_marginStart="@dimen/space_15"
+                android:layout_marginLeft="@dimen/space_15"
                 android:layout_marginTop="@dimen/space_5"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="14dp"
+                android:layout_marginEnd="@dimen/space_15"
+                android:layout_marginRight="@dimen/space_15"
                 android:text="Lorem ipsum, or lipsum as it is sometimes known, Is dummy text used in laying out print, graphic or Web designs. The passage is attributed to anis Dummy text used in laying out Graphic or Web designs. The passage is attributed to an Dummy tex"
                 android:textColor="@color/campaign_515151"
                 android:textSize="11sp"
@@ -427,43 +412,33 @@
                 android:layout_marginStart="@dimen/space_15"
                 android:layout_marginLeft="@dimen/space_15"
                 android:layout_marginTop="@dimen/space_5"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="14dp"
+                android:layout_marginEnd="@dimen/space_15"
+                android:layout_marginRight="@dimen/space_15"
                 android:text="Lorem ipsum, or lipsum as it is sometimes known, Is dummy text used in laying out print, graphic or Web designs. The passage is attributed to anis Dummy text used in laying out Graphic or Web designs. The passage is attributed to an Dummy tex"
                 android:textColor="@color/campaign_515151"
                 android:textSize="11sp"
                 app:fontName="open_sans.ttf"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/term_header" />
 
-
-            <View
-                android:id="@+id/view_2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/space_15"
-                android:background="#E5E5E5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/term_text" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/label_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_15"
+                android:layout_marginBottom="@dimen/space_103"
                 android:background="@drawable/campaign_label_bg"
                 android:gravity="center"
                 android:paddingTop="@dimen/space_10"
                 android:paddingBottom="@dimen/space_10"
                 android:textColor="#4A4A4A"
-                app:fontName="open_sans.ttf"
+                app:fontName="open_sans_bold.ttf"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_2" />
+                app:layout_constraintTop_toBottomOf="@+id/term_text" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 

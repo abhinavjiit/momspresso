@@ -53,8 +53,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
             Picasso.with(view.context).load(campaignList.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(view.brand_img)
             (view.brand_name).setText(campaignList.brandDetails.name)
             (view.campaign_name).setText(campaignList.name)
-
-            (view.amount).setText("" + campaignList.totalPayout)
+            (view.amount).setText("Rs. " + campaignList.totalPayout)
             setTextAndColor(campaignList.campaignStatus)
         }
 
@@ -87,7 +86,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_expired))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_expired)
                 (view.end_date).setText(context!!.resources.getString(R.string.end_date))
-                (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM YYYY"))
+                (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_expired_background))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
@@ -95,7 +94,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
                 (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
                 (view.end_date).setText(context!!.resources.getString(R.string.start_date))
-                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
+                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
@@ -103,7 +102,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_submission_open))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscription_open)
                 (view.end_date).setText(context!!.resources.getString(R.string.end_date))
-                (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM YYYY"))
+                (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
@@ -111,7 +110,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_applied))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscribed)
                 (view.end_date).setText(context!!.resources.getString(R.string.start_date))
-                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
+                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
@@ -119,23 +118,23 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_application_full))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_submission_full)
                 (view.end_date).setText(context!!.resources.getString(R.string.start_date))
-                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
+                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 5) {
-                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_expired))
-                (view.submission_status).setBackgroundResource(R.drawable.campaign_expired)
-                (view.end_date).setText(context!!.resources.getString(R.string.end_date))
-                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
-                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_expired_background))
-                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
-                (view.amount).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
+                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
+                (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
+                (view.end_date).setText(context!!.resources.getString(R.string.start_date))
+                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 6) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_rejected))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_rejected)
                 (view.end_date).setText(context!!.resources.getString(R.string.end_date))
-                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
+                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
@@ -143,7 +142,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_completed))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_completed)
                 (view.end_date).setText(context!!.resources.getString(R.string.end_date))
-                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM YYYY"))
+                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
@@ -160,7 +159,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
 
             // Create a calendar object that will convert the date and time value in milliseconds to date.
             val calendar = Calendar.getInstance()
-            calendar.timeInMillis = milliSeconds
+            calendar.timeInMillis = milliSeconds*1000
             return formatter.format(calendar.time)
         }
 

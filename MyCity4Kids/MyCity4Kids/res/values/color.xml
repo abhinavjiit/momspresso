@@ -480,6 +480,7 @@
     <color name="campaign_expired">#9B9B9B</color>
     <color name="campaign_list_buttons">#D03F56</color>
     <color name="campaign_515151">#515151</color>
+    <color name="campaign_7D7D7D">#7D7D7D</color>
     <color name="campaign_rejected">#eb3955</color>
     <color name="campaign_completed">#40bc68</color>
     <color name="campaign_expired_background">#9B9B9B</color>

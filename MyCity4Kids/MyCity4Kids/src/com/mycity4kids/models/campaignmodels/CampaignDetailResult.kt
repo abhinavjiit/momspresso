@@ -50,7 +50,7 @@ class CampaignDetailResult {
     var isActive: Int? = null
     @SerializedName("is_fixed_amount")
     @Expose
-    var isFixedAmount: Int? = null
+    var isFixedAmount: Int? = 0
     @SerializedName("max_amount")
     @Expose
     var maxAmount: Double? = null
