@@ -62,6 +62,8 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         override fun onClick(v: View) {
             //val context = itemView.context
             if (v == (view.share)) {
+                Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "share", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+
                 val shareIntent = ShareCompat.IntentBuilder
                         .from(context)
                         .setType("text/plain")

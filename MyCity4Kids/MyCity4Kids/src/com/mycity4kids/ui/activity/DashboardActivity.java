@@ -1778,6 +1778,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.topContainer:
             case R.id.profileImageView:
                 mDrawerLayout.closeDrawers();
+                Utils.campaignEvent(this, "profile", "sidebar", "Update", "", "android", SharedPrefUtils.getAppLocale(this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Update_Rewards");
                 Intent pIntent = new Intent(this, PrivateProfileActivity.class);
                 startActivity(pIntent);
                 break;
