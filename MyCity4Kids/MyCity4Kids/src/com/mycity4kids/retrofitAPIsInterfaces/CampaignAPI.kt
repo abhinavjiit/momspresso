@@ -3,6 +3,7 @@ package com.mycity4kids.retrofitAPIsInterfaces
 import com.mycity4kids.models.BaseResponseModel
 import com.mycity4kids.models.campaignmodels.*
 import com.mycity4kids.models.request.CampaignParticipate
+import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
@@ -58,6 +59,10 @@ interface CampaignAPI {
 
     @POST("rewards/v1/campaigns/participate/")
     fun postRegisterCampaign(@Body body: CampaignParticipate)
+            : Call<ParticipateCampaignResponse>
+
+    @POST("rewards/v1/campaigns/referrals/")
+    fun postReferralCampaign(@Body body: CampaignReferral)
             : Call<ParticipateCampaignResponse>
 
     @POST("/payments/v1/account/")
