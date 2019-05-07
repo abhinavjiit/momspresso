@@ -65,7 +65,7 @@ class RewardsTabFragment : Fragment() {
             startActivity(intent)
         }
 
-        if (arguments!=null) {
+        if (arguments != null) {
             isRewardsAdded = arguments!!.getString("isRewardsAdded", "0")
             if (isRewardsAdded.equals("1")) {
                 textStartReward.setText(resources.getString(R.string.update))
