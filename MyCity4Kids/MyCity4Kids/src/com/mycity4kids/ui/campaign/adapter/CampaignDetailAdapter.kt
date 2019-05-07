@@ -17,7 +17,8 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
         return RewardHolder(LayoutInflater.from(context).inflate(R.layout.deliverable_list_recycler_adapter, parent, false))
     }
 
-    override fun getItemCount(): Int = deliverableList!!.get(0).size
+    override fun getItemCount(): Int =
+        deliverableList!!.get(0).size
 
     override fun onBindViewHolder(holder: CampaignDetailAdapter.RewardHolder, position: Int) {
 //        val itemPhoto = deliverableList!!.get(0).[position]

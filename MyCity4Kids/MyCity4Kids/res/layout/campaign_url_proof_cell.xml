@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/textUrl"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/article_listing_item_border_bg"
+        android:fontFamily="sans-serif"
+        android:hint="Enter page link or Url"
+        android:paddingLeft="12dp"
+        android:textColor="@color/black"
+        android:enabled="false"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/textUrl"
+        app:layout_constraintEnd_toEndOf="@+id/textUrl"
+        app:layout_constraintTop_toTopOf="@+id/textUrl"
+        app:srcCompat="@drawable/ic_delete_svg" />
+
+    <ImageView
+        android:id="@+id/imageApprovedRejected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/textUrl"
+        app:layout_constraintTop_toBottomOf="@+id/textUrl"
+        app:srcCompat="@drawable/ic_delete_cross" />
+
+    <TextView
+        android:id="@+id/textAcceptedRejectedStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageApprovedRejected"
+        app:layout_constraintStart_toEndOf="@+id/imageApprovedRejected"
+        app:layout_constraintTop_toTopOf="@+id/imageApprovedRejected" />
+
+</android.support.constraint.ConstraintLayout>

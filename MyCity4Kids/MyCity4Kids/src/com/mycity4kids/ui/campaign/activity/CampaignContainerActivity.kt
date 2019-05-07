@@ -30,11 +30,13 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campaign_container);
 
+
+        /*don't delete this code this is testing for proof screen*/
 //        var arrayList = ArrayList<Int>()
 //        arrayList.add(8)
-//        addAddProofFragment(15, arrayList)
-//        addPaymantMode()
-         campaignListFragment()
+//        addAddProofFragment(67, arrayList)
+        
+        campaignListFragment()
     }
 
     private fun campaignListFragment() {
@@ -59,7 +61,6 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
                 CampaignAddProofFragment::class.java.simpleName).addToBackStack("campaignAddProofFragment")
                 .commit()
     }
-
 
     private fun addPaymantMode() {
         var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = false)

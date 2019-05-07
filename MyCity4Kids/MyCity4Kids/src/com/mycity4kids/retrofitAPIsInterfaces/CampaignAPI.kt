@@ -52,6 +52,10 @@ interface CampaignAPI {
     fun postProofToServer(@Body proofPostModel: ProofPostModel)
             : Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
 
+    @PUT("rewards/v1/campaigns/proofs/{proofId}")
+    fun updateProofToServer(@Path("proofId") proofId: Int, @Body proofPostModel: ProofPostModel)
+            : Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
+
 
     @POST("rewards/v1/campaigns/participate/")
     fun postRegisterCampaign(@Body body: CampaignParticipate)
