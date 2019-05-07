@@ -30,7 +30,6 @@ class RewardsContainerActivity : BaseActivity(),
         }else{
             addPancardDetailFragment()
         }
-
     }
 
     override fun onFacebookEventReceived(response: String?) {

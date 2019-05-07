@@ -32,8 +32,8 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
 
         var arrayList = ArrayList<Int>()
         arrayList.add(8)
-        addAddProofFragment(15, arrayList)
-            //campaignListFragment()
+        addAddProofFragment(67, arrayList)
+        //campaignListFragment()
         //addPaymantMode()
         // campaignListFragment()
     }
@@ -60,7 +60,6 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
                 CampaignAddProofFragment::class.java.simpleName).addToBackStack("campaignAddProofFragment")
                 .commit()
     }
-
 
     private fun addPaymantMode() {
         var campaignPaymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = false)
