@@ -146,16 +146,22 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         if (arguments != null) {
             isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
                 arguments.getBoolean("isComingFromRewards")
+
             } else {
                 false
             }
         }
+
+        if(isComingFromRewards){
+            toolbar.visibility = View.GONE
+        }else{
+            toolbar.visibility = View.VISIBLE
+        }
+
         back.setOnClickListener {
             if (isComingFromRewards) {
-                toolbar.visibility = View.GONE
                 (activity as RewardsContainerActivity).onBackPressed()
             } else {
-                toolbar.visibility = View.VISIBLE
                 (activity as CampaignContainerActivity).onBackPressed()
 
             }

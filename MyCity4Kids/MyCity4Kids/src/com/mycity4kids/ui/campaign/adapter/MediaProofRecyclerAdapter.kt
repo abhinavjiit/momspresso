@@ -61,12 +61,14 @@ class MediaProofRecyclerAdapter(
                     setOnClickListener(mOnClickListener)
                 }
             }else{
-//                Picasso.with(context.context).load(R.drawable.ic_add_proof)
-//                        .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
+                holder.relativeParent.setOnClickListener {
+                    clickListener.onCellClick()
+                }
             }
         }else{
-//            Picasso.with(context.context).load(R.drawable.ic_add_proof)
-//                    .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
+            holder.relativeParent.setOnClickListener {
+                clickListener.onCellClick()
+            }
         }
 
     }
