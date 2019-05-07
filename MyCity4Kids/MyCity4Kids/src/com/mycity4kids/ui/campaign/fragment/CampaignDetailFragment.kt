@@ -11,15 +11,14 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ShareCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.crashlytics.android.Crashlytics
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
@@ -31,6 +30,7 @@ import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.campaignmodels.CampaignDetailResult
 import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
 import com.mycity4kids.models.request.CampaignParticipate
+import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
@@ -59,7 +59,7 @@ class CampaignDetailFragment : BaseFragment() {
     private var apiGetParticipationResponse: BaseResponseModel? = null
     private lateinit var containerView: View
     private var id: Int? = 0
-    private var status: Int? = 0
+    private var status: Int = 0
     private lateinit var bannerImg: ImageView
     private lateinit var brandImg: ImageView
     private lateinit var brandName: TextView
@@ -80,6 +80,11 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var bottomLayout: RelativeLayout
     private lateinit var isRewardAdded: String
     private lateinit var parentConstraint: ConstraintLayout
+    private lateinit var referCode: EditText
+    private lateinit var referCodeApply: TextView
+    private lateinit var referCodeError: TextView
+    private lateinit var viewLine: View
+    private lateinit var referCodeHeader: TextView
 
     override fun updateUi(response: Response?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -123,7 +128,40 @@ class CampaignDetailFragment : BaseFragment() {
                 context!!.startActivity(shareIntent)
             }
         }
+
+        referCodeApply.setOnClickListener {
+            applyCode()
+        }
+
+        referCode.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                referCodeError.visibility = View.GONE
+            }
+
+        })
+
         return containerView
+    }
+
+    private fun applyCode() {
+        var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        var referralRequest = CampaignReferral()
+        referralRequest!!.user_id = userId
+        referralRequest.campaign_id = this!!.id!!
+        referralRequest.referral_code = referCode.text.toString()
+
+        val retro = BaseApplication.getInstance().campaignRetrofit
+        val campaignAPI = retro.create(CampaignAPI::class.java)
+        val call = campaignAPI.postReferralCampaign(referralRequest)
+        call.enqueue(referCampaign)
     }
 
     private fun initializeXml() {
@@ -145,6 +183,11 @@ class CampaignDetailFragment : BaseFragment() {
         appliedTag = containerView.findViewById(R.id.applied_tag)
         applicationStatus = containerView.findViewById(R.id.application_status)
         parentConstraint = containerView.findViewById(R.id.parentConstraint)
+        referCode = containerView.findViewById(R.id.refer_code_text)
+        referCodeApply = containerView.findViewById(R.id.refer_code_apply)
+        referCodeError = containerView.findViewById(R.id.refer_code_error)
+        referCodeHeader = containerView.findViewById(R.id.refer_header)
+        viewLine = containerView.findViewById(R.id.view_6)
     }
 
     private fun fetchCampaignDetail() {
@@ -203,7 +246,7 @@ class CampaignDetailFragment : BaseFragment() {
         }
         termText.setText(termBuilder.toString())
 
-        status = apiGetResponse!!.campaignStatus
+        status = apiGetResponse!!.campaignStatus!!
         if (apiGetResponse!!.deliverables!!.size > 0) {
             detail_recyclerview.layoutManager = linearLayoutManager
             adapter = CampaignDetailAdapter(apiGetResponse!!.deliverables, activity)
@@ -303,26 +346,61 @@ class CampaignDetailFragment : BaseFragment() {
         }
     }
 
+    val referCampaign = object : Callback<ParticipateCampaignResponse> {
+        override fun onResponse(call: Call<ParticipateCampaignResponse>, response: retrofit2.Response<ParticipateCampaignResponse>) {
+            removeProgressDialog()
+            if (response == null || null == response.body()) {
+                val nee = NetworkErrorException(response.raw().toString())
+                Crashlytics.logException(nee)
+                return
+            }
+            try {
+                val responseData = response.body()
+                if (responseData!!.code == 200) {
+                    if (Constants.SUCCESS == responseData.status) {
+                        Toast.makeText(context, responseData.data.get(0).msg, Toast.LENGTH_SHORT).show()
+                    } else {
+                        referCodeError.visibility = View.VISIBLE
+                        referCodeError.setText("" + responseData.reason)
+                    }
+                }
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+        }
+
+        override fun onFailure(call: Call<ParticipateCampaignResponse>, t: Throwable) {
+            removeProgressDialog()
+            Crashlytics.logException(t)
+            Log.d("MC4kException", Log.getStackTraceString(t))
+        }
+    }
+
     fun setLabels() {
         labelText.visibility = View.VISIBLE
         appliedTag.visibility = View.GONE
         if (status == 0) {
+            hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_expired))
             applicationStatus.setBackgroundResource(R.drawable.campaign_expired)
             labelText.setText(context!!.resources.getString(R.string.label_campaign_expired))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward))
         } else if (status == 1) {
+            hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
             applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
             labelText.setText(context!!.resources.getString(R.string.label_campaign_apply))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_apply_now))
         } else if (status == 2) {
+            hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_submission_open))
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
             labelText.visibility = View.GONE
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_submit_proof))
             Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
         } else if (status == 21) {
+            hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_submission_open))
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
             Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_not_started), Toast.LENGTH_SHORT).show()
@@ -330,6 +408,7 @@ class CampaignDetailFragment : BaseFragment() {
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
             labelText.setText(context!!.resources.getString(R.string.label_campaign_not_started) + " " + getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy"))
         } else if (status == 3) {
+            hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_applied))
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscribed)
             Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
@@ -337,17 +416,19 @@ class CampaignDetailFragment : BaseFragment() {
             appliedTag.visibility = View.VISIBLE
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
         } else if (status == 4) {
+            hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_application_full))
             applicationStatus.setBackgroundResource(R.drawable.campaign_submission_full)
             Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_full), Toast.LENGTH_SHORT).show()
             labelText.setText(context!!.resources.getString(R.string.label_campaign_full))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward))
         } else if (status == 5) {
+            hideShowReferral(status)
             if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
-                val intent = Intent(context, RewardsContainerActivity::class.java)
-                intent.putExtra("isComingfromCampaign", true)
-                intent.putExtra("pageLimit", 2)
-                startActivityForResult(intent, REWARDS_FILL_FORM_REQUEST)
+                applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
+                applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
+                labelText.setText(context!!.resources.getString(R.string.label_campaign_apply))
+                submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_apply_now))
             } else {
                 applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
                 applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
@@ -356,16 +437,32 @@ class CampaignDetailFragment : BaseFragment() {
                 submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
             }
         } else if (status == 6) {
+            hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_rejected))
             applicationStatus.setBackgroundResource(R.drawable.campaign_rejected)
             Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_reject), Toast.LENGTH_SHORT).show()
             labelText.setText(context!!.resources.getString(R.string.label_campaign_reject))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_view_other))
         } else if (status == 7) {
+            hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_completed))
             applicationStatus.setBackgroundResource(R.drawable.campaign_completed)
             labelText.setText(context!!.resources.getString(R.string.label_campaign_completed))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward))
+        }
+    }
+
+    fun hideShowReferral(status: Int){
+        if (status == 1){
+            viewLine.visibility = View.VISIBLE
+            referCode.visibility = View.VISIBLE
+            referCodeApply.visibility = View.VISIBLE
+            referCodeHeader.visibility = View.VISIBLE
+        } else{
+            viewLine.visibility = View.GONE
+            referCode.visibility = View.GONE
+            referCodeApply.visibility = View.GONE
+            referCodeHeader.visibility = View.GONE
         }
     }
 
@@ -377,9 +474,9 @@ class CampaignDetailFragment : BaseFragment() {
             dialog.setCancelable(true)
             val showAmount = dialog.findViewById<TextView>(R.id.show_amount)
             if (apiGetResponse!!.isFixedAmount == 1) {
-                showAmount.setText("Rs. " + apiGetResponse!!.amount)
+                showAmount.setText("Rs." + apiGetResponse!!.amount)
             } else {
-                showAmount.setText("Rs. " + apiGetResponse!!.minAmount + "-" + "Rs. " + apiGetResponse!!.maxAmount)
+                showAmount.setText("Rs." + apiGetResponse!!.minAmount + "-" + "Rs." + apiGetResponse!!.maxAmount)
             }
 
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -401,6 +498,7 @@ class CampaignDetailFragment : BaseFragment() {
                 intent.putExtra("isComingfromCampaign", true)
                 intent.putExtra("pageLimit", 2)
                 startActivityForResult(intent, REWARDS_FILL_FORM_REQUEST)
+                dialog.dismiss()
             }
 
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

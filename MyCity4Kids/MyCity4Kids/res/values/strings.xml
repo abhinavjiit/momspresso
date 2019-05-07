@@ -1111,6 +1111,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_details_applied">APPLIED</string>
     <string name="campaign_details_expired">EXPIRED</string>
     <string name="campaign_details_completed">COMPLETED</string>
+    <string name="campaign_details_invite_only">INVITE ONLY</string>
     <string name="campaign_details_rejected">REJECTED</string>
     <string name="end_date">End Date</string>
     <string name="start_date">Start Date</string>
@@ -1151,5 +1152,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="dialog_thanks_for_interest">Thanks for your interest!</string>
     <string name="dialog_register_for_mymoney">For applying to the campaign, you first need to register for the Momspresso MyMoney.</string>
     <string name="register_now">REGISTER NOW</string>
+    <string name="apply_refer_code">APPLY REFERRAL CODE</string>
+    <string name="apply_code_error">Code already used. Please enter a different one</string>
 
 </resources>

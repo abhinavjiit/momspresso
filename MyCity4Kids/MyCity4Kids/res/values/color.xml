@@ -481,9 +481,15 @@
     <color name="campaign_list_buttons">#D03F56</color>
     <color name="campaign_515151">#515151</color>
     <color name="campaign_7D7D7D">#7D7D7D</color>
+    <color name="campaign_4A4A4A">#4A4A4A</color>
+    <color name="campaign_9B9B9B_5">#0D9B9B9B</color>
     <color name="campaign_rejected">#eb3955</color>
     <color name="campaign_completed">#40bc68</color>
+    <color name="campaign_FDF8F8">#FDF8F8</color>
+    <color name="campaign_list_buttons_20">#20D03F56</color>
     <color name="campaign_expired_background">#9B9B9B</color>
+    <color name="campaign_show_mymoney_btn">#56CD6A</color>
+    <color name="campaign_refer_code_error">#D0021B</color>
 
     <color name="black_64">#A6000000</color>
 </resources>
