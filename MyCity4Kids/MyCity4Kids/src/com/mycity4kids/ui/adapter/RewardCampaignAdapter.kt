@@ -69,7 +69,8 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                     context!!.startActivity(shareIntent)
                 }
             } else {
-                (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
+                if (campaignList!!.campaignStatus != 8)
+                    (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
             }
         }
 
@@ -138,6 +139,14 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+            } else if (status == 8) {
+                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_invite_only))
+                (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
+                (view.end_date).setText(context!!.resources.getString(R.string.start_date))
+                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             }
         }
 
@@ -151,7 +160,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
 
             // Create a calendar object that will convert the date and time value in milliseconds to date.
             val calendar = Calendar.getInstance()
-            calendar.timeInMillis = milliSeconds*1000
+            calendar.timeInMillis = milliSeconds * 1000
             return formatter.format(calendar.time)
         }
 

@@ -33,6 +33,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.picker_dialog_cell.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,12 +43,15 @@ const val SELECT_IMAGE = 1005
 
 class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickListener, MediaProofRecyclerAdapter.ClickListener {
     override fun onUrlProofDelete(cellIndex: Int) {
-        if (campaignProofList.get(cellIndex).id != 0) {
-            deleteProof(campaignProofList.get(cellIndex).id!!)
-        } else {
-            campaignProofList.removeAt(cellIndex)
-            notifyAdapters()
+        if (campaignProofList != null && !campaignProofList!!.isNullOrEmpty()) {
+            if (campaignProofList.get(cellIndex).id != 0) {
+                deleteProof(campaignProofList.get(cellIndex).id!!)
+            } else {
+                campaignProofList.removeAt(cellIndex)
+                notifyAdapters()
+            }
         }
+
     }
 
     fun onProofSubmitClick() {
@@ -64,11 +68,17 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             } else {
                 var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
                 var textview = view.findViewById<TextView>(R.id.textUrl)
-                var proofPostModel = ProofPostModel(url = textview.text.toString(), campaign_id = campaignId, url_type = 1)
-                if (i == 2) {
-                    postProofToServer(proofPostModel, true)
+                if (!textview.text.isNullOrEmpty()) {
+                    var proofPostModel = ProofPostModel(url = textview.text.toString(), campaign_id = campaignId, url_type = 1)
+                    if (i == 2) {
+                        postProofToServer(proofPostModel, true)
+                    } else {
+                        postProofToServer(proofPostModel, false)
+                    }
                 } else {
-                    postProofToServer(proofPostModel, false)
+                    if (i == 2) {
+                        submitListener.proofSubmitDone()
+                    }
                 }
             }
         }
@@ -174,7 +184,15 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
         textSubmit = view.findViewById<TextView>(R.id.textSubmit)
         textSubmit.setOnClickListener {
-            onProofSubmitClick()
+            if (urlTypes.equals("image_link", true)) {
+                submitListener.proofSubmitDone()
+            } else if (urlTypes.equals("website_link", true)) {
+                if (!validateUrlProofs()) {
+                    onProofSubmitClick()
+                } else {
+                    Toast.makeText(activity, "Please submit a proof", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         /*fetch faq data from server*/
@@ -184,6 +202,19 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         fetSubmissionDetail()
 
         return view
+    }
+
+    private fun validateUrlProofs(): Boolean {
+        var isAllEmpty: Boolean = true
+        for (i in 0..2) {
+            var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
+            var textview = view.findViewById<TextView>(R.id.textUrl)
+            if (textview != null && !textview.text.isNullOrEmpty()) {
+                isAllEmpty = false
+                break
+            }
+        }
+        return isAllEmpty
     }
 
     /*fetch data from server*/
@@ -275,16 +306,21 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
                         response.data != null && response.data!!.result != null) {
-
                     if (!urlTypes.isNullOrEmpty()) {
                         if (urlTypes.equals("image_link", true)) {
+                            if (response!!.data!!.result.id != 0) {
+                                var campaignProofResponse = CampaignProofResponse()
+                                campaignProofResponse.id = response!!.data!!.result.id
+                                campaignProofResponse.url = proofPostModel.url
+                                campaignProofResponse.urlType = 0
+                                campaignProofList.add(campaignProofResponse)
+                            }
                         } else if (urlTypes.equals("website_link", true)) {
                             if (proceedToPayment) {
                                 submitListener.proofSubmitDone()
                             }
                         }
                     }
-
                 } else {
                 }
             }
@@ -361,7 +397,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             if (urlTypes.equals("image_link", true)) {
                 mediaProofRecyclerAdapter.notifyDataSetChanged()
             } else if (urlTypes.equals("website_link", true)) {
-                mediaProofRecyclerAdapter.notifyDataSetChanged()
+                urlProofRecyclerAdapter.notifyDataSetChanged()
             }
         }
     }

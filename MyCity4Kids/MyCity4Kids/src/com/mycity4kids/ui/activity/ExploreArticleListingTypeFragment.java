@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -35,6 +36,8 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.adapter.TopicsRecyclerGridAdapter;
+import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
+import com.mycity4kids.ui.fragment.CampaignListFragment;
 import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -81,6 +84,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             forYouTextView, /*videosTextView,*/
             recentTextView;
     private TextView continueTextView;
+    private FrameLayout container;
     private RelativeLayout videosContainer, storyContainer, groupsContainer, momsTVContainer, rewardsContainer;
 
     @Override
@@ -88,7 +92,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         view = inflater.inflate(R.layout.explore_article_listing_type_fragment, container, false);
 
         dynamoUserId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
-
+        container = view.findViewById(R.id.container);
         quickLinkContainer = (HorizontalScrollView) view.findViewById(R.id.quickLinkContainer);
         gridview = (HeaderGridView) view.findViewById(R.id.gridview);
         exploreCategoriesLabel = (TextView) view.findViewById(R.id.exploreCategoriesLabel);
@@ -278,9 +282,10 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             case R.id.rewardsContainer: {
                 Utils.pushOpenScreenEvent(getActivity(), "RewardsScreen", dynamoUserId + "");
                 Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "RewardsScreen");
-                /*Intent cityIntent = new Intent(getActivity(), CategoryVideosListingActivity.class);
-                cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
-                startActivity(cityIntent);*/
+
+
+                Intent cityIntent = new Intent(getActivity(), CampaignContainerActivity.class);
+                startActivity(cityIntent);
             }
             break;
 //            case R.id.shortStoryTextView:

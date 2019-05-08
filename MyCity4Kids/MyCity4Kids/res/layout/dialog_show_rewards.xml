@@ -11,8 +11,8 @@
     android:orientation="vertical"
     android:paddingTop="@dimen/space_28"
     android:paddingBottom="@dimen/space_28"
-    android:paddingLeft="@dimen/space_40"
-    android:paddingRight="@dimen/space_40">
+    android:paddingLeft="@dimen/space_20"
+    android:paddingRight="@dimen/space_20">
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/header"

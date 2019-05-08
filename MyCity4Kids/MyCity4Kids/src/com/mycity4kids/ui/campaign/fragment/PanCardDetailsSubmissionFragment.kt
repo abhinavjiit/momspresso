@@ -64,6 +64,12 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
             }
         }
 
+        if (isComingFromRewards) {
+            toolbar.visibility = View.GONE
+        } else {
+            toolbar.visibility = View.VISIBLE
+        }
+
         textLater = view.findViewById(R.id.textLater)
         textLater.setOnClickListener {
             if (isComingFromRewards) {
