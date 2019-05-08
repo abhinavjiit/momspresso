@@ -555,4 +555,9 @@ public class Constants {
         instagram,
         website
     }
+
+    public enum ProofEditDelete{
+        edit,
+        delete
+    }
 }

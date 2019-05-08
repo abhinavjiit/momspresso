@@ -4,9 +4,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:padding="10dp"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <RelativeLayout
         android:id="@+id/relativeParent"
@@ -29,22 +28,6 @@
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_add_proof" />
 
-        <RelativeLayout
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            android:visibility="gone"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/screenshotImageView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:alpha="0.4"
-                android:tint="#EB3955"
-                app:srcCompat="@drawable/ic_upload_proof_image" />
-
-        </RelativeLayout>
-
         <ImageView
             android:id="@+id/imageAcceptDeleteProof"
             android:layout_width="30dp"
@@ -53,6 +36,17 @@
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp" />
 
+        <ImageView
+            android:id="@+id/imageEdit"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignEnd="@+id/imageScreenshot"
+            android:layout_alignRight="@+id/imageScreenshot"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginRight="3dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_edit_proof" />
     </RelativeLayout>
-
 </RelativeLayout>

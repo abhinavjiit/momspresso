@@ -50,4 +50,5 @@
         app:layout_constraintStart_toEndOf="@+id/imageApprovedRejected"
         app:layout_constraintTop_toTopOf="@+id/imageApprovedRejected" />
 
+
 </android.support.constraint.ConstraintLayout>
