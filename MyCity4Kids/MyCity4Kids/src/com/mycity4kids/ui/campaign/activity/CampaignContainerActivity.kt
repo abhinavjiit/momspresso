@@ -32,6 +32,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     }
 
     override fun proofSubmitDone() {
+
         fetchPaymentModes()
     }
 
@@ -90,10 +91,14 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         if (fragmentManager.backStackEntryCount == 1) {
             finish()
         } else {
-           /* val current = fragmentManager.backStackEntryCount - 1
-            val c = fragmentManager.getBackStackEntryAt(current)*/
+            //    index = getActivity().getFragmentManager().getBackStackEntryCount() - 1
+            /*   val index = fragmentManager.backStackEntryCount - 1
+               FragmentManager.BackStackEntry backEntry = getFragmentManager ().getBackStackEntryAt(index);
+               String tag = backEntry . getName ();
+               fragment = getFragmentManager().findFragmentByTag(tag);*/
+            /* val current = fragmentManager.backStackEntryCount - 1
+             val c = fragmentManager.getBackStackEntryAt(current)*/
             val currentFragment = fragmentManager.findFragmentByTag("CampaignListFragment")
-            val abhi = "abhi"
             if (currentFragment is CampaignListFragment) {
                 finish()
             } else {
@@ -162,4 +167,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     }
 
+
 }
+

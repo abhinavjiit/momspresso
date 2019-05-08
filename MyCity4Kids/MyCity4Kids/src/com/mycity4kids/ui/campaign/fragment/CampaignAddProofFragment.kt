@@ -1,8 +1,11 @@
 package com.mycity4kids.ui.campaign.fragment
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -10,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -33,11 +37,9 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.picker_dialog_cell.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 const val SELECT_IMAGE = 1005
 
@@ -185,7 +187,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         textSubmit = view.findViewById<TextView>(R.id.textSubmit)
         textSubmit.setOnClickListener {
             if (urlTypes.equals("image_link", true)) {
-                submitListener.proofSubmitDone()
+                showRewardDialog()
             } else if (urlTypes.equals("website_link", true)) {
                 if (!validateUrlProofs()) {
                     onProofSubmitClick()
@@ -449,5 +451,23 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
     interface SubmitListener {
         fun proofSubmitDone()
+    }
+
+
+    private fun showRewardDialog() {
+        if (activity != null) {
+            val dialog = Dialog(activity)
+            dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.proof_submitted_congo_screen)
+            dialog.setCancelable(true)
+            val okBtn = dialog.findViewById<TextView>(R.id.click_ok)
+            okBtn.setOnClickListener {
+                submitListener.proofSubmitDone()
+                dialog.cancel()
+            }
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+        }
+
     }
 }

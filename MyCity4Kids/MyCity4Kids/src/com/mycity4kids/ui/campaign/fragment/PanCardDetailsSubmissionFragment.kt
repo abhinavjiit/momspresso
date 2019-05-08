@@ -24,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.question_popup_layout_groups_detail_activity.*
+import java.util.regex.Pattern
 
 class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 
@@ -125,61 +126,75 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(p0: View?) {
         if (!panCardDetailEditTextView.text.toString().isNullOrEmpty()) {
+            val panCardNumber = panCardDetailEditTextView.text.toString().trim()
 
-            if (!panNumber.isNullOrEmpty()) {
-                val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
-                showProgressDialog(resources.getString(R.string.please_wait))
-                BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).updatePanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
-                    override fun onComplete() {
-                        removeProgressDialog()
-                    }
+            val pattern = Pattern.compile("[A-Z]{5}[0-9]{4}[A-Z]{1}")
+            val matcher = pattern.matcher(panCardNumber)
 
-                    override fun onSubscribe(d: Disposable) {
-                    }
 
-                    override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
-                        if (isComingFromRewards) {
-                            submitOnClickListener.onPanCardDone()
-                        } else {
-                            var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
-                            (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
-                                    CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
-                                    .commit()
+            if (matcher.matches()) {
+
+
+                if (!panNumber.isNullOrEmpty()) {
+                    val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
+                    showProgressDialog(resources.getString(R.string.please_wait))
+                    BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).updatePanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+                        override fun onComplete() {
+                            removeProgressDialog()
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                        }
+
+                        override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
+                            if (isComingFromRewards) {
+                                submitOnClickListener.onPanCardDone()
+                            } else {
+                                var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
+                                (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
+                                        CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
+                                        .commit()
+                            }
+
+
+                        }
+
+                        override fun onError(e: Throwable) {
+                            removeProgressDialog()
+                            Log.e("exception in error", e.message.toString())
+
                         }
 
 
-                    }
+                    })
+                } else {
+                    val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
+                    showProgressDialog(resources.getString(R.string.please_wait))
+                    BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).addPanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+                        override fun onComplete() {
+                            removeProgressDialog()
 
-                    override fun onError(e: Throwable) {
-                        removeProgressDialog()
-                        Log.e("exception in error", e.message.toString())
+                        }
 
-                    }
+                        override fun onSubscribe(d: Disposable) {
+                        }
+
+                        override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
+                        }
+
+                        override fun onError(e: Throwable) {
+                            removeProgressDialog()
+                            Log.e("exception in error", e.message.toString())
+                        }
 
 
-                })
+                    })
+                }
+
+
             } else {
-                val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
-                showProgressDialog(resources.getString(R.string.please_wait))
-                BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).addPanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
-                    override fun onComplete() {
-                        removeProgressDialog()
+                Toast.makeText(activity, panCardNumber + " is Not Matching the Correct Formate", Toast.LENGTH_SHORT).show()
 
-                    }
-
-                    override fun onSubscribe(d: Disposable) {
-                    }
-
-                    override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
-                    }
-
-                    override fun onError(e: Throwable) {
-                        removeProgressDialog()
-                        Log.e("exception in error", e.message.toString())
-                    }
-
-
-                })
             }
 
 
