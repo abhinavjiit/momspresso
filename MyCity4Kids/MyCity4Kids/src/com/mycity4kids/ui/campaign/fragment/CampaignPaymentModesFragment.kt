@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
@@ -32,7 +33,7 @@ import io.reactivex.schedulers.Schedulers
 class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickListener, View.OnClickListener {
 
     private var mContext: Context? = null
-    private var selectedPaymantIdPosition: Int = 0
+    private var selectedPaymantIdPosition: Int = -1
     private lateinit var saveContinueTextView: TextView
     private lateinit var submitOnClickListener: CampaignPaymentModesFragment.SubmitListener
     private lateinit var toolbar: Toolbar
@@ -62,31 +63,35 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
 
 
     override fun onClick(p0: View?) {
-        if (isComingFromRewards) {
-            val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
-            if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
-                var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards)
-                (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
-                        CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
-                        .commit()
+        if (selectedPaymantIdPosition != -1) {
+            if (isComingFromRewards) {
+                val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
+                if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
+                    var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards)
+                    (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
+                            CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
+                            .commit()
+                } else {
+                    submitOnClickListener.onPaymentModeDone()
+                }
             } else {
-                submitOnClickListener.onPaymentModeDone()
+                val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
+                if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
+                    var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards)
+                    (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
+                            CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
+                            .commit()
+                } else {
+                    val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].id
+                    postApiForDefaultPaymantMode(paymentModeId)
+                    var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = isComingFromRewards)
+                    (activity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
+                            CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
+                            .commit()
+                }
             }
         } else {
-            val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
-            if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
-                var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards)
-                (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
-                        CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
-                        .commit()
-            } else {
-                val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].id
-                postApiForDefaultPaymantMode(paymentModeId)
-                var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = isComingFromRewards)
-                (activity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
-                        CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
-                        .commit()
-            }
+            Toast.makeText(mContext, "choose atleast one option", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -152,9 +157,9 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
             }
         }
 
-        if(isComingFromRewards){
+        if (isComingFromRewards) {
             toolbar.visibility = View.GONE
-        }else{
+        } else {
             toolbar.visibility = View.VISIBLE
         }
 

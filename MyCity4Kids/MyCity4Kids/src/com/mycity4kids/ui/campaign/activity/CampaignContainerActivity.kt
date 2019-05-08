@@ -1,22 +1,39 @@
 package com.mycity4kids.ui.campaign.activity;
 
+import android.app.FragmentManager
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.TextView
+import com.kelltontech.network.Response
+import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import com.mycity4kids.ui.campaign.PaymentModeListModal
 import com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment
 import com.mycity4kids.ui.campaign.fragment.CampaignCongratulationFragment
 import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
 import com.mycity4kids.ui.fragment.CampaignDetailFragment
 import com.mycity4kids.ui.fragment.CampaignListFragment
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
-class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener {
+class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener {
+    override fun updateUi(response: Response?) {
+    }
+
     override fun congratulateScreenDone() {
-        campaignListFragment()
+        campaignListFragment = CampaignListFragment.newInstance()
+        supportFragmentManager.beginTransaction().add(R.id.container, campaignListFragment,
+                CampaignListFragment::class.java.simpleName).addToBackStack("CampaignListFragment")
+                .commit()
     }
 
     override fun proofSubmitDone() {
-        addPaymantMode()
+        fetchPaymentModes()
     }
 
     private lateinit var toolbarTitle: TextView
@@ -25,15 +42,16 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
     private var id: Int = 0
     private var campaignDetailFragment: CampaignDetailFragment? = null
     private var campaignListFragment: CampaignListFragment? = null
+    private var defaultdata: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campaign_container);
 
         /*don't delete this code this is testing for proof screen*/
-     /*   var arrayList = ArrayList<Int>()
-        arrayList.add(1)
-        addAddProofFragment(67, arrayList)*/
+        /*   var arrayList = ArrayList<Int>()
+           arrayList.add(1)
+           addAddProofFragment(67, arrayList)*/
 
         campaignListFragment()
     }
@@ -70,10 +88,20 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
 
     override fun onBackPressed() {
         val fragmentManager = supportFragmentManager
-        if (fragmentManager.backStackEntryCount == 1) {
+        val currentFragment = fragmentManager.findFragmentByTag("CampaignListFragment")
+        if (currentFragment is CampaignListFragment) {
             finish()
-        } else
-            super.onBackPressed()
+        } else {
+//            val currentFragment = fragmentManager.findFragmentByTag("CampaignListFragment")
+//            super.onBackPressed()
+            fragmentManager.popBackStack("CampaignListFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            /*if (currentFragment is CampaignListFragment) {
+                finish()
+            }
+            else {
+                super.onBackPressed()
+            }*/
+        }
     }
 
 
@@ -99,6 +127,41 @@ class CampaignContainerActivity : AppCompatActivity(), CampaignAddProofFragment.
 
     fun getIdCamp(): Int {
         return id
+    }
+
+    fun fetchPaymentModes() {
+        showProgressDialog(resources.getString(R.string.please_wait))
+        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getPaymentModes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<PaymentModeListModal>> {
+            override fun onComplete() {
+                removeProgressDialog()
+            }
+
+            override fun onSubscribe(d: Disposable) {
+            }
+
+            override fun onNext(response: BaseResponseGeneric<PaymentModeListModal>) {
+                if (response.data!!.result.default != null) {
+                    var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
+                    supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
+                            CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
+                            .commit()
+                } else {
+                    addPaymantMode()
+                }
+
+
+            }
+
+            override fun onError(e: Throwable) {
+                removeProgressDialog()
+                Log.e("exception in error", e.message.toString())
+
+
+            }
+
+
+        })
+
     }
 
 }
