@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.campaign.activity;
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.util.Log
 import android.widget.TextView
 import com.kelltontech.network.Response
@@ -25,10 +26,11 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     }
 
     override fun congratulateScreenDone() {
-        campaignListFragment = CampaignListFragment.newInstance()
+        onBackPressed()
+        /*campaignListFragment = CampaignListFragment.newInstance()
         supportFragmentManager.beginTransaction().add(R.id.container, campaignListFragment,
                 CampaignListFragment::class.java.simpleName).addToBackStack("campaignListFragment")
-                .commit()
+                .commit()*/
     }
 
     override fun proofSubmitDone() {
@@ -87,15 +89,15 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     override fun onBackPressed() {
         val fragmentManager = supportFragmentManager
+        val currentFragment: Fragment
+        currentFragment = supportFragmentManager.findFragmentById(R.id.container)
         if (fragmentManager.backStackEntryCount == 1) {
             finish()
         } else {
-           /* val current = fragmentManager.backStackEntryCount - 1
-            val c = fragmentManager.getBackStackEntryAt(current)*/
-            val currentFragment = fragmentManager.findFragmentByTag("CampaignListFragment")
-            val abhi = "abhi"
-            if (currentFragment is CampaignListFragment) {
-                finish()
+            if (currentFragment is CampaignCongratulationFragment) {
+                for (i in fragmentManager.backStackEntryCount downTo 2) {
+                    supportFragmentManager.popBackStack()
+                }
             } else {
                 super.onBackPressed()
             }
