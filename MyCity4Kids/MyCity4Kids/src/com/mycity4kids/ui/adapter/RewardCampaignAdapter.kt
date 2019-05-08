@@ -16,6 +16,7 @@ import java.util.*
 
 class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResult>, val context: FragmentActivity?) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
 
+
     private var campaignNewList: List<CampaignDataListResult>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RewardCampaignAdapter.RewardHolder {
