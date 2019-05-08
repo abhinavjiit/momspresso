@@ -68,7 +68,7 @@ public class BaseApplication extends Application {
     private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
     private static BaseApplication mInstance;
-    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit,campaignRewards;
+    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards;
     private static OkHttpClient client, customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;

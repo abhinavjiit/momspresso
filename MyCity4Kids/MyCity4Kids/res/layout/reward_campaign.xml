@@ -22,9 +22,10 @@
 
             <ImageView
                 android:id="@+id/back"
-                android:layout_width="@dimen/space_25"
-                android:layout_height="@dimen/space_18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:padding="@dimen/space_10"
                 android:src="@drawable/back_xxhdpi"
                 android:tint="@color/black" />
 
