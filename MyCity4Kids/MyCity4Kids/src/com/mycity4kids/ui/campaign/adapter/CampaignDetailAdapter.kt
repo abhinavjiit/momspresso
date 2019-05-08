@@ -18,7 +18,7 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
     }
 
     override fun getItemCount(): Int =
-        deliverableList!!.get(0).size
+            deliverableList!!.get(0).size
 
     override fun onBindViewHolder(holder: CampaignDetailAdapter.RewardHolder, position: Int) {
 //        val itemPhoto = deliverableList!!.get(0).[position]
@@ -35,11 +35,13 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
         fun bindPhoto(deliverableList: List<CampaignDetailDeliverable>) {
             this.deliverableList = deliverableList
             val builder = StringBuilder()
-            for (instructions in deliverableList.get(position).instructions!!) {
-                builder.append("\u2022" + "  " + instructions + "\n")
+            if (deliverableList.get(position).instructions!!.size > 0) {
+                for (instructions in deliverableList.get(position).instructions!!) {
+                    builder.append("\u2022" + "  " + instructions + "\n")
+                }
+                (view.deliverable_text).setText(builder.toString())
+                (view.deliverable_header).setText(deliverableList.get(position).name)
             }
-            (view.deliverable_text).setText(builder.toString())
-            (view.deliverable_header).setText(deliverableList.get(position).name)
         }
 
         //4

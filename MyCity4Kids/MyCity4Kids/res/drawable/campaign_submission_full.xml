@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <corners
-        android:radius="@dimen/space_10" />
+        android:radius="@dimen/space_20" />
     <solid android:color="@color/campaign_submission_full" />
 
 

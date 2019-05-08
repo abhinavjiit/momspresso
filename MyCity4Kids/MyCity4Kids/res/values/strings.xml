@@ -1012,7 +1012,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="not_working">Not Working</string>
     <string name="working">Working</string>
     <string name="save_continue"><![CDATA[SAVE & CONTINUE]]></string>
-    <string name="momspresso_rewards">MyMoney</string>
+    <string name="momspresso_rewards">My Money</string>
     <string name="rewards_program">MyMoney</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -1106,7 +1106,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     //campaigndetails
     <string name="campaign_details_apply_now">APPLY NOW</string>
-    <string name="campaign_details_submission_open">SUBMISSION OPEN</string>
+    <string name="campaign_details_submission_open">SUBMIT PROOF</string>
     <string name="campaign_details_application_full">APPLICATION FULL</string>
     <string name="campaign_details_applied">APPLIED</string>
     <string name="campaign_details_expired">EXPIRED</string>
@@ -1158,5 +1158,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="dialog_register_proof_submitted_text">Your proofs have been submitted.</string>
     <string name="apply_refer_code">APPLY REFERRAL CODE</string>
     <string name="apply_code_error">Code already used. Please enter a different one</string>
+    <string name="dialog_congratulations">Congratulations!</string>
+    <string name="dialog_you_can_earn">You can earn</string>
 
 </resources>

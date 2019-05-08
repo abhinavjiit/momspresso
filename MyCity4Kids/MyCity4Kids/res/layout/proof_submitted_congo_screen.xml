@@ -8,9 +8,9 @@
     android:clickable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/space_40"
+    android:paddingLeft="@dimen/space_50"
     android:paddingTop="@dimen/space_28"
-    android:paddingRight="@dimen/space_40"
+    android:paddingRight="@dimen/space_50"
     android:paddingBottom="@dimen/space_35">
 
     <ImageView
@@ -38,7 +38,9 @@
         android:text="@string/dialog_register_proof_submitted_text"
         android:textColor="@color/campaign_7D7D7D"
         android:textSize="14sp"
+
         app:fontName="open_sans.ttf" />
+
 
     <com.mycity4kids.widget.CustomFontTextView
         android:layout_width="match_parent"

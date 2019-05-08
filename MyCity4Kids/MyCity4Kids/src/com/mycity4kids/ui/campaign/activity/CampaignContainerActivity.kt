@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.campaign.activity;
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.util.Log
 import android.widget.TextView
 import com.kelltontech.network.Response
@@ -25,14 +26,11 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     }
 
     override fun congratulateScreenDone() {
-        campaignListFragment = CampaignListFragment.newInstance()
-        supportFragmentManager.beginTransaction().add(R.id.container, campaignListFragment,
-                CampaignListFragment::class.java.simpleName).addToBackStack("campaignListFragment")
-                .commit()
+        onBackPressed()
+
     }
 
     override fun proofSubmitDone() {
-
         fetchPaymentModes()
     }
 
@@ -88,19 +86,15 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     override fun onBackPressed() {
         val fragmentManager = supportFragmentManager
+        val currentFragment: Fragment
+        currentFragment = supportFragmentManager.findFragmentById(R.id.container)
         if (fragmentManager.backStackEntryCount == 1) {
             finish()
         } else {
-            //    index = getActivity().getFragmentManager().getBackStackEntryCount() - 1
-            /*   val index = fragmentManager.backStackEntryCount - 1
-               FragmentManager.BackStackEntry backEntry = getFragmentManager ().getBackStackEntryAt(index);
-               String tag = backEntry . getName ();
-               fragment = getFragmentManager().findFragmentByTag(tag);*/
-            /* val current = fragmentManager.backStackEntryCount - 1
-             val c = fragmentManager.getBackStackEntryAt(current)*/
-            val currentFragment = fragmentManager.findFragmentByTag("CampaignListFragment")
-            if (currentFragment is CampaignListFragment) {
-                finish()
+            if (currentFragment is CampaignCongratulationFragment) {
+                for (i in fragmentManager.backStackEntryCount downTo 2) {
+                    supportFragmentManager.popBackStack()
+                }
             } else {
                 super.onBackPressed()
             }
@@ -167,6 +161,4 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     }
 
-
 }
-

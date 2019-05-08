@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/dialog_based_on_profile"
+        android:text="@string/dialog_congratulations"
         android:textColor="@color/campaign_515151"
         android:textSize="18sp"
         app:fontName="oswald_regular.ttf" />
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_5"
         android:gravity="center"
-        android:text="@string/dialog_you_can_get_reward_of"
+        android:text="@string/dialog_you_can_earn"
         android:textColor="@color/grey_faded"
         android:textSize="10sp"
         app:fontName="open_sans.ttf" />
