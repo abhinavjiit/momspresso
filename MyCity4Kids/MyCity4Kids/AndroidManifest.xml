@@ -411,7 +411,8 @@
         <activity
             android:name=".ui.rewards.activity.RewardsContainerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.RankingActivity"
             android:screenOrientation="portrait"

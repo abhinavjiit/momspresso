@@ -96,6 +96,12 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         if (arguments != null && arguments!!.containsKey("id")) {
             paymantModeId = arguments!!.getInt("id")
             comingFrom = arguments!!.getString("comingFrom")
+
+            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
+                arguments.getBoolean("isComingFromRewards")
+            } else {
+                false
+            }
         }
 
 
@@ -110,18 +116,18 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             fetchAllBankName()
         }
         submitTextViewCampaign.setOnClickListener(this)
+
+        if (isComingFromRewards) {
+            toolbar.visibility = View.GONE
+        } else {
+            toolbar.visibility = View.VISIBLE
+        }
         back.setOnClickListener {
-
-
             if (isComingFromRewards) {
-                toolbar.visibility = View.GONE
                 (activity as RewardsContainerActivity).onBackPressed()
             } else {
-                toolbar.visibility = View.VISIBLE
                 (activity as CampaignContainerActivity).onBackPressed()
             }
-
-
         }
         return view
     }

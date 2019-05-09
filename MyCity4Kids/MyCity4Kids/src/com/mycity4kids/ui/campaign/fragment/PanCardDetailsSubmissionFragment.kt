@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toolbar
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
@@ -23,7 +22,6 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.question_popup_layout_groups_detail_activity.*
 import java.util.regex.Pattern
 
 class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {

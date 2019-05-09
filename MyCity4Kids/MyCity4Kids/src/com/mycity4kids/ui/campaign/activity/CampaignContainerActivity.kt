@@ -50,7 +50,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         /*   var arrayList = ArrayList<Int>()
            arrayList.add(1)
            addAddProofFragment(67, arrayList)*/
-
+        // addPaymantMode()
         campaignListFragment()
     }
 

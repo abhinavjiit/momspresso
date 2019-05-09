@@ -14,8 +14,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <RelativeLayout
@@ -33,8 +33,9 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="24dp"
                     android:alpha="0.6"
-                    app:srcCompat="@drawable/ic_rupee_icon"
-                    android:tint="@color/white" />
+
+                    android:tint="@color/white"
+                    app:srcCompat="@drawable/ic_rupee_icon" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/rewardsTextView"
@@ -44,8 +45,8 @@
                     android:layout_marginBottom="10dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:textAllCaps="true"
                     android:text="@string/rewards_program"
+                    android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     app:fontName="oswald_regular.ttf" />
