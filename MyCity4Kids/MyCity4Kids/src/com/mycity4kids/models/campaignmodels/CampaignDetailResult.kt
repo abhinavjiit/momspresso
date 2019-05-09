@@ -75,6 +75,9 @@ class CampaignDetailResult {
     @SerializedName("read_this")
     @Expose
     var readThis: CampaignDetailReadThis? = null
+    @SerializedName("referral_code")
+    @Expose
+    var referralCode: String? = null
     @SerializedName("segments")
     @Expose
     var segments: List<CampaignDetailSegment>? = null
