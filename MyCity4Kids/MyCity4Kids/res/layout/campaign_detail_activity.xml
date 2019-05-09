@@ -130,6 +130,7 @@
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 app:fontName="oswald_regular.ttf"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/header_img"
                 app:layout_constraintStart_toStartOf="@+id/header_img" />
 
