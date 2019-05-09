@@ -91,6 +91,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var referCodeError: TextView
     private lateinit var viewLine: View
     private lateinit var referCodeHeader: TextView
+    private lateinit var readThisBox : LinearLayout
     private val urlPattern = Pattern.compile(
             "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
                     + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
@@ -200,6 +201,7 @@ class CampaignDetailFragment : BaseFragment() {
         referCodeError = containerView.findViewById(R.id.refer_code_error)
         referCodeHeader = containerView.findViewById(R.id.refer_header)
         viewLine = containerView.findViewById(R.id.view_6)
+        readThisBox = containerView.findViewById(R.id.read_this_box)
     }
 
     private fun fetchCampaignDetail() {
@@ -242,23 +244,32 @@ class CampaignDetailFragment : BaseFragment() {
 
         val descBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.description?.instructions!!) {
-            descBuilder.append("\u2022" + "  " + instructions + "\n")
+            if (instructions.isNotEmpty())
+                descBuilder.append("\u2022" + "  " + instructions + "\n")
         }
-        getOffset(descBuilder.toString(), descText)
+        if (!descBuilder.isEmpty()) {
+            getOffset(descBuilder.toString(), descText)
+        }
 //        descText.setText(descBuilder.toString())
 
         val readBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.readThis?.instructions!!) {
-            readBuilder.append("\u2022" + "  " + instructions + "\n")
+            if (instructions.isNotEmpty())
+                readBuilder.append("\u2022" + "  " + instructions + "\n")
         }
-        getOffset(readBuilder.toString(), readThisText)
+        if (!readBuilder.isEmpty()) {
+            getOffset(readBuilder.toString(), readThisText)
+        }
 //        readThisText.setText(readBuilder.toString())
 
         val termBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.terms?.instructions!!) {
-            termBuilder.append("\u2022" + "  " + instructions + "\n")
+            if (instructions.isNotEmpty())
+                termBuilder.append("\u2022" + "  " + instructions + "\n")
         }
-        getOffset(termBuilder.toString(), termText)
+        if (!termBuilder.isEmpty()) {
+            getOffset(termBuilder.toString(), termText)
+        }
 //        termText.setText(termBuilder.toString())
 
         status = apiGetResponse!!.campaignStatus!!
