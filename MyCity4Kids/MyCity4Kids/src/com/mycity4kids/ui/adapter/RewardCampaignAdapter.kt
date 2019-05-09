@@ -116,8 +116,8 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
 //                (view.end_date).setText(context!!.resources.getString(R.string.start_date))
 //                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
-                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
-                (view.amount).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 4) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_application_full))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_submission_full)
@@ -178,7 +178,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         fun compareDate() {
             if (currentDate.compareTo(getDate(campaignList!!.startTime, "dd MMM yyyy")) > 0) {
                 (view.end_date).setText(context!!.resources.getString(R.string.end_date))
-                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
+                (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM yyyy"))
             } else {
                 (view.end_date).setText(context!!.resources.getString(R.string.start_date))
                 (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))

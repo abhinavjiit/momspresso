@@ -328,6 +328,7 @@ class CampaignDetailFragment : BaseFragment() {
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_applied))
+                    Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
                     labelText.setText(context!!.resources.getString(R.string.label_campaign_applied))
                 } else {
                     Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show()
@@ -358,6 +359,10 @@ class CampaignDetailFragment : BaseFragment() {
                 if (responseData!!.code == 200) {
                     if (Constants.SUCCESS == responseData.status) {
                         Toast.makeText(context, responseData.data.get(0).msg, Toast.LENGTH_SHORT).show()
+                        viewLine.visibility = View.GONE
+                        referCode.visibility = View.GONE
+                        referCodeApply.visibility = View.GONE
+                        referCodeHeader.visibility = View.GONE
                     } else {
                         referCodeError.visibility = View.VISIBLE
                         referCodeError.setText("" + responseData.reason)
@@ -457,6 +462,12 @@ class CampaignDetailFragment : BaseFragment() {
             referCode.visibility = View.VISIBLE
             referCodeApply.visibility = View.VISIBLE
             referCodeHeader.visibility = View.VISIBLE
+            if (!apiGetResponse!!.referralCode.isNullOrEmpty()){
+                referCode.setText(apiGetResponse!!.referralCode)
+                referCodeApply.setText(context!!.resources.getString(R.string.campaign_details_applied))
+                referCodeApply.isEnabled = false
+                referCode.isEnabled = false
+            }
         } else {
             viewLine.visibility = View.GONE
             referCode.visibility = View.GONE

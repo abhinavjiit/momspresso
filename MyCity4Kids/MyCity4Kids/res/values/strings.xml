@@ -1146,9 +1146,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     //campaigndetaildialog
     <string name="dialog_based_on_profile">Based on your Profile</string>
     <string name="dialog_you_can_get_reward_of">You can get reward of</string>
-    <string name="campaign_starts_on">Campaign Starts On</string>
-    <string name="campaign_ends_on">Campaign Ends On</string>
-    <string name="view_mymoney">View MyMoney for Campaign</string>
+    <string name="campaign_starts_on">Starts On</string>
+    <string name="campaign_ends_on">Ends On</string>
+    <string name="view_mymoney">View MyMoney for this campaign</string>
     <string name="dialog_thanks_for_interest">Thanks for your interest!</string>
     <string name="dialog_proof_submitted_congo_text">Congratulations!</string>
     <string name="dialog_register_for_mymoney">For applying to the campaign, you first need to register for the Momspresso MyMoney.</string>

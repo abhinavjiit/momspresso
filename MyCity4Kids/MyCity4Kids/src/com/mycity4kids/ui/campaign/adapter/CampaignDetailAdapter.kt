@@ -2,6 +2,7 @@ package com.mycity4kids.ui.adapter
 
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.RecyclerView
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,9 +38,11 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             val builder = StringBuilder()
             if (deliverableList.get(position).instructions!!.size > 0) {
                 for (instructions in deliverableList.get(position).instructions!!) {
+
                     builder.append("\u2022" + "  " + instructions + "\n")
                 }
                 (view.deliverable_text).setText(builder.toString())
+                (view.deliverable_text).setMovementMethod(LinkMovementMethod.getInstance());
                 (view.deliverable_header).setText(deliverableList.get(position).name)
             }
         }
@@ -49,6 +52,8 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             //val context = itemView.context
 //            (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
         }
+
+
 
         fun getDate(milliSeconds: Long, dateFormat: String): String {
             // Create a DateFormatter object for displaying date in specified format.
