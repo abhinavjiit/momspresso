@@ -915,7 +915,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="coachmark.home">Welcome to Momspresso! You can explore the app in the language of your choice.</string>
     <string name="coachmark.explore">What do you want to do today? Read a 100 Word Story or watch Videos. You can also explore the various categories and read blogs</string>
     <string name="coachmark.create">Add your #100WordStory, blog post, or your videos. View/ edit your drafts too.</string>
-    <string name="coachmark.menu">Jump to your preferred section on the app instantly. View your bookmarked articles and update your app settings.</string>
+    <string name="coachmark.menu">Browse, participate, earn in MyMoney campaigns</string>
     <string name="coachmark.drawer">View your personal profile and see all your blogs, 100 word stories, and Mom Vlogs at one place.</string>
     <string name="coachmark.edit_profile">Edit and update your profile to stay updated on blogger meets and sponsored articles.</string>
     <string name="coachmark.app_setting">You can edit your app preferences and language preferences at one place. Subscribe to notifications and categories here.</string>
@@ -1012,8 +1012,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="not_working">Not Working</string>
     <string name="working">Working</string>
     <string name="save_continue"><![CDATA[SAVE & CONTINUE]]></string>
-    <string name="momspresso_rewards">My Money</string>
-    <string name="rewards_program">My Money</string>
+    <string name="momspresso_rewards">MyMoney</string>
+    <string name="rewards_program">MyMoney</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="add_website">ADD WEBSITE</string>

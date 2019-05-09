@@ -53,6 +53,10 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
                 holder.viewBaseLine.visibility = View.INVISIBLE
 
             }
+            holder.nonDefaultModeImageView.setOnClickListener {
+                clickListener.onRadioButton(position)
+
+            }
             holder.nonDefaultRadioButton.setOnClickListener {
                 clickListener.onRadioButton(position)
             }

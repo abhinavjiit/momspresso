@@ -110,6 +110,7 @@ import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
+import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.GroupIdCategoryMap;
@@ -197,7 +198,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private WebView mWebView;
     private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
     private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
-   private FloatingActionButton commentFloatingActionButton;
+    private FloatingActionButton commentFloatingActionButton;
 
     private MyWebChromeClient mWebChromeClient = null;
     private View mCustomView;
@@ -1171,7 +1172,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 break;
                 case R.id.writeArticleTextView:
                 case R.id.writeArticleImageView:
-                    launchEditor();
+                    Intent intentt = new Intent(getActivity(), CampaignContainerActivity.class);
+                    startActivity(intentt);
                     break;
                 case R.id.viewAllTagsTextView:
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
