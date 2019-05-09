@@ -64,7 +64,7 @@
                 android:layout_marginRight="0dp"
                 android:background="@drawable/shape_red_fill"
                 android:drawablePadding="5dp"
-                android:gravity="right"
+                android:gravity="right|center_vertical"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingRight="10dp"
@@ -74,7 +74,7 @@
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 android:visibility="visible"
-                app:fontName="oswald_regular.ttf" />
+                app:fontName="oswald.ttf" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -98,14 +98,14 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginStart="0dp"
-                android:layout_marginLeft="0dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="0dp"
                 android:layout_marginRight="0dp"
-                android:text="Please add a screenshots"
-                android:textColor="@color/ad.author_name.text"
+                android:paddingLeft="12dp"
+                android:text="Please add image proofs"
+                android:textColor="@color/black"
                 android:textSize="20sp"
-                app:fontName="oswald.ttf" />
+                app:fontName="oswald_regular.ttf" />
 
             <RelativeLayout
                 android:id="@+id/relativeMediaProof"
@@ -113,15 +113,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/addScreenShotTextView"
                 android:layout_marginTop="10dp"
-                android:alpha="0.3"
-                android:background="#EB3955"
+                android:background="@color/app_nav_bg"
                 android:gravity="center"
                 android:visibility="visible">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerMediaProof"
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
@@ -140,20 +139,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relativeMediaProof"
-                >
+                android:layout_marginTop="10dp">
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/addlinkTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginTop="0dp"
                     android:layout_marginBottom="10dp"
                     android:text="Please add a link"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:visibility="visible"
-                    app:fontName="oswald.ttf" />
+                    app:fontName="oswald_regular.ttf" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -162,7 +160,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/headerTextViewContainer"
-                android:alpha="0.3" />
+                android:background="@color/app_nav_bg" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textFaq"
@@ -170,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/recyclerUrlProof"
                 android:layout_marginTop="20dp"
-                android:paddingLeft="28dp"
+                android:paddingLeft="12dp"
                 android:text="FAQS"
                 android:textColor="@color/black"
                 android:textSize="20sp"

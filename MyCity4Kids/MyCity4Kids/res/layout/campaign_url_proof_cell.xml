@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:padding="5dp"
     android:layout_height="wrap_content">
 
     <com.mycity4kids.widget.CustomFontEditText
@@ -13,6 +14,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="40dp"
         android:background="@drawable/article_listing_item_border_bg"
+        android:layout_marginTop="5dp"
         android:enabled="false"
         android:fontFamily="sans-serif"
         android:hint="Enter page link or Url"

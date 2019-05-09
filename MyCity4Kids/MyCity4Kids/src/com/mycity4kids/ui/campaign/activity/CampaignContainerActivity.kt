@@ -54,7 +54,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
            arrayList.add(1)
            addAddProofFragment(67, arrayList)*/
 
-        campaignListFragment()
+//        addPaymantMode()
+       campaignListFragment()
     }
 
     private fun campaignListFragment() {

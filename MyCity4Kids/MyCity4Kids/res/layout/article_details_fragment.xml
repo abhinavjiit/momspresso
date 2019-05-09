@@ -10,7 +10,8 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_Lout">
+        android:layout_above="@+id/bottom_Lout"
+        android:layout_marginBottom="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -21,7 +22,8 @@
                 android:id="@+id/native_banner_ad_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:visibility="gone"/>
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/article_title"
@@ -372,13 +374,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/adViewSeparator"
                 android:orientation="vertical"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/groupHeaderView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/native_ad_container"
+                android:visibility="gone"
                 android:background="@color/white">
 
                 <android.support.v7.widget.CardView
@@ -408,7 +411,8 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:visibility="visible">
 
                         <com.mycity4kids.widget.CustomFontTextView
                             android:id="@+id/groupHeadingTextView"

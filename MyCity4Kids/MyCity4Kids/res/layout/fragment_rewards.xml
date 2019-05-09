@@ -210,7 +210,7 @@
                 android:drawableLeft="@drawable/ic_pan_details"
                 android:drawablePadding="15dp"
                 android:padding="@dimen/space_20"
-                android:text="PAN DETAILS"
+                android:text="PAN CARD DETAILS"
                 android:textSize="14sp"
                 app:fontName="oswald.ttf" />
         </LinearLayout>

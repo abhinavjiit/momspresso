@@ -35,7 +35,7 @@ class MediaProofRecyclerAdapter(
         if (!campaignProofResponse.isNullOrEmpty()) {
             if (position < campaignProofResponse.size) {
                 val item = campaignProofResponse.get(position)
-                Picasso.with(context.context).load(item.thumbnail)
+                Picasso.with(context.context).load(item.url)
                         .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
 
 
@@ -49,16 +49,6 @@ class MediaProofRecyclerAdapter(
                     holder.imageEdit.visibility = View.GONE
                 }
 
-                holder.relativeParent.setOnClickListener {
-                    clickListener.onCellClick()
-                }
-
-//                holder.imageAcceptDeleteProof.setOnClickListener {
-//                    //if(item.proofStatus!=3){
-//                    clickListener.onProofDelete(holder.adapterPosition)
-//                    //}
-//                }
-
                 holder.imageEdit.setOnClickListener {
                     clickListener.onProofDelete(holder.adapterPosition)
                 }
@@ -68,9 +58,9 @@ class MediaProofRecyclerAdapter(
                     setOnClickListener(mOnClickListener)
                 }
             } else {
-                holder.relativeParent.setOnClickListener {
-                    clickListener.onCellClick()
-                }
+//                holder.relativeParent.setOnClickListener {
+//                    clickListener.onCellClick()
+//                }
             }
         } else {
             holder.relativeParent.setOnClickListener {
