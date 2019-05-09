@@ -244,7 +244,7 @@ class CampaignDetailFragment : BaseFragment() {
 
         val descBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.description?.instructions!!) {
-            if (instructions.isNotEmpty())
+            if (!instructions.isNullOrEmpty() && !instructions.equals(""))
                 descBuilder.append("\u2022" + "  " + instructions + "\n")
         }
         if (!descBuilder.isEmpty()) {
@@ -254,7 +254,7 @@ class CampaignDetailFragment : BaseFragment() {
 
         val readBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.readThis?.instructions!!) {
-            if (instructions.isNotEmpty())
+            if (!instructions.isNullOrEmpty() && !instructions.equals(""))
                 readBuilder.append("\u2022" + "  " + instructions + "\n")
         }
         if (!readBuilder.isEmpty()) {
@@ -264,7 +264,7 @@ class CampaignDetailFragment : BaseFragment() {
 
         val termBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.terms?.instructions!!) {
-            if (instructions.isNotEmpty())
+            if (!instructions.isNullOrEmpty() && !instructions.equals(""))
                 termBuilder.append("\u2022" + "  " + instructions + "\n")
         }
         if (!termBuilder.isEmpty()) {

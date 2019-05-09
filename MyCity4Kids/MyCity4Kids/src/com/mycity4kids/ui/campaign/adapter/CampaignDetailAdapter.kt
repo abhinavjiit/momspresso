@@ -51,7 +51,7 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             val builder = StringBuilder()
             if (deliverableList.get(position).instructions!!.size > 0) {
                 for (instructions in deliverableList.get(position).instructions!!) {
-                    if (instructions.isNotEmpty())
+                    if (!instructions.isNullOrEmpty() && !instructions.equals(""))
                         builder.append("\u2022" + "  " + instructions + "\n")
                 }
                 if (!builder.isEmpty()) {
