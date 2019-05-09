@@ -33,7 +33,7 @@ import io.reactivex.schedulers.Schedulers
 class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickListener, View.OnClickListener {
 
     private var mContext: Context? = null
-    private var selectedPaymantIdPosition: Int = -1
+    private var selectedPaymantIdPosition: Int = 0
     private lateinit var saveContinueTextView: TextView
     private lateinit var submitOnClickListener: CampaignPaymentModesFragment.SubmitListener
     private lateinit var toolbar: Toolbar
@@ -48,6 +48,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     private lateinit var textLater: TextView
     private var isComingFromRewards: Boolean = false
     private lateinit var back: TextView
+    private var str: String? = null
 
     override fun onRadioButton(position: Int) {
         selectedPaymantIdPosition = position
@@ -63,7 +64,14 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
 
 
     override fun onClick(p0: View?) {
-        if (selectedPaymantIdPosition != -1) {
+        for (i in 0..allPaymantModes!!.size - 1) {
+            if (allPaymantModes[i].isDefault) {
+                str = "selected"
+                break
+            }
+
+        }
+        if (str.equals("selected")) {
             if (isComingFromRewards) {
                 val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
                 if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
@@ -120,7 +128,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     }
 
     override fun onCellClick(paymentModeId: Int, position: Int) {
-        var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "comingForEdit")
+        var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "comingForEdit", isComingFromRewards = isComingFromRewards)
         (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                 PanCardDetailsSubmissionFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
                 .commit()

@@ -29,6 +29,8 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (position == 0) {
             holder.selectOptionPaymentTextView.visibility = View.VISIBLE
+
+
         } else {
             holder.selectOptionPaymentTextView.visibility = View.GONE
         }
@@ -39,14 +41,20 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
 
         if (item != null) {
             holder.nonDefaultRadioButton.isChecked = item.isDefault
+
             if (!item.accountNumber.isNullOrBlank()) {
                 holder.accountNumberTextView.text = item.accountNumber
                 holder.nonDefaultEditTextView.visibility = View.VISIBLE
                 holder.viewBaseLine.visibility = View.VISIBLE
             } else {
+
                 holder.accountNumberTextView.visibility = View.GONE
                 holder.nonDefaultEditTextView.visibility = View.INVISIBLE
                 holder.viewBaseLine.visibility = View.INVISIBLE
+
+            }
+            holder.nonDefaultModeImageView.setOnClickListener {
+                clickListener.onRadioButton(position)
 
             }
             holder.nonDefaultRadioButton.setOnClickListener {

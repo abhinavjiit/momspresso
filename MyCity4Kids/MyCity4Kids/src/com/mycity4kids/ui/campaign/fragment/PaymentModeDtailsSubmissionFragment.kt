@@ -96,6 +96,12 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         if (arguments != null && arguments!!.containsKey("id")) {
             paymantModeId = arguments!!.getInt("id")
             comingFrom = arguments!!.getString("comingFrom")
+
+            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
+                arguments.getBoolean("isComingFromRewards")
+            } else {
+                false
+            }
         }
 
 
@@ -111,16 +117,15 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         }
         submitTextViewCampaign.setOnClickListener(this)
 
-        if(isComingFromRewards){
+        if (isComingFromRewards) {
             toolbar.visibility = View.GONE
-        }else{
+        } else {
             toolbar.visibility = View.VISIBLE
         }
         back.setOnClickListener {
             if (isComingFromRewards) {
                 (activity as RewardsContainerActivity).onBackPressed()
             } else {
-                toolbar.visibility = View.VISIBLE
                 (activity as CampaignContainerActivity).onBackPressed()
             }
         }
@@ -216,7 +221,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                 }
 
                 override fun onNext(t: BaseResponseGeneric<DefaultData>) {
-                    if (comingFrom.equals("firstTime")) {
+                    if (comingFrom.equals("firstTime") && !isComingFromRewards) {
+
                         var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = false)
                         (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
                                 CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")

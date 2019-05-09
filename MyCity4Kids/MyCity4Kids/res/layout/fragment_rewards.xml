@@ -58,8 +58,8 @@
                 android:id="@+id/relativeParticipate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_below="@+id/imageView2">
+                android:layout_below="@+id/imageView2"
+                android:visibility="gone">
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/text1"

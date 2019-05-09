@@ -915,7 +915,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="coachmark.home">Welcome to Momspresso! You can explore the app in the language of your choice.</string>
     <string name="coachmark.explore">What do you want to do today? Read a 100 Word Story or watch Videos. You can also explore the various categories and read blogs</string>
     <string name="coachmark.create">Add your #100WordStory, blog post, or your videos. View/ edit your drafts too.</string>
-    <string name="coachmark.menu">Jump to your preferred section on the app instantly. View your bookmarked articles and update your app settings.</string>
+    <string name="coachmark.menu">Browse, participate, earn in MyMoney campaigns</string>
     <string name="coachmark.drawer">View your personal profile and see all your blogs, 100 word stories, and Mom Vlogs at one place.</string>
     <string name="coachmark.edit_profile">Edit and update your profile to stay updated on blogger meets and sponsored articles.</string>
     <string name="coachmark.app_setting">You can edit your app preferences and language preferences at one place. Subscribe to notifications and categories here.</string>
@@ -1146,12 +1146,16 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     //campaigndetaildialog
     <string name="dialog_based_on_profile">Based on your Profile</string>
     <string name="dialog_you_can_get_reward_of">You can get reward of</string>
-    <string name="campaign_starts_on">Campaign Starts On</string>
-    <string name="campaign_ends_on">Campaign Ends On</string>
-    <string name="view_mymoney">View MyMoney for Campaign</string>
+    <string name="campaign_starts_on">Starts On</string>
+    <string name="campaign_ends_on">Ends On</string>
+    <string name="view_mymoney">View MyMoney for this campaign</string>
     <string name="dialog_thanks_for_interest">Thanks for your interest!</string>
+    <string name="dialog_proof_submitted_congo_text">Congratulations!</string>
     <string name="dialog_register_for_mymoney">For applying to the campaign, you first need to register for the Momspresso MyMoney.</string>
     <string name="register_now">REGISTER NOW</string>
+    <string name="dialog_continue">CONTINUE</string>
+    <string name="dialog_share_your_campaign_detail_text">Please share your payment details so that we can process your payment faster.</string>
+    <string name="dialog_register_proof_submitted_text">Your proofs have been submitted.</string>
     <string name="apply_refer_code">APPLY REFERRAL CODE</string>
     <string name="apply_code_error">Code already used. Please enter a different one</string>
     <string name="dialog_congratulations">Congratulations!</string>

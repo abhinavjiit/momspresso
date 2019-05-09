@@ -76,7 +76,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                     }
                 } else {
                     if (i == 2) {
-                        submitListener.proofSubmitDone()
+                        //submitListener.proofSubmitDone()
+                        showRewardDialog()
                     }
                 }
             }
@@ -321,7 +322,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                             notifyMediaAdapter()
                         } else if (urlType == 1) {
                             if (proceedToPayment) {
-                                submitListener.proofSubmitDone()
+                                showRewardDialog()
+                                //submitListener.proofSubmitDone()
                             }
                         }
                     }
@@ -460,5 +462,23 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
     interface SubmitListener {
         fun proofSubmitDone()
+    }
+
+
+    private fun showRewardDialog() {
+        if (activity != null) {
+            val dialog = Dialog(activity)
+            dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.proof_submitted_congo_screen)
+            dialog.setCancelable(true)
+            val okBtn = dialog.findViewById<TextView>(R.id.click_ok)
+            okBtn.setOnClickListener {
+                submitListener.proofSubmitDone()
+                dialog.cancel()
+            }
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+        }
+
     }
 }

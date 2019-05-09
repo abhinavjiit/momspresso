@@ -7,12 +7,17 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ShareCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -47,6 +52,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 
@@ -85,6 +91,12 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var referCodeError: TextView
     private lateinit var viewLine: View
     private lateinit var referCodeHeader: TextView
+    private val urlPattern = Pattern.compile(
+            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+                    + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
+                    + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+            Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL)
+    private var spannable: SpannableString? = null
 
     override fun updateUi(response: Response?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -232,19 +244,22 @@ class CampaignDetailFragment : BaseFragment() {
         for (instructions in apiGetResponse!!.description?.instructions!!) {
             descBuilder.append("\u2022" + "  " + instructions + "\n")
         }
-        descText.setText(descBuilder.toString())
+        getOffset(descBuilder.toString(), descText)
+//        descText.setText(descBuilder.toString())
 
         val readBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.readThis?.instructions!!) {
             readBuilder.append("\u2022" + "  " + instructions + "\n")
         }
-        readThisText.setText(readBuilder.toString())
+        getOffset(readBuilder.toString(), readThisText)
+//        readThisText.setText(readBuilder.toString())
 
         val termBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.terms?.instructions!!) {
             termBuilder.append("\u2022" + "  " + instructions + "\n")
         }
-        termText.setText(termBuilder.toString())
+        getOffset(termBuilder.toString(), termText)
+//        termText.setText(termBuilder.toString())
 
         status = apiGetResponse!!.campaignStatus!!
         if (apiGetResponse!!.deliverables!!.size > 0) {
@@ -265,6 +280,29 @@ class CampaignDetailFragment : BaseFragment() {
         setLabels()
     }
 
+
+    private fun getOffset(instruction: String, textView: TextView) {
+        val matcher = urlPattern.matcher(instruction)
+        var matchStart: Int? = null
+        var matchEnd: Int? = null
+        while (matcher.find()) {
+            matchStart = matcher.start(1)
+            matchEnd = matcher.end()
+        }
+        spannable = SpannableString(instruction)
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(p0: View?) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(instruction.substring(matchStart!!, matchEnd!!)))
+                context!!.startActivity(intent)
+            }
+        }
+        if (matchStart != null && matchEnd != null) {
+            spannable!!.setSpan(clickableSpan, matchStart, matchEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        };
+        textView.setText(spannable)
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setHighlightColor(Color.TRANSPARENT);
+    }
 
     private fun setClickAction() {
         if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_apply_now)) {
@@ -328,6 +366,7 @@ class CampaignDetailFragment : BaseFragment() {
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_applied))
+                    Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
                     labelText.setText(context!!.resources.getString(R.string.label_campaign_applied))
                 } else {
                     Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show()
@@ -358,6 +397,10 @@ class CampaignDetailFragment : BaseFragment() {
                 if (responseData!!.code == 200) {
                     if (Constants.SUCCESS == responseData.status) {
                         Toast.makeText(context, responseData.data.get(0).msg, Toast.LENGTH_SHORT).show()
+                        viewLine.visibility = View.GONE
+                        referCode.visibility = View.GONE
+                        referCodeApply.visibility = View.GONE
+                        referCodeHeader.visibility = View.GONE
                     } else {
                         referCodeError.visibility = View.VISIBLE
                         referCodeError.setText("" + responseData.reason)
@@ -457,6 +500,12 @@ class CampaignDetailFragment : BaseFragment() {
             referCode.visibility = View.VISIBLE
             referCodeApply.visibility = View.VISIBLE
             referCodeHeader.visibility = View.VISIBLE
+            if (!apiGetResponse!!.referralCode.isNullOrEmpty()) {
+                referCode.setText(apiGetResponse!!.referralCode)
+                referCodeApply.setText(context!!.resources.getString(R.string.campaign_details_applied))
+                referCodeApply.isEnabled = false
+                referCode.isEnabled = false
+            }
         } else {
             viewLine.visibility = View.GONE
             referCode.visibility = View.GONE

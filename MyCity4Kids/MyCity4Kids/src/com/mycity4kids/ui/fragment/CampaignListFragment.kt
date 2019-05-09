@@ -66,7 +66,8 @@ class CampaignListFragment : BaseFragment() {
         recyclerView.layoutManager = linearLayoutManager
         adapter = RewardCampaignAdapter(campaignList, activity)
         recyclerView.adapter = adapter
-        fetchCampaignList(0)
+        if (campaignList.size == 0)
+            fetchCampaignList(0)
         backIcon.setOnClickListener {
             activity!!.onBackPressed()
         }
@@ -127,8 +128,10 @@ class CampaignListFragment : BaseFragment() {
             try {
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-                    campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
-                    adapter.notifyDataSetChanged()
+                    if (responseData.data!!.result!!.size > 0) {
+                        campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
+                        adapter.notifyDataSetChanged()
+                    }
                 } else {
                 }
             } catch (e: Exception) {

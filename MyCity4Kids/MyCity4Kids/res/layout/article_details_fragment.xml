@@ -253,10 +253,11 @@
             <ImageView
                 android:id="@+id/writeArticleImageView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="173dp"
                 android:layout_below="@+id/articleWebView"
                 android:scaleType="fitXY"
-                android:src="@drawable/write_article" />
+
+                android:src="@drawable/screenshot_campaign_listing" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/writeArticleTextView"
@@ -264,10 +265,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/writeArticleImageView"
                 android:layout_alignBottom="@+id/writeArticleImageView"
+                android:layout_marginTop="-2dp"
+                android:layout_marginBottom="2dp"
                 android:gravity="center"
                 android:text="@string/ad.write_blog"
                 android:textColor="@color/app_red"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/tagsLayoutContainer"

@@ -15,9 +15,9 @@
         android:layout_marginEnd="@dimen/space_15"
         android:layout_marginRight="@dimen/space_15"
         android:text="DELIVERABLE BRIEF"
+        android:textAllCaps="true"
         android:textColor="@color/campaign_515151"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:textSize="17sp"
         app:fontName="oswald_regular.ttf" />
 
 
@@ -31,10 +31,11 @@
         android:layout_marginEnd="@dimen/space_15"
         android:layout_marginRight="@dimen/space_15"
         android:text="DELIVERABLE BRIEF"
-        android:textColor="@color/campaign_515151"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:fontName="oswald_regular.ttf" />
+        android:autoLink="web"
+        android:textColorLink="#0000ee"
+        android:textColor="@color/campaign_4A4A4A"
+        android:textSize="15sp"
+        app:fontName="open_sans.ttf" />
 
     <View
         android:layout_width="match_parent"

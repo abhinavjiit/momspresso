@@ -27,10 +27,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     override fun congratulateScreenDone() {
         onBackPressed()
-        /*campaignListFragment = CampaignListFragment.newInstance()
-        supportFragmentManager.beginTransaction().add(R.id.container, campaignListFragment,
-                CampaignListFragment::class.java.simpleName).addToBackStack("campaignListFragment")
-                .commit()*/
+
     }
 
     override fun proofSubmitDone() {
@@ -53,9 +50,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         /*   var arrayList = ArrayList<Int>()
            arrayList.add(1)
            addAddProofFragment(67, arrayList)*/
-
-//        addPaymantMode()
-       campaignListFragment()
+        // addPaymantMode()
+        campaignListFragment()
     }
 
     private fun campaignListFragment() {
