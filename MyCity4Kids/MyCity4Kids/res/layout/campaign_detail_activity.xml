@@ -305,6 +305,8 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/campaign_list_buttons"
                     android:textSize="15sp"
+                    android:autoLink="web"
+                    android:textColorLink="#0000ee"
                     app:fontName="open_sans.ttf"
                     app:layout_constraintStart_toStartOf="@id/read_this_box" />
             </LinearLayout>
@@ -364,6 +366,8 @@
                 android:layout_marginEnd="@dimen/space_15"
                 android:layout_marginRight="@dimen/space_15"
                 android:lineSpacingExtra="1.6dp"
+                android:autoLink="web"
+                android:textColorLink="#0000ee"
                 android:text="Lorem ipsum, or lipsum as it is sometimes known, Is dummy text used in laying out print, graphic or Web designs. The passage is attributed to anis Dummy text used in laying out Graphic or Web designs. The passage is attributed to an Dummy tex"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="15sp"
@@ -425,6 +429,8 @@
                 android:text="Lorem ipsum, or lipsum as it is sometimes known, Is dummy text used in laying out print, graphic or Web designs. The passage is attributed to anis Dummy text used in laying out Graphic or Web designs. The passage is attributed to an Dummy tex"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="15sp"
+                android:autoLink="web"
+                android:textColorLink="#0000ee"
                 app:fontName="open_sans.ttf"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -31,6 +31,8 @@
         android:layout_marginEnd="@dimen/space_15"
         android:layout_marginRight="@dimen/space_15"
         android:text="DELIVERABLE BRIEF"
+        android:autoLink="web"
+        android:textColorLink="#0000ee"
         android:textColor="@color/campaign_4A4A4A"
         android:textSize="15sp"
         app:fontName="open_sans.ttf" />
