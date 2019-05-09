@@ -221,7 +221,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                 }
 
                 override fun onNext(t: BaseResponseGeneric<DefaultData>) {
-                    if (comingFrom.equals("firstTime")) {
+                    if (comingFrom.equals("firstTime") && !isComingFromRewards) {
+
                         var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = false)
                         (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
                                 CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")

@@ -832,8 +832,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/menuVerticalLine"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="10dp"
+
+                    android:layout_marginLeft="@dimen/space_10"
                     android:layout_marginRight="10dp"
                     android:background="@color/white"
                     android:paddingLeft="9dp"
@@ -1531,6 +1531,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/topSettingContainer"
+
                 android:layout_marginTop="20dp"
                 android:drawableLeft="@drawable/drawer_home_red"
                 android:drawablePadding="20dp"
@@ -1541,6 +1542,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/groups.sections.blogs"
                 android:textAllCaps="true"
+                android:visibility="invisible"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -1548,6 +1550,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/homeTextView"
+
+                android:drawableLeft="@drawable/ic_mom_vlogs"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="30dp"
@@ -1555,6 +1559,7 @@
                 android:paddingRight="16dp"
                 android:paddingBottom="12dp"
                 android:text="@string/myprofile.section.videos_label"
+                android:visibility="invisible"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -1562,6 +1567,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/videosTextView"
+
                 android:drawableLeft="@drawable/drawer_video_red"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"
@@ -1570,6 +1576,7 @@
                 android:paddingRight="16dp"
                 android:paddingBottom="12dp"
                 android:text="@string/all_videos.tabbar.momspresso_label"
+                android:visibility="invisible"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -1584,7 +1591,9 @@
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="12dp"
+
                 android:text="@string/myprofile.section.short_story_label"
+                android:visibility="invisible"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -1592,24 +1601,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_below="@+id/shortStoryTextView"
+                android:drawableLeft="@drawable/ic_group_icon"
                 android:drawablePadding="20dp"
+                android:drawableTint="@color/app_red"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+
+                android:paddingBottom="12dp"
+                android:text="@string/groups.support_groups"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/myMoneyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+
+                android:layout_below="@+id/groupsTextView"
+                android:drawableLeft="@drawable/ic_rupee_iconn"
+                android:drawablePadding="20dp"
+                android:drawableTint="@color/app_red"
                 android:gravity="center_vertical"
                 android:paddingLeft="30dp"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="12dp"
-                android:text="@string/groups.support_groups"
+                android:text="MYMONEY"
+                android:visibility="invisible"
                 app:fontName="oswald.ttf" />
 
             <View
                 android:id="@+id/divider1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/groupsTextView"
+                android:layout_below="@+id/myMoneyTextView"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="25dp"
-                android:background="@color/app_nav_bg" />
+                android:background="@color/app_nav_bg"
+                android:visibility="invisible" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/bookmarksTextView"
@@ -1623,8 +1655,10 @@
                 android:paddingLeft="30dp"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
+
                 android:paddingBottom="12dp"
                 android:text="@string/user_activities.tabs.bookmark"
+                android:visibility="invisible"
                 app:fontName="oswald.ttf" />
 
             <View
@@ -1634,13 +1668,33 @@
                 android:layout_below="@+id/bookmarksTextView"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:background="@color/app_nav_bg" />
+                android:background="@color/app_nav_bg"
+                android:visibility="invisible" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/langTextView"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/divider2"
+                android:drawableLeft="@drawable/ic_language"
+                android:drawablePadding="20dp"
+                android:drawableTint="#d54058"
+                android:gravity="center_vertical"
+
+                android:paddingLeft="30dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="12dp"
+                android:text="LANGUAGE"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/settingTextView"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_below="@+id/divider2"
+                android:layout_below="@+id/langTextView"
+                android:drawableLeft="@drawable/ic_app_settings"
                 android:drawablePadding="20dp"
                 android:drawableTint="#d54058"
                 android:gravity="center_vertical"
@@ -1685,9 +1739,325 @@
                 android:paddingBottom="7dp"
                 android:text="@string/coachmark.app_setting"
                 android:textColor="@color/black"
+                android:visibility="visible"
                 app:fontName="oswald.ttf" />
         </RelativeLayout>
 
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/drawerMyMoneyCoachmark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark_transparent"
+        android:elevation="8dp"
+        android:visibility="invisible">
+
+        <RelativeLayout
+            android:id="@+id/drawerMyMoneyContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
+
+            <LinearLayout
+                android:id="@+id/topMyMoneyContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_nav_bg"
+                android:orientation="vertical"
+                android:paddingTop="40dp"
+                android:paddingBottom="20dp"
+                android:visibility="invisible">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/profileMyMoneyImageView"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/family_xxhdpi"
+                    app:civ_border="true"
+                    app:civ_border_color="@color/grey"
+                    app:civ_border_width="1dp"
+                    app:civ_shadow="false" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/usernameMyMoneyTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text=""
+                    android:textColor="@color/app_light_black"
+                    android:textSize="20sp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/view_profile"
+                    android:textColor="@color/app_red"
+                    android:textSize="13sp"
+                    app:fontName="oswald.ttf" />
+            </LinearLayout>
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/homeMyMoneyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/topMyMoneyContainer"
+                android:layout_marginTop="20dp"
+                android:drawableLeft="@drawable/drawer_home_red"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="12dp"
+                android:text="@string/groups.sections.blogs"
+                android:textAllCaps="true"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/videosMyMoneyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/homeMyMoneyTextView"
+                android:drawableLeft="@drawable/ic_mom_vlogs"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+
+                android:paddingBottom="12dp"
+                android:text="@string/myprofile.section.videos_label"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/momspressoMyMoneyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/videosMyMoneyTextView"
+                android:drawableLeft="@drawable/drawer_video_red"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+
+                android:paddingBottom="12dp"
+                android:text="@string/all_videos.tabbar.momspresso_label"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/shortStoryMyMoneyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/momspressoMyMoneyTextView"
+                android:drawableLeft="@drawable/drawer_shortstory_red"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+
+                android:paddingBottom="12dp"
+                android:text="@string/myprofile.section.short_story_label"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/groupsMyMoneyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/shortStoryMyMoneyTextView"
+                android:drawableLeft="@drawable/ic_group_icon"
+                android:drawablePadding="20dp"
+                android:drawableTint="@color/app_red"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+
+                android:paddingBottom="12dp"
+                android:text="@string/groups.support_groups"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/myMoneyCampaignTextView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/groupsMyMoneyTextView"
+                android:drawableLeft="@drawable/ic_rupee_iconn"
+                android:drawablePadding="20dp"
+                android:drawableTint="@color/app_red"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="12dp"
+                android:text="MYMONEY"
+                android:textColor="@color/white"
+                app:fontName="oswald.ttf" />
+
+            <View
+                android:id="@+id/verticalMyMoneyDrawer2"
+                android:layout_width="2dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/myMoneyCampaignTextView"
+                android:layout_marginLeft="100dp"
+                android:background="@color/white" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/drawerGuideCampaignMyMoneyTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/verticalMyMoneyDrawer2"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/white"
+                android:paddingLeft="9dp"
+                android:paddingTop="7dp"
+                android:paddingRight="9dp"
+                android:paddingBottom="7dp"
+                android:text="Participate and earn in MyMoney campaigns"
+                android:textColor="@color/black"
+                android:visibility="visible"
+                app:fontName="oswald.ttf" />
+
+            <View
+                android:id="@+id/horizontalMyMoneyLine"
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_above="@+id/myMoneyCampaignTextView"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="50dp"
+                android:background="@color/white" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/myMoneyCampaignTextView"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="25dp"
+                android:background="@color/app_nav_bg"
+                android:visibility="invisible" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/bookmarksMyMoneyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/divider3"
+                android:drawableLeft="@drawable/ic_bookmark"
+                android:drawablePadding="20dp"
+                android:drawableTint="#d54058"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:paddingTop="12dp"
+
+                android:paddingRight="16dp"
+                android:paddingBottom="12dp"
+                android:text="@string/user_activities.tabs.bookmark"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/bookmarksMyMoneyTextView"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:background="@color/app_nav_bg"
+                android:visibility="invisible" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/langMyMoneyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/divider4"
+                android:drawableLeft="@drawable/ic_language"
+                android:drawablePadding="20dp"
+                android:drawableTint="#d54058"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+
+                android:paddingBottom="12dp"
+                android:text="LANGUAGE"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/settingMyMoneyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/langMyMoneyTextView"
+                android:drawableLeft="@drawable/ic_app_settings"
+                android:drawablePadding="20dp"
+                android:drawableTint="#d54058"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+
+                android:paddingBottom="12dp"
+                android:text="@string/app_settings"
+                android:textAllCaps="true"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
+
+            <View
+                android:id="@+id/settingHorizontalMyMoneyLine"
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_above="@+id/settingMyMoneyTextView"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="50dp"
+                android:background="@color/white"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/verticalLineMyMoneyDrawer2"
+                android:layout_width="2dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/settingHorizontalMyMoneyLine"
+                android:layout_marginLeft="100dp"
+                android:background="@color/white"
+                android:visibility="gone" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/drawerGuideMyMoneyTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/verticalLineMyMoneyDrawer2"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/white"
+                android:paddingLeft="9dp"
+                android:paddingTop="7dp"
+                android:paddingRight="9dp"
+                android:paddingBottom="7dp"
+                android:text="@string/coachmark.app_setting"
+                android:textColor="@color/black"
+                android:visibility="gone"
+                app:fontName="oswald.ttf" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout

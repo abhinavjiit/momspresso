@@ -191,7 +191,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout drawerTopContainer, drawerContainer;
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
-    private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, drawerProfileCoachmark, drawerSettingsCoachmark, menuCoachmark, languageLayout;
+    private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, drawerProfileCoachmark, drawerSettingsCoachmark, menuCoachmark, languageLayout, drawerMyMoneyCoachmark;
     private RecyclerView draftsRecyclerView;
     private ShimmerFrameLayout draftsShimmerLayout;
     private TextView createLabelTextView, continueWritingLabelTV;
@@ -319,6 +319,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         menuCoachmark = (RelativeLayout) findViewById(R.id.menuCoachmark);
         drawerProfileCoachmark = (RelativeLayout) findViewById(R.id.drawerProfileCoachmark);
         drawerSettingsCoachmark = (RelativeLayout) findViewById(R.id.drawerSettingsCoachmark);
+        drawerMyMoneyCoachmark = (RelativeLayout) findViewById(R.id.drawerMyMoneyCoachmark);
         draftsRecyclerView = (RecyclerView) findViewById(R.id.draftsRecyclerView);
         draftsShimmerLayout = (ShimmerFrameLayout) findViewById(R.id.draftsShimmerLayout);
         createLabelTextView = (TextView) findViewById(R.id.createLabelTextView);
@@ -337,6 +338,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         menuCoachmark.setOnClickListener(this);
         drawerProfileCoachmark.setOnClickListener(this);
         drawerSettingsCoachmark.setOnClickListener(this);
+        drawerMyMoneyCoachmark.setOnClickListener(this);
         chooseStoryChallengeLayout.setOnClickListener(this);
         overLayViewChooseStory.setOnClickListener(this);
         writeStoryText.setOnClickListener(this);
@@ -1689,12 +1691,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.drawerProfileCoachmark: {
                 drawerProfileCoachmark.setVisibility(View.GONE);
-                drawerSettingsCoachmark.setVisibility(View.VISIBLE);
+                drawerMyMoneyCoachmark.setVisibility(View.VISIBLE);
             }
             break;
-            case R.id.drawerSettingsCoachmark: {
+         /*   case R.id.drawerSettingsCoachmark: {
                 drawerSettingsCoachmark.setVisibility(View.GONE);
+                drawerMyMoneyCoachmark.setVisibility(View.VISIBLE);
+            }
+            break;*/
+            case R.id.drawerMyMoneyCoachmark: {
+                drawerMyMoneyCoachmark.setVisibility(View.GONE);
                 SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "Drawer", true);
+
             }
             break;
             case R.id.homeCoachmark: {
