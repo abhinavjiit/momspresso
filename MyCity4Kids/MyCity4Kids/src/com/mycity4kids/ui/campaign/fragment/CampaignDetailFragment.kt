@@ -12,10 +12,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ShareCompat
 import android.support.v7.widget.LinearLayoutManager
-import android.text.Editable
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextWatcher
+import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
@@ -91,7 +88,8 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var referCodeError: TextView
     private lateinit var viewLine: View
     private lateinit var referCodeHeader: TextView
-    private lateinit var readThisBox : LinearLayout
+    private lateinit var readThisBox: LinearLayout
+    private var userId: String? = null
     private val urlPattern = Pattern.compile(
             "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
                     + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
@@ -120,6 +118,7 @@ class CampaignDetailFragment : BaseFragment() {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.campaign_detail_activity, container, false)
         id = arguments!!.getInt("id")
+        userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
         showProgressDialog(resources.getString(R.string.please_wait))
         fetchCampaignDetail();
@@ -134,7 +133,7 @@ class CampaignDetailFragment : BaseFragment() {
                     .from(activity)
                     .setType("text/plain")
                     .setChooserTitle("Share URL")
-                    .setText("https://www.momspresso.com/" + apiGetResponse!!.nameSlug + "/" + id)
+                    .setText("http://603236c3.ngrok.io/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
                     .intent
 
             if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
@@ -165,7 +164,6 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     private fun applyCode() {
-        var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         var referralRequest = CampaignReferral()
         referralRequest!!.user_id = userId
         referralRequest.campaign_id = this!!.id!!
@@ -320,7 +318,6 @@ class CampaignDetailFragment : BaseFragment() {
             if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
                 showRewardDialog()
             } else {
-                var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
                 var participateRequest = CampaignParticipate()
                 participateRequest!!.user_id = userId
                 participateRequest.campaign_id = this!!.id!!
@@ -330,12 +327,11 @@ class CampaignDetailFragment : BaseFragment() {
                 call.enqueue(participateCampaign)
             }
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_share)) {
-
             val shareIntent = ShareCompat.IntentBuilder
                     .from(activity)
                     .setType("text/plain")
                     .setChooserTitle("Share URL")
-                    .setText("https://www.momspresso.com/" + apiGetResponse!!.nameSlug + "/" + id)
+                    .setText("http://603236c3.ngrok.io/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
                     .intent
 
             if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
@@ -346,7 +342,7 @@ class CampaignDetailFragment : BaseFragment() {
                     .from(activity)
                     .setType("text/plain")
                     .setChooserTitle("Share URL")
-                    .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id)
+                    .setText("http://603236c3.ngrok.io/mymoney?referrer=" + userId)
                     .intent
 
             if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
@@ -443,7 +439,8 @@ class CampaignDetailFragment : BaseFragment() {
             hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
             applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_apply))
+            labelText.setText(Html.fromHtml(context!!.resources.getString(R.string.label_campaign_apply)))
+            labelText.setMovementMethod(LinkMovementMethod.getInstance());
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_apply_now))
         } else if (status == 2) {
             hideShowReferral(status)
@@ -480,7 +477,8 @@ class CampaignDetailFragment : BaseFragment() {
             if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
                 applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
                 applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
-                labelText.setText(context!!.resources.getString(R.string.label_campaign_apply))
+                labelText.setText(Html.fromHtml(context!!.resources.getString(R.string.label_campaign_apply)))
+                labelText.setMovementMethod(LinkMovementMethod.getInstance());
                 submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_apply_now))
             } else {
                 applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))

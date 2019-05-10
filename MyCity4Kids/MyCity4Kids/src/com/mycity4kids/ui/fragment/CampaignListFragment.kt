@@ -22,14 +22,11 @@ import com.mycity4kids.ui.adapter.RewardCampaignAdapter
 import com.mycity4kids.utils.EndlessScrollListener
 import retrofit2.Call
 import retrofit2.Callback
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 
 class CampaignListFragment : BaseFragment() {
 
-    //    private lateinit var saveAndContinueListener: SaveAndContinueListener
     private var campaignList = mutableListOf<CampaignDataListResult>()
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: RewardCampaignAdapter
@@ -77,34 +74,7 @@ class CampaignListFragment : BaseFragment() {
                 fetchCampaignList(endIndex + 1)
             }
         })
-
-        System.out.println("-------" + getCurrentDateTime())
-        System.out.println("currentTimeMillis-------" + System.currentTimeMillis())
-        System.out.println("-------" + getCurrentDateTime().toString("yyyy/MM/dd"))
-        getMilliFromDate(getCurrentDateTime().toString("yyyy/MM/dd"))
         return containerView
-    }
-
-    fun Date.toString(format: String, locale: Locale = Locale.getDefault()): String {
-        val formatter = SimpleDateFormat(format, locale)
-        return formatter.format(this)
-    }
-
-    fun getCurrentDateTime(): Date {
-        return Calendar.getInstance().time
-    }
-
-    fun getMilliFromDate(dateFormat: String): Long {
-        var date = Date()
-        val formatter = SimpleDateFormat("dd/MM/yyyy")
-        try {
-            date = formatter.parse(dateFormat)
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-
-        println("Today is $date")
-        return date.time
     }
 
     private fun fetchCampaignList(startIndex: Int) {

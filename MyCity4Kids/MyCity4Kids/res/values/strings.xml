@@ -1122,7 +1122,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="label_campaign_full">Share Momspresso MyMoney with your friends.</string>
     <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
     <string name="label_campaign_applied">We will notify you about your eligibility for the campaign.</string>
-    <string name="label_campaign_apply">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
+    <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
     <string name="label_campaign_completed">Congratulations! Your submission is approved.</string>
     <string name="label_campaign_not_started">Campaign starts on </string>
     <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
