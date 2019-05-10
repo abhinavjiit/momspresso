@@ -254,8 +254,7 @@
                 android:layout_height="173dp"
                 android:layout_below="@+id/articleWebView"
                 android:scaleType="fitXY"
-
-                android:src="@drawable/screenshot_campaign_listing" />
+                android:src="@drawable/mymoney_start_earning" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/writeArticleTextView"

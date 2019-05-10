@@ -4,19 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <HorizontalScrollView
         android:id="@+id/quickLinkContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:elevation="8dp"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:visibility="invisible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,8 +76,8 @@
         android:layout_height="48dp"
         android:layout_below="@+id/quickLinkContainer"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="10dp"
         android:background="@color/search_topics.search_bg"
         android:drawableLeft="@drawable/search"
         android:drawablePadding="10dp"
@@ -100,6 +102,7 @@
         android:verticalSpacing="16dp"
         android:visibility="visible" />
 
+
     <RelativeLayout
         android:id="@+id/guideOverlay"
         android:layout_width="match_parent"
@@ -112,8 +115,8 @@
             android:id="@+id/guideQuickLinkContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:elevation="8dp"
             android:scrollbars="none">
 
@@ -213,10 +216,10 @@
             android:layout_marginRight="20dp"
             android:background="@color/white"
             android:elevation="2dp"
-            android:paddingBottom="7dp"
             android:paddingLeft="9dp"
-            android:paddingRight="9dp"
             android:paddingTop="7dp"
+            android:paddingRight="9dp"
+            android:paddingBottom="7dp"
             android:text="@string/guide.quick_link_tour"
             android:textColor="@color/black"
             app:fontName="oswald.ttf" />
@@ -290,13 +293,263 @@
             android:layout_marginRight="20dp"
             android:background="@color/white"
             android:elevation="2dp"
-            android:paddingBottom="7dp"
             android:paddingLeft="9dp"
-            android:paddingRight="9dp"
             android:paddingTop="7dp"
+            android:paddingRight="9dp"
+            android:paddingBottom="7dp"
             android:text="@string/guide.topics_tour"
             android:textColor="@color/black"
             app:fontName="oswald.ttf" />
 
     </RelativeLayout>
+
+    <View
+        android:id="@+id/coachmarkMyMoney"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dark_transparent"
+        android:visibility="visible"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/coachmarkMymoneyLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchTopicsEditText"
+        android:layout_marginLeft="16dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <HorizontalScrollView
+            android:id="@+id/quickLinkContainer1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/rewardsContainer1"
+                    android:layout_width="90dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/round_border_groups">
+
+                    <ImageView
+                        android:id="@+id/rewardsImageView1"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="24dp"
+                        android:alpha="0.6"
+
+                        android:tint="@color/white"
+                        app:srcCompat="@drawable/ic_rupee_icon" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/rewardsTextView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rewardsImageView1"
+                        android:layout_marginBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/rewards_program"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        app:fontName="oswald_regular.ttf" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/videosContainer1"
+                    android:layout_width="90dp"
+                    android:layout_height="100dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/round_border_momsvlog"
+                    android:visibility="invisible">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/videoImageView1"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="24dp"
+                        android:alpha="0.6"
+                        android:tint="@color/white"
+                        app:srcCompat="@drawable/ic_mom_vlogs_white" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/videosTextView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/videoImageView1"
+                        android:layout_marginBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/all_videos.tabbar.funny_label"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        app:fontName="oswald_regular.ttf" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/momsTVContainer1"
+                    android:layout_width="90dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/round_border_videos"
+                    android:visibility="invisible">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/momsTVImageView1"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="24dp"
+                        android:alpha="0.6"
+                        android:tint="@color/white"
+                        app:srcCompat="@drawable/video_grey" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/momsTVTextView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/momsTVImageView1"
+                        android:layout_marginBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="4dp"
+                        android:text="@string/all_videos.tabbar.momspresso_label"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        app:fontName="oswald_regular.ttf" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/storyContainer1"
+                    android:layout_width="90dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/round_border_story"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:id="@+id/storyImageView1"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="24dp"
+                        android:alpha="0.6"
+                        android:src="@drawable/shortstory_grey"
+                        android:tint="@color/white" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/storyTextView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/storyImageView1"
+                        android:layout_marginBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/myprofile.section.short_story_label"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        app:fontName="oswald_regular.ttf" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/groupsContainer1"
+                    android:layout_width="90dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/round_border_groups"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:id="@+id/groupImageView1"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="24dp"
+                        android:alpha="0.6"
+                        android:src="@drawable/ic_group_icon"
+                        android:tint="@color/white" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/groupsTextView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/groupImageView1"
+                        android:layout_marginBottom="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/groups.support_groups"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        app:fontName="oswald_regular.ttf" />
+                </RelativeLayout>
+
+                <!--<LinearLayout-->
+                <!--android:layout_width="100dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="8dp"-->
+                <!--android:background="#0ea2e8"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:padding="10dp"-->
+                <!--android:src="@drawable/tab5_selected" />-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:padding="10dp"-->
+                <!--android:text="Trending"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="14sp"-->
+                <!--app:fontName="oswald_regular.ttf" />-->
+                <!--</LinearLayout>-->
+
+            </LinearLayout>
+
+
+        </HorizontalScrollView>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="@dimen/space_30"
+            android:background="@color/white" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/exploreCategoriesLabel1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="@dimen/space_10"
+            android:layout_marginRight="@dimen/space_30"
+            android:layout_marginBottom="@dimen/space_10"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:text="Participate and earn in MyMoney campaigns"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:visibility="visible"
+            app:fontName="oswald.ttf" />
+
+
+    </LinearLayout>
 </RelativeLayout>
