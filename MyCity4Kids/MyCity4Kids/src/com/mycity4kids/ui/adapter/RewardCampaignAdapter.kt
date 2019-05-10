@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
@@ -16,15 +17,6 @@ import java.util.*
 
 
 class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResult>, val context: FragmentActivity?) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
-    var currentDate: String
-
-    init {
-        val c = Calendar.getInstance().time
-        val df = SimpleDateFormat("dd-MMM-yyyy")
-        currentDate = df.format(c)
-        currentDate = currentDate.replace("-", " ", false)
-
-    }
 
     private var campaignNewList: List<CampaignDataListResult>? = null
 
@@ -45,10 +37,9 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
 
     //1
     inner class RewardHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        //2
+
         private var campaignList: CampaignDataListResult? = null
 
-        //3
         init {
             view.setOnClickListener(this)
             (view.share).setOnClickListener(this)
@@ -67,13 +58,13 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
 
         //4
         override fun onClick(v: View) {
-            //val context = itemView.context
             if (v == (view.share)) {
+                var userId = SharedPrefUtils.getUserDetailModel(context)?.dynamoId
                 val shareIntent = ShareCompat.IntentBuilder
                         .from(context)
                         .setType("text/plain")
                         .setChooserTitle("Share URL")
-                        .setText("https://www.momspresso.com/mymoney/" + campaignList!!.nameSlug + "/" + campaignList!!.id)
+                        .setText("http://603236c3.ngrok.io/mymoney/" + campaignList!!.nameSlug + "/" + campaignList!!.id + "?referrer=" + userId)
                         .intent
 
                 if (shareIntent.resolveActivity(context!!.packageManager) != null) {
@@ -89,76 +80,63 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
             if (status == 0) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_expired))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_expired)
-//                (view.end_date).setText(context!!.resources.getString(R.string.end_date))
-//                (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_expired_background))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_expired_bg)
             } else if (status == 1) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
                 (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
-//                (view.end_date).setText(context!!.resources.getString(R.string.start_date))
-//                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 2) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_submission_open))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscription_open)
-//                (view.end_date).setText(context!!.resources.getString(R.string.end_date))
-//                (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 3) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_applied))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscribed)
-//                (view.end_date).setText(context!!.resources.getString(R.string.start_date))
-//                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 4) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_application_full))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_submission_full)
-//                (view.end_date).setText(context!!.resources.getString(R.string.start_date))
-//                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 5) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_apply_now))
                 (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
-//                (view.end_date).setText(context!!.resources.getString(R.string.start_date))
-//                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 6) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_rejected))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_rejected)
-//                (view.end_date).setText(context!!.resources.getString(R.string.end_date))
-//                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 7) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_completed))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_completed)
-//                (view.end_date).setText(context!!.resources.getString(R.string.end_date))
-//                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 8) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_invite_only))
                 (view.submission_status).setBackgroundResource(R.drawable.subscribe_now)
-//                (view.end_date).setText(context!!.resources.getString(R.string.start_date))
-//                (view.end_date_text).setText(getDate(campaignList!!.startTime, "dd MMM yyyy"))
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             }
+        }
+
+        fun Date.toString(format: String, locale: Locale = Locale.getDefault()): String {
+            val formatter = SimpleDateFormat(format, locale)
+            return formatter.format(this)
         }
 
         fun getCurrentDateTime(): Date {
@@ -166,17 +144,15 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         }
 
         fun getDate(milliSeconds: Long, dateFormat: String): String {
-            // Create a DateFormatter object for displaying date in specified format.
             val formatter = SimpleDateFormat(dateFormat)
 
-            // Create a calendar object that will convert the date and time value in milliseconds to date.
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = milliSeconds * 1000
             return formatter.format(calendar.time)
         }
 
         fun compareDate() {
-            if (currentDate.compareTo(getDate(campaignList!!.startTime, "dd MMM yyyy")) > 0) {
+            if ((getCurrentDateTime().toString("yyyy-MM-dd")).compareTo(getDate(campaignList!!.startTime, "yyyy-MM-dd")) > 0) {
                 (view.end_date).setText(context!!.resources.getString(R.string.end_date))
                 (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM yyyy"))
             } else {
