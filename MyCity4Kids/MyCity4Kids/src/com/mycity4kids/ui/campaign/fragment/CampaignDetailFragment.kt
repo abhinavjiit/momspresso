@@ -88,7 +88,8 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var referCodeError: TextView
     private lateinit var viewLine: View
     private lateinit var referCodeHeader: TextView
-    private lateinit var readThisBox : LinearLayout
+    private lateinit var readThisBox: LinearLayout
+    private var userId: String? = null
     private val urlPattern = Pattern.compile(
             "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
                     + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
@@ -117,6 +118,7 @@ class CampaignDetailFragment : BaseFragment() {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.campaign_detail_activity, container, false)
         id = arguments!!.getInt("id")
+        userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
         showProgressDialog(resources.getString(R.string.please_wait))
         fetchCampaignDetail();
@@ -131,7 +133,7 @@ class CampaignDetailFragment : BaseFragment() {
                     .from(activity)
                     .setType("text/plain")
                     .setChooserTitle("Share URL")
-                    .setText("https://www.momspresso.com/" + apiGetResponse!!.nameSlug + "/" + id)
+                    .setText("http://603236c3.ngrok.io/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
                     .intent
 
             if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
@@ -162,7 +164,6 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     private fun applyCode() {
-        var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         var referralRequest = CampaignReferral()
         referralRequest!!.user_id = userId
         referralRequest.campaign_id = this!!.id!!
@@ -317,7 +318,6 @@ class CampaignDetailFragment : BaseFragment() {
             if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
                 showRewardDialog()
             } else {
-                var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
                 var participateRequest = CampaignParticipate()
                 participateRequest!!.user_id = userId
                 participateRequest.campaign_id = this!!.id!!
@@ -327,7 +327,6 @@ class CampaignDetailFragment : BaseFragment() {
                 call.enqueue(participateCampaign)
             }
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_share)) {
-            var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
             val shareIntent = ShareCompat.IntentBuilder
                     .from(activity)
                     .setType("text/plain")
@@ -339,7 +338,6 @@ class CampaignDetailFragment : BaseFragment() {
                 context!!.startActivity(shareIntent)
             }
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward)) {
-            var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
             val shareIntent = ShareCompat.IntentBuilder
                     .from(activity)
                     .setType("text/plain")

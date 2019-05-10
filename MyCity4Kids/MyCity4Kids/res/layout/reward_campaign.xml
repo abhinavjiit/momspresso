@@ -38,7 +38,7 @@
                 android:layout_marginLeft="@dimen/space_10"
                 android:layout_toEndOf="@id/back"
                 android:layout_toRightOf="@id/back"
-                android:text="CAMPAIGN FEED"
+                android:text="MYMONEY CAMPAIGNS"
                 android:textColor="@color/home.toolbar.titlecolor"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />

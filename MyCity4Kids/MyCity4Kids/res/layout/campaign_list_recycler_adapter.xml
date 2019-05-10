@@ -82,7 +82,7 @@
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/campaign_name"
-                android:layout_width="170dp"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
                 android:layout_marginLeft="7dp"
@@ -109,7 +109,7 @@
                 android:paddingRight="@dimen/space_15"
                 android:paddingBottom="5dp"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 app:fontName="oswald_regular.ttf"
                 app:layout_constraintBottom_toTopOf="@+id/view4"
                 app:layout_constraintEnd_toEndOf="parent"
