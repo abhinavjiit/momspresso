@@ -47,6 +47,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerRelativeLayout" />
 
+
     <RadioButton
         android:id="@+id/radioButton"
         android:layout_width="wrap_content"
@@ -65,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_20"
         android:gravity="center_vertical"
-        android:text="Your proofs and payment details have been successfully submitted."
+        android:text="Thanks for submitting proof and payment details"
         android:textColor="#4A4A4A"
         android:textSize="16sp"
         android:clickable="false"
@@ -106,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/space_5"
         android:layout_marginTop="25dp"
-        android:text="Submission Approved"
+        android:text="Proof approval is pending"
         android:textSize="16sp"
         app:fontName="oswald.ttf"
         android:clickable="false"
@@ -120,7 +121,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/space_5"
         android:layout_marginTop="22dp"
-        android:text="Payment Completed "
+        android:text="Post approval, payment would be made"
         android:textSize="16sp"
         app:fontName="oswald.ttf"
         app:layout_constraintStart_toEndOf="@id/two"

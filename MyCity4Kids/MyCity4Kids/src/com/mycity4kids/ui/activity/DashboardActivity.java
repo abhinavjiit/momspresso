@@ -1240,14 +1240,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         launchEditor();
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
-                    Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
-                    startActivity(campaignIntent);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
+                    Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);//DEEPLINK_MOMSPRESSO_CAMPAIGN
+                    startActivity(campaignIntent);
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
+                  /*  final int pos =tempDeepLinkURL.lastIndexOf("/");
+                    final int last=tempDeepLinkURL.indexOf("?");*/
+                    final String campaignID = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.indexOf("?"));
+                    Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                    startActivity(campaignIntent);
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_MYMONEY__CAMPAIGN)) {
                     final String campaignID = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
-                    campaignIntent.putExtra("campaignID",campaignID);
+                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
                     startActivity(campaignIntent);
+
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_GROUPS)) {
                     String[] separated = tempDeepLinkURL.split("/");
                     if (separated[separated.length - 1].startsWith("comment-")) {

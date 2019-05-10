@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.daimajia.easing.linear.Linear;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
@@ -69,7 +70,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
     private TabLayout tabLayout;
     private HeaderGridView gridview;
 
-    View gridViewHeader;
+    View gridViewHeader, coachmarkMyMoney;
     Tracker t;
     private ParentTopicsGridAdapter adapter;
     private View view;
@@ -85,6 +86,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             recentTextView;
     private TextView continueTextView;
     private FrameLayout container;
+    private LinearLayout coachmarkMymoneyLinearLayout;
     private RelativeLayout videosContainer, storyContainer, groupsContainer, momsTVContainer, rewardsContainer;
 
     @Override
@@ -107,6 +109,9 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 //        videosTextView = (TextView) view.findViewById(R.id.videosTextView);
         recentTextView = (TextView) view.findViewById(R.id.recentTextView);
         continueTextView = (TextView) view.findViewById(R.id.continueTextView);
+        coachmarkMyMoney = (View) view.findViewById(R.id.coachmarkMyMoney);
+        coachmarkMymoneyLinearLayout = (LinearLayout) view.findViewById(R.id.coachmarkMymoneyLinearLayout);
+        quickLinkContainer = (HorizontalScrollView) view.findViewById(R.id.quickLinkContainer);
 
         fragType = getArguments().getString("fragType");
 
@@ -116,6 +121,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         forYouTextView.setOnClickListener(this);
 //        videosTextView.setOnClickListener(this);
         recentTextView.setOnClickListener(this);
+        coachmarkMyMoney.setOnClickListener(this);
+        quickLinkContainer.setOnClickListener(this);
 
         searchTopicsEditText.setVisibility(View.GONE);
         guideOverLay.setOnClickListener(this);
@@ -256,6 +263,12 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.coachmarkMyMoney:
+                coachmarkMyMoney.setVisibility(View.GONE);
+                coachmarkMymoneyLinearLayout.setVisibility(View.GONE);
+                quickLinkContainer.setVisibility(View.VISIBLE);
+
+
             case R.id.guideOverlay:
                 guideOverLay.setVisibility(View.GONE);
                 if (isAdded()) {

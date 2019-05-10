@@ -1,8 +1,12 @@
 package com.mycity4kids.ui.campaign.activity;
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
+import android.view.Window
 import android.widget.TextView
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
@@ -145,13 +149,16 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             }
 
             override fun onNext(response: BaseResponseGeneric<PaymentModeListModal>) {
+
                 if (response.data!!.result.default != null) {
+
                     var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
                     supportFragmentManager.beginTransaction().replace(R.id.container, campaignCongratulationFragment,
                             CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
                             .commit()
                 } else {
-                    addPaymantMode()
+                    showRewardDialog()
+
                 }
 
 
@@ -169,4 +176,19 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     }
 
+    private fun showRewardDialog() {
+        if (this@CampaignContainerActivity != null) {
+            val dialog = Dialog(this)
+            dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.proof_submitted_congo_screen)
+            dialog.setCancelable(false)
+            val okBtn = dialog.findViewById<TextView>(R.id.click_ok)
+            okBtn.setOnClickListener {
+                addPaymantMode()
+                dialog.cancel()
+            }
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+        }
+    }
 }

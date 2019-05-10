@@ -467,6 +467,7 @@ public class AppConstants {
     public static final String DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL = "mc4k://www.momspresso.com/addfunnyvideo";
     public static final String DEEPLINK_MOMSPRESSO_CAMPAIGN = "http://603236c3.ngrok.io/mymoney/";
     public static final String DEEPLINK_MOMSPRESSO_REWARD_MYMONEY = "http://603236c3.ngrok.io/mymoney?referrer=";
+    public static final String DEEPLINK_MOMSPRESSO_MYMONEY__CAMPAIGN = "https://www.momspresso.com/mymoney/congratulation/";
     public static final String DEEPLINK_UPCOMING_EVENTS = "/Events_el";
     public static final String DEEPLINK_SETUP_BLOG = "setupablog";
     public static final String DEEPLINK_GROUPS = "momspresso.com/groups/";
