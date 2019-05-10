@@ -63,7 +63,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     private LinkedTreeMap<String, String> selectedQuestionnaire;
     private TextView toolbarTitle;
     private MixpanelAPI mixpanel;
-    ArrayList<GroupResult> joinList =null;
+    ArrayList<GroupResult> joinList = null;
     ArrayList<GroupResult> remainList = new ArrayList<>();
 
     @Override

@@ -53,11 +53,11 @@ class CampaignCongratulationFragment : BaseFragment() {
 
         whatsappShareImageView.setOnClickListener {
             val contentStr = String.format("Participate in this campaign. Earn upto Rs.%d \n https://www.momspresso.com/mymoney/%s/%d", (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
-            AppUtils.shareStoryWithWhatsApp(activity as CampaignContainerActivity, contentStr, "campaignCongo", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).name)
+            AppUtils.shareCampaignWithWhatsApp(activity as CampaignContainerActivity, contentStr, "campaignCongo", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).name)
         }
         facebookShareImageView.setOnClickListener {
             val contentStr = String.format("Participate in this campaign. Earn upto Rs.%d \n https://www.momspresso.com/mymoney/%s/%d", (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
-            AppUtils.shareFacebook(activity as CampaignContainerActivity, "", contentStr)
+            AppUtils.shareWithFBForCampaign(this@CampaignCongratulationFragment, contentStr)
         }
         genricShareImageView.setOnClickListener {
             val contentStr = String.format("Participate in this campaign. Earn upto Rs.%d \n https://www.momspresso.com/mymoney/%s/%d", (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
@@ -82,5 +82,7 @@ class CampaignCongratulationFragment : BaseFragment() {
     interface SubmitListener {
         fun congratulateScreenDone()
     }
+
+
 
 }

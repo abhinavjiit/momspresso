@@ -577,6 +577,7 @@ public class AppUtils {
         }
         return shareUrl;
     }
+
     public static void shareFacebook(Activity activity, String text, String url) {
         boolean facebookAppFound = false;
         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
