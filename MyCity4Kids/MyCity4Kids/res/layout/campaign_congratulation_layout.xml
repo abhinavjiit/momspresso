@@ -24,9 +24,9 @@
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/cancel"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_margin="@dimen/space_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/space_18"
             android:src="@drawable/cross_icon_back"
             android:tint="@color/black" />
 
