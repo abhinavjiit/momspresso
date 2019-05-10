@@ -2,8 +2,8 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:padding="5dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="5dp">
 
     <com.mycity4kids.widget.CustomFontEditText
         android:id="@+id/textUrl"
@@ -11,10 +11,10 @@
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="40dp"
         android:background="@drawable/article_listing_item_border_bg"
-        android:layout_marginTop="5dp"
         android:enabled="false"
         android:fontFamily="sans-serif"
         android:hint="Enter page link or Url"
@@ -51,6 +51,4 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageApprovedRejected"
         app:layout_constraintStart_toEndOf="@+id/imageApprovedRejected"
         app:layout_constraintTop_toTopOf="@+id/imageApprovedRejected" />
-
-
 </android.support.constraint.ConstraintLayout>

@@ -34,6 +34,7 @@ import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.campaign.adapter.FaqRecyclerAdapter
 import com.mycity4kids.ui.campaign.adapter.MediaProofRecyclerAdapter
 import com.mycity4kids.ui.campaign.adapter.UrlProofRecyclerAdapter
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -103,7 +104,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         val dialog = AlertDialog.Builder(activity, R.style.MyAlertDialogStyle)
         dialog.setMessage("Are you sure? you want to delete this image.").setNegativeButton("Delete") { dialog, which ->
             dialog.cancel()
-            if (!campaignImageProofList.isNullOrEmpty() && cellIndex<campaignImageProofList.size && !campaignImageProofList.get(cellIndex).url.isNullOrEmpty()) {
+            if (!campaignImageProofList.isNullOrEmpty() && cellIndex < campaignImageProofList.size && !campaignImageProofList.get(cellIndex).url.isNullOrEmpty()) {
                 deleteProof(campaignImageProofList.get(cellIndex).id!!, urlType = 0)
             }
 
@@ -132,6 +133,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var deliverableTypeList: ArrayList<Int>
     private lateinit var submitListener: SubmitListener
     private lateinit var relativeMediaProof: RelativeLayout
+    private lateinit var back: TextView
 
     companion object {
         @JvmStatic
@@ -164,6 +166,14 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 arguments.getIntegerArrayList("deliverableTypeList")
             } else {
                 emptyList<Int>() as ArrayList<Int>
+            }
+        }
+
+        back = view.findViewById(R.id.back)
+
+        back.setOnClickListener {
+            back.setOnClickListener {
+                (activity as CampaignContainerActivity).onBackPressed()
             }
         }
 

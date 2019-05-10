@@ -37,20 +37,27 @@ class MediaProofRecyclerAdapter(
                 val item = campaignProofResponse.get(position)
                 Picasso.with(context.context).load(item.url)
                         .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
-
-
                 if (item.proofStatus == 1 || item.proofStatus == 0) {
                     holder.imageEdit.visibility = View.VISIBLE
+
                 } else if (item.proofStatus == 2) {
                     holder.imageAcceptDeleteProof.setImageDrawable(context.context!!.resources.getDrawable(R.drawable.ic_delete_cross))
                     holder.imageEdit.visibility = View.VISIBLE
+                    holder.imageAcceptedRejected.setText("Rejected")
+                    holder.imageAcceptedRejected.setTextColor(context.resources.getColor(R.color.campaign_rejected))
                 } else if (item.proofStatus == 3) {
                     holder.imageAcceptDeleteProof.setImageDrawable(context.context!!.resources.getDrawable(R.drawable.ic_accepted))
                     holder.imageEdit.visibility = View.GONE
+                    holder.imageAcceptedRejected.setText("Approved")
+                    holder.imageAcceptedRejected.setTextColor(context.resources.getColor(R.color.campaign_approved_rejected))
+                    holder.relativeParent.isClickable = false
                 }
 
                 holder.imageEdit.setOnClickListener {
                     clickListener.onProofDelete(holder.adapterPosition)
+                }
+
+                holder.relativeParent.setOnClickListener {
                 }
 
                 with(holder.mView) {
@@ -58,9 +65,9 @@ class MediaProofRecyclerAdapter(
                     setOnClickListener(mOnClickListener)
                 }
             } else {
-//                holder.relativeParent.setOnClickListener {
-//                    clickListener.onCellClick()
-//                }
+                holder.relativeParent.setOnClickListener {
+                    clickListener.onCellClick()
+                }
             }
         } else {
             holder.relativeParent.setOnClickListener {
@@ -76,6 +83,7 @@ class MediaProofRecyclerAdapter(
         val imageScreenshot = mView.imageScreenshot
         val imageAcceptDeleteProof = mView.imageAcceptDeleteProof
         val imageEdit = mView.imageEdit
+        val imageAcceptedRejected = mView.imageAcceptedRejected
     }
 
     interface ClickListener {

@@ -16,6 +16,19 @@
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextAppearance="@style/ToolbarTheme.Title">
 
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/back_arroow"
+            android:drawablePadding="@dimen/space_10"
+            android:drawableTint="@color/black"
+            android:text="ADD PROOF"
+            android:textAllCaps="true"
+            android:textColor="#515151"
+            android:textSize="20sp"
+            app:fontName="oswald_regular.ttf" />
+
         <RelativeLayout
             android:id="@+id/toolbarRelativeLayout"
             android:layout_width="match_parent"
@@ -63,16 +76,15 @@
                 android:layout_marginEnd="0dp"
                 android:layout_marginRight="0dp"
                 android:background="@drawable/shape_red_fill"
-                android:drawablePadding="5dp"
                 android:gravity="right|center_vertical"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:text="Submit"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="15sp"
                 android:visibility="visible"
                 app:fontName="oswald.ttf" />
         </RelativeLayout>
@@ -113,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/addScreenShotTextView"
                 android:layout_marginTop="10dp"
-                android:background="@color/app_nav_bg"
+                android:background="#0DEB3955"
                 android:gravity="center"
                 android:visibility="visible">
 
@@ -160,7 +172,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/headerTextViewContainer"
-                android:background="@color/app_nav_bg" />
+                android:background="#0DEB3955" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textFaq"
