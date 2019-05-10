@@ -147,7 +147,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             override fun onNext(response: BaseResponseGeneric<PaymentModeListModal>) {
                 if (response.data!!.result.default != null) {
                     var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
-                    supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
+                    supportFragmentManager.beginTransaction().replace(R.id.container, campaignCongratulationFragment,
                             CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
                             .commit()
                 } else {
