@@ -887,9 +887,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_detail")) {
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
-                campaignIntent.putExtra("campaignID", notificationExtras.getInt("campaign_id"));
+                campaignIntent.putExtra("campaign_id", notificationExtras.getString("campaign_id"));
                 startActivity(campaignIntent);
-
                 try {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());

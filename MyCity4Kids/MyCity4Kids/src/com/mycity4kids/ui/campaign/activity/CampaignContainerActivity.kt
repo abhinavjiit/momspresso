@@ -24,6 +24,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.lang.NumberFormatException
 
 class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener {
     override fun updateUi(response: Response?) {
@@ -46,6 +47,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     private var campaignListFragment: CampaignListFragment? = null
     private var defaultdata: String? = null
     private var deeplinkCampaignId: Int = 0
+    private lateinit var notificationCampaignId: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,12 +56,17 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
         deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
-        /*don't delete this code this is testing for proof screen*/
-        /*   var arrayList = ArrayList<Int>()
-           arrayList.add(1)
-           addAddProofFragment(67, arrayList)*/
-        // addPaymantMode()
-        if (deeplinkCampaignId == -1) {
+        notificationCampaignId = if (intent.hasExtra("campaign_id")) {
+            intent.getStringExtra("campaign_id")
+        } else {
+            ""
+        }
+
+        if (!notificationCampaignId.equals("", true)) {
+            deeplinkCampaignId = notificationCampaignId.toInt()
+        }
+
+        if (deeplinkCampaignId == -1 || deeplinkCampaignId == 0) {
             campaignListFragment()
         } else {
             addCampaginDetailFragment(deeplinkCampaignId)

@@ -464,13 +464,14 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent = new Intent(getApplicationContext(), CampaignContainerActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
+                        resultIntent.putExtra("campaign_id", pushNotificationModel.getCampaign_id());
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack
                         stackBuilder.addParentStack(AppSettingsActivity.class);
                         // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("opening rewards contai", "it's true");
+                        Log.e("opening campaign_detail", "it's true" + pushNotificationModel.getCampaign_id());
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
