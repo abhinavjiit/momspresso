@@ -121,7 +121,6 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
         })
     }
 
-
     override fun onClick(p0: View?) {
         if (!panCardDetailEditTextView.text.toString().isNullOrEmpty()) {
             val panCardNumber = panCardDetailEditTextView.text.toString().trim()
@@ -199,8 +198,6 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
         } else {
             Toast.makeText(activity, "field cann't be empty", Toast.LENGTH_SHORT).show()
         }
-
-
     }
 
     override fun onAttach(context: Context?) {

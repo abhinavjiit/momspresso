@@ -159,8 +159,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     public int getItemViewType(int position) {
         if (topicHeaderVisibilityFlag && position == 0) {
             return HEADER;
-        } else if (position != 0 && position % 6 == 0) {
-            return GROUPS;
+//        } else if (position != 0 && position % 6 == 0) {
+//            return GROUPS;
         } else if (position != 0 && position % 3 == 0) {
             if (showVideoFlag) {
                 return VIDEOS;

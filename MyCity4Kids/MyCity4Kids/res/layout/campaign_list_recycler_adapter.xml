@@ -9,8 +9,8 @@
         style="@style/CardView.Light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/space_10"
         android:layout_marginLeft="@dimen/space_10"
+        android:layout_marginRight="@dimen/space_10"
         android:layout_marginBottom="@dimen/space_10"
         app:cardCornerRadius="@dimen/space_2"
         app:cardElevation="@dimen/space_4">
@@ -82,12 +82,12 @@
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/campaign_name"
-                android:layout_width="170dp"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
                 android:layout_marginStart="7dp"
                 android:layout_marginLeft="7dp"
                 android:layout_marginTop="4dp"
+                android:ellipsize="end"
                 android:textColor="#9B9B9B"
                 android:textSize="12sp"
                 app:fontName="open_sans.ttf"
@@ -96,24 +96,23 @@
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/submission_status"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="206dp"
-                android:layout_marginLeft="206dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="@dimen/space_10"
-                android:layout_marginRight="@dimen/space_10"
+                android:layout_marginEnd="@dimen/space_15"
+                android:layout_marginRight="@dimen/space_15"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/campaign_subscription_open"
                 android:gravity="center"
+                android:paddingLeft="@dimen/space_15"
                 android:paddingTop="5dp"
+                android:paddingRight="@dimen/space_15"
                 android:paddingBottom="5dp"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 app:fontName="oswald_regular.ttf"
                 app:layout_constraintBottom_toTopOf="@+id/view4"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/brand_img"
                 app:layout_constraintTop_toBottomOf="@+id/campaign_header" />
 
             <View

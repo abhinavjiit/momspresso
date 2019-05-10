@@ -12,7 +12,6 @@ import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.CampaignDetailDeliverable
 import kotlinx.android.synthetic.main.deliverable_list_recycler_adapter.view.*
@@ -52,13 +51,22 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             val builder = StringBuilder()
             if (deliverableList.get(position).instructions!!.size > 0) {
                 for (instructions in deliverableList.get(position).instructions!!) {
-
-                    builder.append("\u2022" + "  " + instructions + "\n")
+                    if (!instructions.isNullOrEmpty() && !instructions.equals(""))
+                        builder.append("\u2022" + "  " + instructions + "\n")
                 }
-                getOffset(builder.toString())
+                if (!builder.isEmpty()) {
+                    getOffset(builder.toString())
 //                (view.deliverable_text).setText(builder.toString())
-                (view.deliverable_text).setMovementMethod(LinkMovementMethod.getInstance());
-                (view.deliverable_header).setText(deliverableList.get(position).name)
+                    (view.view).visibility = View.VISIBLE
+                    (view.deliverable_text).visibility = View.VISIBLE
+                    (view.deliverable_header).visibility = View.VISIBLE
+                    (view.deliverable_text).setMovementMethod(LinkMovementMethod.getInstance());
+                    (view.deliverable_header).setText(deliverableList.get(position).name)
+                } else {
+                    (view.view).visibility = View.GONE
+                    (view.deliverable_text).visibility = View.GONE
+                    (view.deliverable_header).visibility = View.GONE
+                }
             }
         }
 
@@ -67,7 +75,6 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
             //val context = itemView.context
 //            (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
         }
-
 
 
         private fun getOffset(instruction: String) {

@@ -169,10 +169,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout rootLayout;
     private ImageView downArrowImageView;
     private TextView selectOptToolbarTitle;
-    //    private TextView readAllNotificationTextView;
     private Badge badge;
     private View toolbarUnderline, langView;
-    //    private ImageView menuImageView;
     private TextView langTextView;
     private FrameLayout transparentLayerToolbar;
     private FrameLayout transparentLayerNavigation;
@@ -212,7 +210,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-
     }
 
     private Bundle extras;
@@ -246,11 +243,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         onNewIntent(getIntent());
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-       /* BaseApplication.getInstance().destroyRetrofitInstance();
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        call.enqueue(onLoginResponseReceivedListener);*/
 
         if (null != intent.getParcelableExtra("notificationExtras")) {
             if ("upcoming_event_list".equals(((Bundle) intent.getParcelableExtra("notificationExtras")).getString("type")))
@@ -717,56 +709,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-
- /*   Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
-        @Override
-        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-            Log.d("SUCCESS", "" + response);
-            removeProgressDialog();
-            if (response == null || response.body() == null) {
-                showToast(getString(R.string.went_wrong));
-                return;
-            }
-
-            try {
-                UserDetailResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    UserInfo model = new UserInfo();
-                    model.setId(responseData.getData().get(0).getResult().getId());
-                    model.setDynamoId(responseData.getData().get(0).getResult().getDynamoId());
-                    model.setEmail(responseData.getData().get(0).getResult().getEmail());
-                    model.setIsValidated(responseData.getData().get(0).getResult().getIsValidated());
-                    model.setFirst_name(responseData.getData().get(0).getResult().getFirstName());
-                    model.setLast_name(responseData.getData().get(0).getResult().getLastName());
-                    model.setUserType(responseData.getData().get(0).getResult().getUserType());
-                    model.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
-                    model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
-
-
-                    model.setBlogTitle(responseData.getData().get(0).getResult().getBlogTitle());
-
-
-                    SharedPrefUtils.setUserDetailModel(DashboardActivity.this, model);
-
-                } else {
-                    showToast(responseData.getReason());
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            removeProgressDialog();
-            Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
-            showToast(getString(R.string.went_wrong));
-        }
-    };*/
 
 
     private Callback<ResponseBody> draftsResponseCallback = new Callback<ResponseBody>() {
@@ -1274,6 +1216,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         launchEditor();
                     }
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
+                    Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);//DEEPLINK_MOMSPRESSO_CAMPAIGN
+                    startActivity(campaignIntent);
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_CAMPAIGN)) {
+                  /*  final int pos =tempDeepLinkURL.lastIndexOf("/");
+                    final int last=tempDeepLinkURL.indexOf("?");*/
+                    final String campaignID = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.indexOf("?"));
+                    Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                    startActivity(campaignIntent);
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_MYMONEY__CAMPAIGN)) {
+                    final String campaignID = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
+                    Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                    startActivity(campaignIntent);
+
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_GROUPS)) {
                     String[] separated = tempDeepLinkURL.split("/");
                     if (separated[separated.length - 1].startsWith("comment-")) {
@@ -2641,24 +2599,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         selectOptToolbarTitle.setVisibility(View.GONE);
         toolbarTitleTextView.setVisibility(View.VISIBLE);
         downArrowImageView.setVisibility(View.INVISIBLE);
-//        menuImageView.setVisibility(View.GONE);
-        // langTextView.setVisibility(View.GONE);
         if (null != topFragment && topFragment instanceof BecomeBloggerFragment) {
             toolbarUnderline.setVisibility(View.VISIBLE);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_become_blogger));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
-//            setSupportActionBar(mToolbar);
-            //getSupportActionBar().setDisplayShowHomeEnabled(true);
-            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else if (null != topFragment && topFragment instanceof UploadVideoInfoFragment) {
             toolbarUnderline.setVisibility(View.VISIBLE);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_first_video_upload));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
-//            setSupportActionBar(mToolbar);
-            //getSupportActionBar().setDisplayShowHomeEnabled(true);
-            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
             toolbarUnderline.setVisibility(View.VISIBLE);
             if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
@@ -2669,21 +2619,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics")) {
-//                    showToolbarAndNavigationLayer();
-//                    ((ExploreArticleListingTypeFragment) topFragment).showGuideView();
                 }
-//                setSupportActionBar(mToolbar);
-                //getSupportActionBar().setDisplayShowHomeEnabled(true);
-                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            }
-            /*else if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
-                Utils.pushOpenScreenEvent(this, "PrivateProfileScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                toolbarTitleTextView.setText(getString(R.string.home_screen_profile_title));
-                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.myprofile_toolbar_title));
-                menu.findItem(R.id.action_profile).setChecked(true);
-                toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            }*/
-            else if (null != topFragment && topFragment instanceof NotificationFragment) {
+            } else if (null != topFragment && topFragment instanceof NotificationFragment) {
                 Utils.pushOpenScreenEvent(this, "NotificationsScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));

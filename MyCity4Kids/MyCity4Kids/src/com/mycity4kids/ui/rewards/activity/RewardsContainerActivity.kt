@@ -88,13 +88,13 @@ class RewardsContainerActivity : BaseActivity(),
             }
         }
 
-        if(pageNumber == 2){
+        if (pageNumber == 2) {
             addProfileFragment()
-        }else if(pageNumber == 3){
+        } else if (pageNumber == 3) {
             addSocialFragment()
-        }else if(pageNumber == 4){
+        } else if (pageNumber == 4) {
             addPaymentModesFragment()
-        }else if(pageNumber == 5){
+        } else if (pageNumber == 5) {
             addPancardDetailFragment()
         }
 
@@ -103,10 +103,7 @@ class RewardsContainerActivity : BaseActivity(),
         /*initialize XML components*/
         initializeXMLComponents()
 
-        /*add fragement to container*/
-        //addProfileFragment()
     }
-
     private fun initializeXMLComponents() {
         findViewById(R.id.langTextView).setOnClickListener {
             val changePreferredLanguageDialogFragment = ChangePreferredLanguageDialogFragment()

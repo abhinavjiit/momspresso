@@ -45,17 +45,25 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     private var campaignDetailFragment: CampaignDetailFragment? = null
     private var campaignListFragment: CampaignListFragment? = null
     private var defaultdata: String? = null
+    private var deeplinkCampaignId: Int = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campaign_container);
+
+        deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
         /*don't delete this code this is testing for proof screen*/
         /*   var arrayList = ArrayList<Int>()
            arrayList.add(1)
            addAddProofFragment(67, arrayList)*/
         // addPaymantMode()
-        campaignListFragment()
+        if (deeplinkCampaignId == -1) {
+            campaignListFragment()
+        } else {
+            addCampaginDetailFragment(deeplinkCampaignId)
+        }
     }
 
     private fun campaignListFragment() {

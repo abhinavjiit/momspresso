@@ -130,6 +130,7 @@
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 app:fontName="oswald_regular.ttf"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/header_img"
                 app:layout_constraintStart_toStartOf="@+id/header_img" />
 
@@ -150,7 +151,7 @@
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/campaign_name"
-                android:layout_width="250dp"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_7"
                 android:layout_marginLeft="@dimen/space_7"
@@ -170,7 +171,7 @@
                 android:layout_marginTop="@dimen/space_15"
                 android:layout_marginEnd="@dimen/space_25"
                 android:layout_marginRight="@dimen/space_25"
-                android:text="Earn Upto"
+                android:text="Total Payout"
                 android:textColor="@color/campaign_515151"
                 android:textSize="11sp"
                 app:fontName="open_sans.ttf"

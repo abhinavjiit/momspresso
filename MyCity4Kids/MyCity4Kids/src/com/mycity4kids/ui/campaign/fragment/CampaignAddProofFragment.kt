@@ -3,7 +3,6 @@ package com.mycity4kids.ui.campaign.fragment
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -25,7 +24,6 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.campaignmodels.*
 import com.mycity4kids.models.response.BaseResponseGeneric
@@ -106,7 +104,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         val dialog = AlertDialog.Builder(activity, R.style.MyAlertDialogStyle)
         dialog.setMessage("Are you sure? you want to delete this image.").setNegativeButton("Delete") { dialog, which ->
             dialog.cancel()
-            if (!campaignImageProofList.get(cellIndex).url.isNullOrEmpty()) {
+            if (!campaignImageProofList.isNullOrEmpty() && cellIndex < campaignImageProofList.size && !campaignImageProofList.get(cellIndex).url.isNullOrEmpty()) {
                 deleteProof(campaignImageProofList.get(cellIndex).id!!, urlType = 0)
             }
 
@@ -135,6 +133,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var deliverableTypeList: ArrayList<Int>
     private lateinit var submitListener: SubmitListener
     private lateinit var relativeMediaProof: RelativeLayout
+    private lateinit var back: TextView
 
     companion object {
         @JvmStatic
@@ -170,6 +169,14 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             }
         }
 
+        back = view.findViewById(R.id.back)
+
+        back.setOnClickListener {
+            back.setOnClickListener {
+                (activity as CampaignContainerActivity).onBackPressed()
+            }
+        }
+
         relativeMediaProof = view.findViewById(R.id.relativeMediaProof)
         relativeMediaProof.setOnClickListener {
         }
@@ -189,7 +196,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
         textSubmit = view.findViewById<TextView>(R.id.textSubmit)
         textSubmit.setOnClickListener {
-            if (!validateUrlProofs()) {
+            if (!validateUrlProofs() || !validateMediaProofs()) {
                 onProofSubmitClick()
             } else {
                 Toast.makeText(activity, "Please submit a proof", Toast.LENGTH_SHORT).show()
@@ -216,6 +223,11 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             }
         }
         return isAllEmpty
+    }
+
+
+    private fun validateMediaProofs(): Boolean {
+        return campaignImageProofList.isNullOrEmpty()
     }
 
     /*fetch data from server*/
