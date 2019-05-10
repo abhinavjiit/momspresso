@@ -103,7 +103,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         val dialog = AlertDialog.Builder(activity, R.style.MyAlertDialogStyle)
         dialog.setMessage("Are you sure? you want to delete this image.").setNegativeButton("Delete") { dialog, which ->
             dialog.cancel()
-            if (!campaignImageProofList.isNullOrEmpty() && cellIndex>campaignImageProofList.size && campaignImageProofList.get(cellIndex).url.isNullOrEmpty()) {
+            if (!campaignImageProofList.isNullOrEmpty() && cellIndex<campaignImageProofList.size && !campaignImageProofList.get(cellIndex).url.isNullOrEmpty()) {
                 deleteProof(campaignImageProofList.get(cellIndex).id!!, urlType = 0)
             }
 
