@@ -874,7 +874,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_listing")) {
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_listing")) {
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 startActivity(campaignIntent);
                 try {
@@ -885,7 +885,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_detail")) {
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_detail")) {
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_id", notificationExtras.getString("campaign_id"));
                 startActivity(campaignIntent);
@@ -1247,13 +1247,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                     campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
                     startActivity(campaignIntent);
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_MYMONEY__CAMPAIGN)) {
+                } /*else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_MYMONEY__CAMPAIGN)) {
                     final String campaignID = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                     campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
                     startActivity(campaignIntent);
 
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_GROUPS)) {
+                }*/ else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_GROUPS)) {
                     String[] separated = tempDeepLinkURL.split("/");
                     if (separated[separated.length - 1].startsWith("comment-")) {
                         String[] commArray = separated[separated.length - 1].split("-");
