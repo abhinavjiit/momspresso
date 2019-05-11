@@ -57,7 +57,7 @@ class CampaignCongratulationFragment : BaseFragment() {
         }
         facebookShareImageView.setOnClickListener {
             val contentStr = String.format("Participate in this campaign. Earn upto Rs.%d \n https://www.momspresso.com/mymoney/%s/%d", (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
-            AppUtils.shareWithFBForCampaign(this@CampaignCongratulationFragment, contentStr)
+            AppUtils.shareFacebook(activity as CampaignContainerActivity, "", contentStr)
         }
         genricShareImageView.setOnClickListener {
             val contentStr = String.format("Participate in this campaign. Earn upto Rs.%d \n https://www.momspresso.com/mymoney//%s/%d", (activity as CampaignContainerActivity).getTotalPayOut(), (activity as CampaignContainerActivity).getNameSlug(), (activity as CampaignContainerActivity).getIdCamp())
