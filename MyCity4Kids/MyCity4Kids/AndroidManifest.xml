@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="136"
-    android:versionName="10.2.3">
+    android:versionCode="137"
+    android:versionName="11.0.0">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -297,9 +297,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.RewardCampaignActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.AutoSuggestTransparentDialogActivity"
             android:screenOrientation="portrait"
