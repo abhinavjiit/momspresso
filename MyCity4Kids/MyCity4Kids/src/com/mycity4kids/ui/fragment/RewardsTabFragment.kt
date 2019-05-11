@@ -11,6 +11,9 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 
 class RewardsTabFragment : Fragment() {
@@ -38,6 +41,8 @@ class RewardsTabFragment : Fragment() {
         relativeParticipate = containerView.findViewById(R.id.relativeParticipate)
 
         textPersonalInfo.setOnClickListener {
+            Utils.campaignEvent(activity, "personalInfo", "reward_tab", "personalInfoText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "personal_info_detail")
+
             var intent = Intent(activity, RewardsContainerActivity::class.java)
             intent.putExtra("pageLimit", 2)
             intent.putExtra("pageNumber", 2)
@@ -45,6 +50,8 @@ class RewardsTabFragment : Fragment() {
         }
 
         textSocial.setOnClickListener {
+            Utils.campaignEvent(activity, "socialInfo", "reward_tab", "socialText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "social_info_detail")
+
             var intent = Intent(activity, RewardsContainerActivity::class.java)
             intent.putExtra("pageNumber", 3)
             intent.putExtra("pageLimit", 3)
@@ -52,6 +59,8 @@ class RewardsTabFragment : Fragment() {
         }
 
         textPaymentModes.setOnClickListener {
+            Utils.campaignEvent(activity, "paymentModeOptions", "rewards_tab", "paymentText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "payment_option_selection")
+
             var intent = Intent(activity, RewardsContainerActivity::class.java)
             intent.putExtra("pageNumber", 4)
             intent.putExtra("pageLimit", 4)
@@ -59,6 +68,8 @@ class RewardsTabFragment : Fragment() {
         }
 
         textPanDetails.setOnClickListener {
+            Utils.campaignEvent(activity, "panDetailAdd", "rewards_tab", "panDetailText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "show_pan_detail")
+
             var intent = Intent(activity, RewardsContainerActivity::class.java)
             intent.putExtra("pageNumber", 5)
             intent.putExtra("pageLimit", 5)

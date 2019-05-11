@@ -94,6 +94,8 @@ public class TopicsListingActivity extends BaseActivity {
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.campaignEvent(TopicsListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(TopicsListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+
                     startActivity(new Intent(TopicsListingActivity.this, RewardsContainerActivity.class));
                 }
             });
@@ -101,6 +103,8 @@ public class TopicsListingActivity extends BaseActivity {
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.campaignEvent(TopicsListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(TopicsListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+
                     startActivity(new Intent(TopicsListingActivity.this, RewardsContainerActivity.class));
                 }
             });
@@ -121,7 +125,7 @@ public class TopicsListingActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Fragment fragment = pagerAdapter.getCurrentFragment();//.get(viewPager.getCurrentItem());
-                if (fragment != null && fragment instanceof TopicsArticlesTabFragment){
+                if (fragment != null && fragment instanceof TopicsArticlesTabFragment) {
                     ((TopicsArticlesTabFragment) fragment).showSortedByDialog();
                 }
             }

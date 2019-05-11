@@ -41,6 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:drawableLeft="@drawable/back_arroow"
+                android:drawableTint="@color/black"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textColor="@color/home.toolbar.titlecolor"

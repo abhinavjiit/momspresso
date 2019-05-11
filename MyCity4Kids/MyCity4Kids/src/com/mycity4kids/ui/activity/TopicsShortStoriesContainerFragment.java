@@ -55,9 +55,9 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
     private ArrayList<Topics> shortStoriesTopicList;
     private String parentTopicId;
     private ArrayList<Topics> subTopicsList;
-    private LinearLayout layoutBottomSheet,bottom_sheet;
+    private LinearLayout layoutBottomSheet, bottom_sheet;
     private BottomSheetBehavior sheetBehavior;
-    private TextView textHeaderUpdate,textUpdate;
+    private TextView textHeaderUpdate, textUpdate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,14 +66,14 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         tablayoutLayer = (FrameLayout) view.findViewById(R.id.topLayerGuideLayout);
 
-        layoutBottomSheet= (LinearLayout)view.findViewById(R.id.bottom_sheet);
+        layoutBottomSheet = (LinearLayout) view.findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(getActivity());
-        if(!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")){
+        if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -88,14 +88,18 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(getActivity(),RewardsContainerActivity.class));
+                    Utils.campaignEvent(getActivity(), "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+
+                    startActivity(new Intent(getActivity(), RewardsContainerActivity.class));
                 }
             });
 
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(getActivity(),RewardsContainerActivity.class));
+                    Utils.campaignEvent(getActivity(), "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+
+                    startActivity(new Intent(getActivity(), RewardsContainerActivity.class));
                 }
             });
 
@@ -104,8 +108,8 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
                 public void run() {
                     bottom_sheet.setVisibility(View.GONE);
                 }
-            },10000);
-        }else{
+            }, 10000);
+        } else {
             bottom_sheet.setVisibility(View.GONE);
         }
 

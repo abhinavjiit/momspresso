@@ -295,8 +295,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             case R.id.rewardsContainer: {
                 Utils.pushOpenScreenEvent(getActivity(), "RewardsScreen", dynamoUserId + "");
                 Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "RewardsScreen");
-
-
                 Intent cityIntent = new Intent(getActivity(), CampaignContainerActivity.class);
                 startActivity(cityIntent);
             }

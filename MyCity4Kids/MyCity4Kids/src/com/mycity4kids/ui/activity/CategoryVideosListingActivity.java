@@ -102,6 +102,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.campaignEvent(CategoryVideosListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+
                     startActivity(new Intent(CategoryVideosListingActivity.this, RewardsContainerActivity.class));
                 }
             });
@@ -109,6 +111,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.campaignEvent(CategoryVideosListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+
                     startActivity(new Intent(CategoryVideosListingActivity.this, RewardsContainerActivity.class));
                 }
             });

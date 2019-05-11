@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
@@ -61,6 +63,8 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         override fun onClick(v: View) {
             if (v == (view.share)) {
                 var userId = SharedPrefUtils.getUserDetailModel(context)?.dynamoId
+                Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "share", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+
                 val shareIntent = ShareCompat.IntentBuilder
                         .from(context)
                         .setType("text/plain")
@@ -72,6 +76,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                     context!!.startActivity(shareIntent)
                 }
             } else {
+                Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "Click_listing_card", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
                 if (campaignList!!.campaignStatus == 8)
                     Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_invite), Toast.LENGTH_SHORT).show()
                 else
