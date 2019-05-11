@@ -1127,13 +1127,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="label_campaign_not_started">Campaign starts on </string>
     <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
 
-    <string name="toast_not_elegible">Sorry, this campaign is not available for you.</string>
+    <string name="toast_not_elegible">Sorry, you are not eligible for this campaign.</string>
     <string name="toast_campaign_full">Oops! Entries to this campaign are now closed.</string>
     <string name="toast_campaign_open">Thank you for applying to the campaign.</string>
     <string name="toast_campaign_applied">Thank you for applying to the campaign.</string>
     <string name="toast_campaign_not_started">Congratulations! Your application is approved.</string>
     <string name="toast_campaign_started">Congratulations! Your application is approved.</string>
     <string name="toast_campaign_reject">Sorry, we have not been able to approve your application.</string>
+    <string name="toast_campaign_invite">Sorry, this campaign is by invitation only.</string>
 
     <string name="detail_bottom_apply_now">APPLY NOW</string>
     <string name="detail_bottom_applied">APPLIED</string>
