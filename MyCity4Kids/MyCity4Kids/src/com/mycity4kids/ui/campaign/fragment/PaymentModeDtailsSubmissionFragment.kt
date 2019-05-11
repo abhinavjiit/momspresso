@@ -14,7 +14,9 @@ import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.AddAccountDetailModal
 import com.mycity4kids.ui.campaign.BankNameModal
@@ -48,6 +50,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
     private lateinit var addMobileNumberEditText: EditText
     private lateinit var back: TextView
     private lateinit var toolbar: Toolbar
+    private var source: String? = null
 
     private var isComingFromRewards: Boolean = false
 
@@ -125,7 +128,9 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         back.setOnClickListener {
             if (isComingFromRewards) {
                 (activity as RewardsContainerActivity).onBackPressed()
+                Utils.campaignEvent(activity, "Payment Option", source, "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_payment_option_detail")
             } else {
+                Utils.campaignEvent(activity, "Bank Detail", "Bank Detail", "Cancel", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Change_bank_account_detail_no")
                 (activity as CampaignContainerActivity).onBackPressed()
             }
         }
@@ -136,7 +141,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
 
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getAllBankName().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<List<BankNameModal>>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getAllBankName().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<List<BankNameModal>>> {
 
 
             override fun onComplete() {
@@ -192,7 +197,12 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
     override fun onClick(p0: View?) {
         if (isValid()) {
-
+//            if (comingFrom.equals("comingForEdit")) {
+//                Utils.campaignEvent(activity, "Bank Detail", "Bank Detail", "Continue", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Change_bank_account_detail_yes")
+//
+//            } else {
+//                Utils.campaignEvent(activity, "PayTM Detail", source, "Submit", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Submit_paytm_mobile_no")
+//            }
             val addAcoountDetailModal: AddAccountDetailModal
 
             when (paymantModeId) {
@@ -212,7 +222,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             }
 
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).addAccountDetail(addAcoountDetailModal).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<DefaultData>> {
+            BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).addAccountDetail(addAcoountDetailModal).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<DefaultData>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }

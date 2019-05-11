@@ -43,6 +43,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
@@ -124,15 +125,15 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
         Intent intent = getIntent();
 
-        if(getIntent()!=null){
-            if(getIntent().getExtras().containsKey("isRewardAdded")){
+        if (getIntent() != null) {
+            if (getIntent().getExtras().containsKey("isRewardAdded")) {
                 isRewardsAdded = getIntent().getStringExtra("isRewardAdded");
             }
         }
 
-        if(getIntent()!=null){
-            if(getIntent().getExtras().containsKey("isComingFromReward")){
-                isComingFromReward = getIntent().getBooleanExtra("isComingFromReward",false);
+        if (getIntent() != null) {
+            if (getIntent().getExtras().containsKey("isComingFromReward")) {
+                isComingFromReward = getIntent().getBooleanExtra("isComingFromReward", false);
             }
         }
 
@@ -239,9 +240,9 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
                     AppUtils.changeTabsFont(EditProfileNewActivity.this, tabLayout);
 
-                    viewPagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), userDetails, mDatalist,isRewardsAdded);
+                    viewPagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), userDetails, mDatalist, isRewardsAdded, EditProfileNewActivity.this);
                     viewPager.setAdapter(viewPagerAdapter);
-                    if(isComingFromReward){
+                    if (isComingFromReward) {
                         viewPager.setCurrentItem(2);
                         saveTextView.setVisibility(View.GONE);
                     }
@@ -250,9 +251,9 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
-                            if(tab.getPosition()==2){
+                            if (tab.getPosition() == 2) {
                                 saveTextView.setVisibility(View.GONE);
-                            }else{
+                            } else {
                                 saveTextView.setVisibility(View.VISIBLE);
                             }
                             viewPager.setCurrentItem(tab.getPosition());
@@ -736,5 +737,6 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
             }
         }
     }
+
 
 }

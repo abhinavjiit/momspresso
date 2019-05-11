@@ -11,6 +11,7 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.utils.AppUtils
@@ -47,6 +48,7 @@ class CampaignCongratulationFragment : BaseFragment() {
         genricShareImageView = view.findViewById(R.id.genricShareImageView)
         cancel = view.findViewById(R.id.cancel)
         cancel.setOnClickListener {
+            Utils.campaignEvent(activity, "Campaign Listing", "Thank you screen", "Close", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             submitListener.congratulateScreenDone()
 //.setText("http://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
         }

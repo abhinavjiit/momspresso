@@ -56,7 +56,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_campaign_container);
+        setContentView(R.layout.activity_campaign_container)
 
         deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
@@ -151,7 +151,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     fun fetchPaymentModes() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getPaymentModes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<PaymentModeListModal>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPaymentModes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<PaymentModeListModal>> {
             override fun onComplete() {
                 removeProgressDialog()
             }

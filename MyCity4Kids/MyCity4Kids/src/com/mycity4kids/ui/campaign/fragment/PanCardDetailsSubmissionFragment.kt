@@ -13,8 +13,10 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.ProofPostModel
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
@@ -96,7 +98,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 
     private fun fetchPanNumber() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getPanNumber().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPanNumber().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -135,7 +137,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                 if (!panNumber.isNullOrEmpty()) {
                     val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
                     showProgressDialog(resources.getString(R.string.please_wait))
-                    BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).updatePanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+                    BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).updatePanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
                         override fun onComplete() {
                             removeProgressDialog()
                         }
@@ -147,6 +149,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                             if (isComingFromRewards) {
                                 submitOnClickListener.onPanCardDone()
                             } else {
+                                Utils.campaignEvent(activity, "Thank you screen", "Pan Card", "Submit", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Submission_Success")
                                 var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
                                 (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
                                         CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
@@ -167,7 +170,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                 } else {
                     val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
                     showProgressDialog(resources.getString(R.string.please_wait))
-                    BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).addPanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+                    BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).addPanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
                         override fun onComplete() {
                             removeProgressDialog()
 

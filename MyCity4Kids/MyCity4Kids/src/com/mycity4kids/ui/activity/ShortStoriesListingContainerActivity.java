@@ -99,6 +99,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.campaignEvent(ShortStoriesListingContainerActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(ShortStoriesListingContainerActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
                     startActivity(new Intent(ShortStoriesListingContainerActivity.this, RewardsContainerActivity.class));
                 }
             });
@@ -106,6 +107,8 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.campaignEvent(ShortStoriesListingContainerActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(ShortStoriesListingContainerActivity.this
+                    ), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
                     startActivity(new Intent(ShortStoriesListingContainerActivity.this, RewardsContainerActivity.class));
                 }
             });
@@ -290,7 +293,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
 
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
 
-                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu()) || AppConstants.SHORT_STORY_CHALLENGE_ID.equals(responseData.getData().get(i).getChild().get(k).getId()) ) {
+                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu()) || AppConstants.SHORT_STORY_CHALLENGE_ID.equals(responseData.getData().get(i).getChild().get(k).getId())) {
                             responseData.getData().get(i).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());
                             responseData.getData().get(i).getChild().get(k)

@@ -34,4 +34,17 @@ public class GTMTags {
     public static final String INDEX = "index";
     public static final String ArticleListing = "articleListing";
     public static final String Author = "author";
+
+
+    //campaign events
+    public static final String Current_Screen = "Current_Screen";
+    public static final String Source = "Source";
+    public static final String CTA = "CTA";
+    public static final String Campaign_Name = "Campaign_Name";
+    public static final String Platform = "Platform";
+    public static final String Language = "Language";
+    public static final String Event_Name = "Event_Name";
+    public static final String Timestamp = "Timestamp";
+
+
 }

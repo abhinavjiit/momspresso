@@ -25,6 +25,7 @@ import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.*
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
@@ -133,6 +134,9 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var deliverableTypeList: ArrayList<Int>
     private lateinit var submitListener: SubmitListener
     private lateinit var relativeMediaProof: RelativeLayout
+    //private lateinit var relativeTextProof: RelativeLayout
+    private lateinit var urlTypes: String
+    private lateinit var toolbarTitle: TextView
     private lateinit var back: TextView
 
     companion object {
@@ -151,7 +155,6 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         val view = inflater.inflate(R.layout.fragment_add_proof, container, false)
 
         recyclerFaqs = view.findViewById<RecyclerView>(R.id.recyclerFaqs)
-
         recyclerFaqs.layoutManager = LinearLayoutManager(context)
 
         if (arguments != null && arguments.containsKey("id") && arguments.containsKey("deliverableTypeList")) {
@@ -172,9 +175,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         back = view.findViewById(R.id.back)
 
         back.setOnClickListener {
-            back.setOnClickListener {
                 (activity as CampaignContainerActivity).onBackPressed()
-            }
+            Utils.campaignEvent(activity, "Campaign Detail", "Proof Submission", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Detail")
         }
 
         relativeMediaProof = view.findViewById(R.id.relativeMediaProof)
@@ -201,6 +203,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             } else {
                 Toast.makeText(activity, "Please submit a proof", Toast.LENGTH_SHORT).show()
             }
+            Utils.campaignEvent(activity, "Payment Option", "Proof Submission", "Share_payment_details", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_payment_option_detail")
         }
 
         /*fetch faq data from server*/
@@ -263,7 +266,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     /*fetch data from server for submission*/
     private fun fetSubmissionDetail() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getSubmissionDetail(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<GetCampaignSubmissionDetailsResponse>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getSubmissionDetail(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<GetCampaignSubmissionDetailsResponse>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -314,7 +317,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     /*Post proof on server*/
     private fun postProofToServer(proofPostModel: ProofPostModel, proceedToPayment: Boolean = false, urlType: Int = -1) {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).postProofToServer(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postProofToServer(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -354,7 +357,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     /*Post proof on server*/
     private fun updateProofToServer(proofPostModel: ProofPostModel, proceedToPayment: Boolean = false, proofId: Int) {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).updateProofToServer(proofId, proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).updateProofToServer(proofId, proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -383,7 +386,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     /*Delete proof on server*/
     private fun deleteProof(proofId: Int, urlType: Int = -1) {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).deleteProofById(proofId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).deleteProofById(proofId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
             override fun onComplete() {
                 removeProgressDialog()
             }

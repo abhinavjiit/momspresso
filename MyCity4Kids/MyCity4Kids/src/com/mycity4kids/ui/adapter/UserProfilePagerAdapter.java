@@ -1,12 +1,17 @@
 package com.mycity4kids.ui.adapter;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.response.UserDetailResult;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.activity.EditProfileNewActivity;
 import com.mycity4kids.ui.fragment.About;
 import com.mycity4kids.ui.fragment.Contactdetails;
 import com.mycity4kids.ui.fragment.RewardsTabFragment;
@@ -19,15 +24,18 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
     private ArrayList<CityInfoItem> mDatalist;
 
     private About about;
+    Context context;
     private Contactdetails contactdetails;
     private RewardsTabFragment rewardsFragment;
     private String isRewardAdded = "0";
 
-    public UserProfilePagerAdapter(FragmentManager fm, UserDetailResult userDetails, ArrayList<CityInfoItem> mDatalist,String isRewardAdded) {
+    public UserProfilePagerAdapter(FragmentManager fm, UserDetailResult userDetails, ArrayList<CityInfoItem> mDatalist, String isRewardAdded, Context context) {
         super(fm);
         this.userDetailResult = userDetails;
         this.mDatalist = mDatalist;
         this.isRewardAdded = isRewardAdded;
+        this.context = context;
+
     }
 
     @Override
@@ -49,10 +57,11 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
                 contactdetails.setArguments(bundle);
                 return contactdetails;
             case 2:
+                Utils.campaignEvent(context, "Rewards 1st screen", "Edit Profile", "Rewards", "", "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
                 if (rewardsFragment == null) {
                     rewardsFragment = new RewardsTabFragment();
                 }
-                bundle.putString("isRewardsAdded",isRewardAdded);
+                bundle.putString("isRewardsAdded", isRewardAdded);
                 rewardsFragment.setArguments(bundle);
                 return rewardsFragment;
         }
@@ -75,4 +84,5 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
     public RewardsTabFragment getRewardsFragment() {
         return rewardsFragment;
     }
+
 }

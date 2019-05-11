@@ -17,8 +17,10 @@ import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.ProofPostModel
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.DefaultData
 import com.mycity4kids.ui.campaign.PaymentModeListModal
@@ -106,7 +108,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     private fun postApiForDefaultPaymantMode(paymentModeId: Int) {
         val proofPostModel = ProofPostModel(id = paymentModeId.toString())
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).postForDefaultAccount(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postForDefaultAccount(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -128,6 +130,10 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     }
 
     override fun onCellClick(paymentModeId: Int, position: Int) {
+//        if (paymentModeId == 3) {
+//            Utils.campaignEvent(activity, "Bank Detail", "Bank Detail", "Change_Account_Detail", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Change_bank_account_detail")
+//
+//        }
         var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "comingForEdit", isComingFromRewards = isComingFromRewards)
         (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                 PanCardDetailsSubmissionFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
@@ -208,7 +214,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     /*fetch data from server*/
     private fun fetchPaymentModes() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getPaymentModes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<PaymentModeListModal>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPaymentModes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<PaymentModeListModal>> {
 
 
             override fun onComplete() {

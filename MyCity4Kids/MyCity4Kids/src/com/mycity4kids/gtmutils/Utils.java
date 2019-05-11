@@ -17,8 +17,32 @@ import org.json.JSONObject;
  */
 public class Utils {
     private Utils() {
-        // private constructor.
+        // private constructor.G
     }
+
+
+    public static void campaignEvent(Context context, String currentScreen, String source, String CTA, String campaignName, String platform, String lang, String userId, String timestamp, String event) {
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, event, GTMTags.Current_Screen, currentScreen, GTMTags.Source, source, GTMTags.CTA, CTA, GTMTags.Campaign_Name, campaignName, GTMTags.Platform, platform, GTMTags.Language, lang, GTMTags.USER_ID, userId, GTMTags.Timestamp, timestamp));
+
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(GTMTags.Current_Screen, currentScreen);
+            jsonObject.put(GTMTags.Source, source);
+            jsonObject.put(GTMTags.CTA, CTA);
+            jsonObject.put(GTMTags.Campaign_Name, campaignName);
+            jsonObject.put(GTMTags.Platform, platform);
+            jsonObject.put(GTMTags.Language, lang);
+            jsonObject.put(GTMTags.USER_ID, userId);
+            jsonObject.put(GTMTags.Timestamp, timestamp);
+            mixpanel.track(event, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public static void pushAppOpenEvent(Context context, String user) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
