@@ -874,6 +874,29 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_listing")) {
+                Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                startActivity(campaignIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "campaign_listing");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_detail")) {
+                Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                campaignIntent.putExtra("campaign_id", notificationExtras.getString("campaign_id"));
+                startActivity(campaignIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "campaign_detail");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryDetails")) {
                 Intent ssIntent = new Intent(DashboardActivity.this, ShortStoryContainerActivity.class);
                 ssIntent.putExtra(Constants.AUTHOR_ID, notificationExtras.getString("userId"));

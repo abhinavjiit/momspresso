@@ -20,6 +20,7 @@
             android:id="@+id/congratulationHeaderImageView"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:clickable="false"
             android:src="@drawable/congratulations_screen_illustration" />
 
         <android.support.v7.widget.AppCompatImageView
@@ -40,6 +41,7 @@
         android:text="CONGRATULATIONS!"
         android:textColor="#4A4A4A"
         android:textSize="30dp"
+        android:clickable="false"
         app:fontName="oswald_regular.ttf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,6 +69,7 @@
         android:text="Thanks for submitting proof and payment details"
         android:textColor="#4A4A4A"
         android:textSize="16sp"
+        android:clickable="false"
         app:fontName="oswald.ttf"
         app:layout_constraintStart_toEndOf="@id/radioButton"
         app:layout_constraintTop_toBottomOf="@id/textView5" />
@@ -107,6 +110,7 @@
         android:text="Proof approval is pending"
         android:textSize="16sp"
         app:fontName="oswald.ttf"
+        android:clickable="false"
         app:layout_constraintStart_toEndOf="@id/one"
         app:layout_constraintTop_toBottomOf="@+id/radioButton" />
 

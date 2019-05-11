@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.preference.SharedPrefUtils
@@ -71,8 +72,11 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                     context!!.startActivity(shareIntent)
                 }
             } else {
-                if (campaignList!!.campaignStatus != 8)
+                if (campaignList!!.campaignStatus == 8)
+                    Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_invite), Toast.LENGTH_SHORT).show()
+                else
                     (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
+
             }
         }
 
