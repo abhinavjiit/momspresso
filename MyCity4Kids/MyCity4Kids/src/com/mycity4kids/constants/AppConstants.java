@@ -26,7 +26,7 @@ public class AppConstants {
 
     public static final String BASE_URL = LIVE_URL;
 
-    //    public static final String STAGING_INTERNAL_SERVER_URL = "http://59.162.46.199:8585/mycity4kids/";
+    //public static final String STAGING_INTERNAL_SERVER_URL = "http://59.162.46.199:8585/mycity4kids/";
     public static final String STAGING_INTERNAL_SERVER_URL = LIVE_URL;
     public static final String STAGING_CLIENT_SERVER_URL = LIVE_URL;
 
