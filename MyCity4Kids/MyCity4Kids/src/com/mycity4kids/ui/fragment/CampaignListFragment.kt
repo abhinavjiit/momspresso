@@ -81,7 +81,7 @@ class CampaignListFragment : BaseFragment() {
         showProgressDialog(resources.getString(R.string.please_wait))
         endIndex = startIndex + 10
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        val retro = BaseApplication.getInstance().campaignRetrofit
+        val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
         val call = campaignAPI.getCampaignList(userId, startIndex, endIndex)
         call.enqueue(getCampaignList)

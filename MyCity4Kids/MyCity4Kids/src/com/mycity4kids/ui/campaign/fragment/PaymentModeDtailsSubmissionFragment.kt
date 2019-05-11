@@ -136,7 +136,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
 
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getAllBankName().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<List<BankNameModal>>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getAllBankName().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<List<BankNameModal>>> {
 
 
             override fun onComplete() {
@@ -212,7 +212,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             }
 
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).addAccountDetail(addAcoountDetailModal).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<DefaultData>> {
+            BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).addAccountDetail(addAcoountDetailModal).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<DefaultData>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }

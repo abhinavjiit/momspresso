@@ -169,7 +169,7 @@ class CampaignDetailFragment : BaseFragment() {
         referralRequest.campaign_id = this!!.id!!
         referralRequest.referral_code = referCode.text.toString()
 
-        val retro = BaseApplication.getInstance().campaignRetrofit
+        val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
         val call = campaignAPI.postReferralCampaign(referralRequest)
         call.enqueue(referCampaign)
@@ -203,7 +203,7 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     private fun fetchCampaignDetail() {
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getCampaignDetail(this!!.id!!).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(this!!.id!!).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
 
 
             override fun onComplete() {
@@ -321,7 +321,7 @@ class CampaignDetailFragment : BaseFragment() {
                 var participateRequest = CampaignParticipate()
                 participateRequest!!.user_id = userId
                 participateRequest.campaign_id = this!!.id!!
-                val retro = BaseApplication.getInstance().campaignRetrofit
+                val retro = BaseApplication.getInstance().retrofit
                 val campaignAPI = retro.create(CampaignAPI::class.java)
                 val call = campaignAPI.postRegisterCampaign(participateRequest)
                 call.enqueue(participateCampaign)

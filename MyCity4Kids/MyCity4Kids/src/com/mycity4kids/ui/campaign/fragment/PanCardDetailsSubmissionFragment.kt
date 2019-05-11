@@ -96,7 +96,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 
     private fun fetchPanNumber() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getPanNumber().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getPanNumber().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -135,7 +135,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                 if (!panNumber.isNullOrEmpty()) {
                     val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
                     showProgressDialog(resources.getString(R.string.please_wait))
-                    BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).updatePanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+                    BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).updatePanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
                         override fun onComplete() {
                             removeProgressDialog()
                         }
@@ -167,7 +167,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                 } else {
                     val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
                     showProgressDialog(resources.getString(R.string.please_wait))
-                    BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).addPanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+                    BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).addPanNumber(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
                         override fun onComplete() {
                             removeProgressDialog()
 
