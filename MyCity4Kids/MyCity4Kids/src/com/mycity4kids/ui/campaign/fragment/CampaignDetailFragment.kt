@@ -136,7 +136,7 @@ class CampaignDetailFragment : BaseFragment() {
                     .from(activity)
                     .setType("text/plain")
                     .setChooserTitle("Share URL")
-                    .setText("http://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
+                    .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
                     .intent
 
             if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
@@ -338,7 +338,7 @@ class CampaignDetailFragment : BaseFragment() {
                     .from(activity)
                     .setType("text/plain")
                     .setChooserTitle("Share URL")
-                    .setText("http://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
+                    .setText("https://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
                     .intent
 
             if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
@@ -351,7 +351,7 @@ class CampaignDetailFragment : BaseFragment() {
                     .from(activity)
                     .setType("text/plain")
                     .setChooserTitle("Share URL")
-                    .setText("http://www.momspresso.com/mymoney?referrer=" + userId)
+                    .setText("https://www.momspresso.com/mymoney?referrer=" + userId)
                     .intent
 
             if (shareIntent.resolveActivity(activity!!.packageManager) != null) {
