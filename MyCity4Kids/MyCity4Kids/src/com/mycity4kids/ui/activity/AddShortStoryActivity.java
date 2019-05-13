@@ -931,7 +931,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         }
 
 
-                    } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
+                    }
+                    else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
 
 
                         if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {

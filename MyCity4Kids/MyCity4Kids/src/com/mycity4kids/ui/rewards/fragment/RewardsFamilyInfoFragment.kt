@@ -833,7 +833,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
                 override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
-                        if(isComingFromCampaign){
+                        if (isComingFromCampaign) {
                             SharedPrefUtils.setIsRewardsAdded(activity, "1")
                         }
                         submitListener.FamilyOnSubmit()
