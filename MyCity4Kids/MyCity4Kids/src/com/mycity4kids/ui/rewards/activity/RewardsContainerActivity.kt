@@ -147,6 +147,7 @@ class RewardsContainerActivity : BaseActivity(),
                     .commit()
         } else if (isComingfromCampaign) {
             setResult(Activity.RESULT_OK)
+            finish()
         } else {
             finish()
         }
