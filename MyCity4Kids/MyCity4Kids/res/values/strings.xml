@@ -1152,7 +1152,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="view_mymoney">View MyMoney for this campaign</string>
     <string name="dialog_thanks_for_interest">Thanks for your interest!</string>
     <string name="dialog_proof_submitted_congo_text">Congratulations!</string>
-    <string name="dialog_register_for_mymoney">For applying to the campaign, you first need to register for the Momspresso MyMoney.</string>
+    <string name="dialog_register_for_mymoney">For applying to the campaign, you first need to register for Momspresso MyMoney.</string>
     <string name="register_now">REGISTER NOW</string>
     <string name="dialog_continue">CONTINUE</string>
     <string name="dialog_share_your_campaign_detail_text">Please share your payment details so that we can process your payment faster.</string>
