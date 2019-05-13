@@ -14,15 +14,25 @@ import java.util.HashMap;
 
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
+
     public abstract void setContent(CharSequence text);
+
     public abstract CharSequence getTitle();
+
     public abstract CharSequence getContent();
+
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
+
     public abstract void appendGallery(MediaGallery mediaGallery);
+
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
+
     public abstract boolean hasFailedMediaUploads();
+
     public abstract void setTitlePlaceholder(CharSequence text);
+
     public abstract void setContentPlaceholder(CharSequence text);
+
     public abstract void toggleTitleView(boolean b);
 
     // TODO: remove this as soon as we can (we'll need to drop the legacy editor or fix html2spanned translation)
@@ -44,7 +54,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     }
 
     private static final String FEATURED_IMAGE_SUPPORT_KEY = "featured-image-supported";
-    private static final String FEATURED_IMAGE_WIDTH_KEY   = "featured-image-width";
+    private static final String FEATURED_IMAGE_WIDTH_KEY = "featured-image-width";
 
     protected EditorFragmentListener mEditorFragmentListener;
     protected boolean mFeaturedImageSupported;
@@ -52,7 +62,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected String mBlogSettingMaxImageWidth;
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
-    public static  int imageUploading=-1;
+    public static int imageUploading = -1;
     protected HashMap<String, String> mCustomHttpHeaders;
 
     @Override
@@ -136,15 +146,24 @@ public abstract class EditorFragmentAbstract extends Fragment {
      */
     public interface EditorFragmentListener {
         void onEditorFragmentInitialized();
+
         void onSettingsClicked();
+
         void onAddMediaClicked();
+
         void onMediaRetryClicked(String mediaId);
+
         void onMediaUploadCancelClicked(String mediaId, boolean delete);
+
         void onFeaturedImageChanged(int mediaId);
+
         void onVideoPressInfoRequested(String videoId);
+
         String onAuthHeaderRequested(String url);
+
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
+
         void onTrackableEvent(TrackableEvent event);
     }
 

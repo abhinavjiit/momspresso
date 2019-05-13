@@ -740,12 +740,22 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                                     viewMore, userBio), TextView.BufferType.SPANNABLE);
                 } else if (maxLine > 0 && tv.getLineCount() > maxLine) {
                     int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
-                    String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
-                    tv.setText(text);
-                    tv.setMovementMethod(LinkMovementMethod.getInstance());
-                    tv.setText(
-                            addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
-                                    viewMore, userBio), TextView.BufferType.SPANNABLE);
+                    if ((lineEndIndex - expandText.length() + 1) > 10) {
+                        String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
+                        tv.setText(text);
+                        tv.setMovementMethod(LinkMovementMethod.getInstance());
+                        tv.setText(
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                        viewMore, userBio), TextView.BufferType.SPANNABLE);
+                    } else {
+                         // int lineEndIndex1 = tv.getLayout().getLineEnd(maxLine-1);
+                        String text = tv.getText().subSequence(0, lineEndIndex ) + " " + expandText;
+                        tv.setText(text);
+                        tv.setMovementMethod(LinkMovementMethod.getInstance());
+                        tv.setText(
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                        viewMore, userBio), TextView.BufferType.SPANNABLE);
+                    }
                 } else {
 
                 }

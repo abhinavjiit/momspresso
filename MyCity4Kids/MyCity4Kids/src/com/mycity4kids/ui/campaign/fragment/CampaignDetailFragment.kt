@@ -595,6 +595,7 @@ class CampaignDetailFragment : BaseFragment() {
         if (data != null && resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REWARDS_FILL_FORM_REQUEST -> {
+                    isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
                     fetchCampaignDetail()
                 }
             }

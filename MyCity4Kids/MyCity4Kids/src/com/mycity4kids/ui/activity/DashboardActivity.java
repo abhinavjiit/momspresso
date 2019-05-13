@@ -1966,13 +1966,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     videoStreamUrl = new ArrayList<>();
                     if (videoTopicList.get(0).getChild().size() != 0) {
                         num_of_categorys = videoTopicList.get(0).getChild().size();
-                    }
-                    if (num_of_categorys != 0) {
-                        for (int j = 0; j < num_of_categorys; j++) {
-                            if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
+                        if (num_of_categorys != 0) {
+                            for (int j = 0; j < num_of_categorys; j++) {
+                                if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
 
-                                videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
+                                    videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
 
+                                }
                             }
                         }
                     }
