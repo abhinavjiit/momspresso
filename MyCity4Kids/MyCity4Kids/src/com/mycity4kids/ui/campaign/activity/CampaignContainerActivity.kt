@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.campaign.activity;
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -202,4 +203,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             dialog.show()
         }
     }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//    }
 }

@@ -476,7 +476,7 @@
                 android:layout_marginLeft="@dimen/space_15"
                 android:layout_marginTop="@dimen/space_5"
                 android:background="@drawable/campaign_detail_refer_code_text_bg"
-                android:hint="REFERRAL CODE"
+                android:hint="REFERRAL CODE(Optional)"
                 android:lineSpacingExtra="2.2dp"
                 android:paddingLeft="@dimen/space_30"
                 android:paddingTop="@dimen/space_10"
