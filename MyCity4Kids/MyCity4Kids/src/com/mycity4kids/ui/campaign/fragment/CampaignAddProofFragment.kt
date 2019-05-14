@@ -176,7 +176,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
         back.setOnClickListener {
                 (activity as CampaignContainerActivity).onBackPressed()
-            Utils.campaignEvent(activity, "Campaign Detail", "Proof Submission", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Detail")
+//            Utils.campaignEvent(activity, "Campaign Detail", "Proof Submission", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Detail")
         }
 
         relativeMediaProof = view.findViewById(R.id.relativeMediaProof)

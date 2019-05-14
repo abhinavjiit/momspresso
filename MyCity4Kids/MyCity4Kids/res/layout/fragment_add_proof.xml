@@ -36,20 +36,6 @@
             android:visibility="visible">
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/toolbarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:drawableLeft="@drawable/back_arroow"
-                android:drawableTint="@color/black"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:textColor="@color/home.toolbar.titlecolor"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
-
-            <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/selectOptToolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
