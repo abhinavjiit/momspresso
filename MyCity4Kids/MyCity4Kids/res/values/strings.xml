@@ -1135,6 +1135,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="toast_campaign_started">Congratulations! Your application is approved.</string>
     <string name="toast_campaign_reject">Sorry, we have not been able to approve your application.</string>
     <string name="toast_campaign_invite">Sorry, this campaign is by invitation only.</string>
+    <string name="toast_campaign_invite_thankyou">Thank you, we will get in touch with you.</string>
 
     <string name="detail_bottom_apply_now">APPLY NOW</string>
     <string name="detail_bottom_applied">APPLIED</string>
@@ -1161,5 +1162,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="apply_code_error">Code already used. Please enter a different one</string>
     <string name="dialog_congratulations">Congratulations!</string>
     <string name="dialog_you_can_earn">You can earn</string>
+    <string name="invite_only_header">This campaign is by invite only.</string>
+    <string name="invite_only_interested">INTERESTED</string>
+    <string name="dialog_invite_only_subtext">Click below to apply for future ‘invite only’ campaigns.</string>
 
 </resources>

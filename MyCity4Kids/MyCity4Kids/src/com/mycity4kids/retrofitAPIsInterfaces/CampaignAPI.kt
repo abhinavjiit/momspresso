@@ -61,6 +61,10 @@ interface CampaignAPI {
     fun postRegisterCampaign(@Body body: CampaignParticipate)
             : Call<ParticipateCampaignResponse>
 
+    @POST("rewards/v1/campaigns/subscribe/{campaignId}")
+    fun postSubscribeCampaign(@Path("campaignId") campaignId: Int)
+            : Call<ParticipateCampaignResponse>
+
     @POST("rewards/v1/campaigns/referrals/")
     fun postReferralCampaign(@Body body: CampaignReferral)
             : Call<ParticipateCampaignResponse>
