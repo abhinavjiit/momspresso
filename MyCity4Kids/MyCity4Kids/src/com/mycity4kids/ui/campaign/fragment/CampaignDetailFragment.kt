@@ -301,7 +301,12 @@ class CampaignDetailFragment : BaseFragment() {
         spannable = SpannableString(instruction)
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(p0: View?) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(instruction.substring(matchStart!!, matchEnd!!)))
+                var url: String
+                url = instruction.substring(matchStart!!, matchEnd!!)
+                if (!url.startsWith("http") || !url.startsWith("https")) {
+                    url = "http://" + url
+                }
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 context!!.startActivity(intent)
             }
         }
