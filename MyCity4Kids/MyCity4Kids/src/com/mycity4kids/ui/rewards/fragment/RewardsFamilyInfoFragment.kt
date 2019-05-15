@@ -331,7 +331,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                     createKidsDetailDynamicView(apiGetResponse.kidsInfo!!.get(i).gender!!, AppUtils.convertTimestampToDate(apiGetResponse.kidsInfo!!.get(i).dob), apiGetResponse.kidsInfo!!.get(i).name)
                 }
             }
-
             linearKidsEmptyView.visibility = View.GONE
         } else {
             textDeleteChild.visibility = View.GONE

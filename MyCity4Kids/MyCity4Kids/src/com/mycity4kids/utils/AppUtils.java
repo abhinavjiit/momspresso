@@ -961,7 +961,12 @@ public class AppUtils {
     }
 
     public static String convertTimestampToDate(Long timestamp) {
-        return new SimpleDateFormat("dd-MM-yyyy").format(new Date(timestamp * 1000));
+        if(timestamp!=null){
+            return new SimpleDateFormat("dd-MM-yyyy").format(new Date(timestamp * 1000));
+        }else{
+            return "";
+        }
+
     }
 
     public static void CopyStream(InputStream is, OutputStream os) {

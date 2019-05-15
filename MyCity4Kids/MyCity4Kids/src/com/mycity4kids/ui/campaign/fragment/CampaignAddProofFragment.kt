@@ -329,7 +329,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
                         response.data != null && response.data!!.result != null) {
-                    if (urlType != 1) {
+                    if (urlType != -1) {
                         if (urlType == 0) {
                             var campaignProofResponse = CampaignProofResponse()
                             campaignProofResponse.id = response!!.data!!.result.id
