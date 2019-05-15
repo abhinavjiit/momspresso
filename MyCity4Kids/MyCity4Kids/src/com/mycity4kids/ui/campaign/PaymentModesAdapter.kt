@@ -61,8 +61,6 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
                 clickListener.onRadioButton(position)
             }
             holder.nonDefaultEditTextView.setOnClickListener {
-
-
                 clickListener.onCellClick(paymentMode[position].type_id, position)
             }
         }
@@ -96,9 +94,6 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
     interface ClickListener {
         fun onCellClick(paymentModeId: Int, position: Int)
         fun onRadioButton(position: Int)
-
     }
-
-
 }
 

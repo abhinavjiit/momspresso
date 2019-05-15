@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.campaign.fragment
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.util.Log
@@ -232,13 +233,17 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
                 override fun onNext(t: BaseResponseGeneric<DefaultData>) {
                     if (comingFrom.equals("firstTime") && !isComingFromRewards) {
-
                         var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = false)
                         (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
                                 CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
                                 .commit()
                     } else {
                         activity!!.supportFragmentManager.popBackStack()
+                        var fragment = targetFragment
+                        if(fragment!=null && fragment is CampaignPaymentModesFragment){
+                            fragment.onActivityResult(2019, Activity.RESULT_OK,null)
+                        }
+
                     }
 
                 }

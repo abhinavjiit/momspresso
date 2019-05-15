@@ -289,7 +289,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     /*post data to server*/
     private fun postDataofRewardsToServer() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        //var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
+//        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
             Log.e("sending json", Gson().toJson(apiGetResponse))
@@ -323,6 +323,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     /*fetch data from server*/
     private fun fetchRewardsData() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+//        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {

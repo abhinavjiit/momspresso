@@ -175,8 +175,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         back = view.findViewById(R.id.back)
 
         back.setOnClickListener {
-                (activity as CampaignContainerActivity).onBackPressed()
-            Utils.campaignEvent(activity, "Campaign Detail", "Proof Submission", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Detail")
+            (activity as CampaignContainerActivity).onBackPressed()
+//            Utils.campaignEvent(activity, "Campaign Detail", "Proof Submission", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Detail")
         }
 
         relativeMediaProof = view.findViewById(R.id.relativeMediaProof)
@@ -329,7 +329,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
                         response.data != null && response.data!!.result != null) {
-                    if (urlType != 1) {
+                    if (urlType != -1) {
                         if (urlType == 0) {
                             var campaignProofResponse = CampaignProofResponse()
                             campaignProofResponse.id = response!!.data!!.result.id
@@ -448,8 +448,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                                 + "/media/" + file + "_" + timeStamp)
                         val uploadTask = riversRef.putFile(data.data)
                         Log.e("file path ", riversRef.path)
+                        showProgressDialog("")
                         uploadTask.addOnFailureListener {
                             Log.e("fcm ", it.message)
+                            removeProgressDialog()
                         }.addOnSuccessListener {
                             riversRef.downloadUrl.addOnSuccessListener {
                                 Log.e("uploaded path ", it.toString())
@@ -457,6 +459,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                                 postProofToServer(proofPostModel, urlType = 0)
                             }
                             Log.e("fcm ", "file uploaded succesfully")
+                            removeProgressDialog()
                         }.addOnProgressListener {
                             Log.e("fcm ", "file uploaded succesfully")
                         }

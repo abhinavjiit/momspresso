@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="141"
-    android:versionName="11.0.0">
+    android:versionCode="142"
+    android:versionName="11.0.1">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -97,40 +97,6 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-
-        <!-- <activity -->
-        <!-- android:name=".LauncherActivity" -->
-        <!-- android:label="@string/app_name" -->
-        <!-- android:launchMode="singleTask" -->
-        <!-- android:theme="@style/AppTheme.NoActionBar"> -->
-
-
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-
-
-        <!-- &lt;!&ndash; Branch URI Scheme &ndash;&gt; -->
-        <!-- <intent-filter> -->
-        <!-- <data android:scheme="androidexample" /> -->
-        <!-- <action android:name="android.intent.action.VIEW" /> -->
-
-
-        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-        <!-- <category android:name="android.intent.category.BROWSABLE" /> -->
-        <!-- </intent-filter> -->
-
-
-        <!-- &lt;!&ndash; Branch App Links (optional) &ndash;&gt; -->
-        <!-- <intent-filter android:autoVerify="true"> -->
-        <!-- <action android:name="android.intent.action.VIEW" /> -->
-
-        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-        <!-- <category android:name="android.intent.category.BROWSABLE" /> -->
-
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
 
         <activity
             android:name=".ui.activity.SplashActivity"
@@ -669,7 +635,5 @@
         <activity
             android:name=".ui.campaign.activity.CampaignContainerActivity"
             android:windowSoftInputMode="adjustPan" />
-
-
     </application>
 </manifest>

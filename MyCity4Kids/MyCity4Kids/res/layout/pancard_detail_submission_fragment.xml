@@ -101,21 +101,29 @@
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/submitTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/shape_red_fill"
-        android:paddingLeft="80dp"
-        android:paddingTop="@dimen/space_10"
-        android:paddingRight="80dp"
-        android:paddingBottom="@dimen/space_10"
-        android:text="SAVE  CONTINUE"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/app_red"
+        android:gravity="center_horizontal"
+        android:paddingLeft="35dp"
+        android:paddingTop="15dp"
+
+        android:paddingRight="35dp"
+        android:paddingBottom="15dp"
+        android:text="@string/save_continue"
         android:textColor="@color/white"
-        android:textSize="16sp"
+
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:fontName="oswald_regular.ttf"
         app:layout_constraintBottom_toTopOf="@+id/textLater"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/textLater"

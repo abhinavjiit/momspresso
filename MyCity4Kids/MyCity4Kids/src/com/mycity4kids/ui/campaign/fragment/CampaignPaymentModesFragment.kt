@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.campaign.fragment
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
@@ -130,11 +132,8 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     }
 
     override fun onCellClick(paymentModeId: Int, position: Int) {
-//        if (paymentModeId == 3) {
-//            Utils.campaignEvent(activity, "Bank Detail", "Bank Detail", "Change_Account_Detail", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Change_bank_account_detail")
-//
-//        }
         var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "comingForEdit", isComingFromRewards = isComingFromRewards)
+        paymentModeDtailsSubmissionFragment.setTargetFragment(this@CampaignPaymentModesFragment,2019)
         (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                 PanCardDetailsSubmissionFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
                 .commit()
@@ -228,6 +227,8 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status
                         && response.data != null && response.data!!.result != null && response.data!!.result.available!!.isNotEmpty()) {
                     allPaymentData = response.data!!.result
+                    allPaymantModes.clear()
+                    availableList.clear()
                     if (response.data!!.result.default != null && response.data!!.result!!.default!!.account_type != null) {
                         allPaymantModes.add(0, response.data!!.result!!.default!!.account_type!!)
                         allPaymantModes[0].isDefault = true
@@ -272,6 +273,11 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         })
     }
 
+    fun refreshPaymentInfo(){
+        /*fetch faq data from server*/
+        fetchPaymentModes()
+    }
+
     override fun onAttach(context: Context?) {
         mContext = context
         super.onAttach(context)
@@ -287,5 +293,13 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         fun onPaymentModeDone()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 2019 && resultCode== Activity.RESULT_OK){
+            /*fetch faq data from server*/
+            fetchPaymentModes()
+        }
+
+    }
 
 }
