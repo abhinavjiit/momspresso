@@ -215,7 +215,7 @@ class CampaignDetailFragment : BaseFragment() {
             }
 
             override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
-                if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result!=null) {
                     parentConstraint.visibility = View.VISIBLE
                     apiGetResponse = response.data!!.result
                     setResponseData()
