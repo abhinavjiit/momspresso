@@ -174,7 +174,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         back = view.findViewById(R.id.back)
 
         back.setOnClickListener {
-                (activity as CampaignContainerActivity).onBackPressed()
+            (activity as CampaignContainerActivity).onBackPressed()
 //            Utils.campaignEvent(activity, "Campaign Detail", "Proof Submission", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Detail")
         }
 
@@ -447,8 +447,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                                 + "/media/" + file + "_" + timeStamp)
                         val uploadTask = riversRef.putFile(data.data)
                         Log.e("file path ", riversRef.path)
+                        showProgressDialog("")
                         uploadTask.addOnFailureListener {
                             Log.e("fcm ", it.message)
+                            removeProgressDialog()
                         }.addOnSuccessListener {
                             riversRef.downloadUrl.addOnSuccessListener {
                                 Log.e("uploaded path ", it.toString())
@@ -456,6 +458,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                                 postProofToServer(proofPostModel, urlType = 0)
                             }
                             Log.e("fcm ", "file uploaded succesfully")
+                            removeProgressDialog()
                         }.addOnProgressListener {
                             Log.e("fcm ", "file uploaded succesfully")
                         }

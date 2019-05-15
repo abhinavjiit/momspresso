@@ -139,6 +139,17 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         groupsContainer.setOnClickListener(this);
         momsTVContainer.setOnClickListener(this);
         rewardsContainer.setOnClickListener(this);
+
+        if (SharedPrefUtils.getMyMoney(getActivity()) == 0) {
+            coachmarkMyMoney.setVisibility(View.VISIBLE);
+            coachmarkMymoneyLinearLayout.setVisibility(View.VISIBLE);
+
+        } else {
+            quickLinkContainer.setVisibility(View.VISIBLE);
+
+        }
+
+
         try {
             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -267,6 +278,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 coachmarkMyMoney.setVisibility(View.GONE);
                 coachmarkMymoneyLinearLayout.setVisibility(View.GONE);
                 quickLinkContainer.setVisibility(View.VISIBLE);
+                SharedPrefUtils.myMoneyCoachMark(getActivity(), 1);
 
 
             case R.id.guideOverlay:

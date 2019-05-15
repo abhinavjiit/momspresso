@@ -803,4 +803,18 @@ public class SharedPrefUtils {
         return (_sharedPref1.getInt("count", 0));
         //return (_sharedPref.getString("groupId-" + groupId, ""));
     }
+
+    public static void myMoneyCoachMark(Context pContext, int count) {
+        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref1.edit();
+        _editor.putInt("count", count);
+        _editor.apply();
+    }
+    public static int getMyMoney(Context pContext) {
+        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (_sharedPref1.getInt("count", 0));
+        //return (_sharedPref.getString("groupId-" + groupId, ""));
+    }
+
+
 }

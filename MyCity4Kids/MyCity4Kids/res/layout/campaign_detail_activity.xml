@@ -60,10 +60,11 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/label_text">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -129,8 +130,8 @@
                 android:paddingBottom="5dp"
                 android:textColor="@color/white"
                 android:textSize="13sp"
-                app:fontName="oswald_regular.ttf"
                 android:visibility="gone"
+                app:fontName="oswald_regular.ttf"
                 app:layout_constraintBottom_toBottomOf="@+id/header_img"
                 app:layout_constraintStart_toStartOf="@+id/header_img" />
 
@@ -304,10 +305,10 @@
                     android:id="@+id/read_this_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/campaign_list_buttons"
-                    android:textSize="15sp"
                     android:autoLink="web"
+                    android:textColor="@color/campaign_list_buttons"
                     android:textColorLink="#0000ee"
+                    android:textSize="15sp"
                     app:fontName="open_sans.ttf"
                     app:layout_constraintStart_toStartOf="@id/read_this_box" />
             </LinearLayout>
@@ -366,11 +367,11 @@
                 android:layout_marginTop="@dimen/space_5"
                 android:layout_marginEnd="@dimen/space_15"
                 android:layout_marginRight="@dimen/space_15"
-                android:lineSpacingExtra="1.6dp"
                 android:autoLink="web"
-                android:textColorLink="#0000ee"
+                android:lineSpacingExtra="1.6dp"
                 android:text="Lorem ipsum, or lipsum as it is sometimes known, Is dummy text used in laying out print, graphic or Web designs. The passage is attributed to anis Dummy text used in laying out Graphic or Web designs. The passage is attributed to an Dummy tex"
                 android:textColor="@color/campaign_4A4A4A"
+                android:textColorLink="#0000ee"
                 android:textSize="15sp"
                 app:fontName="open_sans.ttf"
                 app:layout_constraintEnd_toEndOf="@id/img"
@@ -427,11 +428,11 @@
                 android:layout_marginTop="@dimen/space_5"
                 android:layout_marginEnd="@dimen/space_15"
                 android:layout_marginRight="@dimen/space_15"
+                android:autoLink="web"
                 android:text="Lorem ipsum, or lipsum as it is sometimes known, Is dummy text used in laying out print, graphic or Web designs. The passage is attributed to anis Dummy text used in laying out Graphic or Web designs. The passage is attributed to an Dummy tex"
                 android:textColor="@color/campaign_4A4A4A"
-                android:textSize="15sp"
-                android:autoLink="web"
                 android:textColorLink="#0000ee"
+                android:textSize="15sp"
                 app:fontName="open_sans.ttf"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -531,27 +532,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/refer_code_text" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/label_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_15"
-                android:layout_marginBottom="@dimen/space_103"
-                android:background="@drawable/campaign_label_bg"
-                android:gravity="center"
-                android:lineSpacingExtra="1.2dp"
-                android:paddingTop="@dimen/space_10"
-                android:paddingBottom="@dimen/space_10"
-                android:textColor="#4A4A4A"
-                android:textSize="12sp"
-                app:fontName="open_sans_bold.ttf"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/refer_code_error" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/label_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_15"
+        android:background="@drawable/campaign_label_bg"
+        android:gravity="center"
+        android:lineSpacingExtra="1.2dp"
+        android:paddingTop="@dimen/space_10"
+        android:paddingBottom="@dimen/space_10"
+        android:textColor="#4A4A4A"
+        android:textSize="12sp"
+        app:fontName="open_sans_bold.ttf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_button" />
 
     <RelativeLayout
         android:id="@+id/bottom_button"

@@ -1182,7 +1182,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
 
 
-
     }
 
     @Override
