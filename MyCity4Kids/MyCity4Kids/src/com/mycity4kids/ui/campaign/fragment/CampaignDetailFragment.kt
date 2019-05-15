@@ -519,7 +519,7 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     fun hideShowReferral(status: Int) {
-        if (status == 1) {
+        if (status == 1 && apiGetResponse!!.showRefferField == true) {
             viewLine.visibility = View.VISIBLE
             referCode.visibility = View.VISIBLE
             referCodeApply.visibility = View.VISIBLE

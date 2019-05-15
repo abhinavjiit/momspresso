@@ -1,11 +1,9 @@
 package com.mycity4kids.retrofitAPIsInterfaces
 
-import com.mycity4kids.models.BaseResponseModel
 import com.mycity4kids.models.campaignmodels.*
 import com.mycity4kids.models.request.CampaignParticipate
 import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
-import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.ui.campaign.*
 import com.mycity4kids.ui.campaign.PaymentModeListModal
@@ -18,7 +16,8 @@ interface CampaignAPI {
     @GET("/rewards/v1/campaigns/recommendations/{userId}")
     fun getCampaignList(@Path("userId") userId: String? = null,
                         @Query("start") start: Int,
-                        @Query("end") end: Int)
+                        @Query("end") end: Int,
+                        @Query("v") v: Double)
             : Call<AllCampaignDataResponse>
 
 
