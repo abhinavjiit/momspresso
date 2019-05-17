@@ -876,6 +876,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_listing")) {
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                campaignIntent.putExtra("campaign_listing", "campaign_listing");
                 startActivity(campaignIntent);
                 try {
                     JSONObject jsonObject = new JSONObject();
@@ -888,6 +889,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_detail")) {
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_id", notificationExtras.getString("campaign_id"));
+                campaignIntent.putExtra("campaign_detail", "campaign_detail");
                 startActivity(campaignIntent);
                 try {
                     JSONObject jsonObject = new JSONObject();
@@ -897,6 +899,54 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("campaign_submit_proof")) {
+                Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                campaignIntent.putExtra("campaign_Id", notificationExtras.getString("campaign_id"));
+                campaignIntent.putExtra("campaign_submit_proof", "campaign_submit_proof");
+                startActivity(campaignIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "campaign_submit_proof");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("mymoney_bankdetails")) {
+                Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
+                campaignIntent.putExtra("isComingfromCampaign", true);
+                campaignIntent.putExtra("pageLimit", 4);
+                campaignIntent.putExtra("pageNumber", 4);
+                campaignIntent.putExtra("campaign_Id", notificationExtras.getString("campaign_id"));
+                campaignIntent.putExtra("mymoney_bankdetails", "mymoney_bankdetails");
+                startActivity(campaignIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "campaign_submit_proof");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("mymoney_pancard")) {
+                Intent campaignIntent = new Intent(this, RewardsContainerActivity.class);
+                campaignIntent.putExtra("isComingFromRewards", true);
+                campaignIntent.putExtra("pageLimit", 5);
+                campaignIntent.putExtra("pageNumber", 5);
+                campaignIntent.putExtra("panCardFormNotification", "mymoney_pancard");
+                campaignIntent.putExtra("mymoney_pancard", "mymoney_pancard");
+                startActivity(campaignIntent);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    jsonObject.put("type", "campaign_submit_proof");
+                    mMixpanel.track("PushNotification", jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             } else if (notificationExtras.getString("type").equalsIgnoreCase("shortStoryDetails")) {
                 Intent ssIntent = new Intent(DashboardActivity.this, ShortStoryContainerActivity.class);
                 ssIntent.putExtra(Constants.AUTHOR_ID, notificationExtras.getString("userId"));
