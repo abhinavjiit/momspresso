@@ -118,6 +118,7 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -185,11 +186,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout actionItemContainer, articleContainer, videoContainer, storyContainer;
     private View overlayView;
     private RelativeLayout createContentContainer;
-    private TextView usernameTextView, coachUsernameTextView, videosTextView, shortStoryTextView, momspressoTextView, groupsTextView, bookmarksTextView, settingTextView, rewardsTextView;
+    private TextView usernameTextView, coachUsernameTextView, videosTextView, shortStoryTextView,
+            momspressoTextView, groupsTextView, bookmarksTextView, settingTextView, rewardsTextView;
     private LinearLayout drawerTopContainer, drawerContainer;
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
-    private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, drawerProfileCoachmark, drawerSettingsCoachmark, menuCoachmark, languageLayout, drawerMyMoneyCoachmark;
+    private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, drawerProfileCoachmark,
+            drawerSettingsCoachmark, menuCoachmark, languageLayout, drawerMyMoneyCoachmark;
     private RecyclerView draftsRecyclerView;
     private ShimmerFrameLayout draftsShimmerLayout;
     private TextView createLabelTextView, continueWritingLabelTV;

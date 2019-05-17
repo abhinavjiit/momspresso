@@ -77,7 +77,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
 //                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "upcoming_event_list");
                     Log.i(TAG, " INSIDE EVENTS LIST: " + msg);
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher);
+                            R.drawable.ic_launcher
+                            );
 
                     int requestID = (int) System.currentTimeMillis();
                     String title = remoteMessage.getNotification().getTitle();
