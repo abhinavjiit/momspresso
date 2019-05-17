@@ -116,7 +116,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
-            } else if (status == 3) {
+            } else if (status == 3 || status == 21) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_applied))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscribed)
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))

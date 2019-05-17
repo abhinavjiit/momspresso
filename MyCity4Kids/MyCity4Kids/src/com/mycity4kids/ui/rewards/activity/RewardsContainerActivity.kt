@@ -131,7 +131,7 @@ class RewardsContainerActivity : BaseActivity(),
 
     private fun addFamilyFragment() {
         if (pageLimit!! >= 2) {
-            rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance(isComingFromRewards = true)
+            rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance(isComingFromRewards = true, isComingfromCampaign = isComingfromCampaign)
             supportFragmentManager.beginTransaction().replace(R.id.container, rewardsFamilyInfoFragment,
                     RewardsFamilyInfoFragment::class.java.simpleName)
                     .commit()

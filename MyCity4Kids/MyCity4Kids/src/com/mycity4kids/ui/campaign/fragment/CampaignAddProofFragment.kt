@@ -56,7 +56,6 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 notifyUrlAdapter()
             }
         }
-
     }
 
     fun onProofSubmitClick() {
@@ -483,7 +482,5 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     interface SubmitListener {
         fun proofSubmitDone()
     }
-
-
 }
 

@@ -51,6 +51,9 @@ class CampaignDetailResult {
     @SerializedName("is_fixed_amount")
     @Expose
     var isFixedAmount: Int? = 0
+    @SerializedName("show_reffer_field")
+    @Expose
+    var showRefferField: Boolean? = false
     @SerializedName("max_amount")
     @Expose
     var maxAmount: Double? = null
