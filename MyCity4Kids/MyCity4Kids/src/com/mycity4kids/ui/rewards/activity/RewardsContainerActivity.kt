@@ -18,16 +18,15 @@ import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
 
 class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
-        RewardsSocialInfoFragment.SubmitListener,
-        RewardsFamilyInfoFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener, PanCardDetailsSubmissionFragment.SubmitListener, IFacebookEvent {
+        RewardsSocialInfoFragment.SubmitListener,CampaignPaymentModesFragment.SubmitListener, PanCardDetailsSubmissionFragment.SubmitListener, IFacebookEvent {
     override fun onPanCardDone() {
         this@RewardsContainerActivity.finish()
     }
 
     override fun onPaymentModeDone() {
-        if(pageLimit==4){
+        if (pageLimit == 4) {
             this@RewardsContainerActivity.finish()
-        }else{
+        } else {
             addPancardDetailFragment()
         }
     }
@@ -41,17 +40,13 @@ class RewardsContainerActivity : BaseActivity(),
     override fun updateUi(response: Response?) {
     }
 
-    override fun FamilyOnSubmit() {
-        addSocialFragment()
-    }
-
     override fun socialOnSubmitListener() {
         addPaymentModesFragment()
 //        this@RewardsContainerActivity.finish()
     }
 
     override fun profileOnSaveAndContinue() {
-        addFamilyFragment()
+        addSocialFragment()
     }
 
     private var callbackManager: CallbackManager? = null
@@ -104,6 +99,7 @@ class RewardsContainerActivity : BaseActivity(),
         initializeXMLComponents()
 
     }
+
     private fun initializeXMLComponents() {
         findViewById(R.id.langTextView).setOnClickListener {
             val changePreferredLanguageDialogFragment = ChangePreferredLanguageDialogFragment()
@@ -128,16 +124,16 @@ class RewardsContainerActivity : BaseActivity(),
 
     }
 
-    private fun addFamilyFragment() {
-        if (pageLimit!! >= 2) {
-            rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance(isComingFromRewards = true, isComingfromCampaign = isComingfromCampaign)
-            supportFragmentManager.beginTransaction().replace(R.id.container, rewardsFamilyInfoFragment,
-                    RewardsFamilyInfoFragment::class.java.simpleName)
-                    .commit()
-        } else {
-            finish()
-        }
-    }
+//    private fun addFamilyFragment() {
+//        if (pageLimit!! >= 2) {
+//            rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance(isComingFromRewards = true, isComingfromCampaign = isComingfromCampaign)
+//            supportFragmentManager.beginTransaction().replace(R.id.container, rewardsFamilyInfoFragment,
+//                    RewardsFamilyInfoFragment::class.java.simpleName)
+//                    .commit()
+//        } else {
+//            finish()
+//        }
+//    }
 
     private fun addSocialFragment() {
         if (pageLimit!! >= 3) {
