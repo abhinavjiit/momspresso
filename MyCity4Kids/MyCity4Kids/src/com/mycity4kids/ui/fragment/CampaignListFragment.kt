@@ -1,7 +1,10 @@
 package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -17,13 +20,17 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import com.mycity4kids.ui.activity.EditProfileNewActivity
 import com.mycity4kids.ui.adapter.RewardCampaignAdapter
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.EndlessScrollListener
 import retrofit2.Call
 import retrofit2.Callback
 import java.util.*
 
+const val REWARDS_FILL_FORM = 1000
 
 class CampaignListFragment : BaseFragment() {
 
@@ -35,6 +42,10 @@ class CampaignListFragment : BaseFragment() {
     private lateinit var containerView: View
     private lateinit var recyclerView: RecyclerView
     private var endIndex: Int = 0
+    private lateinit var profileIcon: ImageView
+    private lateinit var isRewardAdded: String
+    private lateinit var registerRewards: ConstraintLayout
+
 
     override fun updateUi(response: Response?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -58,13 +69,24 @@ class CampaignListFragment : BaseFragment() {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.reward_campaign, container, false)
         backIcon = containerView.findViewById(R.id.back)
+        profileIcon = containerView.findViewById(R.id.profile_icon)
         recyclerView = containerView.findViewById(R.id.recyclerView)
         linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayoutManager
         adapter = RewardCampaignAdapter(campaignList, activity)
+        registerRewards = containerView.findViewById(R.id.register_rewards)
+        isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
         recyclerView.adapter = adapter
         if (campaignList.size == 0)
             fetchCampaignList(0)
+
+        profileIcon.setOnClickListener {
+            val intent = Intent(context, EditProfileNewActivity::class.java)
+            intent.putExtra("isComingfromCampaign", true)
+            intent.putExtra("isRewardAdded", isRewardAdded)
+            startActivity(intent)
+        }
+
         backIcon.setOnClickListener {
             activity!!.onBackPressed()
         }
@@ -74,7 +96,40 @@ class CampaignListFragment : BaseFragment() {
                 fetchCampaignList(endIndex + 1)
             }
         })
+        if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
+            registerRewards.visibility = View.VISIBLE
+        } else {
+            registerRewards.visibility = View.GONE
+        }
+
+        registerRewards.setOnClickListener {
+            checkRewardForm()
+        }
+
         return containerView
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                REWARDS_FILL_FORM -> {
+                    isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
+                    checkRewardForm()
+                }
+            }
+        }
+    }
+
+    fun checkRewardForm() {
+        if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
+            val intent = Intent(context, RewardsContainerActivity::class.java)
+            intent.putExtra("isComingfromCampaign", true)
+            intent.putExtra("pageLimit", 2)
+            startActivityForResult(intent, REWARDS_FILL_FORM)
+        } else {
+            registerRewards.visibility = View.GONE
+        }
     }
 
     private fun fetchCampaignList(startIndex: Int) {
@@ -83,7 +138,7 @@ class CampaignListFragment : BaseFragment() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
-        val call = campaignAPI.getCampaignList(userId, startIndex, endIndex,2.0)
+        val call = campaignAPI.getCampaignList(userId, startIndex, endIndex, 2.0)
         call.enqueue(getCampaignList)
     }
 

@@ -43,6 +43,16 @@
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
+            <ImageView
+                android:id="@+id/profile_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/space_10"
+                android:padding="@dimen/space_10"
+                android:src="@drawable/profile_icon" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -51,13 +61,91 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/space_7"
-        android:background="@color/white"
-        android:scrollbars="vertical" />
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/register_rewards"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/campaign_register_feed_bg"
+                android:padding="@dimen/space_10"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@drawable/campaign_feed_confetti"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
+                <ImageView
+                    android:id="@+id/money_logo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_5"
+                    android:layout_marginLeft="@dimen/space_5"
+                    android:layout_marginTop="@dimen/space_10"
+                    android:src="@drawable/mymoney_logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/space_10"
+                    android:layout_marginLeft="@dimen/space_10"
+                    android:layout_marginTop="@dimen/space_5"
+                    android:layout_marginBottom="@dimen/space_10"
+                    android:text="Browse. Participate. Earn"
+                    android:textColor="@color/campaign_4A4A4A"
+                    android:textSize="14sp"
+                    app:fontName="oswald.ttf"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/money_logo" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/register_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/campaign_feed_register_textview_bg"
+                    android:paddingLeft="@dimen/space_15"
+                    android:paddingTop="@dimen/space_5"
+                    android:paddingRight="@dimen/space_15"
+                    android:paddingBottom="@dimen/space_5"
+                    android:text="REGISTER"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:fontName="oswald_regular.ttf"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/space_7"
+                android:background="@color/white"
+                android:nestedScrollingEnabled="false"
+                android:scrollbars="vertical" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

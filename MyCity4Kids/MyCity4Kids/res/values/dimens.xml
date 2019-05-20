@@ -76,4 +76,5 @@
     <dimen name="space_140">140dp</dimen>
     <dimen name="space_145">145dp</dimen>
     <dimen name="space_155">155dp</dimen>
+    <dimen name="space_8">8dp</dimen>
 </resources>
