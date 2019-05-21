@@ -15,7 +15,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -43,7 +42,6 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
@@ -63,7 +61,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.adapter.UserProfilePagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GenericFileProvider;
-import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -105,7 +102,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
     private String mCurrentPhotoPath, absoluteImagePath;
     private Uri imageUri;
     private String isRewardsAdded = "0";
-    private boolean isComingFromReward;
+    private boolean isComingFromReward, isComingfromCampaign = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +133,9 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                 isComingFromReward = getIntent().getBooleanExtra("isComingFromReward", false);
             }
         }
-
+        if (getIntent().getExtras().containsKey("isComingfromCampaign")) {
+            isComingfromCampaign = getIntent().getBooleanExtra("isComingfromCampaign", false);
+        }
         saveTextView.setOnClickListener(this);
         editImageView.setOnClickListener(this);
         try {
@@ -245,6 +244,13 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     if (isComingFromReward) {
                         viewPager.setCurrentItem(2);
                         saveTextView.setVisibility(View.GONE);
+                    }
+
+                    if (isComingfromCampaign) {
+                        viewPager.setCurrentItem(2);
+                        saveTextView.setVisibility(View.GONE);
+                    } else {
+                        viewPager.setCurrentItem(0);
                     }
 
                     viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

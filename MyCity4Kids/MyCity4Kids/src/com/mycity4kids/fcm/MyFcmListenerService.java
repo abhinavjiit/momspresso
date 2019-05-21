@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.DisplayMetrics;
 import android.util.Log;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -374,7 +375,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
 
-                }else if (type.equalsIgnoreCase("momsights_screen")) {
+                } else if (type.equalsIgnoreCase("momsights_screen")) {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
@@ -412,7 +413,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                     // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
-                }else if (type.equalsIgnoreCase("campaign_listing")) {
+                } else if (type.equalsIgnoreCase("campaign_listing")) {
 //                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "app_settings");
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
@@ -452,7 +453,138 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
 
-                }else if (type.equalsIgnoreCase("campaign_detail")) {
+                } else if (type.equalsIgnoreCase("mymoney_pancard")) {
+                    int requestID = (int) System.currentTimeMillis();
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        Log.e("upupgrade true", "it's true");
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), RewardsContainerActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra("isComingFromRewards", true);
+                        resultIntent.putExtra("pageLimit", 5);
+                        resultIntent.putExtra("pageNumber", 5);
+                        resultIntent.putExtra("fromNotification", true);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(AppSettingsActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(resultIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                        Log.e("opening mymoney_pancard", "it's true" + pushNotificationModel.getCampaign_id());
+
+                    }
+
+                    String title = remoteMessage.getNotification().getTitle();
+                    String body = remoteMessage.getNotification().getBody();
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_launcher);
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setLargeIcon(icon)
+                                    .setSmallIcon(R.drawable.icon_notify)
+                                    .setContentTitle(title)
+                                    .setContentIntent(contentIntent)
+                                    .setContentText(body)
+                                    .setAutoCancel(true);
+
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(requestID, mBuilder.build());
+                } else if (type.equalsIgnoreCase("campaign_submit_proof")) {
+                    int requestID = (int) System.currentTimeMillis();
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        Log.e("upupgrade true", "it's true");
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), CampaignContainerActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra("fromNotification", true);
+                        resultIntent.putExtra("campaign_id", pushNotificationModel.getCampaign_id());
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(AppSettingsActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(resultIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                        Log.e("opening campaign_detail", "it's true" + pushNotificationModel.getCampaign_id());
+
+                    }
+
+                    String title = remoteMessage.getNotification().getTitle();
+                    String body = remoteMessage.getNotification().getBody();
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_launcher);
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setLargeIcon(icon)
+                                    .setSmallIcon(R.drawable.icon_notify)
+                                    .setContentTitle(title)
+                                    .setContentIntent(contentIntent)
+                                    .setContentText(body)
+                                    .setAutoCancel(true);
+
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(requestID, mBuilder.build());
+
+                } else if (type.equalsIgnoreCase("mymoney_bankdetails ")) {
+                    int requestID = (int) System.currentTimeMillis();
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        Log.e("upupgrade true", "it's true");
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), RewardsContainerActivity.class);
+                        resultIntent.putExtra("isComingfromCampaign", true);
+                        resultIntent.putExtra("pageLimit", 4);
+                        resultIntent.putExtra("pageNumber", 4);
+                        //    resultIntent = new Intent(getApplicationContext(), CampaignContainerActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra("fromNotification", true);
+                        resultIntent.putExtra("campaign_id", pushNotificationModel.getCampaign_id());
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(AppSettingsActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(resultIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                        Log.e("mymoney_bankdetails", "it's true" + pushNotificationModel.getCampaign_id());
+
+                    }
+
+                    String title = remoteMessage.getNotification().getTitle();
+                    String body = remoteMessage.getNotification().getBody();
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_launcher);
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setLargeIcon(icon)
+                                    .setSmallIcon(R.drawable.icon_notify)
+                                    .setContentTitle(title)
+                                    .setContentIntent(contentIntent)
+                                    .setContentText(body)
+                                    .setAutoCancel(true);
+
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(requestID, mBuilder.build());
+
+                } else if (type.equalsIgnoreCase("campaign_detail")) {
 //                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "app_settings");
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;

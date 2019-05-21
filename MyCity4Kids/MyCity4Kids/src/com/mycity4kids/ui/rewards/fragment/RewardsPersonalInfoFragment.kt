@@ -4,13 +4,17 @@ package com.mycity4kids.ui.rewards.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import com.facebook.accountkit.AccountKitLoginResult
 import com.facebook.accountkit.ui.AccountKitActivity
 import com.facebook.accountkit.ui.AccountKitConfiguration
@@ -26,7 +30,9 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.models.response.*
+import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.models.response.CityInfoItem
+import com.mycity4kids.models.response.SetupBlogData
 import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
@@ -49,6 +55,10 @@ const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
 const val REQUEST_SELECT_PLACE = 2000
 
 class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity {
+    var address: String? = null
+    private var lat: Double = 0.0
+    private var lng: Double = 0.0
+
     override fun onCitySelect(cityItem: CityInfoItem?) {
         editLocation.setText(cityItem!!.getCityName())
         currentCityName = cityItem!!.getCityName()
@@ -121,6 +131,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         /*fetch data from server*/
         fetchRewardsData()
+
+
+
 
         return containerView
     }
@@ -224,10 +237,16 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             return false
         } else {
             apiGetResponse.location = editLocation.text.toString()
+            address = editLocation.text.toString()
         }
 
-        apiGetResponse.latitude = 28.7041
-        apiGetResponse.longitude = 77.1025
+
+        apiGetResponse.latitude = lat
+        apiGetResponse.longitude = lng
+
+
+
+
 
         return true
     }
@@ -252,6 +271,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     if (!place.name.toString().isNullOrEmpty()) {
                         cityName = place.name.toString()
                         editLocation.setText(cityName)
+                        address = cityName
+                        if (address != null) {
+                            fetchLangLat(address!!)
+                        }
                     }
                 }
                 VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
@@ -398,6 +421,18 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         })
     }
 
+    fun fetchLangLat(address: String) {
+        val coder = Geocoder(activity as RewardsContainerActivity)
+        var addresses: List<Address>
+        addresses = coder.getFromLocationName(address, 5)
+        if (addresses == null) {
+        }
+        val location: Address = addresses.get(0)
+        lat = location.getLatitude()
+        lng = location.getLongitude()
+        Log.i("lat", lat.toString())
+        Log.i("lat", lng.toString())
+    }
 
 }
 

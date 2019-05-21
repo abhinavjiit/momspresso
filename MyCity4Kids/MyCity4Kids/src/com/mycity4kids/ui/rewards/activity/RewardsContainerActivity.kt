@@ -25,9 +25,9 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     override fun onPaymentModeDone() {
-        if(pageLimit==4){
+        if (pageLimit == 4) {
             this@RewardsContainerActivity.finish()
-        }else{
+        } else {
             addPancardDetailFragment()
         }
     }
@@ -104,6 +104,7 @@ class RewardsContainerActivity : BaseActivity(),
         initializeXMLComponents()
 
     }
+
     private fun initializeXMLComponents() {
         findViewById(R.id.langTextView).setOnClickListener {
             val changePreferredLanguageDialogFragment = ChangePreferredLanguageDialogFragment()
@@ -155,6 +156,7 @@ class RewardsContainerActivity : BaseActivity(),
 
     private fun addPaymentModesFragment() {
         if (pageLimit!! >= 4) {
+
             paymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = true)
             supportFragmentManager.beginTransaction().replace(R.id.container, paymentModesFragment,
                     CampaignPaymentModesFragment::class.java.simpleName)

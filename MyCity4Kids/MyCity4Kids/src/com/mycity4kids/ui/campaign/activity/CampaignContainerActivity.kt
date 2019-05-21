@@ -16,9 +16,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.PaymentModeListModal
-import com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment
-import com.mycity4kids.ui.campaign.fragment.CampaignCongratulationFragment
-import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
+import com.mycity4kids.ui.campaign.fragment.*
 import com.mycity4kids.ui.fragment.CampaignDetailFragment
 import com.mycity4kids.ui.fragment.CampaignListFragment
 import io.reactivex.Observer
@@ -28,6 +26,8 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.NumberFormatException
 
 class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener {
+
+
     override fun onPaymentModeDone() {
 
     }
@@ -53,29 +53,68 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     private var defaultdata: String? = null
     private var deeplinkCampaignId: Int = 0
     private lateinit var notificationCampaignId: String
-
-
+    private lateinit var notificationCampaignSubmitProof: String
+    private var submitProofCampaignId: Int = 0
+    private lateinit var panCardNotification: String
+    private var arrayList = mutableListOf<Int>()
+    private var comingFrom: String = "deeplink"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campaign_container)
 
         deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
-        notificationCampaignId = if (intent.hasExtra("campaign_id")) {
-            intent.getStringExtra("campaign_id")
+
+
+
+
+        if (intent.hasExtra("campaign_id") && intent.hasExtra("campaign_detail")) {
+            notificationCampaignId = intent.getStringExtra("campaign_id")
+            comingFrom = "campaign_detail"
+
         } else {
-            ""
+            notificationCampaignId = ""
         }
+
+
+
+
+        if (intent.hasExtra("campaign_Id") && intent.hasExtra("campaign_submit_proof")) {
+            notificationCampaignSubmitProof = intent.getStringExtra("campaign_Id")
+            comingFrom = "campaign_submit_proof"
+
+        } else {
+            notificationCampaignSubmitProof = ""
+        }
+
+
+
+
+
+
+
+        if (!notificationCampaignSubmitProof.equals("", true)) {
+            deeplinkCampaignId = notificationCampaignSubmitProof.toInt()
+        }
+
+
+
 
         if (!notificationCampaignId.equals("", true)) {
             deeplinkCampaignId = notificationCampaignId.toInt()
         }
 
-        if (deeplinkCampaignId == -1 || deeplinkCampaignId == 0) {
+        if ((deeplinkCampaignId == -1 || deeplinkCampaignId == 0) && comingFrom.equals("deeplink")) {
             campaignListFragment()
+        } else if (comingFrom.equals("campaign_detail")) {
+            addCampaginDetailFragment(deeplinkCampaignId)
+
+        } else if (comingFrom.equals("campaign_submit_proof")) {
+            addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>)
         } else {
             addCampaginDetailFragment(deeplinkCampaignId)
         }
+
     }
 
     private fun campaignListFragment() {
