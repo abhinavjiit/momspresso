@@ -742,9 +742,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
-
                         AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                         FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
                         Bundle _args = new Bundle();
@@ -762,7 +760,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
                         intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                         intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 2222);
                     }
                 }
             });
@@ -875,7 +873,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
                         intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                         intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 2222);
                     }
                 }
             });
@@ -954,7 +952,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
                         intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                         intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 2222);
                     }
                 }
             });
@@ -1130,36 +1128,13 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
                         intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                         intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 2222);
                     }
                 }
             });
-         /*   view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
-                }
-            });*/
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                 /*   Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
-                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
-                    intent.putExtra("postData", postList.get(getAdapterPosition()));
-                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
-                    intent.putExtra("pollOptions", linkedTreeMap);
-                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
-                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                    ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);*/
                     AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                     FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
                     Bundle _args = new Bundle();
@@ -1301,7 +1276,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
                         intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                         intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
-                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 1111);
+                        ((GroupDetailsActivity) mContext).startActivityForResult(intent, 2222);
                     }
                 }
             });
