@@ -22,6 +22,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:padding="@dimen/space_10"
+                android:background="#F1F1F5"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -32,16 +34,42 @@
                     android:layout_marginRight="4dp"
                     android:background="@drawable/round_border_groups">
 
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rectangular_btn_green_bg"
+                        android:backgroundTint="@color/white"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginLeft="@dimen/space_5"
+                        android:layout_marginTop="@dimen/space_5"
+                        android:text="NEW"
+                        android:textAllCaps="true"
+                        android:textColor="@color/campaign_list_buttons"
+                        android:textSize="14sp"
+                        app:fontName="oswald_regular.ttf" />
+
                     <ImageView
                         android:id="@+id/rewardsImageView"
                         android:layout_width="26dp"
                         android:layout_height="26dp"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="@dimen/space_32"
+                        android:layout_marginBottom="@dimen/space_10"
                         android:alpha="0.6"
 
                         android:tint="@color/white"
                         app:srcCompat="@drawable/ic_rupee_icon" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rewardsImageView"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/white_bg"
+                        android:src="@drawable/mymoney_logo"/>
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/rewardsTextView"
@@ -55,6 +83,7 @@
                         android:textAllCaps="true"
                         android:textColor="@color/white"
                         android:textSize="14sp"
+                        android:visibility="gone"
                         app:fontName="oswald_regular.ttf" />
                 </RelativeLayout>
 

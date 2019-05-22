@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
@@ -23,6 +24,7 @@ class CampaignCongratulationFragment : BaseFragment() {
     private lateinit var facebookShareImageView: ImageView
     private lateinit var cancel: ImageView
     private lateinit var genricShareImageView: ImageView
+    private lateinit var continueBrowsingCampaignsTextView: TextView
     private lateinit var submitListener: SubmitListener
 
     override fun updateUi(response: Response?) {
@@ -46,7 +48,12 @@ class CampaignCongratulationFragment : BaseFragment() {
         whatsappShareImageView = view.findViewById(R.id.whatsappShareImageView)
         facebookShareImageView = view.findViewById(R.id.facebookShareImageView)
         genricShareImageView = view.findViewById(R.id.genricShareImageView)
+        continueBrowsingCampaignsTextView = view.findViewById(R.id.continueBrowsingCampaignsTextView)
         cancel = view.findViewById(R.id.cancel)
+        continueBrowsingCampaignsTextView.setOnClickListener {
+            Utils.campaignEvent(activity, "Campaign Listing", "Thank you screen", "Close", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            submitListener.congratulateScreenDone()
+        }
         cancel.setOnClickListener {
             Utils.campaignEvent(activity, "Campaign Listing", "Thank you screen", "Close", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             submitListener.congratulateScreenDone()

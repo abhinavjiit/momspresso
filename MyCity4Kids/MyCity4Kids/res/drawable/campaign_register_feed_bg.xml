@@ -2,9 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <corners
-        android:radius="@dimen/space_20" />
-    <solid android:color="@color/campaign_completed_bg" />
-
+    <stroke
+        android:width="@dimen/space_10"
+        android:color="@color/campaign_feed_register" />
 
 </shape>

@@ -4,7 +4,7 @@
 
     <corners
         android:radius="@dimen/space_20" />
-    <solid android:color="@color/campagin_submission_open" />
+    <solid android:color="@color/campaign_submit_proof_bg" />
 
 
 </shape>
