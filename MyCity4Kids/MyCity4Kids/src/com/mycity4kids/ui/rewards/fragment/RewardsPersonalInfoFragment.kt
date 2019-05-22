@@ -29,6 +29,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.gson.Gson
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
+import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -36,6 +37,7 @@ import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.*
 import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
+import com.mycity4kids.models.rewardsmodels.KidsInfoResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
@@ -63,7 +65,7 @@ import java.util.*
 const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
 const val REQUEST_SELECT_PLACE = 2000
 
-class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity , PickerDialogFragment.OnClickDoneListener {
+class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity, PickerDialogFragment.OnClickDoneListener {
     override fun onItemClick(selectedValueName: ArrayList<String>, popupType: String) {
         if (popupType == Constants.PopListRequestType.INTEREST.name) {
             //preSelectedInterest = selectedValue
@@ -73,6 +75,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             setFloatingLayout(selectedValueName, popupType)
         }
     }
+
     override fun onCitySelect(cityItem: CityInfoItem?) {
         editLocation.setText(cityItem!!.getCityName())
         currentCityName = cityItem!!.getCityName()
@@ -154,6 +157,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         lateinit var textView: TextView
         private lateinit var textDOB: TextView
         private lateinit var textKidsDOB: TextView
+
         @JvmStatic
         fun newInstance(isComingFromRewards: Boolean = false) =
                 RewardsPersonalInfoFragment().apply {
@@ -423,7 +427,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             showDatePickerDialog(true)
         }
 
-
         textEditLanguage.setOnClickListener {
             var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.LANGUAGE.name,
                     isSingleSelection = true, preSelectedItemIds = preSelectedLanguage, context = this@RewardsPersonalInfoFragment)
@@ -470,7 +473,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             showDatePickerDialog(false, true)
         }
 
-        containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
+        containerView.findViewById<TextView>(R.id.textSaveAndContinue).setOnClickListener {
             if (prepareDataForPosting()) {
                 postDataofRewardsToServer()
             }
@@ -559,6 +562,121 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             apiGetResponse.location = editLocation.text.toString()
         }
 
+        if (radioGroupWorkingStatus.checkedRadioButtonId == R.id.radiokWorking) {
+            apiGetResponse.workStatus = 1
+        } else {
+            apiGetResponse.workStatus = 0
+        }
+
+        apiGetResponse.gender = if (genderSpinner.selectedItemPosition == 0) {
+            0
+        } else {
+            1
+        }
+
+        if (RewardsPersonalInfoFragment.textDOB.text.isNullOrEmpty()) {
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            apiGetResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textDOB.text.toString())
+        }
+
+        if (preSelectedLanguage.isEmpty()) {
+            Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_language)), Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            apiGetResponse.preferred_languages = preSelectedLanguage
+        }
+
+        if (radioGroupAreMother.checkedRadioButtonId == R.id.radioYes) {
+            apiGetResponse.isMother = 1
+        } else if (radioGroupAreMother.checkedRadioButtonId == R.id.radioNo) {
+            apiGetResponse.isMother = 0
+        }
+
+        if (!preSelectedInterest.isEmpty()) {
+            preSelectedInterestForPosting.clear()
+            (preSelectedInterest).forEach {
+                try {
+                    preSelectedInterestForPosting.add(it.toInt())
+                } catch (ex: Exception) {
+
+                }
+            }
+            apiGetResponse.interest = preSelectedInterestForPosting
+        }
+
+        if (checkAreYouExpecting.isChecked) {
+            if (editExpectedDate.text.isNullOrEmpty()) {
+                Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_expected_date)), Toast.LENGTH_SHORT).show()
+                return false
+            } else {
+                apiGetResponse.isExpecting = 1
+                apiGetResponse.expectedDate = DateTimeUtils.convertStringToTimestamp(editExpectedDate.text.toString())
+            }
+        } else {
+            apiGetResponse.isExpecting = 0
+            apiGetResponse.expectedDate = 0
+        }
+
+        if (radioGroupAreMother.checkedRadioButtonId == R.id.radioYes) {
+            if (linearKidsDetail.childCount > 0) {
+                var kidsList = ArrayList<KidsInfoResponse>()
+                for (i in 0..linearKidsDetail.childCount) {
+                    var kidsInfoResponse = KidsInfoResponse()
+                    if (linearKidsDetail.getChildAt(i) != null) {
+                        kidsInfoResponse.gender = if (linearKidsDetail.getChildAt(i).findViewById<Spinner>(R.id.spinnerGender).selectedItemPosition == 0) {
+                            0
+                        } else {
+                            1
+                        }
+                        kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(linearKidsDetail.getChildAt(i).findViewById<TextView>(R.id.textKidsDOB).text.toString())
+                        kidsInfoResponse.name = linearKidsDetail.getChildAt(i).findViewById<EditText>(R.id.editKidsName).text.toString()
+                        kidsList.add(kidsInfoResponse)
+                    }
+                }
+                apiGetResponse.kidsInfo = kidsList
+                Log.e("dob text is ", RewardsPersonalInfoFragment.textKidsDOB.text.toString())
+                if (linearKidsEmptyView.visibility == View.VISIBLE) {
+                    if (!RewardsPersonalInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
+                        //if (apiGetResponse.kidsInfo.isNullOrEmpty()) {
+                        var kidsInfoResponse = KidsInfoResponse()
+                        kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
+                            0
+                        } else {
+                            1
+                        }
+                        kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textKidsDOB.text.toString())
+                        kidsInfoResponse.name = editKidsName.text.toString()
+                        apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
+                        //}
+                    } else {
+                        Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                        return false
+                    }
+                }
+            } else {
+                if (!RewardsPersonalInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
+                    var kidsInfoLocal = ArrayList<KidsInfoResponse>()
+                    var kidsInfoResponse = KidsInfoResponse()
+                    kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
+                        0
+                    } else {
+                        1
+                    }
+                    kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textKidsDOB.text.toString())
+                    kidsInfoResponse.name = editKidsName.text.toString()
+                    kidsInfoLocal.add(kidsInfoResponse)
+                    apiGetResponse.kidsInfo = kidsInfoLocal
+                } else {
+                    Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
+                    return false
+                }
+            }
+        } else {
+            apiGetResponse.kidsInfo = null
+        }
+
         apiGetResponse.latitude = 28.7041
         apiGetResponse.longitude = 77.1025
 
@@ -626,7 +744,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
             Log.e("sending json", Gson().toJson(apiGetResponse))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<SetupBlogData>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, pageValue = 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<SetupBlogData>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }

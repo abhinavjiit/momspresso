@@ -167,7 +167,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     private var isComingFromCampaign = false
     private var isComingFromRewards = false
 
-
     companion object {
         lateinit var textView: TextView
         private lateinit var textDOB: TextView
@@ -603,12 +602,12 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (context is RewardsContainerActivity) {
-            submitListener = context
-        }
-    }
+//    override fun onAttach(context: Context?) {
+//        super.onAttach(context)
+//        if (context is RewardsContainerActivity) {
+//            submitListener = context
+//        }
+//    }
 
     fun convertStringToTimestamp(): Long {
         return DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textDOB.getText().toString())
