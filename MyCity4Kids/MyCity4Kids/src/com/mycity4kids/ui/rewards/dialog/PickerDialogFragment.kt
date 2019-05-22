@@ -18,6 +18,7 @@ import com.mycity4kids.R
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.ui.rewards.adapter.PickerDialogAdapter
 import com.mycity4kids.ui.rewards.fragment.RewardsFamilyInfoFragment
+import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
 import kotlinx.android.synthetic.main.cropimage.*
 import java.util.*
@@ -160,7 +161,7 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
 
         // TODO: Customize parameter initialization
         @JvmStatic
-        fun newInstance(columnCount: Int = 1, popType: String, isSingleSelection: Boolean = false, preSelectedItemIds: ArrayList<String>? = null, context: RewardsFamilyInfoFragment) =
+        fun newInstance(columnCount: Int = 1, popType: String, isSingleSelection: Boolean = false, preSelectedItemIds: ArrayList<String>? = null, context: RewardsPersonalInfoFragment) =
                 PickerDialogFragment().apply {
                     this.onClickDoneListener = context
                     arguments = Bundle().apply {
