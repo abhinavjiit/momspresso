@@ -499,6 +499,7 @@
     <color name="campaign_submission_full_bg">#F5A623</color>
     <color name="campaign_invite_only_bg">#7566E5</color>
     <color name="campaign_submit_proof_bg">#73B926</color>
+    <color name="campaign_proof_reject_bg">#212121</color>
 
     <color name="black_64">#A6000000</color>
 </resources>
