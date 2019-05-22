@@ -73,6 +73,7 @@ import com.mycity4kids.ui.fragment.GpPostCommentOptionsDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.ui.fragment.TaskFragment;
 import com.mycity4kids.ui.fragment.ViewGroupPostCommentsRepliesDialogFragment;
+import com.mycity4kids.utils.EndlessScrollListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -198,24 +199,38 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         groupMembershipStatus.checkMembershipStatus(groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) //check for scroll down
-                {
-                    visibleItemCount = llm.getChildCount();
-                    totalItemCount = llm.getItemCount();
-                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
 
-                    if (!isReuqestRunning && !isLastPageReached) {
-                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                            isReuqestRunning = true;
-                            getPostComments();
-                        }
-                    }
-                }
+
+        recyclerView.setOnScrollListener(new EndlessScrollListener(new LinearLayoutManager(GroupPostDetailActivity.this)) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                getPostComments();
             }
         });
+//        recyclerView.setOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
+//            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+//                fetchCampaignList(endIndex + 1)
+//            }
+//        })
+
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                if (dy > 0) //check for scroll down
+//                {
+//                    visibleItemCount = llm.getChildCount();
+//                    totalItemCount = llm.getItemCount();
+//                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
+//
+//                    if (!isReuqestRunning && !isLastPageReached) {
+//                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+//                            isReuqestRunning = true;
+//                            getPostComments();
+//                        }
+//                    }
+//                }
+//            }
+//        });
     }
 
     private void getPostDetails() {
@@ -1917,8 +1932,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void onBackPressed() {
-
-
         Intent intent = new Intent();
         intent.putExtra("completeResponseList", completeResponseList);
         intent.putExtra("postId", postId);

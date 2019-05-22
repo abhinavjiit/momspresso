@@ -240,8 +240,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                     } else {
                         activity!!.supportFragmentManager.popBackStack()
                         var fragment = targetFragment
-                        if(fragment!=null && fragment is CampaignPaymentModesFragment){
-                            fragment.onActivityResult(2019, Activity.RESULT_OK,null)
+                        if (fragment != null && fragment is CampaignPaymentModesFragment) {
+                            fragment.onActivityResult(2019, Activity.RESULT_OK, null)
                         }
 
                     }

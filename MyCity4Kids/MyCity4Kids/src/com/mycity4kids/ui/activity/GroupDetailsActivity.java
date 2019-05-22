@@ -1470,8 +1470,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                         startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     }
                 }
-
-
                 break;
             }
             case R.id.postSettingImageView:
@@ -1817,7 +1815,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 1111) {
-
                 if (data != null && data.getParcelableExtra("postDatas") != null) {
                     GroupPostResult currentPost = data.getParcelableExtra("postDatas");
                     for (int i = 0; i < postList.size(); i++) {
@@ -1842,8 +1839,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                             break;
                         }
                     }
-
-
                 } else {
                     MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                     try {
@@ -1872,6 +1867,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 }
                 selectedPost.setContent(data.getStringExtra("updatedContent"));
                 groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+            } else if (requestCode == 2222) {
+                Intent intent = getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                startActivity(intent);
             }
         }
     }

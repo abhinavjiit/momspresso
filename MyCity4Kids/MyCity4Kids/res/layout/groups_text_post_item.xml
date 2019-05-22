@@ -213,7 +213,6 @@
         android:src="@drawable/ic_share_white"
         android:tint="@color/app_red" />
 
-
     <RelativeLayout
         android:id="@+id/commentLayout"
         android:layout_width="match_parent"
