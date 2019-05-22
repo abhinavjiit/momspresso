@@ -79,7 +79,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     Log.i(TAG, " INSIDE EVENTS LIST: " + msg);
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
                             R.drawable.ic_launcher
-                            );
+                    );
 
                     int requestID = (int) System.currentTimeMillis();
                     String title = remoteMessage.getNotification().getTitle();

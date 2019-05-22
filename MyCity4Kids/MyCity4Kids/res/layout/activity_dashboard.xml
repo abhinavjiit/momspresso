@@ -584,22 +584,43 @@
                     android:layout_marginLeft="100dp"
                     android:background="@color/white" />
 
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/exploreGuideTextView"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/exploreVerticalLine"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/white"
-                    android:paddingLeft="9dp"
-                    android:paddingTop="7dp"
-                    android:paddingRight="9dp"
-                    android:paddingBottom="7dp"
-                    android:text="@string/coachmark.explore"
-                    android:textColor="@color/black"
-                    app:fontName="oswald.ttf" />
+                    android:layout_marginLeft="35dp"
+                    android:background="@drawable/coachmark_round_layout"
+                    android:gravity="center"
+
+                    >
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/exploreGuideTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:paddingLeft="9dp"
+                        android:paddingTop="15dp"
+                        android:paddingRight="9dp"
+                        android:paddingBottom="15dp"
+                        android:src="@drawable/mymoney_logo"
+                        android:textColor="@color/black"
+                        app:fontName="oswald.ttf" />
+
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/exploreGuideTextView"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/space_10"
+                        android:paddingLeft="@dimen/space_25"
+                        android:paddingRight="@dimen/space_25"
+                        android:text="BROWSE.PARTICIPATE.EARN."
+                        android:textColor="#656565"
+                        android:textSize="16sp"
+                        app:fontName="oswald.ttf" />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/navBarExplore"
@@ -627,6 +648,7 @@
                         <android.support.v7.widget.AppCompatImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
+                            android:tint="@color/white"
                             android:visibility="visible"
                             app:srcCompat="@drawable/ic_bottom_discover" />
 

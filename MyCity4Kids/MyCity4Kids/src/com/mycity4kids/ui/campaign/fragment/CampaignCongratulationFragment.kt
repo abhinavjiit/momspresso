@@ -91,23 +91,23 @@ class CampaignCongratulationFragment : BaseFragment() {
         }
 
         spannable = SpannableStringBuilder()
-        var newColorString = "7 working days"
+        var newColorString = " 7 working days "
         var str = pendingTextView.text.toString()
-        var iStart = str.indexOf("7 working days")
-        var iEnd = iStart + 14
-        val ssText = SpannableString(newColorString)
-        ssText.setSpan(ForegroundColorSpan(resources.getColor(R.color.app_red)), iStart, iEnd, 0)
-        spannable.append(ssText)
-
-        var preString = str.subSequence(0, iStart - 1)
+        var iStart = str.indexOf(" 7 working days ")
+        var iEnd = iStart + 16
+        var preString = str.subSequence(0, iStart)
         val ssText1 = SpannableString(preString)
-        ssText1.setSpan(ForegroundColorSpan(resources.getColor(R.color.greytxt_color)), 0, iStart - 1, 0)
+        ssText1.setSpan(ForegroundColorSpan(resources.getColor(R.color.greytxt_color)), 0, preString.length, 0)
         spannable.append(ssText1)
 
+        val ssText = SpannableString(newColorString)
+        ssText.setSpan(ForegroundColorSpan(resources.getColor(R.color.app_red)), 0, newColorString.length, 0)
+        spannable.append(ssText)
 
-        var postString = str.subSequence(iStart + 1, str.length)
+
+        var postString = str.subSequence(iEnd, str.length)
         val ssText2 = SpannableString(postString)
-        ssText2.setSpan(ForegroundColorSpan(resources.getColor(R.color.greytxt_color)), 0, iStart - 1, 0)
+        ssText2.setSpan(ForegroundColorSpan(resources.getColor(R.color.greytxt_color)), 0, postString.length, 0)
         spannable.append(ssText2)
 
 
