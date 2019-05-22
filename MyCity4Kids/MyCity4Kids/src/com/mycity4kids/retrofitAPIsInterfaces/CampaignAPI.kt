@@ -5,7 +5,9 @@ import com.mycity4kids.models.request.CampaignParticipate
 import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
-import com.mycity4kids.ui.campaign.*
+import com.mycity4kids.ui.campaign.AddAccountDetailModal
+import com.mycity4kids.ui.campaign.BankNameModal
+import com.mycity4kids.ui.campaign.DefaultData
 import com.mycity4kids.ui.campaign.PaymentModeListModal
 import io.reactivex.Observable
 import retrofit2.Call
@@ -22,8 +24,8 @@ interface CampaignAPI {
 
 
     @GET("/rewards/v1/campaigns/{campaign-id}")
-    fun getCampaignDetail(@Path("campaign-id") campaignId: Int
-    )
+    fun getCampaignDetail(@Path("campaign-id") campaignId: Int,
+                          @Query("v") v: Double)
             : Observable<BaseResponseGeneric<CampaignDetailResult>>
 
     @GET("/v1/utilities/faqs/rewards/")

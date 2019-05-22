@@ -203,7 +203,7 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     private fun fetchCampaignDetail() {
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(this!!.id!!).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(this!!.id!!,2.0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
 
 
             override fun onComplete() {
@@ -517,6 +517,20 @@ class CampaignDetailFragment : BaseFragment() {
             applicationStatus.setBackgroundResource(R.drawable.campaign_completed)
             labelText.setText(context!!.resources.getString(R.string.label_campaign_completed))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward))
+        } else if (status == 9) {
+            hideShowReferral(status)
+            applicationStatus.setText(context!!.resources.getString(R.string.campaign_list_proof_moderation))
+            applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
+            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_proof_moderation), Toast.LENGTH_SHORT).show()
+            labelText.setText(context!!.resources.getString(R.string.label_campaign_proof_moderation))
+            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_submit_proof))
+        } else if (status == 10) {
+            hideShowReferral(status)
+            applicationStatus.setText(context!!.resources.getString(R.string.campaign_list_proof_reject))
+            applicationStatus.setBackgroundResource(R.drawable.campaign_proof_rejected_bg)
+            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_proof_reject), Toast.LENGTH_SHORT).show()
+            labelText.setText(context!!.resources.getString(R.string.label_campaign_completed))
+            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_submit_proof))
         }
     }
 
