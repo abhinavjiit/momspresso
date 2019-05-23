@@ -497,32 +497,6 @@
                         app:fontName="oswald_regular.ttf" />
                 </RelativeLayout>
 
-                <!--<LinearLayout-->
-                <!--android:layout_width="100dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="8dp"-->
-                <!--android:background="#0ea2e8"-->
-                <!--android:orientation="vertical">-->
-
-                <!--<ImageView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:padding="10dp"-->
-                <!--android:src="@drawable/tab5_selected" />-->
-
-                <!--<com.mycity4kids.widget.CustomFontTextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:padding="10dp"-->
-                <!--android:text="Trending"-->
-                <!--android:textColor="@color/white"-->
-                <!--android:textSize="14sp"-->
-                <!--app:fontName="oswald_regular.ttf" />-->
-                <!--</LinearLayout>-->
-
             </LinearLayout>
 
 

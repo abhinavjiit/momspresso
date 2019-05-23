@@ -31,9 +31,7 @@ public class NotificationActivity extends BaseActivity {
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.black_color), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
-
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-
         NotificationFragment fragment = new NotificationFragment();
         Bundle mBundle = new Bundle();
         fragment.setArguments(mBundle);

@@ -58,8 +58,8 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
         toolbar = view.findViewById(R.id.toolbar)
 
         if (arguments != null) {
-            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
-                arguments.getBoolean("isComingFromRewards")
+            isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
+                arguments!!.getBoolean("isComingFromRewards")
             } else {
                 false
             }

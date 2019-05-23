@@ -9,8 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
-import android.location.Address
-import android.location.Geocoder
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -22,9 +20,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.facebook.accountkit.AccountKitLoginResult
 import com.facebook.accountkit.ui.AccountKitActivity
 import com.facebook.accountkit.ui.AccountKitConfiguration
@@ -188,14 +184,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
 
         if (arguments != null) {
-            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
-                arguments.getBoolean("isComingFromRewards")
+            isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
+                arguments!!.getBoolean("isComingFromRewards")
             } else {
                 false
             }
 
-            isComingFromCampaign = if (arguments.containsKey("isComingfromCampaign")) {
-                arguments.getBoolean("isComingfromCampaign")
+            isComingFromCampaign = if (arguments!!.containsKey("isComingfromCampaign")) {
+                arguments!!.getBoolean("isComingfromCampaign")
             } else {
                 false
             }
@@ -879,7 +875,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)
         bundle.putBoolean("is_show_future_only", isShowFutureDate)
         newFragment.arguments = bundle
-        newFragment.show(activity.supportFragmentManager, "datePicker")
+        newFragment.show(activity!!.supportFragmentManager, "datePicker")
     }
 
 
@@ -900,8 +896,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             val dlg = DatePickerDialog(activity, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day)
 
             if (arguments != null) {
-                isShowTillCurrent = arguments.getBoolean("is_show_current_only", false)
-                isShowFutureOnly = arguments.getBoolean("is_show_future_only", false)
+                isShowTillCurrent = arguments!!.getBoolean("is_show_current_only", false)
+                isShowFutureOnly = arguments!!.getBoolean("is_show_future_only", false)
             }
             dlg.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             if (isShowTillCurrent) {
@@ -975,7 +971,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     fun createKidsDetailDynamicView(gender: Int? = null, date: String = "", name: String? = "", shouldDelteShow: Boolean = true) {
         val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater = activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val indexView = inflater.inflate(R.layout.dynamic_child_view, null)
         var textHeader = indexView.findViewById<TextView>(R.id.textHeader)
         var textDelete = indexView.findViewById<TextView>(R.id.textDeleteChild)

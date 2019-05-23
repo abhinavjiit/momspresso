@@ -81,7 +81,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                 if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
                     var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards)
                     paymentModeDtailsSubmissionFragment.setTargetFragment(this@CampaignPaymentModesFragment,2019)
-                    (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
+                    (activity)!!.supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                             CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
                             .commit()
                 } else {
@@ -92,14 +92,14 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                 if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
                     var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards)
                     paymentModeDtailsSubmissionFragment.setTargetFragment(this@CampaignPaymentModesFragment,2019)
-                    (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
+                    (activity)!!.supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                             CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
                             .commit()
                 } else {
                     val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].id
                     postApiForDefaultPaymantMode(paymentModeId)
                     var panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = isComingFromRewards)
-                    (activity).supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
+                    (activity)!!.supportFragmentManager.beginTransaction().add(R.id.container, panCardDetailsSubmissionFragment,
                             CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
                             .commit()
                 }
@@ -136,7 +136,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     override fun onCellClick(paymentModeId: Int, position: Int) {
         var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "comingForEdit", isComingFromRewards = isComingFromRewards)
         paymentModeDtailsSubmissionFragment.setTargetFragment(this@CampaignPaymentModesFragment,2019)
-        (activity).supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
+        (activity)!!.supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                 PanCardDetailsSubmissionFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
                 .commit()
     }
@@ -164,8 +164,8 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         back = view.findViewById(R.id.back)
 
         if (arguments != null) {
-            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
-                arguments.getBoolean("isComingFromRewards")
+            isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
+                arguments!!.getBoolean("isComingFromRewards")
 
             } else {
                 false

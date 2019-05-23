@@ -549,7 +549,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
                         Fragment selectedFragment = null;
                         switch (item.getItemId()) {
-
                             case R.id.action_profile:
                                 hideCreateContentView();
                                 if (topFragment instanceof ExploreArticleListingTypeFragment) {
@@ -2910,9 +2909,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
                 draftListResult.setUpdatedTime((allDraftsList.get(position).getUpdatedTime()));
                 draftListResult.setTags(allDraftsList.get(position).getTags());
-                // draftListResult.setContentType(allDraftsList.get(position).getContentType());
-
-
                 Intent intent = new Intent(this, AddShortStoryActivity.class);
                 intent.putExtra("draftItem", draftListResult);
                 intent.putExtra("from", "draftList");
@@ -2932,9 +2928,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 draftListResult.setTitle(allDraftsList.get(position).getTitle());
                 draftListResult.setCreatedTime(allDraftsList.get(position).getCreatedTime());
                 draftListResult.setUpdatedTime((allDraftsList.get(position).getUpdatedTime()));
-                //      draftListResult.setTags(allDraftsList.get(position).getTags());
-
-
                 Intent intent = new Intent(this, EditorPostActivity.class);
                 intent.putExtra("draftItem", draftListResult);
                 intent.putExtra("from", "draftList");

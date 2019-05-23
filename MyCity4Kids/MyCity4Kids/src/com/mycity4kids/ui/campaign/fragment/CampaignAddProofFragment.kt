@@ -101,7 +101,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     }
 
     fun showEditDeleteProofDialog(cellIndex: Int) {
-        val dialog = AlertDialog.Builder(activity, R.style.MyAlertDialogStyle)
+        val dialog = AlertDialog.Builder(activity!!, R.style.MyAlertDialogStyle)
         dialog.setMessage("Are you sure? you want to delete this image.").setNegativeButton("Delete") { dialog, which ->
             dialog.cancel()
             if (!campaignImageProofList.isNullOrEmpty() && cellIndex < campaignImageProofList.size && !campaignImageProofList.get(cellIndex).url.isNullOrEmpty()) {
@@ -156,16 +156,16 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         recyclerFaqs = view.findViewById<RecyclerView>(R.id.recyclerFaqs)
         recyclerFaqs.layoutManager = LinearLayoutManager(context)
 
-        if (arguments != null && arguments.containsKey("id") && arguments.containsKey("deliverableTypeList")) {
+        if (arguments != null && arguments!!.containsKey("id") && arguments!!.containsKey("deliverableTypeList")) {
 
-            campaignId = if (arguments.containsKey("id")) {
-                arguments.getInt("id")
+            campaignId = if (arguments!!.containsKey("id")) {
+                arguments!!.getInt("id")
             } else {
                 0
             }
 
-            deliverableTypeList = if (arguments.containsKey("deliverableTypeList")) {
-                arguments.getIntegerArrayList("deliverableTypeList")
+            deliverableTypeList = if (arguments!!.containsKey("deliverableTypeList")) {
+                arguments!!.getIntegerArrayList("deliverableTypeList")
             } else {
                 emptyList<Int>() as ArrayList<Int>
             }

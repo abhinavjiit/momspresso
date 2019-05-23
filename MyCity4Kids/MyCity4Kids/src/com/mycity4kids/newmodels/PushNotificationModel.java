@@ -26,6 +26,24 @@ public class PushNotificationModel implements Parcelable {
     private String blogTitleSlug;
     private String titleSlug;
     private int campaign_id;
+    private String rich_image_url;
+    private String sound;
+
+    public String getSound() {
+        return sound;
+    }
+
+    public void setSound(String sound) {
+        this.sound = sound;
+    }
+
+    public String getRich_image_url() {
+        return rich_image_url;
+    }
+
+    public void setRich_image_url(String rich_image_url) {
+        this.rich_image_url = rich_image_url;
+    }
 
     public int getCampaign_id() {
         return campaign_id;

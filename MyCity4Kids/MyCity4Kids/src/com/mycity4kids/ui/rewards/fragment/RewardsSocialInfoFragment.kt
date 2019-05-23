@@ -143,14 +143,14 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         containerView = inflater.inflate(R.layout.fragment_rewards_social_info, container, false)
 
         if (arguments != null){
-            isComingFromRewards = if(arguments.containsKey("isComingFromRewards")){
-                arguments.getBoolean("isComingFromRewards")
+            isComingFromRewards = if(arguments!!.containsKey("isComingFromRewards")){
+                arguments!!.getBoolean("isComingFromRewards")
             }else{
                 false
             }
 
-            isComingFromCampaign = if(arguments.containsKey("fromFromCampaign")){
-                arguments.getBoolean("fromFromCampaign")
+            isComingFromCampaign = if(arguments!!.containsKey("fromFromCampaign")){
+                arguments!!.getBoolean("fromFromCampaign")
             }else{
                 false
             }

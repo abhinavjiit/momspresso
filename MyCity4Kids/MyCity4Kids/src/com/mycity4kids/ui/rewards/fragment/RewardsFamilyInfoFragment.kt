@@ -189,14 +189,14 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         containerView = inflater.inflate(R.layout.fragment_rewards_family_info, container, false)
 
         if (arguments != null) {
-            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
-                arguments.getBoolean("isComingFromRewards")
+            isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
+                arguments!!.getBoolean("isComingFromRewards")
             } else {
                 false
             }
 
-            isComingFromCampaign = if (arguments.containsKey("isComingfromCampaign")) {
-                arguments.getBoolean("isComingfromCampaign")
+            isComingFromCampaign = if (arguments!!.containsKey("isComingfromCampaign")) {
+                arguments!!.getBoolean("isComingfromCampaign")
             } else {
                 false
             }
@@ -479,7 +479,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     fun createKidsDetailDynamicView(gender: Int? = null, date: String = "", name: String? = "", shouldDelteShow: Boolean = true) {
         val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater = activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val indexView = inflater.inflate(R.layout.dynamic_child_view, null)
         var textHeader = indexView.findViewById<TextView>(R.id.textHeader)
         var textDelete = indexView.findViewById<TextView>(R.id.textDeleteChild)
@@ -565,7 +565,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)
         bundle.putBoolean("is_show_future_only", isShowFutureDate)
         newFragment.arguments = bundle
-        newFragment.show(activity.supportFragmentManager, "datePicker")
+        newFragment.show(activity!!.supportFragmentManager, "datePicker")
     }
 
     /*send data to server*/

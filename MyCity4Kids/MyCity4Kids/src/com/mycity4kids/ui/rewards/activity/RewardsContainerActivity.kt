@@ -3,6 +3,7 @@ package com.mycity4kids.ui.rewards.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import com.facebook.CallbackManager
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
@@ -41,6 +42,7 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     override fun socialOnSubmitListener() {
+        pageLimit!!+1
         addPaymentModesFragment()
 //        this@RewardsContainerActivity.finish()
     }
@@ -71,9 +73,9 @@ class RewardsContainerActivity : BaseActivity(),
             }
 
             if (intent.hasExtra("pageNumber")) {
-                pageNumber = intent.getIntExtra("pageNumber", 2)
+                pageNumber = intent.getIntExtra("pageNumber", 1)
             } else {
-                pageNumber = 2
+                pageNumber = 1
             }
 
             if (intent.hasExtra("isComingfromCampaign")) {
@@ -83,7 +85,7 @@ class RewardsContainerActivity : BaseActivity(),
             }
         }
 
-        if (pageNumber == 2) {
+        if (pageNumber == 1) {
             addProfileFragment()
         } else if (pageNumber == 3) {
             addSocialFragment()
@@ -101,7 +103,7 @@ class RewardsContainerActivity : BaseActivity(),
     }
 
     private fun initializeXMLComponents() {
-        findViewById(R.id.langTextView).setOnClickListener {
+        findViewById<TextView>(R.id.langTextView).setOnClickListener {
             val changePreferredLanguageDialogFragment = ChangePreferredLanguageDialogFragment()
             val fm = supportFragmentManager
             val _args = Bundle()
