@@ -172,7 +172,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 if (type.equalsIgnoreCase("upcoming_event_list")) {
                     Log.i(TAG, " INSIDE EVENTS LIST: " + msg);
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher);
+                            R.drawable.ic_launcher
+                    );
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;

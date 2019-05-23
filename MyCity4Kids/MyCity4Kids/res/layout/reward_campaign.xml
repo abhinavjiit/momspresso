@@ -51,7 +51,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/space_10"
                 android:padding="@dimen/space_10"
-                android:src="@drawable/profile_icon" />
+                app:srcCompat="@drawable/profile_icon" />
 
             <View
                 android:layout_width="match_parent"

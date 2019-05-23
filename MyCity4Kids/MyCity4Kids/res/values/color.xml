@@ -493,6 +493,13 @@
     <color name="campaign_approved_rejected">#6FA138</color>
     <color name="campaign_feed_register">#23C9AC</color>
     <color name="campaign_feed_register_textview">#23CAAD</color>
+    <color name="campaign_apply_bg">#D3425A</color>
+    <color name="campaign_applied_bg">#4A90E2</color>
+    <color name="campaign_completed_bg">#0EC0A1</color>
+    <color name="campaign_submission_full_bg">#F5A623</color>
+    <color name="campaign_invite_only_bg">#7566E5</color>
+    <color name="campaign_submit_proof_bg">#73B926</color>
+    <color name="campaign_proof_reject_bg">#212121</color>
 
     <color name="black_64">#A6000000</color>
 </resources>

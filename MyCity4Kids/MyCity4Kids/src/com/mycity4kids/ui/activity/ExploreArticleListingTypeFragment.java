@@ -141,8 +141,10 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         rewardsContainer.setOnClickListener(this);
 
         if (SharedPrefUtils.getMyMoney(getActivity()) == 0) {
-            coachmarkMyMoney.setVisibility(View.VISIBLE);
-            coachmarkMymoneyLinearLayout.setVisibility(View.VISIBLE);
+            coachmarkMyMoney.setVisibility(View.GONE);
+            coachmarkMymoneyLinearLayout.setVisibility(View.GONE);
+            quickLinkContainer.setVisibility(View.VISIBLE);
+
 
         } else {
             quickLinkContainer.setVisibility(View.VISIBLE);

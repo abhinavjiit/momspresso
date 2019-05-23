@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -38,10 +39,10 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="false"
         android:text="CONGRATULATIONS!"
         android:textColor="#4A4A4A"
         android:textSize="30dp"
-        android:clickable="false"
         app:fontName="oswald_regular.ttf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,20 +59,24 @@
         android:buttonTint="@color/app_red"
         android:checked="true"
         android:clickable="true"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView5" />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:layout_width="300dp"
+        android:id="@+id/thankYouForSubmittingTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_20"
-        android:gravity="center_vertical"
+        android:clickable="false"
+        android:gravity="center_horizontal"
         android:text="Thanks for submitting proof and payment details"
         android:textColor="#4A4A4A"
-        android:textSize="16sp"
-        android:clickable="false"
-        app:fontName="oswald.ttf"
-        app:layout_constraintStart_toEndOf="@id/radioButton"
+        android:textSize="20sp"
+        android:visibility="visible"
+        app:fontName="oswald_regular.ttf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView5" />
 
 
@@ -83,6 +88,7 @@
         android:layout_marginTop="@dimen/space_30"
         android:background="@drawable/circular_image_bg"
         android:backgroundTint="#F494A3"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/radioButton"
 
@@ -96,23 +102,28 @@
         android:layout_marginTop="@dimen/space_30"
         android:background="@drawable/circular_image_bg"
         android:backgroundTint="#F494A3"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/one"
 
         />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/space_5"
-        android:layout_marginTop="25dp"
-        android:text="Proof approval is pending"
-        android:textSize="16sp"
-        app:fontName="oswald.ttf"
+        android:id="@+id/pendingTextView"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="20dp"
         android:clickable="false"
-        app:layout_constraintStart_toEndOf="@id/one"
-        app:layout_constraintTop_toBottomOf="@+id/radioButton" />
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="We'll review and be in touch in next 7 working days till then you can take part in other interesting campaigns"
+        android:textSize="16sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/thankYouForSubmittingTextView" />
 
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -123,9 +134,10 @@
         android:layout_marginTop="22dp"
         android:text="Post approval, payment would be made"
         android:textSize="16sp"
+        android:visibility="gone"
         app:fontName="oswald.ttf"
         app:layout_constraintStart_toEndOf="@id/two"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/pendingTextView" />
 
     <RelativeLayout
         android:id="@+id/l"
@@ -141,7 +153,10 @@
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/ldki"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="170dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/illustration"
 
             />
@@ -157,8 +172,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/v"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/space_5"
-            android:background="@drawable/update_profile_bg"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/shape_down_side_corner_layout"
             android:gravity="center_horizontal"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
@@ -167,7 +182,7 @@
             android:shadowColor="#EBABB5"
             android:shadowDx="0"
             android:shadowDy="3"
-            android:text="REFER THE CAMPAIGN"
+            android:text="SHARE THE JOY"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -204,8 +219,23 @@
             android:id="@+id/genricShareImageView"
             android:layout_width="38dp"
             android:layout_height="38dp"
+            android:tint="#38C5A5"
             app:srcCompat="@drawable/ic_share_camp" />
 
     </LinearLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/continueBrowsingCampaignsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_red"
+        android:gravity="center"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp"
+        android:text="CONTINUE BROWSING CAMPAIGNS"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:fontName="oswald_regular.ttf"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

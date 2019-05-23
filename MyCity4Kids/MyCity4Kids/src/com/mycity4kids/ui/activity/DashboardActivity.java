@@ -118,7 +118,6 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -187,8 +186,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private View overlayView;
     private RelativeLayout createContentContainer;
     private TextView usernameTextView, coachUsernameTextView, videosTextView, shortStoryTextView,
-            momspressoTextView, groupsTextView, bookmarksTextView, settingTextView, rewardsTextView;
-    private LinearLayout drawerTopContainer, drawerContainer;
+            momspressoTextView, groupsTextView, bookmarksTextView, settingTextView;
+    private LinearLayout drawerTopContainer, drawerContainer, rewardsTextView;
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
     private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, drawerProfileCoachmark,
@@ -299,7 +298,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         shortStoryTextView = (TextView) findViewById(R.id.shortStoryTextView);
         momspressoTextView = (TextView) findViewById(R.id.momspressoTextView);
         groupsTextView = (TextView) findViewById(R.id.groupsTextView);
-        rewardsTextView = (TextView) findViewById(R.id.rewardsTextView);
+        rewardsTextView = (LinearLayout) findViewById(R.id.rewardsTextView);
         bookmarksTextView = (TextView) findViewById(R.id.bookmarksTextView);
         settingTextView = (TextView) findViewById(R.id.settingTextView);
         usernameTextView = (TextView) findViewById(R.id.usernameTextView);
@@ -1726,7 +1725,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.drawerProfileCoachmark: {
                 drawerProfileCoachmark.setVisibility(View.GONE);
-                drawerMyMoneyCoachmark.setVisibility(View.VISIBLE);
+                drawerMyMoneyCoachmark.setVisibility(View.GONE);
+                SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "Drawer", true);
+
             }
             break;
          /*   case R.id.drawerSettingsCoachmark: {

@@ -138,7 +138,7 @@ class CampaignListFragment : BaseFragment() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
-        val call = campaignAPI.getCampaignList(userId, startIndex, endIndex, 2.0)
+        val call = campaignAPI.getCampaignList(userId, startIndex, endIndex, 3.0)
         call.enqueue(getCampaignList)
     }
 

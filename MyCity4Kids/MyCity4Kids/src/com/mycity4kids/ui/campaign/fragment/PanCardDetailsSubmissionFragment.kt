@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
@@ -24,7 +26,10 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.adapter.rxjava2.HttpException
+import java.io.InputStreamReader
 import java.util.regex.Pattern
+
 
 class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 
@@ -145,23 +150,36 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                         override fun onSubscribe(d: Disposable) {
                         }
 
-                        override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
-                            if (isComingFromRewards) {
-                                submitOnClickListener.onPanCardDone()
-                            } else {
-                                Utils.campaignEvent(activity, "Thank you screen", "Pan Card", "Submit", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Submission_Success")
-                                var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
-                                (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
-                                        CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
-                                        .commit()
+                        override fun onNext(response: BaseResponseGeneric<ProofPostModel>) {
+                            if (response != null && response.code == 200 && response.data != null && response.data!!.result != null) {
+                                if (isComingFromRewards) {
+                                    submitOnClickListener.onPanCardDone()
+                                } else {
+                                    Utils.campaignEvent(activity, "Thank you screen", "Pan Card", "Submit", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Submission_Success")
+                                    var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
+                                    (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
+                                            CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
+                                            .commit()
+                                }
+
+
                             }
-
-
                         }
 
                         override fun onError(e: Throwable) {
                             removeProgressDialog()
+                            val code = (e as HttpException).code()
+                            if (code == 400) {
+                                var data = (e as HttpException).response().errorBody()!!.byteStream()
+                                var jsonParser = JsonParser()
+                                var jsonObject = jsonParser.parse(
+                                        InputStreamReader(data, "UTF-8")) as JsonObject
+                                var reason = jsonObject.get("reason")
+                                Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
+                            }
+
                             Log.e("exception in error", e.message.toString())
+
 
                         }
 
@@ -179,11 +197,34 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                         override fun onSubscribe(d: Disposable) {
                         }
 
-                        override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
+                        override fun onNext(response: BaseResponseGeneric<ProofPostModel>) {
+                            if (response != null && response.code == 200 && response.data != null && response.data!!.result != null) {
+                                if (isComingFromRewards) {
+                                    submitOnClickListener.onPanCardDone()
+                                } else {
+                                    Utils.campaignEvent(activity, "Thank you screen", "Pan Card", "Submit", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Submission_Success")
+                                    var campaignCongratulationFragment = CampaignCongratulationFragment.newInstance()
+                                    (context as CampaignContainerActivity).supportFragmentManager.beginTransaction().add(R.id.container, campaignCongratulationFragment,
+                                            CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
+                                            .commit()
+                                }
+
+
+                            }
                         }
 
                         override fun onError(e: Throwable) {
                             removeProgressDialog()
+                            val code = (e as HttpException).code()
+                            if (code == 400) {
+                                var data = (e as HttpException).response().errorBody()!!.byteStream()
+                                var jsonParser = JsonParser()
+                                var jsonObject = jsonParser.parse(
+                                        InputStreamReader(data, "UTF-8")) as JsonObject
+                                var reason = jsonObject.get("reason")
+                                Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
+                            }
+
                             Log.e("exception in error", e.message.toString())
                         }
 
