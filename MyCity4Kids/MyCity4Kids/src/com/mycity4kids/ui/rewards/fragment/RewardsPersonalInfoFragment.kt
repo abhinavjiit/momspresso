@@ -33,6 +33,7 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
+import com.mycity4kids.MessageEvent
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
@@ -58,6 +59,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_rewards_family_info.*
 import org.apmem.tools.layouts.FlowLayout
+import org.greenrobot.eventbus.EventBus
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -178,10 +180,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_personal_info, container, false)
-
 
         if (arguments != null) {
             isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
@@ -202,6 +202,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         /*fetch data from server*/
         fetchRewardsData()
+
+        EventBus.getDefault().post(MessageEvent("Hello everyone"))
 
         return containerView
     }
@@ -776,7 +778,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
                     Log.e("response is ", Gson().toJson(response.data))
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
-                        //apiGetResponse = response.data!!.result
                         saveAndContinueListener.profileOnSaveAndContinue()
                     } else {
 

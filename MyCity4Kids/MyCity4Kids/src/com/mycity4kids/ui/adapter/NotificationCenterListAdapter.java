@@ -649,7 +649,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", AppConstants.NOTIFICATION_TYPE_CAMPAIGN_DETAIL);
                     Intent campaignIntent = new Intent(mContext, CampaignContainerActivity.class);
-                    campaignIntent.putExtra("campaign_id", notificationList.get(position).getCampaign_id());
+                    campaignIntent.putExtra("campaign_id", notificationList.get(position).getCampaign_id() + "");
                     campaignIntent.putExtra("campaign_detail", "campaign_detail");
                     mContext.startActivity(campaignIntent);
                     try {
@@ -672,7 +672,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", AppConstants.NOTIFICATION_TYPE_CAMPAIGN_SUBMIT_PROOF);
                     Intent campaignIntent = new Intent(mContext, CampaignContainerActivity.class);
-                    campaignIntent.putExtra("campaign_Id", notificationList.get(position).getCampaign_id());
+                    campaignIntent.putExtra("campaign_Id", notificationList.get(position).getCampaign_id() + "");
                     campaignIntent.putExtra("campaign_submit_proof", "campaign_submit_proof");
                     mContext.startActivity(campaignIntent);
                     try {
@@ -744,7 +744,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     campaignIntent.putExtra("isComingfromCampaign", true);
                     campaignIntent.putExtra("pageLimit", 4);
                     campaignIntent.putExtra("pageNumber", 4);
-                    campaignIntent.putExtra("campaign_Id", notificationList.get(position).getCampaign_id());
+                    campaignIntent.putExtra("campaign_Id", notificationList.get(position).getCampaign_id() + "");
                     campaignIntent.putExtra("mymoney_bankdetails", "mymoney_bankdetails");
                     mContext.startActivity(campaignIntent);
                     try {

@@ -64,10 +64,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
         deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
-
-
-
-
         if (intent.hasExtra("campaign_id") && intent.hasExtra("campaign_detail")) {
             notificationCampaignId = intent.getStringExtra("campaign_id")
             comingFrom = "campaign_detail"
@@ -75,9 +71,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         } else {
             notificationCampaignId = ""
         }
-
-
-
 
         if (intent.hasExtra("campaign_Id") && intent.hasExtra("campaign_submit_proof")) {
             notificationCampaignSubmitProof = intent.getStringExtra("campaign_Id")
