@@ -20,12 +20,18 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
+import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.activity.EditProfileNewActivity
 import com.mycity4kids.ui.adapter.RewardCampaignAdapter
+import com.mycity4kids.ui.campaign.PaymentModeListModal
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.EndlessScrollListener
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import java.util.*
@@ -79,6 +85,12 @@ class CampaignListFragment : BaseFragment() {
         recyclerView.adapter = adapter
         if (campaignList.size == 0)
             fetchCampaignList(0)
+
+
+
+
+
+
 
         profileIcon.setOnClickListener {
             val intent = Intent(context, EditProfileNewActivity::class.java)
@@ -171,6 +183,7 @@ class CampaignListFragment : BaseFragment() {
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
     }
+
 
 }
 

@@ -101,8 +101,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             paymantModeId = arguments!!.getInt("id")
             comingFrom = arguments!!.getString("comingFrom")
 
-            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
-                arguments.getBoolean("isComingFromRewards")
+            isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
+                arguments!!.getBoolean("isComingFromRewards")
             } else {
                 false
             }

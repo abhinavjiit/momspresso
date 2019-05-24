@@ -44,8 +44,8 @@ class RewardsTabFragment : Fragment() {
             Utils.campaignEvent(activity, "personalInfo", "reward_tab", "personalInfoText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "personal_info_detail")
 
             var intent = Intent(activity, RewardsContainerActivity::class.java)
-            intent.putExtra("pageLimit", 2)
-            intent.putExtra("pageNumber", 2)
+            intent.putExtra("pageLimit", 1)
+            intent.putExtra("pageNumber", 1)
             startActivity(intent)
         }
 

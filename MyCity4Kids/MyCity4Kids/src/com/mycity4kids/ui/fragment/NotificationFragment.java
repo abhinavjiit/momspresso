@@ -57,11 +57,9 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.aa_notification, container, false);
-
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mContext = (DashboardActivity) BaseApplication.getInstance().getDashboardActivity();
-
         notificationCenterResultArrayList = new ArrayList<>();
         notificationListView = (ListView) view.findViewById(R.id.notificationListView);
         notificationCenterListAdapter = new NotificationCenterListAdapter(getActivity(), notificationCenterResultArrayList);
@@ -111,22 +109,17 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-//                showToast("Something went wrong from server");
                 return;
             }
             try {
                 NotificationCenterListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponse(responseData);
-//                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());
-//                    notificationCenterListAdapter.notifyDataSetChanged();
                 } else {
-//                    showToast(responseData.getReason());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -135,7 +128,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
             progressBar.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-//            showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -186,7 +178,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                 } else {
                     paginationValue = responseData.getData().getPagination().getId() + "_" + responseData.getData().getPagination().getCreatedTime();
                 }
-//                notificationCenterListAdapter.setNewListData(notificationCenterResultArrayList);
                 notificationCenterListAdapter.notifyDataSetChanged();
             }
         } catch (Exception ex) {
@@ -214,22 +205,18 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-//                showToast("Something went wrong from server");
                 return;
             }
             try {
                 NotificationCenterListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     paginationValue = "";
-//                    ((DashboardActivity) getActivity()).updateUnreadNotificationCount("0");
                     getNotificationFromAPI();
                 } else {
-//                    showToast(responseData.getReason());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -237,7 +224,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
         public void onFailure(Call<NotificationCenterListResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-//            showToast(getString(R.string.went_wrong));
         }
     };
 

@@ -47,7 +47,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.aa_attendee_item.view.*
 import kotlinx.android.synthetic.main.event_details_activity.*
 import kotlinx.android.synthetic.main.fragment_rewards_family_info.*
-import kotlinx.android.synthetic.main.fragment_rewards_personal_info.*
 import kotlinx.android.synthetic.main.splash_activity.*
 import org.apmem.tools.layouts.FlowLayout
 import java.text.ParseException
@@ -190,21 +189,18 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         containerView = inflater.inflate(R.layout.fragment_rewards_family_info, container, false)
 
         if (arguments != null) {
-            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
-                arguments.getBoolean("isComingFromRewards")
+            isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
+                arguments!!.getBoolean("isComingFromRewards")
             } else {
                 false
             }
 
-            isComingFromCampaign = if (arguments.containsKey("isComingfromCampaign")) {
-                arguments.getBoolean("isComingfromCampaign")
+            isComingFromCampaign = if (arguments!!.containsKey("isComingfromCampaign")) {
+                arguments!!.getBoolean("isComingfromCampaign")
             } else {
                 false
             }
         }
-
-        /*initialize XML components*/
-        initializeXMLComponents()
 
         /*fetch data from server*/
         fetchRewardsData()
@@ -336,180 +332,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             textDeleteChild.visibility = View.GONE
             linearKidsEmptyView.visibility = View.VISIBLE
         }
-    }
-
-    private fun initializeXMLComponents() {
-        editExpectedDate = containerView.findViewById(R.id.editExpectedDate)
-        radioGroupWorkingStatus = containerView.findViewById(R.id.radioGroupWorkingStatus)
-        genderSpinner = containerView.findViewById(R.id.genderSpinner)
-        spinnerGender = containerView.findViewById(R.id.spinnerGender)
-        editKidsName = containerView.findViewById(R.id.editKidsName)
-        layoutNumberOfKids = containerView.findViewById(R.id.layoutNumberOfKids)
-        layoutMotherExptectedDate = containerView.findViewById(R.id.layoutExptectedDateOfDelivery)
-        linearKidsDetail = containerView.findViewById(R.id.linearKidsDetail)
-        textAddChild = containerView.findViewById(R.id.textAddChild)
-        radioYes = containerView.findViewById(R.id.radioYes)
-        radioNo = containerView.findViewById(R.id.radioNo)
-        checkNuclear = containerView.findViewById(R.id.checkNuclear)
-        checkJoint = containerView.findViewById(R.id.checkJoint)
-        textEditInterest = containerView.findViewById(R.id.textEditInterest)
-        floatingInterest = containerView.findViewById(R.id.floatingInterest)
-        linearInterest = containerView.findViewById(R.id.linearInterest)
-        editInterest = containerView.findViewById(R.id.editInterest)
-        textEditInterest = containerView.findViewById(R.id.textEditInterest)
-        floatingLanguage = containerView.findViewById(R.id.floatingLanguage)
-        linearLanguage = containerView.findViewById(R.id.linearLanguage)
-        editLanguage = containerView.findViewById(R.id.editLanguage)
-        textEditLanguage = containerView.findViewById(R.id.textEditLanguage)
-        radioGroupAreMother = containerView.findViewById<RadioGroup>(R.id.radioGroupAreMother)
-        layoutDynamicNumberOfKids = containerView.findViewById(R.id.layoutDynamicNumberOfKids)
-        RewardsFamilyInfoFragment.textKidsDOB = containerView.findViewById(R.id.textKidsDOB)
-        RewardsFamilyInfoFragment.textDOB = containerView.findViewById(R.id.textDOB)
-        textDeleteChild = containerView.findViewById(R.id.textDeleteChild)
-        linearKidsEmptyView = containerView.findViewById(R.id.linearKidsEmptyView)
-
-        textDeleteChild.setOnClickListener {
-            if (linearKidsDetail.childCount > 0) {
-                if (linearKidsDetail.childCount == 1) {
-                    linearKidsDetail.getChildAt(0).findViewById<TextView>(R.id.textDeleteChild).visibility = View.GONE
-                    linearKidsEmptyView.visibility = View.GONE
-                } else {
-                    linearKidsEmptyView.visibility = View.GONE
-                }
-
-            }
-        }
-
-        (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-            override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
-                if (isChecked) {
-                    layoutMotherExptectedDate.visibility = View.VISIBLE
-                } else {
-                    layoutMotherExptectedDate.visibility = View.GONE
-                    editExpectedDate.setText("")
-                }
-            }
-        })
-
-        textAddChild.setOnClickListener {
-            if (validateChildData()) {
-                createKidsDetailDynamicView()
-            } else {
-
-            }
-        }
-
-        textEditInterest.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
-                    isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@RewardsFamilyInfoFragment)
-            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
-        }
-
-        editInterest.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.INTEREST.name,
-                    isSingleSelection = true, preSelectedItemIds = preSelectedInterest, context = this@RewardsFamilyInfoFragment)
-            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
-        }
-
-        RewardsFamilyInfoFragment.textDOB.setOnClickListener {
-            RewardsFamilyInfoFragment.textView = RewardsFamilyInfoFragment.textDOB
-            showDatePickerDialog(true)
-        }
-
-        RewardsFamilyInfoFragment.textKidsDOB.setOnClickListener {
-            RewardsFamilyInfoFragment.textView = RewardsFamilyInfoFragment.textKidsDOB
-            showDatePickerDialog(true)
-        }
-
-
-        textEditLanguage.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.LANGUAGE.name,
-                    isSingleSelection = true, preSelectedItemIds = preSelectedLanguage, context = this@RewardsFamilyInfoFragment)
-            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
-        }
-
-        editLanguage.setOnClickListener {
-            var fragment = PickerDialogFragment.newInstance(columnCount = 1, popType = Constants.PopListRequestType.LANGUAGE.name,
-                    isSingleSelection = true, preSelectedItemIds = preSelectedLanguage, context = this@RewardsFamilyInfoFragment)
-            fragment.show(fragmentManager, RewardsSocialInfoFragment::class.java.simpleName)
-        }
-
-        val genderList = ArrayList<String>()
-        genderList.add("Male")
-        genderList.add("Female")
-
-        val spinAdapter = CustomSpinnerAdapter(activity, genderList)
-        spinnerGender.adapter = spinAdapter
-        spinnerGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                        position: Int, id: Long) {
-                spinnerGender.setSelection(position)
-            }
-
-            override fun onNothingSelected(arg0: AdapterView<*>) {
-
-            }
-        }
-        genderSpinner.adapter = spinAdapter
-        genderSpinner.setSelection(1)
-        genderSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapter: AdapterView<*>, v: View,
-                                        position: Int, id: Long) {
-                genderSpinner.setSelection(position)
-            }
-
-            override fun onNothingSelected(arg0: AdapterView<*>) {
-
-            }
-        }
-
-        editExpectedDate.setOnClickListener {
-            RewardsFamilyInfoFragment.textView = editExpectedDate
-            showDatePickerDialog(false, true)
-        }
-
-        containerView.findViewById<TextView>(R.id.textSubmit).setOnClickListener {
-            if (prepareDataForPosting()) {
-                postDataofRewardsToServer()
-            }
-        }
-
-        containerView.findViewById<RadioGroup>(R.id.radioGroupFamilyType)
-                .setOnCheckedChangeListener { radioGroup, i ->
-                    when (i) {
-                        0 -> {
-
-                        }
-
-                        1 -> {
-
-                        }
-                    }
-                }
-
-        containerView.findViewById<RadioGroup>(R.id.radioGroupAreMother)
-                .setOnCheckedChangeListener { radioGroup, i ->
-                    when (i) {
-                        R.id.radioNo -> {
-                            linearKidsDetail.removeAllViews()
-                            layoutNumberOfKids.visibility = View.GONE
-                            linearKidsDetail.visibility = View.GONE
-                            linearKidsEmptyView.visibility = View.GONE
-                            textAddChild.visibility = View.GONE
-                            layoutDynamicNumberOfKids.visibility = View.GONE
-                        }
-
-                        R.id.radioYes -> {
-                            textAddChild.visibility = View.VISIBLE
-                            spinnernumberOfKids.setSelection(0)
-                            layoutNumberOfKids.visibility = View.VISIBLE
-                            linearKidsDetail.visibility = View.VISIBLE
-                            linearKidsEmptyView.visibility = View.VISIBLE
-                            layoutDynamicNumberOfKids.visibility = View.VISIBLE
-                        }
-
-                    }
-                }
     }
 
     private fun validateChildData(): Boolean {
@@ -657,7 +479,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     fun createKidsDetailDynamicView(gender: Int? = null, date: String = "", name: String? = "", shouldDelteShow: Boolean = true) {
         val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater = activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val indexView = inflater.inflate(R.layout.dynamic_child_view, null)
         var textHeader = indexView.findViewById<TextView>(R.id.textHeader)
         var textDelete = indexView.findViewById<TextView>(R.id.textDeleteChild)
@@ -737,81 +559,13 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         linearKidsDetail.addView(indexView)
     }
 
-    class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
-
-        internal var cancel: Boolean = false
-        internal val c = Calendar.getInstance()
-        internal var curent_year = c.get(Calendar.YEAR)
-        internal var current_month = c.get(Calendar.MONTH)
-        internal var current_day = c.get(Calendar.DAY_OF_MONTH)
-        var isShowTillCurrent: Boolean = false
-        var isShowFutureOnly: Boolean = false
-
-
-        @SuppressLint("NewApi")
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            // Use the current date as the default date in the picker
-            val dlg = DatePickerDialog(activity, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day)
-
-            if (arguments != null) {
-                isShowTillCurrent = arguments.getBoolean("is_show_current_only", false)
-                isShowFutureOnly = arguments.getBoolean("is_show_future_only", false)
-            }
-            dlg.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            if (isShowTillCurrent) {
-                dlg.datePicker.maxDate = c.timeInMillis
-            }
-
-            if (isShowFutureOnly) {
-                dlg.datePicker.minDate = c.timeInMillis
-            }
-
-            return dlg
-        }
-
-        override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-            if (RewardsFamilyInfoFragment.textView != null) {
-                val sel_date = "" + day + "-" + (month + 1) + "-" + year
-//                if (chkTime(sel_date)) {
-                RewardsFamilyInfoFragment.textView.setText("" + day + "-" + (month + 1) + "-" + year)
-//                } else {
-//                    //RewardsFamilyInfoFragment.textView.setText("" + current_day + "-" + (current_month + 1) + "-" + curent_year)
-//                }
-            }
-        }
-
-        fun chkTime(time: String): Boolean {
-            var result = true
-            val currentime = "" + System.currentTimeMillis() / 1000
-            if (Integer.parseInt(currentime) < Integer.parseInt(convertDate(time)))
-                result = false
-
-            return result
-        }
-
-        fun convertDate(convertdate: String): String {
-            var timestamp = ""
-            try {
-                val formatter = SimpleDateFormat("dd-MM-yyyy")
-                val dateobj = formatter.parse(convertdate)
-                timestamp = "" + dateobj.time / 1000
-                return timestamp
-            } catch (e: ParseException) {
-                // TODO Auto-generated catch block
-                e.printStackTrace()
-            }
-
-            return timestamp
-        }
-    }
-
     fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false) {
-        val newFragment = DatePickerFragment()
+        val newFragment = RewardsPersonalInfoFragment.DatePickerFragment()
         var bundle = Bundle()
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)
         bundle.putBoolean("is_show_future_only", isShowFutureDate)
         newFragment.arguments = bundle
-        newFragment.show(activity.supportFragmentManager, "datePicker")
+        newFragment.show(activity!!.supportFragmentManager, "datePicker")
     }
 
     /*send data to server*/
@@ -848,12 +602,12 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         }
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (context is RewardsContainerActivity) {
-            submitListener = context
-        }
-    }
+//    override fun onAttach(context: Context?) {
+//        super.onAttach(context)
+//        if (context is RewardsContainerActivity) {
+//            submitListener = context
+//        }
+//    }
 
     fun convertStringToTimestamp(): Long {
         return DateTimeUtils.convertStringToTimestamp(RewardsFamilyInfoFragment.textDOB.getText().toString())

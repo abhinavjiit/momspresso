@@ -67,6 +67,7 @@
             android:paddingLeft="15dp"
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
+            android:textAllCaps="true"
             android:textColor="@color/app_light_black"
             android:textSize="16dp"
             app:fontName="oswald_regular.ttf" />

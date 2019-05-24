@@ -63,8 +63,8 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
         toolbar = view.findViewById(R.id.toolbar)
 
         if (arguments != null) {
-            isComingFromRewards = if (arguments.containsKey("isComingFromRewards")) {
-                arguments.getBoolean("isComingFromRewards")
+            isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
+                arguments!!.getBoolean("isComingFromRewards")
             } else {
                 false
             }
@@ -115,6 +115,8 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                 if (response.data != null && response.data!!.result != null && !response.data!!.result.pan.isNullOrEmpty()) {
                     panNumber = response.data!!.result.pan
                     panCardDetailEditTextView.setText(panNumber)
+                } else {
+                    
                 }
             }
 
