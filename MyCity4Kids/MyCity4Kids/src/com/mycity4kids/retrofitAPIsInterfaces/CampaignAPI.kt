@@ -19,7 +19,6 @@ interface CampaignAPI {
                         @Query("v") v: Double)
             : Call<AllCampaignDataResponse>
 
-
     @GET("/rewards/v1/campaigns/{campaign-id}")
     fun getCampaignDetail(@Path("campaign-id") campaignId: Int,
                           @Query("v") v: Double)

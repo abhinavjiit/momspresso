@@ -285,8 +285,8 @@ class CampaignDetailFragment : BaseFragment() {
         }
 //        termText.setText(termBuilder.toString())
 
-        // status = apiGetResponse!!.campaignStatus!!
-        status = 5
+        status = apiGetResponse!!.campaignStatus!!
+
         if (apiGetResponse!!.deliverables!!.size > 0) {
             detail_recyclerview.layoutManager = linearLayoutManager
             adapter = CampaignDetailAdapter(apiGetResponse!!.deliverables, activity)
@@ -487,7 +487,7 @@ class CampaignDetailFragment : BaseFragment() {
             Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_not_started), Toast.LENGTH_SHORT).show()
             appliedTag.visibility = View.VISIBLE
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_not_started) + " " + getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy"))
+            labelText.setText(context!!.resources.getString(R.string.label_campaign_not_started) + " " + getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy") + ". Please wait for campaign to start to submit proofs.")
         } else if (status == 3) {
             hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_applied))
@@ -553,7 +553,7 @@ class CampaignDetailFragment : BaseFragment() {
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_list_proof_reject))
             applicationStatus.setBackgroundResource(R.drawable.campaign_proof_rejected_bg)
             Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_proof_reject), Toast.LENGTH_SHORT).show()
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_completed))
+            labelText.setText(context!!.resources.getString(R.string.label_campaign_proof_reject))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_submit_proof))
         }
     }

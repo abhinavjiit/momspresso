@@ -1058,7 +1058,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_number_of_kids">Number of kids</string>
     <string name="rewards_interest">Interests</string>
     <string name="rewards_link_social">Link Social Accounts</string>
-    <string name="rewards_are_expecing">ARE YOU EXPECTING?</string>
+    <string name="rewards_are_expecing">I am Expecting</string>
     <string name="cannot_be_left_blank">%1$s cannot be left blank\u0020</string>
     <string name="please_enter_a_valid">Please enter a valid\u0020 %1$s</string>
     <string name="need_to_select_option">You need to select an option for\u0020 %1$s</string>
@@ -1108,10 +1108,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_details_apply_now">APPLY NOW</string>
     <string name="campaign_details_submission_open">SUBMIT PROOF</string>
     <string name="campaign_details_application_full">APPLICATION FULL</string>
+    <string name="campaign_details_approved">APPROVED</string>
     <string name="campaign_details_applied">APPLIED</string>
     <string name="campaign_details_expired">EXPIRED</string>
     <string name="campaign_details_completed">COMPLETED</string>
-    <string name="campaign_details_invite_only">INVITE ONLY</string>
+    <string name="campaign_details_invite_only">INVITATION ONLY</string>
     <string name="campaign_details_rejected">REJECTED</string>
     <string name="campaign_list_proof_moderation">PROOF SUBMITTED</string>
     <string name="campaign_list_proof_reject">PROOF REJECTED</string>
@@ -1124,9 +1125,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="label_campaign_checking_eligiblity">We are checking for your eligibility. Please try again after sometime</string>
     <string name="label_campaign_full">Share Momspresso MyMoney with your friends.</string>
     <string name="label_campaign_open">By clicking on Apply Now, you agree to the Terms &amp; Conditions.</string>
-    <string name="label_campaign_applied">We will notify you about your eligibility for the campaign.</string>
+    <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
     <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
-    <string name="label_campaign_completed">Congratulations! Your submission is approved.</string>
+    <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
+
+
     <string name="label_campaign_not_started">Campaign starts on </string>
     <string name="label_campaign_reject">Please explore other campaigns to participate and earn.</string>
     <string name="label_campaign_proof_moderation">Your proofs are under moderation. To add more, you can click below.</string>
@@ -1137,8 +1140,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     <string name="toast_campaign_full">Oops! Entries to this campaign are now closed.</string>
     <string name="toast_campaign_open">Thank you for applying to the campaign.</string>
-    <string name="toast_campaign_applied">Thank you for applying. We will notify once your application is approved.</string>
-    <string name="toast_campaign_not_started">Congratulations! Your application is approved.</string>
+    <string name="toast_campaign_applied">On CTA click: Thank you for applying. We will notify you within 7 days on the status of your application.</string>
+    <string name="toast_campaign_not_started">Congratulations! Your application is approved. Please wait for campaign to start to submit proofs.</string>
     <string name="toast_campaign_started">Congratulations! Your application is approved.</string>
     <string name="toast_campaign_reject">Sorry, we have not been able to approve your application.</string>
     <string name="toast_campaign_invite">Sorry, this campaign is by invitation only.</string>

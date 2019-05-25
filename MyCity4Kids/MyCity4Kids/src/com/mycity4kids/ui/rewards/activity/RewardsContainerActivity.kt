@@ -16,6 +16,14 @@ import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsFamilyInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
+import android.R.id.message
+import android.util.Log
+import android.widget.Toast
+import com.mycity4kids.MessageEvent
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.ThreadMode
+import org.greenrobot.eventbus.Subscribe
+
 
 class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
@@ -123,19 +131,7 @@ class RewardsContainerActivity : BaseActivity(),
         } else {
             finish()
         }
-
     }
-
-//    private fun addFamilyFragment() {
-//        if (pageLimit!! >= 2) {
-//            rewardsFamilyInfoFragment = RewardsFamilyInfoFragment.newInstance(isComingFromRewards = true, isComingfromCampaign = isComingfromCampaign)
-//            supportFragmentManager.beginTransaction().replace(R.id.container, rewardsFamilyInfoFragment,
-//                    RewardsFamilyInfoFragment::class.java.simpleName)
-//                    .commit()
-//        } else {
-//            finish()
-//        }
-//    }
 
     private fun addSocialFragment() {
         if (pageLimit!! >= 3) {
@@ -182,4 +178,6 @@ class RewardsContainerActivity : BaseActivity(),
         callbackManager!!.onActivityResult(requestCode, resultCode, data)
         FacebookUtils.onActivityResult(this, requestCode, resultCode, data)
     }
+
+
 }

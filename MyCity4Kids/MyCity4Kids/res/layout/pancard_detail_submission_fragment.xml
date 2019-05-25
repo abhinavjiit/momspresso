@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -15,7 +14,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:theme="@style/ToolbarTheme"
         app:titleTextAppearance="@style/ToolbarTheme.Title">
-
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/back"
@@ -63,6 +61,7 @@
             android:background="@drawable/campaign_border_round_rectangular_layout"
             android:hint=""
             android:inputType="textNoSuggestions"
+            android:maxLength="11"
             android:paddingStart="15dp"
             android:paddingLeft="15dp"
             android:paddingTop="15dp"
@@ -83,7 +82,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/relativeLayout2">
-
 
         <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"
@@ -112,19 +110,16 @@
         android:gravity="center_horizontal"
         android:paddingLeft="35dp"
         android:paddingTop="15dp"
-
         android:paddingRight="35dp"
         android:paddingBottom="15dp"
         android:text="@string/save_continue"
         android:textColor="@color/white"
-
         android:textSize="18sp"
         android:textStyle="bold"
         app:fontName="oswald_regular.ttf"
         app:layout_constraintBottom_toTopOf="@+id/textLater"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/textLater"
