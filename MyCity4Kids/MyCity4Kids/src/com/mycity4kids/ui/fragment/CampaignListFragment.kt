@@ -83,8 +83,9 @@ class CampaignListFragment : BaseFragment() {
         registerRewards = containerView.findViewById(R.id.register_rewards)
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
         recyclerView.adapter = adapter
-        if (campaignList.size == 0)
-            fetchCampaignList(0)
+        campaignList.clear()
+//        if (campaignList.size == 0)
+        fetchCampaignList(0)
 
 
 
