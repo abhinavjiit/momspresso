@@ -183,10 +183,11 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         private lateinit var textKidsDOB: TextView
 
         @JvmStatic
-        fun newInstance(isComingFromRewards: Boolean = false) =
+        fun newInstance(isComingFromRewards: Boolean = false, isComingfromCampaign: Boolean = false) =
                 RewardsPersonalInfoFragment().apply {
                     arguments = Bundle().apply {
                         this.putBoolean("isComingFromRewards", isComingFromRewards)
+                        this.putBoolean("isComingfromCampaign", isComingfromCampaign)
                     }
                 }
     }
@@ -807,6 +808,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 //                    Log.e("response is ", Gson().toJson(response.data))
                     if (response != null && response.code == 200 ) {
                         if(Constants.SUCCESS == response.status){
+                            if (isComingFromCampaign) {
+                                SharedPrefUtils.setIsRewardsAdded(activity, "1")
+                            }
                             saveAndContinueListener.profileOnSaveAndContinue()
                         }else if(Constants.FAILURE == response.status){
                             Toast.makeText(activity, response?.reason,Toast.LENGTH_LONG).show()
