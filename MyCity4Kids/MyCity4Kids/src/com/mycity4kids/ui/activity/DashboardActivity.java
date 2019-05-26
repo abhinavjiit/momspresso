@@ -1290,6 +1290,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         launchEditor();
                     }
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_PAGE)) {
+                    Intent rewardForm = new Intent(this, RewardsContainerActivity.class);
+                    rewardForm.putExtra("pageLimit", 1);
+                    rewardForm.putExtra("pageNumber", 1);
+                    startActivity(rewardForm);
+
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {
                     Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                     startActivity(campaignIntent);

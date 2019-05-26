@@ -466,7 +466,8 @@ public class AppConstants {
     public static final String DEEPLINK_ADD_FUNNY_VIDEO_URL = "mc4k://www.mycity4kids.com/addfunnyvideo";
     public static final String DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL = "mc4k://www.momspresso.com/addfunnyvideo";
     public static final String DEEPLINK_MOMSPRESSO_CAMPAIGN = "https://www.momspresso.com/mymoney/";
-    public static final String DEEPLINK_MOMSPRESSO_REWARD_MYMONEY = "https://www.momspresso.com/mymoney";
+    public static final String DEEPLINK_MOMSPRESSO_REWARD_MYMONEY = "https://www.momspresso.com/mymoney?";
+    public static final String DEEPLINK_MOMSPRESSO_REWARD_PAGE = "https://www.momspresso.com/usersprofile/rewardsform";
     public static final String DEEPLINK_UPCOMING_EVENTS = "/Events_el";
     public static final String DEEPLINK_SETUP_BLOG = "setupablog";
     public static final String DEEPLINK_GROUPS = "momspresso.com/groups/";

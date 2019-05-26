@@ -143,13 +143,13 @@
             android:layout_marginTop="@dimen/space_20"
             android:background="@color/white"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textPersonalInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="8dp"
                 android:drawableLeft="@drawable/ic_personal_info"
                 android:drawablePadding="15dp"
                 android:padding="@dimen/space_20"
@@ -160,7 +160,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="60dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/grey_light" />
 
@@ -168,9 +168,9 @@
                 android:id="@+id/textSocial"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="8dp"
                 android:drawableLeft="@drawable/ic_social_links"
-                android:drawablePadding="15dp"
+                android:drawablePadding="12dp"
                 android:padding="@dimen/space_20"
                 android:text="SOCIAL LINKS"
                 android:textSize="14sp"
@@ -179,7 +179,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="60dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/grey_light" />
 
@@ -187,7 +187,7 @@
                 android:id="@+id/textPaymentModes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="8dp"
                 android:drawableLeft="@drawable/ic_payment_mode"
                 android:drawablePadding="15dp"
                 android:padding="@dimen/space_20"
@@ -198,7 +198,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="60dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/grey_light" />
 
@@ -206,13 +206,15 @@
                 android:id="@+id/textPanDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="8dp"
                 android:drawableLeft="@drawable/ic_pan_details"
                 android:drawablePadding="15dp"
                 android:padding="@dimen/space_20"
                 android:text="PAN CARD DETAILS"
                 android:textSize="14sp"
                 app:fontName="oswald.ttf" />
+
+
         </LinearLayout>
     </RelativeLayout>
 
