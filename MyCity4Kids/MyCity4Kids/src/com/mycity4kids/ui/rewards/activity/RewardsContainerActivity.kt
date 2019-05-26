@@ -124,7 +124,7 @@ private fun initializeXMLComponents() {
 
 private fun addProfileFragment() {
     if (pageLimit!! >= 1) {
-        rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance(isComingFromRewards = true)
+        rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance(isComingFromRewards = true, isComingfromCampaign = isComingfromCampaign)
         supportFragmentManager.beginTransaction().replace(R.id.container, rewardsPersonalInfoFragment,
                 RewardsPersonalInfoFragment::class.java.simpleName)
                 .commit()

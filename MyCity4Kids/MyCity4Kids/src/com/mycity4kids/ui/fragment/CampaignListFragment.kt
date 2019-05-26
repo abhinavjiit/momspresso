@@ -128,7 +128,10 @@ class CampaignListFragment : BaseFragment() {
             when (requestCode) {
                 REWARDS_FILL_FORM -> {
                     isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
-                    checkRewardForm()
+                    if (isRewardAdded.isNotEmpty() || isRewardAdded.equals("1")) {
+                        registerRewards.visibility = View.GONE
+                    }
+//                    checkRewardForm()
                 }
             }
         }
