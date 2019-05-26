@@ -203,7 +203,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         /*fetch data from server*/
         fetchRewardsData()
 
-        EventBus.getDefault().post(MessageEvent("Hello everyone"))
+
 
         return containerView
     }

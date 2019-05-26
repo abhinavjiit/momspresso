@@ -115,6 +115,8 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                 if (response.data != null && response.data!!.result != null && !response.data!!.result.pan.isNullOrEmpty()) {
                     panNumber = response.data!!.result.pan
                     panCardDetailEditTextView.setText(panNumber)
+                } else {
+                    
                 }
             }
 

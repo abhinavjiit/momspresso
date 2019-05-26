@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -12,6 +13,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ShareCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -29,6 +31,7 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.BaseResponseModel
+import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.campaignmodels.CampaignDetailResult
 import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
@@ -37,9 +40,13 @@ import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import com.mycity4kids.ui.activity.EditProfileNewActivity
 import com.mycity4kids.ui.adapter.CampaignDetailAdapter
+import com.mycity4kids.ui.adapter.RewardCampaignAdapter
+import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
+import com.mycity4kids.utils.EndlessScrollListener
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -90,6 +97,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var viewLine: View
     private lateinit var referCodeHeader: TextView
     private lateinit var readThisBox: LinearLayout
+    private var forYouStatus: Int = 0
     private var userId: String? = null
     private val urlPattern = Pattern.compile(
             "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
@@ -119,8 +127,13 @@ class CampaignDetailFragment : BaseFragment() {
         id = arguments!!.getInt("id")
         userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
-        showProgressDialog(resources.getString(R.string.please_wait))
-        fetchCampaignDetail();
+        if (isRewardAdded.equals("1", true)) {
+            fetchForYou()
+        } else {
+            showProgressDialog(resources.getString(R.string.please_wait))
+            fetchCampaignDetail()
+        }
+
         initializeXml()
         backIcon = containerView.findViewById(R.id.back)
         linearLayoutManager = LinearLayoutManager(activity as Context?, LinearLayoutManager.VERTICAL, false)
@@ -203,7 +216,7 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     private fun fetchCampaignDetail() {
-        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(this!!.id!!,2.0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(this!!.id!!, 2.0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
 
 
             override fun onComplete() {
@@ -273,6 +286,7 @@ class CampaignDetailFragment : BaseFragment() {
 //        termText.setText(termBuilder.toString())
 
         status = apiGetResponse!!.campaignStatus!!
+
         if (apiGetResponse!!.deliverables!!.size > 0) {
             detail_recyclerview.layoutManager = linearLayoutManager
             adapter = CampaignDetailAdapter(apiGetResponse!!.deliverables, activity)
@@ -498,11 +512,21 @@ class CampaignDetailFragment : BaseFragment() {
                 labelText.setMovementMethod(LinkMovementMethod.getInstance());
                 submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_apply_now))
             } else {
-                applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
-                applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
-                Toast.makeText(context, context!!.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()
-                labelText.setText(context!!.resources.getString(R.string.label_campaign_not_eligible))
-                submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
+                if (isRewardAdded.equals("1", true)) {
+                    if (forYouStatus == 0) {
+                        applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
+                        applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
+                        Toast.makeText(context, context!!.resources.getString(R.string.checking_elegiblity), Toast.LENGTH_SHORT).show()
+                        labelText.setText(context!!.resources.getString(R.string.label_campaign_checking_eligiblity))
+                        submitBtn.setText(context!!.resources.getString(R.string.please_wait))
+                    } else {
+                        applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
+                        applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
+                        Toast.makeText(context, context!!.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()
+                        labelText.setText(context!!.resources.getString(R.string.label_campaign_not_eligible))
+                        submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
+                    }
+                }
             }
         } else if (status == 6) {
             hideShowReferral(status)
@@ -614,11 +638,48 @@ class CampaignDetailFragment : BaseFragment() {
             when (requestCode) {
                 REWARDS_FILL_FORM_REQUEST -> {
                     isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
-                    fetchCampaignDetail()
+                    if (isRewardAdded.equals("1", true)) {
+                        fetchForYou()
+                    }
                 }
             }
         }
     }
+
+
+    private fun fetchForYou() {
+        showProgressDialog(resources.getString(R.string.please_wait))
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getForYouStatus(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BasicResponse> {
+            override fun onNext(response: BasicResponse) {
+                if (response.code == 200 && response.data != null && response.status == "success") {
+                    if (response.data.result != null && response.data.result.recm_status != null) {
+                        forYouStatus = response.data.result.recm_status
+                    }
+                }
+                showProgressDialog(resources.getString(R.string.please_wait))
+                fetchCampaignDetail()
+
+
+            }
+
+            override fun onComplete() {
+                removeProgressDialog()
+            }
+
+            override fun onSubscribe(d: Disposable) {
+            }
+
+
+            override fun onError(e: Throwable) {
+                removeProgressDialog()
+            }
+
+
+        })
+    }
 }
+
+
+
 
 

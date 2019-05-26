@@ -475,7 +475,7 @@
 
     <color name="campagin_submission_open">#17AF49</color>
     <color name="campagin_subscribe_now">#4A90E2</color>
-    <color name="campaign_subscribed">#67A2E6</color>
+    <color name="campaign_subscribed">#0EC0A1</color>
     <color name="campaign_submission_full">#F69C47</color>
     <color name="campaign_expired">#9B9B9B</color>
     <color name="campaign_list_buttons">#D03F56</color>
@@ -483,7 +483,7 @@
     <color name="campaign_7D7D7D">#7D7D7D</color>
     <color name="campaign_4A4A4A">#4A4A4A</color>
     <color name="campaign_9B9B9B_5">#0D9B9B9B</color>
-    <color name="campaign_rejected">#eb3955</color>
+    <color name="campaign_rejected">#212121</color>
     <color name="campaign_completed">#40bc68</color>
     <color name="campaign_FDF8F8">#FDF8F8</color>
     <color name="campaign_list_buttons_20">#20D03F56</color>
@@ -493,12 +493,12 @@
     <color name="campaign_approved_rejected">#6FA138</color>
     <color name="campaign_feed_register">#23C9AC</color>
     <color name="campaign_feed_register_textview">#23CAAD</color>
-    <color name="campaign_apply_bg">#D3425A</color>
+    <color name="campaign_apply_bg">#9013FE</color>
     <color name="campaign_applied_bg">#4A90E2</color>
-    <color name="campaign_completed_bg">#0EC0A1</color>
+    <color name="campaign_completed_bg">#E3334E</color>
     <color name="campaign_submission_full_bg">#F5A623</color>
-    <color name="campaign_invite_only_bg">#7566E5</color>
-    <color name="campaign_submit_proof_bg">#73B926</color>
+    <color name="campaign_invite_only_bg">#8B572A</color>
+    <color name="campaign_submit_proof_bg">#74B825</color>
     <color name="campaign_proof_reject_bg">#212121</color>
 
     <color name="black_64">#A6000000</color>

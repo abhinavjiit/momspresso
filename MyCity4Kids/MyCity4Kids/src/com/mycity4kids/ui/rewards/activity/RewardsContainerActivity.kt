@@ -179,19 +179,5 @@ class RewardsContainerActivity : BaseActivity(),
         FacebookUtils.onActivityResult(this, requestCode, resultCode, data)
     }
 
-    @Subscribe()
-    fun onMessageEvent(event: MessageEvent) {
-        Log.e("event bus event ", event.message.toString())
-    }
 
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this@RewardsContainerActivity)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this@RewardsContainerActivity)
-    }
 }

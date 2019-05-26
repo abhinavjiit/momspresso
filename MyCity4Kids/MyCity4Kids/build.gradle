@@ -161,7 +161,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            debuggable true
+
         }
         debug {
             buildConfigField 'String', 'GROUPS_LIVE_URL', '"https://groups.momspresso.com/"'
