@@ -44,6 +44,7 @@ import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.SetupBlogData
 import com.mycity4kids.models.response.UserDetailData
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
+import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import com.mycity4kids.models.rewardsmodels.SocialAccountObject
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
@@ -427,7 +428,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         if (!userId.isNullOrEmpty()) {
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<SetupBlogData>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -436,13 +437,13 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
                 }
 
-                override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
-
-
-                        submitListener.socialOnSubmitListener()
-                    } else {
-
+                override fun onNext(response: RewardsPersonalResponse) {
+                    if (response != null && response.code == 200 ) {
+                        if(Constants.SUCCESS == response.status){
+                            submitListener.socialOnSubmitListener()
+                        }else if(Constants.FAILURE == response.status){
+                            Toast.makeText(activity, response?.reason,Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
 
