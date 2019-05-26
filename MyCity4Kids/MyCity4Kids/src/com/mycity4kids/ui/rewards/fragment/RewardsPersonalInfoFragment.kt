@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.rewards.fragment
 
 
+import android.accounts.NetworkErrorException
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -21,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.crashlytics.android.Crashlytics
 import com.facebook.accountkit.AccountKitLoginResult
 import com.facebook.accountkit.ui.AccountKitActivity
 import com.facebook.accountkit.ui.AccountKitConfiguration
@@ -29,6 +31,8 @@ import com.facebook.accountkit.ui.ThemeUIManager
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
@@ -38,13 +42,17 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
+import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
+import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.CityInfoItem
 import com.mycity4kids.models.response.SetupBlogData
 import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
 import com.mycity4kids.models.rewardsmodels.KidsInfoResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
+import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import com.mycity4kids.preference.SharedPrefUtils
+import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
@@ -60,6 +68,10 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_rewards_family_info.*
 import org.apmem.tools.layouts.FlowLayout
 import org.greenrobot.eventbus.EventBus
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.adapter.rxjava2.HttpException
+import java.io.InputStreamReader
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -162,6 +174,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var editKidsName: EditText
     private var isComingFromCampaign = false
     private var isComingFromRewards = false
+
+    private var endIndex: Int = 0
 
     companion object {
         lateinit var textView: TextView
@@ -351,6 +365,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
         (containerView.findViewById<TextView>(R.id.textSaveAndContinue)).setOnClickListener {
             if (prepareDataForPosting()) {
+//                showProgressDialog(resources.getString(R.string.please_wait))
+//                var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+//                val retro = BaseApplication.getInstance().retrofit
+//                val campaignAPI = retro.create(RewardsAPI::class.java)
+//                val call = campaignAPI.sendRewardsapiDataTest(userId!!,apiGetResponse, pageValue = 4 )
+//                call.enqueue(postDataofRewardsToServer)
+
+
                 postDataofRewardsToServer()
             }
         }
@@ -485,6 +507,12 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         containerView.findViewById<TextView>(R.id.textSaveAndContinue).setOnClickListener {
             if (prepareDataForPosting()) {
+//                showProgressDialog(resources.getString(R.string.please_wait))
+//                var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+//                val retro = BaseApplication.getInstance().retrofit
+//                val campaignAPI = retro.create(RewardsAPI::class.java)
+//                val call = campaignAPI.sendRewardsapiDataTest(userId!!,apiGetResponse, pageValue = 4 )
+//                call.enqueue(postDataofRewardsToServer)
                 postDataofRewardsToServer()
             }
         }
@@ -766,7 +794,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
             Log.e("sending json", Gson().toJson(apiGetResponse))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiData(userId!!, apiGetResponse, pageValue = 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<SetupBlogData>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, pageValue = 4).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -775,22 +803,65 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
                 }
 
-                override fun onNext(response: BaseResponseGeneric<SetupBlogData>) {
-                    Log.e("response is ", Gson().toJson(response.data))
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.msg.equals(Constants.SUCCESS_MESSAGE)) {
-                        saveAndContinueListener.profileOnSaveAndContinue()
-                    } else {
-
+                override fun onNext(response: RewardsPersonalResponse) {
+//                    Log.e("response is ", Gson().toJson(response.data))
+                    if (response != null && response.code == 200 ) {
+                        if(Constants.SUCCESS == response.status){
+                            saveAndContinueListener.profileOnSaveAndContinue()
+                        }else if(Constants.FAILURE == response.status){
+                            Toast.makeText(activity, response?.reason,Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
 
                 override fun onError(e: Throwable) {
                     removeProgressDialog()
+//                    var data = (e as IllegalStateException).response().errorBody()!!.byteStream()
+//
+//                    if (code == 400) {
+//                        var data = (e as HttpException).response().errorBody()!!.byteStream()
+//                        var jsonParser = JsonParser()
+//                        var jsonObject = jsonParser.parse(
+//                                InputStreamReader(data, "UTF-8")) as JsonObject
+//                        var reason = jsonObject.get("reason")
+//                        Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
+//                    }
                     Log.e("exception in error", e.message.toString())
                 }
             })
         }
     }
+
+//    private val postDataofRewardsToServer = object : Callback<RewardsPersonalResponse> {
+//
+//        override fun onResponse(call: Call<RewardsPersonalResponse>, response: retrofit2.Response<RewardsPersonalResponse>) {
+//            removeProgressDialog()
+//            if (response == null || null == response.body()) {
+//                val nee = NetworkErrorException(response.raw().toString())
+//                Crashlytics.logException(nee)
+//                return
+//            }
+//            try {
+//                val responseData = response.body()
+////                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+////                    if (responseData.data!!.result!!.size > 0) {
+////                        campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
+////                        adapter.notifyDataSetChanged()
+////                    }
+////                } else {
+////                }
+//            } catch (e: Exception) {
+//                Crashlytics.logException(e)
+//                Log.d("MC4kException", Log.getStackTraceString(e))
+//            }
+//        }
+//
+//        override fun onFailure(call: Call<RewardsPersonalResponse>, t: Throwable) {
+//            removeProgressDialog()
+//            Crashlytics.logException(t)
+//            Log.d("MC4kException", Log.getStackTraceString(t))
+//        }
+//    }
 
     /*fetch data from server*/
     private fun fetchRewardsData() {
