@@ -87,12 +87,6 @@ class CampaignListFragment : BaseFragment() {
 //        if (campaignList.size == 0)
         fetchCampaignList(0)
 
-
-
-
-
-
-
         profileIcon.setOnClickListener {
             val intent = Intent(context, EditProfileNewActivity::class.java)
             intent.putExtra("isComingfromCampaign", true)

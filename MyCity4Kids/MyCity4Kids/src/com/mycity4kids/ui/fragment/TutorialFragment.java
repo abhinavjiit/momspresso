@@ -24,7 +24,7 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
     private ArrayList<String> titleList;
     private View view;
     private RelativeLayout lnrRoot;
-    private TextView tutorial_desc_1, tutorial_desc_2, tutorial_desc_3, tutorial_desc_4;
+    private TextView tutorial_desc_1, tutorial_desc_2, tutorial_desc_3, tutorial_desc_4, tutorial_desc_5;
     private int mPosition;
     private ArrayList<Integer> pagerImagesList;
     private TextView txvTitle;
@@ -43,6 +43,8 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         tutorial_desc_2 = (TextView) view.findViewById(R.id.tutorial_desc_2);
         tutorial_desc_3 = (TextView) view.findViewById(R.id.tutorial_desc_3);
         tutorial_desc_4 = (TextView) view.findViewById(R.id.tutorial_desc_4);
+        tutorial_desc_5 = (TextView) view.findViewById(R.id.tutorial_desc_5);
+
         return view;
     }
 
@@ -54,6 +56,7 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         titleList.add(titleArray[1]);
         titleList.add(titleArray[2]);
         titleList.add(titleArray[3]);
+        titleList.add(titleArray[4]);
 
         pagerImagesList = new ArrayList<Integer>();
 
@@ -61,6 +64,7 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
         pagerImagesList.add(R.drawable.onboarding_2);
         pagerImagesList.add(R.drawable.onboarding_3);
         pagerImagesList.add(R.drawable.onboarding_4);
+        pagerImagesList.add(R.drawable.onboarding_5);
 
 
     }
@@ -75,13 +79,13 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setImageInPager() {
-
         lnrRoot.setBackgroundResource(pagerImagesList.get(mPosition));
         txvTitle.setText(titleList.get(mPosition));
         tutorial_desc_1.setVisibility(View.GONE);
         tutorial_desc_2.setVisibility(View.GONE);
         tutorial_desc_3.setVisibility(View.GONE);
         tutorial_desc_4.setVisibility(View.GONE);
+        tutorial_desc_5.setVisibility(View.GONE);
         switch (mPosition + 1) {
             case 1:
                 tutorial_desc_1.setVisibility(View.VISIBLE);
@@ -98,6 +102,10 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
             case 4:
                 tutorial_desc_4.setVisibility(View.VISIBLE);
                 onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.onboarding_4));
+                break;
+            case 5:
+                tutorial_desc_5.setVisibility(View.VISIBLE);
+                onboardingImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.onboarding_5));
                 break;
         }
     }
