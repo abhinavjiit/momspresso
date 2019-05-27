@@ -209,7 +209,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 Bundle _args = new Bundle();
                 addArticleCommentReplyDialogFragment.setArguments(_args);
                 addArticleCommentReplyDialogFragment.setCancelable(true);
-                // addArticleCommentReplyDialogFragment.setTargetFragment(ArticleCommentsFragment.this, 0);
                 addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
                 break;
         }
@@ -413,7 +412,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         _args.putInt("position", position);
         addArticleCommentReplyDialogFragment.setArguments(_args);
         addArticleCommentReplyDialogFragment.setCancelable(true);
-       // addArticleCommentReplyDialogFragment.setTargetFragment(this, 0);
         addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 
@@ -426,7 +424,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         reportContentDialogFragment.setArguments(_args);
         reportContentDialogFragment.setCancelable(true);
-       // reportContentDialogFragment.setTargetFragment(this, 0);
         reportContentDialogFragment.show(fm, "Report Content");
     }
 
@@ -817,7 +814,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 _args.putInt("position", position);
                 articleCommentRepliesDialogFragment.setArguments(_args);
                 articleCommentRepliesDialogFragment.setCancelable(true);
-              //  articleCommentRepliesDialogFragment.setTargetFragment(this, 0);
                 articleCommentRepliesDialogFragment.show(fm, "View Replies");
             }
             break;
@@ -831,7 +827,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         _args.putParcelable("parentCommentData", cData);
         addArticleCommentReplyDialogFragment.setArguments(_args);
         addArticleCommentReplyDialogFragment.setCancelable(true);
-       // addArticleCommentReplyDialogFragment.setTargetFragment(this, 0);
         addArticleCommentReplyDialogFragment.show(fm, "Add Replies");
     }
 

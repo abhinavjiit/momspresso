@@ -113,6 +113,18 @@
                 android:visibility="invisible"
                 app:fontName="oswald.ttf" />
 
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/tutorial_desc_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Earn by participating in brand campaigns"
+                android:textColor="@color/onboarding.desc"
+                android:textSize="13sp"
+                android:visibility="invisible"
+                app:fontName="oswald.ttf" />
+
         </RelativeLayout>
 
     </RelativeLayout>
