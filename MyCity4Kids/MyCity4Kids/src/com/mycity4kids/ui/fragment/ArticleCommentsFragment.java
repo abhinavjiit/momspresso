@@ -52,7 +52,7 @@ import static android.content.Context.ACTIVITY_SERVICE;
  * Created by user on 08-06-2015.
  */
 public class ArticleCommentsFragment extends BaseFragment implements OnClickListener, ArticleCommentsRecyclerAdapter.RecyclerViewClickListener,
-        CommentOptionsDialogFragment.ICommentOptionAction {
+        CommentOptionsDialogFragment.ICommentOptionAction, AddArticleCommentReplyDialogFragment.AddComments {
 
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private String paginationCommentId = null;
@@ -209,16 +209,13 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 Bundle _args = new Bundle();
                 addArticleCommentReplyDialogFragment.setArguments(_args);
                 addArticleCommentReplyDialogFragment.setCancelable(true);
-//                Log.e("required fragmentman= ", addArticleCommentReplyDialogFragment.requireFragmentManager() + "" );
-//                addArticleCommentReplyDialogFragment.requireFragmentManager()
-                addArticleCommentReplyDialogFragment.setTargetFragment(this, 0);
                 addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
                 break;
         }
 
     }
 
-    public void addComment(String content) {
+    public  void addComment(String content) {
         showProgressDialog("Adding Comment");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
@@ -415,7 +412,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         _args.putInt("position", position);
         addArticleCommentReplyDialogFragment.setArguments(_args);
         addArticleCommentReplyDialogFragment.setCancelable(true);
-        //addArticleCommentReplyDialogFragment.setTargetFragment(this, 0);
         addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 
@@ -428,7 +424,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         reportContentDialogFragment.setArguments(_args);
         reportContentDialogFragment.setCancelable(true);
-        //reportContentDialogFragment.setTargetFragment(this, 0);
         reportContentDialogFragment.show(fm, "Report Content");
     }
 
@@ -796,7 +791,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             case R.id.commentRootLayout: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-                commentOptionsDialogFragment.setTargetFragment(this, 0);
+              //  commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("authorId", commentsList.get(position).getUserId());
@@ -819,7 +814,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 _args.putInt("position", position);
                 articleCommentRepliesDialogFragment.setArguments(_args);
                 articleCommentRepliesDialogFragment.setCancelable(true);
-                //articleCommentRepliesDialogFragment.setTargetFragment(this, 0);
                 articleCommentRepliesDialogFragment.show(fm, "View Replies");
             }
             break;
@@ -833,7 +827,24 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         _args.putParcelable("parentCommentData", cData);
         addArticleCommentReplyDialogFragment.setArguments(_args);
         addArticleCommentReplyDialogFragment.setCancelable(true);
-        //addArticleCommentReplyDialogFragment.setTargetFragment(this, 0);
         addArticleCommentReplyDialogFragment.show(fm, "Add Replies");
     }
+
+    @Override
+    public void addComments(String content) {
+        showProgressDialog("Adding Comment");
+        AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
+        addEditCommentOrReplyRequest.setPost_id(articleId);
+        addEditCommentOrReplyRequest.setMessage(content);
+        addEditCommentOrReplyRequest.setParent_id("0");
+        if ("video".equals(sourceType)) {
+            addEditCommentOrReplyRequest.setType("video");
+        } else {
+            addEditCommentOrReplyRequest.setType("article");
+        }
+        Call<CommentListResponse> call = articleDetailsAPI.addCommentOrReply(addEditCommentOrReplyRequest);
+        call.enqueue(addCommentResponseListener);
+
+    }
+
 }

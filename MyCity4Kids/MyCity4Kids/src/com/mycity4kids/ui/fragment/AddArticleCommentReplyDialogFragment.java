@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,7 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
     private TextView headingTextView;
     private String actionType;
     private int position;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,14 +131,24 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
             case R.id.postCommentReplyTextView:
                 if (isValid()) {
                     if ("EDIT_COMMENT".equals(actionType)) {
-                        ((ArticleCommentsFragment) getTargetFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
+                        ((ArticleCommentsFragment) getParentFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
                     } else if ("EDIT_REPLY".equals(actionType)) {
-                        ((ArticleCommentsFragment) getTargetFragment()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
+                        Fragment fragment = getParentFragment();
+                        if (fragment != null && fragment instanceof ArticleCommentsFragment) {
+                            ((ArticleCommentsFragment) getParentFragment()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
+                        } else if (fragment != null && fragment instanceof ArticleCommentRepliesDialogFragment) {
+                            Fragment parentOfParentFragment = fragment.getParentFragment();
+                            if (parentOfParentFragment != null && parentOfParentFragment instanceof ArticleCommentsFragment) {
+                                ((ArticleCommentsFragment) parentOfParentFragment).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
+                            }
+                        }
+
                     } else {
                         if (commentOrReplyData == null) {
-                            ((ArticleCommentsFragment) getTargetFragment()).addComment(commentReplyEditText.getText().toString());
+                            ((AddComments) this.getParentFragment()).addComments(commentReplyEditText.getText().toString());
+
                         } else {
-                            ((ArticleCommentsFragment) getTargetFragment()).addReply(commentReplyEditText.getText().toString(), commentOrReplyData.get_id());
+                            ((ArticleCommentsFragment) getParentFragment()).addReply(commentReplyEditText.getText().toString(), commentOrReplyData.get_id());
                         }
                     }
                     dismiss();
@@ -184,4 +196,8 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
         return true;
     }
 
+    public interface AddComments {
+
+        void addComments(String comment);
+    }
 }

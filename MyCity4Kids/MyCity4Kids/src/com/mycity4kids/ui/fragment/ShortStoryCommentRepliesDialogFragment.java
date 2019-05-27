@@ -250,7 +250,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             case R.id.commentRootLayout: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-                commentOptionsDialogFragment.setTargetFragment(this, 0);
+                //commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "COMMENT");
@@ -263,7 +263,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             case R.id.replyRootView: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-                commentOptionsDialogFragment.setTargetFragment(this, 0);
+                //commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "REPLY");
@@ -281,7 +281,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.openAddReplyDialog: {
-                ((ShortStoryFragment) getTargetFragment()).openAddCommentReplyDialog(data);
+                ((ShortStoryFragment) getParentFragment()).openAddCommentReplyDialog(data);
             }
             break;
         }
@@ -309,9 +309,9 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
     public void onResponseDelete(int position, String responseType) {
         // position-1 to adjust for the comment added on the top of reply list
         if ("REPLY".equals(responseType)) {
-            ((ShortStoryFragment) getTargetFragment()).deleteReply(commentPosition, position - 1);
+            ((ShortStoryFragment) getParentFragment()).deleteReply(commentPosition, position - 1);
         } else {
-            ((ShortStoryFragment) getTargetFragment()).onResponseDelete(commentPosition, "COMMENT");
+            ((ShortStoryFragment) getParentFragment()).onResponseDelete(commentPosition, "COMMENT");
         }
 
     }
@@ -331,7 +331,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         _args.putParcelable("parentCommentData", repliesList.get(position));
         addGpPostCommentReplyDialogFragment.setArguments(_args);
         addGpPostCommentReplyDialogFragment.setCancelable(true);
-        addGpPostCommentReplyDialogFragment.setTargetFragment(getParentFragment(), 0);
+        //addGpPostCommentReplyDialogFragment.setTargetFragment(getParentFragment(), 0);
         addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 
@@ -344,7 +344,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         reportContentDialogFragment.setArguments(_args);
         reportContentDialogFragment.setCancelable(true);
-        reportContentDialogFragment.setTargetFragment(this, 0);
+        //reportContentDialogFragment.setTargetFragment(this, 0);
         reportContentDialogFragment.show(fm, "Report Content");
     }
 
