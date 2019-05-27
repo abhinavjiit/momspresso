@@ -499,6 +499,7 @@
         <activity
             android:name=".ui.activity.ChangePasswordActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.SuggestedTopicsActivity"
             android:screenOrientation="portrait" />

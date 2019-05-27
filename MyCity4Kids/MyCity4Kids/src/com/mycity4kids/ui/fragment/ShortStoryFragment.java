@@ -275,7 +275,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     Bundle _args = new Bundle();
                     addGpPostCommentReplyDialogFragment.setArguments(_args);
                     addGpPostCommentReplyDialogFragment.setCancelable(true);
-                    addGpPostCommentReplyDialogFragment.setTargetFragment(this, 0);
+                    //addGpPostCommentReplyDialogFragment.setTargetFragment(this, 0);
                     addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
                     break;
             }
@@ -701,14 +701,14 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
                 reportContentDialogFragment.setArguments(_args);
                 reportContentDialogFragment.setCancelable(true);
-                reportContentDialogFragment.setTargetFragment(this, 0);
+              //  reportContentDialogFragment.setTargetFragment(this, 0);
                 reportContentDialogFragment.show(fm, "Report Content");
             }
             break;
             case R.id.commentRootLayout: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-                commentOptionsDialogFragment.setTargetFragment(this, 0);
+               // commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("authorId", consolidatedList.get(position).getSsComment().getUserId());
@@ -731,7 +731,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 _args.putInt("position", position);
                 shortStoryCommentRepliesDialogFragment.setArguments(_args);
                 shortStoryCommentRepliesDialogFragment.setCancelable(true);
-                shortStoryCommentRepliesDialogFragment.setTargetFragment(this, 0);
+                //shortStoryCommentRepliesDialogFragment.setTargetFragment(this, 0);
                 shortStoryCommentRepliesDialogFragment.show(fm, "View Replies");
             }
             break;
@@ -814,7 +814,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         _args.putParcelable("parentCommentData", cData);
         addGpPostCommentReplyDialogFragment.setArguments(_args);
         addGpPostCommentReplyDialogFragment.setCancelable(true);
-        addGpPostCommentReplyDialogFragment.setTargetFragment(this, 0);
+        //addGpPostCommentReplyDialogFragment.setTargetFragment(this, 0);
         addGpPostCommentReplyDialogFragment.show(fm, "Add Replies");
     }
 
@@ -1226,7 +1226,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         _args.putInt("position", position);
         addGpPostCommentReplyDialogFragment.setArguments(_args);
         addGpPostCommentReplyDialogFragment.setCancelable(true);
-        addGpPostCommentReplyDialogFragment.setTargetFragment(this, 0);
+        //addGpPostCommentReplyDialogFragment.setTargetFragment(this, 0);
         addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 
@@ -1242,7 +1242,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         reportContentDialogFragment.setArguments(_args);
         reportContentDialogFragment.setCancelable(true);
-        reportContentDialogFragment.setTargetFragment(this, 0);
+        //reportContentDialogFragment.setTargetFragment(this, 0);
         reportContentDialogFragment.show(fm, "Report Content");
     }
 

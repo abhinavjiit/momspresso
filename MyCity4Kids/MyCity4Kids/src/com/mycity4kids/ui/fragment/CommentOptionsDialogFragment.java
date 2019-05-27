@@ -67,19 +67,19 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.deleteCommentTextView: {
-                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getTargetFragment();
+                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
                 iCommentOptionAction.onResponseDelete(position, responseType);
                 dismiss();
             }
             break;
             case R.id.editCommentTextView: {
-                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getTargetFragment();
+                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
                 iCommentOptionAction.onResponseEdit(position, responseType);
                 dismiss();
             }
             break;
             case R.id.reportCommentTextView: {
-                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getTargetFragment();
+                ICommentOptionAction iCommentOptionAction = (ICommentOptionAction) getParentFragment();
                 iCommentOptionAction.onResponseReport(position, responseType);
                 dismiss();
             }

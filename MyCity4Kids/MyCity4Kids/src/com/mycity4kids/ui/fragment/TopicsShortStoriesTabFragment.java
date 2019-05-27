@@ -389,7 +389,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
                 reportContentDialogFragment.setArguments(_args);
                 reportContentDialogFragment.setCancelable(true);
-                reportContentDialogFragment.setTargetFragment(this, 0);
+               // reportContentDialogFragment.setTargetFragment(this, 0);
                 reportContentDialogFragment.show(fm, "Report Content");
             }
             break;

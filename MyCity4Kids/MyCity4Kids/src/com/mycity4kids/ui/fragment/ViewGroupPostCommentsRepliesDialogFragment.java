@@ -313,7 +313,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             case R.id.commentRootView: {
                 GpPostCommentOptionsDialogFragment commentOptionsDialogFragment = new GpPostCommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-                commentOptionsDialogFragment.setTargetFragment(this, 0);
+                //commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putInt("commentPosition", commentPosition);
@@ -329,7 +329,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             case R.id.replyRootView: {
                 GpPostCommentOptionsDialogFragment commentOptionsDialogFragment = new GpPostCommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-                commentOptionsDialogFragment.setTargetFragment(this, 0);
+                //commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "REPLY");
