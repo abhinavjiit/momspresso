@@ -651,6 +651,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     Intent campaignIntent = new Intent(mContext, CampaignContainerActivity.class);
                     campaignIntent.putExtra("campaign_id", notificationList.get(position).getCampaign_id() + "");
                     campaignIntent.putExtra("campaign_detail", "campaign_detail");
+                    campaignIntent.putExtra("fromNotification", true);
                     mContext.startActivity(campaignIntent);
                     try {
                         JSONObject jsonObject = new JSONObject();

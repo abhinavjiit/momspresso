@@ -58,14 +58,22 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     private lateinit var panCardNotification: String
     private var arrayList = mutableListOf<Int>()
     private var comingFrom: String = "deeplink"
+    private var fromNotification: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campaign_container)
 
         deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
+        fromNotification = if (intent.hasExtra("fromNotification")) {//fromNotification
+            intent.getBooleanExtra("fromNotification", false)
+        } else {
+            false
+        }
+
         if (intent.hasExtra("campaign_id") && intent.hasExtra("campaign_detail")) {
             notificationCampaignId = intent.getStringExtra("campaign_id")
+
             comingFrom = "campaign_detail"
 
         } else {
@@ -115,7 +123,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
 
     fun addCampaginDetailFragment(id: Int) {
-        campaignDetailFragment = CampaignDetailFragment.newInstance(id)
+        campaignDetailFragment = CampaignDetailFragment.newInstance(id, fromNotification)
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignDetailFragment,
                 CampaignDetailFragment::class.java.simpleName).addToBackStack("campaignDetailFragment")
                 .commit()
@@ -144,8 +152,20 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             finish()
         } else {
             if (currentFragment is CampaignCongratulationFragment) {
-                for (i in fragmentManager.backStackEntryCount downTo 2) {
-                    supportFragmentManager.popBackStack()
+                if (fromNotification) {
+                    var count = fragmentManager.backStackEntryCount
+                    for (i in 0..count) {
+                        fragmentManager.popBackStack()
+                    }
+
+                    campaignListFragment = CampaignListFragment.newInstance()
+                    supportFragmentManager.beginTransaction().add(R.id.container, campaignListFragment,
+                            CampaignListFragment::class.java.simpleName).addToBackStack("campaignListFragment")
+                            .commit()
+                } else {
+                    for (i in fragmentManager.backStackEntryCount downTo 2) {
+                        supportFragmentManager.popBackStack()
+                    }
                 }
             } else {
                 super.onBackPressed()

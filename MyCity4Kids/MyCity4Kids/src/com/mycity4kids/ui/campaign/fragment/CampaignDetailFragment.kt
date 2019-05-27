@@ -112,7 +112,7 @@ class CampaignDetailFragment : BaseFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(id: Int) =
+        fun newInstance(id: Int, fromNotification: Boolean = false) =
                 CampaignDetailFragment().apply {
                     arguments = Bundle().apply {
                         this.putInt("id", id)
