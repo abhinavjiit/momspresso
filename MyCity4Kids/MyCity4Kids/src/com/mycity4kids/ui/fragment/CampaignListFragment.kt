@@ -100,7 +100,7 @@ class CampaignListFragment : BaseFragment() {
 
         recyclerView.setOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                fetchCampaignList(endIndex + 1)
+                fetchCampaignList(totalItemsCount, true)
             }
         })
         if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
@@ -142,13 +142,16 @@ class CampaignListFragment : BaseFragment() {
         }
     }
 
-    private fun fetchCampaignList(startIndex: Int) {
-        showProgressDialog(resources.getString(R.string.please_wait))
-        endIndex = startIndex + 10
+    private fun fetchCampaignList(startIndex: Int, shouldShowProgressbar : Boolean = false) {
+        if(!shouldShowProgressbar){
+            showProgressDialog(resources.getString(R.string.please_wait))
+        }
+
+        //endIndex = startIndex + 10
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
-        val call = campaignAPI.getCampaignList(userId, startIndex, endIndex, 3.0)
+        val call = campaignAPI.getCampaignList(userId, startIndex, startIndex+10, 3.0)
         call.enqueue(getCampaignList)
     }
 
