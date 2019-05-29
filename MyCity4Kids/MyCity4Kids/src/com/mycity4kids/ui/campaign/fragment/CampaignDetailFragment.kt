@@ -528,7 +528,6 @@ class CampaignDetailFragment : BaseFragment() {
 
 
 
-                        submitBtn.setText(context!!.resources.getString(R.string.please_wait))
                     }
                 }
             }
