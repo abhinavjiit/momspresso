@@ -142,8 +142,8 @@ class CampaignListFragment : BaseFragment() {
         }
     }
 
-    private fun fetchCampaignList(startIndex: Int, shouldShowProgressbar : Boolean = false) {
-        if(!shouldShowProgressbar){
+    private fun fetchCampaignList(startIndex: Int, shouldShowProgressbar: Boolean = false) {
+        if (!shouldShowProgressbar) {
             showProgressDialog(resources.getString(R.string.please_wait))
         }
 
@@ -151,8 +151,15 @@ class CampaignListFragment : BaseFragment() {
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
-        val call = campaignAPI.getCampaignList(userId, startIndex, startIndex+10, 3.0)
-        call.enqueue(getCampaignList)
+        if (startIndex == 0) {
+            val call = campaignAPI.getCampaignList(userId, startIndex, startIndex + 10, 3.0)
+            call.enqueue(getCampaignList)
+        } else {
+            val call = campaignAPI.getCampaignList(userId, startIndex + 1, startIndex + 10, 3.0)
+            call.enqueue(getCampaignList)
+        }
+
+
     }
 
     private val getCampaignList = object : Callback<AllCampaignDataResponse> {

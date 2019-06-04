@@ -891,6 +891,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
                 campaignIntent.putExtra("campaign_id", notificationExtras.getString("campaign_id"));
                 campaignIntent.putExtra("campaign_detail", "campaign_detail");
+                campaignIntent.putExtra("fromNotification", true);
                 startActivity(campaignIntent);
                 try {
                     JSONObject jsonObject = new JSONObject();

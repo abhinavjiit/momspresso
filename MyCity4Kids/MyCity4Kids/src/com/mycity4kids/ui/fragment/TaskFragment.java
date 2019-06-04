@@ -135,7 +135,7 @@ public class TaskFragment extends Fragment {
             Bitmap bitmap = params[0];
             if (!isCancelled()) {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
             }
             return bitmap;
         }

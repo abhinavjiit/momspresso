@@ -806,14 +806,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
                 override fun onNext(response: RewardsPersonalResponse) {
 //                    Log.e("response is ", Gson().toJson(response.data))
-                    if (response != null && response.code == 200 ) {
-                        if(Constants.SUCCESS == response.status){
+                    if (response != null && response.code == 200) {
+                        if (Constants.SUCCESS == response.status) {
                             if (isComingFromCampaign) {
                                 SharedPrefUtils.setIsRewardsAdded(activity, "1")
                             }
                             saveAndContinueListener.profileOnSaveAndContinue()
-                        }else if(Constants.FAILURE == response.status){
-                            Toast.makeText(activity, response?.reason,Toast.LENGTH_LONG).show()
+                        } else if (Constants.FAILURE == response.status) {
+                            Toast.makeText(activity, response?.reason, Toast.LENGTH_LONG).show()
                         }
                     }
                 }
