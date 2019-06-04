@@ -104,7 +104,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     private int totalPostCount;
     private int skip = 0;
-    private int limit = 10;
+    private int limit = 150;
     private boolean isLoading;
     private ArrayList<GroupPostCommentResult> completeResponseList;
     private String postType;

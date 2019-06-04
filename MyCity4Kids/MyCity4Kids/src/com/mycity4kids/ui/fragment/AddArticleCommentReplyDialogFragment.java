@@ -27,6 +27,8 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.CommentListData;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * Created by hemant on 6/6/18.
  */
@@ -103,6 +105,7 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
         postCommentReplyTextView.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
 
+
         return rootView;
     }
 
@@ -131,7 +134,9 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
             case R.id.postCommentReplyTextView:
                 if (isValid()) {
                     if ("EDIT_COMMENT".equals(actionType)) {
-                        ((ArticleCommentsFragment) getParentFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
+                        EventBus.getDefault().post("myevent");
+                        EventBus.getDefault().post(1);
+                        //((ArticleCommentsFragment) getParentFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
                     } else if ("EDIT_REPLY".equals(actionType)) {
                         Fragment fragment = getParentFragment();
                         if (fragment != null && fragment instanceof ArticleCommentsFragment) {
@@ -200,4 +205,6 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
 
         void addComments(String comment);
     }
+
+
 }

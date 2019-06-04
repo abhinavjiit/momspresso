@@ -1178,5 +1178,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="invite_only_header">This campaign is by invite only.</string>
     <string name="invite_only_interested">I\'M INTERESTED</string>
     <string name="dialog_invite_only_subtext">Click below to apply for future ‘invite only’ campaigns.</string>
+    <string name="title_activity_tracker">TrackerActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
