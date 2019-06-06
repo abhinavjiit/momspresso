@@ -536,12 +536,6 @@ class CampaignDetailFragment : BaseFragment() {
                         Toast.makeText(context, context!!.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()
                         labelText.setText(context!!.resources.getString(R.string.label_campaign_not_eligible))
                         submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> f080b257bcc962dc5d4fe2778a57544307f7fe51
                     }
                 }
             }
