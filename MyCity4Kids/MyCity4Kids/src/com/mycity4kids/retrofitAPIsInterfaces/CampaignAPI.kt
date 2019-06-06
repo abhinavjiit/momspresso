@@ -6,6 +6,7 @@ import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.ui.campaign.*
+import com.mycity4kids.ui.mymoneytracker.model.TrackerDataModel
 import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.*
@@ -75,6 +76,9 @@ interface CampaignAPI {
 
     @GET("/payments/v1/user/pan")
     fun getPanNumber(): Observable<BaseResponseGeneric<ProofPostModel>>
+
+    @GET("/rewards/v1/campaigns/trackers/{campaignId}")
+    fun getTrackerData(@Path("campaignId") campaignId : Int): Observable<BaseResponseGeneric<ArrayList<TrackerDataModel>>>
 
     @PATCH("/payments/v1/user/pan/")
     fun updatePanNumber(@Body proofPostModel: ProofPostModel): Observable<BaseResponseGeneric<ProofPostModel>>

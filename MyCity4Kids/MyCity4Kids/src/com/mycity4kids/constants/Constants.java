@@ -1,5 +1,7 @@
 package com.mycity4kids.constants;
 
+import android.app.Application;
+
 /**
  * @author deepanker.Chaudhary
  */
@@ -325,15 +327,15 @@ public class Constants {
         private final int id;
 
         TypeOfDurables(int i, String name) {
-            this.name=name;
-            this.id=i;
+            this.name = name;
+            this.id = i;
         }
 
-        public int getId(){
+        public int getId() {
             return this.id;
         }
 
-        public String getName(){
+        public String getName() {
             return this.name;
         }
 
@@ -362,15 +364,15 @@ public class Constants {
         private final int id;
 
         TypeOfInterest(int i, String name) {
-            this.name=name;
-            this.id=i;
+            this.name = name;
+            this.id = i;
         }
 
-        public int getId(){
+        public int getId() {
             return this.id;
         }
 
-        public String getName(){
+        public String getName() {
             return this.name;
         }
 
@@ -393,21 +395,21 @@ public class Constants {
 
 
     public enum TypeOfLanguages {
-        LOCALE_ENGLISH("en", "English"), LOCALE_HINDI("hi","Hindi"), LOCALE_MARATHI("mr","Marathi"), LOCALE_BENGALI("bn","Bangali"), LOCALE_TAMIL("ta","Tamil"), LOCALE_TELUGU("te","Telgu"),
-        LOCALE_KANNADA("kn","Kannada"), LOCALE_MALAYALAM("ml","Malayalam");
+        LOCALE_ENGLISH("en", "English"), LOCALE_HINDI("hi", "Hindi"), LOCALE_MARATHI("mr", "Marathi"), LOCALE_BENGALI("bn", "Bangali"), LOCALE_TAMIL("ta", "Tamil"), LOCALE_TELUGU("te", "Telgu"),
+        LOCALE_KANNADA("kn", "Kannada"), LOCALE_MALAYALAM("ml", "Malayalam");
         private final String name;
         private final String id;
 
         TypeOfLanguages(String i, String name) {
-            this.name=name;
-            this.id=i;
+            this.name = name;
+            this.id = i;
         }
 
-        public String getId(){
+        public String getId() {
             return this.id;
         }
 
-        public String getName(){
+        public String getName() {
             return this.name;
         }
 
@@ -429,21 +431,21 @@ public class Constants {
     }
 
     public enum TypeOfLanguagesWithContent {
-        LOCALE_ENGLISH("en", "English"), LOCALE_HINDI("hi","हिंदी"), LOCALE_MARATHI("mr","मराठी"), LOCALE_BENGALI("bn","বাংলা"), LOCALE_TAMIL("ta","தமிழ்"), LOCALE_TELUGU("te","తెలుగు"),
-        LOCALE_KANNADA("kn","ಕನ್ನಡ"), LOCALE_MALAYALAM("ml","മലയാളം");
+        LOCALE_ENGLISH("en", "English"), LOCALE_HINDI("hi", "हिंदी"), LOCALE_MARATHI("mr", "मराठी"), LOCALE_BENGALI("bn", "বাংলা"), LOCALE_TAMIL("ta", "தமிழ்"), LOCALE_TELUGU("te", "తెలుగు"),
+        LOCALE_KANNADA("kn", "ಕನ್ನಡ"), LOCALE_MALAYALAM("ml", "മലയാളം");
         private final String name;
         private final String id;
 
         TypeOfLanguagesWithContent(String i, String name) {
-            this.name=name;
-            this.id=i;
+            this.name = name;
+            this.id = i;
         }
 
-        public String getId(){
+        public String getId() {
             return this.id;
         }
 
-        public String getName(){
+        public String getName() {
             return this.name;
         }
 
@@ -465,21 +467,21 @@ public class Constants {
     }
 
     public enum DeliverableTypes {
-        ONE("1", "0"), TWO("2","0"), THREE("3","0"), FOUR("4","0"), FIVE("5","0"), SIX("6","0"),
-        SEVEN("7","2"), EIGHT("8","1"), NINE("9","0"), TEN("10","2"), ELEVEN("11","0");
+        ONE("1", "0"), TWO("2", "0"), THREE("3", "0"), FOUR("4", "0"), FIVE("5", "0"), SIX("6", "0"),
+        SEVEN("7", "2"), EIGHT("8", "1"), NINE("9", "0"), TEN("10", "2"), ELEVEN("11", "0");
         private final String name;
         private final String id;
 
         DeliverableTypes(String i, String name) {
-            this.name=name;
-            this.id=i;
+            this.name = name;
+            this.id = i;
         }
 
-        public String getId(){
+        public String getId() {
             return this.id;
         }
 
-        public String getName(){
+        public String getName() {
             return this.name;
         }
 
@@ -493,7 +495,7 @@ public class Constants {
 
         public static String findUrlTypeByDeliverableTypes(String id) {
             String name = findById(id);
-            return  UrlTypes.findById(name);
+            return UrlTypes.findById(name);
         }
 
         public static String findByName(String name) {
@@ -506,20 +508,20 @@ public class Constants {
     }
 
     public enum UrlTypes {
-        ONE("0", "image_link"), TWO("1","website_link"), THREE("2","video_link");
+        ONE("0", "image_link"), TWO("1", "website_link"), THREE("2", "video_link");
         private final String name;
         private final String id;
 
         UrlTypes(String i, String name) {
-            this.name=name;
-            this.id=i;
+            this.name = name;
+            this.id = i;
         }
 
-        public String getId(){
+        public String getId() {
             return this.id;
         }
 
-        public String getName(){
+        public String getName() {
             return this.name;
         }
 
@@ -540,6 +542,44 @@ public class Constants {
         }
     }
 
+    public enum TrackerStatusMapping {
+        APPROVED(2, "Approved"), APPLIED(3, "Applied"), PROOF_APPPROVAL(7, "Proof approval"), PROOF_SUBMITTED_REJECTED(10, "Proof submission rejected"),
+        APPLICATION_UNDER_REVIEW(11, "Application under review"), PROOF_UNDER_REVIEW(12, "Proof under review"),
+        PAYMENT_IN_PROCESS(13, "Payment in process"), PAYMENT_DONE(14, "Payment done"), PROOF_SUBMITTED(15, "Proof submitted");;
+        private final String name;
+        private final int id;
+
+        TrackerStatusMapping(int i, String name) {
+            this.name = name;
+            this.id = i;
+        }
+
+        public int getId() {
+            return this.id;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public static String findById(int id) {
+            for (TrackerStatusMapping trackerStatusMapping : TrackerStatusMapping.values()) {
+                if (id == trackerStatusMapping.id)
+                    return trackerStatusMapping.name;
+            }
+            return "";
+        }
+
+        public static int findByName(String name) {
+            for (TrackerStatusMapping trackerStatusMapping : TrackerStatusMapping.values()) {
+                if (name.trim().toLowerCase().equalsIgnoreCase(trackerStatusMapping.getName()))
+                    return trackerStatusMapping.id;
+            }
+            return 0;
+        }
+    }
+
+
     public enum PopListRequestType {
         INTEREST,
         DURABLES,
@@ -548,7 +588,7 @@ public class Constants {
         LANGUAGE
     }
 
-    public enum SocialPlatformName{
+    public enum SocialPlatformName {
         facebook,
         twitter,
         youtube,
@@ -556,7 +596,7 @@ public class Constants {
         website
     }
 
-    public enum ProofEditDelete{
+    public enum ProofEditDelete {
         edit,
         delete
     }

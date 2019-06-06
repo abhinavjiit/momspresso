@@ -39,6 +39,9 @@ import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,6 +141,8 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 }
             }
         });
+
+        EventBus.getDefault().register(this);
         return rootView;
     }
 
@@ -589,6 +594,16 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         }
     };
 
+    @Subscribe
+    public void getEventBusEventCall(String something){
+        Log.e("some event", something);
+    }
+
+    @Subscribe
+    public void getEventBusEventCal(int something){
+        Log.e("some event", something + "");
+    }
+
     public void editReply(String content, String parentCommentId, String replyId) {
         showProgressDialog("Editing Reply");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
@@ -847,4 +862,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

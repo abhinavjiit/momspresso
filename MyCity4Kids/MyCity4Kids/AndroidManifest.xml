@@ -7,20 +7,15 @@
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!-- Used to request data from the Google+ APIs in the SignInActivity -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- Used to request data from the Google+ APIs in the SignInActivity -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <!-- Required if we need to invalidate access tokens -->
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" /> <!-- Required if we need to invalidate access tokens -->
     <!-- <uses-permission android:name="android.permission.USE_CREDENTIALS" /> -->
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <!-- External storage for caching. -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- My Location -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" /> <!-- External storage for caching. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- My Location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -30,9 +25,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
-    <!-- Maps API needs OpenGL ES 2.0. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- Maps API needs OpenGL ES 2.0. -->
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -45,22 +38,20 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.mymoneytracker.activity.TrackerActivity"
+            android:label="@string/title_activity_tracker"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD0t9fusBGBU-bTdNO9teedX6by9J-LscI" />
-
-        <!-- API key For Google Map Local -->
-
+            android:value="AIzaSyD0t9fusBGBU-bTdNO9teedX6by9J-LscI" /> <!-- API key For Google Map Local -->
         <!-- <meta-data -->
         <!-- android:name="com.google.android.maps.v2.API_KEY" -->
         <!-- android:value="AIzaSyDW1kR3eOOksMp4gBrOnyGVB-q9bFJ21x4" /> -->
-
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCLaeioxT3JtDNGj4aczM_Clno7T_WTfWU" />
-
-        <!-- // this is old one keyyyyy -->
+            android:value="AIzaSyCLaeioxT3JtDNGj4aczM_Clno7T_WTfWU" /> <!-- // this is old one keyyyyy -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -97,16 +88,15 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.SplashActivity"
             android:icon="@drawable/myicon"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/transparent_status">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -158,9 +148,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-
-        <!-- Login Activity for facebook & app id -->
+        </activity> <!-- Login Activity for facebook & app id -->
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -378,10 +366,7 @@
             android:name=".ui.rewards.activity.RewardsContainerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
-
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".ui.activity.RankingActivity"
             android:screenOrientation="portrait"
@@ -499,7 +484,6 @@
         <activity
             android:name=".ui.activity.ChangePasswordActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.SuggestedTopicsActivity"
             android:screenOrientation="portrait" />
@@ -518,7 +502,6 @@
         <activity
             android:name=".ui.activity.ChallnegeDetailListingActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.ChooseVideoCategoryActivity"
             android:screenOrientation="portrait" />
@@ -545,8 +528,6 @@
         <meta-data
             android:name="io.branch.sdk.TestMode"
             android:value="false" /> <!-- Set to true to use Branch_Test_Key -->
-
-
         <!-- Branch install referrer tracking (optional) -->
         <receiver
             android:name="io.branch.referral.InstallListener"
@@ -609,7 +590,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".fcm.MyInstanceIDListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -623,7 +603,6 @@
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/notification_icon"
             tools:ignore="ManifestResource" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/blue_bg" />
@@ -640,4 +619,5 @@
             android:name=".ui.campaign.activity.CampaignContainerActivity"
             android:windowSoftInputMode="adjustPan" />
     </application>
+
 </manifest>

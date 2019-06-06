@@ -45,6 +45,7 @@ import com.mycity4kids.ui.adapter.CampaignDetailAdapter
 import com.mycity4kids.ui.adapter.RewardCampaignAdapter
 import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
+import com.mycity4kids.ui.mymoneytracker.activity.TrackerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.utils.EndlessScrollListener
 import com.squareup.picasso.Picasso
@@ -153,6 +154,16 @@ class CampaignDetailFragment : BaseFragment() {
                 context!!.startActivity(shareIntent)
             }
         }
+
+        ((containerView.findViewById<TextView>(R.id.txtTrackerStatus)).setOnClickListener {
+            var intent = Intent(activity, TrackerActivity::class.java)
+            intent.putExtra("campaign_id", 93)
+            intent.putExtra("brand_name", apiGetResponse!!.brandDetails!!.name)
+            intent.putExtra("campaign_name", apiGetResponse!!.name)
+            intent.putExtra("total_payout", apiGetResponse!!.totalPayout)
+            intent.putExtra("image_url", apiGetResponse!!.brandDetails!!.imageUrl)
+            startActivity(intent)
+        })
 
         referCodeApply.setOnClickListener {
             applyCode()
@@ -525,7 +536,6 @@ class CampaignDetailFragment : BaseFragment() {
                         Toast.makeText(context, context!!.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()
                         labelText.setText(context!!.resources.getString(R.string.label_campaign_not_eligible))
                         submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
-
 
                     }
                 }

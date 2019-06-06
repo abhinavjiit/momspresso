@@ -54,6 +54,23 @@
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/grey_light" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/txtTrackerStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="TRACK STATUS"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/campaign_feed_register_textview_bg"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/white"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:textSize="10sp"
+                app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
