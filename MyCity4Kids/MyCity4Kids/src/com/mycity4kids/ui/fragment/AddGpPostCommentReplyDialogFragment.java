@@ -72,12 +72,14 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
+import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.utils.AppUtils;
@@ -490,6 +492,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
     @Override
     public void onRecordingStarted() {
+        Utils.groupsEvent(getActivity(), "Add a comment", "Audio", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+
         if (mMediaPlayerComment != null && isCommentPlay) {
             mMediaPlayerComment.release();
             mMediaPlayerComment = null;
@@ -609,6 +613,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.postCommentReplyTextView:
+                Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
+
                 Map<String, String> mediaMap = new HashMap<>();
                 int i = 1;
                 if (!imageUrlHashMap.isEmpty()) {
@@ -655,6 +661,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 }
                 break;
             case R.id.closeImageView:
+                Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
+
                 if ("EDIT_COMMENT".equals(actionType)) {
                 } else if ("EDIT_REPLY".equals(actionType)) {
                 } else {
@@ -671,6 +679,8 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 dismiss();
                 break;
             case R.id.cancelTextView:
+                Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
+
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
             case R.id.chooseMediaTypeContainer:
@@ -726,15 +736,20 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 });
                 break;
             case R.id.record_button_red:
+
                 audioRecordView.setVisibility(View.VISIBLE);
                 mImgRecordButton.setVisibility(View.GONE);
                 mImgRecordCross.setVisibility(View.GONE);
                 break;
             case R.id.imageCameraTextView:
+                Utils.groupsEvent(getActivity(), "choose image pop up ", "capture image from camera", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "camera", "", String.valueOf(postId));
+
                 loadImageFromCamera();
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
             case R.id.imageGalleryTextView:
+                Utils.groupsEvent(getActivity(), "choose image pop up ", "choose from gallery", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "phone gallery", "", String.valueOf(postId));
+
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent, ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE);
@@ -743,6 +758,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             case R.id.anonymousImageView:
             case R.id.anonymousTextView:
             case R.id.anonymousCheckbox:
+                Utils.groupsEvent(getActivity(), "Add a comment", "Anonymous", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
                 if (anonymousCheckbox.isChecked()) {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
                 } else {
@@ -1045,8 +1061,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         }
                     })
                     .show();
-        }
-        else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

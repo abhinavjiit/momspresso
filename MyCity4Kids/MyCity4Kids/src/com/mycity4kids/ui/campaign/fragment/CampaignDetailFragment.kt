@@ -527,7 +527,6 @@ class CampaignDetailFragment : BaseFragment() {
                         submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
 
 
-
                     }
                 }
             }
@@ -591,9 +590,10 @@ class CampaignDetailFragment : BaseFragment() {
             dialog.setCancelable(true)
             val showAmount = dialog.findViewById<TextView>(R.id.show_amount)
             if (apiGetResponse!!.isFixedAmount == 1) {
-                showAmount.setText("Rs." + apiGetResponse!!.amount)
+                var amount: Int = (apiGetResponse!!.amount) as Int
+                showAmount.setText("Rs." + amount)
             } else {
-                showAmount.setText("Rs." + apiGetResponse!!.minAmount + "-" + "Rs." + apiGetResponse!!.maxAmount)
+                showAmount.setText("Rs." + (apiGetResponse!!.minAmount) as Int + "-" + "Rs." + (apiGetResponse!!.maxAmount) as Int)
             }
 
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

@@ -34,6 +34,11 @@ public class GTMTags {
     public static final String INDEX = "index";
     public static final String ArticleListing = "articleListing";
     public static final String Author = "author";
+    public static final String videoId = "videoId";
+    public static final String categoryId = "categoryId";
+    public static final String challengeId = "challengeId";
+    public static final String GroupId = "GroupId";
+    public static final String PostId = "PostId";
 
 
     //campaign events

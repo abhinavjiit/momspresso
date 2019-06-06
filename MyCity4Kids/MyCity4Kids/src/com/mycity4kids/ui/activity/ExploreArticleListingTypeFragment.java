@@ -338,6 +338,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             case R.id.videosContainer: {
                 Utils.pushOpenScreenEvent(getActivity(), "VideosScreen", dynamoUserId + "");
                 Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "VideosScreen");
+                Utils.momVlogEvent(getActivity(), "Home Screen", "Discover_vlogs", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
                 Intent cityIntent = new Intent(getActivity(), CategoryVideosListingActivity.class);
                 cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                 startActivity(cityIntent);

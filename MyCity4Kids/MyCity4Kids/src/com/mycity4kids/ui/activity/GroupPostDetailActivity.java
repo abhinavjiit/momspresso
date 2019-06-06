@@ -200,7 +200,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         groupMembershipStatus.checkMembershipStatus(groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
 
-
         recyclerView.setOnScrollListener(new EndlessScrollListener(new LinearLayoutManager(GroupPostDetailActivity.this)) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -323,9 +322,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
             switch (postData.getCounts().get(i).getName()) {
                 case "helpfullCount":
+                    Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Helpful", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+
                     postData.setHelpfullCount(postData.getCounts().get(i).getCount());
                     break;
                 case "notHelpfullCount":
+                    Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "not helpful", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+
                     postData.setNotHelpfullCount(postData.getCounts().get(i).getCount());
                     break;
                 case "responseCount":
@@ -514,6 +517,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             break;
             case R.id.replyCommentTextView:
             case R.id.replyCommentTextViewmedia: {
+                Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Reply", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Type_Reply", "", String.valueOf(groupId));
+
                 if (commentDisableFlag) {
                 } else {
                     openAddCommentReplyDialog(completeResponseList.get(position));
@@ -523,6 +528,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             break;
             case R.id.replyCountTextView:
             case R.id.replyCountTextViewmedia:
+                Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "View Reply", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Reply screen", "", String.valueOf(groupId));
+
                 viewGroupPostCommentsRepliesDialogFragment = new ViewGroupPostCommentsRepliesDialogFragment();
                 Bundle _args = new Bundle();
                 _args.putParcelable("commentReplies", completeResponseList.get(position));
@@ -535,6 +542,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 viewGroupPostCommentsRepliesDialogFragment.show(fm, "Replies");
                 break;
             case R.id.postSettingImageView:
+
                 getCurrentPostSettingsStatus(postData);
                 if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
                         || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
@@ -572,6 +580,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, "comment", position);
                 break;
             case R.id.shareTextView:
+                Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Share", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "sharing options", "", String.valueOf(groupId));
+
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
 
@@ -970,7 +980,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 }
                 break;
             case R.id.commentToggleTextView:
+                Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment ActionView", "disable comments  ", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+
                 if (commentToggleTextView.getText().toString().equals(getString(R.string.groups_disable_comment))) {
+
                     updatePostCommentSettings(1);
                 } else {
                     updatePostCommentSettings(0);
@@ -978,6 +991,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.notificationToggleTextView:
                 if (notificationToggleTextView.getText().toString().equals("DISABLE NOTIFICATION")) {
+                    Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment ActionView", "enable notification ", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+
                     updateUserPostPreferences("enableNotif");
                 } else {
                     updateUserPostPreferences("disableNotif");
@@ -985,6 +1000,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.openAddCommentDialog:
             case R.id.commentLayout: {
+                Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Type_Here bar", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Type_Reply", "", String.valueOf(groupId));
+
                 AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
@@ -997,6 +1014,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
             break;
             case R.id.reportPostTextView:
+                Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment ActionView", "report this post", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
@@ -1557,7 +1576,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                             break;
                         }
                     }
-         //           postData.setResponseCount(postData.getResponseCount() + 1);
+                    //           postData.setResponseCount(postData.getResponseCount() + 1);
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
                 } else {
                     showToast("Failed to add reply. Please try again");

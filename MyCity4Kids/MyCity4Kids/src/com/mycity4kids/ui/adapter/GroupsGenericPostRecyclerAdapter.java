@@ -45,6 +45,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
@@ -53,6 +54,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
+import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.utils.AppUtils;
@@ -117,6 +119,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         this.memberType = memberType;
         mHandler = new Handler(this);
         this.playingPosition = -1;
+        setHasStableIds(true);
     }
 
     public void setData(ArrayList<GroupPostResult> postList) {
@@ -126,6 +129,12 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public int getItemCount() {
         return postList.size();
+    }
+
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -366,11 +375,12 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_incognito));
             } else {
                 mediaPostViewHolder.usernameTextView.setText(postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+
                 try {
                     Picasso.with(mContext).load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(mediaPostViewHolder.userImageView);
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(mediaPostViewHolder.userImageView);
                 } catch (Exception e) {
-                    mediaPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
+                    mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_commentor_img));
                 }
             }
             initializeViews((MediaPostViewHolder) holder, position);
@@ -1242,6 +1252,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Utils.groupsEvent(mContext, "Groups_Discussion", "# comment ", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Groups_Discussion", "", String.valueOf(postList.get(getAdapterPosition()).getId()));
+
                     AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                     FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
                     Bundle _args = new Bundle();
@@ -1257,6 +1269,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 @Override
                 public void onClick(View v) {
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
+                        Utils.groupsEvent(mContext, "Groups_Discussion", "# comment ", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", String.valueOf(postList.get(getAdapterPosition()).getId()));
+
 
                         AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                         FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();

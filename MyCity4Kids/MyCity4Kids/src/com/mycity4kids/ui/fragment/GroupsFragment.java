@@ -30,6 +30,7 @@ import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
@@ -66,6 +67,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     private LinkedTreeMap<String, String> selectedQuestionnaire;
     private TextView joinGpLabel;
     private MixpanelAPI mixpanel;
+    private int position;
 
     @Nullable
     @Override
@@ -259,6 +261,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.seeAllGpTextView: {
+                Utils.groupsEvent(getActivity(), "Home Screen", "other groups_View all", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "other group listing", "", "");
                 Intent intent = new Intent(getActivity(), GroupsListingActivity.class);
                 intent.putExtra("isMember", false);
                 intent.putParcelableArrayListExtra("joinedList", joinedGroupList);
@@ -266,6 +269,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             }
             break;
             case R.id.seeAllJoinedGpTextView: {
+                Utils.groupsEvent(getActivity(), "Home Screen", "Groups you are member of_ View all", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Your groups listing", "", "");
                 Intent intent = new Intent(getActivity(), GroupsListingActivity.class);
                 intent.putExtra("isMember", true);
                 startActivity(intent);
@@ -330,10 +334,14 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             if (isAdded())
                 Toast.makeText(getActivity(), getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
+
             Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
+            Utils.groupsEvent(getActivity(), "Home Screen", "Groups you are member of_group card", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Discussion Page", "", "");
+
+
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
@@ -341,6 +349,7 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
         } else {
+            Utils.groupsEvent(getActivity(), "Home Screen", "other groups_group card", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "About Page", "", "");
             Intent intent = new Intent(getActivity(), GroupsSummaryActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
@@ -351,6 +360,11 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onMembershipStatusFetchFail() {
 
+    }
+
+
+    public void setHightlight(int position) {
+        this.position = position;
     }
 
 

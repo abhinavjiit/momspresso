@@ -1211,7 +1211,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    public void addRemoveBookmark(String bookmarkStatus, int pos,String authorId, String videoId) {
+    public void addRemoveBookmark(String bookmarkStatus, int pos, String authorId, String videoId) {
         updateBookmarkPos = pos;
         bookmarkAuthorId = authorId;
         this.bookmarkStatus = bookmarkStatus;
@@ -1231,7 +1231,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    private void hitBookmarkVideoStatusAPI(String videoId,String authorId) {
+    private void hitBookmarkVideoStatusAPI(String videoId, String authorId) {
         ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
         articleDetailRequest.setArticleId(videoId);
 

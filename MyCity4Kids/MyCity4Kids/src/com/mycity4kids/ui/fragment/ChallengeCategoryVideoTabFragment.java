@@ -14,6 +14,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -84,8 +85,10 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
                 bundle.putParcelable("topic", articledatamodal);*/
 
                 Intent intent = new Intent(getActivity(), NewVideoChallengeActivity.class);
+                Utils.momVlogEvent(getActivity(), "Video Listing", "Challenge container", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", challengeId.toString());
+
                 intent.putExtra("Display_Name", Display_Name);
-                intent.putExtra("screenName","MomVlogs");
+                intent.putExtra("screenName", "MomVlogs");
                 intent.putExtra("challenge", challengeId);
                 intent.putExtra("position", position);
                 intent.putExtra("StreamUrl", activeStreamUrl);

@@ -15,7 +15,11 @@ import android.widget.TextView;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 
 public class VideoChallengeDiscription extends Fragment implements View.OnClickListener {
 
@@ -53,6 +57,8 @@ public class VideoChallengeDiscription extends Fragment implements View.OnClickL
         if (!StringUtils.isNullOrEmpty(challengeRules)) {
             webView.loadData(challengeRules, "text/html", "UTF-8");
         }
+        Utils.momVlogEvent(getActivity(), "Challenge detail", "About", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge__detail", "", "");
+
         return view;
     }
 

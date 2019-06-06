@@ -23,6 +23,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.TrendingListingResult;
@@ -289,6 +290,8 @@ public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCa
             case R.id.addMomVlogTextView:
             case R.id.addVideoContainer: {
                 MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, "Trending-" + trendingTopicData.getDisplay_name());
+                Utils.momVlogEvent(getActivity(), "Home Screen", "Carousel_banner_add_vlog", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+
                 Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
                 startActivity(intent);
             }

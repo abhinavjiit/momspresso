@@ -560,6 +560,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 break;
                             case R.id.action_momVlog:
                                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Bottom_nav_videos", "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
                                 Intent cityIntent = new Intent(DashboardActivity.this, CategoryVideosListingActivity.class);
                                 cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                                 startActivity(cityIntent);
@@ -593,6 +594,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 if (topFragment instanceof GroupsFragment) {
                                     return true;
                                 }
+                                Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Group_bottom_nav", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
+
                                 GroupsFragment groupsFragment = new GroupsFragment();
                                 Bundle eBundle = new Bundle();
                                 groupsFragment.setArguments(eBundle);
@@ -1879,6 +1882,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.videosTextView: {
                 mDrawerLayout.closeDrawers();
                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Sidebar_vlogs", "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
                 Intent cityIntent = new Intent(this, CategoryVideosListingActivity.class);
                 cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                 startActivity(cityIntent);
@@ -1901,6 +1905,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.groupsTextView: {
                 mDrawerLayout.closeDrawers();
+                Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Sidebar_groups", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
                 GroupsFragment fragment = new GroupsFragment();
                 Bundle mBundle = new Bundle();
                 fragment.setArguments(mBundle);
@@ -1969,6 +1974,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         if (v.getId() == R.id.upload_video) {
             MixPanelUtils.pushAddMomVlogClickEvent(mMixpanel, "BottomSheet");
+            Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+
             Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
             startActivity(intent);
             chooseLayoutVideo.setVisibility(View.GONE);

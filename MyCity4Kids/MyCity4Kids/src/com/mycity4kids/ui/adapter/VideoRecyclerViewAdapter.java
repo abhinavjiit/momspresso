@@ -32,12 +32,14 @@ import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.BaseViewHolder;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -233,6 +235,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             followText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.momVlogEvent(mContext, "Video Detail", "Follow", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+
                     ((ParallelFeedActivity) mContext).followAPICall(responseData.getAuthor().getId(), position);
                 }
             });
@@ -248,10 +252,16 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 public void onClick(View view) {
                     if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
                         likeStatus = "0";
+
                         ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
+                        Utils.momVlogEvent(mContext, "Video Detail", "Like", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+
                     } else {
                         likeStatus = "1";
+
                         ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
+                        Utils.momVlogEvent(mContext, "Video Detail", "DisLike", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+
                     }
                 }
             });
@@ -259,12 +269,14 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mImgBookmark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.momVlogEvent(mContext, "Video Detail", "Bookmark", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+
                     if (responseData.getIs_bookmark() != null && responseData.getIs_bookmark().equals("1")) {
                         bookmarkStatus = "0";
                     } else {
                         bookmarkStatus = "1";
                     }
-                    ((ParallelFeedActivity) mContext).addRemoveBookmark(bookmarkStatus, position,responseData.getAuthor().getId(), responseData.getId());
+                    ((ParallelFeedActivity) mContext).addRemoveBookmark(bookmarkStatus, position, responseData.getAuthor().getId(), responseData.getId());
 
                 }
             });
@@ -284,6 +296,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         Utils.pushShareArticleEvent(mContext, "DetailVideoScreen", userDynamoId + "", responseData.getId(), responseData.getAuthor().getId() + "~" + responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName(), "CommonShare");
                     }
 
+                    Utils.momVlogEvent(mContext, "Video Detail", "Share", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
 
                 }
             });
@@ -304,6 +317,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         } catch (android.content.ActivityNotFoundException ex) {
                             Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
                         }
+                        Utils.momVlogEvent(mContext, "Video Detail", "Whatsapp", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+
                     }
                 }
             });
@@ -317,6 +332,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.momVlogEvent(mContext, "Video Detail", "Add comment", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
+
                     ((ParallelFeedActivity) mContext).openViewCommentDialog(responseData.getCommentUri(), getShareUrl(responseData), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + " " + responseData.getAuthor().getLastName(), responseData.getId());
                 }
             });
