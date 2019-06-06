@@ -559,7 +559,8 @@
                 android:paddingBottom="15dp"
                 android:text="SUBMIT"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:fontName="oswald_regular.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textlater"

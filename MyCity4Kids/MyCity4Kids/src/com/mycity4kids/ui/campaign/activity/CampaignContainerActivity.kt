@@ -62,7 +62,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campaign_container)
-        addAddProofFragment(35, arrayList as ArrayList<Int>)
+        addPaymantMode()
+      //  addAddProofFragment(35, arrayList as ArrayList<Int>)
         /*    deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
             fromNotification = if (intent.hasExtra("fromNotification")) {//fromNotification

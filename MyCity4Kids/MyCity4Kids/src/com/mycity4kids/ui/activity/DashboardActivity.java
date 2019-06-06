@@ -2835,7 +2835,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 .setBadgePadding(3, true)
                 .setBadgeGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL)
                 .setGravityOffset(0, 0, true)
-                .bindTarget(bottomNavigationView.getBottomNavigationItemView(4));
+                .bindTarget(bottomNavigationView.getBottomNavigationItemView(1));
 
         return badge;
     }
