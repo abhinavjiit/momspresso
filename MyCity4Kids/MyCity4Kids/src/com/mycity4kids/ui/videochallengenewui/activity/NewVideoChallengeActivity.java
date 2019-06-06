@@ -21,7 +21,10 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.videochallengenewui.Adapter.VideoChallengePagerAdapter;
 import com.squareup.picasso.Picasso;
@@ -213,6 +216,8 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             Intent intent = new Intent(this, ExoplayerVideoChallengePlayViewActivity.class);
             intent.putExtra("StreamUrl", selectedStreamUrl);
             startActivity(intent);
+            Utils.momVlogEvent(NewVideoChallengeActivity.this, "Challenge detail", "Prompt_video_play", "", "android", SharedPrefUtils.getAppLocale(NewVideoChallengeActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_detail", "", "");
+
         }
 
 

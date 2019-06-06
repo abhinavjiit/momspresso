@@ -1058,7 +1058,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_language">Preferred languages</string>
     <string name="rewards_number_of_kids">Number of kids</string>
     <string name="rewards_interest">Interests</string>
-    <string name="rewards_link_social">Link Social Accounts</string>
+    <string name="rewards_link_social">Link Account</string>
     <string name="rewards_are_expecing">I am Expecting</string>
     <string name="cannot_be_left_blank">%1$s cannot be left blank\u0020</string>
     <string name="please_enter_a_valid">Please enter a valid\u0020 %1$s</string>
@@ -1180,5 +1180,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="dialog_invite_only_subtext">Click below to apply for future ‘invite only’ campaigns.</string>
     <string name="title_activity_tracker">TrackerActivity</string>
     <string name="action_settings">Settings</string>
+
+
+    <string name="social_page_add_social_accounts">ADD SOCIAL ACCOUNTS</string>
+    <string name="social_page_add_website_hint">www.momvlogger.com/sheetal</string>
+    <string name="social_page_add_website">ADD WEBSITE</string>
+
 
 </resources>

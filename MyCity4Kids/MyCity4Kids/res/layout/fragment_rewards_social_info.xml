@@ -14,22 +14,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="#F9F9F9"
             android:orientation="vertical">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="20dp"
-                android:text="@string/rewards_social_header"
-                android:gravity="center"
-                android:layout_marginLeft="20dp"
                 android:layout_gravity="center_horizontal"
-                android:textColor="@color/app_grey"
-                android:textSize="18sp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
-                app:fontName="oswald.ttf" />
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:text="@string/rewards_social_header"
+                android:textColor="@color/app_grey"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="wrap_content"
@@ -38,61 +38,21 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/rewards_link_social"
                 android:textAllCaps="true"
-                android:textColor="@color/app_grey"
-                android:textSize="18sp"
+                android:textColor="@color/home.toolbar.titlecolor"
+                android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
-
-            <LinearLayout
-                android:id="@+id/layoutInstagram"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".2"
-                    android:padding="5dp"
-                    app:srcCompat="@drawable/ic_instagram" />
-
-                <com.mycity4kids.widget.CustomFontEditText
-                    android:id="@+id/editInstagram"
-                    android:layout_width="0dp"
-                    android:layout_weight=".6"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:hint="@string/rewards_instagram_handler"
-                    android:inputType="textNoSuggestions"
-                    android:textColor="@color/app_light_black"
-                    android:textSize="16dp"
-                    app:fontName="oswald_regular.ttf" />
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".2"
-                    android:padding="10dp"
-                    android:src="@drawable/arrow_right" />
-
-            </LinearLayout>
-
-            <include
-                layout="@layout/view_bottom_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp" />
 
             <LinearLayout
                 android:id="@+id/layoutFacebook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/social_page_border_rectangular_circular_corner"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
                 <ImageView
                     android:layout_width="0dp"
@@ -106,15 +66,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".6"
-                    android:hint="@string/rewards_facebook_handler"
-                    android:focusable="false"
-                    android:editable="false"
                     android:background="@null"
+                    android:editable="false"
+
+                    android:focusable="false"
+                    android:hint="@string/rewards_facebook_handler"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:textAllCaps="true"
                     android:textColor="@color/app_grey"
-                    android:textSize="16sp"
+                    android:textColorHint="@color/app_red"
+                    android:textSize="18sp"
                     app:fontName="oswald_regular.ttf" />
 
                 <ImageView
@@ -122,96 +84,205 @@
                     android:layout_height="match_parent"
                     android:layout_weight=".2"
                     android:padding="10dp"
-                    android:src="@drawable/arrow_right" />
+                    android:src="@drawable/arrow_right"
+                    android:tint="@color/app_red" />
 
             </LinearLayout>
 
             <include
                 layout="@layout/view_bottom_line"
                 android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                android:layout_height="1dp"
+                android:visibility="gone" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/social_page_add_social_accounts"
+                android:textAllCaps="true"
+                android:textColor="@color/home.toolbar.titlecolor"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+
+            <LinearLayout
+                android:id="@+id/layoutInstagram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/social_page_border_rectangular_circular_corner"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:paddingLeft="@dimen/space_5"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="@dimen/space_5"
+                    app:srcCompat="@drawable/ic_instagram" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E5E5E5" />
+
+                <com.mycity4kids.widget.CustomFontEditText
+                    android:id="@+id/editInstagram"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/space_15"
+                    android:layout_weight=".6"
+                    android:background="@null"
+                    android:hint="@string/rewards_instagram_handler"
+                    android:inputType="textNoSuggestions"
+                    android:paddingTop="10dp"
+
+                    android:paddingBottom="10dp"
+                    android:textColor="@color/app_light_black"
+                    android:textSize="16dp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:padding="10dp"
+                    android:src="@drawable/arrow_right"
+                    android:tint="@color/app_red"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/view_bottom_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="gone" />
+
+
+            <include
+                layout="@layout/view_bottom_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/layoutTwitter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/social_page_border_rectangular_circular_corner"
                 android:orientation="horizontal"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp">
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight=".2"
-                    android:padding="5dp"
+                    android:paddingLeft="@dimen/space_5"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="@dimen/space_5"
                     app:srcCompat="@drawable/ic_twitter" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E5E5E5" />
 
                 <com.mycity4kids.widget.CustomFontEditText
                     android:id="@+id/editTwitter"
                     android:layout_width="0dp"
-                    android:layout_weight=".6"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/space_15"
+                    android:layout_weight=".6"
                     android:background="@null"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:hint="@string/add_twitter"
                     android:inputType="textNoSuggestions"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+
                     android:textColor="@color/app_light_black"
                     android:textSize="16dp"
                     app:fontName="oswald_regular.ttf" />
 
                 <!--<com.mycity4kids.widget.CustomFontEditText-->
-                    <!--android:id="@+id/editTwitter"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight=".6"-->
-                    <!--android:hint="TWITTER"-->
-                    <!--android:paddingTop="10dp"-->
-                    <!--android:paddingBottom="10dp"-->
-                    <!--android:textAllCaps="true"-->
-                    <!--android:textColor="@color/app_grey"-->
-                    <!--android:textSize="16sp"-->
-                    <!--app:fontName="oswald_regular.ttf" />-->
+                <!--android:id="@+id/editTwitter"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight=".6"-->
+                <!--android:hint="TWITTER"-->
+                <!--android:paddingTop="10dp"-->
+                <!--android:paddingBottom="10dp"-->
+                <!--android:textAllCaps="true"-->
+                <!--android:textColor="@color/app_grey"-->
+                <!--android:textSize="16sp"-->
+                <!--app:fontName="oswald_regular.ttf" />-->
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight=".2"
                     android:padding="10dp"
-                    android:src="@drawable/arrow_right" />
+                    android:src="@drawable/arrow_right"
+                    android:tint="@color/app_red"
+                    android:visibility="invisible" />
 
             </LinearLayout>
 
             <include
                 layout="@layout/view_bottom_line"
                 android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                android:layout_height="1dp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/layoutYoutube"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/social_page_border_rectangular_circular_corner"
                 android:orientation="horizontal"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp">
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight=".2"
-                    android:padding="5dp"
+                    android:paddingLeft="@dimen/space_5"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="@dimen/space_5"
                     app:srcCompat="@drawable/ic_youtube" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E5E5E5" />
 
                 <com.mycity4kids.widget.CustomFontEditText
                     android:id="@+id/editYoutube"
                     android:layout_width="0dp"
-                    android:layout_weight=".6"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/space_15"
+                    android:layout_weight=".6"
                     android:background="@null"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:hint="@string/add_youtube"
                     android:inputType="textNoSuggestions"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+
                     android:textColor="@color/app_light_black"
                     android:textSize="16dp"
                     app:fontName="oswald_regular.ttf" />
@@ -221,24 +292,92 @@
                     android:layout_height="match_parent"
                     android:layout_weight=".2"
                     android:padding="10dp"
-                    android:src="@drawable/arrow_right" />
+                    android:src="@drawable/arrow_right"
+                    android:tint="@color/app_red"
+                    android:visibility="invisible" />
             </LinearLayout>
 
             <include
                 layout="@layout/view_bottom_line"
                 android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                android:layout_height="1dp"
+                android:visibility="gone" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/social_page_add_website"
+                android:textAllCaps="true"
+                android:textColor="@color/home.toolbar.titlecolor"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
 
             <LinearLayout
                 android:id="@+id/layoutWebsite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/social_page_border_rectangular_circular_corner"
                 android:orientation="horizontal"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp">
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:paddingLeft="@dimen/space_5"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="@dimen/space_5"
+                    android:tint="@color/app_red"
+                    app:srcCompat="@drawable/ic_desktop" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#E5E5E5" />
 
                 <com.mycity4kids.widget.CustomFontEditText
                     android:id="@+id/editWebsite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/space_15"
+                    android:layout_weight=".6"
+                    android:background="@null"
+                    android:hint="www.momvlogger.com/sheetal"
+                    android:inputType="textNoSuggestions"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+
+                    android:textColor="@color/app_light_black"
+                    android:textSize="16dp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".2"
+                    android:padding="10dp"
+                    android:src="@drawable/arrow_right"
+                    android:tint="@color/app_red"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutWebsite1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:visibility="gone">
+
+                <com.mycity4kids.widget.CustomFontEditText
+                    android:id="@+id/editWebsite1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -259,7 +398,8 @@
             <include
                 layout="@layout/view_bottom_line"
                 android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                android:layout_height="1dp"
+                android:visibility="gone" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="wrap_content"
@@ -405,11 +545,12 @@
                 android:id="@+id/textSubmit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="15dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="10dp"
                 android:background="@color/app_red"
                 android:gravity="center"
                 android:paddingLeft="35dp"
@@ -417,21 +558,21 @@
                 android:paddingRight="35dp"
                 android:paddingBottom="15dp"
                 android:text="SUBMIT"
-                android:layout_marginBottom="10dp"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:fontName="oswald_regular.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textlater"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="15dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:text="Maybe Later"
-                android:layout_marginBottom="10dp"
                 android:textColor="@color/app_red"
                 android:textSize="15sp" />
 

@@ -277,6 +277,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
             case R.id.joinGroupTextView:
+                Utils.groupsEvent(GroupsSummaryActivity.this, "other groups_group card", "Join group", "android", SharedPrefUtils.getAppLocale(GroupsSummaryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Groups Discussion page", "", "");
                 joinGroupRequest();
                 break;
         }

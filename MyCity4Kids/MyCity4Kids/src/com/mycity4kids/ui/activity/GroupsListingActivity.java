@@ -346,6 +346,8 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
             startActivity(intent);
+            Utils.groupsEvent(GroupsListingActivity.this, "Groups you are member of_listing", "group card", "android", SharedPrefUtils.getAppLocale(GroupsListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Groups_Discussion", "", "");
+
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());

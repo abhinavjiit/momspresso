@@ -107,6 +107,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         } else if (sortType.equals(Constants.KEY_TRENDING)) {
             toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_trending));
         } else if (sortType.equals(Constants.KEY_FOR_YOU)) {
+            Utils.timeSpending(this, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
             toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_for_you));
         } else if (sortType.equals(Constants.KEY_TODAYS_BEST)) {
             toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_todays_best));

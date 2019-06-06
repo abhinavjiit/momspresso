@@ -265,6 +265,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         mInflater = inflater;
         fragmentView = inflater.inflate(R.layout.article_details_fragment, container, false);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        Utils.pushOpenScreenEvent(getActivity(), "articleDetailFragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         deepLinkURL = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);

@@ -16,6 +16,7 @@ import com.lid.lib.LabelImageView;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupResult;
+import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -109,6 +110,8 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
                 @Override
                 public void onClick(View v) {
                     mListener.onRecyclerItemClick(v, getAdapterPosition(), isMember);
+                    // ((SetHighLights) this).setHighLight(getAdapterPosition());
+                    //((GroupsFragment) this).setHightlight(getAdapterPosition());
                     groupsDataList.get(getAdapterPosition()).setHighlight(0);
                     notifyDataSetChanged();
                 }
@@ -119,5 +122,6 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
     public interface RecyclerViewClickListener {
         void onRecyclerItemClick(View view, int position, boolean isMember);
     }
+
 
 }
