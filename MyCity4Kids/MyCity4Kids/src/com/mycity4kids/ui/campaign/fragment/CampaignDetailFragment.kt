@@ -157,7 +157,7 @@ class CampaignDetailFragment : BaseFragment() {
 
         ((containerView.findViewById<TextView>(R.id.txtTrackerStatus)).setOnClickListener {
             var intent = Intent(activity, TrackerActivity::class.java)
-            intent.putExtra("campaign_id", 93)
+            intent.putExtra("campaign_id", id!!)
             intent.putExtra("brand_name", apiGetResponse!!.brandDetails!!.name)
             intent.putExtra("campaign_name", apiGetResponse!!.name)
             intent.putExtra("total_payout", apiGetResponse!!.totalPayout)
@@ -536,7 +536,6 @@ class CampaignDetailFragment : BaseFragment() {
                         Toast.makeText(context, context!!.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()
                         labelText.setText(context!!.resources.getString(R.string.label_campaign_not_eligible))
                         submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
-
                     }
                 }
             }

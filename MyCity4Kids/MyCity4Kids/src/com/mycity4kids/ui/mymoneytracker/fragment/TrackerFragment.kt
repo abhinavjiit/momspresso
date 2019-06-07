@@ -140,7 +140,7 @@ class TrackerFragment : BaseFragment() {
     }
 
     private fun getTrackerData(campaignId: Int) {
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getTrackerData(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ArrayList<TrackerDataModel>>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getTrackerData(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ArrayList<TrackerDataModel>>> {
             override fun onComplete() {
                 removeProgressDialog()
             }

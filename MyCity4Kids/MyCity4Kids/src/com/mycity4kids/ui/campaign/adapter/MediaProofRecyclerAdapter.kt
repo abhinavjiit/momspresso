@@ -35,35 +35,49 @@ class MediaProofRecyclerAdapter(
         if (!campaignProofResponse.isNullOrEmpty()) {
             if (position < campaignProofResponse.size) {
                 val item = campaignProofResponse.get(position)
-                Picasso.with(context.context).load(item.url)
-                        .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
-                if (item.proofStatus == 1 || item.proofStatus == 0) {
-                    holder.imageEdit.visibility = View.VISIBLE
+                if(item.isTemplate){
+                    holder.relativeParent.setOnClickListener {
+                        clickListener.onCellClick()
+                    }
 
-                } else if (item.proofStatus == 2) {
-                    holder.imageAcceptDeleteProof.setImageDrawable(context.context!!.resources.getDrawable(R.drawable.ic_delete_cross))
-                    holder.imageEdit.visibility = View.VISIBLE
-                    holder.imageAcceptedRejected.setText("Rejected")
-                    holder.imageAcceptedRejected.setTextColor(context.resources.getColor(R.color.campaign_rejected))
-                } else if (item.proofStatus == 3) {
-                    holder.imageAcceptDeleteProof.setImageDrawable(context.context!!.resources.getDrawable(R.drawable.ic_accepted))
+                    holder.imageScreenshot.setImageDrawable(context.resources.getDrawable(R.drawable.ic_add_proof))
+//                    Picasso.with(context.context).load(item.url)
+//                            .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
+
                     holder.imageEdit.visibility = View.GONE
-                    holder.imageAcceptedRejected.setText("Approved")
-                    holder.imageAcceptedRejected.setTextColor(context.resources.getColor(R.color.campaign_approved_rejected))
-                    holder.relativeParent.isClickable = false
+
+                }else{
+                    Picasso.with(context.context).load(item.url)
+                            .placeholder(R.drawable.ic_add_proof).error(R.drawable.ic_add_proof).into(holder.imageScreenshot)
+                    if (item.proofStatus == 1 || item.proofStatus == 0) {
+                        holder.imageEdit.visibility = View.VISIBLE
+
+                    } else if (item.proofStatus == 2) {
+                        holder.imageAcceptDeleteProof.setImageDrawable(context.context!!.resources.getDrawable(R.drawable.ic_delete_cross))
+                        holder.imageEdit.visibility = View.VISIBLE
+                        holder.imageAcceptedRejected.setText("Rejected")
+                        holder.imageAcceptedRejected.setTextColor(context.resources.getColor(R.color.campaign_rejected))
+                    } else if (item.proofStatus == 3) {
+                        holder.imageAcceptDeleteProof.setImageDrawable(context.context!!.resources.getDrawable(R.drawable.ic_accepted))
+                        holder.imageEdit.visibility = View.GONE
+                        holder.imageAcceptedRejected.setText("Approved")
+                        holder.imageAcceptedRejected.setTextColor(context.resources.getColor(R.color.campaign_approved_rejected))
+                        holder.relativeParent.isClickable = false
+                    }
+
+                    holder.imageEdit.setOnClickListener {
+                        clickListener.onProofDelete(holder.adapterPosition)
+                    }
+
+                    holder.relativeParent.setOnClickListener {
+                    }
+
+                    with(holder.mView) {
+                        tag = item
+                        setOnClickListener(mOnClickListener)
+                    }
                 }
 
-                holder.imageEdit.setOnClickListener {
-                    clickListener.onProofDelete(holder.adapterPosition)
-                }
-
-                holder.relativeParent.setOnClickListener {
-                }
-
-                with(holder.mView) {
-                    tag = item
-                    setOnClickListener(mOnClickListener)
-                }
             } else {
                 holder.relativeParent.setOnClickListener {
                     clickListener.onCellClick()
@@ -76,7 +90,7 @@ class MediaProofRecyclerAdapter(
         }
     }
 
-    override fun getItemCount(): Int = 6
+    override fun getItemCount(): Int = campaignProofResponse.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val relativeParent = mView.relativeParent

@@ -38,6 +38,15 @@ class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse
             if (position < campaignProofResponse.size) {
                 val item = campaignProofResponse.get(position)
 
+                if (campaignProofResponse.size == 1) {
+                    holder.imageDeleteComponent.visibility = View.GONE
+                } else {
+                    holder.imageDeleteComponent.visibility = View.VISIBLE
+                }
+
+                holder.imageDeleteComponent.setOnClickListener {
+                    clickListener.onUrlComponentDelete(holder.adapterPosition)
+                }
                 holder.textUrl.setText(item.url)
                 holder.textUrl.addTextChangedListener(object : TextWatcher {
                     override fun afterTextChanged(text: Editable?) {
@@ -47,9 +56,11 @@ class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse
                     }
 
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
                     }
 
                     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
                     }
 
                 })
@@ -73,7 +84,8 @@ class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse
                 }
 
                 holder.imageDelete.setOnClickListener {
-                    clickListener.onUrlProofDelete(holder.adapterPosition)
+                    holder.textUrl.setText("")
+                    //clickListener.onUrlProofDelete(holder.adapterPosition)
                 }
 
                 with(holder.mView) {
@@ -136,18 +148,19 @@ class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse
         }
     }
 
-    override fun getItemCount(): Int = 3
+    override fun getItemCount(): Int = campaignProofResponse.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val textUrl = mView.textUrl
         val imageDelete = mView.imageDelete
         val imageApprovedRejected = mView.imageApprovedRejected
         val textAcceptedRejectedStatus = mView.textAcceptedRejectedStatus
-
+        val imageDeleteComponent = mView.imageDeleteComponent
     }
 
     interface ClickListener {
         fun onCellClick()
         fun onUrlProofDelete(cellIndex: Int)
+        fun onUrlComponentDelete(cellIndex: Int)
     }
 }

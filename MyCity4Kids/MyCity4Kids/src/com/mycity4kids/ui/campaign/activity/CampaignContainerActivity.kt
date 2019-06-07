@@ -26,7 +26,43 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.NumberFormatException
 
 class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener {
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("Activity", "onDestroy")
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i("Activity", "onPause")
+
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("Activity", "onResume")
+
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        Log.i("Activity", "onStart")
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.i("Activity", "onStop")
+
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.i("Activity", "onRestart")
+
+    }
 
     override fun onPaymentModeDone() {
 
@@ -61,57 +97,58 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     private var fromNotification: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("Activity", "onCreate")
+
         setContentView(R.layout.activity_campaign_container)
-        addPaymantMode()
-      //  addAddProofFragment(35, arrayList as ArrayList<Int>)
-        /*    deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
-            fromNotification = if (intent.hasExtra("fromNotification")) {//fromNotification
-                intent.getBooleanExtra("fromNotification", false)
-            } else {
-                false
-            }
+        deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
-            if (intent.hasExtra("campaign_id") && intent.hasExtra("campaign_detail")) {
-                notificationCampaignId = intent.getStringExtra("campaign_id")
+        fromNotification = if (intent.hasExtra("fromNotification")) {//fromNotification
+            intent.getBooleanExtra("fromNotification", false)
+        } else {
+            false
+        }
 
-                comingFrom = "campaign_detail"
+        if (intent.hasExtra("campaign_id") && intent.hasExtra("campaign_detail")) {
+            notificationCampaignId = intent.getStringExtra("campaign_id")
 
-            } else {
-                notificationCampaignId = ""
-            }
+            comingFrom = "campaign_detail"
 
-            if (intent.hasExtra("campaign_Id") && intent.hasExtra("campaign_submit_proof")) {
-                notificationCampaignSubmitProof = intent.getStringExtra("campaign_Id")
-                comingFrom = "campaign_submit_proof"
+        } else {
+            notificationCampaignId = ""
+        }
 
-            } else {
-                notificationCampaignSubmitProof = ""
-            }
+        if (intent.hasExtra("campaign_Id") && intent.hasExtra("campaign_submit_proof")) {
+            notificationCampaignSubmitProof = intent.getStringExtra("campaign_Id")
+            comingFrom = "campaign_submit_proof"
 
-
-
-            if (!notificationCampaignSubmitProof.equals("", true)) {
-                deeplinkCampaignId = notificationCampaignSubmitProof.toInt()
-            }
+        } else {
+            notificationCampaignSubmitProof = ""
+        }
 
 
 
+        if (!notificationCampaignSubmitProof.equals("", true)) {
+            deeplinkCampaignId = notificationCampaignSubmitProof.toInt()
+        }
 
-            if (!notificationCampaignId.equals("", true)) {
-                deeplinkCampaignId = notificationCampaignId.toInt()
-            }
 
-            if ((deeplinkCampaignId == -1 || deeplinkCampaignId == 0) && comingFrom.equals("deeplink")) {
-                campaignListFragment()
-            } else if (comingFrom.equals("campaign_detail")) {
-                addCampaginDetailFragment(deeplinkCampaignId)
 
-            } else if (comingFrom.equals("campaign_submit_proof")) {
-                addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>)
-            } else {
-                addCampaginDetailFragment(deeplinkCampaignId)
-            }*/
+
+        if (!notificationCampaignId.equals("", true)) {
+            deeplinkCampaignId = notificationCampaignId.toInt()
+        }
+
+        if ((deeplinkCampaignId == -1 || deeplinkCampaignId == 0) && comingFrom.equals("deeplink")) {
+            campaignListFragment()
+        } else if (comingFrom.equals("campaign_detail")) {
+            addCampaginDetailFragment(deeplinkCampaignId)
+
+        } else if (comingFrom.equals("campaign_submit_proof")) {
+            addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>)
+        } else {
+            addCampaginDetailFragment(deeplinkCampaignId)
+        }
 
     }
 

@@ -47,6 +47,30 @@ import java.util.*
 const val SELECT_IMAGE = 1005
 
 class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickListener, MediaProofRecyclerAdapter.ClickListener {
+    override fun onUrlComponentDelete(cellIndex: Int) {
+        for (i in 0..campaignUrlProofList.size - 1) {
+            var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
+            var textview = view.findViewById<TextView>(R.id.textUrl)
+            if (textview != null && !textview.text.isNullOrEmpty()) {
+                this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = textview.text.toString()
+            } else {
+                this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = ""
+            }
+        }
+
+        if (campaignUrlProofList != null && !campaignUrlProofList!!.isNullOrEmpty()) {
+            if (campaignUrlProofList.get(cellIndex).id != 0) {
+                deleteProof(campaignUrlProofList.get(cellIndex).id!!, urlType = 1)
+            } else {
+                campaignUrlProofList.removeAt(cellIndex)
+                if (campaignUrlProofList.size < 3) {
+                    textAddUrlProof.visibility = View.VISIBLE
+                }
+                notifyUrlAdapter()
+            }
+        }
+    }
+
     override fun onUrlProofDelete(cellIndex: Int) {
         if (campaignUrlProofList != null && !campaignUrlProofList!!.isNullOrEmpty()) {
             if (campaignUrlProofList.get(cellIndex).id != 0) {
@@ -137,6 +161,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var urlTypes: String
     private lateinit var toolbarTitle: TextView
     private lateinit var back: TextView
+    private lateinit var textAddUrlProof: TextView
 
     companion object {
         @JvmStatic
@@ -169,6 +194,35 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             } else {
                 emptyList<Int>() as ArrayList<Int>
             }
+        }
+
+        textAddUrlProof = view.findViewById(R.id.textAddUrlProof)
+        textAddUrlProof.setOnClickListener {
+            var isEmpty = false
+            for (i in 0..campaignUrlProofList.size - 1) {
+                var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
+                var textview = view.findViewById<TextView>(R.id.textUrl)
+                if (textview != null && !textview.text.isNullOrEmpty()) {
+                    this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = textview.text.toString()
+                } else {
+                    this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = ""
+                    isEmpty = true
+                }
+            }
+
+            if(!isEmpty){
+                var campaignProofResponse = CampaignProofResponse()
+                campaignProofResponse.id = 0
+                this@CampaignAddProofFragment.campaignUrlProofList.add(campaignProofResponse)
+
+                if (campaignUrlProofList.size == 3) {
+                    textAddUrlProof.visibility = View.GONE
+                }
+                notifyUrlAdapter()
+            }else{
+                Toast.makeText(activity, "Please add link in the box above before adding more", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         back = view.findViewById(R.id.back)
@@ -276,32 +330,59 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
             override fun onNext(response: BaseResponseGeneric<GetCampaignSubmissionDetailsResponse>) {
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
-                        response.data != null && response.data!!.result != null && !response.data!!.result.campaignProofResponse.isNullOrEmpty()) {
+                        response.data != null && response.data!!.result != null) {
 
-                    var campaignImageProofList = response.data!!.result.campaignProofResponse!!.filter {
-                        !it.url.isNullOrEmpty() && it.urlType == 0
+                    if (!response.data!!.result.campaignProofResponse.isNullOrEmpty()) {
+                        var campaignImageProofList = response.data!!.result.campaignProofResponse!!.filter {
+                            !it.url.isNullOrEmpty() && it.urlType == 0
+                        }
+
+                        var campaignUrlProofList = response.data!!.result.campaignProofResponse!!.filter {
+                            !it.url.isNullOrEmpty() && it.urlType == 1
+                        }
+
+                        this@CampaignAddProofFragment.campaignImageProofList.clear()
+                        this@CampaignAddProofFragment.campaignUrlProofList.clear()
+
+                        this@CampaignAddProofFragment.campaignImageProofList.addAll(campaignImageProofList)
+                        this@CampaignAddProofFragment.campaignUrlProofList.addAll(campaignUrlProofList)
+
+                        if (this@CampaignAddProofFragment.campaignImageProofList.size < 6) {
+                            var campaignProofResponse = CampaignProofResponse()
+                            campaignProofResponse.isTemplate = true
+                            this@CampaignAddProofFragment.campaignImageProofList.add(campaignProofResponse)
+                            notifyMediaAdapter()
+                        }
+
+                        if (this@CampaignAddProofFragment.campaignUrlProofList.isNullOrEmpty()) {
+                            var campaignProofResponse = CampaignProofResponse()
+                            campaignProofResponse.id = 0
+                            this@CampaignAddProofFragment.campaignUrlProofList.add(campaignProofResponse)
+                            notifyUrlAdapter()
+                            textAddUrlProof.visibility = View.VISIBLE
+                        } else {
+                            if (this@CampaignAddProofFragment.campaignUrlProofList.size >= 3) {
+                                textAddUrlProof.visibility = View.GONE
+                            }
+                        }
+
+                        if (!campaignImageProofList.isNullOrEmpty()) {
+                            notifyMediaAdapter()
+                        }
+
+                        if (!campaignUrlProofList.isNullOrEmpty()) {
+                            notifyUrlAdapter()
+                        }
+                    } else {
+                        if (this@CampaignAddProofFragment.campaignImageProofList.isNullOrEmpty()) {
+                            var campaignProofResponse = CampaignProofResponse()
+                            campaignProofResponse.isTemplate = true
+                            this@CampaignAddProofFragment.campaignImageProofList.add(campaignProofResponse)
+                            notifyMediaAdapter()
+                        }
                     }
 
-
-                    var campaignUrlProofList = response.data!!.result.campaignProofResponse!!.filter {
-                        !it.url.isNullOrEmpty() && it.urlType == 1
-                    }
-
-                    this@CampaignAddProofFragment.campaignImageProofList.clear()
-                    this@CampaignAddProofFragment.campaignUrlProofList.clear()
-
-                    this@CampaignAddProofFragment.campaignImageProofList.addAll(campaignImageProofList)
-                    this@CampaignAddProofFragment.campaignUrlProofList.addAll(campaignUrlProofList)
-
-                    if (!campaignImageProofList.isNullOrEmpty()) {
-                        notifyMediaAdapter()
-                    }
-
-                    if (!campaignUrlProofList.isNullOrEmpty()) {
-                        notifyUrlAdapter()
-                    } else
-
-                        Log.e("response", Gson().toJson(response.data!!.result.campaignProofResponse))
+                    Log.e("response", Gson().toJson(response.data!!.result.campaignProofResponse))
                 } else {
                 }
             }
@@ -334,7 +415,12 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                             campaignProofResponse.id = response!!.data!!.result.id
                             campaignProofResponse.url = proofPostModel.url
                             campaignProofResponse.urlType = 0
-                            this@CampaignAddProofFragment.campaignImageProofList.add(campaignProofResponse)
+                            campaignProofResponse.isTemplate = false
+                            this@CampaignAddProofFragment.campaignImageProofList.add(0, campaignProofResponse)
+
+                            if (this@CampaignAddProofFragment.campaignImageProofList.size >= 7) {
+                                this@CampaignAddProofFragment.campaignImageProofList.removeAt(campaignImageProofList.size - 1)
+                            }
                             notifyMediaAdapter()
                         } else if (urlType == 1) {
                             if (proceedToPayment) {
@@ -402,11 +488,26 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                             var campaignProofListLocal = this@CampaignAddProofFragment.campaignImageProofList.filter { it.id != proofId }
                             campaignImageProofList.clear()
                             campaignImageProofList.addAll(campaignProofListLocal)
+
+                            if (campaignImageProofList.size > 0) {
+                                var campaignImageProof = campaignImageProofList.get(campaignImageProofList.size - 1)
+                                if (!campaignImageProof.isTemplate) {
+                                    var campaignProofResponse = CampaignProofResponse()
+                                    campaignProofResponse.url = ""
+                                    campaignProofResponse.urlType = 0
+                                    campaignProofResponse.isTemplate = true
+                                    this@CampaignAddProofFragment.campaignImageProofList.add(campaignImageProofList.size, campaignProofResponse)
+                                }
+                            }
+
                             notifyMediaAdapter()
                         } else if (urlType == 1) {
                             var campaignProofListLocal = this@CampaignAddProofFragment.campaignUrlProofList.filter { it.id != proofId }
                             campaignUrlProofList.clear()
                             campaignUrlProofList.addAll(campaignProofListLocal)
+                            if (campaignUrlProofList.size < 3) {
+                                textAddUrlProof.visibility = View.VISIBLE
+                            }
                             notifyUrlAdapter()
                         }
                     }
