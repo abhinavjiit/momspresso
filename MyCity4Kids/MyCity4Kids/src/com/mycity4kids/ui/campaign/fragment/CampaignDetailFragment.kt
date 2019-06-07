@@ -157,7 +157,7 @@ class CampaignDetailFragment : BaseFragment() {
 
         ((containerView.findViewById<TextView>(R.id.txtTrackerStatus)).setOnClickListener {
             var intent = Intent(activity, TrackerActivity::class.java)
-            intent.putExtra("campaign_id", id)
+            intent.putExtra("campaign_id", id!!)
             intent.putExtra("brand_name", apiGetResponse!!.brandDetails!!.name)
             intent.putExtra("campaign_name", apiGetResponse!!.name)
             intent.putExtra("total_payout", apiGetResponse!!.totalPayout)
@@ -274,8 +274,6 @@ class CampaignDetailFragment : BaseFragment() {
         if (!descBuilder.isEmpty()) {
             getOffset(descBuilder.toString(), descText)
         }
-//        descText.setText(descBuilder.toString())
-
         val readBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.readThis?.instructions!!) {
             if (!instructions.isNullOrEmpty() && !instructions.equals(""))
@@ -284,8 +282,6 @@ class CampaignDetailFragment : BaseFragment() {
         if (!readBuilder.isEmpty()) {
             getOffset(readBuilder.toString(), readThisText)
         }
-//        readThisText.setText(readBuilder.toString())
-
         val termBuilder = StringBuilder()
         for (instructions in apiGetResponse!!.terms?.instructions!!) {
             if (!instructions.isNullOrEmpty() && !instructions.equals(""))
@@ -294,8 +290,6 @@ class CampaignDetailFragment : BaseFragment() {
         if (!termBuilder.isEmpty()) {
             getOffset(termBuilder.toString(), termText)
         }
-//        termText.setText(termBuilder.toString())
-
         status = apiGetResponse!!.campaignStatus!!
 
         if (apiGetResponse!!.deliverables!!.size > 0) {
@@ -566,6 +560,19 @@ class CampaignDetailFragment : BaseFragment() {
             Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_proof_reject), Toast.LENGTH_SHORT).show()
             labelText.setText(context!!.resources.getString(R.string.label_campaign_proof_reject))
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_submit_proof))
+        }
+
+        /*making visible invisible tracker button*/
+        if(status == 0 || status == 4 || status == 5 || status == 6 || status == 10){
+            if(status==5){
+                if (isRewardAdded.equals("1", true)) {
+                    txtTrackerStatus.visibility = View.GONE
+                }
+            }else{
+                txtTrackerStatus.visibility = View.GONE
+            }
+        }else{
+            txtTrackerStatus.visibility = View.VISIBLE
         }
     }
 

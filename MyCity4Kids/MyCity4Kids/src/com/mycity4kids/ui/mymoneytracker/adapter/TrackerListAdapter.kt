@@ -57,8 +57,9 @@ class TrackerListAdapter(var context: Context, var trackerDataModel: ArrayList<T
                 if (trackerDataModel.is_completed == 1) {
                     if (trackerDataModel.completed_time > 0) {
                         holder.textDate.setText(convertDate(trackerDataModel.completed_time))
+                        holder.textDate.visibility = View.VISIBLE
                     } else {
-
+                        holder.textDate.visibility = View.GONE
                     }
                     setColorsAndImage(Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status), holder.imageStatus, context, holder.textDate, holder.textStatusName)
                     holder.textDateError.text = ""
@@ -75,7 +76,6 @@ class TrackerListAdapter(var context: Context, var trackerDataModel: ArrayList<T
                     }
                     holder.imageStatus.setImageDrawable(context.getDrawable(R.drawable.ic_circle_svg))
                     holder.imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_expired), android.graphics.PorterDuff.Mode.SRC_IN);
-                    //DrawableCompat.setTint(holder.imageStatus.getDrawable(), ContextCompat.getColor(context, R.color.campaign_expired));
                     holder.textstatusError.text = ""
                     if (Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status).equals(Constants.TrackerStatusMapping.APPROVED.name)) {
                         holder.textDateError.text = "Expected Approval"

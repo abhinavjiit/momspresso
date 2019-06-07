@@ -62,9 +62,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campaign_container)
-        addPaymantMode()
-      //  addAddProofFragment(35, arrayList as ArrayList<Int>)
-        /*    deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
+            deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
             fromNotification = if (intent.hasExtra("fromNotification")) {//fromNotification
                 intent.getBooleanExtra("fromNotification", false)
@@ -89,14 +87,9 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                 notificationCampaignSubmitProof = ""
             }
 
-
-
             if (!notificationCampaignSubmitProof.equals("", true)) {
                 deeplinkCampaignId = notificationCampaignSubmitProof.toInt()
             }
-
-
-
 
             if (!notificationCampaignId.equals("", true)) {
                 deeplinkCampaignId = notificationCampaignId.toInt()
@@ -111,7 +104,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                 addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>)
             } else {
                 addCampaginDetailFragment(deeplinkCampaignId)
-            }*/
+            }
 
     }
 

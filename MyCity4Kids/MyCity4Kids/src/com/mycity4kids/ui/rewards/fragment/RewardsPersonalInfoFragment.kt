@@ -237,7 +237,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             editAddNumber.visibility = View.VISIBLE
         }
         if (!apiGetResponse.email.isNullOrBlank()) editEmail.setText(apiGetResponse.email)
-        //if (apiGetResponse.dob != null && apiGetResponse.dob!! > 0) RewardsPersonalInfoFragment.textDOB.setText(DateTimeUtils.getDateFromTimestamp(apiGetResponse.dob!!.toLong()))
         if (!apiGetResponse.location.isNullOrBlank()) editLocation.setText(apiGetResponse.location)
 
 
@@ -319,6 +318,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             layoutMotherExptectedDate.visibility = View.GONE
         }
 
+        /*this is not a master piece so handle with care*/
         if (apiGetResponse.kidsInfo != null && apiGetResponse.kidsInfo!!.isNotEmpty()) {
             for (i in 0..apiGetResponse.kidsInfo!!.size - 1) {
                 if (i == 0 && apiGetResponse.kidsInfo!!.size == 1) {
@@ -452,7 +452,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         RewardsPersonalInfoFragment.textDOB.setOnClickListener {
             RewardsPersonalInfoFragment.textView = RewardsPersonalInfoFragment.textDOB
-            showDatePickerDialog(true)
+            showDatePickerDialog(true, isForParent = true)
         }
 
         RewardsPersonalInfoFragment.textKidsDOB.setOnClickListener {
@@ -945,11 +945,12 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         })
     }
 
-    fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false) {
+    fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false, isForParent: Boolean = false) {
         val newFragment = RewardsPersonalInfoFragment.DatePickerFragment()
         var bundle = Bundle()
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)
         bundle.putBoolean("is_show_future_only", isShowFutureDate)
+        bundle.putBoolean("is_for_parent", isForParent)
         newFragment.arguments = bundle
         newFragment.show(activity!!.supportFragmentManager, "datePicker")
     }
@@ -964,6 +965,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         internal var current_day = c.get(Calendar.DAY_OF_MONTH)
         var isShowTillCurrent: Boolean = false
         var isShowFutureOnly: Boolean = false
+        var isForParent: Boolean = false
 
 
         @SuppressLint("NewApi")
@@ -974,6 +976,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             if (arguments != null) {
                 isShowTillCurrent = arguments!!.getBoolean("is_show_current_only", false)
                 isShowFutureOnly = arguments!!.getBoolean("is_show_future_only", false)
+                isForParent = arguments!!.getBoolean("is_for_parent", false)
             }
             dlg.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             if (isShowTillCurrent) {
@@ -982,6 +985,11 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
             if (isShowFutureOnly) {
                 dlg.datePicker.minDate = c.timeInMillis
+            }
+
+            if (isForParent) {
+                c.add(Calendar.YEAR, -16)
+                dlg.datePicker.maxDate = c.timeInMillis
             }
 
             return dlg
