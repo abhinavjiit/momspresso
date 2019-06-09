@@ -51,7 +51,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface,View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 2;
     private int limit = 10;
@@ -77,6 +77,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCa
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        Utils.pushOpenScreenEvent(getActivity(), "TrendingTabFragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         if (getArguments() != null) {
             trendingTopicData = getArguments().getParcelable("trendingTopicsData");
@@ -151,9 +152,9 @@ public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCa
     }
 
     private void getGroupIdForCurrentCategory() {
-                GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(trendingTopicData.getId(), this, "listing");
-                groupIdCategoryMap.getGroupIdForCurrentCategory();
-            }
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap(trendingTopicData.getId(), this, "listing");
+        groupIdCategoryMap.getGroupIdForCurrentCategory();
+    }
 
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
@@ -353,6 +354,6 @@ public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCa
     @Override
     public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
         recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
-                recyclerAdapter.notifyDataSetChanged();
+        recyclerAdapter.notifyDataSetChanged();
     }
 }
