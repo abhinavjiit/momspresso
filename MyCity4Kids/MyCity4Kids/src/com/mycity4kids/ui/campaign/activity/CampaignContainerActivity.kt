@@ -26,43 +26,7 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.NumberFormatException
 
 class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener {
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i("Activity", "onDestroy")
 
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.i("Activity", "onPause")
-
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        Log.i("Activity", "onResume")
-
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        Log.i("Activity", "onStart")
-
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.i("Activity", "onStop")
-
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.i("Activity", "onRestart")
-
-    }
 
     override fun onPaymentModeDone() {
 

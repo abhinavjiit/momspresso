@@ -53,41 +53,6 @@ class CampaignListFragment : BaseFragment() {
     private lateinit var isRewardAdded: String
     private lateinit var registerRewards: ConstraintLayout
 
-    override fun onResume() {
-        super.onResume()
-        Log.i("Fragment", "onResume")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.i("Fragment", "onStart")
-
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.i("Fragment", "onPause")
-
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.i("Fragment", "onCreate")
-
-    }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        Log.i("Fragment", "onAttach")
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i("Fragment", "onDestroy")
-
-    }
-
 
     override fun updateUi(response: Response?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -227,31 +192,6 @@ class CampaignListFragment : BaseFragment() {
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Log.i("Fragment", "onViewCreated")
-
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.i("Fragment", "onDestroyView")
-
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Log.i("Fragment", "onDetach")
-
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.i("Fragment", "onStop")
-
-
     }
 
 
