@@ -62,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/red"
-        android:textSize="8sp"
+        android:textSize="12sp"
         app:fontName="oswald.ttf"
         app:layout_constraintStart_toStartOf="@+id/textStatusName"
         app:layout_constraintTop_toBottomOf="@+id/textStatusName" />

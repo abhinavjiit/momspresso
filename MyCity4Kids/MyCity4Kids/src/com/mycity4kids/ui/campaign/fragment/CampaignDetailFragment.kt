@@ -563,15 +563,15 @@ class CampaignDetailFragment : BaseFragment() {
         }
 
         /*making visible invisible tracker button*/
-        if(status == 0 || status == 4 || status == 5 || status == 6 || status == 10){
-            if(status==5){
+        if (status == 0 || status == 4 || status == 5 || status == 6 || status == 1) {
+            if (status == 5) {
                 if (isRewardAdded.equals("1", true)) {
                     txtTrackerStatus.visibility = View.GONE
                 }
-            }else{
+            } else {
                 txtTrackerStatus.visibility = View.GONE
             }
-        }else{
+        } else {
             txtTrackerStatus.visibility = View.VISIBLE
         }
     }

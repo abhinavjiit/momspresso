@@ -724,8 +724,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             apiGetResponse.kidsInfo = null
         }
 
-        apiGetResponse.latitude = 28.7041
-        apiGetResponse.longitude = 77.1025
+/*        apiGetResponse.latitude = 28.7041
+        apiGetResponse.longitude = 77.1025*/
 
         return true
     }

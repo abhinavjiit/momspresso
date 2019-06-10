@@ -543,9 +543,9 @@ public class Constants {
     }
 
     public enum TrackerStatusMapping {
-        APPROVED(2, "Approved"), APPLIED(3, "Applied"), PROOF_APPPROVAL(7, "Proof approval"), PROOF_SUBMITTED_REJECTED(10, "Proof submission rejected"),
-        APPLICATION_UNDER_REVIEW(11, "Application under review"), PROOF_UNDER_REVIEW(12, "Proof under review"),
-        PAYMENT_IN_PROCESS(13, "Payment in process"), PAYMENT_DONE(14, "Payment done"), PROOF_SUBMITTED(15, "Proof submitted");;
+        APPROVED(2, "APPROVED"), APPLIED(3, "APPLIED"), PROOF_APPPROVAL(7, "PROOF APPPROVAL"), PROOF_SUBMITTED_REJECTED(10, "PROOF SUBMITTED REJECTED"),
+        APPLICATION_UNDER_REVIEW(11, "APPLICATION UNDER REVIEW"), PROOF_UNDER_REVIEW(12, "PROOF UNDER REVIEW"),
+        PAYMENT_IN_PROCESS(13, "PAYMENT IN PROCESS"), PAYMENT_DONE(14, "PAYMENT DONE"), PROOF_SUBMITTED(15, "PROOF SUBMITTED");;
         private final String name;
         private final int id;
 

@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -50,7 +51,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     override fun onUrlComponentDelete(cellIndex: Int) {
         for (i in 0..campaignUrlProofList.size - 1) {
             var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
-            var textview = view.findViewById<TextView>(R.id.textUrl)
+            var textview = view.findViewById<EditText>(R.id.textUrl)
             if (textview != null && !textview.text.isNullOrEmpty()) {
                 this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = textview.text.toString()
             } else {
@@ -86,7 +87,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         for (i in 0..2) {
             if (campaignUrlProofList != null && campaignUrlProofList.size > i) {
                 var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
-                var textview = view.findViewById<TextView>(R.id.textUrl)
+                var textview = view.findViewById<EditText>(R.id.textUrl)
                 var proofPostModel = ProofPostModel(url = textview.text.toString(), campaign_id = campaignId, url_type = 1)
                 if (i == 2) {
                     updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = true)
@@ -95,7 +96,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 }
             } else {
                 var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
-                var textview = view.findViewById<TextView>(R.id.textUrl)
+                var textview = view.findViewById<EditText>(R.id.textUrl)
                 if (!textview.text.isNullOrEmpty()) {
                     var proofPostModel = ProofPostModel(url = textview.text.toString(), campaign_id = campaignId, url_type = 1)
                     if (i == 2) {
@@ -201,7 +202,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             var isEmpty = false
             for (i in 0..campaignUrlProofList.size - 1) {
                 var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
-                var textview = view.findViewById<TextView>(R.id.textUrl)
+                var textview = view.findViewById<EditText>(R.id.textUrl)
                 if (textview != null && !textview.text.isNullOrEmpty()) {
                     this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = textview.text.toString()
                 } else {
@@ -210,7 +211,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 }
             }
 
-            if(!isEmpty){
+            if (!isEmpty) {
                 var campaignProofResponse = CampaignProofResponse()
                 campaignProofResponse.id = 0
                 this@CampaignAddProofFragment.campaignUrlProofList.add(campaignProofResponse)
@@ -219,7 +220,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                     textAddUrlProof.visibility = View.GONE
                 }
                 notifyUrlAdapter()
-            }else{
+            } else {
                 Toast.makeText(activity, "Please add link in the box above before adding more", Toast.LENGTH_SHORT).show()
             }
 
@@ -272,7 +273,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         var isAllEmpty: Boolean = true
         for (i in 0..2) {
             var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
-            var textview = view.findViewById<TextView>(R.id.textUrl)
+            var textview: EditText = view.findViewById<EditText>(R.id.textUrl)
             if (textview != null && !textview.text.isNullOrEmpty()) {
                 isAllEmpty = false
                 break

@@ -13,6 +13,6 @@
         android:clickable="false"
         android:padding="10dp"
         android:text="One"
-        android:textColor="@color/topic_follow_unfollow_text_selector"
+        android:textColor="@color/app_red"
         app:fontName="oswald_regular.ttf" />
 </LinearLayout>
