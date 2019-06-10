@@ -40,6 +40,7 @@ import com.mycity4kids.ui.adapter.TopicsRecyclerGridAdapter;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.fragment.CampaignListFragment;
 import com.mycity4kids.ui.fragment.GroupsFragment;
+import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.HeaderGridView;
@@ -352,7 +353,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             }
             break;
             case R.id.groupsContainer: {
-                GroupsFragment fragment0 = new GroupsFragment();
+                GroupsViewFragment fragment0 = new GroupsViewFragment();
                 Bundle mBundle0 = new Bundle();
                 fragment0.setArguments(mBundle0);
                 ((DashboardActivity) getActivity()).addFragment(fragment0, mBundle0, true);

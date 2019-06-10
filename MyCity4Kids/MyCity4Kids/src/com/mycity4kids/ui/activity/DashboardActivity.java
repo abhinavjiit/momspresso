@@ -1854,7 +1854,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.toolbarTitle:
                 break;
             case R.id.searchAllImageView:
-                if (topFragment instanceof GroupsFragment) {
+                if (topFragment instanceof GroupsViewFragment) {
                     Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
                     startActivity(searchIntent);
                 } else {
@@ -1902,7 +1902,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.groupsTextView: {
                 mDrawerLayout.closeDrawers();
-                GroupsFragment fragment = new GroupsFragment();
+                GroupsViewFragment fragment = new GroupsViewFragment();
                 Bundle mBundle = new Bundle();
                 fragment.setArguments(mBundle);
                 addFragment(fragment, null, true);
@@ -2767,7 +2767,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (null != topFragment && topFragment instanceof GroupsViewFragment) {
-                Utils.pushOpenScreenEvent(this, "GroupsFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                Utils.pushOpenScreenEvent(this, "GroupsViewFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.groups_support_groups));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.groups_light_black_color));
                 menu.findItem(R.id.action_location).setChecked(true);

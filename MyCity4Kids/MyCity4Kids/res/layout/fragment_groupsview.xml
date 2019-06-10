@@ -12,10 +12,8 @@
         android:elevation="3dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:tabGravity="fill"
         app:tabIndicatorColor="@color/campaign_list_buttons"
         app:tabIndicatorHeight="3dp"
-        app:tabMode="scrollable"
         app:tabSelectedTextColor="@color/color_979797"
         app:tabTextAppearance="@style/CustomGroupTabText"
         app:tabTextColor="@color/color_979797" />
