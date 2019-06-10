@@ -504,6 +504,7 @@
     <color name = "campaign_proof_approval">#D3425A</color>
     <color name = "campaign_payment_in_process">#F5B346</color>
     <color name = "campaign_payment_done">#7566E5</color>
+    <color name="color_979797">#979797</color>
 
 
     <color name="black_64">#A6000000</color>

@@ -98,6 +98,7 @@ import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.GroupsFragment;
+import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
@@ -593,7 +594,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 if (topFragment instanceof GroupsFragment) {
                                     return true;
                                 }
-                                GroupsFragment groupsFragment = new GroupsFragment();
+                                GroupsViewFragment groupsFragment = new GroupsViewFragment();
                                 Bundle eBundle = new Bundle();
                                 groupsFragment.setArguments(eBundle);
                                 addFragment(groupsFragment, eBundle, true);
@@ -629,7 +630,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             fragment1.setArguments(mBundle1);
             addFragment(fragment1, mBundle1, true);
         } else if (Constants.GROUP_LISTING_FRAGMENT.equals(fragmentToLoad)) {
-            GroupsFragment fragment1 = new GroupsFragment();
+            GroupsViewFragment fragment1 = new GroupsViewFragment();
             Bundle mBundle1 = new Bundle();
             fragment1.setArguments(mBundle1);
             addFragment(fragment1, mBundle1, true);
@@ -1904,7 +1905,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 GroupsFragment fragment = new GroupsFragment();
                 Bundle mBundle = new Bundle();
                 fragment.setArguments(mBundle);
-                addFragment(fragment, mBundle, true);
+                addFragment(fragment, null, true);
             }
             break;
             case R.id.rewardsTextView: {
@@ -2765,7 +2766,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (null != topFragment && topFragment instanceof GroupsFragment) {
+            } else if (null != topFragment && topFragment instanceof GroupsViewFragment) {
                 Utils.pushOpenScreenEvent(this, "GroupsFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.groups_support_groups));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.groups_light_black_color));
