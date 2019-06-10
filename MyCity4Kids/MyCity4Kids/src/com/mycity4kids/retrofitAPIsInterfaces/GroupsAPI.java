@@ -26,10 +26,8 @@ import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupIdCategoryIdMappingResponse;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
-import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.GroupsActionVoteResponse;
-import com.mycity4kids.models.response.GroupsAllSearchResponse;
 import com.mycity4kids.models.response.GroupsCategoryMappingResponse;
 import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsListingResponse;
@@ -47,7 +45,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -124,6 +121,17 @@ public interface GroupsAPI {
                                                          @Query("$skip") int skip,
                                                          @Query("$limit") int limit,
                                                          @Query("type") String type);
+
+    @GET("/api/v1/groups/post")
+    Call<GroupPostResponse> getAllMyFeedPosts(@Query("$skip") int skip,
+                                              @Query("$myFeed") int myFeed,
+                                              @Query("$limit") int limit);
+//    @Query("$myFeed") int myFeed,
+
+    @GET("/api/v1/groups/post")
+    Call<GroupPostResponse> getAllPollPosts(@Query("$skip") int skip,
+                                            @Query("$limit") int limit,
+                                            @Query("type") String type);
 
     @GET("/api/v1/groups/post/{postId}")
     Call<GroupPostResponse> getSinglePost(@Path("postId") int postId);

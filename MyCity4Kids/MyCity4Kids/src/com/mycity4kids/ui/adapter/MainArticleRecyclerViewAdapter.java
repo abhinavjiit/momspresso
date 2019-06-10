@@ -44,6 +44,7 @@ import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.ui.fragment.GroupsFragment;
+import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.FeedNativeAd;
@@ -885,7 +886,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     Log.d("groupHeaderView", "GROUPID-" + groupId);
                     if (groupId == 0) {
                         if (mContext instanceof DashboardActivity) {
-                            GroupsFragment groupsFragment = new GroupsFragment();
+                            GroupsViewFragment groupsFragment = new GroupsViewFragment();
                             Bundle bundle = new Bundle();
                             groupsFragment.setArguments(bundle);
                             ((DashboardActivity) mContext).addFragment(groupsFragment, bundle, true);
