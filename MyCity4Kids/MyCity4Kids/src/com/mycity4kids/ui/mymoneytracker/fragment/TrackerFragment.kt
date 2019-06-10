@@ -121,12 +121,10 @@ class TrackerFragment : BaseFragment() {
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
         recyclerView.adapter = adapter
         getTrackerData(campaignId)
-
         return containerView
     }
 
     companion object {
-
         fun newInstance(campaignId: Int = 0, brandName: String = "", campaignName: String = "", totalPayout: Int = 0, imageUrl: String = "") =
                 TrackerFragment().apply {
                     arguments = Bundle().apply {

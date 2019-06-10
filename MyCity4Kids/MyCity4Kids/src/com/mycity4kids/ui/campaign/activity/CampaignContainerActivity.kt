@@ -96,9 +96,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             deeplinkCampaignId = notificationCampaignSubmitProof.toInt()
         }
 
-
-
-
         if (!notificationCampaignId.equals("", true)) {
             deeplinkCampaignId = notificationCampaignId.toInt()
         }

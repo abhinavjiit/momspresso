@@ -130,9 +130,9 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
     private var isComingFromCampaign = false
 
     companion object {
-        fun newInstance(isComingFromRewards : Boolean = false, fromCampaign : Boolean = false) = RewardsSocialInfoFragment().apply {
+        fun newInstance(isComingFromRewards: Boolean = false, fromCampaign: Boolean = false) = RewardsSocialInfoFragment().apply {
             arguments = Bundle().apply {
-                this.putBoolean("isComingFromRewards",isComingFromRewards)
+                this.putBoolean("isComingFromRewards", isComingFromRewards)
 
             }
         }
@@ -143,16 +143,16 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_social_info, container, false)
 
-        if (arguments != null){
-            isComingFromRewards = if(arguments!!.containsKey("isComingFromRewards")){
+        if (arguments != null) {
+            isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
                 arguments!!.getBoolean("isComingFromRewards")
-            }else{
+            } else {
                 false
             }
 
-            isComingFromCampaign = if(arguments!!.containsKey("fromFromCampaign")){
+            isComingFromCampaign = if (arguments!!.containsKey("fromFromCampaign")) {
                 arguments!!.getBoolean("fromFromCampaign")
-            }else{
+            } else {
                 false
             }
         }
@@ -251,7 +251,6 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     private fun setValuesForSocial(platformName: Constants.SocialPlatformName, token: String) {
         if (apiGetResponse.socialAccounts != null && apiGetResponse.socialAccounts!!.isNotEmpty()) {
-
             var socialAccountsListNotContainsGivenPlatform = ArrayList<SocialAccountObject>(apiGetResponse.socialAccounts!!.filter { it -> !it.platform_name.equals(platformName.name) })
             var socialAccountsListByGivenPlatform = apiGetResponse.socialAccounts!!.filter { it -> it.platform_name.equals(platformName.name) }
             if (socialAccountsListByGivenPlatform.isNotEmpty()) {
@@ -438,11 +437,11 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 }
 
                 override fun onNext(response: RewardsPersonalResponse) {
-                    if (response != null && response.code == 200 ) {
-                        if(Constants.SUCCESS == response.status){
+                    if (response != null && response.code == 200) {
+                        if (Constants.SUCCESS == response.status) {
                             submitListener.socialOnSubmitListener()
-                        }else if(Constants.FAILURE == response.status){
-                            Toast.makeText(activity, response?.reason,Toast.LENGTH_LONG).show()
+                        } else if (Constants.FAILURE == response.status) {
+                            Toast.makeText(activity, response?.reason, Toast.LENGTH_LONG).show()
                         }
                     }
                 }

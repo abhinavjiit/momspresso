@@ -81,6 +81,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:textSize="10sp"
+        android:visibility="gone"
         app:fontName="oswald.ttf"
         app:layout_constraintTop_toTopOf="@+id/textStatusName" />
 
