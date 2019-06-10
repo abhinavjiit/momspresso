@@ -69,8 +69,8 @@ import static android.app.Activity.RESULT_OK;
 public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGenericRecyclerAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus,View.OnClickListener {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
-    private boolean isRequestRunning = false;
-    private boolean isLastPageReached = false;
+    private boolean isRequestRunning;
+    private boolean isLastPageReached;
     private MyFeedPollGenericRecyclerAdapter myFeedPollGenericRecyclerAdapter;
     private GroupPostDetailsAndCommentsRecyclerAdapter groupPostDetailsAndCommentsRecyclerAdapter;
     private int skip = 0;
@@ -149,7 +149,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                     if (!isRequestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isRequestRunning = true;
-                            if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+                            if (recyclerView.getAdapter() instanceof MyFeedPollGenericRecyclerAdapter) {
                                 getGroupPosts();
                             }
                         }
