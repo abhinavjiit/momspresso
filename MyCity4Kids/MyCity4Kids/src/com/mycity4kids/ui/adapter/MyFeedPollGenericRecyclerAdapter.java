@@ -3,6 +3,7 @@ package com.mycity4kids.ui.adapter;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -220,7 +221,11 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
-
+            textPostViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
+            if (postList.get(position).getGroupInfo().getColor() != null) {
+                textPostViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                textPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+            }
 
         } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
@@ -316,6 +321,11 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             }
             audioCommentViewHolder.upvoteCommentCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             audioCommentViewHolder.downvoteCommentCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
+            audioCommentViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
+            if (postList.get(position).getGroupInfo().getColor() != null) {
+                audioCommentViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                audioCommentViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+            }
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
 
@@ -373,6 +383,11 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 }
             }
             initializeViews((MediaPostViewHolder) holder, position);
+            mediaPostViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
+            if (postList.get(position).getGroupInfo().getColor() != null) {
+                mediaPostViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                mediaPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+            }
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
 
@@ -464,6 +479,11 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 showVotingData(textPollPostViewHolder, postList.get(position));
             } else {
                 hideVotingData(textPollPostViewHolder);
+            }
+            textPollPostViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
+            if (postList.get(position).getGroupInfo().getColor() != null) {
+                textPollPostViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                textPollPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
         } else {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
@@ -558,6 +578,11 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 hideImagePollVotingData(imageHolder);
             }
 
+            imageHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
+            if (postList.get(position).getGroupInfo().getColor() != null) {
+                imageHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+                imageHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+            }
         }
     }
 
@@ -697,6 +722,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         ImageView postSettingImageView;
         ImageView shareTextView;
         RelativeLayout commentLayout,groupNameLayout;
+        View groupNameView;
 
         TextPostViewHolder(View view) {
             super(view);
@@ -716,6 +742,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
             groupNameLayout = (RelativeLayout)view.findViewById(R.id.group_name_layout);
+            groupNameView = (View) view.findViewById(R.id.groupname_view);
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
             groupName.setOnClickListener(this);
@@ -791,6 +818,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         private TextView indexTextView;
         private GroupMediaPostViewPagerAdapter mViewPagerAdapter;
         RelativeLayout commentLayout,groupNameLayout;
+        View groupNameView;
 
         MediaPostViewHolder(View view) {
             super(view);
@@ -812,6 +840,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
             groupNameLayout = (RelativeLayout)view.findViewById(R.id.group_name_layout);
+            groupNameView = (View) view.findViewById(R.id.groupname_view);
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
             groupName.setOnClickListener(this);
@@ -911,6 +940,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         ImageView postSettingImageView;
         ImageView shareTextView;
         RelativeLayout commentLayout,groupNameLayout;
+        View groupNameView;
 
 
         public AudioCommentViewHolder(View view) {
@@ -936,6 +966,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
             groupNameLayout = (RelativeLayout)view.findViewById(R.id.group_name_layout);
+            groupNameView = (View) view.findViewById(R.id.groupname_view);
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
             groupName.setOnClickListener(this);
@@ -1071,6 +1102,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView totalVoteCountTextView,groupName;
         RelativeLayout option3Container, option4Container;
         RelativeLayout commentLayout,groupNameLayout;
+        View groupNameView;
 
         TextPollPostViewHolder(View view) {
             super(view);
@@ -1108,6 +1140,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
             groupNameLayout = (RelativeLayout)view.findViewById(R.id.group_name_layout);
+            groupNameView = (View) view.findViewById(R.id.groupname_view);
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
             groupName.setOnClickListener(this);
@@ -1216,6 +1249,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         LinearLayout lastOptionsContainer;
         RelativeLayout commentLayout,groupNameLayout;
         RelativeLayout option1Container, option2Container, option3Container, option4Container;
+        View groupNameView;
 
         ImagePollPostViewHolder(View view) {
             super(view);
@@ -1251,6 +1285,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             groupNameLayout = (RelativeLayout)view.findViewById(R.id.group_name_layout);
+            groupNameView = (View) view.findViewById(R.id.groupname_view);
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
             groupName.setOnClickListener(this);

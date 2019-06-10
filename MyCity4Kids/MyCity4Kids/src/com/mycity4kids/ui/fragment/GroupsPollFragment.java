@@ -143,7 +143,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                     if (!isRequestRunning && !isLastPageReached) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isRequestRunning = true;
-                            if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+                            if (recyclerView.getAdapter() instanceof MyFeedPollGenericRecyclerAdapter) {
                                 getFilteredGroupPosts();
                             }
                         }
@@ -159,7 +159,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
-        Call<GroupPostResponse> call = groupsAPI.getAllPollPosts(skip, limit, postType);
+        Call<GroupPostResponse> call = groupsAPI.getAllPollPosts(skip, limit, 1, postType);
         call.enqueue(groupPostResponseCallback);
     }
 
@@ -363,7 +363,6 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 break;
         }
     }
-
 
 
     private Callback<UserPostSettingResponse> userPostSettingResponseCallback = new Callback<UserPostSettingResponse>() {

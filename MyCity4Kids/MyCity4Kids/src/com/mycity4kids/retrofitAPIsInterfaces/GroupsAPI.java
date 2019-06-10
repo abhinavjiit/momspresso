@@ -126,11 +126,11 @@ public interface GroupsAPI {
     Call<GroupPostResponse> getAllMyFeedPosts(@Query("$skip") int skip,
                                               @Query("$myFeed") int myFeed,
                                               @Query("$limit") int limit);
-//    @Query("$myFeed") int myFeed,
 
     @GET("/api/v1/groups/post")
     Call<GroupPostResponse> getAllPollPosts(@Query("$skip") int skip,
                                             @Query("$limit") int limit,
+                                            @Query("$myFeed") int myFeed,
                                             @Query("type") String type);
 
     @GET("/api/v1/groups/post/{postId}")

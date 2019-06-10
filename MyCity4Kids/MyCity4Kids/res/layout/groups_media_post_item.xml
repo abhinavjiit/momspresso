@@ -16,7 +16,7 @@
             android:id="@+id/groupname_view"
             android:layout_width="4dp"
             android:layout_height="20dp"
-            android:background="@color/app_red" />
+            android:background="@color/campaign_list_buttons" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/group_name"
@@ -27,6 +27,7 @@
             android:layout_toEndOf="@+id/groupname_view"
             android:layout_toRightOf="@+id/groupname_view"
             android:text="groupname"
+            android:textColor="@color/campaign_list_buttons"
             app:fontName="open_sans.ttf" />
 
     </RelativeLayout>
