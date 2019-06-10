@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -71,6 +72,7 @@ class CampaignListFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
+        Log.i("Fragment", "onCreateView")
 
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.reward_campaign, container, false)

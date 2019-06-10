@@ -26,6 +26,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
@@ -96,6 +97,8 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
         String gpImageUrl = getArguments().getString("gpImageUrl");
         int groupId = getArguments().getInt("groupId");
         // progressBar.setVisibility(View.VISIBLE);
+        Utils.pushOpenScreenEvent(getActivity(), "TrendingAllTabFragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
+
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         progressBar.setVisibility(View.VISIBLE);

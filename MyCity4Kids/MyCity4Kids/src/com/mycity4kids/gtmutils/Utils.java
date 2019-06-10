@@ -24,7 +24,6 @@ public class Utils {
     public static void campaignEvent(Context context, String currentScreen, String source, String CTA, String campaignName, String platform, String lang, String userId, String timestamp, String event) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, event, GTMTags.Current_Screen, currentScreen, GTMTags.Source, source, GTMTags.CTA, CTA, GTMTags.Campaign_Name, campaignName, GTMTags.Platform, platform, GTMTags.Language, lang, GTMTags.USER_ID, userId, GTMTags.Timestamp, timestamp));
-
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         try {
             JSONObject jsonObject = new JSONObject();
@@ -43,10 +42,58 @@ public class Utils {
 
     }
 
+    public static void momVlogEvent(Context context, String currentScreen, String CTA, String videoId, String platform, String lang, String userId, String timestamp, String event, String categoryId, String challengeId) {
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, event, GTMTags.Current_Screen, currentScreen, GTMTags.videoId, videoId, GTMTags.CTA, CTA, GTMTags.challengeId, challengeId, GTMTags.Platform, platform, GTMTags.Language, lang, GTMTags.USER_ID, userId, GTMTags.Timestamp, timestamp, GTMTags.categoryId, categoryId));
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(GTMTags.Current_Screen, currentScreen);
+            jsonObject.put(GTMTags.videoId, videoId);
+            jsonObject.put(GTMTags.CTA, CTA);
+            jsonObject.put(GTMTags.challengeId, challengeId);
+            jsonObject.put(GTMTags.Platform, platform);
+            jsonObject.put(GTMTags.Language, lang);
+            jsonObject.put(GTMTags.USER_ID, userId);
+            jsonObject.put(GTMTags.Timestamp, timestamp);
+            jsonObject.put(GTMTags.categoryId, categoryId);
+            mixpanel.track(event, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void groupsEvent(Context context, String currentScreen, String CTA, String platform, String lang, String userId, String timestamp, String event, String groupId, String postId) {
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, event, GTMTags.Current_Screen, currentScreen, GTMTags.CTA, CTA, GTMTags.GroupId, groupId, GTMTags.Platform, platform, GTMTags.Language, lang, GTMTags.USER_ID, userId, GTMTags.Timestamp, timestamp, GTMTags.PostId, postId));
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(GTMTags.Current_Screen, currentScreen);
+            jsonObject.put(GTMTags.CTA, CTA);
+            jsonObject.put(GTMTags.GroupId, groupId);
+            jsonObject.put(GTMTags.Platform, platform);
+            jsonObject.put(GTMTags.Language, lang);
+            jsonObject.put(GTMTags.USER_ID, userId);
+            jsonObject.put(GTMTags.Timestamp, timestamp);
+            jsonObject.put(GTMTags.PostId, postId);
+            mixpanel.track(event, jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public static void pushAppOpenEvent(Context context, String user) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "AppLaunch", GTMTags.USER_ID, user));
+    }
+
+    public static void timeSpending(Context context, String user) {
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.ScreenName, "ForYouTime", GTMTags.USER_ID, user));
     }
 
     /**

@@ -18,7 +18,7 @@ import com.mycity4kids.R;
  */
 public class ConfirmationDialogFragment extends DialogFragment implements OnClickListener {
 
-//    private IConfirmationResult iConfirmationResult;
+    //    private IConfirmationResult iConfirmationResult;
     private int position;
 
     @Override
@@ -53,7 +53,7 @@ public class ConfirmationDialogFragment extends DialogFragment implements OnClic
                 dismiss();
                 break;
             case R.id.continueTextView:
-                IConfirmationResult iConfirmationResult = (IConfirmationResult) getTargetFragment();
+                IConfirmationResult iConfirmationResult = (IConfirmationResult) getParentFragment();
                 iConfirmationResult.onContinue(position);
                 dismiss();
                 break;

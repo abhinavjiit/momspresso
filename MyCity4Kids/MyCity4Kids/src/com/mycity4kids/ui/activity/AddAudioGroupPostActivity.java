@@ -66,6 +66,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.AddGroupPostRequest;
 import com.mycity4kids.models.response.AddGroupPostResponse;
 import com.mycity4kids.models.response.GroupResult;
@@ -291,9 +292,13 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.closeEditorImageView:
+                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
+
                 onBackPressed();
                 break;
             case R.id.cancelTextView:
+                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
+
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
             case R.id.chooseMediaTypeContainer:
@@ -338,6 +343,8 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
             case R.id.anonymousImageView:
             case R.id.anonymousTextView:
             case R.id.anonymousCheckbox:
+                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
+
                 if (anonymousCheckbox.isChecked()) {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
                 } else {
@@ -349,6 +356,8 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
 
                 break;
             case R.id.publishTextView:
+                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Anonymous", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
+
                 if (!isRequestRunning && validateParams()) {
                     isRequestRunning = true;
                     publishPost();
@@ -761,7 +770,6 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     }
 
 
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -812,6 +820,8 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
 
     @Override
     public void onRecordingStarted() {
+        Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Audio Button", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
+
         if (mMediaplayer != null && isCommentPlay) {
             mMediaplayer.release();
             mMediaplayer = null;

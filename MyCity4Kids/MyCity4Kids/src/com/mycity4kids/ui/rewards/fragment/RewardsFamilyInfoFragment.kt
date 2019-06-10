@@ -513,7 +513,6 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             } else if (linearKidsEmptyView.visibility == View.VISIBLE && linearKidsDetail.childCount == 0) {
                 textDeleteChild.visibility = View.GONE
             }
-
         }
         var spinnerGender = indexView.findViewById<Spinner>(R.id.spinnerGender)
         var textDOB = indexView.findViewById<TextView>(R.id.textKidsDOB)
@@ -538,7 +537,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         textDOB.setOnClickListener {
             RewardsFamilyInfoFragment.textView = it as TextView
-            showDatePickerDialog(true, false)
+            showDatePickerDialog(false, false, true)
         }
 
         if (gender != null && !date.isNullOrEmpty()) {
@@ -559,11 +558,12 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         linearKidsDetail.addView(indexView)
     }
 
-    fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false) {
+    fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false,isShowForParent : Boolean = false) {
         val newFragment = RewardsPersonalInfoFragment.DatePickerFragment()
         var bundle = Bundle()
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)
         bundle.putBoolean("is_show_future_only", isShowFutureDate)
+        bundle.putBoolean("is_for_parent", isShowForParent)
         newFragment.arguments = bundle
         newFragment.show(activity!!.supportFragmentManager, "datePicker")
     }

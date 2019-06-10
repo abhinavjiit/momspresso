@@ -61,6 +61,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     private var fromNotification: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("Activity", "onCreate")
+
         setContentView(R.layout.activity_campaign_container)
 
         deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
@@ -93,9 +95,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         if (!notificationCampaignSubmitProof.equals("", true)) {
             deeplinkCampaignId = notificationCampaignSubmitProof.toInt()
         }
-
-
-
 
         if (!notificationCampaignId.equals("", true)) {
             deeplinkCampaignId = notificationCampaignId.toInt()

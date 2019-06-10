@@ -8,7 +8,7 @@ class CampaignDetailResult {
 
     @SerializedName("amount")
     @Expose
-    var amount: Any? = null
+    var amount: Int? = null
     @SerializedName("approval_status")
     @Expose
     var approvalStatus: Int? = null
@@ -56,13 +56,13 @@ class CampaignDetailResult {
     var showRefferField: Boolean? = false
     @SerializedName("max_amount")
     @Expose
-    var maxAmount: Double? = null
+    var maxAmount: Int? = null
     @SerializedName("max_slots")
     @Expose
     var maxSlots: Int? = null
     @SerializedName("min_amount")
     @Expose
-    var minAmount: Double? = null
+    var minAmount: Int? = null
     @SerializedName("moderation_required")
     @Expose
     var moderationRequired: Int? = null

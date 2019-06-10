@@ -36,10 +36,13 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
+import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VlogsListingAdapter;
 import com.mycity4kids.utils.MixPanelUtils;
@@ -175,8 +178,10 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
                 Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
                 if (adapterView.getAdapter() instanceof VlogsListingAdapter) {
+
                     MixPanelUtils.pushMomVlogClickEvent(mixpanel, i, "" + videoCategory);
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
+                    Utils.momVlogEvent(getActivity(), "Video Listing", "Video_play_icon", parentingListData.getId(), "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", "", "");
                     intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
                     intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
@@ -319,6 +324,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 sortType = 0;
                 nextPageNumber = 1;
                 hitArticleListingApi();
+                Utils.momVlogEvent(getActivity(), "Video Listing", "Sort_recent", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+
                 break;
             case R.id.popularSortFAB:
                 funnyvideosshimmer.startShimmerAnimation();
@@ -330,6 +337,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 sortType = 1;
                 nextPageNumber = 1;
                 hitArticleListingApi();
+                Utils.momVlogEvent(getActivity(), "Video Listing", "Sort_popular", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+
                 break;
         }
     }

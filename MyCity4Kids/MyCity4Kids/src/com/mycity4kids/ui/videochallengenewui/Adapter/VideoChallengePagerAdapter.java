@@ -45,6 +45,7 @@ public class VideoChallengePagerAdapter extends FragmentPagerAdapter {
         switch (position) {
 
             case 0:
+
                 if (discription == null) {
                     discription = new VideoChallengeDiscription();
                 }

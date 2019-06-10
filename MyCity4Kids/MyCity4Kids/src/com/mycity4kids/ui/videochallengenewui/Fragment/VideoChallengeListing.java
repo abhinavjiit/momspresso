@@ -39,9 +39,11 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.observablescrollview.ObservableScrollView;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
@@ -211,6 +213,8 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
                     startActivity(intent);
+                    Utils.momVlogEvent(getActivity(), "Challenge detail", "Video", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_detail", parentingListData.getId(), "");
+
                 }
             }
         });

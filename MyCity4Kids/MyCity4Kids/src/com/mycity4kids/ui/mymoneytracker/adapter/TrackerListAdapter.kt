@@ -47,22 +47,21 @@ class TrackerListAdapter(var context: Context, var trackerDataModel: ArrayList<T
                     //DrawableCompat.setTint(holder.imageTop.getDrawable(), ContextCompat.getColor(context, R.color.app_red));
                 } else if (position == trackerData.size - 1) {
                     holder.imageStatus.setImageDrawable(context.getDrawable(R.drawable.ic_circle_svg))
-                    holder.imageTop.visibility = View.INVISIBLE
+                    holder.imageTop.visibility = View.GONE
                 } else {
                     holder.imageStatus.setImageDrawable(context.getDrawable(R.drawable.ic_bullet_svg))
-                    holder.imageTop.visibility = View.INVISIBLE
+                    holder.imageTop.visibility = View.GONE
                 }
 
                 holder.textStatusName.text = Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status)
                 if (trackerDataModel.is_completed == 1) {
                     if (trackerDataModel.completed_time > 0) {
                         holder.textDate.setText(convertDate(trackerDataModel.completed_time))
-
-                        //setColorsAndImage(trackerDataModel.tracker_status,holder.imageStatus,holder.textStatus,Nameholder.textDate)
+                        holder.textDate.visibility = View.VISIBLE
                     } else {
-
+                        holder.textDate.visibility = View.GONE
                     }
-                    setColorsAndImage(Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status), holder.imageStatus, context)
+                    setColorsAndImage(Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status), holder.imageStatus, context, holder.textDate, holder.textStatusName)
                     holder.textDateError.text = ""
                     if (Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status).equals(Constants.TrackerStatusMapping.PROOF_SUBMITTED_REJECTED.name)) {
                         holder.textstatusError.text = "Please submit corrected proofs again."
@@ -77,7 +76,6 @@ class TrackerListAdapter(var context: Context, var trackerDataModel: ArrayList<T
                     }
                     holder.imageStatus.setImageDrawable(context.getDrawable(R.drawable.ic_circle_svg))
                     holder.imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_expired), android.graphics.PorterDuff.Mode.SRC_IN);
-                    //DrawableCompat.setTint(holder.imageStatus.getDrawable(), ContextCompat.getColor(context, R.color.campaign_expired));
                     holder.textstatusError.text = ""
                     if (Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status).equals(Constants.TrackerStatusMapping.APPROVED.name)) {
                         holder.textDateError.text = "Expected Approval"
@@ -97,35 +95,54 @@ fun convertDate(milliSeconds: Long): String {
     return formatter.format(calendar.time)
 }
 
-fun setColorsAndImage(statusCode: String, imageStatus: ImageView, context: Context) {
+fun setColorsAndImage(statusCode: String, imageStatus: ImageView, context: Context, textDate: TextView, textStatusName: TextView) {
     when {
-        Constants.TrackerStatusMapping.APPROVED.name.equals(statusCode, true) -> {
+        "Approved".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_subscribed), android.graphics.PorterDuff.Mode.SRC_IN);
+            textDate.setTextColor(context.resources.getColor(R.color.campaign_subscribed))
+            textStatusName.setTextColor(context.resources.getColor(R.color.campaign_subscribed))
         }
-        Constants.TrackerStatusMapping.APPLIED.name.equals(statusCode, true) -> {
+        "Applied".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_applied_bg), android.graphics.PorterDuff.Mode.SRC_IN);
+            textDate.setTextColor(context.resources.getColor(R.color.campaign_applied_bg))
+            textStatusName.setTextColor(context.resources.getColor(R.color.campaign_applied_bg))
         }
-        Constants.TrackerStatusMapping.PROOF_APPPROVAL.name.equals(statusCode, true) -> {
+
+        "Proof approval".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_proof_approval), android.graphics.PorterDuff.Mode.SRC_IN);
+            textDate.setTextColor(context.resources.getColor(R.color.campaign_proof_approval))
+            textStatusName.setTextColor(context.resources.getColor(R.color.campaign_proof_approval))
         }
-        Constants.TrackerStatusMapping.PROOF_SUBMITTED_REJECTED.name.equals(statusCode, true) -> {
+        "Proof submission rejected".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.app_red), android.graphics.PorterDuff.Mode.SRC_IN);
-//            DrawableCompat.setTint(imageStatus.getDrawable(), ContextCompat.getColor(context, R.color.app_red));
+            textDate.setTextColor(context.resources.getColor(R.color.app_red))
+            textStatusName.setTextColor(context.resources.getColor(R.color.app_red))
         }
-        Constants.TrackerStatusMapping.APPLICATION_UNDER_REVIEW.name.equals(statusCode, true) -> {
+        "Application under review".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.app_red), android.graphics.PorterDuff.Mode.SRC_IN);
+            textDate.setTextColor(context.resources.getColor(R.color.app_red))
+            textStatusName.setTextColor(context.resources.getColor(R.color.app_red))
         }
-        Constants.TrackerStatusMapping.PROOF_UNDER_REVIEW.name.equals(statusCode, true) -> {
+        "Proof under review".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.app_red), android.graphics.PorterDuff.Mode.SRC_IN);
+            textDate.setTextColor(context.resources.getColor(R.color.app_red))
+            textStatusName.setTextColor(context.resources.getColor(R.color.app_red))
         }
-        Constants.TrackerStatusMapping.PAYMENT_IN_PROCESS.name.equals(statusCode, true) -> {
+        "Payment in process".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_payment_in_process), android.graphics.PorterDuff.Mode.SRC_IN);
+            textDate.setTextColor(context.resources.getColor(R.color.campaign_payment_in_process))
+            textStatusName.setTextColor(context.resources.getColor(R.color.campaign_payment_in_process))
         }
-        Constants.TrackerStatusMapping.PAYMENT_DONE.name.equals(statusCode, true) -> {
+        "Payment done".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_payment_done), android.graphics.PorterDuff.Mode.SRC_IN);
+            textDate.setTextColor(context.resources.getColor(R.color.campaign_payment_done))
+            textStatusName.setTextColor(context.resources.getColor(R.color.campaign_payment_done))
         }
-        Constants.TrackerStatusMapping.PROOF_SUBMITTED.name.equals(statusCode, true) -> {
+
+        "Proof submitted".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_proof_submitted), android.graphics.PorterDuff.Mode.SRC_IN);
+            textDate.setTextColor(context.resources.getColor(R.color.campaign_proof_submitted))
+            textStatusName.setTextColor(context.resources.getColor(R.color.campaign_proof_submitted))
         }
         else -> {
 

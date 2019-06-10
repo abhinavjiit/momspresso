@@ -156,7 +156,10 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                     Intent cityIntent = new Intent(CategoryVideosListingActivity.this, ChooseVideoCategoryActivity.class);
                     cityIntent.putExtra("comingFrom", "createDashboardIcon");
                     cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
+
                     startActivity(cityIntent);
+                    Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+
                 }
             }
         });
@@ -244,10 +247,12 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "Vlogs_Tab", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_vlogs_tab", subTopicsList.get(tab.getPosition()).getId(), "");
 
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
                 if (fragment != null) {
                     if (fragment instanceof ChallengeCategoryVideoTabFragment) {
+
                         fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.GONE);
                     } else {

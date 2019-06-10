@@ -121,12 +121,10 @@ class TrackerFragment : BaseFragment() {
         isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
         recyclerView.adapter = adapter
         getTrackerData(campaignId)
-
         return containerView
     }
 
     companion object {
-
         fun newInstance(campaignId: Int = 0, brandName: String = "", campaignName: String = "", totalPayout: Int = 0, imageUrl: String = "") =
                 TrackerFragment().apply {
                     arguments = Bundle().apply {
@@ -140,7 +138,7 @@ class TrackerFragment : BaseFragment() {
     }
 
     private fun getTrackerData(campaignId: Int) {
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getTrackerData(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ArrayList<TrackerDataModel>>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getTrackerData(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ArrayList<TrackerDataModel>>> {
             override fun onComplete() {
                 removeProgressDialog()
             }

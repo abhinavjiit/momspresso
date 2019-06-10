@@ -284,7 +284,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
             case R.id.deleteDraftImageView:
                 ConfirmationDialogFragment confirmationDialogFragment = new ConfirmationDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-                confirmationDialogFragment.setTargetFragment(this, 0);
+                //confirmationDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 confirmationDialogFragment.setArguments(_args);

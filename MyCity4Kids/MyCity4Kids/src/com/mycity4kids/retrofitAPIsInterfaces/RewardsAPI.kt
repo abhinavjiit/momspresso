@@ -25,8 +25,6 @@ interface RewardsAPI {
                            @Query("fn") pageValue : Int)
             : Observable<RewardsPersonalResponse>
 
-
-
     @GET("/rewards/v1/users/{userId}")
     fun getRewardsapiData(@Path("userId") userId: String, @Query("fn") pageValue : Int)
             : Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>

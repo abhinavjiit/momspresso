@@ -34,6 +34,9 @@ class CampaignProofResponse(
         @SerializedName("url_type")
         @Expose
         var urlType: Int? = null,
+        var isEditable: Boolean? = false,
+        @SerializedName("isTemplate")
+        @Expose
+        var isTemplate: Boolean = false
 
-        var isEditable : Boolean? = false
 )
