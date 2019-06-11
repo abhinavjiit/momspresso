@@ -5,6 +5,20 @@
     android:layout_height="match_parent"
     android:background="@android:color/background_light">
 
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/emptyListText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:drawablePadding="20dp"
+        android:padding="35dp"
+        android:gravity="center"
+        android:text="Please join at least 1 group to start viewing posts here."
+        android:textColor="@color/color_979797"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:fontName="open_sans_bold.ttf" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
