@@ -828,7 +828,7 @@
     <string name="email_and_password">ఇమెయిల్ మరియు పాస్‌వర్డ్</string>
     <string name="location">లొకేషన్</string>
     <string name="search">Search Any article or author</string>
-    <string name="new_label">புதிய</string>
+    <string name="new_label">కొత్త</string>
     <string name="view_profile">view profile</string>
     <string name="choose_video_category">Choose Video Category</string>
     <string name="enter_valid_email">Please enter valid email id</string>
