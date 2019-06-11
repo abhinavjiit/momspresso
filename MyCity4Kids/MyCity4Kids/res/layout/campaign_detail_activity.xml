@@ -66,6 +66,7 @@
                 android:background="@drawable/campaign_feed_register_textview_bg"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
+                android:visibility="gone"
                 android:paddingRight="10dp"
                 android:paddingBottom="5dp"
                 android:text="TRACK STATUS"

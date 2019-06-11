@@ -343,7 +343,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                     Bundle _args = new Bundle();
                     _args.putParcelable("editKidInfo", km);
                     editKidInfoDialogFragment.setArguments(_args);
-                    editKidInfoDialogFragment.setTargetFragment(EditProfileTabFragment.this, 1111);
+                   // editKidInfoDialogFragment.setTargetFragment(EditProfileTabFragment.this, 1111);
                     editKidInfoDialogFragment.setCancelable(true);
                     editKidInfoDialogFragment.show(fm, "Choose video option");
                 }

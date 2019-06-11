@@ -113,10 +113,10 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
         }
         adapter.notifyDataSetChanged();
         if ("editProfile".equals(fromScreen) || "explore".equals(fromScreen)) {
-            IChangeCity changeCity = (IChangeCity) getTargetFragment();
+            IChangeCity changeCity = (IChangeCity) getParentFragment();
             changeCity.onCitySelect(data.get(position));
-        }else if("rewards".equalsIgnoreCase(fromScreen)){
-            IChangeCity changeCity = (IChangeCity) getTargetFragment();
+        } else if ("rewards".equalsIgnoreCase(fromScreen)) {
+            IChangeCity changeCity = (IChangeCity) getParentFragment();
             changeCity.onCitySelect(data.get(position));
             //((RewardsContainerActivity) getActivity()).changeCityText(data.get(position));
         } else {
@@ -135,13 +135,13 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
         }
         adapter.notifyDataSetChanged();
         if ("editProfile".equals(fromScreen) || "explore".equals(fromScreen)) {
-            IChangeCity changeCity = (IChangeCity) getTargetFragment();
+            IChangeCity changeCity = (IChangeCity) getParentFragment();
             changeCity.onOtherCitySelect(position, otherCityName);
-        } else if("rewards".equalsIgnoreCase(fromScreen)){
-            IChangeCity changeCity = (IChangeCity) getTargetFragment();
+        } else if ("rewards".equalsIgnoreCase(fromScreen)) {
+            IChangeCity changeCity = (IChangeCity) getParentFragment();
             changeCity.onOtherCitySelect(position, otherCityName);
             //((BlogSetupActivity) getActivity()).setOtherCityName(position, otherCityName);
-        }else {
+        } else {
             ((BlogSetupActivity) getActivity()).setOtherCityName(position, otherCityName);
         }
     }
@@ -166,7 +166,7 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_SELECT_PLACE){
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_SELECT_PLACE) {
             Place place = PlaceAutocomplete.getPlace(getActivity(), data);
             String cityNameVal = place.getName().toString();
             if (StringUtils.isNullOrEmpty(cityNameVal)) {

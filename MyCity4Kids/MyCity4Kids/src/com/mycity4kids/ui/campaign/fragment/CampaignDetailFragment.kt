@@ -408,6 +408,7 @@ class CampaignDetailFragment : BaseFragment() {
             try {
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                    txtTrackerStatus.visibility = View.VISIBLE
                     submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_applied))
                     Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
                     labelText.setText(context!!.resources.getString(R.string.label_campaign_applied))
@@ -501,6 +502,7 @@ class CampaignDetailFragment : BaseFragment() {
             labelText.setText(context!!.resources.getString(R.string.label_campaign_applied))
             appliedTag.visibility = View.VISIBLE
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
+
         } else if (status == 4) {
             hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_application_full))
@@ -696,6 +698,8 @@ class CampaignDetailFragment : BaseFragment() {
 
         })
     }
+
+
 }
 
 

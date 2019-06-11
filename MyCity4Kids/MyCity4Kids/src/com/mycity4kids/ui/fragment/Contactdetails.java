@@ -81,7 +81,7 @@ public class Contactdetails extends Fragment implements View.OnClickListener, Ci
         switch (v.getId()) {
             case R.id.cityTextView:
                 cityFragment = new CityListingDialogFragment();
-                cityFragment.setTargetFragment(this, 0);
+               // cityFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putParcelableArrayList("cityList", cityList);
                 _args.putString("fromScreen", "editProfile");

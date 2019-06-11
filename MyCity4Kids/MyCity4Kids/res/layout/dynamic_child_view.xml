@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
                 android:text="@string/rewards_kid_detail"
+                android:textAllCaps="true"
                 android:textColor="@color/app_grey"
                 app:fontName="oswald_regular.ttf"
                 app:layout_constraintStart_toStartOf="parent"
@@ -80,6 +81,8 @@
                     android:gravity="center_vertical"
                     android:hint="DD/MM/YYYY"
                     android:textColor="#000"
+
+                    app:fontName="oswald_regular.ttf"
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <ImageView
@@ -107,6 +110,8 @@
                 android:hint="DD/MM/YYYY"
                 android:paddingLeft="10dp"
                 android:textColor="#000"
+                app:fontName="oswald_regular.ttf"
+
                 app:layout_constraintEnd_toEndOf="parent" />
         </LinearLayout>
     </LinearLayout>
