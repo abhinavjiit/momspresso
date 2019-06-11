@@ -255,7 +255,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             apiGetResponse.preferred_languages!!.forEach {
                 var interestName = Constants.TypeOfLanguages.findById(it)
                 preSelectedLanguage.add(it)
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(interestName)
                 catTextView.isSelected = true
@@ -276,7 +276,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             apiGetResponse.interest!!.forEach {
                 var interestName = Constants.TypeOfInterest.findById(it.toInt())
                 preSelectedInterest.add(it.toString())
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(interestName)
                 catTextView.isSelected = true
@@ -1157,7 +1157,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 if (name != null) {
                     preSelectedInterest.add(name)
                 }
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(it)
                 catTextView.isSelected = true
@@ -1185,7 +1185,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 if (name != null) {
                     preSelectedLanguage.add(name)
                 }
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.topic_follow_unfollow_item, null) as LinearLayout
+                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
                 val catTextView = subsubLL.getChildAt(0) as TextView
                 catTextView.setText(it)
                 catTextView.isSelected = true

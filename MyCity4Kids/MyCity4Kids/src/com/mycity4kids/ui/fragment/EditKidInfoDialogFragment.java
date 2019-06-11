@@ -167,11 +167,11 @@ public class EditKidInfoDialogFragment extends DialogFragment implements OnClick
                     } else {
                         kidsinfo.setGender("1");
                     }
-                    ((About) getTargetFragment()).saveEditKidInfo(kidsinfo);
+                    ((About) getParentFragment()).saveEditKidInfo(kidsinfo);
                 }
                 break;
             case R.id.deleteKidInfoTextView:
-                ((About) getTargetFragment()).deleteKid();
+                ((About) getParentFragment()).deleteKid();
                 break;
             case R.id.closeDialogImageView:
                 dismiss();

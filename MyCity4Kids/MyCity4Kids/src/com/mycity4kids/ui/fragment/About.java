@@ -152,7 +152,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
                     Bundle _args = new Bundle();
                     _args.putParcelable("editKidInfo", km);
                     editKidInfoDialogFragment.setArguments(_args);
-                    editKidInfoDialogFragment.setTargetFragment(About.this, 1111);
+                  //  editKidInfoDialogFragment.setTargetFragment(About.this, 1111);
                     editKidInfoDialogFragment.setCancelable(true);
                     editKidInfoDialogFragment.show(fm, "Choose video option");
                 }
