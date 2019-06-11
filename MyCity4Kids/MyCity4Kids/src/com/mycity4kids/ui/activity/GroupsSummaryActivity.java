@@ -546,4 +546,10 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+
 }
+
+
+

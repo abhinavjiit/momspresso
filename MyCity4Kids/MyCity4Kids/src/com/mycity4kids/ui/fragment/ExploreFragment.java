@@ -209,7 +209,7 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                 break;
             case R.id.cityNameTextView:
                 cityFragment = new CityListingDialogFragment();
-                cityFragment.setTargetFragment(this, 0);
+              //  cityFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putParcelableArrayList("cityList", mDatalist);
                 _args.putString("fromScreen", "explore");

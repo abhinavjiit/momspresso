@@ -67,7 +67,7 @@ class TrackerListAdapter(var context: Context, var trackerDataModel: ArrayList<T
                     }
                     setColorsAndImage(Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status), holder.imageStatus, context, holder.textDate, holder.textStatusName)
                     holder.textDateError.text = ""
-                    if (Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status).equals("PROOF SUBMITTED REJECTED")) {
+                    if (Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status).equals("PROOFS SUBMITTED REJECTED")) {
                         if (errorStatus) {
                             holder.textstatusError.text = "Please submit corrected proofs again."
                         } else {
@@ -81,7 +81,7 @@ class TrackerListAdapter(var context: Context, var trackerDataModel: ArrayList<T
                     if (trackerDataModel.expected_time > 0) {
                         holder.textDate.setText(convertDate(trackerDataModel.expected_time))
                         holder.textDate.visibility = View.VISIBLE
-                        holder.textDateError.text = "Expected Approval"
+                        holder.textDateError.text = "Expected Date"
 
                     } else {
                         holder.textDate.visibility = View.GONE
@@ -123,12 +123,12 @@ fun setColorsAndImage(statusCode: String, imageStatus: ImageView, context: Conte
             textStatusName.setTextColor(context.resources.getColor(R.color.campaign_applied_bg))
         }
 
-        "PROOF APPPROVAL".equals(statusCode, true) -> {
+        "PROOFS APPROVED".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_proof_approval), android.graphics.PorterDuff.Mode.SRC_IN);
             textDate.setTextColor(context.resources.getColor(R.color.campaign_proof_approval))
             textStatusName.setTextColor(context.resources.getColor(R.color.campaign_proof_approval))
         }
-        "ROOF SUBMITTED REJECTED".equals(statusCode, true) -> {
+        "PROOFS SUBMITTED REJECTED".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_proof_reject_bg), android.graphics.PorterDuff.Mode.SRC_IN);
             textDate.setTextColor(context.resources.getColor(R.color.campaign_proof_reject_bg))
             textStatusName.setTextColor(context.resources.getColor(R.color.campaign_proof_reject_bg))
@@ -138,7 +138,7 @@ fun setColorsAndImage(statusCode: String, imageStatus: ImageView, context: Conte
             textDate.setTextColor(context.resources.getColor(R.color.app_red))
             textStatusName.setTextColor(context.resources.getColor(R.color.app_red))
         }
-        "PROOF UNDER REVIEW".equals(statusCode, true) -> {
+        "PROOFS UNDER REVIEW".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.app_red), android.graphics.PorterDuff.Mode.SRC_IN);
             textDate.setTextColor(context.resources.getColor(R.color.app_red))
             textStatusName.setTextColor(context.resources.getColor(R.color.app_red))
@@ -154,7 +154,7 @@ fun setColorsAndImage(statusCode: String, imageStatus: ImageView, context: Conte
             textStatusName.setTextColor(context.resources.getColor(R.color.campaign_payment_done))
         }
 
-        "PROOF SUBMITTED".equals(statusCode, true) -> {
+        "PROOFS SUBMITTED".equals(statusCode, true) -> {
             imageStatus.setColorFilter(ContextCompat.getColor(context, R.color.campaign_proof_submitted), android.graphics.PorterDuff.Mode.SRC_IN);
             textDate.setTextColor(context.resources.getColor(R.color.campaign_proof_submitted))
             textStatusName.setTextColor(context.resources.getColor(R.color.campaign_proof_submitted))

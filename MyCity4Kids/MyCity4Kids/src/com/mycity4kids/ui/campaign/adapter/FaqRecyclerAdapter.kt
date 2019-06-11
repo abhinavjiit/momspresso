@@ -12,10 +12,10 @@ import com.mycity4kids.models.campaignmodels.QuestionAnswerResponse
 import kotlinx.android.synthetic.main.fragment_item.view.*
 
 class FaqRecyclerAdapter(
-        private val faqsList: List<QuestionAnswerResponse>, private val context : Context)
+        private val faqsList: List<QuestionAnswerResponse>, private val context: Context)
     : RecyclerView.Adapter<FaqRecyclerAdapter.ViewHolder>() {
     private val mOnClickListener: View.OnClickListener
-    private var faqList : List<QuestionAnswerResponse>
+    private var faqList: List<QuestionAnswerResponse>
 
     init {
         faqList = faqsList
@@ -25,6 +25,7 @@ class FaqRecyclerAdapter(
             // one) that an item has been selected.
         }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -38,10 +39,10 @@ class FaqRecyclerAdapter(
         holder.textAnswer.text = item.answer
 
         holder.imageDown.setOnClickListener {
-            if(holder.textAnswer.visibility == View.GONE){
+            if (holder.textAnswer.visibility == View.GONE) {
                 holder.textAnswer.visibility = View.VISIBLE
                 holder.imageDown.rotation = 180f
-            }else{
+            } else {
                 holder.textAnswer.visibility = View.GONE
                 holder.imageDown.rotation = 0f
             }
