@@ -632,14 +632,16 @@
 
     <string name="all_categories_label">అన్ని</string>
 
-    <string name="language_label.english">ఆంగ్లం</string>
-    <string name="language_label.hindi">హిందీ</string>
-    <string name="language_label.marathi">మరాఠీ</string>
-    <string name="language_label.bengali">বাংলা</string>
-    <string name="language_label.tamil">తమిళ్</string>
+
+    <string name="language_label.english">English</string>
+    <string name="language_label.hindi">हिंदी</string>
+    <string name="language_label.marathi">मराठी</string>
+    <string name="language_label.ben">বাংলা</string>
+    <string name="language_label.tamil">தமிழ்</string>
     <string name="language_label.telegu">తెలుగు</string>
     <string name="language_label.kannada">ಕನ್ನಡ</string>
     <string name="language_label.malayalam">മലയാളം</string>
+
 
     <string name="choose_pref_lang">మీరు ప్రాధాన్యం ఇచ్చే భాషలను ఎంచుకోండి</string>
     <string name="choose_pref_lang.cancel">క్యాన్సల్</string>
