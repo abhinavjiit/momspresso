@@ -22,12 +22,14 @@
             android:id="@+id/group_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/space_7"
             android:layout_marginLeft="@dimen/space_7"
             android:layout_toEndOf="@+id/groupname_view"
             android:layout_toRightOf="@+id/groupname_view"
-            android:textColor="@color/campaign_list_buttons"
             android:text="groupname"
+            android:textColor="@color/campaign_list_buttons"
+            android:textSize="10sp"
             app:fontName="open_sans.ttf" />
 
     </RelativeLayout>

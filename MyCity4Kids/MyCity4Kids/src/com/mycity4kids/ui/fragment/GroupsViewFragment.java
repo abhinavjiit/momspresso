@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
+import com.mycity4kids.utils.AppUtils;
 
 public class GroupsViewFragment extends BaseFragment {
     private TabLayout tabLayout;
@@ -27,10 +28,12 @@ public class GroupsViewFragment extends BaseFragment {
         viewPager = fragmentView.findViewById(R.id.viewpager);
         tabLayout = fragmentView.findViewById(R.id.tablayout);
 
+
         tabLayout.addTab(tabLayout.newTab().setText("Groups"));
         tabLayout.addTab(tabLayout.newTab().setText("My Feed"));
         tabLayout.addTab(tabLayout.newTab().setText("Polls"));
 
+        AppUtils.changeTabsFont(getActivity(), tabLayout);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
