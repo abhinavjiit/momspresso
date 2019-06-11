@@ -170,6 +170,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             isRequestRunning = false;
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
+                    emptyListTextView.setVisibility(View.VISIBLE);
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -177,6 +178,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             }
             try {
                 if (response.isSuccessful()) {
+                    emptyListTextView.setVisibility(View.GONE);
                     GroupPostResponse groupPostResponse = response.body();
                     processPostListingResponse(groupPostResponse);
                 } else {
@@ -184,6 +186,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
+                emptyListTextView.setVisibility(View.VISIBLE);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
