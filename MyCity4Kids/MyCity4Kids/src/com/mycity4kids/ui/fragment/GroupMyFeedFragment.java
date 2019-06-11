@@ -86,7 +86,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
     private GroupPostResult selectedPost;
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
-    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView;
+    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView,emptyListTextView;
     private View overlayView;
     private Animation slideAnim, fadeAnim;
     private UserPostSettingResult currentPostPrefsForUser;
@@ -117,6 +117,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
         notificationToggleTextView = (TextView) fragmentView.findViewById(R.id.notificationToggleTextView);
         reportPostTextView = (TextView) fragmentView.findViewById(R.id.reportPostTextView);
         progressBar = (ProgressBar) fragmentView.findViewById(R.id.progressBar);
+        emptyListTextView = (TextView) fragmentView.findViewById(R.id.emptyListText);
         isRequestRunning = false;
         isLastPageReached = false;
         recyclerView.setAdapter(myFeedPollGenericRecyclerAdapter);
@@ -203,6 +204,8 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
         totalPostCount = response.getTotal();
         ArrayList<GroupPostResult> dataList = (ArrayList<GroupPostResult>) response.getData().get(0).getResult();
         if (dataList.size() == 0) {
+            emptyListTextView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
             isLastPageReached = false;
             if (null != postList && !postList.isEmpty()) {
                 //No more next results for search from pagination
@@ -211,6 +214,8 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                 // No results
             }
         } else {
+            emptyListTextView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
             formatPostData(dataList);
 //            noPostsTextView.setVisibility(View.GONE);
             postList.addAll(dataList);
