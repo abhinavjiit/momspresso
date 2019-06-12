@@ -84,12 +84,12 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     }
 
     fun onProofSubmitClick() {
-        for (i in 0..2) {
+        for (i in 0..campaignUrlProofList.size - 1) {
             if (campaignUrlProofList != null && campaignUrlProofList.size > i) {
                 var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
                 var textview = view.findViewById<EditText>(R.id.textUrl)
                 var proofPostModel = ProofPostModel(url = textview.text.toString(), campaign_id = campaignId, url_type = 1)
-                if (i == 2) {
+                if (i == campaignUrlProofList.size - 1) {
                     updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = true)
                 } else {
                     updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = false)
@@ -271,7 +271,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
     private fun validateUrlProofs(): Boolean {
         var isAllEmpty: Boolean = true
-        for (i in 0..2) {
+        for (i in 0..campaignUrlProofList.size - 1) {
             var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
             var textview: EditText = view.findViewById<EditText>(R.id.textUrl)
             if (textview != null && !textview.text.isNullOrEmpty()) {
