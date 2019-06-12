@@ -135,7 +135,7 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
                 if (isValid()) {
                     if ("EDIT_COMMENT".equals(actionType)) {
 
-                        //((ArticleCommentsFragment) getParentFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
+                        ((ArticleCommentsFragment) getParentFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
                     } else if ("EDIT_REPLY".equals(actionType)) {
                         Fragment fragment = getParentFragment();
                         if (fragment != null && fragment instanceof ArticleCommentsFragment) {
