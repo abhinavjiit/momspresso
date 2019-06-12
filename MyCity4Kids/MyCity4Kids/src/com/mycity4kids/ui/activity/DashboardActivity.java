@@ -1355,13 +1355,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
                         groupMembershipStatus.checkMembershipStatus((int) groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                     } else {
-                        String[] groupArray = separated[separated.length - 1].split("-");
-                        long groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                        String[] groupArray;
+                        long groupId;
+                        if (separated[separated.length - 1].contains("?")) {
+                            groupArray = separated[separated.length - 1].split("[?]");
+                            groupArray = groupArray[0].split("-");
+                            groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                        } else {
+                            groupArray = separated[separated.length - 1].split("-");
+                            groupId = AppUtils.getIdFromHash(groupArray[groupArray.length - 1]);
+                        }
                         if (groupId == -1) {
                             return;
                         }
                         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
                         groupMembershipStatus.checkMembershipStatus((int) groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+
                     }
                 } else {
                     getDeepLinkData(tempDeepLinkURL);

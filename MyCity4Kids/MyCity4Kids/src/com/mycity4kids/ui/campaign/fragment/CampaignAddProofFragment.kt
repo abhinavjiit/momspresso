@@ -99,13 +99,13 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 var textview = view.findViewById<EditText>(R.id.textUrl)
                 if (!textview.text.isNullOrEmpty()) {
                     var proofPostModel = ProofPostModel(url = textview.text.toString(), campaign_id = campaignId, url_type = 1)
-                    if (i == 2) {
+                    if (i == campaignUrlProofList.size - 1) {
                         postProofToServer(proofPostModel, true, urlType = 1)
                     } else {
                         postProofToServer(proofPostModel, false, urlType = 1)
                     }
                 } else {
-                    if (i == 2) {
+                    if (i == campaignUrlProofList.size - 1) {
                         submitListener.proofSubmitDone()
                         // showRewardDialog()
                     }

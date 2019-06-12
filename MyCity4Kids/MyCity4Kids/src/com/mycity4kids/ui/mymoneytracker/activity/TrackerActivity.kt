@@ -1,19 +1,12 @@
 package com.mycity4kids.ui.mymoneytracker.activity
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView
-import com.google.android.gms.dynamic.SupportFragmentWrapper
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.ui.mymoneytracker.fragment.TrackerFragment
-import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
-
 import kotlinx.android.synthetic.main.activity_tracker.*
-import org.greenrobot.eventbus.util.ErrorDialogManager
 
 class TrackerActivity : BaseActivity() {
 

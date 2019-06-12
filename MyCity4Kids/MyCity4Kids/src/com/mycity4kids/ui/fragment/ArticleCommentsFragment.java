@@ -142,7 +142,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             }
         });
 
-        EventBus.getDefault().register(this);
+        // EventBus.getDefault().register(this);
         return rootView;
     }
 
@@ -220,7 +220,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
 
     }
 
-    public  void addComment(String content) {
+    public void addComment(String content) {
         showProgressDialog("Adding Comment");
         AddEditCommentOrReplyRequest addEditCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditCommentOrReplyRequest.setPost_id(articleId);
@@ -594,15 +594,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         }
     };
 
-    @Subscribe
-    public void getEventBusEventCall(String something){
-        Log.e("some event", something);
-    }
-
-    @Subscribe
-    public void getEventBusEventCal(int something){
-        Log.e("some event", something + "");
-    }
 
     public void editReply(String content, String parentCommentId, String replyId) {
         showProgressDialog("Editing Reply");
@@ -806,7 +797,7 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
             case R.id.commentRootLayout: {
                 CommentOptionsDialogFragment commentOptionsDialogFragment = new CommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-              //  commentOptionsDialogFragment.setTargetFragment(this, 0);
+                //  commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("authorId", commentsList.get(position).getUserId());
@@ -865,6 +856,6 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+
     }
 }

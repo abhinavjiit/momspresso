@@ -134,8 +134,7 @@ public class AddArticleCommentReplyDialogFragment extends DialogFragment impleme
             case R.id.postCommentReplyTextView:
                 if (isValid()) {
                     if ("EDIT_COMMENT".equals(actionType)) {
-                        EventBus.getDefault().post("myevent");
-                        EventBus.getDefault().post(1);
+
                         //((ArticleCommentsFragment) getParentFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
                     } else if ("EDIT_REPLY".equals(actionType)) {
                         Fragment fragment = getParentFragment();

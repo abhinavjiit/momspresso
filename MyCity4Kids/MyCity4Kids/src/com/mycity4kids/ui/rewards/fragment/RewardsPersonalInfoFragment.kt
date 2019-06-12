@@ -985,6 +985,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
             if (isShowFutureOnly) {
                 dlg.datePicker.minDate = c.timeInMillis
+                c.add(Calendar.YEAR, 1)
+                dlg.datePicker.maxDate = c.timeInMillis
             }
 
             if (isForParent) {
