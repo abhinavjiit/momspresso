@@ -757,15 +757,14 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                    FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                    Bundle _args = new Bundle();
-                    // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
-                    _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    _args.putInt("postId", postList.get(getAdapterPosition()).getId());
-                    addGpPostCommentReplyDialogFragment.setArguments(_args);
-                    addGpPostCommentReplyDialogFragment.setCancelable(true);
-                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("groupItem", selectedGroup);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                 }
             });
 
@@ -774,15 +773,14 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 @Override
                 public void onClick(View v) {
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
-                        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                        Bundle _args = new Bundle();
-                        // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
-                        _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        _args.putInt("postId", postList.get(getAdapterPosition()).getId());
-                        addGpPostCommentReplyDialogFragment.setArguments(_args);
-                        addGpPostCommentReplyDialogFragment.setCancelable(true);
-                        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                        intent.putExtra("groupItem", selectedGroup);
+                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
+                        intent.putExtra("postData", postList.get(getAdapterPosition()));
+                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                     } else {
                         Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
                         intent.putExtra("groupItem", selectedGroup);
@@ -875,15 +873,15 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                    FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                    Bundle _args = new Bundle();
-                    // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
-                    _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    _args.putInt("postId", postList.get(getAdapterPosition()).getId());
-                    addGpPostCommentReplyDialogFragment.setArguments(_args);
-                    addGpPostCommentReplyDialogFragment.setCancelable(true);
-                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_MEDIA);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getMediaUrls();
+                    intent.putExtra("mediaUrls", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                 }
             });
 
@@ -893,15 +891,15 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
 
-                        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                        Bundle _args = new Bundle();
-                        // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
-                        _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        _args.putInt("postId", postList.get(getAdapterPosition()).getId());
-                        addGpPostCommentReplyDialogFragment.setArguments(_args);
-                        addGpPostCommentReplyDialogFragment.setCancelable(true);
-                        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                        intent.putExtra("postType", AppConstants.POST_TYPE_MEDIA);
+                        intent.putExtra("postData", postList.get(getAdapterPosition()));
+                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getMediaUrls();
+                        intent.putExtra("mediaUrls", linkedTreeMap);
+                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                     } else {
                         Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
                         intent.putExtra("postType", AppConstants.POST_TYPE_MEDIA);
@@ -977,15 +975,15 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 public void onClick(View v) {
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
 
-                        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                        Bundle _args = new Bundle();
-                        // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
-                        _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        _args.putInt("postId", postList.get(getAdapterPosition()).getId());
-                        addGpPostCommentReplyDialogFragment.setArguments(_args);
-                        addGpPostCommentReplyDialogFragment.setCancelable(true);
-                        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                        intent.putExtra("postData", postList.get(getAdapterPosition()));
+                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                        intent.putExtra("pollOptions", linkedTreeMap);
+                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                     } else {
 
                         Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
@@ -1003,14 +1001,16 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                    FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                    Bundle _args = new Bundle();
-                    _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    _args.putInt("postId", postList.get(getAdapterPosition()).getId());
-                    addGpPostCommentReplyDialogFragment.setArguments(_args);
-                    addGpPostCommentReplyDialogFragment.setCancelable(true);
-                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                    intent.putExtra("pollOptions", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                 }
             });
 
@@ -1159,15 +1159,15 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
 
-                        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                        Bundle _args = new Bundle();
-                        // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
-                        _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        _args.putInt("postId", postList.get(getAdapterPosition()).getId());
-                        addGpPostCommentReplyDialogFragment.setArguments(_args);
-                        addGpPostCommentReplyDialogFragment.setCancelable(true);
-                        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                        intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                        intent.putExtra("postData", postList.get(getAdapterPosition()));
+                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                        intent.putExtra("pollOptions", linkedTreeMap);
+                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                     } else {
 
 
@@ -1186,15 +1186,16 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                    FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                    Bundle _args = new Bundle();
-                    // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
-                    _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    _args.putInt("postId", postList.get(getAdapterPosition()).getId());
-                    addGpPostCommentReplyDialogFragment.setArguments(_args);
-                    addGpPostCommentReplyDialogFragment.setCancelable(true);
-                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                    intent.putExtra("pollOptions", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                 }
             });
             pollOption1ProgressBar.setOnClickListener(new View.OnClickListener() {
@@ -1301,14 +1302,15 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                    FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                    Bundle _args = new Bundle();
-                    _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
-                    _args.putInt("postId", postList.get(getAdapterPosition()).getId());
-                    addGpPostCommentReplyDialogFragment.setArguments(_args);
-                    addGpPostCommentReplyDialogFragment.setCancelable(true);
-                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                    intent.putExtra("pollOptions", linkedTreeMap);
+                    intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                    intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                    intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                    ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                 }
             });
 
@@ -1317,15 +1319,15 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 public void onClick(View v) {
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
 
-                        AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                        FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                        Bundle _args = new Bundle();
-                        // groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
-                        _args.putInt("groupId", postList.get(getAdapterPosition()).getGroupId());
-                        _args.putInt("postId", postList.get(getAdapterPosition()).getId());
-                        addGpPostCommentReplyDialogFragment.setArguments(_args);
-                        addGpPostCommentReplyDialogFragment.setCancelable(true);
-                        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                        Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                        intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
+                        intent.putExtra("postData", postList.get(getAdapterPosition()));
+                        LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                        intent.putExtra("pollOptions", linkedTreeMap);
+                        intent.putExtra("postId", postList.get(getAdapterPosition()).getId());
+                        intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
+                        intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                        ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                     } else {
                         Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
                         intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
