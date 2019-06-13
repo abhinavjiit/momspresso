@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -26,15 +25,17 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdatePostSettingsRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
-import com.mycity4kids.models.response.GroupDetailResponse;
+import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
@@ -45,14 +46,12 @@ import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsEditPostActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
-import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
-import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.ui.adapter.MyFeedPollGenericRecyclerAdapter;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -66,7 +65,7 @@ import retrofit2.Retrofit;
 
 import static android.app.Activity.RESULT_OK;
 
-public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGenericRecyclerAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus,View.OnClickListener {
+public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGenericRecyclerAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus, View.OnClickListener {
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private boolean isRequestRunning;
@@ -74,7 +73,9 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
     private MyFeedPollGenericRecyclerAdapter myFeedPollGenericRecyclerAdapter;
     private GroupPostDetailsAndCommentsRecyclerAdapter groupPostDetailsAndCommentsRecyclerAdapter;
     private int skip = 0;
+    private int postId;
     private int limit = 10;
+    String content;
     private String postType;
     private ArrayList<GroupPostResult> postList;
     private RecyclerView recyclerView;
@@ -83,11 +84,13 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
     private GroupResult selectedGroup;
     private String memberType;
     private int groupId;
+
     private GroupPostResult selectedPost;
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
-    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView,emptyListTextView;
+    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView, emptyListTextView;
     private View overlayView;
+    Map<String, String> image;
     private Animation slideAnim, fadeAnim;
     private UserPostSettingResult currentPostPrefsForUser;
     private ProgressBar progressBar;
@@ -137,7 +140,6 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
         pinPostTextView.setOnClickListener(this);
 
 
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -161,10 +163,131 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
         return fragmentView;
     }
 
+    public void addComment(String content, Map<String, String> image, int groupId, int postId) {
+        this.postId = postId;
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            jsonObject.put("groupId", "" + groupId);
+            jsonObject.put("postId", "" + postId);
+            mixpanel.track("CreateGroupComment", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();
+        addGpPostCommentOrReplyRequest.setGroupId(groupId);
+        addGpPostCommentOrReplyRequest.setPostId(postId);
+        if (SharedPrefUtils.isUserAnonymous(getActivity())) {
+            addGpPostCommentOrReplyRequest.setIsAnnon(1);
+        }
+        addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
+        addGpPostCommentOrReplyRequest.setContent(content);
+        addGpPostCommentOrReplyRequest.setMediaUrls(image);
+        Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
+        call.enqueue(addCommentResponseListener);
+    }
+
+    private Callback<AddGpPostCommentReplyResponse> addCommentResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
+        @Override
+        public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                //       showToast("Failed to add comment. Please try again");
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+
+                    for (int i = 0; i < postList.size(); i++) {
+                        if (postList.get(i).getId() == postId) {
+                            postList.get(i).setResponseCount(1);
+                            myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+
+
+
+
+
+                  /*  if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
+                        TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
+                        tab1.select();*/
+                      /*  final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+
+
+
+                             *//*   if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab1.getTag().toString())) {
+                                    isRequestRunning = false;
+                                    isLastPageReached = false;
+                                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+                                    postList.clear();
+                                    skip = 0;
+                                    limit = 10;
+                                    getGroupPosts();
+                                }
+                                if (AppConstants.GROUP_SECTION_PHOTOS.equalsIgnoreCase(tab1.getTag().toString())) {
+                                    isRequestRunning = false;
+                                    isLastPageReached = false;
+                                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+                                    postList.clear();
+                                    skip = 0;
+                                    limit = 10;
+                                    postType = AppConstants.POST_TYPE_MEDIA_KEY;
+                                    getFilteredGroupPosts();
+                                }
+                                if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab1.getTag().toString())) {
+                                    isRequestRunning = false;
+                                    isLastPageReached = false;
+                                    recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
+                                    postList.clear();
+                                    skip = 0;
+                                    limit = 10;
+                                    postType = AppConstants.POST_TYPE_POLL_KEY;
+                                    getFilteredGroupPosts();
+                                }*//*
+
+
+                            }
+                        }, 1000);*/
+
+
+                    //}
+
+                } else {
+                    // showToast("Failed to add comment. Please try again");
+                }
+            } catch (Exception e) {
+                //  showToast("Failed to add comment. Please try again");
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddGpPostCommentReplyResponse> call, Throwable t) {
+            //   showToast("Failed to add comment. Please try again");
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+
     private void getGroupPosts() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        Call<GroupPostResponse> call = groupsAPI.getAllMyFeedPosts(skip,1, limit);
+        Call<GroupPostResponse> call = groupsAPI.getAllMyFeedPosts(skip, 1, limit);
         call.enqueue(groupPostResponseCallback);
     }
 
@@ -444,6 +567,9 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                 break;
         }
     }
+
+
+
 
     private Callback<UserPostSettingResponse> userPostSettingResponseCallback = new Callback<UserPostSettingResponse>() {
         @Override
@@ -1043,4 +1169,6 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                 break;
         }
     }
+
+
 }

@@ -80,7 +80,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
     private GroupPostResult selectedPost;
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
-    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView,emptyListTextView;
+    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView, emptyListTextView;
     private View overlayView;
     private Animation slideAnim, fadeAnim;
     private UserPostSettingResult currentPostPrefsForUser;
@@ -371,6 +371,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 break;
         }
     }
+
 
 
     private Callback<UserPostSettingResponse> userPostSettingResponseCallback = new Callback<UserPostSettingResponse>() {

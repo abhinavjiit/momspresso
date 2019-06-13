@@ -24,6 +24,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Spannable;
@@ -77,6 +78,7 @@ import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsListingActivity;
@@ -167,6 +169,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     private TaskFragment mTaskFragment;
     private MediaRecorder mRecorder;
     private String mFileName;
+    private Boolean myFeed = false;
     private FirebaseAuth mAuth;
     private Uri originalUri;
     private Uri contentURI;
@@ -293,6 +296,9 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         position = extras.getInt("position");
         groupId = extras.getInt("groupId");
         postId = extras.getInt("postId");
+        if (extras.containsKey("myfeed")) {
+            myFeed = true;
+        }
 
         addCommentTextView.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
@@ -647,8 +653,10 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             if (getActivity() instanceof GroupDetailsActivity) {
                                 ((GroupDetailsActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap, groupId, postId);
 
+
                             }
-                        } else {
+
+                        }else {
                             if (getActivity() instanceof GroupPostDetailActivity)
                                 ((GroupPostDetailActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), mediaMap);
                             else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity)

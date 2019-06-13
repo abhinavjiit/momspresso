@@ -774,6 +774,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 @Override
                 public void onClick(View v) {
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
+
                         AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                         FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
                         Bundle _args = new Bundle();
@@ -1316,7 +1317,6 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 @Override
                 public void onClick(View v) {
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
-
                         AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
                         FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
                         Bundle _args = new Bundle();
@@ -1664,6 +1664,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     public interface RecyclerViewClickListener {
         void onGroupPostRecyclerItemClick(View view, int position);
+
     }
 
 }

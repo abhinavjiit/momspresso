@@ -97,6 +97,7 @@ import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
+import com.mycity4kids.ui.fragment.GroupMyFeedFragment;
 import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
@@ -152,6 +153,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<Topics> shortStoriesTopicList;
     private ArrayList<Topics> videoTopicList;
     private String parentTopicId;
+    int groupId;
+    int postId;
+    Map<String, String> image;
+    private String content;
     private ArrayList<Topics> subTopicsList;
     public boolean filter = false;
     Tracker t;
@@ -2962,7 +2967,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 Uri.parse("http://www.momspresso.com/parenting/admin/setupablog"));
                 startActivity(viewIntent);
             }
+
+
         }
     }
+
 
 }
