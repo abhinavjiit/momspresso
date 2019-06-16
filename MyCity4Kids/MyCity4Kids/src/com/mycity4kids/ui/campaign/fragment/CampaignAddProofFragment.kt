@@ -20,10 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.EditText
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import com.kelltontech.network.Response
@@ -46,6 +43,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_add_proof.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -169,6 +167,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var toolbarTitle: TextView
     private lateinit var back: TextView
     private lateinit var textAddUrlProof: TextView
+    private lateinit var linearInstruction: LinearLayout
 
     companion object {
         @JvmStatic
@@ -203,6 +202,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             }
         }
 
+        linearInstruction= view.findViewById(R.id.linearInstruction)
         textAddUrlProof = view.findViewById(R.id.textAddUrlProof)
         textAddUrlProof.setOnClickListener {
             var isEmpty = false
@@ -407,10 +407,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         })
     }
 
-    /*/*this will fetch proof instruction from server*/*/
+    /*this will fetch proof instruction from server*/
     private fun fetchProofInstruction() {
         showProgressDialog(resources.getString(R.string.please_wait))
-        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getProofInstruction(114).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofInstructionResult>> {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getProofInstruction(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofInstructionResult>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -431,8 +431,9 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                     if (!readBuilder.isEmpty()) {
                         getOffset(readBuilder.toString(), textInstruction)
                     }
+                    linearInstruction.visibility = View.VISIBLE
                 } else {
-
+                    linearInstruction.visibility = View.GONE
                 }
             }
 

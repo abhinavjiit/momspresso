@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -14,6 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextAppearance="@style/ToolbarTheme.Title">
+
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/back"
             android:layout_width="wrap_content"
@@ -26,11 +28,13 @@
             android:textColor="#515151"
             android:textSize="20sp"
             app:fontName="oswald_regular.ttf" />
+
         <RelativeLayout
             android:id="@+id/toolbarRelativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible">
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/selectOptToolbarTitle"
                 android:layout_width="wrap_content"
@@ -49,6 +53,7 @@
                 android:textSize="20sp"
                 android:visibility="visible"
                 app:fontName="oswald_regular.ttf" />
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textSubmit"
                 android:layout_width="wrap_content"
@@ -72,16 +77,19 @@
                 app:fontName="oswald.ttf" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintRight_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
         <RelativeLayout
             android:id="@+id/relativeProof"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/addScreenShotTextView"
                 android:layout_width="match_parent"
@@ -98,6 +106,7 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
+
             <RelativeLayout
                 android:id="@+id/relativeMediaProof"
                 android:layout_width="match_parent"
@@ -107,6 +116,7 @@
                 android:background="#0DEB3955"
                 android:gravity="center"
                 android:visibility="visible">
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerMediaProof"
                     android:layout_width="match_parent"
@@ -123,12 +133,14 @@
                     android:layout_marginRight="0dp"
                     android:orientation="horizontal" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/headerTextViewContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relativeMediaProof"
                 android:layout_marginTop="10dp">
+
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/addlinkTextView"
                     android:layout_width="match_parent"
@@ -141,6 +153,7 @@
                     android:visibility="visible"
                     app:fontName="oswald_regular.ttf" />
             </RelativeLayout>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerUrlProof"
                 android:name="com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment"
@@ -152,37 +165,54 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:background="#0DEB3955" />
+
+            <LinearLayout
+                android:id="@+id/linearInstruction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:visibility="gone"
+                android:layout_below="@+id/textAddUrlProof"
+                android:background="@drawable/shape_rectangle_red"
+                android:orientation="vertical">
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/proofInstruction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="READ THIS FIRST"
-                android:layout_marginTop="20dp"
-                android:textColor="@color/campaign_515151"
-                android:textSize="17sp"
-                android:layout_below="@+id/textAddUrlProof"
-                app:fontName="oswald_regular.ttf"/>
+                android:text="Proof Instructions"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textInstruction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="web"
+                android:layout_below="@+id/proofInstruction"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/campaign_list_buttons"
                 android:textColorLink="#0000ee"
-                android:textSize="15sp"
-                android:layout_below="@+id/proofInstruction"
-                app:fontName="open_sans.ttf"/>
+                app:fontName="open_sans.ttf" />
+            </LinearLayout>
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textFaq"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textInstruction"
+                android:layout_below="@+id/linearInstruction"
                 android:layout_marginTop="20dp"
-                android:paddingLeft="12dp"
+                android:paddingLeft="18dp"
                 android:text="FAQS"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerFaqs"
                 android:name="com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment"
@@ -196,6 +226,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textFaq"
                 app:layout_constraintVertical_bias="0.0" />
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/textAddUrlProof"
                 android:layout_width="40dp"
