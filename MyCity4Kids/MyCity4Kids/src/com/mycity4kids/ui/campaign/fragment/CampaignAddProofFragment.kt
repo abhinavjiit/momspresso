@@ -6,10 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -155,6 +160,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private var campaignUrlProofList: ArrayList<CampaignProofResponse> = arrayListOf()
     private var campaignId: Int = 60
     private lateinit var textSubmit: TextView
+    private lateinit var textInstruction: TextView
     private lateinit var deliverableTypeList: ArrayList<Int>
     private lateinit var submitListener: SubmitListener
     private lateinit var relativeMediaProof: RelativeLayout
@@ -250,6 +256,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         urlProofRecyclerAdapter = UrlProofRecyclerAdapter(campaignUrlProofList, this)
         recyclerUrlProof.adapter = urlProofRecyclerAdapter
 
+        textInstruction = view.findViewById(R.id.textInstruction)
+
         textSubmit = view.findViewById<TextView>(R.id.textSubmit)
         textSubmit.setOnClickListener {
             if (!validateUrlProofs() || !validateMediaProofs()) {
@@ -306,6 +314,10 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                     faqs.addAll(response.data!!.result.faqs as ArrayList)
                     faqRecyclerAdapter.notifyDataSetChanged()
                     Log.e("adapter size is ", faqRecyclerAdapter.itemCount.toString())
+
+
+                     /*this will fetch proof instruction from server*/
+                    fetchProofInstruction()
                 } else {
                 }
             }
@@ -393,6 +405,48 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 Log.e("exception in error", e.message.toString())
             }
         })
+    }
+
+    /*/*this will fetch proof instruction from server*/*/
+    private fun fetchProofInstruction() {
+        showProgressDialog(resources.getString(R.string.please_wait))
+        BaseApplication.getInstance().campaignRetrofit.create(CampaignAPI::class.java).getProofInstruction(114).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofInstructionResult>> {
+            override fun onComplete() {
+                removeProgressDialog()
+            }
+
+            override fun onSubscribe(d: Disposable) {
+
+            }
+
+            override fun onNext(response: BaseResponseGeneric<ProofInstructionResult>) {
+                if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
+                        response.data != null && response.data!!.result != null && response.data!!.result.readThis != null
+                        && !response.data!!.result.readThis!!.instructions.isNullOrEmpty()) {
+                    val readBuilder = StringBuilder()
+                    for (instructions in response.data!!.result.readThis!!.instructions!!) {
+                        if (!instructions.isNullOrEmpty() && !instructions.equals(""))
+                            readBuilder.append("\u2022" + "  " + instructions + "\n")
+                    }
+                    if (!readBuilder.isEmpty()) {
+                        getOffset(readBuilder.toString(), textInstruction)
+                    }
+                } else {
+
+                }
+            }
+
+            override fun onError(e: Throwable) {
+                removeProgressDialog()
+                Log.e("exception in error", e.message.toString())
+            }
+        })
+    }
+
+    private fun getOffset(instruction: String, textView: TextView) {
+        textView.setText(instruction)
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setHighlightColor(Color.TRANSPARENT);
     }
 
     /*Post proof on server*/
@@ -585,4 +639,6 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         fun proofSubmitDone()
     }
 }
+
+
 
