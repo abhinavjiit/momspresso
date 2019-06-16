@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -168,25 +169,6 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                 Call<CityConfigResponse> cityCall = cityConfigAPI.getCityConfig();
                 cityCall.enqueue(cityConfigResponseCallback);
 
-//                if (responseData.getData().get(0).getResult().getKids() == null) {
-//                } else {
-//                    int position = 0;
-//                    for (KidsModel km : responseData.getData().get(0).getResult().getKids()) {
-//                        addKidView(km, position);
-//                        position++;
-//                    }
-//
-//                }
-//                firstNameEditText.setText(responseData.getData().get(0).getResult().getFirstName());
-//                emailTextView.setText(responseData.getData().get(0).getResult().getEmail());
-//                lastNameEditText.setText(responseData.getData().get(0).getResult().getLastName());
-//                blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
-//                describeSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
-//
-//                if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
-//                } else {
-//                    phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile());
-//                }
             } else {
             }
         }
@@ -233,8 +215,8 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                         }
                     }
 
+//                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.contact_details)));
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.contact_details)));
-                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.about_txt)));
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.rewards_tab_detail)));
 
                     AppUtils.changeTabsFont(EditProfileNewActivity.this, tabLayout);
@@ -292,10 +274,10 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
     private void saveUserDetails() {
         UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
-        if (viewPager.getCurrentItem() == 1) {
+        if (viewPager.getCurrentItem() == 0) {
             updateUserDetail.setUserBio(viewPagerAdapter.getAbout().getAboutEditText().getText().toString().trim() + "");
-        } else {
-            String[] nameArr = viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().trim().split("\\s+");
+
+            String[] nameArr = viewPagerAdapter.getAbout().getFullNameEditText().getText().toString().trim().split("\\s+");
             updateUserDetail.setFirstName((nameArr[0]));
 
             if (nameArr.length < 2 || StringUtils.isNullOrEmpty(nameArr[1].trim())) {
@@ -304,20 +286,21 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                 updateUserDetail.setLastName(nameArr[1]);
             }
 
-            if (StringUtils.isNullOrEmpty(viewPagerAdapter.getContactdetails().getPhoneEditText().getText().toString().trim())) {
+            if (StringUtils.isNullOrEmpty(viewPagerAdapter.getAbout().getPhoneEditText().getText().toString().trim())) {
 //                updateUserDetail.setMobile(" ");
             } else {
-                updateUserDetail.setMobile(viewPagerAdapter.getContactdetails().getPhoneEditText().getText().toString().trim() + "");
+                updateUserDetail.setMobile(viewPagerAdapter.getAbout().getPhoneEditText().getText().toString().trim() + "");
             }
 
-            if (viewPagerAdapter.getContactdetails().getSelectedCityId() != 0) {
-                updateUserDetail.setCityId("" + viewPagerAdapter.getContactdetails().getSelectedCityId());
-                updateUserDetail.setCityName("" + viewPagerAdapter.getContactdetails().getCurrentCityName());
+            if (viewPagerAdapter.getAbout().getSelectedCityId() != 0) {
+                updateUserDetail.setCityId("" + viewPagerAdapter.getAbout().getSelectedCityId());
+                updateUserDetail.setCityName("" + viewPagerAdapter.getAbout().getCurrentCityName());
             }
         }
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
         Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(updateUserDetail);
+        Log.d("request to server", new Gson().toJson(updateUserDetail));
         call.enqueue(userDetailsUpdateResponseListener);
     }
 
@@ -332,7 +315,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 Toast.makeText(EditProfileNewActivity.this, getString(R.string.app_settings_edit_profile_update_success), Toast.LENGTH_SHORT).show();
                 UserInfo model = SharedPrefUtils.getUserDetailModel(EditProfileNewActivity.this);
-                String[] nameArr = viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().trim().split("\\s+");
+                String[] nameArr = viewPagerAdapter.getAbout().getFullNameEditText().getText().toString().trim().split("\\s+");
                 model.setFirst_name(nameArr[0]);
                 if (nameArr.length < 2 || StringUtils.isNullOrEmpty(nameArr[1].trim())) {
                     model.setLast_name(" ");
@@ -340,7 +323,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     model.setLast_name(nameArr[1]);
                 }
                 SharedPrefUtils.setUserDetailModel(EditProfileNewActivity.this, model);
-                if (viewPagerAdapter.getContactdetails().getSelectedCityId() != 0) {
+                if (viewPagerAdapter.getAbout().getSelectedCityId() != 0) {
                     updateEventsResourcesConfigForCity();
                 }
             } else {
@@ -361,15 +344,15 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
         MetroCity model = new MetroCity();
 
-        model.setId(viewPagerAdapter.getContactdetails().getSelectedCityId());
-        model.setName(viewPagerAdapter.getContactdetails().getCurrentCityName());
-        model.setNewCityId(viewPagerAdapter.getContactdetails().getCurrentCityName());
+        model.setId(viewPagerAdapter.getAbout().getSelectedCityId());
+        model.setName(viewPagerAdapter.getAbout().getCurrentCityName());
+        model.setNewCityId(viewPagerAdapter.getAbout().getCurrentCityName());
 
         SharedPrefUtils.setCurrentCityModel(this, model);
         SharedPrefUtils.setChangeCityFlag(this, true);
 
-        if (viewPagerAdapter.getContactdetails().getSelectedCityId() > 0) {
-            versionApiModel.setCityId(viewPagerAdapter.getContactdetails().getSelectedCityId());
+        if (viewPagerAdapter.getAbout().getSelectedCityId() > 0) {
+            versionApiModel.setCityId(viewPagerAdapter.getAbout().getSelectedCityId());
 //            mFirebaseAnalytics.setUserProperty("CityId", cityModel.getCityId() + "");
 
             String version = AppUtils.getAppVersion(this);
@@ -499,21 +482,19 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
     }
 
     private boolean validateFields() {
-        if (viewPager.getCurrentItem() == 1) {
+
+        try {
             if (TextUtils.isEmpty(viewPagerAdapter.getAbout().getAboutEditText().getText())) {
                 Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_empty), Toast.LENGTH_SHORT).show();
                 return false;
             }
-        } else {
-            try {
-                if (StringUtils.isNullOrEmpty(viewPagerAdapter.getContactdetails().getFullNameEditText().getText().toString().trim())) {
-                    Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_fn_empty), Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            } catch (Exception e) {
-
+            if (StringUtils.isNullOrEmpty(viewPagerAdapter.getAbout().getFullNameEditText().getText().toString().trim())) {
+                Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_fn_empty), Toast.LENGTH_SHORT).show();
                 return false;
             }
+        } catch (Exception e) {
+
+            return false;
         }
         return true;
     }

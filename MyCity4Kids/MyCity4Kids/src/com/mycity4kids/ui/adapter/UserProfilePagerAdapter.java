@@ -11,7 +11,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.EditProfileNewActivity;
 import com.mycity4kids.ui.fragment.About;
 import com.mycity4kids.ui.fragment.Contactdetails;
 import com.mycity4kids.ui.fragment.RewardsTabFragment;
@@ -44,19 +43,13 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
         bundle.putParcelable("userDetail", userDetailResult);
         bundle.putParcelableArrayList("cityList", mDatalist);
         switch (position) {
-            case 1:
+            case 0:
                 if (about == null) {
                     about = new About();
                 }
                 about.setArguments(bundle);
                 return about;
-            case 0:
-                if (contactdetails == null) {
-                    contactdetails = new Contactdetails();
-                }
-                contactdetails.setArguments(bundle);
-                return contactdetails;
-            case 2:
+            case 1:
                 Utils.campaignEvent(context, "Rewards 1st screen", "Edit Profile", "Rewards", "", "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
                 if (rewardsFragment == null) {
                     rewardsFragment = new RewardsTabFragment();
@@ -70,7 +63,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     public About getAbout() {
