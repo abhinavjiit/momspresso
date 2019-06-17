@@ -3,6 +3,7 @@ package com.mycity4kids.ui.fragment;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.request.AddRemoveKidsRequest;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.CityInfoItem;
@@ -36,7 +38,9 @@ import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.response.UserDetailResult;
 import com.mycity4kids.models.user.KidsInfo;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
+import com.mycity4kids.ui.activity.ChangePasswordActivity;
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter;
 import com.mycity4kids.widget.KidsInfoNewCustomView;
 
@@ -51,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class About extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class About extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener,CityListingDialogFragment.IChangeCity {
 
     private boolean isEditFlag = false;
     private int kidsViewPosition;
@@ -70,6 +74,16 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     private RelativeLayout addKidContainer;
     private AppCompatSpinner genderSpinner;
     int position;
+    TextView editmail;
+    private TextView emailTextView, cityTextView, handleNameTextView;
+    private EditText phoneEditText, fullNameEditText;
+    //    private UserDetailResult userDetail;
+//    private ArrayList<CityInfoItem> cityList;
+    private CityListingDialogFragment cityFragment;
+    private String currentCityName;
+    private String newSelectedCityId;
+    private int selectedCityId;
+    private TextView changePassTextView;
 
     @Nullable
     @Override
@@ -124,6 +138,41 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
                 position++;
             }
         }
+
+        emailTextView = (TextView) view.findViewById(R.id.emailTextView);
+        handleNameTextView = (TextView) view.findViewById(R.id.handleNameTextView);
+        phoneEditText = (EditText) view.findViewById(R.id.phoneEditText);
+        cityTextView = (TextView) view.findViewById(R.id.cityTextView);
+        fullNameEditText = (EditText) view.findViewById(R.id.fullNameEditText);
+        changePassTextView = (TextView) view.findViewById(R.id.changePasswordTextView);
+
+        userDetail = getArguments().getParcelable("userDetail");
+        cityList = getArguments().getParcelableArrayList("cityList");
+
+        cityTextView.setOnClickListener(this);
+        changePassTextView.setOnClickListener(this);
+
+        emailTextView.setText("" + userDetail.getEmail());
+        handleNameTextView.setText("" + userDetail.getBlogTitle());
+        fullNameEditText.setText("" + userDetail.getFirstName() + " " + userDetail.getLastName());
+        if (userDetail.getPhone() != null) {
+            if (userDetail.getPhone().getMobile() != null && userDetail.getPhone().getMobile().contains("+91")) {
+                phoneEditText.setText("" + userDetail.getPhone().getMobile().replace("+91", ""));
+            } else {
+                phoneEditText.setText("" + userDetail.getPhone().getMobile());
+            }
+        }
+        MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(getActivity());
+        for (int i = 0; i < cityList.size(); i++) {
+            int cId = Integer.parseInt(cityList.get(i).getId().replace("city-", ""));
+            if (currentCity.getId() == cId) {
+                cityList.get(i).setSelected(true);
+                cityTextView.setText(cityList.get(i).getCityName());
+            } else {
+                cityList.get(i).setSelected(false);
+            }
+        }
+
         return view;
     }
 
@@ -152,7 +201,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
                     Bundle _args = new Bundle();
                     _args.putParcelable("editKidInfo", km);
                     editKidInfoDialogFragment.setArguments(_args);
-                  //  editKidInfoDialogFragment.setTargetFragment(About.this, 1111);
+                    //  editKidInfoDialogFragment.setTargetFragment(About.this, 1111);
                     editKidInfoDialogFragment.setCancelable(true);
                     editKidInfoDialogFragment.show(fm, "Choose video option");
                 }
@@ -183,6 +232,21 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
                     kidsInfoActionType = "ADD";
                     saveKidsInfo();
                 }
+                break;
+
+            case R.id.cityTextView:
+                cityFragment = new CityListingDialogFragment();
+                // cityFragment.setTargetFragment(this, 0);
+                Bundle _args = new Bundle();
+                _args.putParcelableArrayList("cityList", cityList);
+                _args.putString("fromScreen", "editProfile");
+                cityFragment.setArguments(_args);
+                FragmentManager fm = getChildFragmentManager();
+                cityFragment.show(fm, "Replies");
+                break;
+            case R.id.changePasswordTextView:
+                Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+                startActivity(intent);
                 break;
         }
     }
@@ -378,6 +442,23 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
+    @Override
+    public void onCitySelect(CityInfoItem cityItem) {
+        cityTextView.setText(cityItem.getCityName());
+        currentCityName = cityItem.getCityName();
+        selectedCityId = Integer.parseInt(cityItem.getId().replace("city-", ""));
+        newSelectedCityId = cityItem.getId();
+    }
+
+    @Override
+    public void onOtherCitySelect(int pos, String cityName) {
+        currentCityName = cityName;
+        selectedCityId = Integer.parseInt(cityList.get(pos).getId().replace("city-", ""));
+        newSelectedCityId = cityList.get(pos).getId();
+        cityList.get(pos).setCityName("Others(" + cityName + ")");
+        cityTextView.setText(cityList.get(pos).getCityName());
+    }
+
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         boolean cancel;
@@ -436,5 +517,30 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     public EditText getAboutEditText() {
         return aboutEditText;
     }
+
+    public TextView getHandleNameTextView() {
+        return handleNameTextView;
+    }
+
+    public EditText getPhoneEditText() {
+        return phoneEditText;
+    }
+
+    public EditText getFullNameEditText() {
+        return fullNameEditText;
+    }
+
+    public String getCurrentCityName() {
+        return currentCityName;
+    }
+
+    public int getSelectedCityId() {
+        return selectedCityId;
+    }
+
+    public String getNewSelectedCityId() {
+        return newSelectedCityId;
+    }
 }
+
 

@@ -6,6 +6,7 @@ import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.ui.campaign.*
+import com.mycity4kids.ui.campaign.fragment.ProofInstructionResult
 import com.mycity4kids.ui.mymoneytracker.model.TrackerDataModel
 import io.reactivex.Observable
 import retrofit2.Call
@@ -95,4 +96,7 @@ interface CampaignAPI {
     fun getAllCampaignTotalPayout(@Path("userId") userId: String? = null)
             : Call<AllCampaignTotalPayoutResponse>
 
+
+    @GET("rewards/v1/campaigns/proofs/instructions/{campaignId}")
+    fun getProofInstruction(@Path("campaignId") campaignId : Int): Observable<BaseResponseGeneric<ProofInstructionResult>>
 }

@@ -90,8 +90,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             notificationCampaignSubmitProof = ""
         }
 
-
-
         if (!notificationCampaignSubmitProof.equals("", true)) {
             deeplinkCampaignId = notificationCampaignSubmitProof.toInt()
         }
@@ -110,6 +108,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         } else {
             addCampaginDetailFragment(deeplinkCampaignId)
         }
+
+        addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>)
 
     }
 
