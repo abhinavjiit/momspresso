@@ -12,20 +12,22 @@
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="10dp"
         android:layout_marginLeft="18dp"
         android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_marginBottom="20dp"
         android:src="@drawable/default_article" />
 
     <ImageView
         android:id="@+id/videoIndicatorImageView"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="43dp"
         android:layout_marginStart="43dp"
+        android:layout_marginLeft="43dp"
         android:layout_marginTop="10dp"
         android:src="@drawable/ic_videos" />
 
@@ -34,15 +36,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/articleImageView"
-        android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
         android:layout_toEndOf="@+id/articleImageView"
         android:layout_toRightOf="@+id/articleImageView"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingBottom="5dp"
         android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:text="@string/title"
         android:textColor="@color/article_listing.title"
         android:textSize="14sp"
@@ -52,9 +54,9 @@
         android:id="@+id/dateTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/articleTitleTextView"
-        android:layout_alignStart="@+id/articleTitleTextView"
         android:layout_below="@+id/articleTitleTextView"
+        android:layout_alignStart="@+id/articleTitleTextView"
+        android:layout_alignLeft="@+id/articleTitleTextView"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/title"
@@ -62,15 +64,95 @@
         android:textSize="12sp"
         app:fontName="oswald.ttf" />
 
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/viewCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/articleImageView"
+        android:layout_alignLeft="@+id/articleImageView"
+        android:drawableLeft="@drawable/ic_views"
+        android:drawablePadding="4dp"
+        android:gravity="center"
+        android:paddingLeft="2dp"
+        android:paddingTop="@dimen/space_5"
+        android:text="0"
+        android:textColor="@color/article_listing.stats"
+        android:textSize="14sp"
+        app:fontName="open_sans.ttf" />
+
+    <View
+        android:id="@+id/separatorView1"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_alignBottom="@+id/viewCountTextView"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:layout_toEndOf="@+id/viewCountTextView"
+        android:layout_toRightOf="@+id/viewCountTextView"
+        android:background="@color/common_underline" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/commentCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txvAuthorName"
+        android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_alignBottom="@+id/viewCountTextView"
+        android:layout_marginLeft="11dp"
+        android:layout_toRightOf="@+id/viewCountTextView"
+        android:drawableLeft="@drawable/ic_comments"
+        android:drawablePadding="4dp"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/article_listing.stats"
+        android:textSize="14sp"
+        app:fontName="open_sans.ttf" />
+
+    <View
+        android:id="@+id/separatorView2"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_alignBottom="@+id/viewCountTextView"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:layout_toEndOf="@+id/commentCountTextView"
+        android:layout_toRightOf="@+id/commentCountTextView"
+        android:background="@color/common_underline" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/recommendCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txvAuthorName"
+        android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_alignBottom="@+id/viewCountTextView"
+        android:layout_marginLeft="11dp"
+        android:layout_toRightOf="@+id/commentCountTextView"
+        android:drawableLeft="@drawable/ic_likes"
+        android:drawablePadding="4dp"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/user_articles.published.stats"
+        android:textSize="14sp"
+        app:fontName="open_sans.ttf" />
+
+
     <ImageView
         android:id="@+id/shareImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/articleTitleTextView"
         android:layout_alignEnd="@+id/dateTextView"
         android:layout_alignRight="@+id/dateTextView"
-        android:layout_below="@+id/articleTitleTextView"
-        android:layout_marginRight="18dp"
         android:layout_marginTop="5dp"
+        android:layout_marginRight="18dp"
         android:background="@drawable/unfollow_topic_author_bg"
         android:padding="6dp"
         android:src="@drawable/ic_share_white" />
@@ -80,8 +162,9 @@
         android:layout_height="1dp"
         android:layout_below="@+id/articleImageView"
         android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="25dp"
         android:background="@color/light_grey1" />
+
 
 </RelativeLayout>

@@ -52,6 +52,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     private lateinit var textLater: TextView
     private var isComingFromRewards: Boolean = false
     private lateinit var back: TextView
+    private var defaultId: Int = -1
     private var str: String? = null
 
     override fun onRadioButton(position: Int) {
@@ -59,6 +60,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         for (i in 0..allPaymantModes!!.size - 1) {
             if (i == position) {
                 allPaymantModes[position].isDefault = true
+                defaultId = allPaymantModes[position].id
             } else {
                 allPaymantModes[i].isDefault = false
             }
@@ -85,7 +87,9 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                             CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
                             .commit()
                 } else {
-                    submitOnClickListener.onPaymentModeDone()
+                    val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].id
+                    postApiForDefaultPaymantMode(paymentModeId)
+                    submitOnClickListener.onPaymentModeDone(paymentModeId)
                 }
             } else {
                 val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
@@ -195,7 +199,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         }
 
         textLater.setOnClickListener {
-            submitOnClickListener.onPaymentModeDone()
+            submitOnClickListener.onPaymentModeDone(-1)
         }
 
         // Set the adapter
@@ -237,6 +241,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                         allPaymantModes[0].isChecked = true
                         allPaymantModes[0].accountNumber = allPaymentData.default!!.account_number
                         allPaymantModes[0].id = response.data!!.result!!.default!!.id
+                        defaultId = response.data!!.result!!.default!!.id
 
                         availableList.addAll(response.data!!.result.available as List<PaymentModesModal>)
                         for (i in 0..availableList!!.size - 1) {
@@ -292,7 +297,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     }
 
     interface SubmitListener {
-        fun onPaymentModeDone()
+        fun onPaymentModeDone(paymentModeId:Int)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

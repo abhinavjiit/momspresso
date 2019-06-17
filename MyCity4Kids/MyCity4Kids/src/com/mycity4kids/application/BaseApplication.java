@@ -68,7 +68,7 @@ public class BaseApplication extends Application {
     private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
     private static BaseApplication mInstance;
-    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards;
+    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, testRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;
@@ -242,7 +242,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getCampaignRetrofit() {
         if (null == campaignRewards) {
-            createRetrofitInstanceForCampaign(AppConstants.DEV_REWARDS_URL);
+            createRetrofitInstanceForCampaign("http://35.200.142.199/");
         }
         return campaignRewards;
     }
@@ -255,10 +255,10 @@ public class BaseApplication extends Application {
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-                requestBuilder.addHeader("id", "0721da6e2e36482f813c2c9716fe8bdb");
-                requestBuilder.addHeader("mc4kToken", "cf4dbeddb83144689e647e5b508fc680");
-//                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-//                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+               /* requestBuilder.addHeader("id", "0721da6e2e36482f813c2c9716fe8bdb");
+                requestBuilder.addHeader("mc4kToken", "cf4dbeddb83144689e647e5b508fc680");*/
+                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
                 requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
                 requestBuilder.addHeader("model", Build.MODEL);
@@ -556,6 +556,13 @@ public class BaseApplication extends Application {
     public Retrofit getRetrofit() {
         if (null == retrofit) {
             createRetrofitInstance(SharedPrefUtils.getBaseURL(this));
+        }
+        return retrofit;
+    }
+
+    public Retrofit getArticleRetrofit() {
+        if (null == retrofit) {
+            createRetrofitInstance("http://35.200.142.199/");
         }
         return retrofit;
     }

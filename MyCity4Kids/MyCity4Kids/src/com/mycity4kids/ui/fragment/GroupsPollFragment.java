@@ -28,6 +28,8 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdatePostSettingsRequest;
@@ -45,6 +47,8 @@ import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsEditPostActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
+import com.mycity4kids.ui.activity.PrivateProfileActivity;
+import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.ui.adapter.MyFeedPollGenericRecyclerAdapter;
@@ -76,7 +80,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
     private int totalPostCount;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private GroupResult selectedGroup;
-    private String memberType;
+    private String memberType, userDynamoId;
     private GroupPostResult selectedPost;
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
@@ -130,6 +134,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         deletePostTextView.setOnClickListener(this);
         blockUserTextView.setOnClickListener(this);
         pinPostTextView.setOnClickListener(this);
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -369,9 +374,33 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 //                postSettingsContainer.setVisibility(View.VISIBLE);
 //                overlayView.setVisibility(View.VISIBLE);
                 break;
+
+            case R.id.userImageView:
+            case R.id.usernameTextView:
+
+                if (postList.get(position).getIsAnnon() == 0) {
+
+                    if (userDynamoId.equals(postList.get(position).getUserId())) {
+//                    MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+//                    Bundle mBundle0 = new Bundle();
+//                    fragment0.setArguments(mBundle0);
+//                    if (isAdded())
+//                        ((ShortStoriesListingContainerActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+                        Intent pIntent = new Intent(getActivity(), PrivateProfileActivity.class);
+                        startActivity(pIntent);
+                    } else {
+                        Utils.groupsEvent(getActivity(), "Groups_Discussion", "profile image", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "User Profile", "", "");
+
+                        Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
+                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
+                        intentnn.putExtra(AppConstants.AUTHOR_NAME, postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                    }
+                }
+                break;
         }
     }
-
 
 
     private Callback<UserPostSettingResponse> userPostSettingResponseCallback = new Callback<UserPostSettingResponse>() {

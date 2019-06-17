@@ -16,6 +16,17 @@
         android:clipToPadding="false"
         android:paddingBottom="70dp" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/seenVideos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="2dp"
+        android:background="@color/white"
+        android:clipToPadding="false"
+        android:visibility="gone"
+        android:paddingBottom="70dp" />
+
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/noBlogsTextView"
         android:layout_width="wrap_content"
@@ -99,8 +110,8 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:paddingLeft="40dp"
-            android:paddingRight="40dp"
             android:paddingTop="16dp"
+            android:paddingRight="40dp"
             android:text="@string/upload_video.title"
             android:textColor="@color/upload_video.title"
             android:textSize="15sp"
@@ -114,10 +125,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="11dp"
             android:gravity="center"
-            android:paddingBottom="15dp"
             android:paddingLeft="40dp"
-            android:paddingRight="40dp"
             android:paddingTop="15dp"
+            android:paddingRight="40dp"
+            android:paddingBottom="15dp"
             android:text="@string/upload_video.desc"
             android:textColor="@color/upload_video.desc"
             android:textSize="14sp"
@@ -131,10 +142,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/unfollow_topic_author_bg"
-            android:paddingBottom="15dp"
             android:paddingLeft="35dp"
-            android:paddingRight="35dp"
             android:paddingTop="15dp"
+            android:paddingRight="35dp"
+            android:paddingBottom="15dp"
             android:text="@string/upload_video.get_started"
             android:textColor="@color/white"
             android:textSize="16sp"
