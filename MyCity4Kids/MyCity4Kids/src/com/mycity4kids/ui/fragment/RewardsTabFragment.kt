@@ -141,7 +141,7 @@ class RewardsTabFragment : Fragment() {
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     if (responseData.data!!.size > 0) {
                         totalPayout = responseData.data.get(0).result.get(0).total_payout
-                        textTotalPayout.setText("\u20b9 " + totalPayout)
+                        textTotalPayout.setText("\u20b9" + totalPayout)
                     }
                 } else {
                 }

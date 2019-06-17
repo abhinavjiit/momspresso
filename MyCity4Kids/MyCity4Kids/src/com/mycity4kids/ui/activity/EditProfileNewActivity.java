@@ -224,12 +224,12 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     viewPagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), userDetails, mDatalist, isRewardsAdded, EditProfileNewActivity.this);
                     viewPager.setAdapter(viewPagerAdapter);
                     if (isComingFromReward) {
-                        viewPager.setCurrentItem(2);
+                        viewPager.setCurrentItem(1);
                         saveTextView.setVisibility(View.GONE);
                     }
 
                     if (isComingfromCampaign) {
-                        viewPager.setCurrentItem(2);
+                        viewPager.setCurrentItem(1);
                         saveTextView.setVisibility(View.GONE);
                     } else {
                         viewPager.setCurrentItem(0);
@@ -239,7 +239,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
-                            if (tab.getPosition() == 2) {
+                            if (tab.getPosition() == 1) {
                                 saveTextView.setVisibility(View.GONE);
                             } else {
                                 saveTextView.setVisibility(View.VISIBLE);
@@ -254,7 +254,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 
                         @Override
                         public void onTabReselected(TabLayout.Tab tab) {
-
+                            viewPager.setCurrentItem(tab.getPosition());
                         }
                     });
                 } else {

@@ -42,7 +42,7 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
 
         private CampaignDetail campaign_details;
         private int final_payout;
-        private String payment_meta;
+        private PaymentMeta payment_meta;
         private int payment_status;
 
 
@@ -62,11 +62,11 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
             this.final_payout = final_payout;
         }
 
-        public String getPayment_meta() {
+        public PaymentMeta getPayment_meta() {
             return payment_meta;
         }
 
-        public void setPayment_meta(String payment_meta) {
+        public void setPayment_meta(PaymentMeta payment_meta) {
             this.payment_meta = payment_meta;
         }
 
@@ -98,6 +98,136 @@ public class AllCampaignTotalPayoutResponse extends BaseResponse {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+    }
+
+    public class PaymentMeta {
+        private Account account;
+        private int id;
+        private Double net_amount;
+        private String source;
+        private String status;
+        private Double tax_amount;
+        private int tax_percentage;
+        private Double total_amount;
+        private Transaction transaction;
+
+        public Account getAccount() {
+            return account;
+        }
+
+        public void setAccount(Account account) {
+            this.account = account;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public Double getNet_amount() {
+            return net_amount;
+        }
+
+        public void setNet_amount(Double net_amount) {
+            this.net_amount = net_amount;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public Double getTax_amount() {
+            return tax_amount;
+        }
+
+        public void setTax_amount(Double tax_amount) {
+            this.tax_amount = tax_amount;
+        }
+
+        public int getTax_percentage() {
+            return tax_percentage;
+        }
+
+        public void setTax_percentage(int tax_percentage) {
+            this.tax_percentage = tax_percentage;
+        }
+
+        public Double getTotal_amount() {
+            return total_amount;
+        }
+
+        public void setTotal_amount(Double total_amount) {
+            this.total_amount = total_amount;
+        }
+
+        public Transaction getTransaction() {
+            return transaction;
+        }
+
+        public void setTransaction(Transaction transaction) {
+            this.transaction = transaction;
+        }
+
+
+    }
+
+    public class Account {
+        private String account_number;
+        private int id;
+
+        public String getAccount_number() {
+            return account_number;
+        }
+
+        public void setAccount_number(String account_number) {
+            this.account_number = account_number;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+    }
+
+    public class Transaction {
+        private String code;
+        private String status;
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
         }
 
     }

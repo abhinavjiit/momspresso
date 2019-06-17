@@ -90,7 +90,8 @@
         <RelativeLayout
             android:id="@+id/relative_one"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_10">
 
             <View
                 android:id="@+id/green_dot"
@@ -130,7 +131,8 @@
             android:id="@+id/relative_two"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/relative_one">
+            android:layout_below="@id/relative_one"
+            android:layout_marginTop="@dimen/space_8">
 
             <View
                 android:id="@+id/red_dot"
@@ -181,7 +183,8 @@
             android:id="@+id/relative_three"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/view1">
+            android:layout_below="@id/view1"
+            android:layout_marginTop="@dimen/space_5">
 
             <View
                 android:id="@+id/blue_dot"

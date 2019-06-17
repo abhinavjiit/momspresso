@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.AllCampaignTotalPayoutResponse
-import com.mycity4kids.models.campaignmodels.QuestionAnswerResponse
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_item.view.*
 import kotlinx.android.synthetic.main.recycler_myearning.view.*
 
 class EarningRecyclerAdapter(
@@ -37,9 +36,17 @@ class EarningRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (payoutsList!!.size>0) {
+        if (payoutsList!!.size > 0) {
             val item = payoutsList!!.get(position)
             Picasso.with(context).load(item.campaignDetails.brandDetails.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.brandImageView)
+            holder.settleAmount.setText("\u20b9" + item.final_payout)
+            holder.brandName.setText(item.campaignDetails.brandDetails.name)
+            holder.campaignName.setText(item.campaignDetails.name)
+            holder.totalAmount.setText("\u20b9" + item.final_payout)
+            holder.netAmount.setText("\u20b9" + item.payment_meta.net_amount)
+            holder.tds.setText("TDS(" + item.payment_meta.tax_percentage + "%)")
+            holder.paymentStatus.setText(setStatus(item.payment_status, holder))
+            holder.taxAmount.setText("-\u20b9" + item.payment_meta.tax_amount)
             holder.relativeOne.setOnClickListener {
                 if (holder.relativeTwo.visibility == View.GONE) {
                     holder.relativeTwo.visibility = View.VISIBLE
@@ -54,10 +61,30 @@ class EarningRecyclerAdapter(
         }
     }
 
+    private fun setStatus(payment_status: Int, holder: ViewHolder): String {
+        var status: String = ""
+        if (payment_status == 0 || payment_status == 2) {
+            status = "In Process"
+            holder.paymentStatus.setTextColor(context.resources.getColor(R.color.color_F5A623))
+        } else if (payment_status == 1) {
+            status = "Completed"
+            holder.paymentStatus.setTextColor(context.resources.getColor(R.color.color_56CD6A))
+        }
+        return status;
+    }
+
     override fun getItemCount(): Int = payoutsList!!.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         var brandImageView: ImageView = mView.brandImageView
+        var settleAmount: TextView = mView.settle_amount
+        var totalAmount: TextView = mView.total_amount
+        var netAmount: TextView = mView.net_amount
+        var paymentStatus: TextView = mView.payment_status
+        var brandName: TextView = mView.brand_name
+        var campaignName: TextView = mView.campaign_name
+        var tds: TextView = mView.tds
+        var taxAmount: TextView = mView.tds_amount
         var relativeOne: RelativeLayout = mView.first
         var relativeTwo: RelativeLayout = mView.second
 

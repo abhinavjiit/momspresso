@@ -39,7 +39,7 @@ class MyTotalEarningActivity : BaseActivity() {
         recyclerEarnings = findViewById<RecyclerView>(R.id.recyclerEarnings)
         recyclerEarnings.layoutManager = LinearLayoutManager(this)
 
-        textTotalPayout.text = "\u20b9 " + totalPayout
+        textTotalPayout.text = "\u20b9" + totalPayout
         earningRecyclerAdapter = EarningRecyclerAdapter(totalPayoutResponse,this)
         recyclerEarnings.adapter = earningRecyclerAdapter
 
