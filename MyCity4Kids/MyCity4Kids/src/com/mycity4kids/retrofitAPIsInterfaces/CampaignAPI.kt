@@ -85,4 +85,14 @@ interface CampaignAPI {
 
     @POST("/payments/v1/user/pan/")
     fun addPanNumber(@Body proofPostModel: ProofPostModel): Observable<BaseResponseGeneric<ProofPostModel>>
+
+    @GET("/rewards/v1/users/payments/counts/{userId}")
+    fun getTotalPayout(@Path("userId") userId: String? = null)
+            : Call<TotalPayoutResponse>
+
+
+    @GET("/rewards/v1/users/payments/{userId}")
+    fun getAllCampaignTotalPayout(@Path("userId") userId: String? = null)
+            : Call<AllCampaignTotalPayoutResponse>
+
 }

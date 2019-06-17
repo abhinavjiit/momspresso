@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/first"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_20">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/brandImageView"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_20"
+            android:src="@drawable/family_xxhdpi"
+            app:civ_border_color="@color/app_red"
+            app:civ_border_width="2dp" />
+
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/brand_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/space_15"
+            android:layout_marginTop="@dimen/space_15"
+            android:text="@string/total_earning"
+            android:layout_toRightOf="@id/brandImageView"
+            android:textColor="@color/campaign_515151"
+            android:textSize="18sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/campaign_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/brand_name"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/space_15"
+            android:layout_marginTop="@dimen/space_5"
+            android:layout_toRightOf="@id/brandImageView"
+            android:text="@string/total_earning"
+            android:textColor="@color/campaign_expired"
+            android:textSize="14sp"
+            app:fontName="open_sans.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/settle_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/space_15"
+            android:layout_marginRight="@dimen/space_15"
+            android:text="456"
+            android:textColor="@color/campaign_515151"
+            android:textSize="18sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/payment_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/settle_amount"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/space_5"
+            android:layout_marginRight="@dimen/space_15"
+            android:text="In Process"
+            android:textColor="@color/campaign_515151"
+            android:textSize="13sp"
+            app:fontName="open_sans.ttf" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/second"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/first"
+        android:background="@color/kids_detail"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/relative_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/green_dot"
+                android:layout_width="@dimen/space_8"
+                android:layout_height="@dimen/space_8"
+                android:layout_marginLeft="@dimen/space_90"
+                android:layout_marginTop="@dimen/space_8"
+                android:background="@drawable/black_dot"
+                android:backgroundTint="#46A857" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/earning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_8"
+                android:layout_toRightOf="@id/green_dot"
+                android:text="Earnings"
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="13sp"
+                app:fontName="open_sans_bold.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/total_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/space_8"
+                android:layout_marginRight="@dimen/space_15"
+                android:text="512"
+                android:textColor="@color/campaign_4A4A4A"
+                android:textSize="13sp"
+                app:fontName="open_sans_bold.ttf" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/relative_one">
+
+            <View
+                android:id="@+id/red_dot"
+                android:layout_width="@dimen/space_8"
+                android:layout_height="@dimen/space_8"
+                android:layout_marginLeft="@dimen/space_90"
+                android:layout_marginTop="@dimen/space_8"
+                android:background="@drawable/black_dot"
+                android:backgroundTint="#CD2B3F" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/tds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_8"
+                android:layout_toRightOf="@id/red_dot"
+                android:text="TDS"
+                android:textColor="#9E9E9E"
+                android:textSize="13sp"
+                app:fontName="open_sans_bold.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/tds_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/space_8"
+                android:layout_marginRight="@dimen/space_15"
+                android:text="512"
+                android:textColor="#9E9E9E"
+                android:textSize="13sp"
+                app:fontName="open_sans_bold.ttf" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/relative_two"
+            android:layout_marginLeft="@dimen/space_90"
+            android:layout_marginTop="@dimen/space_10"
+            android:layout_marginRight="@dimen/space_15"
+            android:layout_marginBottom="@dimen/space_10"
+            android:background="#E5E5E5" />
+
+        <RelativeLayout
+            android:id="@+id/relative_three"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view1">
+
+            <View
+                android:id="@+id/blue_dot"
+                android:layout_width="@dimen/space_8"
+                android:layout_height="@dimen/space_8"
+                android:layout_marginLeft="@dimen/space_90"
+                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginBottom="@dimen/space_15"
+                android:background="@drawable/black_dot"
+                android:backgroundTint="#50E3C2" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/net_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_8"
+                android:layout_toRightOf="@id/blue_dot"
+                android:text="Net payment"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:fontName="open_sans_bold.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/net_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/space_8"
+                android:layout_marginRight="@dimen/space_15"
+                android:text="456"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:fontName="open_sans_bold.ttf" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

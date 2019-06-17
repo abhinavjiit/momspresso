@@ -1180,6 +1180,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="dialog_invite_only_subtext">Click below to apply for future ‘invite only’ campaigns.</string>
     <string name="title_activity_tracker">TrackerActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="my_money_dashboard">MY MONEY DASHBOARD</string>
+    <string name="total_earning">Total Earnings</string>
 
 
     <string name="social_page_add_social_accounts">ADD SOCIAL ACCOUNTS</string>

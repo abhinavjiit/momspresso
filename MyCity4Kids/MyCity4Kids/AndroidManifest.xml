@@ -515,6 +515,9 @@
             android:name=".ui.videochallengenewui.activity.NewVideoChallengeActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.MyTotalEarningActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.ParallelFeedActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.rankingTheme" />
