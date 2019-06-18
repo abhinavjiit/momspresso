@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.QuestionAnswerResponse
@@ -38,7 +39,7 @@ class FaqRecyclerAdapter(
         holder.textQuestion.text = item.question
         holder.textAnswer.text = item.answer
 
-        holder.imageDown.setOnClickListener {
+        holder.one.setOnClickListener {
             if (holder.textAnswer.visibility == View.GONE) {
                 holder.textAnswer.visibility = View.VISIBLE
                 holder.imageDown.rotation = 180f
@@ -60,6 +61,7 @@ class FaqRecyclerAdapter(
         val textQuestion: TextView = mView.textQuestion
         val textAnswer: TextView = mView.textAnswer
         val imageDown: ImageView = mView.imageDown
+        val one: RelativeLayout = mView.one
 
     }
 }

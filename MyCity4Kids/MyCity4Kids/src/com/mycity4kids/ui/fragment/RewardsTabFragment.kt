@@ -12,6 +12,8 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.crashlytics.android.Crashlytics
+import com.kelltontech.network.Response
+import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
@@ -24,7 +26,11 @@ import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import retrofit2.Call
 import retrofit2.Callback
 
-class RewardsTabFragment : Fragment() {
+class RewardsTabFragment : BaseFragment() {
+    override fun updateUi(response: Response?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private lateinit var textStartReward: TextView
     private lateinit var containerView: View
     private lateinit var textPersonalInfo: View
@@ -35,6 +41,7 @@ class RewardsTabFragment : Fragment() {
     private lateinit var textTotalPayout: TextView
     private lateinit var linearConnectivity: LinearLayout
     private lateinit var relativeParticipate: RelativeLayout
+    private lateinit var myEarningLayout: RelativeLayout
     private var totalPayout: Int = 0
 
     private var isRewardsAdded = "0"
@@ -51,6 +58,7 @@ class RewardsTabFragment : Fragment() {
         textMyEarning = containerView.findViewById(R.id.textMyEarning)
         textTotalPayout = containerView.findViewById(R.id.totalearning)
         linearConnectivity = containerView.findViewById(R.id.linearConnectivity)
+        myEarningLayout = containerView.findViewById(R.id.myearning_layout)
         relativeParticipate = containerView.findViewById(R.id.relativeParticipate)
 
         fetchTotalEarning()
@@ -91,7 +99,7 @@ class RewardsTabFragment : Fragment() {
             startActivity(intent)
         }
 
-        textMyEarning.setOnClickListener {
+        myEarningLayout.setOnClickListener {
             //            Utils.campaignEvent(activity, "myearning", "rewards_tab", "myearningText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "my_earning")
 
             var intent = Intent(activity, MyTotalEarningActivity::class.java)
@@ -120,17 +128,18 @@ class RewardsTabFragment : Fragment() {
     }
 
     private fun fetchTotalEarning() {
+        showProgressDialog(resources.getString(R.string.please_wait))
         var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        val retro = BaseApplication.getInstance().campaignRetrofit
+        val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
-        val call = campaignAPI.getTotalPayout("0721da6e2e36482f813c2c9716fe8bdb")
+        val call = campaignAPI.getTotalPayout(userId)
         call.enqueue(getTotalPayout)
     }
 
 
     private val getTotalPayout = object : Callback<TotalPayoutResponse> {
         override fun onResponse(call: Call<TotalPayoutResponse>, response: retrofit2.Response<TotalPayoutResponse>) {
-//            removeProgressDialog()
+            removeProgressDialog()
             if (response == null || null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
                 Crashlytics.logException(nee)
@@ -141,9 +150,13 @@ class RewardsTabFragment : Fragment() {
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     if (responseData.data!!.size > 0) {
                         totalPayout = responseData.data.get(0).result.get(0).total_payout
-                        textTotalPayout.setText("\u20b9" + totalPayout)
+                        if (totalPayout > 0)
+                            textTotalPayout.setText("\u20b9" + totalPayout)
+                        else
+                            textTotalPayout.visibility = View.GONE
                     }
                 } else {
+                    textTotalPayout.visibility = View.GONE
                 }
             } catch (e: Exception) {
                 Crashlytics.logException(e)
@@ -152,7 +165,7 @@ class RewardsTabFragment : Fragment() {
         }
 
         override fun onFailure(call: Call<TotalPayoutResponse>, t: Throwable) {
-//            removeProgressDialog()
+            removeProgressDialog()
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
