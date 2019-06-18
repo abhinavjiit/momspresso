@@ -55,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class About extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener,CityListingDialogFragment.IChangeCity {
+public class About extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener, CityListingDialogFragment.IChangeCity {
 
     private boolean isEditFlag = false;
     private int kidsViewPosition;
@@ -66,6 +66,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
     private LinearLayout childInfoContainer;
     private static TextView dobTextView;
     EditText aboutEditText;
+    TextView kidsNameTV;
     LinearLayout aboutprofilemaincontainer;
     private UserDetailResult userDetail;
     private ArrayList<CityInfoItem> cityList;
@@ -193,12 +194,14 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
             kidsInfo1.getEditKidInfoIV().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    postKidsData();
                     isEditFlag = true;
                     kidsViewPosition = position;
                     viewInEditMode = kidsInfo1;
                     editKidInfoDialogFragment = new EditKidInfoDialogFragment();
                     FragmentManager fm = getChildFragmentManager();
                     Bundle _args = new Bundle();
+                    km.setName(kidsModelArrayList.get(position).getName());
                     _args.putParcelable("editKidInfo", km);
                     editKidInfoDialogFragment.setArguments(_args);
                     //  editKidInfoDialogFragment.setTargetFragment(About.this, 1111);
@@ -266,7 +269,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
             View innerLayout = childInfoContainer.getChildAt(position);
 
             final TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kidsDOBTextView);
-            TextView kidsNameTV = (TextView) innerLayout.findViewById(R.id.nameTextView);
+            kidsNameTV = (TextView) innerLayout.findViewById(R.id.nameTextView);
             TextView genderTV = (TextView) innerLayout.findViewById(R.id.genderTextView);
 
             KidsInfo kidsInformation = new KidsInfo();
@@ -328,6 +331,48 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
         UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
         Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(addCityAndKidsInformationRequest);
         call.enqueue(updateKidsInfoResponseListener);
+    }
+
+    private void postKidsData() {
+        kidsModelArrayList = new ArrayList<>();
+        ArrayList<KidsInfo> kidsList = getEnteredKidsInfo();
+
+        kidsModelArrayList = new ArrayList<>();
+        for (KidsInfo ki : kidsList) {
+            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
+            kmodel.setName(ki.getName());
+            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(ki.getDate_of_birth());
+            if (bdaytimestamp != 0) {
+                kmodel.setBirthDay(bdaytimestamp * 1000);
+            } else {
+                if (isAdded())
+                    Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            kmodel.setGender(ki.getGender());
+            kidsModelArrayList.add(kmodel);
+        }
+
+        if ("ADD".equals(kidsInfoActionType)) {
+            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
+            if (StringUtils.isNullOrEmpty(kidNameEditText.getText().toString())) {
+                kmodel.setName(" ");
+            } else {
+                kmodel.setName(kidNameEditText.getText().toString());
+            }
+
+            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(kidsDOBTextView.getText().toString());
+            kmodel.setBirthDay(bdaytimestamp * 1000);
+
+            if ("Male".equals(genderSpinner.getSelectedItem().toString())) {
+                kmodel.setGender("0");
+            } else {
+                kmodel.setGender("1");
+            }
+            kidsModelArrayList.add(kmodel);
+        }
+
+
     }
 
     public void saveEditKidInfo(KidsInfo kidsinfo) {

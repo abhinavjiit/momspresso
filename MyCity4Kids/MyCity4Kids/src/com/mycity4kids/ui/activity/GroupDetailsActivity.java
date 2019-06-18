@@ -1128,7 +1128,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     currentPostPrefsForUser = new UserPostSettingResult();
                     currentPostPrefsForUser.setId(jObject.getJSONObject("data").getJSONObject("result").getInt("id"));
                     if (jObject.getJSONObject("data").getJSONObject("result").getBoolean("notificationOff")) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }
@@ -1168,7 +1168,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     UserPostSettingResponse userPostSettingResponse = response.body();
                     currentPostPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
                     if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }
@@ -1828,7 +1828,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         //No existing settings for this post for this user
         if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
             savePostTextView.setText(getString(R.string.groups_save_post));
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
             currentPostPrefsForUser = null;
             return;
         }
@@ -1840,7 +1840,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
 
         if (currentPostPrefsForUser.getNotificationOff() == 1) {
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
         } else {
             notificationToggleTextView.setText("DISABLE NOTIFICATION");
         }

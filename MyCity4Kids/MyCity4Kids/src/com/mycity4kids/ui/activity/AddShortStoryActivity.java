@@ -931,8 +931,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         }
 
 
-                    }
-                    else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
+                    } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
 
 
                         if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
@@ -1052,7 +1051,9 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
     public void requestStoragePermissions() {
         // BEGIN_INCLUDE(contacts_permission_request)
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+        if (ActivityCompat.checkSelfPermission(AddShortStoryActivity.this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

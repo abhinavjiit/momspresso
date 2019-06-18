@@ -29,9 +29,9 @@ public class GroupsViewFragment extends BaseFragment {
         tabLayout = fragmentView.findViewById(R.id.tablayout);
 
 
-        tabLayout.addTab(tabLayout.newTab().setText("Groups"));
-        tabLayout.addTab(tabLayout.newTab().setText("My Feed"));
-        tabLayout.addTab(tabLayout.newTab().setText("Polls"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_groups_myfeed)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_myfeed)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_polls)));
 
         AppUtils.changeTabsFont(getActivity(), tabLayout);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

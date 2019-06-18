@@ -4,9 +4,14 @@
     <string name="app_name">মম্স্প্রেস্সো</string>
     <string name="unknown_person">অজানা</string>
     <string name="resend_email">ইমেল পুনরায় পাঠান</string>
+    <string name="groups.other_groups">Oঅন্যান্য গ্রুপস </string>
+    <string name="groups_enable_notification">নোটিফিকেশন সক্রিয় করুন </string>
+
+
 
     <string name="write_review_prompt">আপনি কি পর্যালোচনা করতে চান ?</string>
-
+    <string name="groups_sections_polls">পোল</string>
+    <string name="groups_sections_myfeed">আমার ফিড </string>
     <string name="loading_txt">লোডিং &#8230;</string>
 
     <string name="subcategoryName">subCagegory</string>
@@ -708,6 +713,7 @@
     <string name="groups.unpin_post">এই পোস্টটি কে আনপিন  করুন</string>
     <string name="groups.all_groups">সকল গ্রুপ</string>
     <string name="groups.groups">গ্রুপ</string>
+    <string name="groups_groups_myfeed">গ্রুপ</string>
     <string name="groups.join_label">আপনি যে সকল গ্রুপের  সদস্য</string>
     <string name="groups.reported_content">যে বস্তুটিকে রিপোর্ট করা হয়েছে</string>
     <string name="groups.reported_by">যাদের দ্বারা রিপোর্ট হয়েছে</string>

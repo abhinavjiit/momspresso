@@ -700,21 +700,26 @@
     <string name="groups.block_member">Block Member</string>
     <string name="groups.remove_post">తీసేయండి Post</string>
     <string name="groups.save_post">Save Post</string>
-    <string name="groups.delete_post">Delete Post</string>
+    <string name="groups.delete_post">పోస్ట్ తొలగించండి </string>
     <string name="groups.turn_notification_on">నోటిఫికేషన్స్ ఆన్ </string>
     <string name="groups.turn_notification_off">నోటిఫికేషన్స్ ఆఫ్ </string>
     <string name="groups.enable_comment">Enable Comments</string>
     <string name="groups.disable_comment">Disable Comments</string>
     <string name="groups.report_post">ఈ పోస్ట్ రిపోర్ట్ చేయండి </string>
-    <string name="groups.block_this_user">Block This User</string>
-    <string name="groups.pin_post">Pin This Post To Top</string>
-    <string name="groups.unpin_post">Unpin This post</string>
+    <string name="groups.block_this_user">ఈ యూజర్‌ని బ్లాక్ చేయండి </string>
+    <string name="groups.pin_post">ఈ పోస్టును పైన పిన్ చేయండి </string>
+    <string name="groups.unpin_post">ఈ పోస్ట్ unpin చేయండి </string>
     <string name="groups.all_groups">మొత్తం గ్రూపులు </string>
     <string name="groups.groups">గ్రూపులో</string>
+    <string name="groups_sections_polls">ఎన్నికలు </string>
+    <string name="groups_groups_myfeed">గ్రూపులు</string>
+
+    <string name="groups_sections_myfeed">నా గురించి</string>
+
     <string name="groups.reported_by">Reported By</string>
     <string name="groups.persons">Persons</string>
     <string name="groups.no_action">No Action</string>
-    <string name="groups.block_user">Block User</string>
+    <string name="groups.block_user">యూజర్‌ని బ్లాక్ చేయండి </string>
     <string name="groups.hide_content">Hide Content</string>
     <string name="groups.invite_members">INVITE MEMBERS</string>
     <string name="groups.invite_family">మీరు మీ స్నేహితులను మరియు కుటుంబ సభ్యులను ఆహ్వానించండి </string>
@@ -758,9 +763,10 @@
     <string name="groups.user_blocked_msg">You have been blocked from this group</string>
     <string name="groups.user_membership_rejected_msg">Your membership has been rejected for this group</string>
     <string name="groups.join_group">గ్రూపులో జాయిన్ అవ్వండి </string>
-    <string name="groups.ask_something">Ask something ...</string>
+    <string name="groups.ask_something">Aఏదైనా అడగండి  ...</string>
     <string name="groups.post_label">పోస్టు</string>
     <string name="groups.edit_post">మార్చు పోస్టు</string>
+    <string name="groups.total_votes">మొత్తం ఓట్లు : %1$s</string>
 
     <string name="no_story.be_first">Be the first one to write stories in this category!</string>
 
@@ -909,17 +915,21 @@
     <string name="rewards_participating_earn_completing_profile">మీ ప్రొఫైల్ పూర్తి చేసి పాల్గొనండి మరియు సంపాదించండి!</string>
     <string name="rewards_momspresso">మామ్స్‌ప్రెస్సో రివార్ద్స్‌</string>
     <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
+    <string name="groups_section_myfeed">எனக்கான பதிவுகள்</string>
+    <string name="groups_enable_notification">నోటిఫికేషన్ అనుమతించు </string>
+
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="groups.other_groups">மற்ற குழுக்கள்</string>
 
     //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
-    <string name="group_add_comment_text">ADD COMMENT</string>
+    <string name="group_add_comment_text">వ్యాఖ్యలను జోడించండి</string>
     <string name="group_invite_text">Invite</string>
     <string name="group_comment_type_here_text">Type here</string>
-    <string name="group_comment_be_the_first_text">Be the first one to comment</string>
+    <string name="group_comment_be_the_first_text">கமென்ட் செய்வதில் முதல் நபராக இருங்கள்</string>
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>

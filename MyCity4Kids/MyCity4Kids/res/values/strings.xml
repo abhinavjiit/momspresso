@@ -800,6 +800,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.unpin_post">UNPIN THIS POST</string>
     <string name="groups.all_groups">ALL GROUPS</string>
     <string name="groups.other_groups">OTHER GROUPS</string>
+    <string name="groups_groups_myfeed">গ্রুপ</string>
+    <string name="groups_enable_notification">ENABLE NOTIFICATION</string>
+
     <string name="groups.groups">GROUPS</string>
     <string name="groups.reported_by">Reported By</string>
     <string name="groups.persons">Persons</string>
@@ -837,7 +840,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.sections.photos">PHOTOS</string>
     <string name="groups.sections.videos">VIDEOS</string>
     <string name="groups.sections.top_posts">TOP POSTS</string>
-    <string name="groups.sections.polls">POLLS</string>
+    <string name="groups_sections_polls">POLLS</string>
+    <string name="groups_sections_myfeed">My Feed</string>
     <string name="groups.search_in">Search</string>
     <string name="groups.join_form">JOINING FORM</string>
     <string name="groups.membership_pending">Membership Pending</string>

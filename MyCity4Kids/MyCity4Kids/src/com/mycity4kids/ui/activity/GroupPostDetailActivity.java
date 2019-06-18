@@ -937,7 +937,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         //No existing settings for this post for this user
         if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
             savePostTextView.setText(getString(R.string.groups_save_post));
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
             currentPostPrefsForUser = null;
             return;
         }
@@ -949,7 +949,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
 
         if (currentPostPrefsForUser.getNotificationOff() == 1) {
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
         } else {
             notificationToggleTextView.setText("DISABLE NOTIFICATION");
         }
@@ -1297,7 +1297,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     currentPostPrefsForUser = new UserPostSettingResult();
                     currentPostPrefsForUser.setId(jObject.getJSONObject("data").getJSONObject("result").getInt("id"));
                     if (jObject.getJSONObject("data").getJSONObject("result").getBoolean("notificationOff")) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }
@@ -1336,7 +1336,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 if (response.isSuccessful()) {
                     UserPostSettingResponse userPostSettingResponse = response.body();
                     if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }

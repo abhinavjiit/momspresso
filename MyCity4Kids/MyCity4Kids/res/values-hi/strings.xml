@@ -4,10 +4,16 @@
     <string name="app_name">मॉस्प्रेस्सो</string>
     <string name="unknown_person">अपरिचित</string>
     <string name="resend_email">रीसेंड ईमेल</string>
-
+    <string name="groups_sections_polls">POLLS</string>
+    <string name="groups_sections_myfeed">मेरी फीड </string>
     <string name="write_review_prompt">आप क्या रिव्यू करना चाहते हैं?</string>
 
     <string name="loading_txt">लोडिंग&#8230;</string>
+    <string name="groups.other_groups">अन्य ग्रुप्स </string>
+    <string name="groups_enable_notification">नोटिफिकेशन  सक्षम करें</string>
+
+
+
 
     <string name="subcategoryName">सब केटेगरी</string>
     <string name="location_info">व्यक्तिगत परिणाम के लिए, अपनी लोकेशन चुने</string>
@@ -15,6 +21,8 @@
     <string name="locality_txt">किस जगह पर?</string>
     <string name="error_network">यह उपकरण नेटवर्क क्षेत्र से बाहर है</string>
     <string name="please_wait">कृपया इंतज़ार करें...</string>
+    <string name="groups_groups_myfeed">গग्रुप्स</string>
+
     <string name="no_result_txt">कोई परिणाम नहीं मिला</string>
     <string name="went_wrong">कुछ गलत हो गया है </string>
     <string name="server_went_wrong">सर्वर में कुछ खराबी हो गयी है</string>

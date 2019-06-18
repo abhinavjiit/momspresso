@@ -3,7 +3,13 @@
 
     <string name="app_name">Momspresso</string>
     <string name="unknown_person">Unknown</string>
+
     <string name="resend_email">Resend Email</string>
+    <string name="groups_sections_polls">പോൾ</string>
+    <string name="groups_sections_myfeed">My Feed</string>
+
+    <string name="groups.other_groups">OTHER GROUPS</string>
+    <string name="groups_enable_notification">നോട്ടിഫിക്കേഷൻ സാധ്യമാക്കൂ </string>
 
     <string name="facebook_app_id">206155642763202</string>
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
@@ -700,6 +706,8 @@
     <string name="groups.unblock_member">UNBLOCK MEMBER</string>
     <string name="groups.block_member">BLOCK MEMBER</string>
     <string name="groups.remove_post">REMOVE POST</string>
+    <string name="groups_groups_myfeed">ഗ്രൂപ്പ് </string>
+
     <string name="groups.save_post">SAVE POST</string>
     <string name="groups.delete_post">DELETE POST</string>
     <string name="groups.turn_notification_on">Turn On Notification</string>
@@ -955,7 +963,6 @@
     <string name="rewards_kid_detail">കുട്ടിയെ കുറിച്ച്</string>
     <string name="rewards_participating_earn_completing_profile"> പ്രൊഫൈൽ പൂരിപ്പിക്കൂ, ഇതിൽ പങ്ക് ചേരൂ, സമ്പാദിക്കാൻ തുടങ്ങൂ!</string>
     <string name="rewards_momspresso">മോംസ്പ്രേസ്സോ റീവാർഡുകൾ</string>
-
 
 
     //new Video Challenge Ui Strings
