@@ -540,9 +540,12 @@
 
     <string name="video_progress.uploading_label">അപ്ലോഡുചെയ്യുന്നു ...</string>
     <string name="video_progress.uploading_msg">ദയവായി എക്സിറ്റ് ചെയ്യുകയോ അപ്ലിക്കേഷൻ നിർത്തുകയോ ചെയ്യരുത്, അങ്ങനെ ചെയ്‌താൽ അപ്‌ലോഡ് ക്യാൻസൽ ആകും. അപ്‌ലോഡ് ചെയ്യാൻ താങ്കൾക്ക് ഈ ആപ്ലിക്കേഷൻ ഉപയോഗിക്കാവുന്നതാണ്</string>
-    <string name="video_progress.way_to_go">വളരെ നന്നായി!</string>
-    <string name="video_progress.success_msg">വീഡിയോ വിജയകരമായി അപ്‌ലോഡ് ചെയ്ത് ക്രമീകരിക്കാനായി അയച്ചിരിക്കുന്നു. അത് ചെയ്ത് കഴിഞ്ഞാൽ താങ്കളെ അറിയിക്കുന്നതാണ്.</string>
-    <string name="video_progress.okay">ഓകെ</string>
+    <string name="video_progress.way_to_go">വളരെ നന്നായി!
+</string>
+    <string name="video_progress.success_msg">താങ്കൾ വീഡിയോ വിജയകരമായി അപ്‌ലോഡ് ചെയ്തിരിക്കുന്നു. ഈ വീഡിയോ രണ്ട്‌ ദിവസങ്ങൾക്കുള്ളിൽ മോഡറേറ്റ് ചെയ്യുന്നതാണ്. ഇതേക്കുറിച്ച് താങ്കളെ അറിയിക്കുന്നതുമാണ്.
+</string>
+    <string name="video_progress.okay">ശരി, മനസ്സിലായി
+</string>
     <string name="video_progress.uploading_failed">Uploading Failed.</string>
     <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
     <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>

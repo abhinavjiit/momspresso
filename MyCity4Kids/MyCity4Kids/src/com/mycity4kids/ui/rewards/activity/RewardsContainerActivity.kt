@@ -21,6 +21,7 @@ import android.util.Log
 import android.widget.Toast
 import com.mycity4kids.MessageEvent
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.campaignmodels.ProofPostModel
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
@@ -199,6 +200,7 @@ class RewardsContainerActivity : BaseActivity(),
         showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postForDefaultAccount(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
             override fun onComplete() {
+
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -206,11 +208,13 @@ class RewardsContainerActivity : BaseActivity(),
 
             override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
                 if (t != null) {
-                    if (t.code == 200 && t.status == "SUCCESS") {
+                    if (t.code == 200 && t.status == Constants.SUCCESS) {
                         removeProgressDialog()
                         this@RewardsContainerActivity.finish()
                     }
                 } else {
+                    removeProgressDialog()
+
                     Toast.makeText(this@RewardsContainerActivity, t.reason.toString(), Toast.LENGTH_SHORT).show()
 
                 }

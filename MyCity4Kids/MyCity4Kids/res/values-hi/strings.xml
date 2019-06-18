@@ -13,8 +13,6 @@
     <string name="groups_enable_notification">नोटिफिकेशन  सक्षम करें</string>
 
 
-
-
     <string name="subcategoryName">सब केटेगरी</string>
     <string name="location_info">व्यक्तिगत परिणाम के लिए, अपनी लोकेशन चुने</string>
     <string name="hint_text">आप क्या देखना चाह रहे हैं?</string>
@@ -532,9 +530,9 @@
 
     <string name="video_progress.uploading_label">अपलोड हो रहा है ...</string>
     <string name="video_progress.uploading_msg">"कृपया ऐप से बाहर न निकलें, यह आप अपलोड को रद्द कर देगा। "</string>
-    <string name="video_progress.way_to_go">आगे का मार्ग!</string>
-    <string name="video_progress.success_msg">वीडियो सफलतापूर्वक अपलोड हो गया है और मॉडरेशन के लिए भेजा गया है।मॉडरेशन के बाद हम आपको सूचित  करेंगे</string>
-    <string name="video_progress.okay">ठीक है</string>
+    <string name="video_progress.way_to_go">शुक्रिया</string>
+    <string name="video_progress.success_msg">आपका वीडियो सफलतापूर्वक अपलोड हो गया है। दो वर्किंग डेज में इसे मॉडरेट करने के बाद आपको सूचित किया जाएगा।</string>
+    <string name="video_progress.okay">गुड लक</string>
     <string name="video_progress.uploading_failed">अपलोडिंग फेल हो गयी</string>
     <string name="video_progress.uploading_error">आपका वीडियो अपलोड करते समय गलती हुई कृपया पुन: प्रयास करें।</string>
     <string name="video_progress.progress_lost_msg">आपकी अपलोड की प्रक्रिया  समाप्त हो  जाएगी. क्या आप निश्चित रूप से  बाहर निकलना चाहते हैं?</string>
@@ -954,13 +952,11 @@
     <string name="group_comment_start_type_here_text">Start Typing</string>
 
 
-
     <string name="about_video">चैलेंज के बारे में</string>
     <string name="myprofile.section.mom_bottom_label">मोम व्लॉग</string>
     <string name="all_videos.toolbar.title.homepage">Videos</string>
     <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
-
 
 
 </resources>

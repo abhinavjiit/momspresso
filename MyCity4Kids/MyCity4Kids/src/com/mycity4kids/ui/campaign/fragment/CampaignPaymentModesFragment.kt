@@ -88,7 +88,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                             .commit()
                 } else {
                     val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].id
-                    postApiForDefaultPaymantMode(paymentModeId)
+                 //   postApiForDefaultPaymantMode(paymentModeId)
                     submitOnClickListener.onPaymentModeDone(paymentModeId)
                 }
             } else {

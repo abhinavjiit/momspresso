@@ -528,8 +528,8 @@
 
     <string name="video_progress.uploading_label">பதிவேற்றுகிறது ...</string>
     <string name="video_progress.uploading_msg">App ஐ விட்டு வெளியேறவோ அல்லது அழிக்கவோ வேண்டாம், அது தானாக பதிவேற்றத்தை ரத்து செய்யும். பதிவேற்றும் போது App ஐ பயன்படுத்தலாம்.</string>
-    <string name="video_progress.way_to_go">மிக நன்று</string>
-    <string name="video_progress.success_msg">வீடியோ வெற்றிகரமாக பதிவேற்றப்பட்டு, தணிக்கைக்கு அனுப்பப்பட்டது. தணிக்கை முடிந்ததும் உங்களை அறிவிப்போம். </string>
+    <string name="video_progress.way_to_go">வாழ்த்துக்கள்.</string>
+    <string name="video_progress.success_msg">காணொளி வெற்றிகரமாக பதிவேற்றப்பட்டது. இரண்டு வேலை நாட்களில் மதிப்பாய்வு செய்து,  உங்களுக்கு  தகவல் அளிப்போம்.</string>
     <string name="video_progress.okay">சரி</string>
     <string name="video_progress.uploading_failed">பதிவேற்றம் தோல்வியடைந்தது.</string>
     <string name="video_progress.uploading_error">உங்கள் வீடியோவை பதிவேற்றும்போது பிழை ஏற்பட்டது. தயவு செய்து மீண்டும் முயற்சிக்கவும்.</string>

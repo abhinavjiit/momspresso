@@ -82,14 +82,14 @@ public class SeenVideosAdapter extends RecyclerView.Adapter<SeenVideosAdapter.Se
             holder.commentCountTextView.setVisibility(View.GONE);
         }
 
-        if (articleDataModelsNew.get(position).getComment_count() != null && !articleDataModelsNew.get(position).getComment_count().equals("0")) {
-            holder.viewCountTextView.setText(articleDataModelsNew.get(position).getComment_count());
+        if (articleDataModelsNew.get(position).getComment_count() != null && !articleDataModelsNew.get(position).getView_count().equals("0")) {
+            holder.viewCountTextView.setText(articleDataModelsNew.get(position).getView_count());
         } else {
             holder.viewCountTextView.setVisibility(View.GONE);
         }
 
-        if (articleDataModelsNew.get(position).getComment_count() != null && !articleDataModelsNew.get(position).getComment_count().equals("0")) {
-            holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getComment_count());
+        if (articleDataModelsNew.get(position).getComment_count() != null && !articleDataModelsNew.get(position).getLike_count().equals("0")) {
+            holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLike_count());
         } else {
             holder.recommendCountTextView.setVisibility(View.GONE);
         }

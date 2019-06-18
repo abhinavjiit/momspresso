@@ -527,9 +527,12 @@
 
     <string name="video_progress.uploading_label">UPLOADING ...</string>
     <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically.</string>
-    <string name="video_progress.way_to_go">WAY TO GO!</string>
-    <string name="video_progress.success_msg">Video has been successfully uploaded and sent for moderation. We will notify you once moderated.</string>
-    <string name="video_progress.okay">ঠিক আছে</string>
+    <string name="video_progress.way_to_go">অভিনন্দন!
+</string>
+    <string name="video_progress.success_msg">আপনার ভিডিওটি সফলভাবে আপলোড হয়ে গেছে এবং আগামী ২-টি কর্মদিবসের মধ্যে সেটিকে মডারেট করা হবে। মডারেট করা হয়ে গেলে আপনাকে সেই বিষয়ে সূচিত করা হবে।
+</string>
+    <string name="video_progress.okay">ধন্যবাদ।
+</string>
     <string name="video_progress.uploading_failed">Uploading Failed.</string>
     <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
     <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>

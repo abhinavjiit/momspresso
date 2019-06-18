@@ -620,9 +620,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     <string name="video_progress.uploading_label">UPLOADING ...</string>
     <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically.</string>
-    <string name="video_progress.way_to_go">WAY TO GO!</string>
-    <string name="video_progress.success_msg">Video has been successfully uploaded and sent for moderation. We will notify you once moderated.</string>
-    <string name="video_progress.okay">OKAY</string>
+    <string name="video_progress.way_to_go">Way to go!</string>
+    <string name="video_progress.success_msg">Video has been successfully uploaded and will be moderated within 2 working days. We will notify you once it is moderated.
+</string>
+    <string name="video_progress.okay">Okay, got it.</string>
     <string name="video_progress.uploading_failed">Uploading Failed.</string>
     <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
     <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
@@ -1184,6 +1185,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="dialog_invite_only_subtext">Click below to apply for future ‘invite only’ campaigns.</string>
     <string name="title_activity_tracker">TrackerActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="my_money_dashboard">MY MONEY DASHBOARD</string>
+    <string name="total_earning">Total Earnings</string>
 
 
     <string name="social_page_add_social_accounts">ADD SOCIAL ACCOUNTS</string>
