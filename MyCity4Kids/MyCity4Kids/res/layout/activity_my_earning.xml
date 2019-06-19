@@ -144,7 +144,7 @@
                     android:paddingRight="@dimen/space_20"
                     android:layout_marginTop="@dimen/space_35"
                     android:paddingBottom="10dp"
-                    android:text="Please participate in the campaigns to start earning"
+                    android:text="Please participate in ongoing campaigns to start earning"
                     android:textColor="@color/color_676767"
                     android:textSize="20sp"
                     android:visibility="gone"
