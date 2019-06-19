@@ -741,8 +741,10 @@
     <string name="groups.now_member_gp">You are now member of the group</string>
     <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
     <string name="groups.support_groups">സപ്പോർട്ട് ഗ്രൂപ്പുകൾ </string>
-    <string name="groups.post_helpful">Helpful</string>
-    <string name="groups.post_nothelpful">Not Helpful</string>
+    <string name="groups.post_helpful"></string>
+    <string name="groups.post_nothelpful"></string>
+    <string name="audio_post">ഓഡിയോ </string>
+
     <string name="groups.summary">SUMMARY</string>
     <string name="groups.add_image">ADD IMAGE</string>
     <string name="groups.image_poll">IMAGE POLL</string>
@@ -941,6 +943,10 @@
     <string name="rewards_non_working">"ജോലി ചെയ്യുന്നില്ല "</string>
     <string name="rewards_language">"ഭാഷ "</string>
     <string name="rewards_save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
+    <string name="reply_groups">Reply</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
+
     <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_participate">പ്രൊഫൈൽ പൂരിപ്പിക്കൂ, ഇതിൽ പങ്ക് ചേരൂ, സമ്പാദിക്കാൻ തുടങ്ങൂ!</string>
     <string name="save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
@@ -976,7 +982,7 @@
     //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
     <string name="group_add_comment_text">ADD COMMENT</string>
-    <string name="group_invite_text">Invite</string>
+    <string name="group_invite_text">ക്ഷണിക്കൂ</string>
     <string name="group_comment_type_here_text">Type here</string>
     <string name="group_comment_be_the_first_text">Be the first one to comment</string>
 

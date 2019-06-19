@@ -223,7 +223,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 textPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         textPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -257,7 +257,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 audioCommentViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         audioCommentViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -372,7 +372,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 mediaPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         mediaPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -453,7 +453,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 textPollPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         textPollPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -565,7 +565,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 imageHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         imageHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -675,7 +675,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else {
                 hideImagePollVotingData(imageHolder);
             }
-        } else if (holder instanceof AudioCommentViewHolder)  {
+        } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
 
             if (postCommentsList.get(position).getIsAnnon() == 1) {
@@ -786,7 +786,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
             } else {
                 audioCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-                audioCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
+                audioCommentViewHolder.replyCountTextView.setText(mContext.getString(R.string.view_group) + "(" + postCommentsList.get(position).getChildCount() + ")" + mContext.getString(R.string.replies));
             }
             audioCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + " " + localizedHelpful);
             audioCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
@@ -890,7 +890,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
             } else {
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-                rootCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
+                rootCommentViewHolder.replyCountTextView.setText(mContext.getString(R.string.view_group) + "(" + postCommentsList.get(position).getChildCount() + ")" + mContext.getString(R.string.replies));
             }
             rootCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + " " + localizedHelpful);
             rootCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);

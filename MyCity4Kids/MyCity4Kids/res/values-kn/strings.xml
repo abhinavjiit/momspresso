@@ -538,6 +538,8 @@
     <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
 
     <string name="video_progress.uploading_label">ಅಪ್ಲೋಡ್ ...</string>
+    <string name="audio_post">ಆಡಿಯೋ</string>
+
     <string name="video_progress.uploading_msg">ದಯವಿಟ್ಟು ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ನಿರ್ಗಮಿಸಲು ಅಥವಾ ಹೊರಹೋಗಬೇಡ, ಅಪ್ಲೋಡ್ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ರದ್ದುಗೊಳ್ಳುತ್ತದೆ. ಅಪ್ಲೋಡ್ ಮಾಡುವಾಗ ನೀವು ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಬಳಸಬಹುದು</string>
     <string name="video_progress.way_to_go">ಹೋಗಲು ದಾರಿ</string>
     <string name="video_progress.success_msg">ವೀಡಿಯೊವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಮಿತಗೊಳಿಸಲು ಕಳುಹಿಸಲಾಗಿದೆ. ಒಮ್ಮೆ ಪೂರ್ಣವಾದ ನಂತರ  ನಾವು ನಿಮಗೆ ತಿಳಿಸುತ್ತೇವೆ.</string>
@@ -735,8 +737,8 @@
     <string name="groups.now_member_gp">You are now member of the group</string>
     <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
     <string name="groups.support_groups">ಗುಂಪುಗಳನ್ನು ಬೆಂಬಲಿಸಿ</string>
-    <string name="groups.post_helpful">Helpful</string>
-    <string name="groups.post_nothelpful">Not Helpful</string>
+    <string name="groups.post_helpful"></string>
+    <string name="groups.post_nothelpful"></string>
     <string name="groups.summary">SUMMARY</string>
     <string name="groups.add_image">ADD IMAGE</string>
     <string name="groups.image_poll">IMAGE POLL</string>
@@ -949,6 +951,10 @@
     <string name="rewards_interest">ಆಸಕ್ತಿಗಳು</string>
     <string name="rewards_not_working">ಕೆಲಸ ಮಾಡದಿರುವುದು</string>
     <string name="rewards_are_expecing">ನಿರೀಕ್ಷಿಸು</string>
+    <string name="reply_groups">Reply</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
+
 
     <string name="cannot_be_left_blank">%1$s ಖಾಲಿ ಬಿಡುವಂತಿಲ್ಲ</string>
     <string name="please_enter_a_valid">ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದುದನ್ನು ನಮೂದಿಸಿ %1$s</string>
@@ -971,7 +977,7 @@
     //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
     <string name="group_add_comment_text">ADD COMMENT</string>
-    <string name="group_invite_text">Invite</string>
+    <string name="group_invite_text">ಆಮಂತ್ರಿಸಿ</string>
     <string name="group_comment_type_here_text">Type here</string>
     <string name="group_comment_be_the_first_text">Be the first one to comment</string>
 

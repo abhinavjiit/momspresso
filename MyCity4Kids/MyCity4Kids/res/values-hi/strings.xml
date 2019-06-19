@@ -522,6 +522,8 @@
     <string name="add_video_details.title_hint">वीडियो का टाइटल लिखें</string>
     <string name="add_video_details.mute_label">ध्वनि म्यूट करें</string>
     <string name="add_video_details.add_music">म्यूजिक ऐड करें</string>
+    <string name="audio_post">ऑडियो</string>
+
     <string name="add_video_details.remove">हटायें</string>
     <string name="add_video_details.error_empty_title">कृपया वीडियो का टाइटल  लिखें </string>
     <string name="add_video_details.save_upload">सेव करें और अपलोड करें </string>
@@ -913,6 +915,10 @@
     <string name="rewards_number_of_kids">"बच्चों की संख्या "</string>
     <string name="rewards_interest">रूचि</string>
     <string name="rewards_not_working">"गैर कामकाजी "</string>
+    <string name="reply_groups">रिप्लाई करें</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
+
     <string name="rewards_are_expecing">क्या आप माँ बनने वाली हैं ?</string>
 
     <string name="cannot_be_left_blank">%1$s इसे खाली नहीं छोड़ा जा सकता </string>
@@ -926,6 +932,8 @@
     <string name="rewards_kid_detail">बच्चों की डिटेल भरें।</string>
     <string name="rewards_participating_earn_completing_profile">अपने प्रोफाइल को अभी भरें और ईनामी योजना में हिस्सा ले कर लाभ कमाएं !</string>
     <string name="rewards_momspresso">मॉम्सप्रेस्सो ईनामी योजना</string>
+
+
 
 
     //new Video Challenge Ui Strings

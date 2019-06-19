@@ -520,6 +520,8 @@
     <string name="add_video_details.mute_label">MUTE SOUND</string>
     <string name="add_video_details.add_music">ADD MUSIC</string>
     <string name="add_video_details.remove">বাতিল করুন</string>
+    <string name="audio_post">অডিও </string>
+
     <string name="add_video_details.error_empty_title">Please enter the title of the video</string>
     <string name="add_video_details.save_upload">সংরক্ষিত &amp; UPLOAD</string>
     <string name="add_video_details.toolbar.title">ভিডিও উপলোড করুন</string>
@@ -915,6 +917,10 @@
     <string name="rewards_interest">"উৎসাহী "</string>
     <string name="rewards_not_working">"কর্মরতা নন "</string>
     <string name="rewards_are_expecing">"সন্তান সম্ভবা "</string>
+    <string name="reply_groups">উত্তর</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
+
 
     <string name="cannot_be_left_blank">%1$s খালি রাখা যাবে না</string>
     <string name="please_enter_a_valid">দয়া করে বৈধ এন্টার করুন %1$s</string>

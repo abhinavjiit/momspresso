@@ -731,8 +731,8 @@
     <string name="groups.now_member_gp">You are now member of the group</string>
     <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
     <string name="groups.support_groups">Support Groups</string>
-    <string name="groups.post_helpful">Helpful</string>
-    <string name="groups.post_nothelpful">Not Helpful</string>
+    <string name="groups.post_helpful"></string>
+    <string name="groups.post_nothelpful"></string>
     <string name="groups.summary">SUMMARY</string>
     <string name="groups.add_image">ADD IMAGE</string>
     <string name="groups.image_poll">IMAGE POLL</string>
@@ -788,6 +788,8 @@
     <string name="short_s.add_reply_fail">Failed to add reply. Please try again</string>
     <string name="short_s.edit_reply_fail">Failed to edit reply. Please try again</string>
     <string name="short_s.delete_reply_fail">Failed to delete reply. Please try again</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
 
     <string name="report.reason">हे उपयोगी नाही कारण</string>
     <string name="report.abuse">हे अपमानास्पद आहे.</string>
@@ -861,6 +863,7 @@
     <string name="challenge_write_story_for_this_picture">आपली कथा उपरोक्त चित्रावरून लिहा </string>
     <string name="choose_challenge_label">आव्हान स्वीकारा </string>
     <string name="start_writing">लिहायला सुरवात करा</string>
+    <string name="audio_post">ऑडिओ</string>
 
     <string name="male">पुरुष</string>
     <string name="female">महिला</string>
@@ -904,6 +907,8 @@
     <string name="rewards_interest">आवड</string>
     <string name="rewards_not_working">नॉन- वर्किंग</string>
     <string name="rewards_are_expecing">एक्स्पेक्टिंग (गरोदर)</string>
+    <string name="reply_groups">रिप्लाय द्या</string>
+
 
     <string name="cannot_be_left_blank">%1$s याला रिकामे ठेऊ शकत नाही</string>
     <string name="please_enter_a_valid">कृपया वैध नाव जमा करा %1$s</string>
@@ -931,7 +936,7 @@
     //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
     <string name="group_add_comment_text">टिप्पण्या जोडा</string>
-    <string name="group_invite_text">Invite</string>
+    <string name="group_invite_text">आमंत्रण</string>
     <string name="group_comment_type_here_text">Type here</string>
     <string name="group_comment_be_the_first_text">प्रथम टिप्पणी करणारे व्हा</string>
 

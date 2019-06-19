@@ -730,11 +730,13 @@
     <string name="groups.sure_leave_gp">Are you sure you want to leave this group</string>
     <string name="groups.leave">Leave</string>
     <string name="groups.membership_req">MEMBERSHIP REQUEST</string>
+    <string name="audio_post">ఆడియో</string>
+
     <string name="groups.now_member_gp">You are now member of the group</string>
     <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
     <string name="groups.support_groups">సపోర్ట్ గ్రూప్స్</string>
-    <string name="groups.post_helpful">ఉపయోగకరమైన </string>
-    <string name="groups.post_nothelpful">నిరుపయోగమైన</string>
+    <string name="groups.post_helpful"></string>
+    <string name="groups.post_nothelpful"></string>
     <string name="groups.summary">SUMMARY</string>
     <string name="groups.add_image">ఇమేజ్ జతచేయండి </string>
     <string name="groups.image_poll">ఇమేజ్ ఎన్నిక </string>
@@ -901,6 +903,10 @@
     <string name="rewards_number_of_kids">పిల్లల సంఖ్య</string>
     <string name="rewards_interest">అభిరుచులు</string>
     <string name="rewards_not_working">"నాన్ వర్కింగ్ "</string>
+    <string name="reply_groups">రిప్లై</string>
+    <string name="view_group">చూడండి</string>
+    <string name="replies">ిప్లై</string>
+
     <string name="rewards_are_expecing">"గర్భవతిని  "</string>
 
     <string name="cannot_be_left_blank">%1$s ఖాళీగా వదిలేయకండి</string>
@@ -927,8 +933,8 @@
     //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
     <string name="group_add_comment_text">వ్యాఖ్యలను జోడించండి</string>
-    <string name="group_invite_text">Invite</string>
-    <string name="group_comment_type_here_text">Type here</string>
+    <string name="group_invite_text">ఆహ్వానించండి </string>
+    <string name="group_comment_type_here_text">ఇక్కడ టైప్ చేయండి</string>
     <string name="group_comment_be_the_first_text">கமென்ட் செய்வதில் முதல் நபராக இருங்கள்</string>
 
     //tooltip groups

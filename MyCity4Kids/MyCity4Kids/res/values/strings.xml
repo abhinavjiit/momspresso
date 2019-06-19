@@ -801,7 +801,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.unpin_post">UNPIN THIS POST</string>
     <string name="groups.all_groups">ALL GROUPS</string>
     <string name="groups.other_groups">OTHER GROUPS</string>
-    <string name="groups_groups_myfeed">গ্রুপ</string>
+    <string name="groups_groups_myfeed">GROUPS</string>
     <string name="groups_enable_notification">ENABLE NOTIFICATION</string>
 
     <string name="groups.groups">GROUPS</string>
@@ -873,6 +873,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="short_s.choose_one_genre">Choose the genre that best describes the content of your story. You can choose only 1 genre.</string>
     <string name="short_s.no_drafts">No short story drafted as yet</string>
     <string name="short_s.no_published">No short story published as yet</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
     <string name="short_s.view_replies">View replies</string>
     <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
@@ -1083,6 +1085,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
     <string name="dialog_header_choose_sort_type">Sort by</string>
+    <string name="reply_groups">Reply</string>
 
 
     //groupdetail Activity toast String
@@ -1095,6 +1098,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="audio_post">AUDIO</string>
     <string name="rewards_instagram_handler">Enter your Instagram handle</string>
     <string name="rewards_facebook_handler">Connect your Facebook</string>
     <string name="rewards_participate_and_earn"><![CDATA[Participate & Earn]]></string>

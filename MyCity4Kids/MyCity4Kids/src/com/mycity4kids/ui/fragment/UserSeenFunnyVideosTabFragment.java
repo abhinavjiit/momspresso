@@ -315,6 +315,7 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
                 articleDataModelsNew = dataList;
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
                 articlesListingAdapter.notifyDataSetChanged();
+                noBlogsTextView.setVisibility(View.VISIBLE);
 
             }
         } else {

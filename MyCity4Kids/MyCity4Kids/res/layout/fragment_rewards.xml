@@ -222,6 +222,7 @@
                 android:background="@color/grey_light" />
 
             <RelativeLayout
+                android:id="@+id/myearning_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -257,15 +258,15 @@
                     android:id="@+id/totalearning"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/space_20"
                     android:padding="10dp"
                     android:textAllCaps="true"
                     android:textColor="@color/color_23CAAD"
                     android:textSize="16sp"
-                    app:fontName="open_sans_bold.ttf"
-                    android:layout_alignParentRight="true" />
+                    app:fontName="open_sans_bold.ttf" />
             </RelativeLayout>
 
 
