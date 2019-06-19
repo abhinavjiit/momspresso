@@ -161,7 +161,7 @@
                     android:visibility="gone"
                     android:paddingRight="@dimen/space_20"
                     android:paddingBottom="10dp"
-                    android:text="Payment History"
+                    android:text="Participate now"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="18sp"

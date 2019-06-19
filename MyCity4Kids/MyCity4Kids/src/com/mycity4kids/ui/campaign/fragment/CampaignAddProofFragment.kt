@@ -256,6 +256,11 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         urlProofRecyclerAdapter = UrlProofRecyclerAdapter(campaignUrlProofList, this)
         recyclerUrlProof.adapter = urlProofRecyclerAdapter
 
+        var campaignProofResponse = CampaignProofResponse()
+        campaignProofResponse.id = 0
+        this@CampaignAddProofFragment.campaignUrlProofList.add(campaignProofResponse)
+        notifyUrlAdapter()
+
         textInstruction = view.findViewById(R.id.textInstruction)
 
         textSubmit = view.findViewById<TextView>(R.id.textSubmit)
