@@ -194,14 +194,12 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
             kidsInfo1.getEditKidInfoIV().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    postKidsData();
                     isEditFlag = true;
                     kidsViewPosition = position;
                     viewInEditMode = kidsInfo1;
                     editKidInfoDialogFragment = new EditKidInfoDialogFragment();
                     FragmentManager fm = getChildFragmentManager();
                     Bundle _args = new Bundle();
-                    km.setName(kidsModelArrayList.get(position).getName());
                     _args.putParcelable("editKidInfo", km);
                     editKidInfoDialogFragment.setArguments(_args);
                     //  editKidInfoDialogFragment.setTargetFragment(About.this, 1111);

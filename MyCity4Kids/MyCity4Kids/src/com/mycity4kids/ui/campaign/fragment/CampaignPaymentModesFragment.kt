@@ -19,10 +19,8 @@ import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.campaignmodels.ProofPostModel
 import com.mycity4kids.models.response.BaseResponseGeneric
-import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.DefaultData
 import com.mycity4kids.ui.campaign.PaymentModeListModal
@@ -88,7 +86,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                             .commit()
                 } else {
                     val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].id
-                 //   postApiForDefaultPaymantMode(paymentModeId)
+                    //   postApiForDefaultPaymantMode(paymentModeId)
                     submitOnClickListener.onPaymentModeDone(paymentModeId)
                 }
             } else {
@@ -297,7 +295,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     }
 
     interface SubmitListener {
-        fun onPaymentModeDone(paymentModeId:Int)
+        fun onPaymentModeDone(paymentModeId: Int)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

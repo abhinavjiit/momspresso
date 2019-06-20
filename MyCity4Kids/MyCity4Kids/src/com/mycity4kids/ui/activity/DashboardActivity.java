@@ -51,6 +51,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.kelltontech.network.Response;
@@ -2151,43 +2152,48 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
 
             if (shortStoriesTopicList == null || shortStoriesTopicList.size() == 0) {
-                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                res = gson.fromJson(fileContent, TopicsResponse.class);
-                shortStoriesTopicList = new ArrayList<Topics>();
-                if (res != null) {
-                    for (int i = 0; i < res.getData().size(); i++) {
-                        if (res.getData() != null && res.getData().get(i) != null && res.getData().get(i).getId() != null && AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
-                            shortStoriesTopicList.add(res.getData().get(i));
+                try {
+                    FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                    String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                    res = gson.fromJson(fileContent, TopicsResponse.class);
+                    shortStoriesTopicList = new ArrayList<Topics>();
+                    if (res != null) {
+                        for (int i = 0; i < res.getData().size(); i++) {
+                            if (res.getData() != null && res.getData().get(i) != null && res.getData().get(i).getId() != null && AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
+                                shortStoriesTopicList.add(res.getData().get(i));
+                            }
                         }
-                    }
-                    challengeId = new ArrayList<>();
-                    Display_Name = new ArrayList<>();
-                    ImageUrl = new ArrayList<>();
-                    num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
-                    if (num_of_categorys != 0) {
-                        for (int j = 0; j < num_of_categorys; j++) {
-                            if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
-                                num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
-                                for (int k = num_of_challeneges - 1; k >= 0; k--) {
-                                    if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                        if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
-                                            if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
-                                                challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
-                                                Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
-                                                ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
-                                                break;
+                        challengeId = new ArrayList<>();
+                        Display_Name = new ArrayList<>();
+                        ImageUrl = new ArrayList<>();
+                        num_of_categorys = shortStoriesTopicList.get(0).getChild().size();
+                        if (num_of_categorys != 0) {
+                            for (int j = 0; j < num_of_categorys; j++) {
+                                if (shortStoriesTopicList.get(0).getChild().get(j).getId().equals(AppConstants.SHORT_STORY_CHALLENGE_ID)) {
+                                    num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
+                                    for (int k = num_of_challeneges - 1; k >= 0; k--) {
+                                        if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                            if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                                if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
+                                                    challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
+                                                    Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
+                                                    ImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
 
+                    }
+                } catch (IllegalStateException | JsonSyntaxException exception) {
+                    Crashlytics.logException(exception);
                 }
             }
+
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));

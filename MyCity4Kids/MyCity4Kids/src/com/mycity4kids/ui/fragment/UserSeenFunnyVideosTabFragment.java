@@ -101,7 +101,7 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.vlogs_listing_activity, container, false);
+        View view = inflater.inflate(R.layout.user_seen_videos, container, false);
 
         rootLayout = view.findViewById(R.id.rootLayout);
         listView = (ListView) view.findViewById(R.id.vlogsListView);

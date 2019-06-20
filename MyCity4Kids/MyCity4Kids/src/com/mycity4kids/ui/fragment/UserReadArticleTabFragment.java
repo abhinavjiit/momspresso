@@ -59,11 +59,13 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private RecyclerView recyclerView;
     private RelativeLayout mLodingView;
-    private TextView noBlogsTextView;
+    private TextView noBlogsTextView, noBlogsTextViewshortstory;
 
     private UserReadArticleAdapter adapter;
     private UserReadShortStoriesAdapter shortStoriesAdapter;
     int chunk = 0;
+    int chunk1 = 0;
+
     private int nextPageNumber = 0;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = true;
@@ -77,11 +79,12 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.user_published_article_tab_fragment, container, false);
+        View view = inflater.inflate(R.layout.user_read_article_tab_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
+        noBlogsTextViewshortstory = view.findViewById(R.id.noBlogsTextViewshortstory);
 
         if (getArguments() != null) {
             authorId = getArguments().getString(Constants.AUTHOR_ID);
@@ -126,7 +129,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
                             isReuqestRunning = true;
                             mLodingView.setVisibility(View.VISIBLE);
                             if ("shortStory".equals(contentType)) {
-                                chunk = chunk + 10;
+                                chunk1 = chunk1 + 10;
                                 getUserPublishedShortStories();
                             } else {
                                 chunk = chunk + 10;
@@ -150,7 +153,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI userpublishedArticlesAPI = retro.create(BloggerDashboardAPI.class);
 
-        final Call<ArticleListingResponse> call = userpublishedArticlesAPI.getAuthorsReadArticles(authorId, 10, chunk, "stories");
+        final Call<ArticleListingResponse> call = userpublishedArticlesAPI.getAuthorsReadArticles(authorId, 10, chunk1, "stories");
         call.enqueue(userPublishedArticleResponseListener);
     }
 
@@ -164,8 +167,7 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI userpublishedArticlesAPI = retro.create(BloggerDashboardAPI.class);
-        chunk = chunk + 10;
-        final Call<ArticleListingResponse> call = userpublishedArticlesAPI.getAuthorsReadArticles(authorId, 10, 0, "articles");
+        final Call<ArticleListingResponse> call = userpublishedArticlesAPI.getAuthorsReadArticles(authorId, 10, chunk, "articles");
         call.enqueue(userPublishedArticleResponseListener);
     }
 
@@ -223,7 +225,11 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
                 shortStoriesAdapter.notifyDataSetChanged();
                 if (isAdded())
                     noBlogsTextView.setText(getString(R.string.short_s_no_published));
-                noBlogsTextView.setVisibility(View.VISIBLE);
+                if ("shortStory".equals(contentType)) {
+                    noBlogsTextViewshortstory.setVisibility(View.VISIBLE);
+                } else {
+                    noBlogsTextView.setVisibility(View.VISIBLE);
+                }
             }
         } else {
             if (nextPageNumber == 1) {
