@@ -1002,17 +1002,21 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.openAddCommentDialog:
             case R.id.commentLayout: {
-                Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Type_Here bar", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Type_Reply", "", String.valueOf(groupId));
+                if (groupPostDetailsAndCommentsRecyclerAdapter == null) {
 
-                AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                FragmentManager fm = getSupportFragmentManager();
-                Bundle _args = new Bundle();
-                groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
-                _args.putInt("groupId", groupId);
-                _args.putInt("postId", postId);
-                addGpPostCommentReplyDialogFragment.setArguments(_args);
-                addGpPostCommentReplyDialogFragment.setCancelable(true);
-                addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                } else {
+                    Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Type_Here bar", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Type_Reply", "", String.valueOf(groupId));
+
+                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                    FragmentManager fm = getSupportFragmentManager();
+                    Bundle _args = new Bundle();
+                    groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                    _args.putInt("groupId", groupId);
+                    _args.putInt("postId", postId);
+                    addGpPostCommentReplyDialogFragment.setArguments(_args);
+                    addGpPostCommentReplyDialogFragment.setCancelable(true);
+                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                }
             }
             break;
             case R.id.reportPostTextView:

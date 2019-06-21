@@ -302,6 +302,12 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                         }
                     }
                 });
+                try {
+                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.profileImageView);
+                } catch (Exception e) {
+                    audioCommentViewHolder.profileImageView.setBackgroundResource(R.drawable.default_commentor_img);
+                }
                 audioCommentViewHolder.commentorUsernameTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -1453,7 +1459,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public class AudioCommentViewHeaderHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
-        ImageView commentorImageView, playHeaderAudioImageView, pauseHeaderAudioImageView;
+        ImageView commentorImageView, playHeaderAudioImageView, pauseHeaderAudioImageView, profileImageView;
         ImageView media;
         TextView commentorUsernameTextView, headerAudioTimeElapsed;
         TextView commentDataTextView;
@@ -1470,6 +1476,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         public AudioCommentViewHeaderHolder(View view) {
             super(view);
             media = (ImageView) view.findViewById(R.id.media);
+            profileImageView = (ImageView) view.findViewById(R.id.profileImageView);
             audiotRootView = view.findViewById(R.id.commentRootView);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
@@ -1496,6 +1503,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             headerAudioSeekBar.setOnSeekBarChangeListener(this);
             postSettingImageView.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            profileImageView.setOnClickListener(this);
 
             underlineView = view.findViewById(R.id.underlineView);
         }
