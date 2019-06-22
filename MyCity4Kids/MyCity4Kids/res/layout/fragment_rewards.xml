@@ -231,7 +231,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:drawableLeft="@drawable/ic_pan_details"
+                    android:drawableLeft="@drawable/ic_my_earning_profile_page"
                     android:drawablePadding="15dp"
                     android:padding="@dimen/space_20"
                     android:text="MY EARNING"

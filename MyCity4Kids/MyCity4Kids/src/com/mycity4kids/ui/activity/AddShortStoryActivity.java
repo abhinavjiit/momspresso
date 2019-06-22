@@ -1043,11 +1043,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 //                        @Override
 //                        public void onClick(View view) {
 //                            requestUngrantedPermissions();
-//                        }
+//             ma           }
 //                    })
 //                    .show();
 //        }
-//    }
+//    }test
 
     public void requestStoragePermissions() {
         // BEGIN_INCLUDE(contacts_permission_request)
