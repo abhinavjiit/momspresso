@@ -28,6 +28,10 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.request.GroupActionsPatchRequest;
+import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdatePostSettingsRequest;
@@ -36,6 +40,7 @@ import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
+import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.GroupsMembershipResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
@@ -45,12 +50,16 @@ import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsEditPostActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
+import com.mycity4kids.ui.activity.PrivateProfileActivity;
+import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
-import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.ui.adapter.MyFeedPollGenericRecyclerAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -76,11 +85,11 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
     private int totalPostCount;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private GroupResult selectedGroup;
-    private String memberType;
+    private String memberType, userDynamoId;
     private GroupPostResult selectedPost;
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
-    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView,emptyListTextView;
+    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView, emptyListTextView;
     private View overlayView;
     private Animation slideAnim, fadeAnim;
     private UserPostSettingResult currentPostPrefsForUser;
@@ -130,6 +139,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         deletePostTextView.setOnClickListener(this);
         blockUserTextView.setOnClickListener(this);
         pinPostTextView.setOnClickListener(this);
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -369,8 +379,196 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
 //                postSettingsContainer.setVisibility(View.VISIBLE);
 //                overlayView.setVisibility(View.VISIBLE);
                 break;
+
+            case R.id.userImageView:
+            case R.id.usernameTextView:
+
+                if (postList.get(position).getIsAnnon() == 0) {
+
+                    if (userDynamoId.equals(postList.get(position).getUserId())) {
+//                    MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+//                    Bundle mBundle0 = new Bundle();
+//                    fragment0.setArguments(mBundle0);
+//                    if (isAdded())
+//                        ((ShortStoriesListingContainerActivity) getActivity()).addFragment(fragment0, mBundle0, true);
+                        Intent pIntent = new Intent(getActivity(), PrivateProfileActivity.class);
+                        startActivity(pIntent);
+                    } else {
+                        Utils.groupsEvent(getActivity(), "Groups_Discussion", "profile image", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "User Profile", "", "");
+
+                        Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
+                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
+                        intentnn.putExtra(AppConstants.AUTHOR_NAME, postList.get(position).getUserInfo().getFirstName() + " " + postList.get(position).getUserInfo().getLastName());
+                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
+                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                    }
+                }
+                break;
+
+            case R.id.shareTextView:
+                Utils.groupsEvent(getActivity(), "Groups_Discussion_# comment", "Share", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "sharing options", "", postList.get(position).getId() + "");
+
+                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+
+                String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+                break;
+            case R.id.upvoteContainer:
+                Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
+
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+                break;
+            case R.id.downvoteContainer:
+                Utils.groupsEvent(getActivity(), "Groups_Discussion", "not helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
+
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+                break;
         }
     }
+
+    private void markAsHelpfulOrUnhelpful(String markType, int position) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
+        groupActionsRequest.setGroupId(postList.get(position).getGroupId());
+        groupActionsRequest.setPostId(postList.get(position).getId());
+        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
+        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
+        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+        call.enqueue(groupActionResponseCallback);
+    }
+
+    private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
+        @Override
+        public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    if (response.code() == 400) {
+                        try {
+                            int patchActionId = 0;
+                            String patchActionType = null;
+
+                            String errorBody = new String(response.errorBody().bytes());
+                            JSONObject jObject = new JSONObject(errorBody);
+                            JSONArray dataArray = jObject.optJSONArray("data");
+                            if (dataArray != null) {
+                                if (dataArray.getJSONObject(0).get("type").equals(dataArray.getJSONObject(1).get("type"))) {
+                                    //Same Action Event
+                                    if ("0".equals(dataArray.getJSONObject(0).get("type"))) {
+                                        Toast.makeText(getActivity(), "already marked unhelpful", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getActivity(), "already marked helpful", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    if (dataArray.getJSONObject(0).has("id") && !dataArray.getJSONObject(0).isNull("id")) {
+                                        patchActionId = dataArray.getJSONObject(0).getInt("id");
+                                        patchActionType = dataArray.getJSONObject(1).getString("type");
+                                    } else {
+                                        patchActionType = dataArray.getJSONObject(0).getString("type");
+                                        patchActionId = dataArray.getJSONObject(1).getInt("id");
+                                    }
+                                    sendUpvoteDownvotePatchRequest(patchActionId, patchActionType);
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsActionResponse groupsActionResponse = response.body();
+                    if (groupsActionResponse.getData().getResult().size() == 1) {
+                        for (int i = 0; i < postList.size(); i++) {
+                            if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
+                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                    postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
+                                } else {
+                                    postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
+                                }
+                            }
+                        }
+                    }
+                    myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
+//                    groupPostResult.setVoted(true);
+//                    notifyDataSetChanged();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+
+    private void sendUpvoteDownvotePatchRequest(int patchActionId, String patchActionType) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        GroupActionsPatchRequest groupActionsRequest = new GroupActionsPatchRequest();
+        groupActionsRequest.setType(patchActionType);
+
+        Call<GroupsActionResponse> call = groupsAPI.patchAction(patchActionId, groupActionsRequest);
+        call.enqueue(patchActionResponseCallback);
+    }
+
+    private Callback<GroupsActionResponse> patchActionResponseCallback = new Callback<GroupsActionResponse>() {
+        @Override
+        public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsActionResponse groupsActionResponse = response.body();
+                    if (groupsActionResponse.getData().getResult().size() == 1) {
+                        for (int i = 0; i < postList.size(); i++) {
+                            if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
+                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                    postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
+                                    postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() - 1);
+                                } else {
+                                    postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
+                                    postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() - 1);
+                                }
+                            }
+                        }
+                    }
+                    myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
+//                    groupPostResult.setVoted(true);
+//                    notifyDataSetChanged();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
+
+        }
+    };
 
 
     private Callback<UserPostSettingResponse> userPostSettingResponseCallback = new Callback<UserPostSettingResponse>() {
@@ -447,7 +645,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         //No existing settings for this post for this user
         if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
             savePostTextView.setText(getString(R.string.groups_save_post));
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
             currentPostPrefsForUser = null;
             return;
         }
@@ -459,7 +657,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         }
 
         if (currentPostPrefsForUser.getNotificationOff() == 1) {
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
         } else {
             notificationToggleTextView.setText("DISABLE NOTIFICATION");
         }
@@ -630,7 +828,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                     currentPostPrefsForUser = new UserPostSettingResult();
                     currentPostPrefsForUser.setId(jObject.getJSONObject("data").getJSONObject("result").getInt("id"));
                     if (jObject.getJSONObject("data").getJSONObject("result").getBoolean("notificationOff")) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }
@@ -670,7 +868,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                     UserPostSettingResponse userPostSettingResponse = response.body();
                     currentPostPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
                     if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }

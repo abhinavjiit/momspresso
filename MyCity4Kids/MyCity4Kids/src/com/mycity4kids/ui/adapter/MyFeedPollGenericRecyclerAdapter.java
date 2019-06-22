@@ -227,6 +227,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 textPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
 
+
         } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
 
@@ -713,7 +714,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     public class TextPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView userImageView;
-        TextView usernameTextView,groupName;
+        TextView usernameTextView, groupName;
         TextView postDateTextView;
         TextView postDataTextView, userTag;
         TextView upvoteCountTextView, downvoteCountTextView;
@@ -721,7 +722,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView postCommentsTextView, typeHere, beTheFirstOne;
         ImageView postSettingImageView;
         ImageView shareTextView;
-        RelativeLayout commentLayout,groupNameLayout;
+        RelativeLayout commentLayout, groupNameLayout;
         View groupNameView;
 
         TextPostViewHolder(View view) {
@@ -741,7 +742,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             typeHere = (TextView) view.findViewById(R.id.typeHere);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
-            groupNameLayout = (RelativeLayout)view.findViewById(R.id.group_name_layout);
+            groupNameLayout = (RelativeLayout) view.findViewById(R.id.group_name_layout);
             groupNameView = (View) view.findViewById(R.id.groupname_view);
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
@@ -773,6 +774,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 @Override
                 public void onClick(View v) {
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
+
                         Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
                         intent.putExtra("groupItem", selectedGroup);
                         intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
@@ -781,6 +783,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                         intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
                         ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
+
                     } else {
                         Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
                         intent.putExtra("groupItem", selectedGroup);
@@ -803,7 +806,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     public class MediaPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView userImageView;
-        TextView usernameTextView,groupName;
+        TextView usernameTextView, groupName;
         TextView postDateTextView;
         TextView postDataTextView;
         ImageView shareTextView;
@@ -815,7 +818,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
         private GroupMediaPostViewPagerAdapter mViewPagerAdapter;
-        RelativeLayout commentLayout,groupNameLayout;
+        RelativeLayout commentLayout, groupNameLayout;
         View groupNameView;
 
         MediaPostViewHolder(View view) {
@@ -837,7 +840,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
-            groupNameLayout = (RelativeLayout)view.findViewById(R.id.group_name_layout);
+            groupNameLayout = (RelativeLayout) view.findViewById(R.id.group_name_layout);
             groupNameView = (View) view.findViewById(R.id.groupname_view);
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
@@ -934,10 +937,10 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView upvoteCommentCountTextView, downvoteCommentCountTextView, userTag;
         LinearLayout upvoteCommentContainer, downvoteCommentContainer;
         RelativeLayout audiotRootView;
-        TextView postCommentsTextView, beTheFirstOne,groupName;
+        TextView postCommentsTextView, beTheFirstOne, groupName;
         ImageView postSettingImageView;
         ImageView shareTextView;
-        RelativeLayout commentLayout,groupNameLayout;
+        RelativeLayout commentLayout, groupNameLayout;
         View groupNameView;
 
 
@@ -963,7 +966,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
-            groupNameLayout = (RelativeLayout)view.findViewById(R.id.group_name_layout);
+            groupNameLayout = (RelativeLayout) view.findViewById(R.id.group_name_layout);
             groupNameView = (View) view.findViewById(R.id.groupname_view);
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
@@ -1099,9 +1102,9 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
         TextView pollResult1TextView, pollResult2TextView, pollResult3TextView, pollResult4TextView;
         TextView pollOption1ProgressTextView, pollOption2ProgressTextView, pollOption3ProgressTextView, pollOption4ProgressTextView;
-        TextView totalVoteCountTextView,groupName;
+        TextView totalVoteCountTextView, groupName;
         RelativeLayout option3Container, option4Container;
-        RelativeLayout commentLayout,groupNameLayout;
+        RelativeLayout commentLayout, groupNameLayout;
         View groupNameView;
 
         TextPollPostViewHolder(View view) {
@@ -1139,7 +1142,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
-            groupNameLayout = (RelativeLayout)view.findViewById(R.id.group_name_layout);
+            groupNameLayout = (RelativeLayout) view.findViewById(R.id.group_name_layout);
             groupNameView = (View) view.findViewById(R.id.groupname_view);
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
@@ -1246,9 +1249,9 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
-        TextView totalVoteCountTextView, beTheFirstOne,groupName;
+        TextView totalVoteCountTextView, beTheFirstOne, groupName;
         LinearLayout lastOptionsContainer;
-        RelativeLayout commentLayout,groupNameLayout;
+        RelativeLayout commentLayout, groupNameLayout;
         RelativeLayout option1Container, option2Container, option3Container, option4Container;
         View groupNameView;
 
@@ -1285,7 +1288,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
-            groupNameLayout = (RelativeLayout)view.findViewById(R.id.group_name_layout);
+            groupNameLayout = (RelativeLayout) view.findViewById(R.id.group_name_layout);
             groupNameView = (View) view.findViewById(R.id.groupname_view);
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
@@ -1319,6 +1322,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 public void onClick(View v) {
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
 
+
                         Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
                         intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
                         intent.putExtra("postData", postList.get(getAdapterPosition()));
@@ -1328,6 +1332,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         intent.putExtra("groupId", postList.get(getAdapterPosition()).getGroupId());
                         intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
                         ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
+
                     } else {
                         Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
                         intent.putExtra("postType", AppConstants.POST_TYPE_IMAGE_POLL);
@@ -1666,6 +1671,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     public interface RecyclerViewClickListener {
         void onGroupPostRecyclerItemClick(View view, int position);
+
     }
 
 }

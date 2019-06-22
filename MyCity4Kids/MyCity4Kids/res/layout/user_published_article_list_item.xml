@@ -157,6 +157,7 @@
         android:layout_toLeftOf="@+id/shareArticleImageView"
         android:padding="4dp"
         android:text="@string/user_article.published.edit"
+        android:visibility="gone"
         android:textColor="@color/user_articles.published.edit"
         android:textSize="11sp"
         app:fontName="oswald.ttf" />

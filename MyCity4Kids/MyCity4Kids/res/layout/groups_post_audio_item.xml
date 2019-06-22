@@ -29,7 +29,7 @@
             android:layout_toRightOf="@+id/groupname_view"
             android:text="groupname"
             android:textColor="@color/campaign_list_buttons"
-            android:textSize="10sp"
+            android:textSize="12sp"
             app:fontName="open_sans.ttf" />
 
     </RelativeLayout>

@@ -214,6 +214,61 @@
                 android:textSize="14sp"
                 app:fontName="oswald.ttf" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/grey_light" />
+
+            <RelativeLayout
+                android:id="@+id/myearning_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/textMyEarning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:drawableLeft="@drawable/ic_my_earning_profile_page"
+                    android:drawablePadding="15dp"
+                    android:padding="@dimen/space_20"
+                    android:text="MY EARNING"
+                    android:textColor="#676767"
+                    android:textSize="14sp"
+                    app:fontName="oswald.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/textMyEarning"
+                    android:background="@drawable/rectangular_btn_green_bg"
+                    android:backgroundTint="@color/color_23CAAD"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="NEW"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/totalearning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/space_20"
+                    android:padding="10dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/color_23CAAD"
+                    android:textSize="16sp"
+                    app:fontName="open_sans_bold.ttf" />
+            </RelativeLayout>
+
 
         </LinearLayout>
     </RelativeLayout>

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="147"
-    android:versionName="11.0.4">
+    android:versionCode="149"
+    android:versionName="11.0.6">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -41,7 +41,7 @@
         <activity
             android:name=".ui.mymoneytracker.activity.TrackerActivity"
             android:label="@string/title_activity_tracker"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -366,7 +366,7 @@
             android:name=".ui.rewards.activity.RewardsContainerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.RankingActivity"
             android:screenOrientation="portrait"
@@ -513,6 +513,13 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.videochallengenewui.activity.NewVideoChallengeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.UserReadArticlesContentActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activity.MyTotalEarningActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ParallelFeedActivity"

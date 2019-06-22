@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.campaign.activity;
 
 import android.app.Dialog
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -16,19 +15,20 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.PaymentModeListModal
-import com.mycity4kids.ui.campaign.fragment.*
+import com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment
+import com.mycity4kids.ui.campaign.fragment.CampaignCongratulationFragment
+import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
 import com.mycity4kids.ui.fragment.CampaignDetailFragment
 import com.mycity4kids.ui.fragment.CampaignListFragment
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.lang.NumberFormatException
 
 class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener {
 
 
-    override fun onPaymentModeDone() {
+    override fun onPaymentModeDone(paymentModeId :Int) {
 
     }
 
@@ -89,6 +89,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         } else {
             notificationCampaignSubmitProof = ""
         }
+
+
 
         if (!notificationCampaignSubmitProof.equals("", true)) {
             deeplinkCampaignId = notificationCampaignSubmitProof.toInt()

@@ -20,6 +20,15 @@ import android.R.id.message
 import android.util.Log
 import android.widget.Toast
 import com.mycity4kids.MessageEvent
+import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.Constants
+import com.mycity4kids.models.campaignmodels.ProofPostModel
+import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.ThreadMode
 import org.greenrobot.eventbus.Subscribe
@@ -28,13 +37,20 @@ import org.greenrobot.eventbus.Subscribe
 class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
         RewardsSocialInfoFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener, PanCardDetailsSubmissionFragment.SubmitListener, IFacebookEvent {
+    private var Id: Int = -1
     override fun onPanCardDone() {
         this@RewardsContainerActivity.finish()
     }
 
-    override fun onPaymentModeDone() {
+    override fun onPaymentModeDone(paymentModeId: Int) {
         if (pageLimit == 4) {
-            this@RewardsContainerActivity.finish()
+            Id = paymentModeId
+            if (Id != -1) {
+                postApiForDefaultPaymantMode(Id)
+            }
+            if (Id == -1) {
+                this@RewardsContainerActivity.finish()
+            }
         } else {
             addPancardDetailFragment()
         }
@@ -177,6 +193,41 @@ class RewardsContainerActivity : BaseActivity(),
         }
         callbackManager!!.onActivityResult(requestCode, resultCode, data)
         FacebookUtils.onActivityResult(this, requestCode, resultCode, data)
+    }
+
+    private fun postApiForDefaultPaymantMode(paymentModeId: Int) {
+        val proofPostModel = ProofPostModel(id = paymentModeId.toString())
+        showProgressDialog(resources.getString(R.string.please_wait))
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postForDefaultAccount(proofPostModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofPostModel>> {
+            override fun onComplete() {
+
+            }
+
+            override fun onSubscribe(d: Disposable) {
+            }
+
+            override fun onNext(t: BaseResponseGeneric<ProofPostModel>) {
+                if (t != null) {
+                    if (t.code == 200 && t.status == Constants.SUCCESS) {
+                        removeProgressDialog()
+                        this@RewardsContainerActivity.finish()
+                    }
+                } else {
+                    removeProgressDialog()
+
+                    Toast.makeText(this@RewardsContainerActivity, t.reason.toString(), Toast.LENGTH_SHORT).show()
+
+                }
+
+            }
+
+            override fun onError(e: Throwable) {
+                removeProgressDialog()
+                Log.e("exception in error", e.message.toString())
+            }
+
+
+        })
     }
 
 

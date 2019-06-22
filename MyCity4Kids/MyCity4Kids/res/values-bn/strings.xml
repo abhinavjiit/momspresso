@@ -4,9 +4,14 @@
     <string name="app_name">মম্স্প্রেস্সো</string>
     <string name="unknown_person">অজানা</string>
     <string name="resend_email">ইমেল পুনরায় পাঠান</string>
+    <string name="groups.other_groups">Oঅন্যান্য গ্রুপস </string>
+    <string name="groups_enable_notification">নোটিফিকেশন সক্রিয় করুন </string>
+
+
 
     <string name="write_review_prompt">আপনি কি পর্যালোচনা করতে চান ?</string>
-
+    <string name="groups_sections_polls">পোল</string>
+    <string name="groups_sections_myfeed">আমার ফিড </string>
     <string name="loading_txt">লোডিং &#8230;</string>
 
     <string name="subcategoryName">subCagegory</string>
@@ -515,6 +520,8 @@
     <string name="add_video_details.mute_label">MUTE SOUND</string>
     <string name="add_video_details.add_music">ADD MUSIC</string>
     <string name="add_video_details.remove">বাতিল করুন</string>
+    <string name="audio_post">অডিও </string>
+
     <string name="add_video_details.error_empty_title">Please enter the title of the video</string>
     <string name="add_video_details.save_upload">সংরক্ষিত &amp; UPLOAD</string>
     <string name="add_video_details.toolbar.title">ভিডিও উপলোড করুন</string>
@@ -522,9 +529,12 @@
 
     <string name="video_progress.uploading_label">UPLOADING ...</string>
     <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically.</string>
-    <string name="video_progress.way_to_go">WAY TO GO!</string>
-    <string name="video_progress.success_msg">Video has been successfully uploaded and sent for moderation. We will notify you once moderated.</string>
-    <string name="video_progress.okay">ঠিক আছে</string>
+    <string name="video_progress.way_to_go">অভিনন্দন!
+</string>
+    <string name="video_progress.success_msg">আপনার ভিডিওটি সফলভাবে আপলোড হয়ে গেছে এবং আগামী ২-টি কর্মদিবসের মধ্যে সেটিকে মডারেট করা হবে। মডারেট করা হয়ে গেলে আপনাকে সেই বিষয়ে সূচিত করা হবে।
+</string>
+    <string name="video_progress.okay">ধন্যবাদ।
+</string>
     <string name="video_progress.uploading_failed">Uploading Failed.</string>
     <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
     <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
@@ -708,6 +718,7 @@
     <string name="groups.unpin_post">এই পোস্টটি কে আনপিন  করুন</string>
     <string name="groups.all_groups">সকল গ্রুপ</string>
     <string name="groups.groups">গ্রুপ</string>
+    <string name="groups_groups_myfeed">গ্রুপ</string>
     <string name="groups.join_label">আপনি যে সকল গ্রুপের  সদস্য</string>
     <string name="groups.reported_content">যে বস্তুটিকে রিপোর্ট করা হয়েছে</string>
     <string name="groups.reported_by">যাদের দ্বারা রিপোর্ট হয়েছে</string>
@@ -906,6 +917,10 @@
     <string name="rewards_interest">"উৎসাহী "</string>
     <string name="rewards_not_working">"কর্মরতা নন "</string>
     <string name="rewards_are_expecing">"সন্তান সম্ভবা "</string>
+    <string name="reply_groups">উত্তর</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
+
 
     <string name="cannot_be_left_blank">%1$s খালি রাখা যাবে না</string>
     <string name="please_enter_a_valid">দয়া করে বৈধ এন্টার করুন %1$s</string>

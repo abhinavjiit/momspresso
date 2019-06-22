@@ -49,6 +49,12 @@ public interface VlogsListingAndDetailsAPI {
                                                  @Query("end") int end,
                                                  @Query("sort") int sort);
 
+    @GET("/user_history/v1/{userId}")
+    Call<VlogsListingResponse> getAuthorsSeenVideos(@Path("userId") String userId,
+                                                        @Query("size") int size,
+                                                        @Query("chunks") int chunks,
+                                                        @Query("filter") String filter);
+
     @GET("v2/videos/")
     Call<VlogsListingResponse> getVlogsList(@Query("start") int start,
                                             @Query("end") int end,

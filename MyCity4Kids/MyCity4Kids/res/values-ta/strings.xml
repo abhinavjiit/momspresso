@@ -528,8 +528,8 @@
 
     <string name="video_progress.uploading_label">பதிவேற்றுகிறது ...</string>
     <string name="video_progress.uploading_msg">App ஐ விட்டு வெளியேறவோ அல்லது அழிக்கவோ வேண்டாம், அது தானாக பதிவேற்றத்தை ரத்து செய்யும். பதிவேற்றும் போது App ஐ பயன்படுத்தலாம்.</string>
-    <string name="video_progress.way_to_go">மிக நன்று</string>
-    <string name="video_progress.success_msg">வீடியோ வெற்றிகரமாக பதிவேற்றப்பட்டு, தணிக்கைக்கு அனுப்பப்பட்டது. தணிக்கை முடிந்ததும் உங்களை அறிவிப்போம். </string>
+    <string name="video_progress.way_to_go">வாழ்த்துக்கள்.</string>
+    <string name="video_progress.success_msg">காணொளி வெற்றிகரமாக பதிவேற்றப்பட்டது. இரண்டு வேலை நாட்களில் மதிப்பாய்வு செய்து,  உங்களுக்கு  தகவல் அளிப்போம்.</string>
     <string name="video_progress.okay">சரி</string>
     <string name="video_progress.uploading_failed">பதிவேற்றம் தோல்வியடைந்தது.</string>
     <string name="video_progress.uploading_error">உங்கள் வீடியோவை பதிவேற்றும்போது பிழை ஏற்பட்டது. தயவு செய்து மீண்டும் முயற்சிக்கவும்.</string>
@@ -662,6 +662,7 @@
     <string name="author_type.expert">நிபுணர்</string>
     <string name="author_type.featured">சிறப்பு எழுத்தாளர்</string>
     <string name="author_type.user">பயனர்</string>
+    <string name="groups_groups_myfeed">குரூப்கள்</string>
 
     <string name="no_article.be_first">Be the first one to write articles in this category!</string>
 
@@ -711,6 +712,9 @@
     <string name="groups.unpin_post">இந்த போஸ்டை அண்-பின் செய்யவும்</string>
     <string name="groups.all_groups">எல்லா குரூப்களும்</string>
     <string name="groups.groups">குரூப்கள்</string>
+    <string name="groups_sections_polls">வாக்கெடுப்பு</string>
+    <string name="groups_sections_myfeed">Mஎனக்கான பதிவுகள்</string>
+
     <string name="groups.reported_by">புகார் அளித்தவர்</string>
     <string name="groups.persons">நபர்கள்</string>
     <string name="groups.no_action">நடவடிக்கை இல்லை</string>
@@ -728,8 +732,10 @@
     <string name="groups.now_member_gp">நீங்கள் இப்பொழுது இந்த குரூப்பின் உறுப்பினர்</string>
     <string name="groups.approval_req_sent">உங்கள் கோரிக்கை குரூப்நிர்வாகியின் ஒப்புதலுக்காக அனுப்பப்பட்டுள்ளது</string>
     <string name="groups.support_groups">ஆதரவளிக்கும் குரூப்</string>
-    <string name="groups.post_helpful">உதவியாக உள்ளது</string>
-    <string name="groups.post_nothelpful">உதவியாக இல்லை</string>
+    <string name="groups.post_helpful"></string>
+    <string name="groups.post_nothelpful"></string>
+    <string name="audio_post">ஆடியோ</string>
+
     <string name="groups.summary">SUMMARY</string>
     <string name="groups.add_image">படத்தை சேர்க்கவும்.</string>
     <string name="groups.image_poll">பட வாக்கெடுப்பு</string>
@@ -761,6 +767,7 @@
     <string name="groups.ask_something">ஏதாவது கேட்கவும் ...</string>
     <string name="groups.post_label">பதிவுகள்</string>
     <string name="groups.edit_post">EDIT POST</string>
+    <string name="groups.total_votes">மொத்த வாக்குகள் %1$s</string>
 
     <string name="no_story.be_first">இந்த பிரிவில் கதைகள் எழுதும் முதல் நபராக இருங்கள்.</string>
 
@@ -864,8 +871,6 @@
     <string name="add">கூட்டு</string>
 
 
-
-
     //Rewards Strings
 
 
@@ -898,6 +903,10 @@
     <string name="rewards_number_of_kids">குழந்தைகள் எண்ணிக்கை</string>
     <string name="rewards_interest">ஆர்வங்கள்</string>
     <string name="rewards_not_working">வேலைக்கு செல்லாதவர்</string>
+    <string name="reply_groups">பதிலளி</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
+
     <string name="rewards_are_expecing">குழந்தையை எதிர்பார்ப்பவர்</string>
     <string name="cannot_be_left_blank">%1$s காலியாக விடமுடியாது</string>
     <string name="please_enter_a_valid">செல்லுபடியாகும் ஒரு %1$s உள்ளிடுக</string>
@@ -911,19 +920,23 @@
     <string name="rewards_participating_earn_completing_profile">உங்கள் சுயவிவரத்தை நிறைவு செய்வதன் மூலம் இப்போது பங்கேற்று சம்பாதிக்கலாம்!</string>
     <string name="rewards_momspresso">மாம்ஸ்ப்ரெஸ்ஸோ வெகுமதிகள்</string>
     <string name="reward_welcome">Welcome to Momspresso MyMoney!</string>
+    <string name="groups_section_myfeed">నా గురించి </string>
+    <string name="groups_enable_notification">நோட்டிஃபிகேஷனை செயல்படுத்தவும்</string>
+
 
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="groups.other_groups">మిగతా గ్రూప్స్ </string>
 
 
     //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
-    <string name="group_add_comment_text">ADD COMMENT</string>
-    <string name="group_invite_text">Invite</string>
+    <string name="group_add_comment_text">கமென்ட்ஸ் சேர்க்கவும்</string>
+    <string name="group_invite_text">அழைக்கவும்</string>
     <string name="group_comment_type_here_text">Type here</string>
-    <string name="group_comment_be_the_first_text">Be the first one to comment</string>
+    <string name="group_comment_be_the_first_text">முதலில் கருத்து தெரிவிக்கவும்</string>
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
