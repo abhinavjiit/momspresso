@@ -419,23 +419,23 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
             }
 
-            override fun onNext(response: BaseResponseGeneric<ProofInstructionResult>) {
-                if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
-                        response.data != null && response.data!!.result != null && response.data!!.result.readThis != null
-                        && !response.data!!.result.readThis!!.instructions.isNullOrEmpty()) {
-                    val readBuilder = StringBuilder()
-                    for (instructions in response.data!!.result.readThis!!.instructions!!) {
-                        if (!instructions.isNullOrEmpty() && !instructions.equals(""))
-                            readBuilder.append("\u2022" + "  " + instructions + "\n")
+            override fun onNext(response: BaseResponseGeneric<ProofInstructionResult>) =
+                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status &&
+                            response.data != null && response.data!!.result != null && response.data!!.result.readThis != null
+                            && !response.data!!.result.readThis!!.instructions.isNullOrEmpty()) {
+                        val readBuilder = StringBuilder()
+                        for (instructions in response.data!!.result.readThis!!.instructions!!) {
+                            if (!instructions.isNullOrEmpty() && !instructions.equals(""))
+                                readBuilder.append("\u2022" + "  " + instructions + "\n")
+                        }
+                        if (!readBuilder.isEmpty()) {
+                            getOffset(readBuilder.toString(), textInstruction)
+                        }
+                        linearInstruction.visibility = View.VISIBLE
+                    } else {
+                        linearInstruction.visibility = View.GONE
+
                     }
-                    if (!readBuilder.isEmpty()) {
-                        getOffset(readBuilder.toString(), textInstruction)
-                    }
-                    linearInstruction.visibility = View.VISIBLE
-                } else {
-                    linearInstruction.visibility = View.GONE
-                }
-            }
 
             override fun onError(e: Throwable) {
                 removeProgressDialog()

@@ -109,8 +109,6 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             addCampaginDetailFragment(deeplinkCampaignId)
         }
 
-        addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>)
-
     }
 
     private fun campaignListFragment() {
@@ -251,7 +249,4 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         }
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//    }
 }
