@@ -509,9 +509,8 @@
     <color name="color_F8FAFB">#F8FAFB</color>
     <color name="color_F5A623">#F5A623</color>
     <color name="color_56CD6A">#56CD6A</color>
+    <color name="light_green">#ffF5FFFD</color>
     <color name="color_676767">#676767</color>
-
     <color name="black_64">#A6000000</color>
-
-
+    <color name ="red_light_shade">#FBF8F8</color>
 </resources>
