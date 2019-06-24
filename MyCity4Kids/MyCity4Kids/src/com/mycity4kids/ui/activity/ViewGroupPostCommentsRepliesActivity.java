@@ -376,7 +376,20 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
             break;
             case R.id.upvoteCommentContainer:
             case R.id.upvoteReplyContainer:
-                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+                if (repliesList.get(position).getMarkedHelpful() == 0) {
+
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+
+
+                }
+                if (repliesList.get(position).getMarkedHelpful() == 1) {
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+
+
+                }
+                //  markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
                 break;
             case R.id.downvoteCommentContainer:
             case R.id.downvoteReplyContainer:
@@ -445,8 +458,11 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                             if (repliesList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getResponseId()) {
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     repliesList.get(i).setHelpfullCount(repliesList.get(i).getHelpfullCount() + 1);
+                                    repliesList.get(i).setMarkedHelpful(1);
                                 } else {
                                     repliesList.get(i).setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() + 1);
+                                    repliesList.get(i).setMarkedHelpful(0);
+
                                 }
                             }
                         }
@@ -498,9 +514,15 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     repliesList.get(i).setHelpfullCount(repliesList.get(i).getHelpfullCount() + 1);
                                     repliesList.get(i).setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() - 1);
+                                    repliesList.get(i).setMarkedHelpful(1);
+
+
                                 } else {
                                     repliesList.get(i).setNotHelpfullCount(repliesList.get(i).getNotHelpfullCount() + 1);
                                     repliesList.get(i).setHelpfullCount(repliesList.get(i).getHelpfullCount() - 1);
+                                    repliesList.get(i).setMarkedHelpful(0);
+
+
                                 }
                             }
                         }

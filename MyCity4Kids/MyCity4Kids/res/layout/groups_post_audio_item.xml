@@ -266,7 +266,7 @@
 
                 <ImageView
                     android:id="@+id/upvoteImageVIew"
-                    android:layout_width="16dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_recommend"
                     android:tint="@color/app_red" />

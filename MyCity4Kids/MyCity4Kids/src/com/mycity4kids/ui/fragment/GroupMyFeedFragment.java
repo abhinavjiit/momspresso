@@ -55,6 +55,7 @@ import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.MyFeedPollGenericRecyclerAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -492,15 +493,31 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
 
 
             case R.id.upvoteContainer:
-                Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
+                Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+                if (postList.get(position).getMarkedHelpful() == 0) {
 
-                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+
+
+                }
+                if (postList.get(position).getMarkedHelpful() == 1) {
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+                }
+
                 break;
             case R.id.downvoteContainer:
                 Utils.groupsEvent(getActivity(), "Groups_Discussion", "not helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
 
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
+
+            case R.id.whatsappShare:
+                String shareUrlWhatsapp = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                AppUtils.shareCampaignWithWhatsApp(getActivity(), shareUrlWhatsapp, "", "", "", "", "");
+
+
         }
     }
 
@@ -565,8 +582,12 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                             if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
+                                    postList.get(i).setMarkedHelpful(1);
+
                                 } else {
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
+                                    postList.get(i).setMarkedHelpful(0);
+
                                 }
                             }
                         }
@@ -621,9 +642,13 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() - 1);
+                                    postList.get(i).setMarkedHelpful(1);
+
                                 } else {
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() - 1);
+                                    postList.get(i).setMarkedHelpful(0);
+
                                 }
                             }
                         }
