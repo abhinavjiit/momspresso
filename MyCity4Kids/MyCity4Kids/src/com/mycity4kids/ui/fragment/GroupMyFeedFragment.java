@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -130,6 +131,16 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
         reportPostTextView = (TextView) fragmentView.findViewById(R.id.reportPostTextView);
         progressBar = (ProgressBar) fragmentView.findViewById(R.id.progressBar);
         emptyListTextView = (TextView) fragmentView.findViewById(R.id.emptyListText);
+
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+            mixpanel.track("MyFeed", jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         isRequestRunning = false;
         isLastPageReached = false;
         recyclerView.setAdapter(myFeedPollGenericRecyclerAdapter);
