@@ -713,7 +713,7 @@
     <string name="groups.all_groups">எல்லா குரூப்களும்</string>
     <string name="groups.groups">குரூப்கள்</string>
     <string name="groups_sections_polls">வாக்கெடுப்பு</string>
-    <string name="groups_sections_myfeed">Mஎனக்கான பதிவுகள்</string>
+    <string name="groups_sections_myfeed">எனக்கான பதிவுகள்</string>
 
     <string name="groups.reported_by">புகார் அளித்தவர்</string>
     <string name="groups.persons">நபர்கள்</string>
@@ -928,7 +928,7 @@
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
-    <string name="groups.other_groups">మిగతా గ్రూప్స్ </string>
+    <string name="groups.other_groups">OTHER GROUPS</string>
 
 
     //groupdetail Activity toast String
