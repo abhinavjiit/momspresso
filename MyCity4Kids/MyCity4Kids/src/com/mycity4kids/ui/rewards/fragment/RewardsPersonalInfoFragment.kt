@@ -44,6 +44,8 @@ import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
+import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
+import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.CityInfoItem
 import com.mycity4kids.models.response.SetupBlogData
@@ -75,6 +77,7 @@ import java.io.InputStreamReader
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.android.synthetic.main.fragment_rewards_personal_info.*
 
 /**editLanguage
  * A simple [Fragment] subclass.
@@ -221,6 +224,50 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
 
         return containerView
+    }
+
+    private fun applyCode() {
+        var referralRequest = CampaignReferral()
+        //referralRequest!!.user_id = userId
+        referralRequest.campaign_id = this!!.id!!
+        referralRequest.referral_code = editReferralCode.text.toString()
+
+        val call = BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postReferralCampaign(referralRequest)
+        call.enqueue(referCampaign)
+    }
+
+    val referCampaign = object : Callback<ParticipateCampaignResponse> {
+        override fun onResponse(call: Call<ParticipateCampaignResponse>, response: retrofit2.Response<ParticipateCampaignResponse>) {
+            removeProgressDialog()
+            if (response == null || null == response.body()) {
+                val nee = NetworkErrorException(response.raw().toString())
+                Crashlytics.logException(nee)
+                return
+            }
+            try {
+                val responseData = response.body()
+                if (responseData!!.code == 200) {
+                    if (Constants.SUCCESS == responseData.status) {
+                        Toast.makeText(context, responseData.data.get(0).msg, Toast.LENGTH_SHORT).show()
+                        editReferralCode.visibility = View.GONE
+                        textApply.visibility = View.GONE
+                        referHeader.visibility = View.GONE
+                    } else {
+                        textReferCodeError.visibility = View.VISIBLE
+                        textReferCodeError.setText("" + responseData.reason)
+                    }
+                }
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+        }
+
+        override fun onFailure(call: Call<ParticipateCampaignResponse>, t: Throwable) {
+            removeProgressDialog()
+            Crashlytics.logException(t)
+            Log.d("MC4kException", Log.getStackTraceString(t))
+        }
     }
 
     /*setting values to components*/
