@@ -98,6 +98,13 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (!SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserType().equals("1")) {
+
+
+            if (getActivity().getWindow() != null) {
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+            }
+        }
         View fragmentView = inflater.inflate(R.layout.fragment_groupspoll, container, false);
         recyclerView = (RecyclerView) fragmentView.findViewById(R.id.recyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());

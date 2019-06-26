@@ -49,13 +49,13 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
-import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsEditPostActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.MyFeedPollGenericRecyclerAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,8 +105,12 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getActivity().getWindow() != null) {
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        if (!SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserType().equals("1")) {
+
+
+            if (getActivity().getWindow() != null) {
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+            }
         }
         View fragmentView = inflater.inflate(R.layout.fragment_groupspoll, container, false);
         recyclerView = (RecyclerView) fragmentView.findViewById(R.id.recyclerView);
@@ -141,6 +145,8 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
         isRequestRunning = false;
         isLastPageReached = false;
         recyclerView.setAdapter(myFeedPollGenericRecyclerAdapter);
@@ -375,11 +381,11 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                     tab.select();*/
                 }
             } else if (requestCode == EDIT_POST_REQUEST_CODE) {
-                /*if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
+                if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
                     postSettingsContainerMain.setVisibility(View.GONE);
                 }
                 selectedPost.setContent(data.getStringExtra("updatedContent"));
-                myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();*/
+                myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 2222) {
                 Intent intent = getActivity().getIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -503,15 +509,31 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
 
 
             case R.id.upvoteContainer:
-                Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
+                Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+                if (postList.get(position).getMarkedHelpful() == 0) {
 
-                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+
+
+                }
+                if (postList.get(position).getMarkedHelpful() == 1) {
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+                }
+
                 break;
             case R.id.downvoteContainer:
                 Utils.groupsEvent(getActivity(), "Groups_Discussion", "not helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
 
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
+
+            case R.id.whatsappShare:
+                String shareUrlWhatsapp = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                AppUtils.shareCampaignWithWhatsApp(getActivity(), shareUrlWhatsapp, "", "", "", "", "");
+
+
         }
     }
 
@@ -576,8 +598,12 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                             if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
+                                    postList.get(i).setMarkedHelpful(1);
+
                                 } else {
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
+                                    postList.get(i).setMarkedHelpful(0);
+
                                 }
                             }
                         }
@@ -632,9 +658,13 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() - 1);
+                                    postList.get(i).setMarkedHelpful(1);
+
                                 } else {
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() - 1);
+                                    postList.get(i).setMarkedHelpful(0);
+
                                 }
                             }
                         }

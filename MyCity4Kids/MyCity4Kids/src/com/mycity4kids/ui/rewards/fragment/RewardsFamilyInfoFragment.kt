@@ -313,7 +313,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
 
         if (apiGetResponse.isExpecting != null && apiGetResponse.isExpecting == 1 && apiGetResponse.expectedDate != null) {
             editExpectedDate.setText(AppUtils.convertTimestampToDate(apiGetResponse.expectedDate))
-            checkAreYouExpecting.isChecked = true
+            checkAreYouExpecting1.isChecked = true
             layoutMotherExptectedDate.visibility = View.VISIBLE
         } else {
             layoutMotherExptectedDate.visibility = View.GONE
@@ -400,7 +400,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
             apiGetResponse.interest = preSelectedInterestForPosting
         }
 
-        if (checkAreYouExpecting.isChecked) {
+        if (checkAreYouExpecting1.isChecked) {
             if (editExpectedDate.text.isNullOrEmpty()) {
                 Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_expected_date)), Toast.LENGTH_SHORT).show()
                 return false
@@ -558,7 +558,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
         linearKidsDetail.addView(indexView)
     }
 
-    fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false,isShowForParent : Boolean = false) {
+    fun showDatePickerDialog(isShowTillCurrent: Boolean, isShowFutureDate: Boolean = false, isShowForParent: Boolean = false) {
         val newFragment = RewardsPersonalInfoFragment.DatePickerFragment()
         var bundle = Bundle()
         bundle.putBoolean("is_show_current_only", isShowTillCurrent)

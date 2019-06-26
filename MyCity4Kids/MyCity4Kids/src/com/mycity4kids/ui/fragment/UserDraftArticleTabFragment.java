@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -322,9 +323,10 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
                                  }
                              } else {
                                  if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
-//                                     showToast(getString(R.string.toast_response_error));
                                  } else {
 //                                     showToast(responseModel.getReason());
+                                     Toast.makeText(getActivity(), responseModel.getReason() + "", Toast.LENGTH_SHORT).show();
+
                                  }
                              }
                          }

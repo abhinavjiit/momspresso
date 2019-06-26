@@ -11,9 +11,9 @@
         android:id="@+id/relativeMainContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
+
         android:paddingTop="8dp"
-        android:paddingRight="10dp"
+
         android:paddingBottom="4dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
@@ -23,6 +23,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/space_10"
             android:contentDescription="@string/author_img"
             android:src="@drawable/default_commentor_img"
             android:visibility="visible"
@@ -95,39 +96,55 @@
             android:id="@+id/playAudioLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/commentDataTextView"
-            android:layout_toEndOf="@+id/commentorImageView"
-            android:layout_toRightOf="@+id/commentorImageView"
-            android:layout_marginTop="10dp">
+            android:layout_below="@id/commentorImageView"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/playAudioImageView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_weight="0.2"
-                android:src="@drawable/play" />
 
-            <ImageView
-                android:id="@+id/pauseAudioImageView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_weight="0.2"
-                android:src="@drawable/pause"
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="137dp"
+                android:layout_height="137dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/space_10"
+                android:src="@drawable/default_article"
                 android:visibility="gone" />
 
-            <SeekBar
-                android:id="@+id/audioSeekBar"
-                android:layout_width="0dp"
-                android:layout_height="4dp"
-                android:layout_below="@+id/commentDateTextView"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/playAudioImageView"
-                android:layout_weight="0.8"
-                android:progressDrawable="@drawable/progress"
-                android:thumb="@color/app_red" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_10">
+
+                <ImageView
+                    android:id="@+id/playAudioImageView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.2"
+                    android:src="@drawable/play" />
+
+                <ImageView
+                    android:id="@+id/pauseAudioImageView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.2"
+                    android:src="@drawable/pause"
+                    android:visibility="gone" />
+
+                <SeekBar
+                    android:id="@+id/audioSeekBar"
+                    android:layout_width="0dp"
+                    android:layout_height="4dp"
+                    android:layout_below="@+id/commentDateTextView"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/playAudioImageView"
+                    android:layout_weight="0.8"
+                    android:progressDrawable="@drawable/progress"
+                    android:thumb="@color/app_red" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -167,7 +184,7 @@
                 android:id="@+id/upvoteImageVIew"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_upvote"
+                android:src="@drawable/ic_recommend"
                 android:tint="@color/app_red" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -176,7 +193,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
-                android:text="0 Helpful"
+                android:text="0"
                 android:textColor="@color/groups.grey"
                 android:textSize="12sp"
                 app:fontName="oswald.ttf" />
@@ -192,7 +209,8 @@
             android:layout_toRightOf="@+id/upvoteCommentContainer"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/downvoteImageVIew"
@@ -221,6 +239,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/space_10"
             android:padding="5dp"
             android:text="Reply"
             android:textColor="@color/app_red"

@@ -20,10 +20,10 @@ public class GroupsViewFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 1:
+            case 0:
                 GroupsFragment groupsFragment = new GroupsFragment();
                 return groupsFragment;
-            case 0:
+            case 1:
                 GroupMyFeedFragment groupMyFeedFragment = new GroupMyFeedFragment();
                 return groupMyFeedFragment;
             case 2:

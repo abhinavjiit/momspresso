@@ -3,7 +3,9 @@ package com.mycity4kids.ui.adapter;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -206,7 +208,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(textPostViewHolder.postDataTextView);
 
-            textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+
             textPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPostViewHolder.commentLayout.setVisibility(View.GONE);
@@ -229,6 +232,16 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 } catch (Exception e) {
                     textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
+
+                if (postList.get(position).getMarkedHelpful() == 1) {
+
+                    textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+                } else {
+                    textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+                }
+
+
             }
 
 
@@ -283,6 +296,14 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 } catch (Exception e) {
                     audioCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
                 }
+                try {
+                    Picasso.with(mContext).load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.profileImageView);
+                } catch (Exception e) {
+                    audioCommentViewHolder.profileImageView.setBackgroundResource(R.drawable.default_commentor_img);
+                }
+
+
                 ArrayList<String> mediaList = new ArrayList<>();
                 Map<String, String> map = (Map<String, String>) postList.get(position).getMediaUrls();
                 if (map != null && !map.isEmpty()) {
@@ -324,6 +345,13 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 audioCommentViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
                 audioCommentViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
             }
+            if (postList.get(position).getMarkedHelpful() == 1) {
+
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
             audioCommentViewHolder.upvoteCommentCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
             audioCommentViewHolder.downvoteCommentCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
         } else if (holder instanceof MediaPostViewHolder) {
@@ -350,6 +378,13 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     mediaPostViewHolder.userTag.setVisibility(View.GONE);
 
                 }
+            }
+            if (postList.get(position).getMarkedHelpful() == 1) {
+
+                mediaPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                mediaPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
             }
             mediaPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(mediaPostViewHolder.postDataTextView, Linkify.WEB_URLS);
@@ -410,7 +445,13 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 }
             }
 
+            if (postList.get(position).getMarkedHelpful() == 1) {
 
+                textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
             textPollPostViewHolder.pollQuestionTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(textPollPostViewHolder.pollQuestionTextView, Linkify.WEB_URLS);
             textPollPostViewHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -499,6 +540,13 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     imageHolder.userTag.setVisibility(View.GONE);
 
                 }
+            }
+            if (postList.get(position).getMarkedHelpful() == 1) {
+
+                imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
             }
             imageHolder.pollQuestionTextView.setText(postList.get(position).getContent());
             Linkify.addLinks(imageHolder.pollQuestionTextView, Linkify.WEB_URLS);
@@ -698,7 +746,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     public class TextPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView userImageView;
+        ImageView userImageView, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView, userTag;
@@ -706,13 +754,15 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView, typeHere, beTheFirstOne;
         ImageView postSettingImageView;
-        ImageView shareTextView;
+        ImageView shareTextView, upvoteImageVIew;
         RelativeLayout commentLayout;
 
         TextPostViewHolder(View view) {
             super(view);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
             postDataTextView = (TextView) view.findViewById(R.id.postDataTextView);
@@ -729,6 +779,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
@@ -787,11 +838,11 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
-        ImageView shareTextView;
+        ImageView shareTextView, upvoteImageVIew;
         TextView upvoteCountTextView, downvoteCountTextView, userTag;
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView, beTheFirstOne;
-        ImageView postSettingImageView;
+        ImageView postSettingImageView, whatsappShare;
         private BubblePageIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
@@ -802,6 +853,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             super(view);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
             postDataTextView = (TextView) view.findViewById(R.id.postDataTextView);
@@ -837,7 +890,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
                 }
             });
-
+            whatsappShare.setOnClickListener(this);
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
@@ -898,7 +951,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
-        ImageView commentorImageView, playAudioImageView, pauseAudioImageView;
+        ImageView commentorImageView, playAudioImageView, pauseAudioImageView, whatsappShare;
         ImageView media;
         TextView commentorUsernameTextView, audioTimeElapsed;
         TextView commentDataTextView;
@@ -909,8 +962,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         LinearLayout upvoteCommentContainer, downvoteCommentContainer;
         RelativeLayout audiotRootView;
         TextView postCommentsTextView, beTheFirstOne;
-        ImageView postSettingImageView;
-        ImageView shareTextView;
+        ImageView postSettingImageView, upvoteImageVIew;
+        ImageView shareTextView, profileImageView;
         RelativeLayout commentLayout;
 
 
@@ -918,7 +971,10 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             super(view);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             media = (ImageView) view.findViewById(R.id.media);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
             audiotRootView = view.findViewById(R.id.commentRootView);
+            profileImageView = view.findViewById(R.id.profileImageView);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);
@@ -936,6 +992,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             beTheFirstOne = (TextView) view.findViewById(R.id.beTheFirstOne);
             userTag = (TextView) view.findViewById(R.id.userTag);
+            profileImageView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
 
 
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
@@ -1057,9 +1115,9 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView upvoteCountTextView, downvoteCountTextView;
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
-        ImageView postSettingImageView;
+        ImageView postSettingImageView, upvoteImageVIew;
         TextView pollQuestionTextView, beTheFirstOne, userTag;
-        ImageView shareTextView;
+        ImageView shareTextView, whatsappShare;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
         TextView pollResult1TextView, pollResult2TextView, pollResult3TextView, pollResult4TextView;
@@ -1071,7 +1129,9 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextPollPostViewHolder(View view) {
             super(view);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
@@ -1111,6 +1171,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
 
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1200,8 +1261,9 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView postCommentsTextView;
         ImageView postSettingImageView;
         TextView pollQuestionTextView, userTag;
-        ImageView shareTextView;
-        ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
+        ImageView shareTextView, upvoteImageVIew;
+        ;
+        ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView, whatsappShare;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
         TextView totalVoteCountTextView, beTheFirstOne;
@@ -1212,6 +1274,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         ImagePollPostViewHolder(View view) {
             super(view);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
@@ -1225,6 +1288,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             option2ImageView = (ImageView) view.findViewById(R.id.option2ImageView);
             option3ImageView = (ImageView) view.findViewById(R.id.option3ImageView);
             option4ImageView = (ImageView) view.findViewById(R.id.option4ImageView);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
             pollOption1ProgressBar = (RoundCornerProgressBar) view.findViewById(R.id.pollOption1ProgressBar);
             pollOption2ProgressBar = (RoundCornerProgressBar) view.findViewById(R.id.pollOption2ProgressBar);
             pollOption3ProgressBar = (RoundCornerProgressBar) view.findViewById(R.id.pollOption3ProgressBar);
@@ -1249,6 +1313,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -239,7 +239,7 @@
                 android:id="@+id/upvoteImageVIew"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_upvote"
+                android:src="@drawable/ic_recommend"
                 android:tint="@color/app_red" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -248,7 +248,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
-                android:text="20 Helpful"
+                android:text="20"
                 android:textColor="@color/groups.grey"
                 android:textSize="12sp"
                 app:fontName="oswald.ttf" />
@@ -264,7 +264,8 @@
             android:layout_toRightOf="@+id/upvoteContainer"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/downvoteImageVIew"
@@ -290,9 +291,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/postDataViewPager"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/addCommentImageView"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:gravity="bottom"
@@ -304,12 +305,12 @@
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/addCommentImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_below="@+id/postDataViewPager"
             android:layout_marginTop="10dp"
             android:layout_marginRight="4dp"
-            android:layout_toLeftOf="@+id/shareTextView"
+            android:layout_toLeftOf="@id/postCommentsTextView"
             android:padding="5dp"
             android:src="@drawable/ic_comments"
             android:tint="@color/app_red" />
@@ -331,13 +332,14 @@
         <!--android:textSize="10sp"-->
         <!--app:fontName="oswald.ttf" />-->
 
-        <ImageView
+              <ImageView
             android:id="@+id/shareTextView"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_below="@+id/postDataViewPager"
-            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/space_10"
             android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/downvoteContainer"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:paddingLeft="5dp"
@@ -346,6 +348,24 @@
             android:paddingBottom="5dp"
             android:src="@drawable/ic_share_white"
             android:tint="@color/app_red" />
+        <ImageView
+            android:id="@+id/whatsappShare"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_below="@+id/postDataViewPager"
+            android:layout_marginLeft="@dimen/space_10"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/shareTextView"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
+            android:src="@drawable/ic_whats_app"
+            android:tint="@color/app_red" />
+
+
 
 
         <RelativeLayout

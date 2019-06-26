@@ -357,7 +357,7 @@
                     app:fontName="oswald_regular.ttf" />
 
                 <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/spinnernumberOfKids"
+                    android:id="@+id/spinnernumberOfKids1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textViewNumberOfKids"
@@ -421,7 +421,7 @@
                 android:textStyle="bold" />
 
             <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/checkAreYouExpecting"
+                android:id="@+id/checkAreYouExpecting1"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"

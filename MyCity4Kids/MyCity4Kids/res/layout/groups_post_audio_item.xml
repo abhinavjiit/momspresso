@@ -41,9 +41,9 @@
         android:layout_below="@+id/group_name_layout"
         android:layout_marginBottom="16dp"
         android:background="@color/white_color"
-        android:paddingLeft="10dp"
+
         android:paddingTop="8dp"
-        android:paddingRight="10dp"
+
         android:paddingBottom="4dp">
 
         //Change View hierarchy with caution. getParent method is in use in the class file
@@ -52,9 +52,7 @@
             android:id="@+id/relativeMainContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
             android:paddingTop="8dp"
-            android:paddingRight="10dp"
             android:paddingBottom="4dp">
 
             <com.mikhaellopez.circularimageview.CircularImageView
@@ -64,6 +62,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginLeft="@dimen/space_10"
                 android:contentDescription="@string/author_img"
                 android:src="@drawable/default_commentor_img"
                 android:visibility="visible"
@@ -170,6 +169,7 @@
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
 
+
             <LinearLayout
                 android:id="@+id/playAudioLayout"
                 android:layout_width="match_parent"
@@ -178,40 +178,58 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginRight="2dp"
+                android:background="#F8EFF0"
                 android:gravity="start"
+                android:orientation="vertical"
                 android:text=""
                 android:textColor="@color/groups.grey"
                 android:textSize="16sp"
                 android:visibility="visible">
 
-                <ImageView
-                    android:id="@+id/playAudioImageView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0.1"
-                    android:src="@drawable/play" />
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/profileImageView"
+                    android:layout_width="137dp"
+                    android:layout_height="137dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/space_10"
+                    android:src="@drawable/default_article" />
 
-                <ImageView
-                    android:id="@+id/pauseAudioImageView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="2dp"
-                    android:layout_weight="0.1"
-                    android:src="@drawable/pause"
-                    android:visibility="gone" />
 
-                <SeekBar
-                    android:id="@+id/audioSeekBar"
-                    android:layout_width="0dp"
-                    android:layout_height="4dp"
-                    android:layout_below="@+id/commentDateTextView"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="2dp"
-                    android:layout_toRightOf="@+id/playAudioImageView"
-                    android:layout_weight="0.9"
-                    android:progressDrawable="@drawable/progress"
-                    android:thumb="@color/app_red" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/space_10"
+                    android:layout_marginBottom="@dimen/space_10">
+
+                    <ImageView
+                        android:id="@+id/playAudioImageView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.1"
+                        android:src="@drawable/play" />
+
+                    <ImageView
+                        android:id="@+id/pauseAudioImageView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="0.1"
+                        android:src="@drawable/pause"
+                        android:visibility="gone" />
+
+                    <SeekBar
+                        android:id="@+id/audioSeekBar"
+                        android:layout_width="0dp"
+                        android:layout_height="4dp"
+                        android:layout_below="@+id/commentDateTextView"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="2dp"
+                        android:layout_toRightOf="@+id/playAudioImageView"
+                        android:layout_weight="0.9"
+                        android:progressDrawable="@drawable/progress"
+                        android:thumb="@color/app_red" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -221,7 +239,7 @@
                 android:layout_below="@+id/playAudioLayout"
                 android:layout_alignStart="@+id/playAudioLayout"
                 android:layout_alignLeft="@+id/playAudioLayout"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless">
 
@@ -240,6 +258,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/timerLayout"
+                android:layout_marginLeft="@dimen/space_10"
                 android:layout_marginTop="15dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
@@ -247,9 +266,9 @@
 
                 <ImageView
                     android:id="@+id/upvoteImageVIew"
-                    android:layout_width="16dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="16dp"
-                    android:src="@drawable/ic_upvote"
+                    android:src="@drawable/ic_recommend"
                     android:tint="@color/app_red" />
 
                 <com.mycity4kids.widget.CustomFontTextView
@@ -258,7 +277,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
                     android:gravity="center"
-                    android:text="0 Helpful"
+                    android:text="0"
                     android:textColor="@color/groups.grey"
                     android:textSize="12sp"
                     app:fontName="oswald.ttf" />
@@ -274,7 +293,8 @@
                 android:layout_toRightOf="@+id/upvoteCommentContainer"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/downvoteImageVIew"
@@ -300,26 +320,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/timerLayout"
+                android:layout_alignParentRight="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@+id/addCommentImageView"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:gravity="bottom"
                 android:padding="5dp"
-                android:text="20 Comments"
+                android:text="Comments"
                 android:textColor="@color/app_red"
                 android:textSize="12sp"
                 app:fontName="oswald.ttf" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/addCommentImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_below="@+id/timerLayout"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="4dp"
-                android:layout_toLeftOf="@+id/shareTextView"
+
+                android:layout_toLeftOf="@id/postCommentsTextView"
                 android:padding="5dp"
                 android:src="@drawable/ic_comments"
                 android:tint="@color/app_red" />
@@ -329,16 +350,35 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_below="@+id/timerLayout"
-                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/space_10"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@id/upvoteCommentContainer"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                android:src="@drawable/ic_share_white"
+                android:tint="@color/app_red" />
+
+            <ImageView
+                android:id="@+id/whatsappShare"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_below="@+id/timerLayout"
+                android:layout_marginLeft="@dimen/space_10"
                 android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/shareTextView"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"
                 android:paddingRight="5dp"
                 android:paddingBottom="5dp"
-                android:src="@drawable/ic_share_white"
+                android:src="@drawable/ic_whats_app"
                 android:tint="@color/app_red" />
+
 
         </RelativeLayout>
 

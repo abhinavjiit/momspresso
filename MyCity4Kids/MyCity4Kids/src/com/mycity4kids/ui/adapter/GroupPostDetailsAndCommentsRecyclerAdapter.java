@@ -251,6 +251,14 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     }
                 }
             });
+
+
+            if (groupPostResult.getMarkedHelpful() == 1) {
+                textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         } else if (holder instanceof AudioCommentViewHeaderHolder) {
             AudioCommentViewHeaderHolder audioCommentViewHolder = (AudioCommentViewHeaderHolder) holder;
 
@@ -302,6 +310,12 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                         }
                     }
                 });
+                try {
+                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.profileImageView);
+                } catch (Exception e) {
+                    audioCommentViewHolder.profileImageView.setBackgroundResource(R.drawable.default_commentor_img);
+                }
                 audioCommentViewHolder.commentorUsernameTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -366,6 +380,15 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             audioCommentViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             audioCommentViewHolder.upvoteCommentCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
             audioCommentViewHolder.downvoteCommentCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
+
+
+            if (groupPostResult.getMarkedHelpful() == 1) {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
+
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
 
@@ -446,6 +469,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 }
             });
             initializeViews((MediaPostViewHolder) holder, position);
+
+            if (groupPostResult.getMarkedHelpful() == 1) {
+                mediaPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                mediaPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
 
@@ -558,6 +588,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 showVotingData(textPollPostViewHolder, groupPostResult);
             } else {
                 hideVotingData(textPollPostViewHolder);
+            }
+
+            if (groupPostResult.getMarkedHelpful() == 1) {
+                textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
             }
         } else if (holder instanceof ImagePollPostViewHolder) {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
@@ -675,6 +712,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else {
                 hideImagePollVotingData(imageHolder);
             }
+
+            if (groupPostResult.getMarkedHelpful() == 1) {
+                imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
 
@@ -790,6 +834,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             }
             audioCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + " " + localizedHelpful);
             audioCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
+
+            if (postCommentsList.get(position).getMarkedHelpful() == 1) {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         } else {
             RootCommentViewHolder rootCommentViewHolder = (RootCommentViewHolder) holder;
             if (postCommentsList.get(position).getIsAnnon() == 1) {
@@ -894,6 +945,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             }
             rootCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + " " + localizedHelpful);
             rootCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
+
+            if (postCommentsList.get(position).getMarkedHelpful() == 1) {
+                rootCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                rootCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         }
     }
 
@@ -1161,7 +1219,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public class TextPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView userImageView;
+        ImageView userImageView, upvoteImageVIew;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
@@ -1173,6 +1231,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         TextPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -1202,7 +1262,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     public class MediaPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView;
+        ImageView userImageView, upvoteImageVIew;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
@@ -1217,6 +1277,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         MediaPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -1268,7 +1330,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     public class TextPollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView;
+        ImageView userImageView, upvoteImageVIew;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
@@ -1285,6 +1347,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         TextPollPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -1360,7 +1424,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     public class ImagePollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView, shareTextView;
+        ImageView userImageView, shareTextView, upvoteImageVIew;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
@@ -1377,6 +1441,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         ImagePollPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -1453,8 +1519,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public class AudioCommentViewHeaderHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
-        ImageView commentorImageView, playHeaderAudioImageView, pauseHeaderAudioImageView;
-        ImageView media;
+        ImageView commentorImageView, playHeaderAudioImageView, pauseHeaderAudioImageView, profileImageView;
+        ImageView media, upvoteImageVIew;
         TextView commentorUsernameTextView, headerAudioTimeElapsed;
         TextView commentDataTextView;
         TextView commentDateTextView, userTag;
@@ -1469,7 +1535,10 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         public AudioCommentViewHeaderHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+
             media = (ImageView) view.findViewById(R.id.media);
+            profileImageView = (ImageView) view.findViewById(R.id.profileImageView);
             audiotRootView = view.findViewById(R.id.commentRootView);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
@@ -1496,6 +1565,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             headerAudioSeekBar.setOnSeekBarChangeListener(this);
             postSettingImageView.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            profileImageView.setOnClickListener(this);
 
             underlineView = view.findViewById(R.id.underlineView);
         }
@@ -1562,7 +1632,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
         ImageView commentorImageView, playAudioImageView, pauseAudioImageView;
-        ImageView media;
+        ImageView media, upvoteImageVIew;
         TextView commentorUsernameTextView, audioTimeElapsed;
         TextView commentDataTextView;
         TextView replyCommentTextView;
@@ -1575,6 +1645,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         public AudioCommentViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+
             media = (ImageView) view.findViewById(R.id.media);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
@@ -1665,7 +1737,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     public class RootCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         ImageView commentorImageView;
-        ImageView media;
+        ImageView media, upvoteImageVIew;
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
         TextView replyCommentTextView;
@@ -1678,6 +1750,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         RootCommentViewHolder(View view) {
             super(view);
             media = (ImageView) view.findViewById(R.id.media);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);

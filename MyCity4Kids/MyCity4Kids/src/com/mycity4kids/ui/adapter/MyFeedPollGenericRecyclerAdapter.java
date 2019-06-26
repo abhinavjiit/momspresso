@@ -7,12 +7,10 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -54,7 +52,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
-import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
@@ -226,7 +223,13 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 textPostViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
                 textPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
+            if (postList.get(position).getMarkedHelpful() == 1) {
 
+                textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
 
         } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
@@ -279,6 +282,13 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 } catch (Exception e) {
                     audioCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
                 }
+                try {
+                    Picasso.with(mContext).load(postList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.profileImageView);
+                } catch (Exception e) {
+                    audioCommentViewHolder.profileImageView.setBackgroundResource(R.drawable.default_commentor_img);
+                }
+
                 ArrayList<String> mediaList = new ArrayList<>();
                 Map<String, String> map = (Map<String, String>) postList.get(position).getMediaUrls();
                 if (map != null && !map.isEmpty()) {
@@ -327,6 +337,16 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 audioCommentViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
                 audioCommentViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
+
+
+            if (postList.get(position).getMarkedHelpful() == 1) {
+
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
+
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
 
@@ -388,6 +408,15 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             if (postList.get(position).getGroupInfo().getColor() != null) {
                 mediaPostViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
                 mediaPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
+            }
+
+
+            if (postList.get(position).getMarkedHelpful() == 1) {
+
+                mediaPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                mediaPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
             }
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
@@ -486,6 +515,14 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 textPollPostViewHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
                 textPollPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
+            if (postList.get(position).getMarkedHelpful() == 1) {
+
+                textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
+
         } else {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
             if (postList.get(position).getIsAnnon() == 1) {
@@ -584,6 +621,13 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 imageHolder.groupName.setTextColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
                 imageHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
+            if (postList.get(position).getMarkedHelpful() == 1) {
+                imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
+
         }
     }
 
@@ -713,7 +757,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     public class TextPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView userImageView;
+        ImageView userImageView, upvoteImageVIew, whatsappShare;
         TextView usernameTextView, groupName;
         TextView postDateTextView;
         TextView postDataTextView, userTag;
@@ -727,6 +771,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
         TextPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
@@ -755,6 +801,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
+
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -805,7 +853,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public class MediaPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView;
+        ImageView userImageView, whatsappShare;
         TextView usernameTextView, groupName;
         TextView postDateTextView;
         TextView postDataTextView;
@@ -813,7 +861,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView upvoteCountTextView, downvoteCountTextView, userTag;
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView, beTheFirstOne;
-        ImageView postSettingImageView;
+        ImageView postSettingImageView, upvoteImageVIew;
         private BubblePageIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
@@ -823,6 +871,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
         MediaPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
@@ -865,7 +915,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
                 }
             });
-
+            whatsappShare.setOnClickListener(this);
             groupNameLayout.setOnClickListener(this);
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -927,8 +977,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
-        ImageView commentorImageView, playAudioImageView, pauseAudioImageView;
-        ImageView media;
+        ImageView commentorImageView, playAudioImageView, pauseAudioImageView, whatsappShare, profileImageView;
+        ImageView media, upvoteImageVIew;
         TextView commentorUsernameTextView, audioTimeElapsed;
         TextView commentDataTextView;
         TextView commentDateTextView;
@@ -946,6 +996,9 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
         public AudioCommentViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+            profileImageView = (ImageView) view.findViewById(R.id.profileImageView);
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             media = (ImageView) view.findViewById(R.id.media);
             audiotRootView = view.findViewById(R.id.commentRootView);
@@ -1026,6 +1079,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             audioSeekBar.setOnSeekBarChangeListener(this);
             postSettingImageView.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
 
             underlineView = view.findViewById(R.id.underlineView);
         }
@@ -1089,13 +1143,13 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public class TextPollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView;
+        ImageView userImageView, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
-        ImageView postSettingImageView;
+        ImageView postSettingImageView, upvoteImageVIew;
         TextView pollQuestionTextView, beTheFirstOne, userTag;
         ImageView shareTextView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
@@ -1109,6 +1163,9 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
         TextPollPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+
             commentLayout = (RelativeLayout) view.findViewById(R.id.commentLayout);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
@@ -1155,6 +1212,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
+
 
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1237,7 +1296,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public class ImagePollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView;
+        ImageView userImageView, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
@@ -1245,7 +1304,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView postCommentsTextView;
         ImageView postSettingImageView;
         TextView pollQuestionTextView, userTag;
-        ImageView shareTextView;
+        ImageView shareTextView, upvoteImageVIew;
         ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
         RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
@@ -1257,6 +1316,9 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
         ImagePollPostViewHolder(View view) {
             super(view);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -1302,6 +1364,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
