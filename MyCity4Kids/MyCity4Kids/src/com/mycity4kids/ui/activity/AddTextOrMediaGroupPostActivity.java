@@ -224,7 +224,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         cancelTextView.setOnClickListener(this);
         closeEditorImageView.setOnClickListener(this);
 
-        postContentEditText.setText(SharedPrefUtils.getSavedPostData(this, selectedGroup.getId()));
+        if (SharedPrefUtils.getSavedPostData(this, selectedGroup.getId()) != null) {
+            postContentEditText.setText(SharedPrefUtils.getSavedPostData(this, selectedGroup.getId()));
+        }
 
         postContentEditText.addTextChangedListener(new TextWatcher() {
             @Override
