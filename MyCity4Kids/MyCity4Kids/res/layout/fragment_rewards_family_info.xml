@@ -6,579 +6,579 @@
     android:layout_height="match_parent"
     tools:context=".ui.rewards.activity.RewardsContainerActivity">
 
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false">
+    <!--<android.support.v4.widget.NestedScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:clipToPadding="false">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:orientation="vertical">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/white"-->
+            <!--android:orientation="vertical">-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:text="@string/rewards_family_header"
-                android:textColor="@color/app_grey"
-                android:textSize="14sp"
-                app:fontName="oswald.ttf" />
-
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/layoutGenderDOB"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="16dp">
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rewards_gender"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/dobLabelTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rewards_dob"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf"
-                    app:layout_constraintLeft_toLeftOf="@+id/textDOB"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="30dp"-->
+                <!--android:layout_marginRight="20dp"-->
+                <!--android:layout_marginBottom="20dp"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/rewards_family_header"-->
+                <!--android:textColor="@color/app_grey"-->
+                <!--android:textSize="14sp"-->
+                <!--app:fontName="oswald.ttf" />-->
 
 
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/genderSpinner"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintRight_toLeftOf="@+id/textDOB"
-                    android:background="@drawable/mainprofile_thin_border"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/gender" />
+            <!--<android.support.constraint.ConstraintLayout-->
+                <!--android:id="@+id/layoutGenderDOB"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:layout_marginRight="16dp">-->
 
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginRight="12dp"
-                    android:src="@drawable/arrowdownnew"
-                    app:layout_constraintRight_toRightOf="@id/genderSpinner"
-                    app:layout_constraintTop_toTopOf="@+id/genderSpinner" />
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:id="@+id/gender"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/rewards_gender"-->
+                    <!--android:textColor="@color/app_grey"-->
+                    <!--app:fontName="oswald_regular.ttf"-->
+                    <!--app:layout_constraintStart_toStartOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/textDOB"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@drawable/mainprofile_thin_border"
-                    android:gravity="center_vertical"
-                    android:hint="DD/MM/YYYY"
-                    android:paddingLeft="10dp"
-                    android:textColor="#000"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/genderSpinner"
-                    app:layout_constraintTop_toBottomOf="@id/dobLabelTextView" />
-            </android.support.constraint.ConstraintLayout>
-
-            <RelativeLayout
-                android:id="@+id/layoutWorking"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="16dp">
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/textWorkingStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rewards_working_status"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
-
-                <RadioGroup
-                    android:id="@+id/radioGroupWorkingStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_below="@+id/textWorkingStatus"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <android.support.v7.widget.AppCompatRadioButton
-                        android:id="@+id/radiokWorking"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_below="@id/textWorkingStatus"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginLeft="0dp"
-                        android:buttonTint="@color/app_red"
-                        android:text="@string/rewards_working"
-                        android:textColor="@color/app_light_black" />
-
-                    <android.support.v7.widget.AppCompatRadioButton
-                        android:id="@+id/radioNotWorking"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_below="@id/textWorkingStatus"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="8dp"
-                        android:buttonTint="@color/app_red"
-                        android:text="@string/rewards_non_working"
-                        android:textColor="@color/app_light_black" />
-                </RadioGroup>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp">
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/rewards_language"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/textEditLanguage"
-                    android:layout_width="50sp"
-                    android:layout_height="30sp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/shape_red_border"
-                    android:gravity="center"
-                    android:text="EDIT"
-                    android:textColor="@color/app_red"
-                    android:textSize="14sp"
-                    android:visibility="gone"
-                    app:fontName="oswald_regular.ttf" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLanguage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/topicInterestLabel"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:visibility="gone">
-
-                <org.apmem.tools.layouts.FlowLayout
-                    android:id="@+id/floatingLanguage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true">
-
-                </org.apmem.tools.layouts.FlowLayout>
-            </LinearLayout>
-
-            <com.mycity4kids.widget.CustomFontEditText
-                android:id="@+id/editLanguage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/mainprofile_thin_border"
-                android:editable="false"
-                android:focusable="false"
-                android:hint="Select"
-                android:inputType="textNoSuggestions"
-                android:paddingStart="15dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
-                android:textColor="@color/app_light_black"
-                android:textSize="16dp"
-                app:fontName="oswald_regular.ttf" />
-
-            <RelativeLayout
-                android:id="@+id/layoutFamilyType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="16dp"
-                android:visibility="gone">
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/textFamilyType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="FAMILY TYPE"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
-
-                <RadioGroup
-                    android:id="@+id/radioGroupFamilyType"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_below="@+id/textFamilyType"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <android.support.v7.widget.AppCompatRadioButton
-                        android:id="@+id/checkNuclear"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_below="@id/textWorkingStatus"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="8dp"
-                        android:buttonTint="@color/app_red"
-                        android:text="Nuclear"
-                        android:textColor="@color/app_light_black" />
-
-                    <android.support.v7.widget.AppCompatRadioButton
-                        android:id="@+id/checkJoint"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_below="@id/textWorkingStatus"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="20dp"
-                        android:buttonTint="@color/app_red"
-                        android:text="Joint"
-                        android:textColor="@color/app_light_black" />
-                </RadioGroup>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/layoutMother"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="16dp">
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/textAreMother"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rewards_have_children"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
-
-                <RadioGroup
-                    android:id="@+id/radioGroupAreMother"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_below="@+id/textAreMother"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <android.support.v7.widget.AppCompatRadioButton
-                        android:id="@+id/radioYes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_below="@id/textAreMother"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentLeft="true"
-                        android:buttonTint="@color/app_red"
-                        android:text="Yes"
-                        android:textColor="@color/app_light_black" />
-
-                    <android.support.v7.widget.AppCompatRadioButton
-                        android:id="@+id/radioExpecting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_below="@id/textAreMother"
-                        android:layout_marginLeft="20dp"
-                        android:layout_toRightOf="@+id/radioYes"
-                        android:buttonTint="@color/app_red"
-                        android:text="Expecting"
-                        android:textColor="@color/app_light_black"
-                        android:visibility="gone" />
-
-                    <android.support.v7.widget.AppCompatRadioButton
-                        android:id="@+id/radioNo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_below="@+id/textAreMother"
-                        android:layout_marginLeft="20dp"
-                        android:layout_toRightOf="@+id/radioExpecting"
-                        android:buttonTint="@color/app_red"
-                        android:text="No"
-                        android:textColor="@color/app_light_black" />
-                </RadioGroup>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/layoutNumberOfKids"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="16dp">
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/textViewNumberOfKids"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rewards_number_of_kids"
-                    android:visibility="gone"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
-
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/spinnernumberOfKids"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textViewNumberOfKids"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/mainprofile_thin_border"
-                    android:inputType="textNoSuggestions"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:textColor="@color/app_light_black"
-                    android:textSize="16dp"
-                    android:visibility="gone"
-                    app:fontName="oswald_regular.ttf" />
-
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_alignTop="@+id/spinnernumberOfKids"
-                    android:layout_alignRight="@id/spinnernumberOfKids"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="8dp"
-                    android:src="@drawable/arrowdownnew"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/linearKidsDetail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="16dp"
-                android:orientation="vertical">
-            </LinearLayout>
-
-            <include
-                android:id="@+id/layoutDynamicNumberOfKids"
-                layout="@layout/dynamic_child_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="15dp"
-                android:visibility="visible"/>
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/textAddChild"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:background="@color/app_red"
-                android:paddingLeft="35dp"
-                android:paddingTop="10dp"
-                android:paddingRight="35dp"
-                android:paddingBottom="10dp"
-                android:text="@string/rewards_add_child"
-                android:textColor="@color/white"
-                app:fontName="oswald_regular.ttf"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/checkAreYouExpecting"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:buttonTint="@color/app_red"
-                android:gravity="center_vertical"
-                android:paddingEnd="15dp"
-                android:paddingRight="15dp"
-                android:text="@string/rewards_are_expecing"
-                android:textColor="@color/app_grey"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/gender" />
-
-            <RelativeLayout
-                android:id="@+id/layoutExptectedDateOfDelivery"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="16dp"
-                android:visibility="gone">
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/textViewLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="EXPECTED DATE OF DELIVERY"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
-
-                <com.mycity4kids.widget.CustomFontEditText
-                    android:id="@+id/editExpectedDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textViewLocation"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/mainprofile_thin_border"
-                    android:editable="false"
-                    android:focusable="false"
-                    android:hint="DD/MM/YYYY"
-                    android:inputType="textNoSuggestions"
-                    android:paddingStart="15dp"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:textColor="@color/app_light_black"
-                    android:textSize="16dp"
-                    app:fontName="oswald_regular.ttf" />
-
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_alignTop="@+id/editExpectedDate"
-                    android:layout_alignRight="@id/editExpectedDate"
-                    android:layout_marginTop="21dp"
-                    android:layout_marginRight="13dp"
-                    android:layout_marginBottom="20dp"
-                    android:src="@drawable/arrowdownnew" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp">
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/rewards_interest"
-                    android:textColor="@color/app_grey"
-                    app:fontName="oswald_regular.ttf" />
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/textEditInterest"
-                    android:layout_width="50sp"
-                    android:layout_height="30sp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/shape_red_border"
-                    android:gravity="center"
-                    android:text="EDIT"
-                    android:textColor="@color/app_red"
-                    android:textSize="14sp"
-                    android:visibility="gone"
-                    app:fontName="oswald_regular.ttf" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/linearInterest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/topicInterestLabel"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:visibility="gone">
-
-                <org.apmem.tools.layouts.FlowLayout
-                    android:id="@+id/floatingInterest"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true">
-
-                </org.apmem.tools.layouts.FlowLayout>
-            </LinearLayout>
-
-            <com.mycity4kids.widget.CustomFontEditText
-                android:id="@+id/editInterest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/mainprofile_thin_border"
-                android:editable="false"
-                android:focusable="false"
-                android:hint="Select"
-                android:inputType="textNoSuggestions"
-                android:paddingStart="15dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
-                android:textColor="@color/app_light_black"
-                android:textSize="16dp"
-                app:fontName="oswald_regular.ttf" />
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:id="@+id/dobLabelTextView"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/rewards_dob"-->
+                    <!--android:textColor="@color/app_grey"-->
+                    <!--app:fontName="oswald_regular.ttf"-->
+                    <!--app:layout_constraintLeft_toLeftOf="@+id/textDOB"-->
+                    <!--app:layout_constraintTop_toTopOf="parent" />-->
 
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/textSubmit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/app_red"
-                android:gravity="center"
-                android:paddingLeft="35dp"
-                android:paddingTop="15dp"
-                android:paddingRight="35dp"
-                android:paddingBottom="15dp"
-                android:text="@string/save_continue"
-                app:fontName="oswald_regular.ttf"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:layout_marginBottom="10dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+                <!--<android.support.v7.widget.AppCompatSpinner-->
+                    <!--android:id="@+id/genderSpinner"-->
+                    <!--android:layout_width="150dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--app:layout_constraintRight_toLeftOf="@+id/textDOB"-->
+                    <!--android:background="@drawable/mainprofile_thin_border"-->
+                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                    <!--app:layout_constraintStart_toStartOf="parent"-->
+                    <!--app:layout_constraintTop_toBottomOf="@id/gender" />-->
+
+                <!--<ImageView-->
+                    <!--android:layout_width="14dp"-->
+                    <!--android:layout_height="14dp"-->
+                    <!--android:layout_marginTop="12dp"-->
+                    <!--android:layout_marginRight="12dp"-->
+                    <!--android:src="@drawable/arrowdownnew"-->
+                    <!--app:layout_constraintRight_toRightOf="@id/genderSpinner"-->
+                    <!--app:layout_constraintTop_toTopOf="@+id/genderSpinner" />-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:id="@+id/textDOB"-->
+                    <!--android:layout_width="150dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_marginStart="8dp"-->
+                    <!--android:layout_marginLeft="8dp"-->
+                    <!--android:layout_marginTop="7dp"-->
+                    <!--android:background="@drawable/mainprofile_thin_border"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:hint="DD/MM/YYYY"-->
+                    <!--android:paddingLeft="10dp"-->
+                    <!--android:textColor="#000"-->
+                    <!--app:layout_constraintEnd_toEndOf="parent"-->
+                    <!--app:layout_constraintStart_toEndOf="@+id/genderSpinner"-->
+                    <!--app:layout_constraintTop_toBottomOf="@id/dobLabelTextView" />-->
+            <!--</android.support.constraint.ConstraintLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/layoutWorking"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:layout_marginRight="16dp">-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:id="@+id/textWorkingStatus"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/rewards_working_status"-->
+                    <!--android:textColor="@color/app_grey"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+
+                <!--<RadioGroup-->
+                    <!--android:id="@+id/radioGroupWorkingStatus"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_below="@+id/textWorkingStatus"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal">-->
+
+                    <!--<android.support.v7.widget.AppCompatRadioButton-->
+                        <!--android:id="@+id/radiokWorking"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:layout_below="@id/textWorkingStatus"-->
+                        <!--android:layout_alignParentStart="true"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_marginStart="0dp"-->
+                        <!--android:layout_marginLeft="0dp"-->
+                        <!--android:buttonTint="@color/app_red"-->
+                        <!--android:text="@string/rewards_working"-->
+                        <!--android:textColor="@color/app_light_black" />-->
+
+                    <!--<android.support.v7.widget.AppCompatRadioButton-->
+                        <!--android:id="@+id/radioNotWorking"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:layout_below="@id/textWorkingStatus"-->
+                        <!--android:layout_marginLeft="20dp"-->
+                        <!--android:layout_marginRight="8dp"-->
+                        <!--android:buttonTint="@color/app_red"-->
+                        <!--android:text="@string/rewards_non_working"-->
+                        <!--android:textColor="@color/app_light_black" />-->
+                <!--</RadioGroup>-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_marginRight="15dp">-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginTop="15dp"-->
+                    <!--android:text="@string/rewards_language"-->
+                    <!--android:textColor="@color/app_grey"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:id="@+id/textEditLanguage"-->
+                    <!--android:layout_width="50sp"-->
+                    <!--android:layout_height="30sp"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginRight="4dp"-->
+                    <!--android:background="@drawable/shape_red_border"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="EDIT"-->
+                    <!--android:textColor="@color/app_red"-->
+                    <!--android:textSize="14sp"-->
+                    <!--android:visibility="gone"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/linearLanguage"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/topicInterestLabel"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_marginRight="15dp"-->
+                <!--android:animateLayoutChanges="true"-->
+                <!--android:orientation="vertical"-->
+                <!--android:paddingTop="10dp"-->
+                <!--android:paddingBottom="10dp"-->
+                <!--android:visibility="gone">-->
+
+                <!--<org.apmem.tools.layouts.FlowLayout-->
+                    <!--android:id="@+id/floatingLanguage"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:animateLayoutChanges="true">-->
+
+                <!--</org.apmem.tools.layouts.FlowLayout>-->
+            <!--</LinearLayout>-->
+
+            <!--<com.mycity4kids.widget.CustomFontEditText-->
+                <!--android:id="@+id/editLanguage"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_marginRight="15dp"-->
+                <!--android:background="@drawable/mainprofile_thin_border"-->
+                <!--android:editable="false"-->
+                <!--android:focusable="false"-->
+                <!--android:hint="Select"-->
+                <!--android:inputType="textNoSuggestions"-->
+                <!--android:paddingStart="15dp"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingTop="15dp"-->
+                <!--android:paddingBottom="15dp"-->
+                <!--android:textColor="@color/app_light_black"-->
+                <!--android:textSize="16dp"-->
+                <!--app:fontName="oswald_regular.ttf" />-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/layoutFamilyType"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:visibility="gone">-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:id="@+id/textFamilyType"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="FAMILY TYPE"-->
+                    <!--android:textColor="@color/app_grey"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+
+                <!--<RadioGroup-->
+                    <!--android:id="@+id/radioGroupFamilyType"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_below="@+id/textFamilyType"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal">-->
+
+                    <!--<android.support.v7.widget.AppCompatRadioButton-->
+                        <!--android:id="@+id/checkNuclear"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:layout_below="@id/textWorkingStatus"-->
+                        <!--android:layout_alignParentStart="true"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_marginStart="0dp"-->
+                        <!--android:layout_marginLeft="0dp"-->
+                        <!--android:layout_marginRight="8dp"-->
+                        <!--android:buttonTint="@color/app_red"-->
+                        <!--android:text="Nuclear"-->
+                        <!--android:textColor="@color/app_light_black" />-->
+
+                    <!--<android.support.v7.widget.AppCompatRadioButton-->
+                        <!--android:id="@+id/checkJoint"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:layout_below="@id/textWorkingStatus"-->
+                        <!--android:layout_alignParentStart="true"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_marginLeft="20dp"-->
+                        <!--android:buttonTint="@color/app_red"-->
+                        <!--android:text="Joint"-->
+                        <!--android:textColor="@color/app_light_black" />-->
+                <!--</RadioGroup>-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/layoutMother"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:layout_marginRight="16dp">-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:id="@+id/textAreMother"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/rewards_have_children"-->
+                    <!--android:textColor="@color/app_grey"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+
+                <!--<RadioGroup-->
+                    <!--android:id="@+id/radioGroupAreMother"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_below="@+id/textAreMother"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal">-->
+
+                    <!--<android.support.v7.widget.AppCompatRadioButton-->
+                        <!--android:id="@+id/radioYes"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:layout_below="@id/textAreMother"-->
+                        <!--android:layout_alignParentStart="true"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:buttonTint="@color/app_red"-->
+                        <!--android:text="Yes"-->
+                        <!--android:textColor="@color/app_light_black" />-->
+
+                    <!--<android.support.v7.widget.AppCompatRadioButton-->
+                        <!--android:id="@+id/radioExpecting"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:layout_below="@id/textAreMother"-->
+                        <!--android:layout_marginLeft="20dp"-->
+                        <!--android:layout_toRightOf="@+id/radioYes"-->
+                        <!--android:buttonTint="@color/app_red"-->
+                        <!--android:text="Expecting"-->
+                        <!--android:textColor="@color/app_light_black"-->
+                        <!--android:visibility="gone" />-->
+
+                    <!--<android.support.v7.widget.AppCompatRadioButton-->
+                        <!--android:id="@+id/radioNo"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:layout_below="@+id/textAreMother"-->
+                        <!--android:layout_marginLeft="20dp"-->
+                        <!--android:layout_toRightOf="@+id/radioExpecting"-->
+                        <!--android:buttonTint="@color/app_red"-->
+                        <!--android:text="No"-->
+                        <!--android:textColor="@color/app_light_black" />-->
+                <!--</RadioGroup>-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/layoutNumberOfKids"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:layout_marginRight="16dp">-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:id="@+id/textViewNumberOfKids"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/rewards_number_of_kids"-->
+                    <!--android:visibility="gone"-->
+                    <!--android:textColor="@color/app_grey"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+
+                <!--<android.support.v7.widget.AppCompatSpinner-->
+                    <!--android:id="@+id/spinnernumberOfKids"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/textViewNumberOfKids"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:background="@drawable/mainprofile_thin_border"-->
+                    <!--android:inputType="textNoSuggestions"-->
+                    <!--android:paddingTop="15dp"-->
+                    <!--android:paddingBottom="15dp"-->
+                    <!--android:textColor="@color/app_light_black"-->
+                    <!--android:textSize="16dp"-->
+                    <!--android:visibility="gone"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+
+                <!--<ImageView-->
+                    <!--android:layout_width="14dp"-->
+                    <!--android:layout_height="14dp"-->
+                    <!--android:layout_alignTop="@+id/spinnernumberOfKids"-->
+                    <!--android:layout_alignRight="@id/spinnernumberOfKids"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:layout_marginRight="5dp"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:src="@drawable/arrowdownnew"-->
+                    <!--android:visibility="gone" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/linearKidsDetail"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:orientation="vertical">-->
+            <!--</LinearLayout>-->
+
+            <!--<include-->
+                <!--android:id="@+id/layoutDynamicNumberOfKids"-->
+                <!--layout="@layout/dynamic_child_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginRight="15dp"-->
+                <!--android:visibility="visible"/>-->
+
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+                <!--android:id="@+id/textAddChild"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:background="@color/app_red"-->
+                <!--android:paddingLeft="35dp"-->
+                <!--android:paddingTop="10dp"-->
+                <!--android:paddingRight="35dp"-->
+                <!--android:paddingBottom="10dp"-->
+                <!--android:text="@string/rewards_add_child"-->
+                <!--android:textColor="@color/white"-->
+                <!--app:fontName="oswald_regular.ttf"-->
+                <!--android:textSize="18sp"-->
+                <!--android:textStyle="bold" />-->
+
+            <!--<android.support.v7.widget.AppCompatCheckBox-->
+                <!--android:id="@+id/checkAreYouExpecting"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:buttonTint="@color/app_red"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:paddingEnd="15dp"-->
+                <!--android:paddingRight="15dp"-->
+                <!--android:text="@string/rewards_are_expecing"-->
+                <!--android:textColor="@color/app_grey"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/gender" />-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/layoutExptectedDateOfDelivery"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:visibility="gone">-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:id="@+id/textViewLocation"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="EXPECTED DATE OF DELIVERY"-->
+                    <!--android:textColor="@color/app_grey"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+
+                <!--<com.mycity4kids.widget.CustomFontEditText-->
+                    <!--android:id="@+id/editExpectedDate"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/textViewLocation"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:background="@drawable/mainprofile_thin_border"-->
+                    <!--android:editable="false"-->
+                    <!--android:focusable="false"-->
+                    <!--android:hint="DD/MM/YYYY"-->
+                    <!--android:inputType="textNoSuggestions"-->
+                    <!--android:paddingStart="15dp"-->
+                    <!--android:paddingLeft="15dp"-->
+                    <!--android:paddingTop="15dp"-->
+                    <!--android:paddingBottom="15dp"-->
+                    <!--android:textColor="@color/app_light_black"-->
+                    <!--android:textSize="16dp"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+
+                <!--<ImageView-->
+                    <!--android:layout_width="14dp"-->
+                    <!--android:layout_height="14dp"-->
+                    <!--android:layout_alignTop="@+id/editExpectedDate"-->
+                    <!--android:layout_alignRight="@id/editExpectedDate"-->
+                    <!--android:layout_marginTop="21dp"-->
+                    <!--android:layout_marginRight="13dp"-->
+                    <!--android:layout_marginBottom="20dp"-->
+                    <!--android:src="@drawable/arrowdownnew" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_marginRight="15dp">-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginTop="15dp"-->
+                    <!--android:text="@string/rewards_interest"-->
+                    <!--android:textColor="@color/app_grey"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+
+                <!--<com.mycity4kids.widget.CustomFontTextView-->
+                    <!--android:id="@+id/textEditInterest"-->
+                    <!--android:layout_width="50sp"-->
+                    <!--android:layout_height="30sp"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginRight="4dp"-->
+                    <!--android:background="@drawable/shape_red_border"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="EDIT"-->
+                    <!--android:textColor="@color/app_red"-->
+                    <!--android:textSize="14sp"-->
+                    <!--android:visibility="gone"-->
+                    <!--app:fontName="oswald_regular.ttf" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/linearInterest"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/topicInterestLabel"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_marginRight="15dp"-->
+                <!--android:animateLayoutChanges="true"-->
+                <!--android:orientation="vertical"-->
+                <!--android:paddingTop="10dp"-->
+                <!--android:paddingBottom="10dp"-->
+                <!--android:visibility="gone">-->
+
+                <!--<org.apmem.tools.layouts.FlowLayout-->
+                    <!--android:id="@+id/floatingInterest"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:animateLayoutChanges="true">-->
+
+                <!--</org.apmem.tools.layouts.FlowLayout>-->
+            <!--</LinearLayout>-->
+
+            <!--<com.mycity4kids.widget.CustomFontEditText-->
+                <!--android:id="@+id/editInterest"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_marginRight="15dp"-->
+                <!--android:background="@drawable/mainprofile_thin_border"-->
+                <!--android:editable="false"-->
+                <!--android:focusable="false"-->
+                <!--android:hint="Select"-->
+                <!--android:inputType="textNoSuggestions"-->
+                <!--android:paddingStart="15dp"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingTop="15dp"-->
+                <!--android:paddingBottom="15dp"-->
+                <!--android:textColor="@color/app_light_black"-->
+                <!--android:textSize="16dp"-->
+                <!--app:fontName="oswald_regular.ttf" />-->
+
+
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+                <!--android:id="@+id/textSubmit"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:layout_marginRight="15dp"-->
+                <!--android:background="@color/app_red"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingLeft="35dp"-->
+                <!--android:paddingTop="15dp"-->
+                <!--android:paddingRight="35dp"-->
+                <!--android:paddingBottom="15dp"-->
+                <!--android:text="@string/save_continue"-->
+                <!--app:fontName="oswald_regular.ttf"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="18sp"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--android:textStyle="bold" />-->
+        <!--</LinearLayout>-->
+    <!--</android.support.v4.widget.NestedScrollView>-->
 </android.support.constraint.ConstraintLayout>

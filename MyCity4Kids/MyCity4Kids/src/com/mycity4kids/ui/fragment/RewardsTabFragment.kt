@@ -3,7 +3,6 @@ package com.mycity4kids.ui.fragment
 import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +22,7 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.activity.MyTotalEarningActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
+import kotlinx.android.synthetic.main.fragment_rewards.*
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -65,11 +65,14 @@ class RewardsTabFragment : BaseFragment() {
 
         textPersonalInfo.setOnClickListener {
             Utils.campaignEvent(activity, "personalInfo", "reward_tab", "personalInfoText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "personal_info_detail")
-
             var intent = Intent(activity, RewardsContainerActivity::class.java)
             intent.putExtra("pageLimit", 1)
             intent.putExtra("pageNumber", 1)
             startActivity(intent)
+        }
+
+        relativeShareReferralCode.setOnClickListener {
+
         }
 
         textSocial.setOnClickListener {

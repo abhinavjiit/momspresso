@@ -513,4 +513,5 @@
     <color name="color_676767">#676767</color>
     <color name="black_64">#A6000000</color>
     <color name ="red_light_shade">#FBF8F8</color>
+    <color name = "green_dark">#417505</color>
 </resources>

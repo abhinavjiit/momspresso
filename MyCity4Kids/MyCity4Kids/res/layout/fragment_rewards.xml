@@ -269,6 +269,27 @@
                     app:fontName="open_sans_bold.ttf" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/relativeShareReferralCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/textReferral"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:drawableLeft="@drawable/share"
+                    android:drawablePadding="15dp"
+                    android:padding="@dimen/space_20"
+                    android:textAllCaps="true"
+                    android:text="refer mymoney"
+                    android:textColor="#676767"
+                    android:textSize="14sp"
+                    app:fontName="oswald.ttf" />
+
+
+            </RelativeLayout>
 
         </LinearLayout>
     </RelativeLayout>

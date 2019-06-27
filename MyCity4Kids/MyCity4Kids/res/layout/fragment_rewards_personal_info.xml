@@ -854,7 +854,7 @@
                         app:fontName="oswald_regular.ttf" />
 
                     <com.mycity4kids.widget.CustomFontTextView
-                        android:id="@+id/textApply"
+                        android:id="@+id/textApplyReferral"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/space_40"
                         android:layout_alignParentEnd="true"

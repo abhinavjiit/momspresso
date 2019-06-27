@@ -1,17 +1,16 @@
 package com.mycity4kids.ui.rewards.fragment
 
 
-import android.accounts.NetworkErrorException
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.location.Address
-import android.location.Geocoder
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
@@ -22,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.crashlytics.android.Crashlytics
 import com.facebook.accountkit.AccountKitLoginResult
 import com.facebook.accountkit.ui.AccountKitActivity
 import com.facebook.accountkit.ui.AccountKitConfiguration
@@ -31,30 +29,22 @@ import com.facebook.accountkit.ui.ThemeUIManager
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.DateTimeUtils
 import com.kelltontech.utils.StringUtils
-import com.mycity4kids.MessageEvent
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
-import com.mycity4kids.models.campaignmodels.CampaignDataListResult
-import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
-import com.mycity4kids.models.request.CampaignReferral
+import com.mycity4kids.models.campaignmodels.ReferralCodeResult
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.CityInfoItem
-import com.mycity4kids.models.response.SetupBlogData
 import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
 import com.mycity4kids.models.rewardsmodels.KidsInfoResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
@@ -67,17 +57,11 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_rewards_family_info.*
+import kotlinx.android.synthetic.main.fragment_rewards_personal_info.*
 import org.apmem.tools.layouts.FlowLayout
-import org.greenrobot.eventbus.EventBus
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.adapter.rxjava2.HttpException
-import java.io.InputStreamReader
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlinx.android.synthetic.main.fragment_rewards_personal_info.*
 
 /**editLanguage
  * A simple [Fragment] subclass.
@@ -139,6 +123,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var editEmail: EditText
     private lateinit var editLocation: EditText
     private lateinit var textVerify: TextView
+    private lateinit var textApplyReferral: TextView
     private var apiGetResponse: RewardsDetailsResultResonse = RewardsDetailsResultResonse()
     private var cityList = ArrayList<CityInfoItem>()
     private var selectedCityId: Int = 0
@@ -224,50 +209,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
 
         return containerView
-    }
-
-    private fun applyCode() {
-        var referralRequest = CampaignReferral()
-        //referralRequest!!.user_id = userId
-        referralRequest.campaign_id = this!!.id!!
-        referralRequest.referral_code = editReferralCode.text.toString()
-
-        val call = BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).postReferralCampaign(referralRequest)
-        call.enqueue(referCampaign)
-    }
-
-    val referCampaign = object : Callback<ParticipateCampaignResponse> {
-        override fun onResponse(call: Call<ParticipateCampaignResponse>, response: retrofit2.Response<ParticipateCampaignResponse>) {
-            removeProgressDialog()
-            if (response == null || null == response.body()) {
-                val nee = NetworkErrorException(response.raw().toString())
-                Crashlytics.logException(nee)
-                return
-            }
-            try {
-                val responseData = response.body()
-                if (responseData!!.code == 200) {
-                    if (Constants.SUCCESS == responseData.status) {
-                        Toast.makeText(context, responseData.data.get(0).msg, Toast.LENGTH_SHORT).show()
-                        editReferralCode.visibility = View.GONE
-                        textApply.visibility = View.GONE
-                        referHeader.visibility = View.GONE
-                    } else {
-                        textReferCodeError.visibility = View.VISIBLE
-                        textReferCodeError.setText("" + responseData.reason)
-                    }
-                }
-            } catch (e: Exception) {
-                Crashlytics.logException(e)
-                Log.d("MC4kException", Log.getStackTraceString(e))
-            }
-        }
-
-        override fun onFailure(call: Call<ParticipateCampaignResponse>, t: Throwable) {
-            removeProgressDialog()
-            Crashlytics.logException(t)
-            Log.d("MC4kException", Log.getStackTraceString(t))
-        }
     }
 
     /*setting values to components*/
@@ -390,9 +331,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         editFirstName = containerView.findViewById(R.id.editFirstName)
         editEmail = containerView.findViewById(R.id.editEmail)
         editLocation = containerView.findViewById(R.id.editLocation)
+        textApplyReferral = containerView.findViewById(R.id.textApplyReferral)
 
         editAddNumber.setOnClickListener {
             varifyNumberWithFacebookAccountKit()
+        }
+
+        textApplyReferral.setOnClickListener {
+            validateReferralCode()
         }
 
         editLocation.setOnClickListener {
@@ -1241,6 +1187,45 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 //subsubLL.tag = it
                 floatingLanguage.addView(subsubLL)
             }
+        }
+    }
+
+
+    /*fetch data from server*/
+    private fun validateReferralCode() {
+        if (!editReferralCode.text.trim().isNullOrEmpty()) {
+            showProgressDialog(resources.getString(R.string.please_wait))
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).validateReferralCode(editReferralCode.text.toString()!!).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ReferralCodeResult>> {
+                override fun onComplete() {
+                    removeProgressDialog()
+                }
+
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onNext(response: BaseResponseGeneric<ReferralCodeResult>) {
+                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response!!.data!!.result != null) {
+                        if (response!!.data!!.result.is_valid) {
+                            editReferralCode.text = response.data!!.result.referral_code
+                            textReferCodeError.visibility = View.GONE
+                            textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.green_dark))
+                            textReferCodeError.setText("Successfully Applied")
+                            editReferralCode.isEnabled = false
+                            textApplyReferral.isEnabled = false
+                        } else {
+                            textReferCodeError.visibility = View.VISIBLE
+                            textReferCodeError.setText("Code already used. Please enter a different one")
+                            textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.campaign_refer_code_error))
+                        }
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+                    removeProgressDialog()
+                    Log.e("exception in error", e.message.toString())
+                }
+            })
         }
     }
 

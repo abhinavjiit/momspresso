@@ -1,15 +1,8 @@
 package com.mycity4kids.ui.rewards.fragment
 
 
-import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.opengl.Visibility
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.widget.AppCompatRadioButton
 import android.support.v7.widget.AppCompatSpinner
@@ -18,8 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.daimajia.easing.linear.Linear
-import com.google.api.client.util.DateTime
 import com.google.gson.Gson
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
@@ -29,30 +20,19 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.models.response.SetupBlogData
-import com.mycity4kids.models.response.UserDetailData
 import com.mycity4kids.models.rewardsmodels.KidsInfoResponse
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
-import com.mycity4kids.ui.adapter.AdapterTaskList
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
-import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
-import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import com.mycity4kids.ui.rewards.dialog.PickerDialogFragment
 import com.mycity4kids.utils.AppUtils
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.aa_attendee_item.view.*
-import kotlinx.android.synthetic.main.event_details_activity.*
-import kotlinx.android.synthetic.main.fragment_rewards_family_info.*
-import kotlinx.android.synthetic.main.splash_activity.*
+import kotlinx.android.synthetic.main.fragment_rewards_personal_info.*
 import org.apmem.tools.layouts.FlowLayout
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
