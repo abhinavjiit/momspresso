@@ -416,6 +416,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 if (addPostContainer.getVisibility() == View.VISIBLE) {
                     addPostContainer.setVisibility(View.GONE);
                 }
+                setResult(RESULT_OK);
                 finish();
                 break;
 
@@ -440,5 +441,17 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         }
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1111) {
+                setResult(RESULT_OK);
+                addPostContainer.setVisibility(View.GONE);
+                finish();
+            }
+        }
     }
 }

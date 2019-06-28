@@ -177,7 +177,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
-
             textPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
             Linkify.addLinks(textPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -1219,7 +1218,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public class TextPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView userImageView, upvoteImageVIew;
+        ImageView userImageView, upvoteImageVIew, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
@@ -1232,7 +1231,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextPostViewHolder(View view) {
             super(view);
             upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
-
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -1246,7 +1245,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
             userTag = (TextView) view.findViewById(R.id.userTag);
 
-
+            whatsappShare.setOnClickListener(this);
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
@@ -1262,7 +1261,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     public class MediaPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView, upvoteImageVIew;
+        ImageView userImageView, upvoteImageVIew, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
@@ -1278,6 +1277,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         MediaPostViewHolder(View view) {
             super(view);
             upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
 
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
@@ -1294,7 +1294,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
             userTag = (TextView) view.findViewById(R.id.userTag);
-
+            whatsappShare.setOnClickListener(this);
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
@@ -1330,7 +1330,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     public class TextPollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView, upvoteImageVIew;
+        ImageView userImageView, upvoteImageVIew, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
@@ -1348,6 +1348,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextPollPostViewHolder(View view) {
             super(view);
             upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
 
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
@@ -1380,6 +1381,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             totalVoteCountTextView = (TextView) view.findViewById(R.id.totalVoteCountTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
             userTag = (TextView) view.findViewById(R.id.userTag);
+            whatsappShare.setOnClickListener(this);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -1424,7 +1426,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     public class ImagePollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView, shareTextView, upvoteImageVIew;
+        ImageView userImageView, shareTextView, upvoteImageVIew, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
@@ -1442,6 +1444,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         ImagePollPostViewHolder(View view) {
             super(view);
             upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
 
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
@@ -1480,6 +1483,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
+
 
             option1Container.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1519,7 +1524,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public class AudioCommentViewHeaderHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
-        ImageView commentorImageView, playHeaderAudioImageView, pauseHeaderAudioImageView, profileImageView;
+        ImageView commentorImageView, playHeaderAudioImageView, pauseHeaderAudioImageView, profileImageView, whatsappShare;
         ImageView media, upvoteImageVIew;
         TextView commentorUsernameTextView, headerAudioTimeElapsed;
         TextView commentDataTextView;
@@ -1536,6 +1541,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         public AudioCommentViewHeaderHolder(View view) {
             super(view);
             upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
 
             media = (ImageView) view.findViewById(R.id.media);
             profileImageView = (ImageView) view.findViewById(R.id.profileImageView);
@@ -1566,6 +1572,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postSettingImageView.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
             profileImageView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
 
             underlineView = view.findViewById(R.id.underlineView);
         }
@@ -1631,7 +1638,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
-        ImageView commentorImageView, playAudioImageView, pauseAudioImageView;
+        ImageView commentorImageView, playAudioImageView, pauseAudioImageView, whatsappShare;
         ImageView media, upvoteImageVIew;
         TextView commentorUsernameTextView, audioTimeElapsed;
         TextView commentDataTextView;
@@ -1646,6 +1653,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         public AudioCommentViewHolder(View view) {
             super(view);
             upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+          //  whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
 
             media = (ImageView) view.findViewById(R.id.media);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
@@ -1662,6 +1670,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             pauseAudioImageView = (ImageView) view.findViewById(R.id.pauseAudioImageView);
             audioSeekBar = (SeekBar) view.findViewById(R.id.audioSeekBar);
             audioTimeElapsed = (TextView) view.findViewById(R.id.audioTimeElapsed);
+         //   whatsappShare.setOnClickListener(this);
 
             commentDataTextView.setOnLongClickListener(this);
             view.setOnLongClickListener(this);

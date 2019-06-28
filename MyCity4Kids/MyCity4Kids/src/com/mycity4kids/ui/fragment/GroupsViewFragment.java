@@ -15,6 +15,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.utils.AppUtils;
 
+import static android.app.Activity.RESULT_OK;
+
 public class GroupsViewFragment extends BaseFragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -38,7 +40,7 @@ public class GroupsViewFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), GroupsListingActivity.class);
                 intent.putExtra("isMember", true);
                 intent.putExtra("comingFrom", "myFeed");
-                startActivity(intent);
+                startActivityForResult(intent, 2000);
             }
         });
 
@@ -81,5 +83,21 @@ public class GroupsViewFragment extends BaseFragment {
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(1);
         return fragmentView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK)
+        {
+            if(requestCode==2000)
+            {
+
+                GroupsViewFragmentPagerAdapter adapter = new GroupsViewFragmentPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+                viewPager.setAdapter(adapter);
+                viewPager.setCurrentItem(1);
+
+            }
+        }
     }
 }

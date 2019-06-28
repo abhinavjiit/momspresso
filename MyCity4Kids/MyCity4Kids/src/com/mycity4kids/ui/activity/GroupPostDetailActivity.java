@@ -106,6 +106,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private int totalPostCount;
     private int skip = 0;
     private int limit = 150;
+    int count = 0;
     private boolean isLoading;
     private ArrayList<GroupPostCommentResult> completeResponseList;
     private String postType;
@@ -1626,6 +1627,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         if (completeResponseList.get(i).getId() == responseData.getData().getResult().getParentId()) {
                             completeResponseList.get(i).getChildData().add(commentListData);
                             completeResponseList.get(i).setChildCount(completeResponseList.get(i).getChildCount() + 1);
+                            postData.setResponseCount(postData.getResponseCount() + 1);
                             if (viewGroupPostCommentsRepliesDialogFragment != null) {
                                 viewGroupPostCommentsRepliesDialogFragment.updateRepliesList(completeResponseList.get(i));
                             }
@@ -1772,12 +1774,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             try {
                 if (response.isSuccessful()) {
                     AddGpPostCommentReplyResponse responseData = response.body();
+                    int childCount = completeResponseList.get(actionItemPosition).getChildCount();
                     completeResponseList.remove(actionItemPosition);
                     if (viewGroupPostCommentsRepliesDialogFragment != null) {
                         viewGroupPostCommentsRepliesDialogFragment.dismiss();
                     }
 
-                    postData.setResponseCount(postData.getResponseCount() - 1);
+                    postData.setResponseCount(postData.getResponseCount() - 1 - childCount);
+
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
 //                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "reply");
                 } else {
@@ -2008,8 +2012,12 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
+        for (int i = 0; i < completeResponseList.size(); i++) {
+            count = count + completeResponseList.get(i).getChildCount();
+        }
         intent.putExtra("completeResponseList", completeResponseList);
         intent.putExtra("postId", postId);
+        intent.putExtra("replyCount", count);
         setResult(RESULT_OK, intent);
 
         super.onBackPressed();

@@ -802,7 +802,9 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
             whatsappShare.setOnClickListener(this);
-
+            commentLayout.setOnClickListener(this);
+            postCommentsTextView.setOnClickListener(this);
+/*
             commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -843,7 +845,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                     }
                 }
-            });
+            });*/
         }
 
         @Override
@@ -916,6 +918,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 }
             });
             whatsappShare.setOnClickListener(this);
+            postCommentsTextView.setOnClickListener(this);
             groupNameLayout.setOnClickListener(this);
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -923,7 +926,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
-            commentLayout.setOnClickListener(new View.OnClickListener() {
+            commentLayout.setOnClickListener(this);
+           /* commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
@@ -965,7 +969,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                     }
                 }
-            });
+            });*/
         }
 
         @Override
@@ -1024,9 +1028,10 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             groupNameLayout.setVisibility(View.VISIBLE);
             groupName = (TextView) view.findViewById(R.id.group_name);
             groupName.setOnClickListener(this);
+            postCommentsTextView.setOnClickListener(this);
+            commentLayout.setOnClickListener(this);
 
-
-            postCommentsTextView.setOnClickListener(new View.OnClickListener() {
+        /*    postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (postCommentsTextView.getText().toString().equals(mContext.getResources().getString(R.string.group_add_comment_text))) {
@@ -1068,7 +1073,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
                     ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                 }
-            });
+            });*/
 
             groupNameLayout.setOnClickListener(this);
             commentDataTextView.setOnLongClickListener(this);
@@ -1213,8 +1218,9 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
             whatsappShare.setOnClickListener(this);
-
-
+            postCommentsTextView.setOnClickListener(this);
+            commentLayout.setOnClickListener(this);
+/*
             postCommentsTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1259,7 +1265,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
                     ((FragmentActivity) mContext).startActivityForResult(intent, 2222);
                 }
-            });
+            });*/
             pollOption1ProgressBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1365,7 +1371,9 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
             whatsappShare.setOnClickListener(this);
-            commentLayout.setOnClickListener(new View.OnClickListener() {
+            commentLayout.setOnClickListener(this);
+            postCommentsTextView.setOnClickListener(this);
+            /*commentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
@@ -1409,7 +1417,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     }
                 }
             });
-
+*/
             option1Container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

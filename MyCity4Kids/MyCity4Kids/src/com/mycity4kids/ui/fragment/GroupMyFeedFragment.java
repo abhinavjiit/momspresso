@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -49,6 +51,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
+import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsEditPostActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.PrivateProfileActivity;
@@ -87,6 +90,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
     private ArrayList<GroupPostResult> postList;
     private RecyclerView recyclerView;
     private int totalPostCount;
+    private String action = "";
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private GroupResult selectedGroup;
     private String memberType;
@@ -387,10 +391,22 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                 selectedPost.setContent(data.getStringExtra("updatedContent"));
                 myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 2222) {
-                Intent intent = getActivity().getIntent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                getActivity().finish();
-                startActivity(intent);
+                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1 && data.getIntExtra("replyCount", -1) != -1) {
+                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
+                    int postId = data.getIntExtra("postId", -1);
+                    int replyCount = data.getIntExtra("replyCount", -1);
+
+                    for (int i = 0; i < postList.size(); i++) {
+
+                        if (postList.get(i).getId() == postId) {
+                            postList.get(i).setResponseCount(completeCommentResponseList.size() - 1 + replyCount);
+                            myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
+
+
             }
         }
     }
@@ -452,6 +468,18 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
     @Override
     public void onGroupPostRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.postCommentsTextView:
+            case R.id.commentLayout:
+                Intent intent = new Intent(getActivity(), GroupPostDetailActivity.class);
+                intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                intent.putExtra("postData", postList.get(position));
+                LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(position).getPollOptions();
+                intent.putExtra("pollOptions", linkedTreeMap);
+                intent.putExtra("postId", postList.get(position).getId());
+                intent.putExtra("groupId", postList.get(position).getGroupId());
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                startActivityForResult(intent, 2222);
+                break;
             case R.id.group_name:
 //                getGroupDetails(postList.get(position).getGroupId());
                 GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
@@ -507,7 +535,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
 
-
+            case R.id.upvoteCommentContainer:
             case R.id.upvoteContainer:
                 Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
                 if (postList.get(position).getMarkedHelpful() == 0) {
@@ -792,11 +820,12 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
     }
 
     private void updatePostCommentSettings(int status) {
+
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
         UpdateGroupPostRequest updateGroupPostRequest = new UpdateGroupPostRequest();
-        updateGroupPostRequest.setGroupId(selectedGroup.getId());
+        updateGroupPostRequest.setGroupId(selectedPost.getId());
         updateGroupPostRequest.setDisableComments(status);
 
         Call<GroupPostResponse> call = groupsAPI.disablePostComment(selectedPost.getId(), updateGroupPostRequest);
@@ -1037,6 +1066,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
         } else if ("markInactive".equals(actionType)) {
             request.setIsActive(0);
             request.setIsPinned(0);
+            action = actionType;
         }
 
         Call<GroupPostResponse> call = groupsAPI.updatePost(selectedPost.getId(), request);
@@ -1138,10 +1168,17 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                     limit = 10;
                     isRequestRunning = false;
                     isLastPageReached = false;
-                    postList.clear();
+                    if ("markInactive".equals(action)) {
+                        for (int i = 0; i < postList.size(); i++) {
+                            if (postList.get(i).getId() == selectedPost.getId()) {
+                                postList.remove(i);
+                                break;
+                            }
+                        }
+                    }
+
                     myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
-//                    TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
-//                    tab.select();
+
                 } else {
 
                 }

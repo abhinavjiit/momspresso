@@ -1942,10 +1942,24 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 selectedPost.setContent(data.getStringExtra("updatedContent"));
                 groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 2222) {
-                Intent intent = getIntent();
+              /*  Intent intent = getIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 finish();
-                startActivity(intent);
+                startActivity(intent);*/
+                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1 && data.getIntExtra("replyCount", -1) != -1) {
+                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
+                    int postId = data.getIntExtra("postId", -1);
+                    int replyCount = data.getIntExtra("replyCount", -1);
+
+                    for (int i = 0; i < postList.size(); i++) {
+
+                        if (postList.get(i).getId() == postId) {
+                            postList.get(i).setResponseCount(completeCommentResponseList.size() - 1 + replyCount);
+                            groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
             }
         }
     }

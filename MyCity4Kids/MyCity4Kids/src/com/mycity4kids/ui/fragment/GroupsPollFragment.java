@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.BuildConfig;
@@ -48,12 +49,14 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
+import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsEditPostActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.MyFeedPollGenericRecyclerAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -83,6 +86,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
     private ArrayList<GroupPostResult> postList;
     private RecyclerView recyclerView;
     private int totalPostCount;
+    private String action = "";
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private GroupResult selectedGroup;
     private String memberType, userDynamoId;
@@ -341,16 +345,25 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                     tab.select();*/
                 }
             } else if (requestCode == EDIT_POST_REQUEST_CODE) {
-                /*if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
+                if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
                     postSettingsContainerMain.setVisibility(View.GONE);
                 }
                 selectedPost.setContent(data.getStringExtra("updatedContent"));
-                myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();*/
+                myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 2222) {
-                Intent intent = getActivity().getIntent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                getActivity().finish();
-                startActivity(intent);
+                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1) {
+                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
+                    int postId = data.getIntExtra("postId", -1);
+
+                    for (int i = 0; i < postList.size(); i++) {
+
+                        if (postList.get(i).getId() == postId) {
+                            postList.get(i).setResponseCount(completeCommentResponseList.size() - 1);
+                            myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
@@ -363,6 +376,18 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
     @Override
     public void onGroupPostRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.postCommentsTextView:
+            case R.id.commentLayout:
+                Intent intent = new Intent(getActivity(), GroupPostDetailActivity.class);
+                intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                intent.putExtra("postData", postList.get(position));
+                LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(position).getPollOptions();
+                intent.putExtra("pollOptions", linkedTreeMap);
+                intent.putExtra("postId", postList.get(position).getId());
+                intent.putExtra("groupId", postList.get(position).getGroupId());
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, memberType);
+                startActivityForResult(intent, 2222);
+                break;
             case R.id.group_name:
 //                getGroupDetails(postList.get(position).getGroupId());
                 GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
@@ -422,16 +447,31 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
+            case R.id.upvoteCommentContainer:
             case R.id.upvoteContainer:
                 Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
+                if (postList.get(position).getMarkedHelpful() == 0) {
 
-                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+
+
+                }
+                if (postList.get(position).getMarkedHelpful() == 1) {
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+                }
                 break;
             case R.id.downvoteContainer:
                 Utils.groupsEvent(getActivity(), "Groups_Discussion", "not helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
 
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
+
+            case R.id.whatsappShare:
+                String shareUrlWhatsapp = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                AppUtils.shareCampaignWithWhatsApp(getActivity(), shareUrlWhatsapp, "", "", "", "", "");
+
         }
     }
 
@@ -496,8 +536,12 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                             if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
+                                    postList.get(i).setMarkedHelpful(1);
+
                                 } else {
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
+                                    postList.get(i).setMarkedHelpful(0);
+
                                 }
                             }
                         }
@@ -552,9 +596,13 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() - 1);
+                                    postList.get(i).setMarkedHelpful(1);
+
                                 } else {
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() - 1);
+                                    postList.get(i).setMarkedHelpful(0);
+
                                 }
                             }
                         }
@@ -927,6 +975,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         } else if ("markInactive".equals(actionType)) {
             request.setIsActive(0);
             request.setIsPinned(0);
+            action = actionType;
         }
 
         Call<GroupPostResponse> call = groupsAPI.updatePost(selectedPost.getId(), request);
@@ -1028,7 +1077,14 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                     limit = 10;
                     isRequestRunning = false;
                     isLastPageReached = false;
-                    postList.clear();
+                    if ("markInactive".equals(action)) {
+                        for (int i = 0; i < postList.size(); i++) {
+                            if (postList.get(i).getId() == selectedPost.getId()) {
+                                postList.remove(i);
+                                break;
+                            }
+                        }
+                    }
                     myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
 //                    TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
 //                    tab.select();
