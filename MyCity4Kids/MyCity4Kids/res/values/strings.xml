@@ -1181,6 +1181,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="dialog_share_your_campaign_detail_text">Please share your payment details so that we can process your payment faster.</string>
     <string name="dialog_register_proof_submitted_text">Your proofs have been submitted.</string>
     <string name="apply_refer_code">HAVE A REFERRAL CODE?</string>
+    <string name="refer_code">REFERRAL CODE</string>
     <string name="apply_code_error">Code already used. Please enter a different one</string>
     <string name="dialog_congratulations">Congratulations!</string>
     <string name="dialog_you_can_earn">You can earn</string>

@@ -213,6 +213,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     /*setting values to components*/
     private fun setValuesToComponents() {
+        if(!apiGetResponse.refer_code.isNullOrEmpty()){
+            editReferralCode.setText(apiGetResponse.refer_code)
+            editReferralCode.isEnabled = false
+        }
         if (!apiGetResponse.firstName.isNullOrBlank()) editFirstName.setText(apiGetResponse.firstName)
         if (!apiGetResponse.lastName.isNullOrBlank()) editLastName.setText(apiGetResponse.lastName)
         if (!apiGetResponse.contact.isNullOrBlank()) {
@@ -1207,7 +1211,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 override fun onNext(response: BaseResponseGeneric<ReferralCodeResult>) {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response!!.data!!.result != null) {
                         if (response!!.data!!.result.is_valid) {
-                            editReferralCode.text = response.data!!.result.referral_code
+                            editReferralCode.setText(response.data!!.result.referral_code)
                             textReferCodeError.visibility = View.GONE
                             textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.green_dark))
                             textReferCodeError.setText("Successfully Applied")
