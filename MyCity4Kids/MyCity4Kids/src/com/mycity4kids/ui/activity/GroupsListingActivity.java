@@ -98,6 +98,9 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         }
 
         comingFrom = getIntent().getStringExtra("comingFrom");
+        if (comingFrom == null) {
+            comingFrom = "notFromFeed";
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

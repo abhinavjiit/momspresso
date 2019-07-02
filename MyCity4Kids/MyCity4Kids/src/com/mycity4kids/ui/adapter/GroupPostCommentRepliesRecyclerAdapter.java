@@ -215,7 +215,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                 }
             });
-            commentsViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            commentsViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount()+"");
             commentsViewHolder.downvoteCommentCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(commentsViewHolder.commentDataTextView, Linkify.WEB_URLS);
@@ -346,7 +346,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                 audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
                 audioCommentViewHolder.replyCountTextView.setText("View (" + repliesList.get(position).getChildCount() + ") replies");
             }
-            audioCommentViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            audioCommentViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount()+"");
             audioCommentViewHolder.downvoteCommentCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
 
 
@@ -441,7 +441,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                 }
             });
-            repliesViewHolder.upvoteReplyCountTextView.setText(repliesList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            repliesViewHolder.upvoteReplyCountTextView.setText(repliesList.get(position).getHelpfullCount()+"");
             repliesViewHolder.downvoteReplyCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(repliesViewHolder.commentDataTextView, Linkify.WEB_URLS);

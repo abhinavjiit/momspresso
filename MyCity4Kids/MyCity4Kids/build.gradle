@@ -164,7 +164,7 @@ android {
 
         }
         debug {
-            buildConfigField 'String', 'GROUPS_LIVE_URL', '"http://35.200.233.99:3030/"'
+            buildConfigField 'String', 'GROUPS_LIVE_URL', '"http://b4028419.ngrok.io/"'
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'

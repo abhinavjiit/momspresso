@@ -39,6 +39,9 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.rewards.activity.RewardsShareReferralCodeActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".ui.mymoneytracker.activity.TrackerActivity"
             android:label="@string/title_activity_tracker"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -95,9 +98,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/transparent_status">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+            <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
             <!-- The following intent filter is added to provide deep linking to the MC4K app -->
@@ -366,7 +369,12 @@
             android:name=".ui.rewards.activity.RewardsContainerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan">
+           <!-- <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
         <activity
             android:name=".ui.activity.RankingActivity"
             android:screenOrientation="portrait"
@@ -517,7 +525,6 @@
         <activity
             android:name=".ui.activity.UserReadArticlesContentActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.MyTotalEarningActivity"
             android:screenOrientation="portrait" />
@@ -624,6 +631,7 @@
 
         <activity
             android:name=".ui.campaign.activity.CampaignContainerActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
     </application>
 

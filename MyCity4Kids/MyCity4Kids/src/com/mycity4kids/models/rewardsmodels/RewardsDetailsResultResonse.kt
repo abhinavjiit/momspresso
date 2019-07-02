@@ -78,7 +78,10 @@ data class RewardsDetailsResultResonse(
         var isExpecting : Int? = null,
         @SerializedName("expected_date")
         @Expose
-        var expectedDate : Long? = null
+        var expectedDate : Long? = null,
+        @SerializedName("refer_code")
+        @Expose
+        var refer_code : String? = "abcd"
 )
 
 

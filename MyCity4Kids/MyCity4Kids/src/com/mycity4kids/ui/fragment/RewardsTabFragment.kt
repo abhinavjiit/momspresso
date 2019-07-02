@@ -3,7 +3,6 @@ package com.mycity4kids.ui.fragment
 import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +22,8 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.activity.MyTotalEarningActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
+import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity
+import kotlinx.android.synthetic.main.fragment_rewards.*
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -42,6 +43,7 @@ class RewardsTabFragment : BaseFragment() {
     private lateinit var linearConnectivity: LinearLayout
     private lateinit var relativeParticipate: RelativeLayout
     private lateinit var myEarningLayout: RelativeLayout
+    private lateinit var relativeShareReferralCode: RelativeLayout
     private var totalPayout: Int = 0
 
     private var isRewardsAdded = "0"
@@ -60,16 +62,22 @@ class RewardsTabFragment : BaseFragment() {
         linearConnectivity = containerView.findViewById(R.id.linearConnectivity)
         myEarningLayout = containerView.findViewById(R.id.myearning_layout)
         relativeParticipate = containerView.findViewById(R.id.relativeParticipate)
+        relativeShareReferralCode = containerView.findViewById(R.id.relativeShareReferralCode)
 
         fetchTotalEarning()
 
         textPersonalInfo.setOnClickListener {
             Utils.campaignEvent(activity, "personalInfo", "reward_tab", "personalInfoText", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "personal_info_detail")
-
             var intent = Intent(activity, RewardsContainerActivity::class.java)
             intent.putExtra("pageLimit", 1)
             intent.putExtra("pageNumber", 1)
             startActivity(intent)
+        }
+
+        relativeShareReferralCode.setOnClickListener {
+            var intent = Intent(activity, RewardsShareReferralCodeActivity::class.java)
+            startActivity(intent)
+
         }
 
         textSocial.setOnClickListener {

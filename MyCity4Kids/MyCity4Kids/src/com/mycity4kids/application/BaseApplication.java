@@ -242,7 +242,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getCampaignRetrofit() {
         if (null == campaignRewards) {
-            createRetrofitInstanceForCampaign("http://35.200.142.199/");
+            createRetrofitInstanceForCampaign("http://b4028419.ngrok.io");
         }
         return campaignRewards;
     }
@@ -569,7 +569,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getGroupsRetrofit() {
         if (null == groupsRetrofit) {
-            createGroupRetrofitInstance(AppConstants.GROUPS_TEST_STAGING_URL);
+            createGroupRetrofitInstance(AppConstants.GROUPS_TEST_LIVE_URL);
         }
         return groupsRetrofit;
     }

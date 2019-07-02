@@ -194,7 +194,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(textPostViewHolder.postDataTextView);
 
-            textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             textPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPostViewHolder.commentLayout.setVisibility(View.GONE);
@@ -330,7 +330,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 audioCommentViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
                 audioCommentViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
             }
-            audioCommentViewHolder.upvoteCommentCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            audioCommentViewHolder.upvoteCommentCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             audioCommentViewHolder.downvoteCommentCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             audioCommentViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
             if (postList.get(position).getGroupInfo().getColor() != null) {
@@ -378,7 +378,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(mediaPostViewHolder.postDataTextView);
 
-            mediaPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            mediaPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             mediaPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 mediaPostViewHolder.commentLayout.setVisibility(View.GONE);
@@ -452,7 +452,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
 
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
-            textPollPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            textPollPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             textPollPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPollPostViewHolder.commentLayout.setVisibility(View.GONE);
@@ -566,7 +566,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
-            imageHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            imageHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             imageHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 imageHolder.commentLayout.setVisibility(View.GONE);

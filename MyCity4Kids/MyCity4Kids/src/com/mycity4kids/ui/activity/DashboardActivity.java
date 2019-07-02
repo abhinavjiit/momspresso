@@ -1380,6 +1380,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         groupMembershipStatus.checkMembershipStatus((int) groupId, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
                     }
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REFERRAL)) {
+                    Intent intent1 = new Intent(this, RewardsContainerActivity.class);
+                    intent1.putExtra("pageNumber", 1);
+                    startActivity(intent1);
+
+
                 } else {
                     getDeepLinkData(tempDeepLinkURL);
                 }

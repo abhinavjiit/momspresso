@@ -513,5 +513,6 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
     public void onPause() {
         super.onPause();
         chunk = 0;
+        chunk1 = 0;
     }
 }
