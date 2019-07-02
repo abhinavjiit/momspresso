@@ -197,7 +197,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
 
                     try {
                         data = new JSONObject(args[0].toString());
-                        userId = data.getString("userId");
+                        userId = data.getString("user_id");
                         title = data.getString("title");
                         body = data.getString("body");
                         type = data.getString("type");
