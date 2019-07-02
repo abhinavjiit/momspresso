@@ -18,6 +18,7 @@
             android:id="@+id/toolbarRelativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/space_2"
             android:visibility="visible">
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -25,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/user_activities.toolbar.title"
+                android:text="@string/myprofile.section.activity_label"
                 android:textColor="@color/user_activities.toolbar.title"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />

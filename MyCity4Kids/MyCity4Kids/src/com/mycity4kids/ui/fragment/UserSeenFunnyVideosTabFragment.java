@@ -148,7 +148,6 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
                             mLodingView.setVisibility(View.VISIBLE);
-                            limit = limit + 10;
                             hitArticleListingApi();
                         }
                     }
@@ -247,7 +246,7 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
     }
 
     private void hitArticleListingApi() {
-        chunk = limit;
+
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
@@ -273,6 +272,7 @@ public class UserSeenFunnyVideosTabFragment extends BaseFragment implements View
             try {
                 VlogsListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    chunk = responseData.getData().get(0).getChunks();
                     processResponse(responseData);
 //                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());
 //                    notificationCenterListAdapter.notifyDataSetChanged();
