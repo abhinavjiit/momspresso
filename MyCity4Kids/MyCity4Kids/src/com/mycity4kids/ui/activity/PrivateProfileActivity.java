@@ -117,7 +117,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     private RoundedHorizontalProgressBar profileCompletionBar;
     private TextView profilePercentageTextView;
     private ImageView editProfileImageView;
-    private TextView editProfileTextView;
+    private TextView editProfileTextView, readArticlesTextView;
     private RelativeLayout menuCoachmark;
     private LinearLayout publishCoachmark1, publishCoachmark2;
     private TextView publishedSectionTextView1, textHeaderUpdate;
@@ -176,7 +176,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         linearRewardsHeader = (LinearLayout) findViewById(R.id.linearRewardsHeader);
         textHeaderUpdate = (TextView) findViewById(R.id.textHeaderUpdate);
         relative_profile_progress = (RelativeLayout) findViewById(R.id.relative_profile_progress);
-
+        readArticlesTextView = findViewById(R.id.readArticles);
         textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -244,6 +244,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         publishCoachmark1.setOnClickListener(this);
         publishCoachmark2.setOnClickListener(this);
         publishedSectionTextView1.setOnClickListener(this);
+        readArticlesTextView.setOnClickListener(this);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
@@ -506,6 +507,12 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 articleIntent.putExtra(Constants.AUTHOR_ID, userId);
                 startActivity(articleIntent);
                 break;
+            case R.id.readArticles:
+                Intent readArticleIntent = new Intent(this, UserReadArticlesContentActivity.class);
+                readArticleIntent.putExtra("isPrivateProfile", true);
+                readArticleIntent.putExtra(Constants.AUTHOR_ID, userId);
+                startActivity(readArticleIntent);
+                break;
             case R.id.draftSectionTextView:
                 Intent ssIntent = new Intent(this, UserDraftsContentActivity.class);
                 ssIntent.putExtra("isPrivateProfile", true);
@@ -749,8 +756,8 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                                 addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
                                         viewMore, userBio), TextView.BufferType.SPANNABLE);
                     } else {
-                         // int lineEndIndex1 = tv.getLayout().getLineEnd(maxLine-1);
-                        String text = tv.getText().subSequence(0, lineEndIndex ) + " " + expandText;
+                        // int lineEndIndex1 = tv.getLayout().getLineEnd(maxLine-1);
+                        String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
                         tv.setText(text);
                         tv.setMovementMethod(LinkMovementMethod.getInstance());
                         tv.setText(

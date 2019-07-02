@@ -73,6 +73,7 @@ import com.mycity4kids.ui.fragment.GpPostCommentOptionsDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.ui.fragment.TaskFragment;
 import com.mycity4kids.ui.fragment.ViewGroupPostCommentsRepliesDialogFragment;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.EndlessScrollListener;
 
 import org.json.JSONArray;
@@ -105,6 +106,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private int totalPostCount;
     private int skip = 0;
     private int limit = 150;
+    int count = 0;
     private boolean isLoading;
     private ArrayList<GroupPostCommentResult> completeResponseList;
     private String postType;
@@ -145,6 +147,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserType().equals("1")) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
         setContentView(R.layout.group_post_detail_activity);
         ((BaseApplication) getApplication()).setActivity(this);
 
@@ -570,13 +575,40 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     fetchAudioUrlFromFirebase(entry);
                 }
             case R.id.upvoteContainer:
-                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "post", 0);
+                if (postData.getMarkedHelpful() == 0) {
+
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "post", 0);
+
+
+                }
+                if (postData.getMarkedHelpful() == 1) {
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, "post", 0);
+
+
+                }
                 break;
             case R.id.downvoteContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, "post", 0);
                 break;
             case R.id.upvoteCommentContainer:
-                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "comment", position);
+                if (completeResponseList.get(position).getMarkedHelpful() == 0) {
+
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "comment", position);
+
+
+                }
+                if (completeResponseList.get(position).getMarkedHelpful() == 1) {
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, "comment", position);
+
+
+                }
+
+
+                // markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "comment", position);
                 break;
             case R.id.downvoteCommentContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, "comment", position);
@@ -591,6 +623,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
+            case R.id.whatsappShare:
+                String shareUrlWhatsapp = AppConstants.GROUPS_BASE_SHARE_URL + postData.getUrl();
+                AppUtils.shareCampaignWithWhatsApp(GroupPostDetailActivity.this, shareUrlWhatsapp, "", "", "", "", "");
+
+
         }
     }
 
@@ -758,8 +795,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                             if (postData.getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
                                 if (groupsActionResponse.getData().getResult().get(0).getType().equals(AppConstants.PUBLIC_VISIBILITY)) {
                                     postData.setHelpfullCount(postData.getHelpfullCount() + 1);
+                                    postData.setMarkedHelpful(1);
+
+
                                 } else {
                                     postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
+                                    postData.setMarkedHelpful(0);
+
                                 }
                                 Intent intent = new Intent();
                                 intent.putExtra("postDatas", postData);
@@ -770,8 +812,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                                 if (completeResponseList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getResponseId()) {
                                     if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                         completeResponseList.get(i).setHelpfullCount(completeResponseList.get(i).getHelpfullCount() + 1);
+                                        completeResponseList.get(i).setMarkedHelpful(1);
                                     } else {
                                         completeResponseList.get(i).setNotHelpfullCount(completeResponseList.get(i).getNotHelpfullCount() + 1);
+                                        completeResponseList.get(i).setMarkedHelpful(0);
+
                                     }
                                 }
                             }
@@ -833,9 +878,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postData.setHelpfullCount(postData.getHelpfullCount() + 1);
                                     postData.setNotHelpfullCount(postData.getNotHelpfullCount() - 1);
+                                    postData.setMarkedHelpful(1);
+
                                 } else {
                                     postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
                                     postData.setHelpfullCount(postData.getHelpfullCount() - 1);
+                                    postData.setMarkedHelpful(0);
+
                                 }
                             }
                         } else {
@@ -844,9 +893,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                                     if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                         completeResponseList.get(i).setHelpfullCount(completeResponseList.get(i).getHelpfullCount() + 1);
                                         completeResponseList.get(i).setNotHelpfullCount(completeResponseList.get(i).getNotHelpfullCount() - 1);
+                                        completeResponseList.get(i).setMarkedHelpful(1);
+
                                     } else {
                                         completeResponseList.get(i).setNotHelpfullCount(completeResponseList.get(i).getNotHelpfullCount() + 1);
                                         completeResponseList.get(i).setHelpfullCount(completeResponseList.get(i).getHelpfullCount() - 1);
+                                        completeResponseList.get(i).setMarkedHelpful(0);
+
                                     }
                                 }
                             }
@@ -937,7 +990,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         //No existing settings for this post for this user
         if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
             savePostTextView.setText(getString(R.string.groups_save_post));
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
             currentPostPrefsForUser = null;
             return;
         }
@@ -949,7 +1002,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
 
         if (currentPostPrefsForUser.getNotificationOff() == 1) {
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
         } else {
             notificationToggleTextView.setText("DISABLE NOTIFICATION");
         }
@@ -1002,17 +1055,21 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.openAddCommentDialog:
             case R.id.commentLayout: {
-                Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Type_Here bar", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Type_Reply", "", String.valueOf(groupId));
+                if (groupPostDetailsAndCommentsRecyclerAdapter == null) {
 
-                AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
-                FragmentManager fm = getSupportFragmentManager();
-                Bundle _args = new Bundle();
-                groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
-                _args.putInt("groupId", groupId);
-                _args.putInt("postId", postId);
-                addGpPostCommentReplyDialogFragment.setArguments(_args);
-                addGpPostCommentReplyDialogFragment.setCancelable(true);
-                addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                } else {
+                    Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Type_Here bar", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Type_Reply", "", String.valueOf(groupId));
+
+                    AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                    FragmentManager fm = getSupportFragmentManager();
+                    Bundle _args = new Bundle();
+                    groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                    _args.putInt("groupId", groupId);
+                    _args.putInt("postId", postId);
+                    addGpPostCommentReplyDialogFragment.setArguments(_args);
+                    addGpPostCommentReplyDialogFragment.setCancelable(true);
+                    addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+                }
             }
             break;
             case R.id.reportPostTextView:
@@ -1297,7 +1354,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     currentPostPrefsForUser = new UserPostSettingResult();
                     currentPostPrefsForUser.setId(jObject.getJSONObject("data").getJSONObject("result").getInt("id"));
                     if (jObject.getJSONObject("data").getJSONObject("result").getBoolean("notificationOff")) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }
@@ -1336,7 +1393,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 if (response.isSuccessful()) {
                     UserPostSettingResponse userPostSettingResponse = response.body();
                     if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }
@@ -1572,6 +1629,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         if (completeResponseList.get(i).getId() == responseData.getData().getResult().getParentId()) {
                             completeResponseList.get(i).getChildData().add(commentListData);
                             completeResponseList.get(i).setChildCount(completeResponseList.get(i).getChildCount() + 1);
+                            postData.setResponseCount(postData.getResponseCount() + 1);
                             if (viewGroupPostCommentsRepliesDialogFragment != null) {
                                 viewGroupPostCommentsRepliesDialogFragment.updateRepliesList(completeResponseList.get(i));
                             }
@@ -1718,12 +1776,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             try {
                 if (response.isSuccessful()) {
                     AddGpPostCommentReplyResponse responseData = response.body();
+                    int childCount = completeResponseList.get(actionItemPosition).getChildCount();
                     completeResponseList.remove(actionItemPosition);
                     if (viewGroupPostCommentsRepliesDialogFragment != null) {
                         viewGroupPostCommentsRepliesDialogFragment.dismiss();
                     }
 
-                    postData.setResponseCount(postData.getResponseCount() - 1);
+                    postData.setResponseCount(postData.getResponseCount() - 1 - childCount);
+
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
 //                        Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "reply");
                 } else {
@@ -1954,8 +2014,12 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
+        for (int i = 0; i < completeResponseList.size(); i++) {
+            count = count + completeResponseList.get(i).getChildCount();
+        }
         intent.putExtra("completeResponseList", completeResponseList);
         intent.putExtra("postId", postId);
+        intent.putExtra("replyCount", count);
         setResult(RESULT_OK, intent);
 
         super.onBackPressed();

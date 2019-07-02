@@ -23,6 +23,7 @@
     <string name="error_network">Device is out of network coverage.</string>
     <string name="please_wait">Please Wait...</string>
     <string name="no_result_txt">No result found.</string>
+    <string name="invite_referral_screen">Invite &amp; Earn MyMoney!</string>
     <string name="went_wrong">Something went wrong.</string>
     <string name="server_went_wrong">Something went wrong at the server.</string>
     <string name="no_data">Data not found.</string>
@@ -620,9 +621,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     <string name="video_progress.uploading_label">UPLOADING ...</string>
     <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically.</string>
-    <string name="video_progress.way_to_go">WAY TO GO!</string>
-    <string name="video_progress.success_msg">Video has been successfully uploaded and sent for moderation. We will notify you once moderated.</string>
-    <string name="video_progress.okay">OKAY</string>
+    <string name="video_progress.way_to_go">Way to go!</string>
+    <string name="video_progress.success_msg">Video has been successfully uploaded and will be moderated within 2 working days. We will notify you once it is moderated.
+</string>
+    <string name="video_progress.okay">Okay, got it.</string>
     <string name="video_progress.uploading_failed">Uploading Failed.</string>
     <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
     <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
@@ -800,6 +802,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.unpin_post">UNPIN THIS POST</string>
     <string name="groups.all_groups">ALL GROUPS</string>
     <string name="groups.other_groups">OTHER GROUPS</string>
+    <string name="groups_groups_myfeed">GROUPS</string>
+    <string name="groups_enable_notification">ENABLE NOTIFICATION</string>
+
     <string name="groups.groups">GROUPS</string>
     <string name="groups.reported_by">Reported By</string>
     <string name="groups.persons">Persons</string>
@@ -837,7 +842,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.sections.photos">PHOTOS</string>
     <string name="groups.sections.videos">VIDEOS</string>
     <string name="groups.sections.top_posts">TOP POSTS</string>
-    <string name="groups.sections.polls">POLLS</string>
+    <string name="groups_sections_polls">POLLS</string>
+    <string name="groups_sections_myfeed">My Feed</string>
     <string name="groups.search_in">Search</string>
     <string name="groups.join_form">JOINING FORM</string>
     <string name="groups.membership_pending">Membership Pending</string>
@@ -868,6 +874,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="short_s.choose_one_genre">Choose the genre that best describes the content of your story. You can choose only 1 genre.</string>
     <string name="short_s.no_drafts">No short story drafted as yet</string>
     <string name="short_s.no_published">No short story published as yet</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
     <string name="short_s.view_replies">View replies</string>
     <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
     <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
@@ -1078,6 +1086,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
     <string name="dialog_header_choose_sort_type">Sort by</string>
+    <string name="reply_groups">Reply</string>
 
 
     //groupdetail Activity toast String
@@ -1090,6 +1099,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
+    <string name="audio_post">AUDIO</string>
     <string name="rewards_instagram_handler">Enter your Instagram handle</string>
     <string name="rewards_facebook_handler">Connect your Facebook</string>
     <string name="rewards_participate_and_earn"><![CDATA[Participate & Earn]]></string>
@@ -1172,6 +1182,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="dialog_share_your_campaign_detail_text">Please share your payment details so that we can process your payment faster.</string>
     <string name="dialog_register_proof_submitted_text">Your proofs have been submitted.</string>
     <string name="apply_refer_code">HAVE A REFERRAL CODE?</string>
+    <string name="refer_code">REFERRAL CODE</string>
     <string name="apply_code_error">Code already used. Please enter a different one</string>
     <string name="dialog_congratulations">Congratulations!</string>
     <string name="dialog_you_can_earn">You can earn</string>
@@ -1187,6 +1198,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="social_page_add_social_accounts">ADD SOCIAL ACCOUNTS</string>
     <string name="social_page_add_website_hint">www.momvlogger.com/sheetal</string>
     <string name="social_page_add_website">ADD WEBSITE</string>
-
 
 </resources>

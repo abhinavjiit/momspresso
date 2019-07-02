@@ -15,8 +15,12 @@ public class VlogsListingAndDetailResult {
     private String approval_time;
     private String published_status;
     private String publication_status;
+
+
+
     private String commentUri;
     private Author author;
+    private String sharing_url;
     private String view_count;
     private ArrayList<String> category_id;
     private String thumbnail;
@@ -30,7 +34,13 @@ public class VlogsListingAndDetailResult {
     private boolean is_gold = false;
     private int winner = 0;
 
+    public String getSharing_url() {
+        return sharing_url;
+    }
 
+    public void setSharing_url(String sharing_url) {
+        this.sharing_url = sharing_url;
+    }
     public int getWinner() {
         return winner;
     }

@@ -95,11 +95,11 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
+
         postList = new ArrayList<>();
         groupsReportedContentRecyclerAdapter = new GroupsReportedContentRecyclerAdapter(this, this);
         groupsReportedContentRecyclerAdapter.setData(postList);
         recyclerView.setAdapter(groupsReportedContentRecyclerAdapter);
-
         getReportedCotent();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

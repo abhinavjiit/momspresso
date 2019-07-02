@@ -44,6 +44,12 @@ public interface BloggerDashboardAPI {
                                                              @Query("start") int start,
                                                              @Query("end") int end);
 
+    @GET("/user_history/v1/{userId}")
+    Call<ArticleListingResponse> getAuthorsReadArticles(@Path("userId") String userId,
+                                                        @Query("size") int size,
+                                                        @Query("chunks") int chunks,
+                                                        @Query("filter") String filter);
+
     @GET("v1/reports/{userId}/{from}/{to}")
     Call<BloggerAnalyticsResponse> getAnalyticsReport(@Path("userId") String userId,
                                                       @Path("from") String from,

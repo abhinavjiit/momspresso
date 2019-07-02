@@ -9,7 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +47,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 17/5/18.
  */
 
-public class GroupsListingActivity extends BaseActivity implements GroupsRecyclerGridAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus {
+public class GroupsListingActivity extends BaseActivity implements GroupsRecyclerGridAdapter.RecyclerViewClickListener, GroupMembershipStatus.IMembershipStatus, View.OnClickListener {
 
     private GroupsRecyclerGridAdapter adapter;
     private boolean isReuqestRunning = false;
@@ -60,11 +62,14 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     private TextView noGroupsTextView;
     private ProgressBar progressBar;
     private GroupResult selectedGroup;
+    private RelativeLayout addPostContainer;
     private LinkedTreeMap<String, String> selectedQuestionnaire;
     private TextView toolbarTitle;
     private MixpanelAPI mixpanel;
     ArrayList<GroupResult> joinList = null;
     ArrayList<GroupResult> remainList = new ArrayList<>();
+    private String comingFrom = "";
+    private ImageView audioImageView, closeImageView, suggestedTopicImageView, writeArticleImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,18 +78,30 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         ((BaseApplication) getApplication()).setActivity(this);
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-
+        addPostContainer = (RelativeLayout) findViewById(R.id.addPostContainer);
+        audioImageView = (ImageView) findViewById(R.id.audioImageView);
+        closeImageView = (ImageView) findViewById(R.id.closeImageView);
+        suggestedTopicImageView = (ImageView) findViewById(R.id.suggestedTopicImageView);
+        writeArticleImageView = (ImageView) findViewById(R.id.writeArticleImageView);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerGridView = (RecyclerView) findViewById(R.id.recyclerGridView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         noGroupsTextView = (TextView) findViewById(R.id.noGroupsTextView);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
+        audioImageView.setOnClickListener(this);
+        closeImageView.setOnClickListener(this);
+        suggestedTopicImageView.setOnClickListener(this);
+        writeArticleImageView.setOnClickListener(this);
 
         final boolean isMember = getIntent().getBooleanExtra("isMember", false);
         if (!isMember) {
             joinList = getIntent().getParcelableArrayListExtra("joinedList");
         }
 
+        comingFrom = getIntent().getStringExtra("comingFrom");
+        if (comingFrom == null) {
+            comingFrom = "notFromFeed";
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -343,12 +360,20 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_BLOCKED.equals(body.getData().getResult().get(0).getStatus())) {
             Toast.makeText(this, getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
-            Intent intent = new Intent(this, GroupDetailsActivity.class);
-            intent.putExtra("groupId", selectedGroup.getId());
-            intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
-            startActivity(intent);
-            Utils.groupsEvent(GroupsListingActivity.this, "Groups you are member of_listing", "group card", "android", SharedPrefUtils.getAppLocale(GroupsListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Groups_Discussion", "", "");
+            if (comingFrom.equals("myFeed")) {
 
+                if (addPostContainer.getVisibility() == View.GONE) {
+                    addPostContainer.setVisibility(View.VISIBLE);
+                }
+
+
+            } else {
+                Intent intent = new Intent(this, GroupDetailsActivity.class);
+                intent.putExtra("groupId", selectedGroup.getId());
+                intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
+                startActivity(intent);
+                Utils.groupsEvent(GroupsListingActivity.this, "Groups you are member of_listing", "group card", "android", SharedPrefUtils.getAppLocale(GroupsListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Groups_Discussion", "", "");
+            }
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
@@ -375,6 +400,62 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 onBackPressed();
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+            case R.id.audioImageView:
+                SharedPrefUtils.setSavedPostData(this, selectedGroup.getId(), "");
+                Intent intent = new Intent(GroupsListingActivity.this, AddAudioGroupPostActivity.class);
+                intent.putExtra("groupItem", selectedGroup);
+                startActivityForResult(intent, 1111);
+
+                break;
+
+            case R.id.closeImageView:
+
+                if (addPostContainer.getVisibility() == View.VISIBLE) {
+                    addPostContainer.setVisibility(View.GONE);
+                }
+                setResult(RESULT_OK);
+                finish();
+                break;
+
+            case R.id.suggestedTopicImageView:
+                SharedPrefUtils.setSavedPostData(this, selectedGroup.getId(), "");
+
+                Intent intent2 = new Intent(GroupsListingActivity.this, AddTextOrMediaGroupPostActivity.class);
+                intent2.putExtra("groupItem", selectedGroup);
+
+                startActivityForResult(intent2, 1111);
+                break;
+            case R.id.writeArticleImageView:
+                SharedPrefUtils.setSavedPostData(this, selectedGroup.getId(), "");
+
+                Intent intent1 = new Intent(GroupsListingActivity.this, AddPollGroupPostActivity.class);
+                intent1.putExtra("groupItem", selectedGroup);
+
+                startActivityForResult(intent1, 1111);
+                break;
+
+
+        }
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1111) {
+                setResult(RESULT_OK);
+                addPostContainer.setVisibility(View.GONE);
+                finish();
+            }
         }
     }
 }

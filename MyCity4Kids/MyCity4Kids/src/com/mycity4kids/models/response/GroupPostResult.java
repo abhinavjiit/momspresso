@@ -30,7 +30,11 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
     private String moderationOn;
     private String createdOn;
     private int groupId;
+
+
+    private int markedHelpful;
     private String userId;
+    private boolean hasVoted;
     private long createdAt;
     private long updatedAt;
     private String pollType;
@@ -79,6 +83,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         helpfullCount = in.readInt();
         notHelpfullCount = in.readInt();
         commentType = in.readInt();
+        markedHelpful = in.readInt();
         groupInfo = in.readParcelable(GroupInfoResult.class.getClassLoader());
     }
 
@@ -196,6 +201,22 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
 
     public void setModerationStatus(String moderationStatus) {
         this.moderationStatus = moderationStatus;
+    }
+
+    public int getMarkedHelpful() {
+        return markedHelpful;
+    }
+
+    public void setMarkedHelpful(int markedHelpful) {
+        this.markedHelpful = markedHelpful;
+    }
+
+    public boolean isHasVoted() {
+        return hasVoted;
+    }
+
+    public void setHasVoted(boolean hasVoted) {
+        this.hasVoted = hasVoted;
     }
 
     public String getModerationOn() {
@@ -406,7 +427,8 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         dest.writeInt(helpfullCount);
         dest.writeInt(notHelpfullCount);
         dest.writeInt(commentType);
-        dest.writeParcelable(groupInfo,flags);
+        dest.writeInt(markedHelpful);
+        dest.writeParcelable(groupInfo, flags);
     }
 }
 

@@ -9,7 +9,9 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        tools:layout_editor_absoluteX="57dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -308,9 +310,9 @@
                         android:layout_width="150dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
-                        app:fontName="oswald_regular.ttf"
-
                         android:background="@drawable/mainprofile_thin_border"
+
+                        app:fontName="oswald_regular.ttf"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@+id/textDOB"
                         app:layout_constraintStart_toStartOf="parent"
@@ -806,6 +808,92 @@
                     android:textColor="@color/app_light_black"
                     android:textSize="16dp"
                     app:fontName="oswald_regular.ttf" />
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingTop="5dp"
+                    android:background="@drawable/shape_rectangle_light_red">
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/referHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginEnd="14dp"
+                        android:layout_marginRight="14dp"
+                        android:paddingLeft="5dp"
+                        android:text="@string/refer_code"
+                        android:textColor="@color/campaign_515151"
+                        android:textSize="17sp"
+                        app:fontName="oswald_regular.ttf"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view_6" />
+
+                    <com.mycity4kids.widget.CustomFontEditText
+                        android:id="@+id/editReferralCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/space_40"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginRight="0dp"
+                        android:background="@drawable/shape_rectangle_light_grey_boder_white_solid"
+                        android:gravity="center_vertical"
+                        android:hint="REFERRAL CODE(Optional)"
+                        android:lineSpacingExtra="2.2dp"
+                        android:paddingStart="15dp"
+                        android:paddingLeft="15dp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/app_light_black"
+                        app:fontName="oswald_regular.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/textApplyReferral"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/space_40"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/campaign_detail_refer_code_apply"
+                        android:gravity="center"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginRight="15dp"
+                        android:text="Apply"
+                        android:textColor="@color/app_red"
+                        android:textSize="14sp"
+                        app:fontName="oswald_regular.ttf" />
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/textReferCodeError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginEnd="@dimen/space_15"
+                        android:layout_marginRight="@dimen/space_15"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:lineSpacingExtra="1.3dp"
+                        android:textColor="@color/campaign_refer_code_error"
+                        android:textSize="13sp"
+                        android:visibility="visible"
+                        app:fontName="open_sans.ttf"
+                        android:layout_below="@+id/editReferralCode"/>
+                </RelativeLayout>
 
             </LinearLayout>
 

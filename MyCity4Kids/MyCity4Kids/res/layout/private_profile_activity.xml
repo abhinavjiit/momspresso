@@ -387,13 +387,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:ellipsize="end"
                             android:gravity="center"
+                            android:maxLines="2"
                             android:paddingLeft="5dp"
                             android:paddingRight="5dp"
                             android:text="@string/rewards_participate"
                             android:textColor="@color/black"
-                            android:maxLines="2"
-                            android:ellipsize="end"
                             android:textSize="12sp"
                             android:textStyle="bold"
                             app:fontName="oswald.ttf" />
@@ -557,7 +557,8 @@
                 android:background="@color/dark_transparent"
                 android:elevation="18dp"
                 android:orientation="vertical"
-                android:visibility="invisible"></LinearLayout>
+                android:visibility="invisible" />
+
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/publishedSectionTextView1"
@@ -635,7 +636,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_below="@+id/underline_1"
-                android:drawableLeft="@drawable/ic_story"
+                android:drawableLeft="@drawable/draft_article"
                 android:drawablePadding="18dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"
@@ -654,10 +655,35 @@
                 android:background="@color/light_grey1" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/activitySectionTextView"
+                android:id="@+id/readArticles"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_below="@+id/underline_2"
+                android:drawableLeft="@drawable/read_article"
+                android:drawablePadding="18dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="READ ARTICLES"
+                app:fontName="oswald.ttf" />
+
+            <View
+                android:id="@+id/underline_3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/readArticles"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/light_grey1" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/activitySectionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@+id/underline_3"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="-2dp"
                 android:drawableLeft="@drawable/ic_activity"
                 android:drawablePadding="20dp"
                 android:gravity="center_vertical"

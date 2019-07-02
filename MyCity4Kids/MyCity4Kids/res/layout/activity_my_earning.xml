@@ -138,17 +138,17 @@
                     android:id="@+id/start_campaign_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_35"
                     android:gravity="center"
                     android:paddingLeft="@dimen/space_20"
                     android:paddingTop="10dp"
                     android:paddingRight="@dimen/space_20"
-                    android:layout_marginTop="@dimen/space_35"
                     android:paddingBottom="10dp"
                     android:text="Please participate in ongoing campaigns to start earning"
                     android:textColor="@color/color_676767"
                     android:textSize="20sp"
                     android:visibility="gone"
-                    app:fontName="open_sans.ttf" />
+                    app:fontName="OpenSans-Regular.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/start_campaign_cta"
@@ -158,13 +158,13 @@
                     android:background="@drawable/money_dashboard_green_bg"
                     android:paddingLeft="@dimen/space_20"
                     android:paddingTop="10dp"
-                    android:visibility="gone"
                     android:paddingRight="@dimen/space_20"
                     android:paddingBottom="10dp"
                     android:text="Participate now"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="18sp"
+                    android:visibility="gone"
                     app:fontName="oswald_regular.ttf" />
             </LinearLayout>
         </LinearLayout>

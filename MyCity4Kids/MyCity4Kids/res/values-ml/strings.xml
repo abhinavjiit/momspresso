@@ -3,7 +3,13 @@
 
     <string name="app_name">Momspresso</string>
     <string name="unknown_person">Unknown</string>
+
     <string name="resend_email">Resend Email</string>
+    <string name="groups_sections_polls">പോൾ</string>
+    <string name="groups_sections_myfeed">My Feed</string>
+
+    <string name="groups.other_groups">OTHER GROUPS</string>
+    <string name="groups_enable_notification">നോട്ടിഫിക്കേഷൻ സാധ്യമാക്കൂ </string>
 
     <string name="facebook_app_id">206155642763202</string>
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
@@ -534,9 +540,12 @@
 
     <string name="video_progress.uploading_label">അപ്ലോഡുചെയ്യുന്നു ...</string>
     <string name="video_progress.uploading_msg">ദയവായി എക്സിറ്റ് ചെയ്യുകയോ അപ്ലിക്കേഷൻ നിർത്തുകയോ ചെയ്യരുത്, അങ്ങനെ ചെയ്‌താൽ അപ്‌ലോഡ് ക്യാൻസൽ ആകും. അപ്‌ലോഡ് ചെയ്യാൻ താങ്കൾക്ക് ഈ ആപ്ലിക്കേഷൻ ഉപയോഗിക്കാവുന്നതാണ്</string>
-    <string name="video_progress.way_to_go">വളരെ നന്നായി!</string>
-    <string name="video_progress.success_msg">വീഡിയോ വിജയകരമായി അപ്‌ലോഡ് ചെയ്ത് ക്രമീകരിക്കാനായി അയച്ചിരിക്കുന്നു. അത് ചെയ്ത് കഴിഞ്ഞാൽ താങ്കളെ അറിയിക്കുന്നതാണ്.</string>
-    <string name="video_progress.okay">ഓകെ</string>
+    <string name="video_progress.way_to_go">വളരെ നന്നായി!
+</string>
+    <string name="video_progress.success_msg">താങ്കൾ വീഡിയോ വിജയകരമായി അപ്‌ലോഡ് ചെയ്തിരിക്കുന്നു. ഈ വീഡിയോ രണ്ട്‌ ദിവസങ്ങൾക്കുള്ളിൽ മോഡറേറ്റ് ചെയ്യുന്നതാണ്. ഇതേക്കുറിച്ച് താങ്കളെ അറിയിക്കുന്നതുമാണ്.
+</string>
+    <string name="video_progress.okay">ശരി, മനസ്സിലായി
+</string>
     <string name="video_progress.uploading_failed">Uploading Failed.</string>
     <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
     <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
@@ -700,6 +709,8 @@
     <string name="groups.unblock_member">UNBLOCK MEMBER</string>
     <string name="groups.block_member">BLOCK MEMBER</string>
     <string name="groups.remove_post">REMOVE POST</string>
+    <string name="groups_groups_myfeed">ഗ്രൂപ്പ് </string>
+
     <string name="groups.save_post">SAVE POST</string>
     <string name="groups.delete_post">DELETE POST</string>
     <string name="groups.turn_notification_on">Turn On Notification</string>
@@ -730,8 +741,10 @@
     <string name="groups.now_member_gp">You are now member of the group</string>
     <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
     <string name="groups.support_groups">സപ്പോർട്ട് ഗ്രൂപ്പുകൾ </string>
-    <string name="groups.post_helpful">Helpful</string>
-    <string name="groups.post_nothelpful">Not Helpful</string>
+    <string name="groups.post_helpful"></string>
+    <string name="groups.post_nothelpful"></string>
+    <string name="audio_post">ഓഡിയോ </string>
+
     <string name="groups.summary">SUMMARY</string>
     <string name="groups.add_image">ADD IMAGE</string>
     <string name="groups.image_poll">IMAGE POLL</string>
@@ -930,6 +943,10 @@
     <string name="rewards_non_working">"ജോലി ചെയ്യുന്നില്ല "</string>
     <string name="rewards_language">"ഭാഷ "</string>
     <string name="rewards_save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
+    <string name="reply_groups">Reply</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
+
     <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_participate">പ്രൊഫൈൽ പൂരിപ്പിക്കൂ, ഇതിൽ പങ്ക് ചേരൂ, സമ്പാദിക്കാൻ തുടങ്ങൂ!</string>
     <string name="save_continue">"സേവ് ചെയ്ത് തുടരൂ "</string>
@@ -957,7 +974,6 @@
     <string name="rewards_momspresso">മോംസ്പ്രേസ്സോ റീവാർഡുകൾ</string>
 
 
-
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>
@@ -966,7 +982,7 @@
     //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
     <string name="group_add_comment_text">ADD COMMENT</string>
-    <string name="group_invite_text">Invite</string>
+    <string name="group_invite_text">ക്ഷണിക്കൂ</string>
     <string name="group_comment_type_here_text">Type here</string>
     <string name="group_comment_be_the_first_text">Be the first one to comment</string>
 

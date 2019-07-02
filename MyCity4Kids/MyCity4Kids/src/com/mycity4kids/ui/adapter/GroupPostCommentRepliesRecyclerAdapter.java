@@ -215,7 +215,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                 }
             });
-            commentsViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            commentsViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount()+"");
             commentsViewHolder.downvoteCommentCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(commentsViewHolder.commentDataTextView, Linkify.WEB_URLS);
@@ -223,6 +223,15 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             commentsViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(commentsViewHolder.commentDataTextView);
             commentsViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
+
+            if (repliesList.get(position).getMarkedHelpful() == 1) {
+                commentsViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                commentsViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
+
+
         } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
 
@@ -337,8 +346,18 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                 audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
                 audioCommentViewHolder.replyCountTextView.setText("View (" + repliesList.get(position).getChildCount() + ") replies");
             }
-            audioCommentViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            audioCommentViewHolder.upvoteCommentCountTextView.setText(repliesList.get(position).getHelpfullCount()+"");
             audioCommentViewHolder.downvoteCommentCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
+
+
+            if (repliesList.get(position).getMarkedHelpful() == 1) {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
+
+
         } else {
             RepliesViewHolder repliesViewHolder = (RepliesViewHolder) holder;
             if (repliesList.get(position).getIsAnnon() == 1) {
@@ -422,7 +441,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
                     }
                 }
             });
-            repliesViewHolder.upvoteReplyCountTextView.setText(repliesList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            repliesViewHolder.upvoteReplyCountTextView.setText(repliesList.get(position).getHelpfullCount()+"");
             repliesViewHolder.downvoteReplyCountTextView.setText(repliesList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
             Linkify.addLinks(repliesViewHolder.commentDataTextView, Linkify.WEB_URLS);
@@ -430,6 +449,13 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             repliesViewHolder.commentDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(repliesViewHolder.commentDataTextView);
             repliesViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
+
+            if (repliesList.get(position).getMarkedHelpful() == 1) {
+                repliesViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                repliesViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         }
     }
 
@@ -460,7 +486,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
     public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
         ImageView commentorImageView, playAudioImageView, pauseAudioImageView;
-        ImageView media;
+        ImageView media, upvoteImageVIew;
         TextView commentorUsernameTextView, audioTimeElapsed;
         TextView commentDataTextView;
         TextView replyCommentTextView;
@@ -474,6 +500,8 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
 
         public AudioCommentViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+
             media = (ImageView) view.findViewById(R.id.media);
             audiotRootView = view.findViewById(R.id.commentRootView);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
@@ -562,7 +590,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
     }
 
     public class CommentsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        ImageView commentorImageView;
+        ImageView commentorImageView, upvoteImageVIew;
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
         TextView replyCommentTextView;
@@ -574,6 +602,8 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
 
         CommentsViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+
             media = (ImageView) view.findViewById(R.id.media);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
@@ -605,7 +635,7 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
     }
 
     public class RepliesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        ImageView commentorImageView;
+        ImageView commentorImageView, upvoteImageVIew;
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
         TextView commentDateTextView;
@@ -615,6 +645,8 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
 
         RepliesViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteReplyImageVIew);
+
             mediaview = (ImageView) view.findViewById(R.id.media);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);

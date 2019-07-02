@@ -177,7 +177,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
-
             textPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
             Linkify.addLinks(textPostViewHolder.postDataTextView, Linkify.WEB_URLS);
             textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -185,7 +184,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             addLinkHandler(textPostViewHolder.postDataTextView);
 
             textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            textPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
+            textPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount()+"");
             textPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             textPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -223,7 +222,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 textPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         textPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -251,13 +250,21 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                     }
                 }
             });
+
+
+            if (groupPostResult.getMarkedHelpful() == 1) {
+                textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         } else if (holder instanceof AudioCommentViewHeaderHolder) {
             AudioCommentViewHeaderHolder audioCommentViewHolder = (AudioCommentViewHeaderHolder) holder;
 
             if (groupPostResult.getIsAnnon() == 1) {
                 audioCommentViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         audioCommentViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -302,6 +309,12 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                         }
                     }
                 });
+                try {
+                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(audioCommentViewHolder.profileImageView);
+                } catch (Exception e) {
+                    audioCommentViewHolder.profileImageView.setBackgroundResource(R.drawable.default_commentor_img);
+                }
                 audioCommentViewHolder.commentorUsernameTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -364,15 +377,24 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
             audioCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             audioCommentViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
-            audioCommentViewHolder.upvoteCommentCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
+            audioCommentViewHolder.upvoteCommentCountTextView.setText(groupPostResult.getHelpfullCount()+"");
             audioCommentViewHolder.downvoteCommentCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
+
+
+            if (groupPostResult.getMarkedHelpful() == 1) {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
+
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
 
             if (groupPostResult.getIsAnnon() == 1) {
                 mediaPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         mediaPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -388,7 +410,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             addLinkHandler(mediaPostViewHolder.postDataTextView);
 
             mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            mediaPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
+            mediaPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount()+"");
             mediaPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             mediaPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -446,6 +468,13 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 }
             });
             initializeViews((MediaPostViewHolder) holder, position);
+
+            if (groupPostResult.getMarkedHelpful() == 1) {
+                mediaPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                mediaPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
 
@@ -453,7 +482,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             if (groupPostResult.getIsAnnon() == 1) {
                 textPollPostViewHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         textPollPostViewHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -469,7 +498,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
 
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            textPollPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
+            textPollPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount()+"");
             textPollPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             textPollPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -559,13 +588,20 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else {
                 hideVotingData(textPollPostViewHolder);
             }
+
+            if (groupPostResult.getMarkedHelpful() == 1) {
+                textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         } else if (holder instanceof ImagePollPostViewHolder) {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
 
             if (groupPostResult.getIsAnnon() == 1) {
                 imageHolder.userTag.setVisibility(View.GONE);
             } else {
-                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null ) {
+                if (groupPostResult != null && groupPostResult.getUserInfo() != null && groupPostResult.getUserInfo().getUserTag() != null) {
                     if (groupPostResult.getUserInfo().getUserTag().size() != 0) {
                         imageHolder.userTag.setText(groupPostResult.getUserInfo().getUserTag().get(0));
                     } else {
@@ -582,7 +618,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
             imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             imageHolder.usernameTextView.setText(groupPostResult.getUserId());
-            imageHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
+            imageHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount()+"");
             imageHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             imageHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -675,7 +711,14 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else {
                 hideImagePollVotingData(imageHolder);
             }
-        } else if (holder instanceof AudioCommentViewHolder)  {
+
+            if (groupPostResult.getMarkedHelpful() == 1) {
+                imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
+        } else if (holder instanceof AudioCommentViewHolder) {
             AudioCommentViewHolder audioCommentViewHolder = (AudioCommentViewHolder) holder;
 
             if (postCommentsList.get(position).getIsAnnon() == 1) {
@@ -786,10 +829,17 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 audioCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
             } else {
                 audioCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-                audioCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
+                audioCommentViewHolder.replyCountTextView.setText(mContext.getString(R.string.view_group) + "(" + postCommentsList.get(position).getChildCount() + ")" + mContext.getString(R.string.replies));
             }
-            audioCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            audioCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount()+"");
             audioCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
+
+            if (postCommentsList.get(position).getMarkedHelpful() == 1) {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         } else {
             RootCommentViewHolder rootCommentViewHolder = (RootCommentViewHolder) holder;
             if (postCommentsList.get(position).getIsAnnon() == 1) {
@@ -890,10 +940,17 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
             } else {
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-                rootCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
+                rootCommentViewHolder.replyCountTextView.setText(mContext.getString(R.string.view_group) + "(" + postCommentsList.get(position).getChildCount() + ")" + mContext.getString(R.string.replies));
             }
-            rootCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            rootCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount()+"");
             rootCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
+
+            if (postCommentsList.get(position).getMarkedHelpful() == 1) {
+                rootCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
+            } else {
+                rootCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
+
+            }
         }
     }
 
@@ -1161,7 +1218,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public class TextPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView userImageView;
+        ImageView userImageView, upvoteImageVIew, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
@@ -1173,6 +1230,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         TextPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -1186,7 +1245,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
             userTag = (TextView) view.findViewById(R.id.userTag);
 
-
+            whatsappShare.setOnClickListener(this);
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
@@ -1202,7 +1261,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     public class MediaPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView;
+        ImageView userImageView, upvoteImageVIew, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
@@ -1217,6 +1276,9 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         MediaPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -1232,7 +1294,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
             userTag = (TextView) view.findViewById(R.id.userTag);
-
+            whatsappShare.setOnClickListener(this);
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
@@ -1268,7 +1330,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     public class TextPollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView;
+        ImageView userImageView, upvoteImageVIew, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
@@ -1285,6 +1347,9 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         TextPollPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -1316,6 +1381,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             totalVoteCountTextView = (TextView) view.findViewById(R.id.totalVoteCountTextView);
             shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
             userTag = (TextView) view.findViewById(R.id.userTag);
+            whatsappShare.setOnClickListener(this);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
@@ -1360,7 +1426,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     }
 
     public class ImagePollPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView userImageView, shareTextView;
+        ImageView userImageView, shareTextView, upvoteImageVIew, whatsappShare;
         TextView usernameTextView;
         TextView postDateTextView;
         TextView upvoteCountTextView, downvoteCountTextView;
@@ -1377,6 +1443,9 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         ImagePollPostViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+
             userImageView = (ImageView) view.findViewById(R.id.userImageView);
             usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
@@ -1414,6 +1483,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             upvoteContainer.setOnClickListener(this);
             downvoteContainer.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
+
 
             option1Container.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1453,8 +1524,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public class AudioCommentViewHeaderHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
-        ImageView commentorImageView, playHeaderAudioImageView, pauseHeaderAudioImageView;
-        ImageView media;
+        ImageView commentorImageView, playHeaderAudioImageView, pauseHeaderAudioImageView, profileImageView, whatsappShare;
+        ImageView media, upvoteImageVIew;
         TextView commentorUsernameTextView, headerAudioTimeElapsed;
         TextView commentDataTextView;
         TextView commentDateTextView, userTag;
@@ -1469,7 +1540,11 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         public AudioCommentViewHeaderHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+            whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+
             media = (ImageView) view.findViewById(R.id.media);
+            profileImageView = (ImageView) view.findViewById(R.id.profileImageView);
             audiotRootView = view.findViewById(R.id.commentRootView);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
@@ -1496,6 +1571,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             headerAudioSeekBar.setOnSeekBarChangeListener(this);
             postSettingImageView.setOnClickListener(this);
             shareTextView.setOnClickListener(this);
+            profileImageView.setOnClickListener(this);
+            whatsappShare.setOnClickListener(this);
 
             underlineView = view.findViewById(R.id.underlineView);
         }
@@ -1561,8 +1638,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
     public class AudioCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, SeekBar.OnSeekBarChangeListener {
 
-        ImageView commentorImageView, playAudioImageView, pauseAudioImageView;
-        ImageView media;
+        ImageView commentorImageView, playAudioImageView, pauseAudioImageView, whatsappShare;
+        ImageView media, upvoteImageVIew;
         TextView commentorUsernameTextView, audioTimeElapsed;
         TextView commentDataTextView;
         TextView replyCommentTextView;
@@ -1575,6 +1652,9 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
         public AudioCommentViewHolder(View view) {
             super(view);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
+          //  whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+
             media = (ImageView) view.findViewById(R.id.media);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
@@ -1590,6 +1670,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             pauseAudioImageView = (ImageView) view.findViewById(R.id.pauseAudioImageView);
             audioSeekBar = (SeekBar) view.findViewById(R.id.audioSeekBar);
             audioTimeElapsed = (TextView) view.findViewById(R.id.audioTimeElapsed);
+         //   whatsappShare.setOnClickListener(this);
 
             commentDataTextView.setOnLongClickListener(this);
             view.setOnLongClickListener(this);
@@ -1665,7 +1746,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     public class RootCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         ImageView commentorImageView;
-        ImageView media;
+        ImageView media, upvoteImageVIew;
         TextView commentorUsernameTextView;
         TextView commentDataTextView;
         TextView replyCommentTextView;
@@ -1678,6 +1759,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         RootCommentViewHolder(View view) {
             super(view);
             media = (ImageView) view.findViewById(R.id.media);
+            upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
             commentorUsernameTextView = (TextView) view.findViewById(R.id.commentorUsernameTextView);
             commentDataTextView = (TextView) view.findViewById(R.id.commentDataTextView);

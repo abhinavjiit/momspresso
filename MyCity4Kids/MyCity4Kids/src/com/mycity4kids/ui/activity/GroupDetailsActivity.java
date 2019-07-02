@@ -161,6 +161,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserType().equals("1")) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
         setContentView(R.layout.group_details_activity);
         ((BaseApplication) getApplication()).setActivity(this);
 
@@ -793,7 +796,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.commentToggleTextView:
                 if (commentToggleTextView.getText().toString().equals(getString(R.string.groups_disable_comment))) {
-                    Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "enable comment", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+                    Utils.groupsEvent(GroupDetailsActivity.this, "scussion_Post ActionView (...)", "enable comment", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
 
                     updatePostCommentSettings(1);
                 } else {
@@ -1129,7 +1132,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     currentPostPrefsForUser = new UserPostSettingResult();
                     currentPostPrefsForUser.setId(jObject.getJSONObject("data").getJSONObject("result").getInt("id"));
                     if (jObject.getJSONObject("data").getJSONObject("result").getBoolean("notificationOff")) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }
@@ -1169,7 +1172,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     UserPostSettingResponse userPostSettingResponse = response.body();
                     currentPostPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
                     if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
-                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                        notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
                     } else {
                         notificationToggleTextView.setText("DISABLE NOTIFICATION");
                     }
@@ -1541,14 +1544,25 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 //                startActivity(intent);
                 break;
             }
+            case R.id.upvoteCommentContainer:
             case R.id.upvoteContainer:
                 Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+                if (postList.get(position).getMarkedHelpful() == 0) {
 
-                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+
+
+                }
+                if (postList.get(position).getMarkedHelpful() == 1) {
+
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+
+
+                }
                 break;
             case R.id.downvoteContainer:
                 Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "not helpful", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
-
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
             case R.id.shareTextView:
@@ -1561,6 +1575,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
                 hitShareAPI();
                 break;
+
+            case R.id.whatsappShare:
+                String shareUrlWhatsapp = AppConstants.GROUPS_BASE_SHARE_URL + postList.get(position).getUrl();
+                AppUtils.shareCampaignWithWhatsApp(GroupDetailsActivity.this, shareUrlWhatsapp, "", "", "", "", "");
+
         }
     }
 
@@ -1635,8 +1654,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                             if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
+                                    postList.get(i).setMarkedHelpful(1);
+
                                 } else {
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
+                                    postList.get(i).setMarkedHelpful(0);
+
+
                                 }
                             }
                         }
@@ -1690,9 +1714,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                                 if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() - 1);
+                                    postList.get(i).setMarkedHelpful(1);
+
                                 } else {
                                     postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
                                     postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() - 1);
+                                    postList.get(i).setMarkedHelpful(0);
+
                                 }
                             }
                         }
@@ -1829,7 +1857,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         //No existing settings for this post for this user
         if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
             savePostTextView.setText(getString(R.string.groups_save_post));
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
             currentPostPrefsForUser = null;
             return;
         }
@@ -1841,7 +1869,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
 
         if (currentPostPrefsForUser.getNotificationOff() == 1) {
-            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            notificationToggleTextView.setText(getString(R.string.groups_enable_notification));
         } else {
             notificationToggleTextView.setText("DISABLE NOTIFICATION");
         }
@@ -1916,10 +1944,24 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 selectedPost.setContent(data.getStringExtra("updatedContent"));
                 groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 2222) {
-                Intent intent = getIntent();
+              /*  Intent intent = getIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 finish();
-                startActivity(intent);
+                startActivity(intent);*/
+                if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1 && data.getIntExtra("replyCount", -1) != -1) {
+                    ArrayList<GroupPostCommentResult> completeCommentResponseList = data.getParcelableArrayListExtra("completeResponseList");
+                    int postId = data.getIntExtra("postId", -1);
+                    int replyCount = data.getIntExtra("replyCount", -1);
+
+                    for (int i = 0; i < postList.size(); i++) {
+
+                        if (postList.get(i).getId() == postId) {
+                            postList.get(i).setResponseCount(completeCommentResponseList.size() - 1 + replyCount);
+                            groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
             }
         }
     }

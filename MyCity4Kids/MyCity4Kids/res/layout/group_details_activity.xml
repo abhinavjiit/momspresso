@@ -284,7 +284,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/groups.sections.polls"
+                android:text="@string/groups_sections_polls"
                 android:textColor="@color/white"
                 android:visibility="visible"
                 app:fontName="oswald.ttf" />
@@ -348,7 +348,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="AUDIO"
+                android:text="@string/audio_post"
                 android:textColor="@color/white"
                 android:visibility="visible"
                 app:fontName="oswald.ttf" />
@@ -445,7 +445,7 @@
                 android:background="@color/white"
                 android:drawablePadding="20dp"
                 android:padding="20dp"
-                android:text="ENABLE NOTIFICATION"
+                android:text="@string/groups_enable_notification"
                 android:textColor="@color/groups.light_black_color"
                 android:textSize="16sp"
                 app:fontName="open_sans.ttf" />

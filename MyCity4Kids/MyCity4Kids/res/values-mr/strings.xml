@@ -526,9 +526,11 @@
 
     <string name="video_progress.uploading_label">अपलोड होत आहे ...</string>
     <string name="video_progress.uploading_msg">कृपयाअँप च्या बाहेर जाऊ नका. तुमचे अपलोड कॅन्सल केले जाईल </string>
-    <string name="video_progress.way_to_go">अजून खूप दूर जायचे आहे !</string>
-    <string name="video_progress.success_msg">तुमचा व्हिडीओ यशस्वीपणे अपलोड झाला आहे व मॉडरेशन साठी पाठवण्यात आला आहे. मॉडरेशन झाल्यावर तुम्हाला लगेच कळवण्यात येईल </string>
-    <string name="video_progress.okay">ओके</string>
+    <string name="video_progress.way_to_go">आपण योग्य मार्गावर आहात.</string>
+    <string name="video_progress.success_msg">आपला व्हिडिओ यशस्वीरित्या अपलोड केला गेला आहे. आठवड्यातील 2 कामकाजाच्या दिवसांमध्ये तो नियंत्रित केला जाईल.  नियंत्रित झाल्यानंतर आम्ही आपल्याला सूचित करू.
+ </string>
+    <string name="video_progress.okay">ओ अोके, समजले ना.
+</string>
     <string name="video_progress.uploading_failed">अपलोड अयशस्वी झाले आहे </string>
     <string name="video_progress.uploading_error">तुमचा व्हिडीओ अपलोड करताना काही तांत्रिक अडचण अली आहे. कृपया नंतर प्रयत्न करा </string>
     <string name="video_progress.progress_lost_msg">तुमचे अपलोड रद्द करण्यात येईल. तुम्हाला निश्चित बाहेर पडायचे आहे का ?</string>
@@ -659,6 +661,8 @@
     <string name="author_type.expert">तज्ज्ञ</string>
     <string name="author_type.featured">अव्वल लेखक</string>
     <string name="author_type.user">USER</string>
+    <string name="groups_groups_myfeed">ग्रुप्स</string>
+
 
     <string name="no_article.be_first">ह्या श्रेणी मध्ये लेख लिहिणारे पहिले लेखक  व्हा</string>
 
@@ -697,21 +701,23 @@
     <string name="groups.block_member">Block Member</string>
     <string name="groups.remove_post">Remove Post</string>
     <string name="groups.save_post">Save Post</string>
-    <string name="groups.delete_post">Delete Post</string>
+    <string name="groups.delete_post">पोस्ट काढून टाका</string>
     <string name="groups.turn_notification_on">Turn On Notification</string>
     <string name="groups.turn_notification_off">Turn Off Notification</string>
     <string name="groups.enable_comment">Enable Comments</string>
     <string name="groups.disable_comment">Disable Comments</string>
     <string name="groups.report_post">Report This Post</string>
-    <string name="groups.block_this_user">Block This User</string>
-    <string name="groups.pin_post">Pin This Post To Top</string>
-    <string name="groups.unpin_post">Unpin This post</string>
+    <string name="groups.block_this_user">या यूजर ला ब्लॉक करा.</string>
+    <string name="groups.pin_post">या पोस्ट ला सर्वात वर पिन करा</string>
+    <string name="groups.unpin_post">या पोस्ट ला अनपिन करा.</string>
     <string name="groups.all_groups">ALL GROUPS</string>
-    <string name="groups.groups">GROUPS</string>
+    <string name="groups.groups">ग्रुप्स</string>
+    <string name="groups_sections_polls">मतदान</string>
+    <string name="groups_sections_myfeed">My Feed</string>
     <string name="groups.reported_by">Reported By</string>
     <string name="groups.persons">Persons</string>
     <string name="groups.no_action">No Action</string>
-    <string name="groups.block_user">Block User</string>
+    <string name="groups.block_user">यूजर ला ब्लॉक करा</string>
     <string name="groups.hide_content">Hide Content</string>
     <string name="groups.invite_members">INVITE MEMBERS</string>
     <string name="groups.invite_family">You can invite your friends and family to this group</string>
@@ -725,8 +731,8 @@
     <string name="groups.now_member_gp">You are now member of the group</string>
     <string name="groups.approval_req_sent">Your request has been sent to group admin for approval</string>
     <string name="groups.support_groups">Support Groups</string>
-    <string name="groups.post_helpful">Helpful</string>
-    <string name="groups.post_nothelpful">Not Helpful</string>
+    <string name="groups.post_helpful"></string>
+    <string name="groups.post_nothelpful"></string>
     <string name="groups.summary">SUMMARY</string>
     <string name="groups.add_image">ADD IMAGE</string>
     <string name="groups.image_poll">IMAGE POLL</string>
@@ -743,7 +749,7 @@
     <string name="groups.sections.photos">PHOTOS</string>
     <string name="groups.sections.videos">VIDEOS</string>
     <string name="groups.sections.top_posts">TOP POSTS</string>
-    <string name="groups.sections.polls">POLLS</string>
+    <string name="groups.sections.polls">मतदान</string>
     <string name="groups.search_in">Search</string>
     <string name="groups.join_form">JOINING FORM</string>
     <string name="groups.membership_pending">Membership Pending</string>
@@ -755,9 +761,10 @@
     <string name="groups.user_blocked_msg">You have been blocked from this group</string>
     <string name="groups.user_membership_rejected_msg">Your membership has been rejected for this group</string>
     <string name="groups.join_group">JOIN GROUP</string>
-    <string name="groups.ask_something">Ask something ...</string>
+    <string name="groups.ask_something">गटामध्ये सामील व्हा ...</string>
     <string name="groups.post_label">POST</string>
     <string name="groups.edit_post">EDIT POST</string>
+    <string name="groups.total_votes">एकूण मते: %1$s</string>
 
     <string name="no_story.be_first">सर्वप्रथम या विषयश्रेणीमध्ये तुम्ही कथा लिहा</string>
 
@@ -781,6 +788,8 @@
     <string name="short_s.add_reply_fail">Failed to add reply. Please try again</string>
     <string name="short_s.edit_reply_fail">Failed to edit reply. Please try again</string>
     <string name="short_s.delete_reply_fail">Failed to delete reply. Please try again</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
 
     <string name="report.reason">हे उपयोगी नाही कारण</string>
     <string name="report.abuse">हे अपमानास्पद आहे.</string>
@@ -854,6 +863,7 @@
     <string name="challenge_write_story_for_this_picture">आपली कथा उपरोक्त चित्रावरून लिहा </string>
     <string name="choose_challenge_label">आव्हान स्वीकारा </string>
     <string name="start_writing">लिहायला सुरवात करा</string>
+    <string name="audio_post">ऑडिओ</string>
 
     <string name="male">पुरुष</string>
     <string name="female">महिला</string>
@@ -897,6 +907,8 @@
     <string name="rewards_interest">आवड</string>
     <string name="rewards_not_working">नॉन- वर्किंग</string>
     <string name="rewards_are_expecing">एक्स्पेक्टिंग (गरोदर)</string>
+    <string name="reply_groups">रिप्लाय द्या</string>
+
 
     <string name="cannot_be_left_blank">%1$s याला रिकामे ठेऊ शकत नाही</string>
     <string name="please_enter_a_valid">कृपया वैध नाव जमा करा %1$s</string>
@@ -904,6 +916,10 @@
     <string name="rewards_expected_date">अपेक्षित तारीख</string>
     <string name="rewards_mobile_number_verified">मोबाईल नंबर तपासून पहा.</string>
     <string name="rewards_have_children">तुम्हाला मुलं आहेत का?</string>
+    <string name="groups_section_myfeed">My Feed</string>
+    <string name="groups_enable_notification">सूचना सक्षम करा
+</string>
+
     <string name="rewards_tab_detail">MyMoney</string>
     <string name="rewards_add_child">मुलांची माहिती</string>
     <string name="rewards_kid_detail">मुलांची माहिती</string>
@@ -915,13 +931,14 @@
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">CHALLENGES</string>
     <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="groups.other_groups">OTHER GROUPS</string>
 
     //groupdetail Activity toast String
     <string name="group_detail_activity_toast_text">You can also post anonymously </string>
-    <string name="group_add_comment_text">ADD COMMENT</string>
-    <string name="group_invite_text">Invite</string>
+    <string name="group_add_comment_text">टिप्पण्या जोडा</string>
+    <string name="group_invite_text">आमंत्रण</string>
     <string name="group_comment_type_here_text">Type here</string>
-    <string name="group_comment_be_the_first_text">Be the first one to comment</string>
+    <string name="group_comment_be_the_first_text">प्रथम टिप्पणी करणारे व्हा</string>
 
     //tooltip groups
     <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>

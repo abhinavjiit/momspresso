@@ -12,17 +12,17 @@
         android:id="@+id/relativeMainContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="4dp"
         android:paddingLeft="10dp"
+        android:paddingTop="8dp"
         android:paddingRight="10dp"
-        android:paddingTop="8dp">
+        android:paddingBottom="4dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/commentorImageView"
             android:layout_width="@dimen/ad_comments_profile_pic_width"
             android:layout_height="@dimen/ad_comments_profile_pic_width"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:contentDescription="@string/author_img"
             android:src="@drawable/default_commentor_img"
@@ -36,8 +36,8 @@
             android:id="@+id/commentorUsernameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
             android:layout_marginStart="3dp"
+            android:layout_marginLeft="3dp"
             android:layout_toEndOf="@+id/commentorImageView"
             android:layout_toRightOf="@+id/commentorImageView"
             android:ellipsize="end"
@@ -66,9 +66,9 @@
             android:id="@+id/commentDataTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/commentorUsernameTextView"
-            android:layout_alignStart="@+id/commentorUsernameTextView"
             android:layout_below="@id/commentorUsernameTextView"
+            android:layout_alignStart="@+id/commentorUsernameTextView"
+            android:layout_alignLeft="@+id/commentorUsernameTextView"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:paddingLeft="5dp"
@@ -160,9 +160,9 @@
             android:id="@+id/upvoteCommentContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/commentorUsernameTextView"
-            android:layout_alignStart="@+id/commentorUsernameTextView"
             android:layout_below="@+id/media"
+            android:layout_alignStart="@+id/commentorUsernameTextView"
+            android:layout_alignLeft="@+id/commentorUsernameTextView"
             android:layout_marginTop="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
@@ -172,7 +172,7 @@
                 android:id="@+id/upvoteImageVIew"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_upvote"
+                android:src="@drawable/ic_recommend"
                 android:tint="@color/app_red" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -181,7 +181,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
-                android:text="0 Helpful"
+                android:text="0"
                 android:textColor="@color/groups.grey"
                 android:textSize="12sp"
                 app:fontName="oswald.ttf" />
@@ -192,12 +192,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/media"
+
             android:layout_marginLeft="10dp"
             android:layout_marginTop="16dp"
             android:layout_toRightOf="@+id/upvoteCommentContainer"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/downvoteImageVIew"
@@ -222,12 +224,12 @@
             android:id="@+id/replyCommentTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/media"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/media"
             android:layout_marginTop="10dp"
             android:padding="5dp"
-            android:text="Reply"
+            android:text="@string/reply_groups"
             android:textColor="@color/app_red"
             android:textSize="14sp"
             app:fontName="oswald.ttf" />
@@ -236,12 +238,12 @@
             android:id="@+id/replyCountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/upvoteCommentContainer"
             android:layout_below="@id/upvoteCommentContainer"
+            android:layout_alignLeft="@+id/upvoteCommentContainer"
             android:layout_marginTop="6dp"
-            android:paddingBottom="6dp"
             android:paddingLeft="5dp"
             android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             android:text="View All Replies"
             android:visibility="gone" />
 

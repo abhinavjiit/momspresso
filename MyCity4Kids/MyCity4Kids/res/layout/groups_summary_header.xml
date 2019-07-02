@@ -63,7 +63,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="28dp"
         android:gravity="center"
-        android:text="ABOUT"
+        android:textAllCaps="true"
+        android:text="@string/about_video"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:fontName="oswald_regular.ttf" />

@@ -105,7 +105,7 @@
                 android:id="@+id/upvoteReplyImageVIew"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_upvote"
+                android:src="@drawable/ic_recommend"
                 android:tint="@color/app_red" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -125,6 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/media"
+            android:visibility="gone"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="16dp"
             android:layout_toRightOf="@+id/upvoteReplyContainer"

@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -10,11 +12,15 @@ import android.view.ViewGroup;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
+import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.utils.AppUtils;
+
+import static android.app.Activity.RESULT_OK;
 
 public class GroupsViewFragment extends BaseFragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private FloatingActionButton createFabButton;
 
 
     @Override
@@ -27,11 +33,21 @@ public class GroupsViewFragment extends BaseFragment {
         View fragmentView = inflater.inflate(R.layout.fragment_groupsview, container, false);
         viewPager = fragmentView.findViewById(R.id.viewpager);
         tabLayout = fragmentView.findViewById(R.id.tablayout);
+        createFabButton = fragmentView.findViewById(R.id.createFabButton);
+        createFabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), GroupsListingActivity.class);
+                intent.putExtra("isMember", true);
+                intent.putExtra("comingFrom", "myFeed");
+                startActivityForResult(intent, 2000);
+            }
+        });
 
 
-        tabLayout.addTab(tabLayout.newTab().setText("Groups"));
-        tabLayout.addTab(tabLayout.newTab().setText("My Feed"));
-        tabLayout.addTab(tabLayout.newTab().setText("Polls"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_groups_myfeed)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_myfeed)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_polls)));
 
         AppUtils.changeTabsFont(getActivity(), tabLayout);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -39,6 +55,12 @@ public class GroupsViewFragment extends BaseFragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == 0 || tab.getPosition() == 2) {
+                    createFabButton.setVisibility(View.GONE);
+                } else {
+                    createFabButton.setVisibility(View.VISIBLE);
+
+                }
             }
 
             @Override
@@ -48,12 +70,34 @@ public class GroupsViewFragment extends BaseFragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0 || tab.getPosition() == 2) {
+                    createFabButton.setVisibility(View.GONE);
+                } else {
+                    createFabButton.setVisibility(View.VISIBLE);
 
+                }
             }
         });
 
         GroupsViewFragmentPagerAdapter adapter = new GroupsViewFragmentPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(1);
         return fragmentView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK)
+        {
+            if(requestCode==2000)
+            {
+
+                GroupsViewFragmentPagerAdapter adapter = new GroupsViewFragmentPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+                viewPager.setAdapter(adapter);
+                viewPager.setCurrentItem(1);
+
+            }
+        }
     }
 }

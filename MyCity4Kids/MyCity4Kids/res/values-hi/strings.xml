@@ -4,10 +4,14 @@
     <string name="app_name">मॉस्प्रेस्सो</string>
     <string name="unknown_person">अपरिचित</string>
     <string name="resend_email">रीसेंड ईमेल</string>
-
+    <string name="groups_sections_polls">POLLS</string>
+    <string name="groups_sections_myfeed">मेरी फीड </string>
     <string name="write_review_prompt">आप क्या रिव्यू करना चाहते हैं?</string>
 
     <string name="loading_txt">लोडिंग&#8230;</string>
+    <string name="groups.other_groups">अन्य ग्रुप्स </string>
+    <string name="groups_enable_notification">नोटिफिकेशन  सक्षम करें</string>
+
 
     <string name="subcategoryName">सब केटेगरी</string>
     <string name="location_info">व्यक्तिगत परिणाम के लिए, अपनी लोकेशन चुने</string>
@@ -15,6 +19,8 @@
     <string name="locality_txt">किस जगह पर?</string>
     <string name="error_network">यह उपकरण नेटवर्क क्षेत्र से बाहर है</string>
     <string name="please_wait">कृपया इंतज़ार करें...</string>
+    <string name="groups_groups_myfeed">গग्रुप्स</string>
+
     <string name="no_result_txt">कोई परिणाम नहीं मिला</string>
     <string name="went_wrong">कुछ गलत हो गया है </string>
     <string name="server_went_wrong">सर्वर में कुछ खराबी हो गयी है</string>
@@ -516,6 +522,8 @@
     <string name="add_video_details.title_hint">वीडियो का टाइटल लिखें</string>
     <string name="add_video_details.mute_label">ध्वनि म्यूट करें</string>
     <string name="add_video_details.add_music">म्यूजिक ऐड करें</string>
+    <string name="audio_post">ऑडियो</string>
+
     <string name="add_video_details.remove">हटायें</string>
     <string name="add_video_details.error_empty_title">कृपया वीडियो का टाइटल  लिखें </string>
     <string name="add_video_details.save_upload">सेव करें और अपलोड करें </string>
@@ -524,9 +532,9 @@
 
     <string name="video_progress.uploading_label">अपलोड हो रहा है ...</string>
     <string name="video_progress.uploading_msg">"कृपया ऐप से बाहर न निकलें, यह आप अपलोड को रद्द कर देगा। "</string>
-    <string name="video_progress.way_to_go">आगे का मार्ग!</string>
-    <string name="video_progress.success_msg">वीडियो सफलतापूर्वक अपलोड हो गया है और मॉडरेशन के लिए भेजा गया है।मॉडरेशन के बाद हम आपको सूचित  करेंगे</string>
-    <string name="video_progress.okay">ठीक है</string>
+    <string name="video_progress.way_to_go">शुक्रिया</string>
+    <string name="video_progress.success_msg">आपका वीडियो सफलतापूर्वक अपलोड हो गया है। दो वर्किंग डेज में इसे मॉडरेट करने के बाद आपको सूचित किया जाएगा।</string>
+    <string name="video_progress.okay">गुड लक</string>
     <string name="video_progress.uploading_failed">अपलोडिंग फेल हो गयी</string>
     <string name="video_progress.uploading_error">आपका वीडियो अपलोड करते समय गलती हुई कृपया पुन: प्रयास करें।</string>
     <string name="video_progress.progress_lost_msg">आपकी अपलोड की प्रक्रिया  समाप्त हो  जाएगी. क्या आप निश्चित रूप से  बाहर निकलना चाहते हैं?</string>
@@ -907,6 +915,10 @@
     <string name="rewards_number_of_kids">"बच्चों की संख्या "</string>
     <string name="rewards_interest">रूचि</string>
     <string name="rewards_not_working">"गैर कामकाजी "</string>
+    <string name="reply_groups">रिप्लाई करें</string>
+    <string name="view_group">View</string>
+    <string name="replies">Replies</string>
+
     <string name="rewards_are_expecing">क्या आप माँ बनने वाली हैं ?</string>
 
     <string name="cannot_be_left_blank">%1$s इसे खाली नहीं छोड़ा जा सकता </string>
@@ -920,6 +932,8 @@
     <string name="rewards_kid_detail">बच्चों की डिटेल भरें।</string>
     <string name="rewards_participating_earn_completing_profile">अपने प्रोफाइल को अभी भरें और ईनामी योजना में हिस्सा ले कर लाभ कमाएं !</string>
     <string name="rewards_momspresso">मॉम्सप्रेस्सो ईनामी योजना</string>
+
+
 
 
     //new Video Challenge Ui Strings
@@ -946,13 +960,11 @@
     <string name="group_comment_start_type_here_text">Start Typing</string>
 
 
-
     <string name="about_video">चैलेंज के बारे में</string>
     <string name="myprofile.section.mom_bottom_label">मोम व्लॉग</string>
     <string name="all_videos.toolbar.title.homepage">Videos</string>
     <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
-
 
 
 </resources>

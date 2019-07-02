@@ -15,6 +15,8 @@ public class GroupPostCommentResult implements Parcelable {
     private String sentiment;
     private int parentId;
     private int groupId;
+    private int markedHelpful;
+
     private int postId;
     private String userId;
     private int isActive;
@@ -59,6 +61,8 @@ public class GroupPostCommentResult implements Parcelable {
         childData = in.createTypedArrayList(GroupPostCommentResult.CREATOR);
         isLastConversation = in.readInt();
         counts = new ArrayList<>();
+        markedHelpful = in.readInt();
+
         in.readTypedList(counts, GroupPostCounts.CREATOR);
         commentType = in.readInt();
     }
@@ -92,6 +96,14 @@ public class GroupPostCommentResult implements Parcelable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getMarkedHelpful() {
+        return markedHelpful;
+    }
+
+    public void setMarkedHelpful(int markedHelpful) {
+        this.markedHelpful = markedHelpful;
     }
 
     public String getContent() {
@@ -302,6 +314,7 @@ public class GroupPostCommentResult implements Parcelable {
         dest.writeLong(updatedAt);
         dest.writeTypedList(childData);
         dest.writeInt(isLastConversation);
+        dest.writeInt(markedHelpful);
         dest.writeTypedList(counts);
         dest.writeInt(commentType);
     }
