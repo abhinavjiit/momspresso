@@ -1,8 +1,10 @@
 package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -101,6 +103,10 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             @Override
             public void onClick(View v) {
                 // handle back button naviagtion
+                Intent intent = new Intent();
+                intent.putExtra("data", repliesList);
+                intent.putExtra("postion", commentPosition);
+                getActivity().setResult(Activity.RESULT_OK, intent);
                 dismiss();
             }
         });

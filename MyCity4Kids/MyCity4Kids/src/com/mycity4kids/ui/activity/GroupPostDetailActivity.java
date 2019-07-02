@@ -545,6 +545,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 _args.putBoolean("commentDisableFlag", commentDisableFlag);
                 _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
                 viewGroupPostCommentsRepliesDialogFragment.setArguments(_args);
+                //viewGroupPostCommentsRepliesDialogFragment.setTargetFragment(viewGroupPostCommentsRepliesDialogFragment, 1000);
                 FragmentManager fm = getSupportFragmentManager();
                 viewGroupPostCommentsRepliesDialogFragment.show(fm, "Replies");
                 break;
@@ -1967,6 +1968,16 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 }
                 postData.setContent(data.getStringExtra("updatedContent"));
                 groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
+            } else if (requestCode == 1000) {
+                Intent data1 = getIntent();
+                int position = data.getIntExtra("position", -1);
+                if (position == -1) {
+
+
+                    // completeResponseList.get(position) = data.getParcelableArrayListExtra("data");
+                }
+
+
             }
         }
     }
@@ -2052,4 +2063,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
 
     }
+
+
 }
