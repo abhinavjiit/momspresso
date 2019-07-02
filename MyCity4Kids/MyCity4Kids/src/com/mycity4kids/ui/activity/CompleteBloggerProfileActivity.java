@@ -63,6 +63,7 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.complete_blogger_profile_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         childInfoContainer = (LinearLayout) findViewById(R.id.childInfoContainer);
         rangebar = (RangeBar) findViewById(R.id.rangebar);

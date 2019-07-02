@@ -173,6 +173,8 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_exo);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         Utils.pushOpenScreenEvent(this, "DetailVideoScreen", userDynamoId + "");
 

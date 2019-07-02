@@ -43,6 +43,8 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.language_selection_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(this, "LanguageSelectionScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         languageRecyclerView = (RecyclerView) findViewById(R.id.languageRecyclerView);
         String[] langArray = {getString(R.string.language_label_english), getString(R.string.language_label_hindi), getString(R.string.language_label_marathi),

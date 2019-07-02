@@ -140,6 +140,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filtered_topics_articles_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);

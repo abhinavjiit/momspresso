@@ -80,6 +80,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_listing_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);

@@ -150,6 +150,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_short_story_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(this, "AddShortStoryScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mLayout = findViewById(R.id.rootLayout);
         challengeHeader = (RelativeLayout) findViewById(R.id.challenge_header_layout);

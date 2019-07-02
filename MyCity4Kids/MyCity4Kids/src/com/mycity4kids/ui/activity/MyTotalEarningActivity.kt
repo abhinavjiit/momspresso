@@ -42,6 +42,7 @@ class MyTotalEarningActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_earning)
+        (application as BaseApplication).activity = this
 
         totalPayout = intent.getIntExtra("totalPayout", 0)
 

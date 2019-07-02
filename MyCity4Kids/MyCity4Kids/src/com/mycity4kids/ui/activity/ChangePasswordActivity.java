@@ -43,6 +43,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.change_password_tab_fragment);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         emailTextView = (TextView) findViewById(R.id.emailTextView);

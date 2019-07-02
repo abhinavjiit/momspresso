@@ -146,6 +146,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_post_detail_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(this, "GroupPostDetailsScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);

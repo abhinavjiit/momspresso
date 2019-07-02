@@ -48,6 +48,7 @@ public class LoadingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.fetch_pincode_config);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         if (!ConnectivityUtils.isNetworkEnabled(LoadingActivity.this)) {
             navigateToDashboard();

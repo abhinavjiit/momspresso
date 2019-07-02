@@ -59,6 +59,8 @@ public class SuggestedTopicsActivity extends BaseActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suggested_topics_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

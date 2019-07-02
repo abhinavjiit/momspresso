@@ -41,6 +41,8 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_edit_post_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         postContentEditText = (EditText) findViewById(R.id.postContentEditText);
         closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
         publishTextView = (TextView) findViewById(R.id.publishTextView);

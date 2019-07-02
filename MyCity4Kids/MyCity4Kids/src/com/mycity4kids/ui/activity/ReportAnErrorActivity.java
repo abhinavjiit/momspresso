@@ -60,6 +60,8 @@ public class ReportAnErrorActivity extends BaseActivity implements
         Utils.pushOpenScreenEvent(ReportAnErrorActivity.this, "Report Error Info", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         setContentView(R.layout.activity_report_an_error);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

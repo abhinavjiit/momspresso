@@ -84,6 +84,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.subscribe_topics_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 

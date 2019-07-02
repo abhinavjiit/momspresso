@@ -81,6 +81,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         super.onCreate(icicle);
         Utils.pushOpenScreenEvent(this, "AddTagScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         setContentView(R.layout.add_article_topics_activity_new);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

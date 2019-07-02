@@ -187,6 +187,8 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parallel_feed_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         Utils.pushOpenScreenEvent(this, "DetailVideoScreen", userDynamoId + "");
 

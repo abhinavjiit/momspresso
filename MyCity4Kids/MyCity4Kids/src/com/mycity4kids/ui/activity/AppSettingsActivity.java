@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.adapter.AppSettingsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -30,6 +31,8 @@ public class AppSettingsActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         setContentView(R.layout.app_settings_activity);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);

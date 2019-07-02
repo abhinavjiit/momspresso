@@ -84,6 +84,7 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.phone_login_user_details_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         fullNameEditText = (EditText) findViewById(R.id.fullNameEditText);
         saveTextView = (TextView) findViewById(R.id.saveTextView);

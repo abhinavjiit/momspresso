@@ -81,6 +81,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_listing_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         ashimmerFrameLayout = (ShimmerFrameLayout) findViewById(R.id.shimmer_article_listing);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);

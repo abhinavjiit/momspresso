@@ -120,6 +120,8 @@ public class WriteReviewActivity extends BaseActivity implements IOnSubmitGaller
             Utils.pushOpenScreenEvent(WriteReviewActivity.this, "Write Review", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
             setContentView(R.layout.activity_write_a_review);
+            ((BaseApplication) getApplication()).setActivity(this);
+
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             rootLayout = findViewById(R.id.rootLayout);
 

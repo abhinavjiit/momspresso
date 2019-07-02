@@ -20,7 +20,7 @@
             android:layout_marginTop="@dimen/space_20"
             android:src="@drawable/family_xxhdpi"
             app:civ_border_color="@color/app_red"
-            app:civ_border_width="2dp" />
+            app:civ_border_width="1dp" />
 
 
         <com.mycity4kids.widget.CustomFontTextView

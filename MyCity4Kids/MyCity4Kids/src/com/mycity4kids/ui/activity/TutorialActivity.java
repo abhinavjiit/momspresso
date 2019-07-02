@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -28,6 +29,8 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(TutorialActivity.this, "OnboardingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mViewPager = (ViewPager) findViewById(R.id.pager);
         dotIndicatorView = (BubblePageIndicator) findViewById(R.id.dotIndicatorView);

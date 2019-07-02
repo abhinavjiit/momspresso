@@ -209,6 +209,8 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         } else if (mEventOrBusiness == Constants.EVENT_PAGE_TYPE) {
             setContentView(R.layout.event_details_activity);
         }
+        ((BaseApplication) getApplication()).setActivity(this);
+
         rootLayout = findViewById(R.id.rootLayout);
         density = getResources().getDisplayMetrics().density;
         findViewById(R.id.img_round).setOnClickListener(this);

@@ -126,6 +126,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blog_setup_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         mLayout = findViewById(R.id.rootLayout);

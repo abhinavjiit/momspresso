@@ -14,6 +14,7 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.RecentlyViewController;
@@ -45,6 +46,7 @@ public class RecentlyViewedActivity extends BaseActivity {
 //                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //            }
             setContentView(R.layout.recently_view_activity);
+            ((BaseApplication) getApplication()).setActivity(this);
 
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(mToolbar);

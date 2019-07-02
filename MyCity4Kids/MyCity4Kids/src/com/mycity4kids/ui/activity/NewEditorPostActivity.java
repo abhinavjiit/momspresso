@@ -142,6 +142,8 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_editor_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(NewEditorPostActivity.this, "CreateArticleScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);

@@ -90,6 +90,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vlogs_listing_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         rootLayout = findViewById(R.id.rootLayout);
         listView = (ListView) findViewById(R.id.vlogsListView);

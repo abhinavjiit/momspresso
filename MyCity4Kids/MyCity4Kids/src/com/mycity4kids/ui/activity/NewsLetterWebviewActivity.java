@@ -13,6 +13,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
@@ -30,6 +31,8 @@ public class NewsLetterWebviewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newsletter_webview);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(NewsLetterWebviewActivity.this, "WebViewScreen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         webview = (WebView) findViewById(R.id.webview);

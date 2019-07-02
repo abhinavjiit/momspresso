@@ -92,6 +92,8 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parenting_blog_home);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(ContributorListActivity.this, "Contributor List", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setVisibility(View.VISIBLE);

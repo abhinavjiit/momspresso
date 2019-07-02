@@ -25,6 +25,7 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ParentingStopController;
@@ -66,6 +67,8 @@ public class TopPicksActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_top_picks);
+		((BaseApplication) getApplication()).setActivity(this);
+
 		findViewById(R.id.imgBack).setOnClickListener(this);
 		mTabWidget=(TabWidget)findViewById(android.R.id.tabs);
 		mHorizontalScrollView=(HorizontalScrollView)findViewById(R.id.horizontalList);

@@ -71,6 +71,7 @@ public class TopicsListingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_listing_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);

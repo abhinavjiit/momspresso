@@ -2,13 +2,12 @@ package com.mycity4kids.models.campaignmodels
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import java.util.HashMap
 
 class CampaignDetailResult {
 
     @SerializedName("amount")
     @Expose
-    var amount: Int? = null
+    var amount: Double? = null
     @SerializedName("approval_status")
     @Expose
     var approvalStatus: Int? = null
@@ -50,19 +49,19 @@ class CampaignDetailResult {
     var isActive: Int? = null
     @SerializedName("is_fixed_amount")
     @Expose
-    var isFixedAmount: Int? = 0
+    var isFixedAmount: Int = 0
     @SerializedName("show_reffer_field")
     @Expose
     var showRefferField: Boolean? = false
     @SerializedName("max_amount")
     @Expose
-    var maxAmount: Int? = null
+    var maxAmount: Double? = null
     @SerializedName("max_slots")
     @Expose
     var maxSlots: Int? = null
     @SerializedName("min_amount")
     @Expose
-    var minAmount: Int? = null
+    var minAmount: Double? = null
     @SerializedName("moderation_required")
     @Expose
     var moderationRequired: Int? = null
@@ -92,7 +91,7 @@ class CampaignDetailResult {
     var terms: CampaignDetailTerms? = null
     @SerializedName("total_payout")
     @Expose
-    var totalPayout: Int? = null
+    var totalPayout: Double? = null
     @SerializedName("total_used_slots")
     @Expose
     var totalUsedSlots: Int? = null

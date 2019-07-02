@@ -105,6 +105,8 @@ public class BusinessListActivity extends BaseActivity implements OnClickListene
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.business_list_activitykidsres);
+            ((BaseApplication) getApplication()).setActivity(this);
+
             TextView _headerTxt = (TextView) findViewById(R.id.txvHeaderText);
             LinearLayout _RootLayout = (LinearLayout) findViewById(R.id.lnrRootFilterSort);
             filterAdapter = new GetFilterAdapter(getSupportFragmentManager());

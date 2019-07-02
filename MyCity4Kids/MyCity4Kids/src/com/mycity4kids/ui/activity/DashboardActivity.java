@@ -224,6 +224,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         ((BaseApplication) getApplication()).setDashboardActivity(this);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         t = ((BaseApplication) getApplication()).getTracker(
                 BaseApplication.TrackerName.APP_TRACKER);
@@ -1915,10 +1916,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.groupsTextView: {
                 mDrawerLayout.closeDrawers();
                 Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Sidebar_groups", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
-                GroupsViewFragment fragment = new GroupsViewFragment();
-                Bundle mBundle = new Bundle();
-                fragment.setArguments(mBundle);
-                addFragment(fragment, mBundle, true);
+                GroupsViewFragment groupsFragment = new GroupsViewFragment();
+                Bundle eBundle = new Bundle();
+                groupsFragment.setArguments(eBundle);
+                addFragment(groupsFragment, eBundle, true);
             }
             break;
             case R.id.rewardsTextView: {
@@ -2278,6 +2279,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }*/
 
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                if (layout != null) {
+                    layout.setVisibility(View.GONE);
+                }
                 finish();
             } else {
                 super.onBackPressed();

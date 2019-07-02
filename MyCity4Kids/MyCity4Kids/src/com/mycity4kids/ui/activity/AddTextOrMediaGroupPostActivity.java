@@ -176,6 +176,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_text_group_post_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         mLayout = findViewById(R.id.rootLayout);
         mHandler = new Handler(this);

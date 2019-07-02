@@ -79,6 +79,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.best_in_your_city_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         cityshimmerFragment = (ShimmerFrameLayout) findViewById(R.id.shimmer_city_article_listing);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

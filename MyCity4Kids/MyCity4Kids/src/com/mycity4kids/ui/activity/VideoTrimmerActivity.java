@@ -43,6 +43,8 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trimmer);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(this, "VideoTrimmerActivity", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         Intent extraIntent = getIntent();
         String path = "";

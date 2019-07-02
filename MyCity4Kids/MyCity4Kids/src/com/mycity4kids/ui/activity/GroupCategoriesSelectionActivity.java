@@ -78,6 +78,7 @@ public class GroupCategoriesSelectionActivity extends BaseActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_article_topics_activity_new);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         Utils.pushOpenScreenEvent(this, "FollowTopicScreen", userId + "");

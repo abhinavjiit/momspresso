@@ -45,6 +45,7 @@ public class HomeCategoryActivity extends BaseActivity implements OnClickListene
 		try {
 
 			setContentView(R.layout.category_activity);
+			((BaseApplication) getApplication()).setActivity(this);
 
 
 			/*if(dialogUpgrade.isHidden())

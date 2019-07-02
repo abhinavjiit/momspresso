@@ -39,6 +39,7 @@ public class LeaveGroupActivity extends BaseActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.leave_group_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         leaveGroupTextView = (TextView) findViewById(R.id.leaveGroupTextView);

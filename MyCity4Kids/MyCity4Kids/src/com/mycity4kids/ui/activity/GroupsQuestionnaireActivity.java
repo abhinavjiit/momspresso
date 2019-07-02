@@ -62,6 +62,8 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_questioannaire_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         joinGroupTextView = (TextView) findViewById(R.id.joinGroupTextView);

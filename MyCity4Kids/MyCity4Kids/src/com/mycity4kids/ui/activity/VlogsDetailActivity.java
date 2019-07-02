@@ -183,6 +183,8 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vlogs_detail_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         Utils.pushOpenScreenEvent(VlogsDetailActivity.this, "DetailVideoScreen", userDynamoId + "");
 

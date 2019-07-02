@@ -56,6 +56,8 @@ public class AutoSuggestTransparentDialogActivity extends BaseActivity implement
 
 		try {
 			setContentView(R.layout.transparent_auto_search_activity);
+			((BaseApplication) getApplication()).setActivity(this);
+
 			mSearchList=(ListView)findViewById(R.id.searchList);
 			mQuerySearchEtxt=(EditText)findViewById(R.id.query_search);
 			mQuerySearchEtxt.addTextChangedListener(textWatcher);

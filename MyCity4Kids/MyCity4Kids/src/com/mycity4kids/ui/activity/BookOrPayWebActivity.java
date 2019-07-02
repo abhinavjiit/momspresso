@@ -34,6 +34,8 @@ public class BookOrPayWebActivity extends BaseActivity implements OnClickListene
 
 		try {
 			setContentView(R.layout.book_pay_web_view);
+			((BaseApplication) getApplication()).setActivity(this);
+
 			bookOrPayWebView=(WebView)findViewById(R.id.book_or_pay_web_view);
 			TextView headerTxt=(TextView)findViewById(R.id.txvHeaderText);
 			headerTxt.setText("Payment");

@@ -135,6 +135,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challnege_detail_listing);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         startWriting = (TextView) findViewById(R.id.start_writing);

@@ -47,6 +47,8 @@ public class SelectLocationActivity extends BaseActivity implements FetchCity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_select_location);
+		((BaseApplication) getApplication()).setActivity(this);
+
 		Utils.pushOpenScreenEvent(SelectLocationActivity.this, "Select Location", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
 		locationList = (ListView) findViewById(R.id.locationList);

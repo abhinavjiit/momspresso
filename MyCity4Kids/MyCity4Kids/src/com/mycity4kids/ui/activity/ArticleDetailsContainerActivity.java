@@ -76,6 +76,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_details_container);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         preferredLang = SharedPrefUtils.getLanguageFilters(this);

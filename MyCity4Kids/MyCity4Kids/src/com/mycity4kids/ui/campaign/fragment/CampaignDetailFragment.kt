@@ -608,10 +608,10 @@ class CampaignDetailFragment : BaseFragment() {
             dialog.setCancelable(true)
             val showAmount = dialog.findViewById<TextView>(R.id.show_amount)
             if (apiGetResponse!!.isFixedAmount == 1) {
-                var amount: Int = (apiGetResponse!!.amount) as Int
+                var amount: Double? = (apiGetResponse!!.amount)
                 showAmount.setText("Rs." + amount)
             } else {
-                showAmount.setText("Rs." + (apiGetResponse!!.minAmount) as Int + "-" + "Rs." + (apiGetResponse!!.maxAmount) as Int)
+                showAmount.setText("Rs." + (apiGetResponse!!.minAmount) + "-" + "Rs." + (apiGetResponse!!.maxAmount))
             }
 
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

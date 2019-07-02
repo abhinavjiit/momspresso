@@ -128,6 +128,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.private_profile_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()

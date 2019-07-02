@@ -39,6 +39,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
@@ -110,6 +111,8 @@ public class HeaderChallengeVideoPlayActivity extends BaseActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.header_challenge_video_play_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         //   backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
 

@@ -94,6 +94,8 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_upload_progress_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(this, "VideoUploadScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mAuth = FirebaseAuth.getInstance();

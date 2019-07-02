@@ -111,6 +111,8 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_post_comment_replies_dialog);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         repliesRecyclerView = (RecyclerView) findViewById(R.id.repliesRecyclerView);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitle);

@@ -96,6 +96,8 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_video_category_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         rootLayout = (LinearLayout) findViewById(R.id.rootLayout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         gridview = (ExpandableHeightGridView) findViewById(R.id.gridview);

@@ -37,6 +37,8 @@ public class ForgotPasswordActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_forgotpswd);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         Utils.pushOpenScreenEvent(ForgotPasswordActivity.this, "ForgotPasswordScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

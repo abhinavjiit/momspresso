@@ -104,6 +104,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_poll_group_post_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         mLayout = findViewById(R.id.rootView);
         addChoiceTextView = (TextView) findViewById(R.id.addChoiceTextView);
         publishTextView = (TextView) findViewById(R.id.publishTextView);

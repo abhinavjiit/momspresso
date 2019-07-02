@@ -54,6 +54,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_moderation_share_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         shareUrl = getIntent().getStringExtra("shareUrl");
         source = getIntent().getStringExtra("source");

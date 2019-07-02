@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -158,6 +159,8 @@ public class SplashActivity extends BaseActivity {
         try {
 
             setContentView(R.layout.splash_activity);
+            ((BaseApplication) getApplication()).setActivity(this);
+
             mLayout = findViewById(R.id.rootLayout);
             /* AnalyticsHelper.logEvent("Application Launch...");*/
 

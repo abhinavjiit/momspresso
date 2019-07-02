@@ -116,6 +116,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_loginform);
+        ((BaseApplication) getApplication()).setActivity(this);
         Utils.pushOpenScreenEvent(this, "LoginSignUpScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().requestScopes(new Scope(Scopes.PLUS_ME))

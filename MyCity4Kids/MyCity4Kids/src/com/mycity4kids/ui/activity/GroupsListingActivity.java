@@ -70,6 +70,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_listing_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 

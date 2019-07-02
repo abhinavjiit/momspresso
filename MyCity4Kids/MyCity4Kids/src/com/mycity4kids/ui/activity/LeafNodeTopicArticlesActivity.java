@@ -50,6 +50,8 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.leaf_topic_articles_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);

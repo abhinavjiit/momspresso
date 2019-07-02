@@ -45,7 +45,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     }
 
     private lateinit var toolbarTitle: TextView
-    private var totalPay: Int = 0
+    private var totalPay: Double? = null
     private var name: String? = null
     private var id: Int = 0
     private var campaignDetailFragment: CampaignDetailFragment? = null
@@ -64,6 +64,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
         Log.i("Activity", "onCreate")
 
         setContentView(R.layout.activity_campaign_container)
+        (application as BaseApplication).activity = this
 
         deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
 
@@ -173,11 +174,11 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     }
 
 
-    fun setTotalPayOut(totalPayOut: Int) {
+    fun setTotalPayOut(totalPayOut: Double) {
         totalPay = totalPayOut
     }
 
-    fun getTotalPayOut(): Int {
+    fun getTotalPayOut(): Double? {
         return totalPay
     }
 

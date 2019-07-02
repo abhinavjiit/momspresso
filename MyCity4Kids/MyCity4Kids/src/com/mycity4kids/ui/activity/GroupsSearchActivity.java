@@ -72,6 +72,7 @@ public class GroupsSearchActivity extends BaseActivity implements View.OnClickLi
         Utils.pushOpenScreenEvent(this, "GroupSearchScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         setContentView(R.layout.groups_search_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTitle = (EditText) findViewById(R.id.toolbarTitle);

@@ -75,6 +75,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.explore_article_listing_type_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         dynamoUserId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         toolbar = (Toolbar) findViewById(R.id.toolbar);

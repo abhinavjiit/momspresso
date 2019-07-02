@@ -109,6 +109,8 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainprofile);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         rootView = findViewById(R.id.mainprofile_parent_layout);
 
         viewPager = (ViewPager) findViewById(R.id.id_viewpager);

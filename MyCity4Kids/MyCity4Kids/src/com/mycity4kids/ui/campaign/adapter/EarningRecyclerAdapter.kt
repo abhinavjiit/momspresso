@@ -44,9 +44,9 @@ class EarningRecyclerAdapter(
             holder.campaignName.setText(item.campaignDetails.name)
             holder.totalAmount.setText("\u20b9" + item.final_payout)
             holder.netAmount.setText("\u20b9" + item.payment_meta.net_amount)
-            holder.tds.setText("TDS(" + item.payment_meta.tax_percentage + "%)")
+            holder.tds.setText("TDS (" + item.payment_meta.tax_percentage + "%)")
             holder.paymentStatus.setText(setStatus(item.payment_status, holder))
-            holder.taxAmount.setText("-\u20b9" + item.payment_meta.tax_amount)
+            holder.taxAmount.setText("- \u20b9" + item.payment_meta.tax_amount)
             holder.relativeOne.setOnClickListener {
                 if (holder.relativeTwo.visibility == View.GONE) {
                     holder.relativeTwo.visibility = View.VISIBLE

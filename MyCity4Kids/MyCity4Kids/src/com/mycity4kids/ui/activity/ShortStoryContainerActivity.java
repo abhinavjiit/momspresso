@@ -47,6 +47,8 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.short_story_container);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         Utils.pushOpenScreenEvent(this, "ShortStoryDetailContainerScreen", userDynamoId + "");
 

@@ -161,6 +161,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
         Constants.IS_RESET = true;
         try {
             setContentView(R.layout.business_list_activitykidsres);
+            ((BaseApplication) getApplication()).setActivity(this);
+
             mLocalitySearchEtxt = (EditText) findViewById(R.id.locality_search);
             searchBtn = (ImageView) findViewById(R.id.search_btn);
             mQuerySearchEtxt = (EditText) findViewById(R.id.search);

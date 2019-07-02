@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.businesseventdetails.GalleryListtingData;
 import com.mycity4kids.ui.adapter.ImageAdapter;
 
@@ -19,6 +20,7 @@ public class PhotoSlideActivity extends BaseActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gallery_pager);
+		((BaseApplication) getApplication()).setActivity(this);
 		ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
 		
 		Bundle bundle=getIntent().getExtras();

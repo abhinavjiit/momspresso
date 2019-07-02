@@ -67,6 +67,7 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
         Utils.pushOpenScreenEvent(this, "SearchScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         setContentView(R.layout.search_articles_authors_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         searchParam = getIntent().getStringExtra(Constants.FILTER_NAME);
         tabPosition = getIntent().getIntExtra(Constants.TAB_POSITION, 0);

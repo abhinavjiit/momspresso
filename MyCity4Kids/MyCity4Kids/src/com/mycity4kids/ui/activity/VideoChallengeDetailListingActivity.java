@@ -150,6 +150,8 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_challenge_detail_listing);
+        ((BaseApplication) getApplication()).setActivity(this);
+
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         /* writeAtricleCell = (RelativeLayout) findViewById(R.id.writeArticleCell);*/
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

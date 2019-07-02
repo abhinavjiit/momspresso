@@ -67,6 +67,7 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_settings_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         disableNotificationSwitch = (SwitchCompat) findViewById(R.id.disableNotificationSwitch);

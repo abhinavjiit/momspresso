@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.ui.adapter.LanguageSpecificArticlePagerAdapter;
@@ -45,6 +46,7 @@ public class LanguageSpecificArticleListingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.language_specific_list_activity);
+        ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         languagesTabLayout = (TabLayout) findViewById(R.id.languagesTabLayout);
