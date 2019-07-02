@@ -25,6 +25,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -66,6 +68,7 @@ import com.mycity4kids.ui.activity.ViewGroupPostCommentsRepliesActivity;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.LocaleManager;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,6 +101,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     private int width, height;
     public View layout;
     private WindowManager.LayoutParams params;
+    private Animation slideDownAnim;
+    private Animation slideAnim, fadeAnim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +111,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         width = displayMetrics.widthPixels;
         height = displayMetrics.heightPixels;
         baseApplication = (BaseApplication) getApplication();
+        slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
+        fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
+        slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
         checkDrawOverlayPermission();
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
@@ -145,6 +153,28 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             System.out.println("e--------" + e);
         }
 
+        slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        layout.setVisibility(View.GONE);
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
     }
 
     public void checkDrawOverlayPermission() {
@@ -171,6 +201,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                         title = data.getString("title");
                         body = data.getString("body");
                         type = data.getString("type");
+                        image_url = data.getString("image_url");
                         id = data.getString("id");
                         titleSlug = data.getString("title_slug");
                         blogSlug = data.getString("blog_slug");
@@ -178,7 +209,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                         postId = data.getString("post_id");
                         responseId = data.getString("response_id");
                         campaignId = data.getString("campaign_id");
-                        image_url = data.getString("image_url");
                         url = data.getString("url");
                         type = "article_details";
                     } catch (JSONException e) {
@@ -204,13 +234,21 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                     params.gravity = Gravity.BOTTOM;
                     final WindowManager mWindowManager = (WindowManager) BaseApplication.getInstance().getActivity().getSystemService(Context.WINDOW_SERVICE);
                     mWindowManager.addView(layout, params);
+                    layout.startAnimation(slideAnim);
                     TextView textTitle = layout.findViewById(R.id.textbody);
                     TextView textAuthor = layout.findViewById(R.id.textauthor);
                     RelativeLayout bottomSheet = layout.findViewById(R.id.bottom_sheet);
                     ImageView cross = layout.findViewById(R.id.cross);
+                    ImageView image = layout.findViewById(R.id.image);
 
                     textTitle.setText(title);
                     textAuthor.setText(body);
+                    if (image_url != null) {
+                        Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
+                                .error(R.drawable.article_default).into(image);
+                    } else {
+                        image.setVisibility(View.GONE);
+                    }
                     bottomSheet.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -222,6 +260,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                         @Override
                         public void onClick(View view) {
                             layout.setVisibility(View.GONE);
+                            layout.startAnimation(slideDownAnim);
                         }
                     });
                 }

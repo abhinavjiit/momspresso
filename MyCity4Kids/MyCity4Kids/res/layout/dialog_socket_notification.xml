@@ -38,8 +38,7 @@
             android:layout_width="100dp"
             android:layout_height="70dp"
             android:layout_below="@+id/textUpdate"
-            android:layout_marginLeft="@dimen/space_10"
-            android:src="@drawable/article_default" />
+            android:layout_marginLeft="@dimen/space_10"/>
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/textbody"
@@ -49,7 +48,6 @@
             android:layout_marginLeft="@dimen/space_10"
             android:layout_marginRight="20dp"
             android:layout_toRightOf="@+id/image"
-            android:text="Creative And Fun Ways To Keep Kids Engaged During Vacations"
             android:textColor="@color/campaign_515151"
             android:textSize="16sp"
             app:fontName="oswald_regular.ttf" />
@@ -62,7 +60,6 @@
             android:layout_marginLeft="@dimen/space_10"
             android:layout_marginRight="20dp"
             android:layout_toRightOf="@+id/image"
-            android:text="Nowroz Afroza"
             android:textColor="@color/color_979797"
             android:textSize="12sp"
             app:fontName="open_sans.ttf" />
