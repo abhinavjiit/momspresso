@@ -59,6 +59,7 @@
             android:layout_below="@+id/textbody"
             android:layout_marginLeft="@dimen/space_10"
             android:layout_marginRight="20dp"
+            android:visibility="gone"
             android:layout_toRightOf="@+id/image"
             android:textColor="@color/color_979797"
             android:textSize="12sp"

@@ -114,7 +114,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         Log.i(getClass().getSimpleName(), "onCreate()");
         try {
 
-            mSocket = IO.socket("http://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage());
+            mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage());
             mSocket.on(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId(), onNewMessage);
             mSocket.connect();
         } catch (URISyntaxException e) {
@@ -177,13 +177,13 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                         mWindowManager = (WindowManager) BaseApplication.getInstance().getActivity().getSystemService(Context.WINDOW_SERVICE);
                         mWindowManager.addView(layout, params);
                         TextView textTitle = layout.findViewById(R.id.textbody);
-                        TextView textAuthor = layout.findViewById(R.id.textauthor);
+                        TextView textAuthor = layout.findViewById(R.id.textUpdate);
                         RelativeLayout bottomSheet = layout.findViewById(R.id.bottom_sheet);
                         ImageView cross = layout.findViewById(R.id.cross);
                         ImageView image = layout.findViewById(R.id.image);
 
-                        textTitle.setText(title);
-                        textAuthor.setText(body);
+                        textTitle.setText(body);
+                        textAuthor.setText(title);
                         if (!image_url.isEmpty()) {
                             Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
                                     .error(R.drawable.article_default).into(image);
