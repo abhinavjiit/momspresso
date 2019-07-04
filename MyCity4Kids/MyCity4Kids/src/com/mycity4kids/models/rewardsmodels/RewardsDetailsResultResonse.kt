@@ -72,16 +72,24 @@ data class RewardsDetailsResultResonse(
         var workStatus: Int? = null,
         @SerializedName("mobile_token")
         @Expose
-        var mobile_token : String? = null,
+        var mobile_token: String? = null,
         @SerializedName("is_expecting")
         @Expose
-        var isExpecting : Int? = null,
+        var isExpecting: Int? = null,
         @SerializedName("expected_date")
         @Expose
-        var expectedDate : Long? = null,
-        @SerializedName("refer_code")
+        var expectedDate: Long? = null,
+        @SerializedName("referral_code")
         @Expose
-        var refer_code : String? = "abcd"
+        var referral_code: String? = "",
+        @SerializedName("referred_by")
+        @Expose
+        var referred_by: String? = "",
+        @SerializedName("is_rewards_added")
+        @Expose
+        var is_rewards_added: Int? = 0
+
+
 )
 
 

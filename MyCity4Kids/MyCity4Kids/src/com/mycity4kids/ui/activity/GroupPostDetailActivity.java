@@ -7,7 +7,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -95,7 +94,7 @@ import retrofit2.Retrofit;
  * Created by hemant on 19/4/18.
  */
 
-public class GroupPostDetailActivity extends BaseActivity implements View.OnClickListener, GroupPostDetailsAndCommentsRecyclerAdapter.RecyclerViewClickListener,
+public class GroupPostDetailActivity extends BaseActivity implements View.OnClickListener, GroupPostDetailsAndCommentsRecyclerAdapter.RecyclerViewClickListener, ViewGroupPostCommentsRepliesDialogFragment.replyUpdate,
         GroupMembershipStatus.IMembershipStatus, TaskFragment.TaskCallbacks {
 
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
@@ -1969,18 +1968,17 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 postData.setContent(data.getStringExtra("updatedContent"));
                 groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 1000) {
-                Intent data1 = getIntent();
-                int position = data.getIntExtra("position", -1);
-                if (position == -1) {
-
-
-                    // completeResponseList.get(position) = data.getParcelableArrayListExtra("data");
-                }
-
+                Intent intent = getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                startActivity(intent);
 
             }
+
+
         }
     }
+
 
     public void processImage(Uri imageUri) {
         android.app.FragmentManager fm = getFragmentManager();
@@ -2065,4 +2063,18 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     }
 
 
+    @Override
+    public void replyDataUpdate(ArrayList<GroupPostCommentResult> repliesList, int position) {
+
+
+    }
+
+
+    public void update(ArrayList<GroupPostCommentResult> repliesList, int position) {
+        Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        startActivity(intent);
+
+    }
 }

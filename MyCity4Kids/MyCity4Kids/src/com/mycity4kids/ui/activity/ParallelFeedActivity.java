@@ -294,7 +294,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 //        callRecentVideoArticles.enqueue(recentArticleResponseCallback);
         Log.d("startIndex", "" + startIndex + "," + (startIndex + 10));
         endIndex = startIndex + 10;
-        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(startIndex, endIndex, 1, 3, taggedCategories);
+        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(startIndex, endIndex, 0, 3, taggedCategories);
         callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
     }
 

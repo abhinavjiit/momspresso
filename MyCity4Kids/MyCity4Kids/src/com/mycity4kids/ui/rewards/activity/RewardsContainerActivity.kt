@@ -38,6 +38,7 @@ class RewardsContainerActivity : BaseActivity(),
         RewardsPersonalInfoFragment.SaveAndContinueListener,
         RewardsSocialInfoFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener, PanCardDetailsSubmissionFragment.SubmitListener, IFacebookEvent {
     private var Id: Int = -1
+    private var referralCode: String = " "
     override fun onPanCardDone() {
         this@RewardsContainerActivity.finish()
     }
@@ -96,7 +97,9 @@ class RewardsContainerActivity : BaseActivity(),
             } else {
                 pageLimit = 5
             }
-
+            if (intent.hasExtra("referral")) {
+                referralCode = intent.getStringExtra("referral")
+            }
             if (intent.hasExtra("pageNumber")) {
                 pageNumber = intent.getIntExtra("pageNumber", 1)
             } else {
@@ -141,7 +144,7 @@ class RewardsContainerActivity : BaseActivity(),
 
     private fun addProfileFragment() {
         if (pageLimit!! >= 1) {
-            rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance(isComingFromRewards = true, isComingfromCampaign = isComingfromCampaign)
+            rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance(isComingFromRewards = true, isComingfromCampaign = isComingfromCampaign, referralCode = referralCode)
             supportFragmentManager.beginTransaction().replace(R.id.container, rewardsPersonalInfoFragment,
                     RewardsPersonalInfoFragment::class.java.simpleName)
                     .commit()
