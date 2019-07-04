@@ -167,59 +167,64 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 @Override
                 public void run() {
 
-                    LayoutInflater inflater = getLayoutInflater();
-                    layout = inflater.inflate(R.layout.dialog_socket_notification, null);
-                    int LAYOUT_FLAG;
+                    if (layout == null) {
+                        LayoutInflater inflater = getLayoutInflater();
+                        layout = inflater.inflate(R.layout.dialog_socket_notification, null);
+                        int LAYOUT_FLAG;
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-                    } else {
-                        LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
-                    }
-                    height = displayMetrics.heightPixels;
-                    height = (int) (height * 0.18);
-                    params = new WindowManager.LayoutParams(
-                            WindowManager.LayoutParams.MATCH_PARENT,
-                            height,
-                            LAYOUT_FLAG,
-                            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                            PixelFormat.TRANSLUCENT);
-                    params.gravity = Gravity.BOTTOM;
-                    mWindowManager = (WindowManager) BaseApplication.getInstance().getActivity().getSystemService(Context.WINDOW_SERVICE);
-                    mWindowManager.addView(layout, params);
-                    TextView textTitle = layout.findViewById(R.id.textbody);
-                    TextView textAuthor = layout.findViewById(R.id.textUpdate);
-                    RelativeLayout bottomSheet = layout.findViewById(R.id.bottom_sheet);
-                    ImageView cross = layout.findViewById(R.id.cross);
-                    ImageView image = layout.findViewById(R.id.image);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                        } else {
+                            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+                        }
+                        height = displayMetrics.heightPixels;
+                        height = (int) (height * 0.18);
+                        params = new WindowManager.LayoutParams(
+                                WindowManager.LayoutParams.MATCH_PARENT,
+                                height,
+                                LAYOUT_FLAG,
+                                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                                PixelFormat.TRANSLUCENT);
+                        params.gravity = Gravity.BOTTOM;
+                        mWindowManager = (WindowManager) BaseApplication.getInstance().getActivity().getSystemService(Context.WINDOW_SERVICE);
+                        mWindowManager.addView(layout, params);
+                        TextView textTitle = layout.findViewById(R.id.textbody);
+                        TextView textAuthor = layout.findViewById(R.id.textUpdate);
+                        RelativeLayout bottomSheet = layout.findViewById(R.id.bottom_sheet);
+                        ImageView cross = layout.findViewById(R.id.cross);
+                        ImageView image = layout.findViewById(R.id.image);
 
-                    textTitle.setText(body);
-                    textAuthor.setText(title);
-                    if (!image_url.isEmpty()) {
-                        Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
-                                .error(R.drawable.article_default).into(image);
-                    } else {
-                        image.setVisibility(View.GONE);
+                        textTitle.setText(body);
+                        textAuthor.setText(title);
+                        if (!image_url.isEmpty()) {
+                            Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
+                                    .error(R.drawable.article_default).into(image);
+                        } else {
+                            image.setVisibility(View.GONE);
+                        }
+                        bottomSheet.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                layout.setVisibility(View.GONE);
+                                layout = null;
+                                setPubSub();
+                            }
+                        });
+                        cross.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                layout.setVisibility(View.GONE);
+                                layout = null;
+                            }
+                        });
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                layout.setVisibility(View.GONE);
+                                layout = null;
+                            }
+                        }, 5000);
                     }
-                    bottomSheet.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            layout.setVisibility(View.GONE);
-                            setPubSub();
-                        }
-                    });
-                    cross.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            layout.setVisibility(View.GONE);
-                        }
-                    });
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            layout.setVisibility(View.GONE);
-                        }
-                    }, 5000);
                 }
             });
         }
@@ -785,6 +790,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         super.onStop();
         if (layout != null) {
             layout.setVisibility(View.GONE);
+            mWindowManager.removeView(layout);
+            layout = null;
         }
         //  AnalyticsHelper.onActivityStop(this);
         if (!isScrInFg || !isChangeScrFg) {
@@ -817,6 +824,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         }
         if (layout != null) {
             layout.setVisibility(View.GONE);
+            mWindowManager.removeView(layout);
+            layout = null;
         }
     }
 
@@ -833,6 +842,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         comScore.onExitForeground();
         if (layout != null) {
             layout.setVisibility(View.GONE);
+            mWindowManager.removeView(layout);
+            layout = null;
         }
     }
 
