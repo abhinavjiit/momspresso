@@ -113,10 +113,11 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
         try {
-
-            mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage());
+            mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
             mSocket.on(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId(), onNewMessage);
-            mSocket.connect();
+            if (mSocket != null && !mSocket.connected()) {
+                mSocket.connect();
+            }
         } catch (URISyntaxException e) {
             System.out.println("e--------" + e);
         }
@@ -142,6 +143,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
 
                     try {
                         data = new JSONObject(args[0].toString());
+                        System.out.println("data--------" + data);
                         userId = data.getString("user_id");
                         title = data.getString("title");
                         body = data.getString("body");
@@ -155,57 +157,69 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                         responseId = data.getString("response_id");
                         campaignId = data.getString("campaign_id");
                         url = data.getString("url");
-
-                        LayoutInflater inflater = getLayoutInflater();
-                        layout = inflater.inflate(R.layout.dialog_socket_notification, null);
-                        int LAYOUT_FLAG;
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-                        } else {
-                            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
-                        }
-                        height = displayMetrics.heightPixels;
-                        height = (int) (height * 0.18);
-                        params = new WindowManager.LayoutParams(
-                                WindowManager.LayoutParams.MATCH_PARENT,
-                                height,
-                                LAYOUT_FLAG,
-                                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                                PixelFormat.TRANSLUCENT);
-                        params.gravity = Gravity.BOTTOM;
-                        mWindowManager = (WindowManager) BaseApplication.getInstance().getActivity().getSystemService(Context.WINDOW_SERVICE);
-                        mWindowManager.addView(layout, params);
-                        TextView textTitle = layout.findViewById(R.id.textbody);
-                        TextView textAuthor = layout.findViewById(R.id.textUpdate);
-                        RelativeLayout bottomSheet = layout.findViewById(R.id.bottom_sheet);
-                        ImageView cross = layout.findViewById(R.id.cross);
-                        ImageView image = layout.findViewById(R.id.image);
-
-                        textTitle.setText(body);
-                        textAuthor.setText(title);
-                        if (!image_url.isEmpty()) {
-                            Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
-                                    .error(R.drawable.article_default).into(image);
-                        } else {
-                            image.setVisibility(View.GONE);
-                        }
-                        bottomSheet.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                layout.setVisibility(View.GONE);
-                                setPubSub();
-                            }
-                        });
-                        cross.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                layout.setVisibility(View.GONE);
-                            }
-                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }
+            });
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    layout = inflater.inflate(R.layout.dialog_socket_notification, null);
+                    int LAYOUT_FLAG;
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                    } else {
+                        LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+                    }
+                    height = displayMetrics.heightPixels;
+                    height = (int) (height * 0.18);
+                    params = new WindowManager.LayoutParams(
+                            WindowManager.LayoutParams.MATCH_PARENT,
+                            height,
+                            LAYOUT_FLAG,
+                            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                            PixelFormat.TRANSLUCENT);
+                    params.gravity = Gravity.BOTTOM;
+                    mWindowManager = (WindowManager) BaseApplication.getInstance().getActivity().getSystemService(Context.WINDOW_SERVICE);
+                    mWindowManager.addView(layout, params);
+                    TextView textTitle = layout.findViewById(R.id.textbody);
+                    TextView textAuthor = layout.findViewById(R.id.textUpdate);
+                    RelativeLayout bottomSheet = layout.findViewById(R.id.bottom_sheet);
+                    ImageView cross = layout.findViewById(R.id.cross);
+                    ImageView image = layout.findViewById(R.id.image);
+
+                    textTitle.setText(body);
+                    textAuthor.setText(title);
+                    if (!image_url.isEmpty()) {
+                        Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
+                                .error(R.drawable.article_default).into(image);
+                    } else {
+                        image.setVisibility(View.GONE);
+                    }
+                    bottomSheet.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            layout.setVisibility(View.GONE);
+                            setPubSub();
+                        }
+                    });
+                    cross.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            layout.setVisibility(View.GONE);
+                        }
+                    });
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            layout.setVisibility(View.GONE);
+                        }
+                    }, 5000);
                 }
             });
         }
@@ -769,7 +783,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     @Override
     protected void onStop() {
         super.onStop();
-//        layout.setVisibility(View.GONE);
+        if (layout != null) {
+            layout.setVisibility(View.GONE);
+        }
         //  AnalyticsHelper.onActivityStop(this);
         if (!isScrInFg || !isChangeScrFg) {
             isAppInFg = false;
@@ -795,10 +811,13 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSocket.off(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-        /*if (mWindowManager != null) {
-            mWindowManager.removeView(layout);
-        }*/
+        if (mSocket != null) {
+            mSocket.off(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+            mSocket.disconnect();
+        }
+        if (layout != null) {
+            layout.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -812,7 +831,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     protected void onPause() {
         super.onPause();
         comScore.onExitForeground();
-
+        if (layout != null) {
+            layout.setVisibility(View.GONE);
+        }
     }
 
     @Override
