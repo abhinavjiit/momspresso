@@ -107,7 +107,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         super.onCreate(savedInstanceState);
         displayMetrics = getResources().getDisplayMetrics();
         width = displayMetrics.widthPixels;
-        height = displayMetrics.heightPixels;
         baseApplication = (BaseApplication) getApplication();
         checkDrawOverlayPermission();
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);

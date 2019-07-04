@@ -1305,8 +1305,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_PAGE)) {
                     Intent rewardForm = new Intent(this, RewardsContainerActivity.class);
+                    final String referralCode = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("=") + 1, tempDeepLinkURL.length());
                     rewardForm.putExtra("pageLimit", 1);
                     rewardForm.putExtra("pageNumber", 1);
+                    rewardForm.putExtra("referral", referralCode);
                     startActivity(rewardForm);
 
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_REWARD_MYMONEY)) {

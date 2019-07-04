@@ -257,7 +257,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getCampaignRetrofit() {
         if (null == campaignRewards) {
-            createRetrofitInstanceForCampaign("http://b4028419.ngrok.io");
+            createRetrofitInstanceForCampaign("http://192.168.1.49:3040");
         }
         return campaignRewards;
     }

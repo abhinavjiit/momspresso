@@ -121,6 +121,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var editPhone: TextView
     private lateinit var editAddNumber: TextView
     private lateinit var editEmail: EditText
+    private lateinit var referralMainLayout: RelativeLayout
     private lateinit var editLocation: EditText
     private lateinit var textVerify: TextView
     private lateinit var textApplyReferral: TextView
@@ -162,6 +163,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var editKidsName: EditText
     private var isComingFromCampaign = false
     private var isComingFromRewards = false
+    private var referralCode: String = " "
+
 
     private var endIndex: Int = 0
 
@@ -171,11 +174,12 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         private lateinit var textKidsDOB: TextView
 
         @JvmStatic
-        fun newInstance(isComingFromRewards: Boolean = false, isComingfromCampaign: Boolean = false) =
+        fun newInstance(isComingFromRewards: Boolean = false, isComingfromCampaign: Boolean = false, referralCode: String = " ") =
                 RewardsPersonalInfoFragment().apply {
                     arguments = Bundle().apply {
                         this.putBoolean("isComingFromRewards", isComingFromRewards)
                         this.putBoolean("isComingfromCampaign", isComingfromCampaign)
+                        this.putString("referralCode", referralCode)
                     }
                 }
     }
@@ -185,7 +189,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_personal_info, container, false)
-
+        referralMainLayout = containerView.findViewById(R.id.referralMainLayout)
         if (arguments != null) {
             isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
                 arguments!!.getBoolean("isComingFromRewards")
@@ -197,6 +201,12 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 arguments!!.getBoolean("isComingfromCampaign")
             } else {
                 false
+            }
+
+            referralCode = if (arguments!!.containsKey("referralCode")) {
+                arguments!!.getString("referralCode")
+            } else {
+                " "
             }
         }
 
@@ -213,9 +223,21 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
     /*setting values to components*/
     private fun setValuesToComponents() {
-        if(!apiGetResponse.refer_code.isNullOrEmpty()){
-            editReferralCode.setText(apiGetResponse.refer_code)
+        if (apiGetResponse.is_rewards_added == 1) {
+            referralMainLayout.visibility = View.GONE
+        } else {
+            referralMainLayout.visibility = View.VISIBLE
+
+        }
+        if (!apiGetResponse.referred_by.isNullOrEmpty()) {
+            editReferralCode.setText(apiGetResponse.referred_by)
             editReferralCode.isEnabled = false
+        } else {
+            if (!referralCode.isNullOrEmpty()) {
+                editReferralCode.setText(referralCode)
+                editReferralCode.isEnabled = false
+                apiGetResponse.referred_by = referralCode
+            }
         }
         if (!apiGetResponse.firstName.isNullOrBlank()) editFirstName.setText(apiGetResponse.firstName)
         if (!apiGetResponse.lastName.isNullOrBlank()) editLastName.setText(apiGetResponse.lastName)
@@ -791,6 +813,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 //        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
+
             Log.e("sending json", Gson().toJson(apiGetResponse))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, pageValue = 4).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
                 override fun onComplete() {
@@ -1211,8 +1234,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 override fun onNext(response: BaseResponseGeneric<ReferralCodeResult>) {
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response!!.data!!.result != null) {
                         if (response!!.data!!.result.is_valid) {
-                            editReferralCode.setText(response.data!!.result.referral_code)
-                            textReferCodeError.visibility = View.GONE
+                            // editReferralCode.setText(response.data!!.result.referral_code)
+                            // textReferCodeError.visibility = View.GONE
                             textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.green_dark))
                             textReferCodeError.setText("Successfully Applied")
                             editReferralCode.isEnabled = false

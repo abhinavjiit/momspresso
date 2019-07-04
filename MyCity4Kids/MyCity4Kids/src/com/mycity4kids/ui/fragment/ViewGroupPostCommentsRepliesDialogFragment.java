@@ -31,7 +31,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
-import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.GroupCommentActionsRequest;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostCommentResult;
@@ -65,6 +64,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
     private int totalPostCount;
     private int skip = 10;
     private int limit = 10;
+    replyUpdate replyUpdate;
     private GroupPostCommentResult data;
     private ArrayList<GroupPostCommentResult> repliesList;
     private int totalRepliesCount;
@@ -101,6 +101,12 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             @Override
             public void onClick(View v) {
                 // handle back button naviagtion
+
+                //        getActivity().setResult(Activity.RESULT_OK);
+                //replyUpdate.replyDataUpdate(repliesList,commentPosition);
+                if (getActivity() instanceof GroupPostDetailActivity) {
+                    ((GroupPostDetailActivity) getActivity()).update(repliesList, commentPosition);
+                }
                 dismiss();
             }
         });
@@ -347,13 +353,13 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                 if (repliesList.get(position).getMarkedHelpful() == 0) {
 
 
-                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, 0);
 
 
                 }
                 if (repliesList.get(position).getMarkedHelpful() == 1) {
 
-                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
+                    markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, 0);
 
 
                 }
@@ -569,4 +575,9 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
         super.onStop();
         groupPostCommentRepliesRecyclerAdapter.releasePlayer();
     }
+
+    public interface replyUpdate {
+        public void replyDataUpdate(ArrayList<GroupPostCommentResult> repliesList, int position);
+    }
+
 }

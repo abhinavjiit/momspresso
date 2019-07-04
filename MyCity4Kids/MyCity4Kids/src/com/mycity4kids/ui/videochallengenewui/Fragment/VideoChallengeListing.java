@@ -231,7 +231,7 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
         Log.d("VIDEO CATEGORY", "--" + videoCategory);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsListForWinner(from, from + limit - 1, sortType, 3, selectedId,"-winner");
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsListForWinner(from, from + limit - 1, sortType, 3, selectedId, "-winner");
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
 

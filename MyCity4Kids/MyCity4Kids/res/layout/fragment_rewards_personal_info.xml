@@ -811,11 +811,13 @@
 
 
                 <RelativeLayout
+                    android:id="@+id/referralMainLayout"
                     android:layout_width="match_parent"
                     android:layout_height="110dp"
                     android:layout_marginTop="10dp"
-                    android:paddingTop="5dp"
-                    android:background="@drawable/shape_rectangle_light_red">
+                    android:visibility="visible"
+                    android:background="@drawable/shape_rectangle_light_red"
+                    android:paddingTop="5dp">
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/referHeader"
@@ -844,6 +846,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/space_40"
                         android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="20dp"
                         android:layout_marginLeft="20dp"
@@ -867,12 +870,11 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="0dp"
                         android:background="@drawable/campaign_detail_refer_code_apply"
                         android:gravity="center"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
-                        android:layout_marginEnd="15dp"
-                        android:layout_marginRight="15dp"
                         android:text="Apply"
                         android:textColor="@color/app_red"
                         android:textSize="14sp"
@@ -882,17 +884,17 @@
                         android:id="@+id/textReferCodeError"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/editReferralCode"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="1dp"
                         android:layout_marginEnd="@dimen/space_15"
                         android:layout_marginRight="@dimen/space_15"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
                         android:lineSpacingExtra="1.3dp"
                         android:textColor="@color/campaign_refer_code_error"
                         android:textSize="13sp"
                         android:visibility="visible"
-                        app:fontName="open_sans.ttf"
-                        android:layout_below="@+id/editReferralCode"/>
+                        app:fontName="open_sans.ttf" />
                 </RelativeLayout>
 
             </LinearLayout>

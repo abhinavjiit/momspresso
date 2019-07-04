@@ -129,10 +129,8 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
                             isReuqestRunning = true;
                             mLodingView.setVisibility(View.VISIBLE);
                             if ("shortStory".equals(contentType)) {
-                                chunk1 = chunk1 + 10;
                                 getUserPublishedShortStories();
                             } else {
-                                chunk = chunk + 10;
                                 getUserPublishedArticles();
                             }
 
@@ -188,9 +186,13 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
             try {
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
                     if ("shortStory".equals(contentType)) {
+                        chunk1 = Integer.parseInt(responseData.getData().get(0).getChunks());
+
                         processPublishedStoriesResponse(responseData);
                     } else {
+                        chunk = Integer.parseInt(responseData.getData().get(0).getChunks());
                         processPublisedArticlesResponse(responseData);
                     }
                 } else {
@@ -513,6 +515,6 @@ public class UserReadArticleTabFragment extends BaseFragment implements View.OnC
     public void onPause() {
         super.onPause();
         chunk = 0;
-        chunk1 = 0;
+
     }
 }

@@ -68,7 +68,7 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
         i.putExtra(android.content.Intent.EXTRA_SUBJECT,
                 "Register on Momspresso MyMoney with referral code ${textCode.text} and earn Rs. " +
                         "25. + Participate in campaigns by brands you love and use. Start earning MyMoney!")
-        i.putExtra(android.content.Intent.EXTRA_TEXT, "Participate in campaigns by brands you love and use. Start earning MyMoney! \n https://www.momspresso.com/mymoney-register?referrer=${textCode.text}")
+        i.putExtra(android.content.Intent.EXTRA_TEXT, "Participate in campaigns by brands you love and use. Start earning MyMoney! \n https://www.momspresso.com/usersprofile/rewardsform?referrer=${textCode.text}")
         startActivity(Intent.createChooser(i, "Share via"))
     }
 
@@ -78,7 +78,7 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
         shareIntent.type = "text/plain"
         shareIntent.putExtra(Intent.EXTRA_TEXT, "Register on Momspresso MyMoney with referral code ${textCode.text} and earn Rs. " +
                 "25. + Participate in campaigns by brands you love and use. Start earning MyMoney!")
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "Participate in campaigns by brands you love and use. Start earning MyMoney! \n https://www.momspresso.com/mymoney-register?referrer=${textCode.text}")
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Participate in campaigns by brands you love and use. Start earning MyMoney! \n https://www.momspresso.com/usersprofile/rewardsform?referrer=${textCode.text}")
 
         val pm = getPackageManager()
         val activityList = pm.queryIntentActivities(shareIntent, 0)
@@ -94,7 +94,7 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
         }
         if (!facebookAppFound) {
             val sharerUrl = "https://www.facebook.com/sharer/sharer.php?u= " +
-                    " https://www.momspresso.com/mymoney-register?referrer=${textCode.text}"
+                    " https://www.momspresso.com/usersprofile/rewardsform?referrer=${textCode.text}"
             shareIntent = Intent(Intent.ACTION_VIEW, Uri.parse(sharerUrl))
         }
         startActivity(shareIntent)
@@ -108,7 +108,7 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
         whatsappIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
                 "Register on Momspresso MyMoney with referral code ${textCode.text} and earn Rs. " +
                         "25. + Participate in campaigns by brands you love and use. Start earning MyMoney!")
-        whatsappIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Participate in campaigns by brands you love and use. Start earning MyMoney! \n https://www.momspresso.com/mymoney-register?referrer=${textCode.text}")
+        whatsappIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Participate in campaigns by brands you love and use. Start earning MyMoney! \n https://www.momspresso.com/usersprofile/rewardsform?referrer=${textCode.text}")
         try {
             startActivity(Intent.createChooser(whatsappIntent, "Share Url:"))
             //  Objects.requireNonNull(this@RewardsShareReferralCodeActivity).startActivity(whatsappIntent)
