@@ -206,11 +206,30 @@
                 app:fontName="oswald.ttf" />
         </LinearLayout>
 
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/referral"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@+id/rewardsTextView"
+            android:drawableLeft="@drawable/ic_share_icon"
+            android:drawablePadding="25dp"
+            android:drawableTint="#d54058"
+            android:gravity="center_vertical"
+            android:paddingLeft="30dp"
+            android:paddingTop="12dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="12dp"
+            android:text="Refer MyMoney"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            app:fontName="oswald.ttf" />
+
         <View
             android:id="@+id/divider1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/rewardsTextView"
+            android:layout_below="@+id/referral"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="25dp"

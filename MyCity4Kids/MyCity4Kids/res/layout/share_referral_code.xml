@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,7 +9,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:scrollY="@dimen/space_20"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -52,10 +53,17 @@
 
             </android.support.v7.widget.Toolbar>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_light"
+                app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_20"
                 app:layout_constraintBottom_toTopOf="@+id/guideline4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -91,7 +99,7 @@
                     android:ellipsize="end"
                     android:maxLines="3"
                     android:paddingRight="10dp"
-                    android:text="Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully participated in a MyMoney campaign."
+                    android:text="Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign."
                     app:fontName="OpenSans-Regular.ttf"
                     app:layout_constraintStart_toStartOf="@+id/textTitle"
                     app:layout_constraintTop_toBottomOf="@+id/textTitle"
@@ -143,7 +151,6 @@
                         android:gravity="center"
                         android:letterSpacing=".1"
                         android:text="svvdfvfvsv"
-                        android:textAllCaps="true"
                         android:textColor="@color/black"
                         android:textSize="@dimen/space_25"
                         app:fontName="oswald.ttf"
@@ -155,10 +162,11 @@
                         android:id="@+id/imageShare"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        android:layout_marginTop="3dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="15dp"
                         android:background="@color/light_green"
-
+                        android:gravity="center"
                         app:layout_constraintBottom_toBottomOf="@+id/textCode"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/textCode"
@@ -187,14 +195,14 @@
                         android:id="@+id/textWhatsApp"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
+
                         android:drawableLeft="@drawable/ic_whats_app"
-                        android:drawablePadding="5dp"
+                        android:drawablePadding="10dp"
                         android:drawableTint="@color/white"
                         android:gravity="center"
                         android:text="WhatsApp"
                         android:textColor="@color/white"
+                        android:textSize="20sp"
                         app:fontName="OpenSans-Regular.ttf"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -207,6 +215,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="8dp"
@@ -226,15 +235,15 @@
                         android:id="@+id/textFacebook"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
 
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        android:drawableLeft="@drawable/ic_facebook_camp"
+
+                        android:drawableLeft="@drawable/ic_facebook_svg"
+                        android:drawablePadding="@dimen/space_10"
+                        android:drawableTint="@color/white"
                         android:gravity="center"
                         android:text="Facebook"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/space_20"
                         app:fontName="OpenSans-Regular.ttf"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -263,15 +272,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.8" />
+                app:layout_constraintGuide_percent="0.5" />
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/space_20"
-                android:scaleType="fitXY"
                 android:src="@drawable/illustration_refer"
+                android:layout_marginLeft="@dimen/space_10"
                 app:layout_constraintBottom_toTopOf="@+id/guideline5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

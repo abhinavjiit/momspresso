@@ -107,6 +107,7 @@ import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
+import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.MixPanelUtils;
@@ -193,7 +194,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private View overlayView;
     private RelativeLayout createContentContainer;
     private TextView usernameTextView, coachUsernameTextView, videosTextView, shortStoryTextView,
-            momspressoTextView, groupsTextView, bookmarksTextView, settingTextView;
+            momspressoTextView, groupsTextView, bookmarksTextView, settingTextView, referral;
     private LinearLayout drawerTopContainer, drawerContainer, rewardsTextView;
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
@@ -331,6 +332,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         writeStoryText = (TextView) findViewById(R.id.write_story);
         TakeChallengetext = (TextView) findViewById(R.id.write_challenge);
         languageLayout = (RelativeLayout) findViewById(R.id.languageLayout);
+        referral = findViewById(R.id.referral);
         langView = (View) findViewById(R.id.langView);
         homeCoachmark.setOnClickListener(this);
         langView.setOnClickListener(this);
@@ -345,6 +347,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         overLayViewChooseStory.setOnClickListener(this);
         writeStoryText.setOnClickListener(this);
         TakeChallengetext.setOnClickListener(this);
+        referral.setOnClickListener(this);
         settingTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_app_settings), null, null, null);
         videosTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_mom_vlogs), null, null, null);
         homeTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_mom_vlogs), null, null, null);
@@ -1897,6 +1900,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent notificationIntent = new Intent(this, NotificationActivity.class);
                 startActivity(notificationIntent);
                 break;
+
             case R.id.firstCoachmark:
                 firstCoachmark.setVisibility(View.GONE);
                 secondCoachmark.setVisibility(View.VISIBLE);
@@ -1950,6 +1954,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(cityIntent);
             }
             break;
+            case R.id.referral:
+                Intent intent = new Intent(this, RewardsShareReferralCodeActivity.class);
+                startActivity(intent);
+                break;
             case R.id.settingTextView: {
                 mDrawerLayout.closeDrawers();
                 Intent cityIntent = new Intent(this, AppSettingsActivity.class);

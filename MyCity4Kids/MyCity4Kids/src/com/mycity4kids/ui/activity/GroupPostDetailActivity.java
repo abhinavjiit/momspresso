@@ -523,6 +523,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             break;
             case R.id.replyCommentTextView:
             case R.id.replyCommentTextViewmedia: {
+                if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
+                    groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                }
                 Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Reply", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Type_Reply", "", String.valueOf(groupId));
 
                 if (commentDisableFlag) {
@@ -534,6 +537,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             break;
             case R.id.replyCountTextView:
             case R.id.replyCountTextViewmedia:
+                if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
+                    groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
+                }
                 Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "View Reply", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Reply screen", "", String.valueOf(groupId));
 
                 viewGroupPostCommentsRepliesDialogFragment = new ViewGroupPostCommentsRepliesDialogFragment();
@@ -544,7 +550,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 _args.putBoolean("commentDisableFlag", commentDisableFlag);
                 _args.putString(AppConstants.GROUP_MEMBER_TYPE, memberType);
                 viewGroupPostCommentsRepliesDialogFragment.setArguments(_args);
-                //viewGroupPostCommentsRepliesDialogFragment.setTargetFragment(viewGroupPostCommentsRepliesDialogFragment, 1000);
                 FragmentManager fm = getSupportFragmentManager();
                 viewGroupPostCommentsRepliesDialogFragment.show(fm, "Replies");
                 break;

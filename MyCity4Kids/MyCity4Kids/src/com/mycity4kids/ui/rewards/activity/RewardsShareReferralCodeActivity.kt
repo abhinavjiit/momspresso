@@ -1,5 +1,7 @@
 package com.mycity4kids.ui.rewards.activity
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
@@ -19,11 +21,13 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.campaignmodels.ReferralCodeResult
 import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.aa_rate_app.*
 import kotlinx.android.synthetic.main.share_referral_code.*
 import java.util.*
 
@@ -31,15 +35,19 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
     private lateinit var backText: TextView
     private lateinit var layoutFacebook: RelativeLayout
     private lateinit var layoutWhatsApp: RelativeLayout
+    private var myClipboard: ClipboardManager? = null
+    private var myClip: ClipData? = null
 
 
     override fun updateUi(response: Response?) {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.share_referral_code)
+        setContentView(R.layout.referral_code)
         layoutFacebook = findViewById(R.id.layoutFacebook)
         layoutWhatsApp = findViewById(R.id.layoutWhatsApp)
+        myClipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
+
 
         backText = findViewById(R.id.backToolbar)
         backText.setOnClickListener {
@@ -56,6 +64,14 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
 
         imageShare.setOnClickListener {
             openSharingDialog()
+        }
+        textCode.setOnClickListener {
+
+            myClip = ClipData.newPlainText("text", textCode.text.toString())
+            myClipboard?.setPrimaryClip(myClip);
+
+            Toast.makeText(this, "ReferralCode Copied", Toast.LENGTH_SHORT).show()
+
         }
 
         fetReferralCode()
@@ -121,7 +137,7 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
     /*fetch data from server*/
     private fun fetReferralCode() {
         //var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(this@RewardsShareReferralCodeActivity)?.dynamoId
-        var userId = "6351276833b94023ad18e7fab5b89199"
+        var userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getReferralCode(userId!!).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ReferralCodeResult>> {

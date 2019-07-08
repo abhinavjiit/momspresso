@@ -5,7 +5,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -71,9 +74,15 @@ const val VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE = 1000
 const val REQUEST_SELECT_PLACE = 2000
 
 class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity, PickerDialogFragment.OnClickDoneListener {
+
     var address: String? = null
     private var lat: Double = 0.0
     private var lng: Double = 0.0
+    private var myClipboard: ClipboardManager? = null
+    private var myClip: ClipData? = null
+
+    private lateinit var editReferralCode1: EditText
+
 
     override fun onItemClick(selectedValueName: ArrayList<String>, popupType: String) {
         if (popupType == Constants.PopListRequestType.INTEREST.name) {
@@ -163,7 +172,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var editKidsName: EditText
     private var isComingFromCampaign = false
     private var isComingFromRewards = false
-    private var referralCode: String = " "
+    private var referralCode: String = ""
 
 
     private var endIndex: Int = 0
@@ -174,7 +183,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         private lateinit var textKidsDOB: TextView
 
         @JvmStatic
-        fun newInstance(isComingFromRewards: Boolean = false, isComingfromCampaign: Boolean = false, referralCode: String = " ") =
+        fun newInstance(isComingFromRewards: Boolean = false, isComingfromCampaign: Boolean = false, referralCode: String = "") =
                 RewardsPersonalInfoFragment().apply {
                     arguments = Bundle().apply {
                         this.putBoolean("isComingFromRewards", isComingFromRewards)
@@ -206,7 +215,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             referralCode = if (arguments!!.containsKey("referralCode")) {
                 arguments!!.getString("referralCode")
             } else {
-                " "
+                ""
             }
         }
 
@@ -231,12 +240,15 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
         if (!apiGetResponse.referred_by.isNullOrEmpty()) {
             editReferralCode.setText(apiGetResponse.referred_by)
-            editReferralCode.isEnabled = false
+            editReferralCode.isEnabled = true
         } else {
-            if (!referralCode.isNullOrEmpty()) {
+            if (!referralCode.trim().isNullOrEmpty()) {
                 editReferralCode.setText(referralCode)
-                editReferralCode.isEnabled = false
+                editReferralCode.isEnabled = true
                 apiGetResponse.referred_by = referralCode
+            } else {
+                apiGetResponse.referred_by = null
+
             }
         }
         if (!apiGetResponse.firstName.isNullOrBlank()) editFirstName.setText(apiGetResponse.firstName)
@@ -437,6 +449,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
             }
         }
+
+
+
+
+
+
+
 
         (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
@@ -1235,14 +1254,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response!!.data!!.result != null) {
                         if (response!!.data!!.result.is_valid) {
                             // editReferralCode.setText(response.data!!.result.referral_code)
-                            // textReferCodeError.visibility = View.GONE
+                            //  textReferCodeError.visibility = View.GONE
                             textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.green_dark))
                             textReferCodeError.setText("Successfully Applied")
-                            editReferralCode.isEnabled = false
+                            editReferralCode.isEnabled = true
                             textApplyReferral.isEnabled = false
                         } else {
                             textReferCodeError.visibility = View.VISIBLE
-                            textReferCodeError.setText("Code already used. Please enter a different one")
+                            textReferCodeError.setText("Code is not valid")
                             textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.campaign_refer_code_error))
                         }
                     }

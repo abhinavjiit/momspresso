@@ -204,7 +204,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                         bottomSheet.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                layout.setVisibility(View.GONE);
+                                if (layout != null) {
+                                    layout.setVisibility(View.GONE);
+                                }
                                 layout = null;
                                 setPubSub();
                             }
@@ -212,14 +214,18 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                         cross.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                layout.setVisibility(View.GONE);
+                                if (layout != null) {
+                                    layout.setVisibility(View.GONE);
+                                }
                                 layout = null;
                             }
                         });
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                layout.setVisibility(View.GONE);
+                                if (layout != null) {
+                                    layout.setVisibility(View.GONE);
+                                }
                                 layout = null;
                             }
                         }, 5000);
