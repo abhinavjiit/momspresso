@@ -404,9 +404,9 @@
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
                 android:text="20"
-                android:textColor="@color/groups.grey"
-                android:textSize="12sp"
-                app:fontName="oswald.ttf" />
+                android:textColor="#4A4A4A"
+                android:textSize="14sp"
+                app:fontName="oswald_regular.ttf" />
         </LinearLayout>
 
         <LinearLayout
@@ -503,7 +503,6 @@
             android:paddingBottom="5dp"
             android:src="@drawable/ic_whats_app"
             android:tint="@color/app_red" />
-
 
 
         <RelativeLayout

@@ -88,10 +88,8 @@ public class GroupsViewFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK)
-        {
-            if(requestCode==2000)
-            {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 2000) {
 
                 GroupsViewFragmentPagerAdapter adapter = new GroupsViewFragmentPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
                 viewPager.setAdapter(adapter);

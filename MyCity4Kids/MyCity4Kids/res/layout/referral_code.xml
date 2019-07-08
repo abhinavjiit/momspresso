@@ -62,8 +62,8 @@
                     android:id="@+id/textTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="@dimen/space_20"
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
@@ -90,9 +90,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="300dp"
                     android:layout_below="@id/textDescription"
-                    android:layout_marginLeft="@dimen/space_10"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/space_20"
-                    android:src="@drawable/illustration_refer" />
+                    android:src="@drawable/illustration_refe" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/textView3"
@@ -101,123 +101,133 @@
                     android:layout_below="@id/imageView"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/space_10"
+                    android:layout_marginBottom="@dimen/space_10"
                     android:text="Share your referral code and start earning"
                     app:fontName="oswald.ttf" />
 
-
-                <RelativeLayout
-                    android:id="@+id/layoutCode"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_below="@id/textView3"
-                    android:layout_centerInParent="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/space_20"
-                    android:layout_marginLeft="@dimen/space_20"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@drawable/shape_rectangle_light_green">
-
-                    <com.mycity4kids.widget.CustomFontTextView
-                        android:id="@+id/textCode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:background="@color/light_green"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/space_25"
-                        app:fontName="oswald.ttf" />
-
-                    <android.support.v7.widget.AppCompatImageView
-                        android:id="@+id/imageShare"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/space_10"
-                        android:background="@color/light_green"
-                        app:srcCompat="@drawable/ic_refer_mymoney_refericon" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/layoutCode"
-                    android:gravity="center_horizontal">
+                    android:layout_below="@id/textView3"
+                    android:layout_marginLeft="@dimen/space_30"
+                    android:layout_marginRight="@dimen/space_30"
+                    android:orientation="vertical">
 
                     <RelativeLayout
-                        android:id="@+id/layoutWhatsApp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_10"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/shape_referral"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp">
+                        android:id="@+id/layoutCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@id/textView3"
+                        android:layout_centerInParent="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+
+
+                        android:background="@drawable/shape_rectangle_light_green">
 
                         <com.mycity4kids.widget.CustomFontTextView
-                            android:id="@+id/textWhatsApp"
+                            android:id="@+id/textCode"
                             android:layout_width="wrap_content"
-                            android:layout_height="50dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:background="@color/light_green"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/space_25"
+                            app:fontName="oswald.ttf" />
 
-                            android:drawableLeft="@drawable/ic_whats_app"
-                            android:drawablePadding="10dp"
-                            android:drawableTint="@color/white"
-                            android:gravity="center"
-                            android:text="WhatsApp"
-                            android:textColor="@color/white"
-                            android:textSize="20sp"
-                            app:fontName="OpenSans-Regular.ttf" />
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/imageShare"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/space_10"
+                            android:background="@color/light_green"
+                            app:srcCompat="@drawable/ic_refer_mymoney_refericon" />
 
                     </RelativeLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/layoutFacebook"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_toRightOf="@id/layoutWhatsApp"
-                        android:background="@drawable/shape_referral"
-                        android:backgroundTint="@color/com_facebook_blue"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp">
+                        android:layout_below="@id/layoutCode"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
-                        <com.mycity4kids.widget.CustomFontTextView
-                            android:id="@+id/textFacebook"
+                        <RelativeLayout
+                            android:id="@+id/layoutWhatsApp"
                             android:layout_width="wrap_content"
-                            android:layout_height="50dp"
-
-
-                            android:drawableLeft="@drawable/ic_facebook_svg"
-                            android:drawablePadding="@dimen/space_10"
-                            android:drawableTint="@color/white"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_10"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_referral"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
-                            android:text="Facebook"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/space_20"
-                            app:fontName="OpenSans-Regular.ttf" />
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp">
 
-                    </RelativeLayout>
-                </RelativeLayout>
+                            <com.mycity4kids.widget.CustomFontTextView
+                                android:id="@+id/textWhatsApp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="50dp"
+
+                                android:drawableLeft="@drawable/ic_whats_app"
+                                android:drawablePadding="10dp"
+                                android:drawableTint="@color/white"
+                                android:gravity="center"
+                                android:text="WhatsApp"
+                                android:textColor="@color/white"
+                                android:textSize="20sp"
+                                app:fontName="OpenSans-Regular.ttf" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/layoutFacebook"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginBottom="8dp"
+
+                            android:layout_toRightOf="@id/layoutWhatsApp"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_referral"
+                            android:backgroundTint="@color/com_facebook_blue"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp">
+
+                            <com.mycity4kids.widget.CustomFontTextView
+                                android:id="@+id/textFacebook"
+                                android:layout_width="wrap_content"
+                                android:layout_height="50dp"
 
 
+                                android:drawableLeft="@drawable/ic_facebook_svg"
+                                android:drawablePadding="5dp"
+                                android:drawableTint="@color/white"
+                                android:gravity="center"
+                                android:text="Facebook"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/space_20"
+                                app:fontName="OpenSans-Regular.ttf" />
+
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

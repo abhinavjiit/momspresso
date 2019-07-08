@@ -350,8 +350,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         referral.setOnClickListener(this);
         settingTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_app_settings), null, null, null);
         videosTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_mom_vlogs), null, null, null);
-        homeTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_mom_vlogs), null, null, null);
+        homeTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.drawer_home_red), null, null, null);
         selectedLangTextView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_language), null, null, null);
+        referral.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.share_dra), null, null, null);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         draftsRecyclerView.setLayoutManager(llm);

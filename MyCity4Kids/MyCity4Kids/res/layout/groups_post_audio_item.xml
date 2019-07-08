@@ -278,9 +278,9 @@
                     android:layout_marginLeft="5dp"
                     android:gravity="center"
                     android:text="0"
-                    android:textColor="@color/groups.grey"
-                    android:textSize="12sp"
-                    app:fontName="oswald.ttf" />
+                    android:textColor="#4A4A4A"
+                    android:textSize="14sp"
+                    app:fontName="oswald_regular.ttf" />
             </LinearLayout>
 
             <LinearLayout

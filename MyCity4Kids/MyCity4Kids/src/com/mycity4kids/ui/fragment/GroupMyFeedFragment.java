@@ -486,6 +486,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                 break;
 
             case R.id.postSettingImageView:
+
                 selectedPost = postList.get(position);
                 getCurrentUserPostSettingsStatus(selectedPost);
                 if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)

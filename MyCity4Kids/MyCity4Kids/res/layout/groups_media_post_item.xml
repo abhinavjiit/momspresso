@@ -249,9 +249,9 @@
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
                 android:text="20"
-                android:textColor="@color/groups.grey"
-                android:textSize="12sp"
-                app:fontName="oswald.ttf" />
+                android:textColor="#4A4A4A"
+                android:textSize="14sp"
+                app:fontName="oswald_regular.ttf" />
         </LinearLayout>
 
         <LinearLayout
@@ -332,7 +332,7 @@
         <!--android:textSize="10sp"-->
         <!--app:fontName="oswald.ttf" />-->
 
-              <ImageView
+        <ImageView
             android:id="@+id/shareTextView"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -348,6 +348,7 @@
             android:paddingBottom="5dp"
             android:src="@drawable/ic_share_white"
             android:tint="@color/app_red" />
+
         <ImageView
             android:id="@+id/whatsappShare"
             android:layout_width="24dp"
@@ -364,8 +365,6 @@
             android:paddingBottom="5dp"
             android:src="@drawable/ic_whats_app"
             android:tint="@color/app_red" />
-
-
 
 
         <RelativeLayout
