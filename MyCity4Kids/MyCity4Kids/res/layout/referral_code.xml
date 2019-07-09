@@ -159,27 +159,24 @@
 
                         <RelativeLayout
                             android:id="@+id/layoutWhatsApp"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/space_10"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginTop="@dimen/space_8"
+                            android:layout_marginRight="@dimen/space_4"
                             android:layout_marginBottom="8dp"
                             android:layout_weight="1"
                             android:background="@drawable/shape_referral"
                             android:clickable="true"
                             android:focusable="true"
-                            android:gravity="center"
-                            android:paddingLeft="12dp"
-                            android:paddingRight="12dp">
+                            android:gravity="center">
 
                             <com.mycity4kids.widget.CustomFontTextView
                                 android:id="@+id/textWhatsApp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="50dp"
-
+                                android:layout_centerInParent="true"
                                 android:drawableLeft="@drawable/ic_whats_app"
-                                android:drawablePadding="10dp"
+                                android:drawablePadding="5dp"
                                 android:drawableTint="@color/white"
                                 android:gravity="center"
                                 android:text="WhatsApp"
@@ -191,12 +188,10 @@
 
                         <RelativeLayout
                             android:id="@+id/layoutFacebook"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginLeft="@dimen/space_4"
+                            android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
 
                             android:layout_toRightOf="@id/layoutWhatsApp"
@@ -205,23 +200,21 @@
                             android:backgroundTint="@color/com_facebook_blue"
                             android:clickable="true"
                             android:focusable="true"
-                            android:gravity="center"
-                            android:paddingLeft="12dp"
-                            android:paddingRight="12dp">
+                            android:gravity="center">
 
                             <com.mycity4kids.widget.CustomFontTextView
                                 android:id="@+id/textFacebook"
                                 android:layout_width="wrap_content"
                                 android:layout_height="50dp"
 
-
+                                android:layout_centerInParent="true"
                                 android:drawableLeft="@drawable/ic_facebook_svg"
-                                android:drawablePadding="5dp"
+                                android:drawablePadding="1dp"
                                 android:drawableTint="@color/white"
                                 android:gravity="center"
-                                android:text="Facebook"
+                                android:text="FaceBook"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/space_20"
+                                android:textSize="20sp"
                                 app:fontName="OpenSans-Regular.ttf" />
 
                         </RelativeLayout>
