@@ -90,7 +90,7 @@ public class BaseApplication extends Application {
     private static Tracker mTracker;
     public static String base_url;
     public String appVersion;
-
+    private boolean askPermission = true;
     public static boolean isFirstSwipe = true;
     private Socket mSocket;
 
@@ -148,6 +148,15 @@ public class BaseApplication extends Application {
     public static void setShortStoryTopicList(ArrayList<Topics> shortStoryTopicList) {
         BaseApplication.shortStoryTopicList = shortStoryTopicList;
     }
+
+    public boolean isAskPermission() {
+        return askPermission;
+    }
+
+    public void setAskPermission(boolean askPermission) {
+        this.askPermission = askPermission;
+    }
+
 
     public static HashMap<Topics, List<Topics>> getTopicsMap() {
         return topicsMap;

@@ -1,5 +1,6 @@
 package com.kelltontech.ui;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -87,6 +88,7 @@ import io.socket.emitter.Emitter;
  */
 public abstract class BaseActivity extends AppCompatActivity implements IScreen, GroupMembershipStatus.IMembershipStatus {
 
+    public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
     //    private int activitiesCount = 0;
     public static boolean isAppInFg = false;
     public static boolean isScrInFg = false;
@@ -101,6 +103,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     private WindowManager.LayoutParams params;
     private WindowManager mWindowManager;
     private DisplayMetrics displayMetrics;
+    private boolean permissionGranted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,25 +111,42 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         displayMetrics = getResources().getDisplayMetrics();
         width = displayMetrics.widthPixels;
         baseApplication = (BaseApplication) getApplication();
-        checkDrawOverlayPermission();
+        if (BaseApplication.getInstance().isAskPermission() && !SharedPrefUtils.isPermissionGranted(BaseApplication.getAppContext())) {
+            checkDrawOverlayPermission();
+        }
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
-        try {
-            mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
-            mSocket.on(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId(), onNewMessage);
-            if (mSocket != null && !mSocket.connected()) {
-                mSocket.connect();
+        if (SharedPrefUtils.isPermissionGranted(BaseApplication.getAppContext())) {
+            try {
+                mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
+                mSocket.on(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId(), onNewMessage);
+                if (mSocket != null && !mSocket.connected()) {
+                    mSocket.connect();
+                }
+            } catch (URISyntaxException e) {
+
             }
-        } catch (URISyntaxException e) {
-            System.out.println("e--------" + e);
         }
     }
 
     public void checkDrawOverlayPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(this)) {
+//            if (!Settings.canDrawOverlays(this)) {
+                BaseApplication.getInstance().setAskPermission(false);
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 5463);
+                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+//            }
+        }
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+            if (Settings.canDrawOverlays(this)) {
+                BaseApplication.getInstance().setAskPermission(false);
+                SharedPrefUtils.setPermissionGranted(BaseApplication.getAppContext(), true);
             }
         }
     }
