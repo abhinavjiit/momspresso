@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -102,8 +101,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     public View layout;
     private WindowManager.LayoutParams params;
     private WindowManager mWindowManager;
-    private boolean permissionGranted, askPermission = true;
     private DisplayMetrics displayMetrics;
+    private boolean permissionGranted;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,44 +111,46 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         displayMetrics = getResources().getDisplayMetrics();
         width = displayMetrics.widthPixels;
         baseApplication = (BaseApplication) getApplication();
-        if (askPermission)
+        if (BaseApplication.getInstance().isAskPermission() && !SharedPrefUtils.isPermissionGranted(this)) {
             checkDrawOverlayPermission();
+        }
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
-        if (permissionGranted) {
-            try {
-                mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
-                mSocket.on(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId(), onNewMessage);
-                if (mSocket != null && !mSocket.connected()) {
-                    mSocket.connect();
-                }
-            } catch (URISyntaxException e) {
-                System.out.println("e--------" + e);
+        //   if (SharedPrefUtils.isPermissionGranted(this)) {
+        try {
+            mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
+            mSocket.on(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId(), onNewMessage);
+            if (mSocket != null && !mSocket.connected()) {
+                mSocket.connect();
             }
+        } catch (URISyntaxException e) {
+
         }
+        //}
     }
 
     public void checkDrawOverlayPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
-                askPermission = false;
+                BaseApplication.getInstance().setAskPermission(false);
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
             }
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+
+    /*@TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
             if (Settings.canDrawOverlays(this)) {
-                permissionGranted = true;
-            } else {
-                permissionGranted = false;
+                BaseApplication.getInstance().setAskPermission(false);
+                SharedPrefUtils.setPermissionGranted(BaseApplication.getAppContext(), true);
             }
+
         }
-    }
+    }*/
 
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
@@ -185,70 +187,75 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 @Override
                 public void run() {
 
-                    if (layout == null) {
-                        LayoutInflater inflater = getLayoutInflater();
-                        layout = inflater.inflate(R.layout.dialog_socket_notification, null);
-                        int LAYOUT_FLAG;
+                    try {
+                        if (layout == null) {
+                            LayoutInflater inflater = getLayoutInflater();
+                            layout = inflater.inflate(R.layout.dialog_socket_notification, null);
+                            int LAYOUT_FLAG;
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-                        } else {
-                            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
-                        }
-                        height = displayMetrics.heightPixels;
-                        height = (int) (height * 0.18);
-                        params = new WindowManager.LayoutParams(
-                                WindowManager.LayoutParams.MATCH_PARENT,
-                                height,
-                                LAYOUT_FLAG,
-                                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                                PixelFormat.TRANSLUCENT);
-                        params.gravity = Gravity.BOTTOM;
-                        mWindowManager = (WindowManager) BaseApplication.getInstance().getActivity().getSystemService(Context.WINDOW_SERVICE);
-                        mWindowManager.addView(layout, params);
-                        TextView textTitle = layout.findViewById(R.id.textbody);
-                        TextView textAuthor = layout.findViewById(R.id.textUpdate);
-                        RelativeLayout bottomSheet = layout.findViewById(R.id.bottom_sheet);
-                        ImageView cross = layout.findViewById(R.id.cross);
-                        ImageView image = layout.findViewById(R.id.image);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                            } else {
+                                LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+                            }
+                            height = displayMetrics.heightPixels;
+                            height = (int) (height * 0.18);
+                            params = new WindowManager.LayoutParams(
+                                    WindowManager.LayoutParams.MATCH_PARENT,
+                                    height,
+                                    LAYOUT_FLAG,
+                                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                                    PixelFormat.TRANSLUCENT);
+                            params.gravity = Gravity.BOTTOM;
+                            mWindowManager = (WindowManager) BaseApplication.getInstance().getActivity().getSystemService(Context.WINDOW_SERVICE);
+                            mWindowManager.addView(layout, params);
+                            TextView textTitle = layout.findViewById(R.id.textbody);
+                            TextView textAuthor = layout.findViewById(R.id.textUpdate);
+                            RelativeLayout bottomSheet = layout.findViewById(R.id.bottom_sheet);
+                            ImageView cross = layout.findViewById(R.id.cross);
+                            ImageView image = layout.findViewById(R.id.image);
 
-                        textTitle.setText(body);
-                        textAuthor.setText(title);
-                        if (!image_url.isEmpty()) {
-                            Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
-                                    .error(R.drawable.article_default).into(image);
-                        } else {
-                            image.setVisibility(View.GONE);
+                            textTitle.setText(body);
+                            textAuthor.setText(title);
+                            if (!image_url.isEmpty()) {
+                                Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
+                                        .error(R.drawable.article_default).into(image);
+                            } else {
+                                image.setVisibility(View.GONE);
+                            }
+                            bottomSheet.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (layout != null) {
+                                        layout.setVisibility(View.GONE);
+                                    }
+                                    layout = null;
+                                    setPubSub();
+                                }
+                            });
+                            cross.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (layout != null) {
+                                        layout.setVisibility(View.GONE);
+                                    }
+                                    layout = null;
+                                }
+                            });
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (layout != null) {
+                                        layout.setVisibility(View.GONE);
+                                    }
+                                    layout = null;
+                                }
+                            }, 5000);
                         }
-                        bottomSheet.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (layout != null) {
-                                    layout.setVisibility(View.GONE);
-                                }
-                                layout = null;
-                                setPubSub();
-                            }
-                        });
-                        cross.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (layout != null) {
-                                    layout.setVisibility(View.GONE);
-                                }
-                                layout = null;
-                            }
-                        });
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (layout != null) {
-                                    layout.setVisibility(View.GONE);
-                                }
-                                layout = null;
-                            }
-                        }, 5000);
+                    } catch (Exception e) {
+
                     }
+
                 }
             });
         }
