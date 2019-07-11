@@ -104,6 +104,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "POLLS"};
     private int categoryIndex = 0;
     private int nextPageNumber = 1;
+
     private int totalPostCount;
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
     private TaskFragment mTaskFragment;

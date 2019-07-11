@@ -20,7 +20,7 @@ import static android.app.Activity.RESULT_OK;
 public class GroupsViewFragment extends BaseFragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private FloatingActionButton createFabButton;
+    private com.getbase.floatingactionbutton.FloatingActionButton createFabButton;
 
 
     @Override
@@ -34,14 +34,11 @@ public class GroupsViewFragment extends BaseFragment {
         viewPager = fragmentView.findViewById(R.id.viewpager);
         tabLayout = fragmentView.findViewById(R.id.tablayout);
         createFabButton = fragmentView.findViewById(R.id.createFabButton);
-        createFabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), GroupsListingActivity.class);
-                intent.putExtra("isMember", true);
-                intent.putExtra("comingFrom", "myFeed");
-                startActivityForResult(intent, 2000);
-            }
+        createFabButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), GroupsListingActivity.class);
+            intent.putExtra("isMember", true);
+            intent.putExtra("comingFrom", "myFeed");
+            startActivityForResult(intent, 2000);
         });
 
 

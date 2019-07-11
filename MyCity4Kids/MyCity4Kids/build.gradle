@@ -48,6 +48,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.0.1'
     implementation 'com.android.support:design:27.3.0'
     implementation 'com.android.support:design:27.1.1'
+   /* implementation 'com.android.support:appcompat-v7:24.2.1'
+    implementation 'com.android.support:design:24.2.1'*/
     implementation 'com.android.support:cardview-v7:27.3.0'
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.android.volley:volley:1.1.0'
@@ -96,7 +98,7 @@ dependencies {
     implementation 'com.github.douglasjunior:android-simple-tooltip:0.2.2'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
-    compile ('io.socket:socket.io-client:0.8.3') {
+    compile('io.socket:socket.io-client:0.8.3') {
         exclude group: 'org.json', module: 'json'
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
@@ -168,7 +170,7 @@ android {
 
         }
         debug {
-            buildConfigField 'String', 'GROUPS_LIVE_URL', '"http://b4028419.ngrok.io/"'
+            buildConfigField 'String', 'GROUPS_LIVE_URL', '"http://35.200.142.199/"'
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'

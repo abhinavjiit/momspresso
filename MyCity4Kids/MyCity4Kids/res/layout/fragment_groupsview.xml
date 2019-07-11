@@ -24,15 +24,20 @@
         android:layout_height="match_parent"
         android:layout_below="@id/tablayout" />
 
-    <android.support.design.widget.FloatingActionButton
+
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/createFabButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/space_10"
-        android:backgroundTint="@color/app_red"
-        android:clickable="true"
-        android:src="@drawable/ic_plus"
-        android:visibility="gone" />
+        android:layout_gravity="right|bottom"
+        android:visibility="gone"
+        app:fab_colorNormal="@color/app_red"
+        app:fab_colorPressed="@color/app_red"
+        app:fab_icon="@drawable/ic_plus" />
+
+
 </RelativeLayout>
