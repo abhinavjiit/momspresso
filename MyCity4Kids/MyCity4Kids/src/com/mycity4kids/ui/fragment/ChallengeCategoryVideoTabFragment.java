@@ -51,7 +51,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
             selectedTopic = currentSubTopic;
         }
 
-
+        getChallenges();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_challenge);
         llm = new LinearLayoutManager(getActivity());
         recyclerAdapter = new ChallengeVideoRecycleAdapter(this, getActivity(), challengeId, Display_Name, activeImageUrl, activeStreamUrl, rules);
@@ -63,6 +63,14 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
 
 
         return view;
+
+
+    }
+
+
+    private void getChallenges() {
+
+
 
 
     }
