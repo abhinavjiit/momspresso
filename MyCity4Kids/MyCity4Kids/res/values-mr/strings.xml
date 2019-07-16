@@ -8,6 +8,8 @@
     <string name="write_review_prompt">तुम्हाला कशाचे विश्लेषण करायला आवडेल ?</string>
 
     <string name="loading_txt">लोडिंग&#8230;</string>
+    <string name="view_more_profile">view more</string>
+    <string name="campaign_maybe_later_text">Maybe later</string>
 
     <string name="subcategoryName">सब केटेगरी</string>
     <string name="location_info">वैयत्तिक सूचना मिळण्या साठी तुमचे प्राधान्य निवडा (स्थान)</string>
@@ -18,6 +20,8 @@
     <string name="no_result_txt">निकाल उपलब्ध नाही</string>
     <string name="went_wrong">काहीतरी चुकलंय </string>
     <string name="group_comment_start_type_here_text">Start Typing</string>
+
+    <string name="groups_sections_ask">ASK AN EXPERT</string>
 
     <string name="server_went_wrong">सर्वर मध्ये काहीतरी चुकलंय </string>
     <string name="no_data">डेटा उपलब्ध नाही </string>

@@ -272,6 +272,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         }
                     } else if (postData.getType().equals("3")) {
                         postType = AppConstants.POST_TYPE_AUDIO;
+                    } else if (postData.getType().equals("4")) {
+                        postType = AppConstants.POST_TYPE_ASK_AN_EXPERT;
                     }
 
                     if (postData.getDisableComments() == 1) {
@@ -290,7 +292,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     } else if (postType.equals("2")) {
                         pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
                         postData.setPollOptions(pollOptions);
-                    }
+                    } /*else if (postType.equals("4")) {
+                        mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
+                        postData.setMediaUrls(mediaUrls);
+                    }*/
 
                     formatPostData();
 

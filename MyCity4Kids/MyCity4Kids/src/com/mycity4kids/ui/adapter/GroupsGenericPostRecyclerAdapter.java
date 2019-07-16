@@ -145,6 +145,8 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             return POST_TYPE_TEXT;
         } else if (postList.get(position).getType().equals("1")) {
             return POST_TYPE_MEDIA;
+        } else if (postList.get(position).getType().equals("4")) {
+            return POST_TYPE_MEDIA;
         } else if (postList.get(position).getType().equals("2")) {
             if (postList.get(position).getPollType().equals("1")) {
                 return POST_TYPE_IMAGE_POLL;

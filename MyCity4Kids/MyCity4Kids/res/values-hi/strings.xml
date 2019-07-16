@@ -12,6 +12,9 @@
     <string name="groups.other_groups">अन्य ग्रुप्स </string>
     <string name="groups_enable_notification">नोटिफिकेशन  सक्षम करें</string>
 
+    <string name="groups_sections_ask">ASK AN EXPERT</string>
+    <string name="view_more_profile">view more</string>
+    <string name="campaign_maybe_later_text">Maybe later</string>
 
     <string name="subcategoryName">सब केटेगरी</string>
     <string name="location_info">व्यक्तिगत परिणाम के लिए, अपनी लोकेशन चुने</string>

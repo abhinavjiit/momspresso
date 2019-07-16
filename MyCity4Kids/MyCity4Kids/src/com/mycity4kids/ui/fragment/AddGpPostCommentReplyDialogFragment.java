@@ -656,7 +656,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
                             }
 
-                        }else {
+                        } else {
                             if (getActivity() instanceof GroupPostDetailActivity)
                                 ((GroupPostDetailActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), mediaMap);
                             else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity)

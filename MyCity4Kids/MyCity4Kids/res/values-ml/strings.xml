@@ -12,11 +12,16 @@
     <string name="groups_enable_notification">നോട്ടിഫിക്കേഷൻ സാധ്യമാക്കൂ </string>
 
     <string name="facebook_app_id">206155642763202</string>
+    <string name="campaign_maybe_later_text">Maybe later</string>
+
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
     <string name="ACCOUNT_KIT_CLIENT_TOKEN">089d77e1898bf3ef59048cc2fe58408b</string>
     <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
 
     <string name="write_review_prompt">What would you like to review?</string>
+
+    <string name="groups_sections_ask">ASK AN EXPERT</string>
+    <string name="view_more_profile">view more</string>
 
     <string name="loading_txt">Loading&#8230;</string>
     <string name="group_comment_start_type_here_text">Start Typing</string>

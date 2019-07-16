@@ -157,10 +157,14 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             } else if (AppConstants.POST_TYPE_TEXT_POLL.equals(postType)) {
                 View v0 = mInflator.inflate(R.layout.groups_text_poll_post_item, parent, false);
                 return new TextPollPostViewHolder(v0);
+            } else if (AppConstants.POST_TYPE_ASK_AN_EXPERT.equals(postType)) {
+                View v0 = mInflator.inflate(R.layout.groups_media_post_item, parent, false);
+                return new MediaPostViewHolder(v0);
             } else {
                 View v0 = mInflator.inflate(R.layout.groups_image_poll_post_item, parent, false);
                 return new ImagePollPostViewHolder(v0);
             }
+
         } else {
             if (COMMENT_AUDIO == viewType) {
                 View v0 = mInflator.inflate(R.layout.group_post_audio_comment_cell, parent, false);
@@ -184,7 +188,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             addLinkHandler(textPostViewHolder.postDataTextView);
 
             textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            textPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount()+"");
+            textPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
             textPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             textPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -377,7 +381,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
             audioCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             audioCommentViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
-            audioCommentViewHolder.upvoteCommentCountTextView.setText(groupPostResult.getHelpfullCount()+"");
+            audioCommentViewHolder.upvoteCommentCountTextView.setText(groupPostResult.getHelpfullCount() + "");
             audioCommentViewHolder.downvoteCommentCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
 
 
@@ -410,7 +414,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             addLinkHandler(mediaPostViewHolder.postDataTextView);
 
             mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            mediaPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount()+"");
+            mediaPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
             mediaPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             mediaPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -498,7 +502,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
 
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            textPollPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount()+"");
+            textPollPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
             textPollPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             textPollPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -618,7 +622,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
             imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             imageHolder.usernameTextView.setText(groupPostResult.getUserId());
-            imageHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount()+"");
+            imageHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
             imageHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             imageHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -831,7 +835,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 audioCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
                 audioCommentViewHolder.replyCountTextView.setText(mContext.getString(R.string.view_group) + "(" + postCommentsList.get(position).getChildCount() + ")" + mContext.getString(R.string.replies));
             }
-            audioCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount()+"");
+            audioCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + "");
             audioCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
 
             if (postCommentsList.get(position).getMarkedHelpful() == 1) {
@@ -942,7 +946,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
                 rootCommentViewHolder.replyCountTextView.setText(mContext.getString(R.string.view_group) + "(" + postCommentsList.get(position).getChildCount() + ")" + mContext.getString(R.string.replies));
             }
-            rootCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount()+"");
+            rootCommentViewHolder.upvoteCommentCountTextView.setText(postCommentsList.get(position).getHelpfullCount() + "");
             rootCommentViewHolder.downvoteCommentCountTextView.setText(postCommentsList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
 
             if (postCommentsList.get(position).getMarkedHelpful() == 1) {
@@ -1653,7 +1657,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         public AudioCommentViewHolder(View view) {
             super(view);
             upvoteImageVIew = (ImageView) view.findViewById(R.id.upvoteImageVIew);
-          //  whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
+            //  whatsappShare = (ImageView) view.findViewById(R.id.whatsappShare);
 
             media = (ImageView) view.findViewById(R.id.media);
             commentorImageView = (ImageView) view.findViewById(R.id.commentorImageView);
@@ -1670,7 +1674,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             pauseAudioImageView = (ImageView) view.findViewById(R.id.pauseAudioImageView);
             audioSeekBar = (SeekBar) view.findViewById(R.id.audioSeekBar);
             audioTimeElapsed = (TextView) view.findViewById(R.id.audioTimeElapsed);
-         //   whatsappShare.setOnClickListener(this);
+            //   whatsappShare.setOnClickListener(this);
 
             commentDataTextView.setOnLongClickListener(this);
             view.setOnLongClickListener(this);

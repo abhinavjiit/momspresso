@@ -585,6 +585,7 @@ public class AppConstants {
     public static final String LOCALE_TELUGU = "te";
     public static final String LOCALE_KANNADA = "kn";
     public static final String LOCALE_MALAYALAM = "ml";
+    public static final String LOCAL_GUJRATI = "gu";
 
     public static final String GROUP_SECTION_ABOUT = "ABOUT";
     public static final String GROUP_SECTION_DISCUSSION = "DISCUSSION";
@@ -593,16 +594,19 @@ public class AppConstants {
     public static final String GROUP_SECTION_VIDEOS = "VIDEOS";
     public static final String GROUP_SECTION_TOP_POSTS = "TOP POSTS";
     public static final String GROUP_SECTION_POLLS = "POLLS";
+    public static final String GROUP_SECTION_ASK_AN_EXPERT = "ASK AN EXPERT";
 
     public static final String POST_TYPE_TEXT = "textPost";
     public static final String POST_TYPE_MEDIA = "mediaPost";
     public static final String POST_TYPE_TEXT_POLL = "textPoll";
     public static final String POST_TYPE_IMAGE_POLL = "imagePoll";
     public static final String POST_TYPE_AUDIO = "audioPost";
+    public static final String POST_TYPE_ASK_AN_EXPERT = "askAnExpert";
 
     public static final String POST_TYPE_TEXT_KEY = "0";
     public static final String POST_TYPE_MEDIA_KEY = "1";
     public static final String POST_TYPE_POLL_KEY = "2";
+    public static final String ASK_AN_EXPERT_KEY = "4";
 
     public static final String GROUP_TYPE_OPEN_KEY = "0";
     public static final String GROUP_TYPE_CLOSED_KEY = "1";

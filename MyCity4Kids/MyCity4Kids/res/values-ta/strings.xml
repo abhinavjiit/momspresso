@@ -10,6 +10,8 @@
     <string name="write_review_prompt">நீங்கள் எதை விமர்சனம் செய்ய விரும்புகிறீர்கள்?</string>
 
     <string name="loading_txt">Loading&#8230;</string>
+    <string name="view_more_profile">view more</string>
+    <string name="campaign_maybe_later_text">Maybe later</string>
 
     <string name="subcategoryName">subCategory</string>
     <string name="location_info">தனிப்பட்ட பரிந்துரைகள் கிடைக்க உங்களுக்கு விருப்பமான இடத்தைத் தேர்ந்தெடுங்கள்</string>
@@ -20,6 +22,8 @@
     <string name="no_result_txt">முடிவு ஒன்றும் கிடைக்கவில்லை</string>
     <string name="went_wrong">ஏதோ தவறு நடந்துவிட்டது</string>
     <string name="server_went_wrong">ஸர்வரில் ஏதோ தவறு நடந்துவிட்டது</string>
+    <string name="groups_sections_ask">ASK AN EXPERT</string>
+
     <string name="no_data">தகவல் ஒன்றும் கிடைக்கவில்லை</string>
     <string name="toast_network_error">கருவி நெட்வொர்க் கவரேஜிற்கு வெளியே உள்ளது</string>
     <string name="toast_response_error">ஏதோ தவறு நடந்துவிட்டது, பிறகு முயற்சி செய்யுங்கள் </string>

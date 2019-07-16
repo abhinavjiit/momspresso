@@ -127,7 +127,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginBottom="28dp"
             android:gravity="center"
-            android:text="Maybe Later"
+            android:text="@string/campaign_maybe_later_text"
             android:textColor="@color/app_red"
             android:textSize="14sp" />
     </LinearLayout>

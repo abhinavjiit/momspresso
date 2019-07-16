@@ -6,6 +6,7 @@
     <string name="resend_email">ఇమెయిల్ మళ్ళీ పంపండి</string>
 
     <string name="write_review_prompt">మీరు ఏమి సమీక్షిద్దామనుకుంటున్నారు?</string>
+    <string name="view_more_profile">view more</string>
 
     <string name="loading_txt">లోడ్ అవుతోంది&#8230;</string>
 
@@ -15,6 +16,8 @@
     <string name="locality_txt">ఏ ప్రాంతానికి చెందిన వారు ?</string>
     <string name="error_network">పరికరం నెట్వర్క్ కవరేజ్ లో లేదు</string>
     <string name="please_wait">దయచేసి వేచి ఉండండి...</string>
+    <string name="campaign_maybe_later_text">Maybe later</string>
+
     <string name="no_result_txt">ఎలాంటి ఫలితం దొరకలేదు</string>
     <string name="group_comment_start_type_here_text">Start Typing</string>
 
@@ -24,6 +27,8 @@
     <string name="toast_network_error">పరికరం నెట్వర్క్ కవరేజ్ లో లేదు</string>
     <string name="toast_response_error">ఎదో లోపం వచ్చింది, దాయచేసి కాసేపాగి ప్రయత్నించండి!</string>
     <string name="toast_server_error">సర్వర్ లోపం </string>
+    <string name="groups_sections_ask">ASK AN EXPERT</string>
+
     <string name="fetching_data">వివరాలు పొందుతున్నాం&#8230;</string>
     <string name="please_select">ఒక్క ప్రమాణముని అయినా ఎంచుకోండి</string>
     <!-- slidingDrawer -->

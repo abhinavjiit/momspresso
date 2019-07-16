@@ -101,7 +101,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     private static final int EDIT_POST_REQUEST_CODE = 1010;
     private ArrayList<GroupsCategoryMappingResult> groupMappedCategories;
-    private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "POLLS"};
+    private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "POLLS", "ASK AN EXPERT"};
     private int categoryIndex = 0;
     private int nextPageNumber = 1;
 
@@ -248,7 +248,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         String[] sections = {
                 getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions), getString(R.string.onboarding_desc_array_tutorial_1_blogs),
-                getString(R.string.groups_sections_photos), getString(R.string.groups_sections_polls)
+                getString(R.string.groups_sections_polls), getString(R.string.groups_sections_ask)
         };
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -1265,7 +1265,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     } else {
                         hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
                     }
-                } else if (AppConstants.GROUP_SECTION_PHOTOS.equalsIgnoreCase(tab.getTag().toString())) {
+                } else if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab.getTag().toString())) {
                     Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "photos", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "photos page", "", "");
 
                     isRequestRunning = false;
@@ -1274,9 +1274,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     postList.clear();
                     skip = 0;
                     limit = 10;
-                    postType = AppConstants.POST_TYPE_MEDIA_KEY;
+                    postType = AppConstants.POST_TYPE_POLL_KEY;
                     getFilteredGroupPosts();
-                } else if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab.getTag().toString())) {
+                } else if (AppConstants.GROUP_SECTION_ASK_AN_EXPERT.equalsIgnoreCase(tab.getTag().toString())) {
                     Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "polls", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "polls page", "", "");
 
                     isRequestRunning = false;
@@ -1285,7 +1285,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     postList.clear();
                     skip = 0;
                     limit = 10;
-                    postType = AppConstants.POST_TYPE_POLL_KEY;
+                    postType = AppConstants.ASK_AN_EXPERT_KEY;
                     getFilteredGroupPosts();
                 }
             }
@@ -1319,16 +1319,16 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     } else {
                         hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
                     }
-                } else if (AppConstants.GROUP_SECTION_PHOTOS.equalsIgnoreCase(tab.getTag().toString())) {
+                } else if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab.getTag().toString())) {
                     isRequestRunning = false;
                     isLastPageReached = false;
                     recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
                     postList.clear();
                     skip = 0;
                     limit = 10;
-                    postType = AppConstants.POST_TYPE_MEDIA_KEY;
+                    postType = AppConstants.POST_TYPE_POLL_KEY;
                     getFilteredGroupPosts();
-                } else if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab.getTag().toString())) {
+                } else if (AppConstants.GROUP_SECTION_ASK_AN_EXPERT.equalsIgnoreCase(tab.getTag().toString())) {
                     isRequestRunning = false;
                     isLastPageReached = false;
                     recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);

@@ -212,7 +212,7 @@
                                 android:drawablePadding="1dp"
                                 android:drawableTint="@color/white"
                                 android:gravity="center"
-                                android:text="FaceBook"
+                                android:text="Facebook"
                                 android:textColor="@color/white"
                                 android:textSize="20sp"
                                 app:fontName="OpenSans-Regular.ttf" />

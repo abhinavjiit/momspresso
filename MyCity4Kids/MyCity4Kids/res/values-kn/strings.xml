@@ -11,8 +11,12 @@
 
     <string name="unknown_person">Unknown</string>
     <string name="resend_email">Resend Email</string>
+    <string name="view_more_profile">view more</string>
+    <string name="campaign_maybe_later_text">Maybe later</string>
 
     <string name="facebook_app_id">206155642763202</string>
+    <string name="groups_sections_ask">ASK AN EXPERT</string>
+
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
     <string name="ACCOUNT_KIT_CLIENT_TOKEN">089d77e1898bf3ef59048cc2fe58408b</string>
     <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>

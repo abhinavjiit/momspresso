@@ -728,6 +728,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
 
     <string name="all_categories_label">ALL</string>
+    <string name="view_more_profile">view more</string>
+    <string name="campaign_maybe_later_text">Maybe later</string>
 
     <string name="language_label.english">English</string>
     <string name="language_label.hindi">हिंदी</string>
@@ -737,6 +739,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="language_label.telegu">తెలుగు</string>
     <string name="language_label.kannada">ಕನ್ನಡ</string>
     <string name="language_label.malayalam">മലയാളം</string>
+    <string name="language_label.gujrati">ગુજરાતી </string>
+
 
     <string name="choose_pref_lang">Choose your preferred language</string>
     <string name="choose_pref_lang.cancel">CANCEL</string>
@@ -843,6 +847,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.sections.videos">VIDEOS</string>
     <string name="groups.sections.top_posts">TOP POSTS</string>
     <string name="groups_sections_polls">POLLS</string>
+    <string name="groups_sections_ask">ASK AN EXPERT</string>
     <string name="groups_sections_myfeed">My Feed</string>
     <string name="groups.search_in">Search</string>
     <string name="groups.join_form">JOINING FORM</string>
