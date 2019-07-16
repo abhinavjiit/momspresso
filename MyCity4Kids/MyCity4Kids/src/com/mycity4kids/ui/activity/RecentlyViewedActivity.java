@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kelltontech.network.Response;
@@ -35,6 +36,7 @@ public class RecentlyViewedActivity extends BaseActivity {
     private BusinessListingAdapterevent eventAdapeter;
     private BusinessListingAdapter kidsResourcesAdapeter;
     private ArrayList<BusinessDataListing> mBusinessDataListings = new ArrayList<>();
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class RecentlyViewedActivity extends BaseActivity {
 //                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //            }
             setContentView(R.layout.recently_view_activity);
+            root = findViewById(R.id.businessRoot);
+            ((BaseApplication) getApplication()).setView(root);
             ((BaseApplication) getApplication()).setActivity(this);
 
             mToolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -89,11 +89,14 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     private String extension;
     private ImageView mImgCancelUpload;
     private com.google.firebase.storage.UploadTask uploadTask;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_upload_progress_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(this, "VideoUploadScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

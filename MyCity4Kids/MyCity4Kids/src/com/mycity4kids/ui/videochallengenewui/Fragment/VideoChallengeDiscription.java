@@ -57,7 +57,7 @@ public class VideoChallengeDiscription extends Fragment implements View.OnClickL
         if (!StringUtils.isNullOrEmpty(challengeRules)) {
             webView.loadData(challengeRules, "text/html", "UTF-8");
         }
-        Utils.momVlogEvent(getActivity(), "Challenge detail", "About", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge__detail", "", "");
+        Utils.momVlogEvent(getActivity(), "Challenge detail", "About", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Challenge_Detail", "", "");
 
         return view;
     }

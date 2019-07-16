@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -53,12 +54,15 @@ public class SuggestedTopicsActivity extends BaseActivity {
     private Toolbar toolbar;
     int tabPosition = 0;
     String lang;
+    private LinearLayout root;
 
     @Nullable
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suggested_topics_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

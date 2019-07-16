@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -75,11 +76,13 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     ArrayList<String> Display_Name, videoDisplay_Name;
     private int num_of_categorys;
     private TopicsResponse res;
+    private CoordinatorLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_listing_activity);
+        root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
@@ -215,6 +218,12 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 }
             });
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((BaseApplication) getApplication()).setView(root);
     }
 
     private void initializeUI() {

@@ -74,11 +74,14 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     private LinkedTreeMap<String, String> questionMap;
     private boolean pendingMembershipFlag;
     private boolean loopHoleFlag;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_summary_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(this, "GroupSummaryScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());

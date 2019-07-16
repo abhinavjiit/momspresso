@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -63,11 +64,14 @@ public class AddGroupVideoPostActivity extends BaseActivity implements View.OnCl
     Uri contentURI;
     private Uri mutedUri;
     private EasyVideoPlayer player;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_group_video_post_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(this, "CreateVideoScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

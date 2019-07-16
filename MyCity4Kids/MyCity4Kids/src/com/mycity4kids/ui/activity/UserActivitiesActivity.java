@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -24,11 +25,14 @@ public class UserActivitiesActivity extends BaseActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private UserActivitiesPagerAdapter adapter;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activities_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

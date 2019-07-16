@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kelltontech.network.Response;
@@ -24,11 +25,14 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
     private BubblePageIndicator dotIndicatorView;
     private TextView signinTextView;
     private TextView getStartedTextView;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(TutorialActivity.this, "OnboardingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

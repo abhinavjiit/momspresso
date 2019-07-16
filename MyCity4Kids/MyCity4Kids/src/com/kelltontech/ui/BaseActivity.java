@@ -5,7 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PixelFormat;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,15 +18,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -103,6 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     private WindowManager mWindowManager;
     private DisplayMetrics displayMetrics;
     private boolean permissionGranted;
+    private Snackbar snackbar;
 
 
     @Override
@@ -111,9 +111,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         displayMetrics = getResources().getDisplayMetrics();
         width = displayMetrics.widthPixels;
         baseApplication = (BaseApplication) getApplication();
-        if (BaseApplication.getInstance().isAskPermission()) {
+        /*if (BaseApplication.getInstance().isAskPermission()) {
             checkDrawOverlayPermission();
-        }
+        }*/
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
         //   if (SharedPrefUtils.isPermissionGranted(this)) {
@@ -188,7 +188,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 public void run() {
 
                     try {
-                        if (layout == null) {
+                        /*if (layout == null) {
                             LayoutInflater inflater = getLayoutInflater();
                             layout = inflater.inflate(R.layout.dialog_socket_notification, null);
                             int LAYOUT_FLAG;
@@ -251,7 +251,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                                     layout = null;
                                 }
                             }, 5000);
-                        }
+                        }*/
+                        Snackbar snackbar = showSnackbar(60000);
+                        snackbar.show();
                     } catch (Exception e) {
 
                     }
@@ -260,6 +262,60 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             });
         }
     };
+
+    private Snackbar showSnackbar(int duration) { // Create the Snackbar
+        snackbar = Snackbar.make(BaseApplication.getInstance().getView(), "", duration);
+        // 15 is margin from all the sides for snackbar
+        int marginFromSides = 0;
+
+        height = displayMetrics.heightPixels;
+        height = (int) (height * 0.22);
+
+        //inflate view
+        View snackView = getLayoutInflater().inflate(R.layout.dialog_socket_notification, null);
+
+        // White background
+        snackbar.getView().setBackgroundColor(Color.TRANSPARENT);
+        // for rounded edges
+//        snackbar.getView().setBackground(getResources().getDrawable(R.drawable.round_edges));
+
+        Snackbar.SnackbarLayout snackBarView = (Snackbar.SnackbarLayout) snackbar.getView();
+        FrameLayout.LayoutParams parentParams = (FrameLayout.LayoutParams) snackBarView.getLayoutParams();
+        parentParams.setMargins(marginFromSides, 0, marginFromSides, marginFromSides);
+        parentParams.height = (int) height;
+        parentParams.width = FrameLayout.LayoutParams.WRAP_CONTENT;
+        snackBarView.setLayoutParams(parentParams);
+
+        snackBarView.addView(snackView, 0);
+        TextView textTitle = snackView.findViewById(R.id.textbody);
+        TextView textAuthor = snackView.findViewById(R.id.textUpdate);
+        RelativeLayout bottomSheet = snackView.findViewById(R.id.bottom_sheet);
+        ImageView cross = snackView.findViewById(R.id.cross);
+        ImageView image = snackView.findViewById(R.id.image);
+
+        textTitle.setText(body);
+        textAuthor.setText(title);
+        if (!image_url.isEmpty()) {
+            Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
+                    .error(R.drawable.article_default).into(image);
+        } else {
+            image.setVisibility(View.GONE);
+        }
+        cross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackbar.dismiss();
+            }
+        });
+        bottomSheet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackbar.dismiss();
+                setPubSub();
+            }
+        });
+        return snackbar;
+    }
 
     private void setPubSub() {
         if (type.equalsIgnoreCase("article_details")) {
@@ -819,11 +875,11 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     @Override
     protected void onStop() {
         super.onStop();
-        if (layout != null) {
+        /*if (layout != null) {
             layout.setVisibility(View.GONE);
             mWindowManager.removeView(layout);
             layout = null;
-        }
+        }*/
         //  AnalyticsHelper.onActivityStop(this);
         if (!isScrInFg || !isChangeScrFg) {
             isAppInFg = false;
@@ -853,11 +909,11 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             mSocket.off(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
             mSocket.disconnect();
         }
-        if (layout != null) {
+        /*if (layout != null) {
             layout.setVisibility(View.GONE);
             mWindowManager.removeView(layout);
             layout = null;
-        }
+        }*/
     }
 
     @Override
@@ -871,11 +927,14 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     protected void onPause() {
         super.onPause();
         comScore.onExitForeground();
-        if (layout != null) {
+        if (snackbar != null){
+            snackbar.dismiss();
+        }
+        /*if (layout != null) {
             layout.setVisibility(View.GONE);
             mWindowManager.removeView(layout);
             layout = null;
-        }
+        }*/
     }
 
     @Override

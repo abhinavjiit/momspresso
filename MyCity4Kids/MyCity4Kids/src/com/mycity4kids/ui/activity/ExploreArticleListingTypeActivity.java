@@ -70,11 +70,14 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
     private TextView todaysBestTextView, editorsPickTextView, shortStoryTextView, forYouTextView, videosTextView, recentTextView;
     private TextView toolbarTitle;
     private TextView continueTextView;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.explore_article_listing_type_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         dynamoUserId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();

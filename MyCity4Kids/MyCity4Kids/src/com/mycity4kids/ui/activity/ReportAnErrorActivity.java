@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class ReportAnErrorActivity extends BaseActivity implements
     Toolbar mToolbar;
     ReportAnErrorAdapter _adapter;
     public ImageView separator;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class ReportAnErrorActivity extends BaseActivity implements
         Utils.pushOpenScreenEvent(ReportAnErrorActivity.this, "Report Error Info", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         setContentView(R.layout.activity_report_an_error);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

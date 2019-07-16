@@ -74,11 +74,14 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
     ShimmerFrameLayout cityshimmerFragment;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.best_in_your_city_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         cityshimmerFragment = (ShimmerFrameLayout) findViewById(R.id.shimmer_city_article_listing);

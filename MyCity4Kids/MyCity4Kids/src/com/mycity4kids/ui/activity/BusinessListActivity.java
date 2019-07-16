@@ -86,6 +86,7 @@ public class BusinessListActivity extends BaseActivity implements OnClickListene
     private int selected_index_filter = 0;
     private int selected_index_sort = 0;
     private GetFilterAdapter filterAdapter;
+    private RelativeLayout root;
 
     enum TabType {Filter, Sort}
 
@@ -105,6 +106,8 @@ public class BusinessListActivity extends BaseActivity implements OnClickListene
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.business_list_activitykidsres);
+            root = findViewById(R.id.businessRoot);
+            ((BaseApplication) getApplication()).setView(root);
             ((BaseApplication) getApplication()).setActivity(this);
 
             TextView _headerTxt = (TextView) findViewById(R.id.txvHeaderText);

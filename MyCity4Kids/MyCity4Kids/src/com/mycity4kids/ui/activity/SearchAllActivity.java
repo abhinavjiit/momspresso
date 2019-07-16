@@ -19,6 +19,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -60,6 +61,7 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout searchHistoryAndTrendContainer;
     private TextView userSearchHistory1TextView, userSearchHistory2TextView, trendingSearch1TextView, trendingSearch2TextView, trendingSearch3TextView;
     private View underline1, underline2, underline3, underline4, underline5;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,8 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
         Utils.pushOpenScreenEvent(this, "SearchScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         setContentView(R.layout.search_articles_authors_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         searchParam = getIntent().getStringExtra(Constants.FILTER_NAME);

@@ -37,12 +37,15 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
     private RecyclerView languageRecyclerView;
 
     private LanguageSelectionRecyclerAdapter languageSelectionRecyclerAdapter;
+    private RelativeLayout root;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.language_selection_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(this, "LanguageSelectionScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

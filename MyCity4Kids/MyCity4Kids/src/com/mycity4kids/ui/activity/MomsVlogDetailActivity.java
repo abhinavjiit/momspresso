@@ -162,6 +162,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
     String streamUrl = "https://www.momspresso.com/new-videos/v1/test1/playlist.m3u8";
     private String taggedCategories;
     private MixpanelAPI mixpanel;
+    private RelativeLayout root;
 
 
     static {
@@ -173,6 +174,8 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_exo);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();

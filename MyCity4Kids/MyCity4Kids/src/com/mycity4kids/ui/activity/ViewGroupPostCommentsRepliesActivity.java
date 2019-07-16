@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -106,11 +107,14 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
     private int deleteCommentPos;
     private int deleteReplyPos;
     private TaskFragment mTaskFragment;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_post_comment_replies_dialog);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -137,11 +138,14 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
     private TextView lastSavedTextView;
     private Editor editor;
     private EditText titleEditText;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_editor_activity);
+        root = findViewById(R.id.rootLayout);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(NewEditorPostActivity.this, "CreateArticleScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

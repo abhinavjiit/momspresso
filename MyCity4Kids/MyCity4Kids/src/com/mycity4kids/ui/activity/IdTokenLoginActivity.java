@@ -89,12 +89,14 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
             "ya29.GluBBZK84Jf2IzfuVTKifGUdqbF86DdkNS3VPcDSXXb6GvnnQ2aPvaz0aQtMy8xVsT2nET3DnubHwlVxD4wHOp79C8kyVRjc1doBLBoCe7O8TRnCC74rRRKAwdml",
             "ya29.GltQBQ24qjfOqnyfwYQt0LVmffDEHRZkkPG6LZ7da3vfUdhIQX4NlYmFrxuq9nrqoy9ugEioadIqbQ0nhufpbAuuAcsk4tVLzt_em3iRnAybywMqsj8ZCPXEDrJw"
     };
-    private LinearLayout userContainer;
+    private LinearLayout userContainer, root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.id_token_login_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         idEditText = (EditText) findViewById(R.id.idEditText);

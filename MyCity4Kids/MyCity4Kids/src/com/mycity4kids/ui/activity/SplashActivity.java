@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.MobileAds;
@@ -107,6 +108,7 @@ public class SplashActivity extends BaseActivity {
     private View mLayout;
     private boolean shouldResumeSplash = false;
     MixpanelAPI mixpanel;
+    private RelativeLayout root;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -159,6 +161,8 @@ public class SplashActivity extends BaseActivity {
         try {
 
             setContentView(R.layout.splash_activity);
+            root = findViewById(R.id.rootLayout);
+            ((BaseApplication) getApplication()).setView(root);
             ((BaseApplication) getApplication()).setActivity(this);
 
             mLayout = findViewById(R.id.rootLayout);

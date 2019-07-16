@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -57,11 +58,14 @@ public class GroupsQuestionnaireActivity extends BaseActivity implements View.On
     private TextView joinGroupTextView;
     private ProgressBar progressBar;
     private HashMap<String, String> qMap;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_questioannaire_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

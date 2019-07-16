@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.crashlytics.android.Crashlytics
 import com.kelltontech.network.Response
@@ -38,10 +39,13 @@ class MyTotalEarningActivity : BaseActivity() {
     private lateinit var backIcon: ImageView
     private lateinit var paymentHistory: TextView
     private var totalPayoutResponse: ArrayList<AllCampaignTotalPayoutResponse.TotalPayoutResult> = arrayListOf()
+    private lateinit var root:LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_earning)
+        root = findViewById(R.id.root)
+        (application as BaseApplication).view = root
         (application as BaseApplication).activity = this
 
         totalPayout = intent.getIntExtra("totalPayout", 0)

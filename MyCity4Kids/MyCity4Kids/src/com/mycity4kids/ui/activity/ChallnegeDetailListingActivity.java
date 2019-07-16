@@ -129,12 +129,14 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     private String ssTopicsText;
     private TextView startWriting;
     private String challengeComingFrom;
+    private RelativeLayout root;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challnege_detail_listing);
+        root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
@@ -687,6 +689,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     @Override
     protected void onResume() {
         super.onResume();
+        ((BaseApplication) getApplication()).setView(root);
         //chooseLayout.setVisibility(View.INVISIBLE);
     }
 

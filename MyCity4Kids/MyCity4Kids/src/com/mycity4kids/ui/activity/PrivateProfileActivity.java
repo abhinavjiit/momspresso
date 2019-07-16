@@ -262,6 +262,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
     @Override
     protected void onResume() {
         super.onResume();
+        ((BaseApplication) getApplication()).setView(rootView);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -41,11 +42,14 @@ public class LanguageSpecificArticleListingActivity extends BaseActivity {
     private ViewPager languagesViewPager;
     private ImageView menuImageView;
     private TextView toolbarTitleTextView;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.language_specific_list_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

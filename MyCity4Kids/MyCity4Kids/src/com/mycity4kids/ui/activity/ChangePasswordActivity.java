@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,12 +38,15 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
     private EditText currentPasswordEditText, newPasswordEditText, confirmPasswordEditText;
     private TextView emailTextView, saveTextView;
     private Toolbar toolbar;
+    private RelativeLayout root;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.change_password_tab_fragment);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

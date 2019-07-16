@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -158,6 +159,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private ImageView groupImageView;
     private ImageView clearSearchImageView;
     private ImageView shareGroupImageView;
+    private CoordinatorLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +168,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         }
         setContentView(R.layout.group_details_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(this, "GroupDetailsScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());

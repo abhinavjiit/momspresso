@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.Window
+import android.widget.FrameLayout
 import android.widget.TextView
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
@@ -59,11 +60,13 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     private var arrayList = mutableListOf<Int>()
     private var comingFrom: String = "deeplink"
     private var fromNotification: Boolean = false
+    private lateinit var root: FrameLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("Activity", "onCreate")
 
         setContentView(R.layout.activity_campaign_container)
+        root = findViewById(R.id.container)
         (application as BaseApplication).activity = this
 
         deeplinkCampaignId = intent.getIntExtra("campaignID", -1)
@@ -112,6 +115,11 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             addCampaginDetailFragment(deeplinkCampaignId)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (application as BaseApplication).view = root
     }
 
     private fun campaignListFragment() {

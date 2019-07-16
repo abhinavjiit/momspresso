@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kelltontech.network.Response;
@@ -27,11 +28,14 @@ public class ExploreEventsResourcesActivity extends BaseActivity implements Frag
 
     Toolbar toolbar;
     TextView toolbarTitleTextView;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.explore_events_resources_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

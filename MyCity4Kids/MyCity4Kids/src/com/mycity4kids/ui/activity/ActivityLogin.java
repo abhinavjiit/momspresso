@@ -109,14 +109,16 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     FacebookAddEmailDialogFragment dialogFragment;
 
     private String loginMode = "";
-    private View mLayout;
+    private View mLayout,root;
     private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_loginform);
+        root = findViewById(R.id.content_frame);
         ((BaseApplication) getApplication()).setActivity(this);
+        ((BaseApplication) getApplication()).setView(root);
         Utils.pushOpenScreenEvent(this, "LoginSignUpScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().requestScopes(new Scope(Scopes.PLUS_ME))

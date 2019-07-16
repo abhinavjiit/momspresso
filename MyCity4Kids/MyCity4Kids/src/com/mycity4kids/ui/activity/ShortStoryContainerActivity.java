@@ -42,11 +42,14 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
     private RelativeLayout guideOverlay;
     private Toolbar guidetoolbar;
     private int currPos;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.short_story_container);
+        root = findViewById(R.id.content_frame);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -36,11 +37,14 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
     private ImageView closeEditorImageView;
     private GroupPostResult postData;
     private TextView publishTextView;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_edit_post_activity);
+        root = findViewById(R.id.rootLayout);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         postContentEditText = (EditText) findViewById(R.id.postContentEditText);

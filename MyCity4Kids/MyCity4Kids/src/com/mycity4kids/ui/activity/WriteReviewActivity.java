@@ -124,6 +124,7 @@ public class WriteReviewActivity extends BaseActivity implements IOnSubmitGaller
 
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             rootLayout = findViewById(R.id.rootLayout);
+            ((BaseApplication) getApplication()).setView(rootLayout);
 
             setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

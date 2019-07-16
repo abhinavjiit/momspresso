@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -13,7 +12,6 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ShareCompat
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -31,7 +29,6 @@ import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
 import com.mycity4kids.models.BaseResponseModel
-import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.campaignmodels.CampaignDetailResult
 import com.mycity4kids.models.campaignmodels.ParticipateCampaignResponse
@@ -40,14 +37,11 @@ import com.mycity4kids.models.request.CampaignReferral
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
-import com.mycity4kids.ui.activity.EditProfileNewActivity
 import com.mycity4kids.ui.adapter.CampaignDetailAdapter
-import com.mycity4kids.ui.adapter.RewardCampaignAdapter
 import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.mymoneytracker.activity.TrackerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
-import com.mycity4kids.utils.EndlessScrollListener
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -96,6 +90,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var referCodeApply: TextView
     private lateinit var referCodeError: TextView
     private lateinit var viewLine: View
+    private lateinit var getHelp: TextView
     private lateinit var referCodeHeader: TextView
     private lateinit var readThisBox: LinearLayout
     private var forYouStatus: Int = 0
@@ -155,6 +150,12 @@ class CampaignDetailFragment : BaseFragment() {
             }
         }
 
+        getHelp.setOnClickListener {
+            val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "support@momspresso-mymoney.com", null))
+            startActivity(Intent.createChooser(emailIntent, "Send email..."))
+        }
+
         ((containerView.findViewById<TextView>(R.id.txtTrackerStatus)).setOnClickListener {
             var intent = Intent(activity, TrackerActivity::class.java)
             intent.putExtra("campaign_id", id!!)
@@ -168,6 +169,8 @@ class CampaignDetailFragment : BaseFragment() {
         referCodeApply.setOnClickListener {
             applyCode()
         }
+
+
 
         referCode.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -222,8 +225,9 @@ class CampaignDetailFragment : BaseFragment() {
         referCodeApply = containerView.findViewById(R.id.refer_code_apply)
         referCodeError = containerView.findViewById(R.id.refer_code_error)
         referCodeHeader = containerView.findViewById(R.id.refer_header)
-        viewLine = containerView.findViewById(R.id.view_6)
+        viewLine = containerView.findViewById(R.id.view_7)
         readThisBox = containerView.findViewById(R.id.read_this_box)
+        getHelp = containerView.findViewById(R.id.get_help)
     }
 
     private fun fetchCampaignDetail() {

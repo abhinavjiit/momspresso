@@ -283,6 +283,11 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((BaseApplication) getApplication()).setView(mLayout);
+    }
 
     @Override
     protected void updateUi(Response response) {

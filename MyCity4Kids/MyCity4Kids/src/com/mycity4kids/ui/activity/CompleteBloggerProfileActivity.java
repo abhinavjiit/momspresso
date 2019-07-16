@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -58,11 +59,14 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
     private static TextView dobTextView;
     private TextView saveTextView;
     private ProgressBar progressBar;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.complete_blogger_profile_activity);
+        root = findViewById(R.id.rootLayout);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         childInfoContainer = (LinearLayout) findViewById(R.id.childInfoContainer);

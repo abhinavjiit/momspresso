@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -72,6 +73,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
 
     private AddArticleTopicsPagerAdapter adapter;
     private String userAgent;
+    private RelativeLayout root;
 
     /**
      * Called when the activity is first created.
@@ -81,6 +83,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         super.onCreate(icicle);
         Utils.pushOpenScreenEvent(this, "AddTagScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         setContentView(R.layout.add_article_topics_activity_new);
+        root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -200,6 +203,12 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 clearTopicsSelection();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((BaseApplication) getApplication()).setView(root);
     }
 
     /*

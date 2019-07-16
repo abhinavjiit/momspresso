@@ -128,14 +128,18 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         String allCategoryLabel = "";
         if (isAdded()) {
-            allCategoryLabel = getString(R.string.all_categories_label);
+            allCategoryLabel = getString(R.string.home_screen_trending_title);
         } else {
-            allCategoryLabel = "All";
+            allCategoryLabel = getString(R.string.home_screen_trending_title);
         }
         tabLayout.addTab(tabLayout.newTab().setText(allCategoryLabel));
-        for (int i = 0; i < trendingArraylist.size(); i++) {
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_todays_best)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_editor_picks)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_for_you)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_recent)));
+        /*for (int i = 0; i < trendingArraylist.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(trendingArraylist.get(i).getDisplay_name()));
-        }
+        }*/
 //        tabLayout.post(new Runnable() {
 //            @Override
 //            public void run() {
@@ -156,7 +160,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         AppUtils.changeTabsFont(getActivity(), tabLayout);
         viewPager = (ViewPager) view.findViewById(R.id.pager);
         adapter = new TrendingTopicsPagerAdapter
-                (getChildFragmentManager(), tabLayout.getTabCount(), trendingArraylist);
+                (getChildFragmentManager(), tabLayout.getTabCount());
         adapter.setGroupInfo(gpHeading, gpSubHeading, gpImageUrl, groupId);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -173,19 +177,20 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                FragmentManager fm = getChildFragmentManager();
+                /*FragmentManager fm = getChildFragmentManager();
                 Fragment f = (Fragment) adapter.instantiateItem(viewPager, viewPager.getCurrentItem());
                 if (f != null) {
                     if (tab.getPosition() == 0) {
                         TrendingTopicsAllTabFragment fragment = (TrendingTopicsAllTabFragment) f;
                         if (null != fragment.getRecyclerView())
                             fragment.getRecyclerView().smoothScrollToPosition(0);
-                    } else {
+                    } *//*else {
                         TrendingTopicsTabFragment fragment = (TrendingTopicsTabFragment) f;
                         if (null != fragment.getRecyclerView())
                             fragment.getRecyclerView().smoothScrollToPosition(0);
-                    }
-                }
+                    }*//*
+                }*/
+                viewPager.setCurrentItem(tab.getPosition());
             }
         });
 

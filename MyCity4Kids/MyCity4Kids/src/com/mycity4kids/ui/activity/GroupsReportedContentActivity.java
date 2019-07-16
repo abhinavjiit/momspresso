@@ -61,11 +61,14 @@ public class GroupsReportedContentActivity extends BaseActivity implements View.
     private GroupsReportedContentRecyclerAdapter groupsReportedContentRecyclerAdapter;
     private GroupReportedContentResult selectedPost;
     private TextView noActionTextView, hideContentTextView, blockUserTextView;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_reported_content_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

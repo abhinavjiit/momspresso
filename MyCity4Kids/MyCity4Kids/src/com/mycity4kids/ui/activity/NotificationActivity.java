@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -17,11 +18,14 @@ import com.mycity4kids.ui.fragment.NotificationFragment;
 
 public class NotificationActivity extends BaseActivity {
     private Toolbar mToolbar;
+    private LinearLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

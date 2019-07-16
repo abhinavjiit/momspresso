@@ -216,7 +216,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             Intent intent = new Intent(this, ExoplayerVideoChallengePlayViewActivity.class);
             intent.putExtra("StreamUrl", selectedStreamUrl);
             startActivity(intent);
-            Utils.momVlogEvent(NewVideoChallengeActivity.this, "Challenge detail", "Prompt_video_play", "", "android", SharedPrefUtils.getAppLocale(NewVideoChallengeActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_detail", "", "");
+            Utils.momVlogEvent(NewVideoChallengeActivity.this, "Challenge detail", "Prompt_video_play", "", "android", SharedPrefUtils.getAppLocale(NewVideoChallengeActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", "", "");
 
         }
 

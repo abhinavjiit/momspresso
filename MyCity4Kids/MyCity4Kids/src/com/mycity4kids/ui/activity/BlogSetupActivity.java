@@ -131,6 +131,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         Utils.pushOpenScreenEvent(this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         mLayout = findViewById(R.id.rootLayout);
+        ((BaseApplication) getApplication()).setView(mLayout);
         introLinearLayout = (LinearLayout) findViewById(R.id.introLinearLayout);
         detailsRelativeLayout = (RelativeLayout) findViewById(R.id.detailsRelativeLayout);
         okayTextView = (TextView) findViewById(R.id.okayTextView);

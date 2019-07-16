@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -39,6 +40,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
     ProgressBar progressBar;
     TextView noResultTextView;
     Toolbar toolbar;
+    private RelativeLayout root;
 
     FollowerFollowingListAdapter followerFollowingListAdapter;
 
@@ -51,6 +53,8 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.follower_following_list_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         followListType = getIntent().getStringExtra(AppConstants.FOLLOW_LIST_TYPE);

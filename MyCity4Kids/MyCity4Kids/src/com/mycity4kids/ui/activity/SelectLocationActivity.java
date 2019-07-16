@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kelltontech.network.Response;
@@ -40,6 +41,7 @@ public class SelectLocationActivity extends BaseActivity implements FetchCity{
 	private String currentCity;
 	private ListView locationList;
 	private TextView headerText;
+	private RelativeLayout root;
 
 
 
@@ -47,6 +49,8 @@ public class SelectLocationActivity extends BaseActivity implements FetchCity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_select_location);
+		root = findViewById(R.id.root);
+		((BaseApplication) getApplication()).setView(root);
 		((BaseApplication) getApplication()).setActivity(this);
 
 		Utils.pushOpenScreenEvent(SelectLocationActivity.this, "Select Location", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

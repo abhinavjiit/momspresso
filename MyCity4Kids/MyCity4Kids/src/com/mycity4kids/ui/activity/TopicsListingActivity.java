@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -66,11 +67,14 @@ public class TopicsListingActivity extends BaseActivity {
     private BottomSheetBehavior sheetBehavior;
     private TextView textHeaderUpdate, textUpdate;
     public ImageView imageSortBy;
+    private CoordinatorLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_listing_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
