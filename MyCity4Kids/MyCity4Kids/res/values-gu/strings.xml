@@ -788,7 +788,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <!--<string name="groups.anonymous">ANONYMOUS</string>-->
     <!--<string name="groups.membership_request_msg">We have received your request for joining this group. Your membership will be confirmed once it is approved by the moderators of this group.</string>-->
 
-    <string name="groups.join_label">સમૂહ જેના તમે સભ્ય  છો </string>
+    <string name="groups.join_label">સમૂહ જેના તમે સભ્ય  છો</string>
     <string name="groups.reported_content">REPORTED CONTENT</string>
     <string name="groups.moderator_invitation">INVITE TO BE A MODERATOR</string>
     <string name="groups.unblock_member">UNBLOCK MEMBER</string>
