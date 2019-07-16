@@ -97,11 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     private Dialog dialog;
     private String userId, title = "", body = "", type = "", id = "", titleSlug = "", blogSlug = "", groupId = "", postId = "", responseId = "", campaignId = "", image_url = "", url = "";
     private int width, height;
-    public View layout;
-    private WindowManager.LayoutParams params;
-    private WindowManager mWindowManager;
     private DisplayMetrics displayMetrics;
-    private boolean permissionGranted;
     private Snackbar snackbar;
 
 
@@ -111,12 +107,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         displayMetrics = getResources().getDisplayMetrics();
         width = displayMetrics.widthPixels;
         baseApplication = (BaseApplication) getApplication();
-        /*if (BaseApplication.getInstance().isAskPermission()) {
-            checkDrawOverlayPermission();
-        }*/
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
-        //   if (SharedPrefUtils.isPermissionGranted(this)) {
         try {
             mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
             mSocket.on(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId(), onNewMessage);
@@ -126,31 +118,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         } catch (URISyntaxException e) {
 
         }
-        //}
     }
-
-    public void checkDrawOverlayPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(this)) {
-                BaseApplication.getInstance().setAskPermission(false);
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-            }
-        }
-    }
-
-
-    /*@TargetApi(Build.VERSION_CODES.M)
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
-            if (Settings.canDrawOverlays(this)) {
-                BaseApplication.getInstance().setAskPermission(false);
-                SharedPrefUtils.setPermissionGranted(BaseApplication.getAppContext(), true);
-            }
-
-        }
-    }*/
 
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
@@ -163,7 +131,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
 
                     try {
                         data = new JSONObject(args[0].toString());
-                        System.out.println("data--------" + data);
                         userId = data.getString("user_id");
                         title = data.getString("title");
                         body = data.getString("body");
@@ -188,70 +155,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
                 public void run() {
 
                     try {
-                        /*if (layout == null) {
-                            LayoutInflater inflater = getLayoutInflater();
-                            layout = inflater.inflate(R.layout.dialog_socket_notification, null);
-                            int LAYOUT_FLAG;
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-                            } else {
-                                LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
-                            }
-                            height = displayMetrics.heightPixels;
-                            height = (int) (height * 0.18);
-                            params = new WindowManager.LayoutParams(
-                                    WindowManager.LayoutParams.MATCH_PARENT,
-                                    height,
-                                    LAYOUT_FLAG,
-                                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                                    PixelFormat.TRANSLUCENT);
-                            params.gravity = Gravity.BOTTOM;
-                            mWindowManager = (WindowManager) BaseApplication.getInstance().getActivity().getSystemService(Context.WINDOW_SERVICE);
-                            mWindowManager.addView(layout, params);
-                            TextView textTitle = layout.findViewById(R.id.textbody);
-                            TextView textAuthor = layout.findViewById(R.id.textUpdate);
-                            RelativeLayout bottomSheet = layout.findViewById(R.id.bottom_sheet);
-                            ImageView cross = layout.findViewById(R.id.cross);
-                            ImageView image = layout.findViewById(R.id.image);
-
-                            textTitle.setText(body);
-                            textAuthor.setText(title);
-                            if (!image_url.isEmpty()) {
-                                Picasso.with(BaseActivity.this).load(image_url).placeholder(R.drawable.article_default)
-                                        .error(R.drawable.article_default).into(image);
-                            } else {
-                                image.setVisibility(View.GONE);
-                            }
-                            bottomSheet.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (layout != null) {
-                                        layout.setVisibility(View.GONE);
-                                    }
-                                    layout = null;
-                                    setPubSub();
-                                }
-                            });
-                            cross.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (layout != null) {
-                                        layout.setVisibility(View.GONE);
-                                    }
-                                    layout = null;
-                                }
-                            });
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (layout != null) {
-                                        layout.setVisibility(View.GONE);
-                                    }
-                                    layout = null;
-                                }
-                            }, 5000);
-                        }*/
                         Snackbar snackbar = showSnackbar(60000);
                         snackbar.show();
                     } catch (Exception e) {
@@ -273,11 +176,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
 
         //inflate view
         View snackView = getLayoutInflater().inflate(R.layout.dialog_socket_notification, null);
-
-        // White background
         snackbar.getView().setBackgroundColor(Color.TRANSPARENT);
-        // for rounded edges
-//        snackbar.getView().setBackground(getResources().getDrawable(R.drawable.round_edges));
 
         Snackbar.SnackbarLayout snackBarView = (Snackbar.SnackbarLayout) snackbar.getView();
         FrameLayout.LayoutParams parentParams = (FrameLayout.LayoutParams) snackBarView.getLayoutParams();
@@ -875,11 +774,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     @Override
     protected void onStop() {
         super.onStop();
-        /*if (layout != null) {
-            layout.setVisibility(View.GONE);
-            mWindowManager.removeView(layout);
-            layout = null;
-        }*/
         //  AnalyticsHelper.onActivityStop(this);
         if (!isScrInFg || !isChangeScrFg) {
             isAppInFg = false;
@@ -909,11 +803,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             mSocket.off(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
             mSocket.disconnect();
         }
-        /*if (layout != null) {
-            layout.setVisibility(View.GONE);
-            mWindowManager.removeView(layout);
-            layout = null;
-        }*/
     }
 
     @Override
@@ -930,11 +819,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         if (snackbar != null){
             snackbar.dismiss();
         }
-        /*if (layout != null) {
-            layout.setVisibility(View.GONE);
-            mWindowManager.removeView(layout);
-            layout = null;
-        }*/
     }
 
     @Override

@@ -2313,9 +2313,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }*/
 
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-                if (layout != null) {
-                    layout.setVisibility(View.GONE);
-                }
                 finish();
             } else {
                 super.onBackPressed();
