@@ -247,7 +247,7 @@
             <RelativeLayout
                 android:id="@+id/relative_profile_progress"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/userbioTextView"
                 android:background="@drawable/shape_round_rectangle"
                 android:visibility="invisible">

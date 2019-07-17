@@ -48,7 +48,10 @@ public class GroupMediaPostViewPagerAdapter extends PagerAdapter implements View
         final LayoutInflater inflater = (LayoutInflater) container.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View v = inflater.inflate(R.layout.group_media_pager_item, container, false);
         ImageView iv = (ImageView) v.findViewById(R.id.mediaImageView);
-        Picasso.with(context).load(mediaList.get(position)).error(R.drawable.default_article).into(iv);
+        if ( mediaList.get(position) != null && !mediaList.get(position).isEmpty())
+            Picasso.with(context).load(mediaList.get(position)).error(R.drawable.default_article).into(iv);
+        else
+            iv.setBackgroundResource(R.drawable.default_article);
         iv.setTag(position);
         iv.setOnClickListener(this);
         container.addView(v);

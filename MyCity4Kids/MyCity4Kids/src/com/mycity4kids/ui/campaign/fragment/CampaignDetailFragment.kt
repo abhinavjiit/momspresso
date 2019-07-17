@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ShareCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -93,6 +94,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var getHelp: TextView
     private lateinit var referCodeHeader: TextView
     private lateinit var readThisBox: LinearLayout
+    private lateinit var detail_recyclerview: RecyclerView
     private var forYouStatus: Int = 0
     private var userId: String? = null
     private val urlPattern = Pattern.compile(
@@ -228,6 +230,7 @@ class CampaignDetailFragment : BaseFragment() {
         viewLine = containerView.findViewById(R.id.view_7)
         readThisBox = containerView.findViewById(R.id.read_this_box)
         getHelp = containerView.findViewById(R.id.get_help)
+        detail_recyclerview = containerView.findViewById(R.id.detail_recyclerview)
     }
 
     private fun fetchCampaignDetail() {
