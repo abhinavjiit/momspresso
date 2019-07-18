@@ -120,6 +120,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     private String comingFrom = "Normal";
     private String blogTitle;
     private String email;
+    private int MY_PERMISSION_LOCATION = 10001;
 
 
     @Override
@@ -484,6 +485,18 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
+        } else if (requestCode == MY_PERMISSION_LOCATION) {
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(mLayout, R.string.permission_location_rationale,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                saveCityData();
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -629,7 +642,25 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 String status = blogUpdateJson.getString("status");
                 if (code == 200 && Constants.SUCCESS.equals(status)) {
                     Utils.pushBlogSetupSuccessEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
-                    saveCityData();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && BlogSetupActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && BlogSetupActivity.this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_LOCATION);
+                    } else {
+                        saveCityData();
+                    }
+
+
+                    /*if (Build.VERSION.SDK_INT >= 23) {
+                        if (ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED
+                                || ActivityCompat.checkSelfPermission(BlogSetupActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED) {
+                            saveCityData();
+                        } else {
+                            saveCityData();
+                        }
+                    } else {
+                        saveCityData();
+                    }*/
                 } else {
                     showToast("" + blogUpdateJson.getString("reason"));
                 }

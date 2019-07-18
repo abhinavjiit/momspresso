@@ -24,7 +24,7 @@ public class Topics implements Parcelable {
     private String parentName;
     private boolean isSelected;
     private String slug;
-    private List<ExtraData> extraData;
+    private List<ExtraData> extraData = new ArrayList<>();
     private String sponsoredCategoryImage;
     private String sponsoredCategoryBadge;
 
