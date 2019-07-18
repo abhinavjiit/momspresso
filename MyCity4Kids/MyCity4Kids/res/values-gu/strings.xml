@@ -158,8 +158,8 @@
     <string name="ad.comments.title">ટીપ્પણી </string>
     <string name="ad.comments.no_comments">NO COMMENTS ADDED</string>
     <string name="ad.comments.view_comment">ટીપ્પણી </string>
-    <string name="ad.comments.fb_comment">ફેસબુક ટીપ્પણી </string>
-    <string name="ad.comments.edit_label">સંપાદિત કરો </string>
+    <string name="ad.comments.fb_comment">ફેસબુક ટીપ્પણી</string>
+    <string name="ad.comments.edit_label">સંપાદિત કરો</string>
     <string name="ad.comments.save">સેવ </string>
     <string name="ad.comments.toast_empty_comment">Please enter some valid text.</string>
     <string name="ad.comments.toolbar.title">COMMENTS</string>
