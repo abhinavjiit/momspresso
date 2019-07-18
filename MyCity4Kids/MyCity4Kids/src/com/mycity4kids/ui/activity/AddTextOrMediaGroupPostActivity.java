@@ -289,6 +289,12 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        ((BaseApplication) getApplication()).setView(mLayout);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.closeEditorImageView:

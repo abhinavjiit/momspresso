@@ -37,6 +37,7 @@ public class BlogFilterActivity extends BaseActivity implements View.OnClickList
         ((BaseApplication) getApplication()).setActivity(this);
 
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
+        ((BaseApplication) getApplication()).setView(rootLayout);
         rankName = (TextView) findViewById(R.id.rank_name);
         blogger = (TextView) findViewById(R.id.bloggers);
         expert = (TextView) findViewById(R.id.experts);

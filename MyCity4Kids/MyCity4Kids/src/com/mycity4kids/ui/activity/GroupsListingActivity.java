@@ -70,11 +70,13 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     ArrayList<GroupResult> remainList = new ArrayList<>();
     private String comingFrom = "";
     private ImageView audioImageView, closeImageView, suggestedTopicImageView, writeArticleImageView;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups_listing_activity);
+        root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
@@ -148,6 +150,12 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             toolbarTitle.setText(getString(R.string.groups_all_groups));
             Utils.pushOpenScreenEvent(this, "AllGroupsListingScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((BaseApplication) getApplication()).setView(root);
     }
 
     private void getJoinedGroupListApi(int skip, int limit) {

@@ -9,8 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/space_20"
-        android:layout_marginRight="@dimen/space_20"
         android:background="@drawable/shape_shadow_rectangle">
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -49,7 +47,7 @@
             android:layout_marginRight="20dp"
             android:layout_toRightOf="@+id/image"
             android:textColor="@color/campaign_515151"
-            android:textSize="16sp"
+            android:textSize="14sp"
             app:fontName="oswald_regular.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView

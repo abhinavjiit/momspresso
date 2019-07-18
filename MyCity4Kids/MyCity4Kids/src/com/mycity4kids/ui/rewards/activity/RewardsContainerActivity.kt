@@ -18,6 +18,7 @@ import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
 import android.R.id.message
 import android.util.Log
+import android.widget.RelativeLayout
 import android.widget.Toast
 import com.mycity4kids.MessageEvent
 import com.mycity4kids.application.BaseApplication
@@ -85,10 +86,14 @@ class RewardsContainerActivity : BaseActivity(),
     private var pageLimit: Int? = null
     private var pageNumber: Int? = null
     private var isComingfromCampaign = false
+    private lateinit var root: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rewards_container)
+        root = findViewById(R.id.dash_root)
+        (application as BaseApplication).view = root
+
         (application as BaseApplication).activity = this
 
         if (intent != null) {

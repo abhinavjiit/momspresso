@@ -107,6 +107,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         ((BaseApplication) getApplication()).setActivity(this);
 
         mLayout = findViewById(R.id.rootView);
+        ((BaseApplication) getApplication()).setView(mLayout);
         addChoiceTextView = (TextView) findViewById(R.id.addChoiceTextView);
         publishTextView = (TextView) findViewById(R.id.publishTextView);
         togglePollOptionImageView = (ImageView) findViewById(R.id.togglePollOptionImageView);

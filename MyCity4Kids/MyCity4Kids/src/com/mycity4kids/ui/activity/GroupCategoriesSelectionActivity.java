@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -73,11 +74,14 @@ public class GroupCategoriesSelectionActivity extends BaseActivity implements Vi
     private ArrayList<GroupsCategoryMappingResult> groupCategoriesList;
     private AddArticleTopicsPagerAdapter adapter;
     private ViewPager viewPager;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_article_topics_activity_new);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();

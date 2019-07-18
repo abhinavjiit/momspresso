@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity;
 
 import android.Manifest;
+import android.accounts.NetworkErrorException;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,16 +30,20 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.videochallengenewui.Adapter.VideoChallengeTopicsAdapter;
@@ -118,6 +123,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
         if (comingFrom.equals("Challenge")) {
             challengeId = intent.getStringExtra("selectedId");
             challengeName = intent.getStringExtra("selectedName");
+
         } else if (comingFrom.equals("createDashboardIcon")) {
 
             //        Bundle extras = getIntent().getExtras();
@@ -125,6 +131,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                 jasonMyObject = intent.getStringExtra("currentChallengesTopic");
 
             }
+            getChallengeData();
             videoChallengeTopics = new Gson().fromJson(jasonMyObject, Topics.class);
             categoriesTextView.setVisibility(View.VISIBLE);
             challengesTextView.setVisibility(View.VISIBLE);
@@ -133,7 +140,6 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             horizontalRecyclerViewForVideoChallenge.setLayoutManager(linearLayoutManager);
             videoChallengeTopicsAdapter = new VideoChallengeTopicsAdapter(this, this, challenge_Id, Display_Name, activeImageUrl, activeStreamUrl, info);
             horizontalRecyclerViewForVideoChallenge.setAdapter(videoChallengeTopicsAdapter);
-            videoChallengeTopicsAdapter.setData(videoChallengeTopics);
         } else {
             comingFrom = "notFromChallenge";
         }
@@ -228,6 +234,12 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((BaseApplication) getApplication()).setView(rootLayout);
     }
 
     public void launchAddVideoOptions() {
@@ -406,7 +418,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     }
 
     @Override
-    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info) {
+    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory) {
 
 
         switch (view.getId()) {
@@ -420,11 +432,12 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                 intent.putExtra("StreamUrl", activeStreamUrl);
                 intent.putExtra("topics", articledatamodelsnew.getParentName());
                 intent.putExtra("parentId", articledatamodelsnew.getParentId());
+                intent.putExtra("mappedCategory", mappedCategory);
                 intent.putExtra("StringUrl", activeImageUrl);
                 intent.putExtra("rules", info);
                 intent.putExtra("Topic", new Gson().toJson(articledatamodelsnew));
                 startActivity(intent);
-                Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Listing_challenge_container", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge__detail", "", challengeId.toString());
+                Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Listing_challenge_container", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Challenge_Detail", "", challengeId.toString());
 
                 break;
 
@@ -445,7 +458,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                             imageView.setOnClickListener(view2 -> dialog.dismiss());
 
                             dialog.show();
-                            Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Challenge_info", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge__detail", "", challengeId.toString());
+                            Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Challenge_info", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Challenge_Detail", "", challengeId.toString());
 
                         }
                     }
@@ -455,4 +468,53 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
 
 
     }
+
+
+    private void getChallengeData() {
+
+
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            return;
+        }
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<TopicsResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogChallenges();
+        callRecentVideoArticles.enqueue(vlogChallengeResponseCallBack);
+
+    }
+
+    private Callback<TopicsResponse> vlogChallengeResponseCallBack = new Callback<TopicsResponse>() {
+        @Override
+        public void onResponse(Call<TopicsResponse> call, retrofit2.Response<TopicsResponse> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                return;
+            }
+            if (response.isSuccessful()) {
+                try {
+                    TopicsResponse responseData = response.body();
+                    if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                        videoChallengeTopicsAdapter.setData(responseData.getData());
+                        videoChallengeTopicsAdapter.notifyDataSetChanged();
+
+
+                    }
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            }
+
+
+        }
+
+        @Override
+        public void onFailure(Call<TopicsResponse> call, Throwable t) {
+
+        }
+    };
 }

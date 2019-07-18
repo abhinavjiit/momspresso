@@ -24,9 +24,12 @@ public class Topics implements Parcelable {
     private String parentName;
     private boolean isSelected;
     private String slug;
+    private boolean prevKey = false;
     private List<ExtraData> extraData;
     private String sponsoredCategoryImage;
     private String sponsoredCategoryBadge;
+    private String is_live;
+    private String mapped_category;
 
     public static class ExtraData implements Parcelable {
         private Challenges challenge;
@@ -121,6 +124,16 @@ public class Topics implements Parcelable {
             private String imageUrl;
             private int type;
             private String desc;
+            private String is_live;
+            private String mapped_category;
+
+            public String getMapped_category() {
+                return mapped_category;
+            }
+
+            public void setMapped_category(String mapped_category) {
+                this.mapped_category = mapped_category;
+            }
 
             public String getRules() {
                 return rules;
@@ -180,6 +193,14 @@ public class Topics implements Parcelable {
                 return desc;
             }
 
+            public String getIs_live() {
+                return is_live;
+            }
+
+            public void setIs_live(String is_live) {
+                this.is_live = is_live;
+            }
+
             public void setDesc(String desc) {
                 this.desc = desc;
             }
@@ -191,6 +212,8 @@ public class Topics implements Parcelable {
                 type = in.readInt();
                 desc = in.readString();
                 rules = in.readString();
+                is_live = in.readString();
+                mapped_category = in.readString();
 
             }
 
@@ -202,6 +225,8 @@ public class Topics implements Parcelable {
                 dest.writeInt(type);
                 dest.writeString(desc);
                 dest.writeString(rules);
+                dest.writeString(is_live);
+                dest.writeString(mapped_category);
 
             }
 
@@ -281,6 +306,9 @@ public class Topics implements Parcelable {
         isSelected = in.readByte() != 0;
         slug = in.readString();
         in.readTypedList(this.extraData, ExtraData.CREATOR);
+        is_live = in.readString();
+        prevKey = in.readByte() != 0;
+        mapped_category = in.readString();
 
 
         //extraData = in.readParcelable(ExtraData.class.getClassLoader());
@@ -314,8 +342,24 @@ public class Topics implements Parcelable {
         return id;
     }
 
+    public String getMapped_category() {
+        return mapped_category;
+    }
+
+    public void setMapped_category(String mapped_category) {
+        this.mapped_category = mapped_category;
+    }
+
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getIs_live() {
+        return is_live;
+    }
+
+    public void setIs_live(String is_live) {
+        this.is_live = is_live;
     }
 
     public String getTitle() {
@@ -360,6 +404,14 @@ public class Topics implements Parcelable {
 
     public boolean isSelected() {
         return isSelected;
+    }
+
+    public boolean isPrevKey() {
+        return prevKey;
+    }
+
+    public void setPrevKey(boolean prevKey) {
+        this.prevKey = prevKey;
     }
 
     public void setIsSelected(boolean isSelected) {
@@ -419,6 +471,9 @@ public class Topics implements Parcelable {
         dest.writeByte((byte) (isSelected ? 1 : 0));
         dest.writeString(slug);
         dest.writeTypedList(extraData);
+        dest.writeString(is_live);
+        dest.writeByte((byte) (prevKey ? 1 : 0));
+        dest.writeString(mapped_category);
         //  dest.writeTypedList(extraData);
     }
 }

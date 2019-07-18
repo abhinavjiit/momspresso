@@ -106,11 +106,14 @@ public class HeaderChallengeVideoPlayActivity extends BaseActivity implements Vi
     String streamUrl = "";
     private String taggedCategories;
     private MixpanelAPI mixpanel;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.header_challenge_video_play_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);

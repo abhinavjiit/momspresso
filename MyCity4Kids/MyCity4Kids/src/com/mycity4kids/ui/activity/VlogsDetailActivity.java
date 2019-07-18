@@ -178,11 +178,14 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     private ImageView backNavigationImageView;
     private LinearLayout bottomToolbarLL;
     private TextView viewCommentsTextView;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vlogs_detail_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();

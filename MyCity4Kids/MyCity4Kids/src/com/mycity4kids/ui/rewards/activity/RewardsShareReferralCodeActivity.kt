@@ -37,6 +37,7 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
     private lateinit var layoutWhatsApp: RelativeLayout
     private var myClipboard: ClipboardManager? = null
     private var myClip: ClipData? = null
+    private lateinit var root:RelativeLayout
 
 
     override fun updateUi(response: Response?) {
@@ -44,6 +45,10 @@ class RewardsShareReferralCodeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.referral_code)
+        root = findViewById(R.id.root)
+        (application as BaseApplication).view = root
+        (application as BaseApplication).activity = this
+
         layoutFacebook = findViewById(R.id.layoutFacebook)
         layoutWhatsApp = findViewById(R.id.layoutWhatsApp)
         myClipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?

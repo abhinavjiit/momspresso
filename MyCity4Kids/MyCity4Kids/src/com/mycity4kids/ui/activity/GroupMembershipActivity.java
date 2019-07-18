@@ -52,11 +52,14 @@ public class GroupMembershipActivity extends BaseActivity implements View.OnClic
     private TextView blockUnblockUserTextView;
     private LinearLayout postSettingsContainer;
     private GroupsMembershipResult memberDetails;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_membership_request_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

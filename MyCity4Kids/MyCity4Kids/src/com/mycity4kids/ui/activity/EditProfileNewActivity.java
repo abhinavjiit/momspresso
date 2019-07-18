@@ -112,7 +112,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         ((BaseApplication) getApplication()).setActivity(this);
 
         rootView = findViewById(R.id.mainprofile_parent_layout);
-
+        ((BaseApplication) getApplication()).setView(rootView);
         viewPager = (ViewPager) findViewById(R.id.id_viewpager);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.id_tabs);

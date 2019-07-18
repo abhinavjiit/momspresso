@@ -37,19 +37,22 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
     private RecyclerView languageRecyclerView;
 
     private LanguageSelectionRecyclerAdapter languageSelectionRecyclerAdapter;
+    private RelativeLayout root;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.language_selection_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(this, "LanguageSelectionScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         languageRecyclerView = (RecyclerView) findViewById(R.id.languageRecyclerView);
         String[] langArray = {getString(R.string.language_label_english), getString(R.string.language_label_hindi), getString(R.string.language_label_marathi),
                 getString(R.string.language_label_bengali), getString(R.string.language_label_telegu), getString(R.string.language_label_tamil)
-                , getString(R.string.language_label_kannada), getString(R.string.language_label_malayalam)};
+                , getString(R.string.language_label_kannada), getString(R.string.language_label_malayalam), getString(R.string.language_label_gujrati)};
         ArrayList<String> langList = new ArrayList<String>(Arrays.asList(langArray));
 //        currentLangTextView = (TextView) findViewById(R.id.currentLangTextView);
 //        englishTextView = (TextView) findViewById(R.id.englishTextView);
@@ -230,6 +233,9 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 break;
             case 7:
                 selectedLang = AppConstants.LOCALE_MALAYALAM;
+                break;
+            case 8:
+                selectedLang = AppConstants.LOCAL_GUJRATI;
                 break;
             default:
                 continueTextView.setVisibility(View.GONE);

@@ -1,5 +1,7 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.ArticleReadTimeRequest;
@@ -51,9 +53,9 @@ public interface VlogsListingAndDetailsAPI {
 
     @GET("/user_history/v1/{userId}")
     Call<VlogsListingResponse> getAuthorsSeenVideos(@Path("userId") String userId,
-                                                        @Query("size") int size,
-                                                        @Query("chunks") int chunks,
-                                                        @Query("filter") String filter);
+                                                    @Query("size") int size,
+                                                    @Query("chunks") int chunks,
+                                                    @Query("filter") String filter);
 
     @GET("v2/videos/")
     Call<VlogsListingResponse> getVlogsList(@Query("start") int start,
@@ -76,6 +78,10 @@ public interface VlogsListingAndDetailsAPI {
                                                   @Query("end") int end,
                                                   @Query("sort") int sort,
                                                   @Query("type") int type*/);
+
+    @GET("/v1/categories/videochallenges/")
+    Call<TopicsResponse> getVlogChallenges();
+
 
     @GET("/v1/articles/doc/")
     Call<ArticleDetailResponse> getArticleDetailsFromWebservice(@Query("articleId") String articleId);

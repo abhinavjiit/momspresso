@@ -5,7 +5,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
+import com.googlecode.mp4parser.authoring.tracks.TextTrackImpl;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -27,11 +29,14 @@ public class MissingPlaceActivity extends BaseActivity {
 
     EditText businessEventName, contactNumber;
     Toolbar toolbar;
+    private LinearLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_missing_place);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(MissingPlaceActivity.this, "Add Missing Place", SharedPrefUtils.getUserDetailModel(this).getId() + "");

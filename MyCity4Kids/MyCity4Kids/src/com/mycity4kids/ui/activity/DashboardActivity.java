@@ -217,6 +217,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private View overLayChooseVideo;
     private String isRewardsAdded;
     private int lastActivieIndex = -1;
+    private FrameLayout root;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -229,9 +230,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        root = findViewById(R.id.dash_root);
 
         ((BaseApplication) getApplication()).setDashboardActivity(this);
         ((BaseApplication) getApplication()).setActivity(this);
+
 
         t = ((BaseApplication) getApplication()).getTracker(
                 BaseApplication.TrackerName.APP_TRACKER);
@@ -485,6 +488,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         langTextView.setText(getString(R.string.language_label_malayalam));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
+                    } else if (AppConstants.LOCAL_GUJRATI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                        langTextView.setText(getString(R.string.language_label_gujrati));
+
+                        selectedlangGuideTextView.setText(getString(R.string.language_label_gujrati));
                     } else {
                         langTextView.setText(getString(R.string.language_label_english));
 
@@ -534,6 +541,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     langTextView.setText(getString(R.string.language_label_malayalam));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
+                } else if (AppConstants.LOCAL_GUJRATI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_gujrati));
+
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_gujrati));
                 } else {
                     langTextView.setText(getString(R.string.language_label_english));
 
@@ -1623,6 +1634,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        ((BaseApplication) getApplication()).setView(root);
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
         if (topFragment instanceof FragmentMC4KHomeNew && SharedPrefUtils.isTopicSelectionChanged(this)) {
@@ -2309,9 +2321,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }*/
 
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-                if (layout != null) {
-                    layout.setVisibility(View.GONE);
-                }
                 finish();
             } else {
                 super.onBackPressed();
@@ -2781,7 +2790,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
                 }
                 langTextView.setVisibility(View.VISIBLE);
-                toolbarTitleTextView.setText(getString(R.string.home_screen_trending_title));
+                toolbarTitleTextView.setText(getString(R.string.navigation_bar_home));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);

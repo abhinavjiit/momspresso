@@ -153,6 +153,7 @@ public class VideoChallengeDetailListingActivity extends BaseActivity implements
         ((BaseApplication) getApplication()).setActivity(this);
 
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
+        ((BaseApplication) getApplication()).setView(rootLayout);
         /* writeAtricleCell = (RelativeLayout) findViewById(R.id.writeArticleCell);*/
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         listView = (ListView) findViewById(R.id.vlogsListView);

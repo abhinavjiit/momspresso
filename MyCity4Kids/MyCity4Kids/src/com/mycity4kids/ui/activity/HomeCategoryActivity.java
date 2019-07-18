@@ -36,6 +36,7 @@ public class HomeCategoryActivity extends BaseActivity implements OnClickListene
 	private HashMap<GroupCategoryModel,  ArrayList<CategoryModel>> categoryData;
 	private ImageView mBusinessSearch;
 	public LinearLayout mParentLout;
+	private LinearLayout root;
 
 
 	@Override
@@ -45,6 +46,8 @@ public class HomeCategoryActivity extends BaseActivity implements OnClickListene
 		try {
 
 			setContentView(R.layout.category_activity);
+			root = findViewById(R.id.root);
+			((BaseApplication) getApplication()).setView(root);
 			((BaseApplication) getApplication()).setActivity(this);
 
 

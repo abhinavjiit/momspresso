@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -73,11 +74,13 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
     private TextView followAuthorTextView;
     private boolean isRequestRunning = false;
     private TextView authorTypeTextView;
+    private ScrollView root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.public_profile_activity);
+        root = findViewById(R.id.rootView);
         ((BaseApplication) getApplication()).setActivity(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -121,6 +124,7 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
+        ((BaseApplication) getApplication()).setView(root);
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
 //            public void run() {

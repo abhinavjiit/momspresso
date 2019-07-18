@@ -87,11 +87,14 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     ArrayList<LanguageConfigModel> languageConfigModelArrayList;
     private String langKey = "0";
     private String dynamoUserId;
+    private RelativeLayout root;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parenting_blog_home);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(ContributorListActivity.this, "Contributor List", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

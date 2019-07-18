@@ -212,6 +212,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         ((BaseApplication) getApplication()).setActivity(this);
 
         rootLayout = findViewById(R.id.rootLayout);
+        ((BaseApplication) getApplication()).setView(rootLayout);
         density = getResources().getDisplayMetrics().density;
         findViewById(R.id.img_round).setOnClickListener(this);
         txvaddress = (TextView) findViewById(R.id.description);

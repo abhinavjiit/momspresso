@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -93,6 +94,7 @@ public class BaseApplication extends Application {
     private boolean askPermission = true;
     public static boolean isFirstSwipe = true;
     private Socket mSocket;
+    private View view;
 
     // Placeholder property ID.this was old which create by own account.
     //private static final String GA_PROPERTY_ID = "UA-50870780-1";
@@ -190,6 +192,16 @@ public class BaseApplication extends Application {
 
     public static void setFirstSwipe(boolean firstSwipe) {
         isFirstSwipe = firstSwipe;
+    }
+
+
+
+    public View getView() {
+        return view;
+    }
+
+    public void setView(View view) {
+        this.view = view;
     }
 
 

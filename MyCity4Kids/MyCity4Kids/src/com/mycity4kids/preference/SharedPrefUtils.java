@@ -123,7 +123,6 @@ public class SharedPrefUtils {
     private static final String LAST_LOGIN_TIMESTAMP = "lastLoginTimestamp";
     private static final String USER_SKIPPED_FOLLOW_TOPIC_FLAG = "userSkippedFollowTopicFlag";
     private static final String HAS_TOPIC_SELECTION_CHANGED = "topicSelectionChangeFlag";
-    private static final String PERMISSION_GRANTED = "permissionGranted";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -737,19 +736,6 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
         _editor.putBoolean(HAS_TOPIC_SELECTION_CHANGED, flag);
-        _editor.commit();
-    }
-
-    public static boolean isPermissionGranted(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        boolean flag = (_sharedPref.getBoolean(PERMISSION_GRANTED, false));
-        return flag;
-    }
-
-    public static void setPermissionGranted(Context pContext, boolean flag) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putBoolean(PERMISSION_GRANTED, flag);
         _editor.commit();
     }
 

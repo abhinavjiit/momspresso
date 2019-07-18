@@ -126,13 +126,13 @@
     <string name="new_cancel">રદ્દ કરો </string>
     <string name="load_error">Failed to load container</string>
     <string name="example_post_title_placeholder">Article Title</string>
-    <string name="example_post_content_placeholder">Share your story here…</string>
+    <string name="example_post_content_placeholder">તમારી વાર્તા અહીં શેયર કરો…</string>
 
     <string name="select_image">ઈમેજ પસંદ કરો </string>
     <string name="select_image_fail">Select an image (failure demo)</string>
     <string name="select_video">Select a video</string>
     <string name="select_video_fail">Select a video (failure demo)</string>
-    <string name="camera_pick">Take Picture From Camera</string>
+    <string name="camera_pick">કામેરા થી ફોટા પાડો </string>
 
     <string name="analytics.popup.last30days">Last 30 days</string>
     <string name="analytics.popup.customdates">Custom</string>
@@ -142,10 +142,12 @@
     <string name="analytics.popup.improve_rank">How can I improve my rank?</string>
     <string name="analytics.popup.improve_social">How can I improve my social share?</string>
 
-    <string name="videos.dialog.title">Choose a video to upload</string>
-    <string name="videos.upload_option.camera">Take video</string>
-    <string name="videos.upload_option.gallery">Choose from gallery</string>
-    <string name="videos.upload_option.cancel">રદ્દ કરો </string>
+    <string name="videos.dialog.title">પસંદ કરેલ વીડિઓ અપલોડ  કરો</string>
+    <string name="videos.upload_option.camera">વીડિઓ બનાઓ</string>
+    <string name="videos.upload_option.gallery">ગેલેરી માં થી પસંદ કરો</string>
+    <string name="videos.upload_option.cancel">રદ્દ કરો</string>
+    <string name="cancel">રદ્દ કરો</string>
+
 
     <string name="ad.swipe_tootip_text">SWIPE LEFT TO READ NEXT ARTICLE</string>
     <string name="ad.view_all_tags.text">સમગ્ર નિહાળો </string>
@@ -295,10 +297,10 @@
     <string name="confirmation_dialog.no">NO</string>
     <string name="confirmation_dialog.yes">YES</string>
 
-    <string name="editor.spell_check.title">Spellcheck</string>
-    <string name="editor.spell_check.message">Are you sure you have completed the spellcheck?</string>
-    <string name="editor.spell_check.no">NO</string>
-    <string name="editor.spell_check.continue">YES પ્રકાશિત કરવાનું ચાલુ રાખો</string>
+    <string name="editor.spell_check.title">જોડણી ચકાસો</string>
+    <string name="editor.spell_check.message">શું તમે ખાતરીપૂર્વક શબ્દ ચકાસણી કરી ??</string>
+    <string name="editor.spell_check.no">ના</string>
+    <string name="editor.spell_check.continue">હા  પ્રકાશિત કરવાનું ચાલુ રાખો</string>
     <string name="editor.banner.message">Blog in a language of your choice</string>
     <string name="editor.last_saved_at">Last saved at %1$s</string>
     <string name="editor.last_saved_on">Last saved on %1$s</string>
@@ -376,22 +378,22 @@
     <string name="onboarding_desc_array.tutorial_4.resources">સ્તોત્રો </string>
 
     <string name="onboarding.signin">સાઈન ઈન</string>
-    <string name="onboarding.already_member">Already a member?</string>
+    <string name="onboarding.already_member">પેહલેથી મેમ્બેર છો ?</string>
     <string name="onboarding.get_started">શરુ કરો	</string>
-    <string name="sign_in.welcome_back">WELCOME BACK</string>
-    <string name="sign_in.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
+    <string name="sign_in.welcome_back">ભલે પધાર્યા</string>
+    <string name="sign_in.desc">માતૃત્વ ના આનંદ ને શોધો. પ્રેરણા અને આશાઓ શોધવા અમારી મોમ કોમ્મુનીટી થી જોડાઓ.</string>
     <string name="sign_in.no_account">મેમ્બર નથી?</string>
     <string name="sign_in.sign_up_btn">સાઈન અપ </string>
 
     <string name="sign_up.welcome_back">સાઈન અપ</string>
-    <string name="sign_up.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
-    <string name="sign_up.already_account">Already have an account?\u0020</string>
+    <string name="sign_up.desc">માતૃત્વ ના આનંદ ને શોધો. પ્રેરણા અને આશાઓ શોધવા અમારી મોમ કોમ્મુનીટી થી જોડાઓ.</string>
+    <string name="sign_up.already_account">પેહલા થી ખાતું છે?</string>
     <string name="sign_up.sign_in_btn">સાઈનઈન</string>
 
-    <string name="login_email.login">LOGIN</string>
-    <string name="login_email.forgot_password">Forgot Password?</string>
+    <string name="login_email.login">લોગીન</string>
+    <string name="login_email.forgot_password">પાસવર્ડ યાદ નથી ?</string>
     <string name="login_email.username_hint">ઈ મેલ</string>
-    <string name="login_email.password_hint">Password</string>
+    <string name="login_email.password_hint">પાસવર્ડ</string>
 
 
     <string name="signin.login_via_facebook">ફેસબુક થી સાઈન ઈન</string>
@@ -474,7 +476,7 @@
 
     <string name="app_settings.edit_profile.hint_fn">First Name</string>
     <string name="app_settings.edit_profile.hint_ln">Last Name</string>
-    <string name="app_settings.edit_profile.hint_phone">Phone</string>
+    <string name="app_settings.edit_profile.hint_phone">ફોન</string>
     <string name="app_settings.edit_profile.describe_label">પોતાની જાત ને વર્ણવો</string>
     <string name="app_settings.edit_profile.blog_title_label">બ્લોગ હેડીંગ</string>
     <string name="app_settings.edit_profile.family_detail_label">પરિવાર ની વિગત </string>
@@ -486,7 +488,7 @@
     <string name="app_settings.edit_profile.update_success">User profile updated successfully</string>
     <string name="app_settings.edit_profile.toast_fn_empty">First Name cannot be empty</string>
     <string name="app_settings.edit_profile.toast_blog_title_empty">બ્લોગ શીર્ષક ખાલી ના રહી શકે </string>
-    <string name="app_settings.edit_profile.toast_user_bio_empty">Tell us ABOUT YOURSELF</string>
+    <string name="app_settings.edit_profile.toast_user_bio_empty">તમારા વિષે જણાવો</string>
     <string name="app_settings.edit_profile.toast_user_bio_max">Maximum limit for bio is</string>
     <string name="app_settings.edit_profile.toast_user_bio_words">શબ્દો</string>
     <string name="app_settings.edit_profile.toast_incorrect_date">Please enter a valid date for kids birthday</string>
@@ -499,18 +501,18 @@
     <string name="app_settings.edit_prefs.facebook">ફેસબુક</string>
     <string name="app_settings.edit_prefs.twitter">TWITTER</string>
     <string name="app_settings.edit_prefs.google">GOOGLE</string>
-    <string name="app_settings.edit_prefs.add">ADD</string>
+    <string name="app_settings.edit_prefs.add">જોડો</string>
     <string name="app_settings.edit_prefs.connected">CONNECTED</string>
     <string name="app_settings.edit_prefs.topics_interested">રસ ના વિષય</string>
-    <string name="app_settings.edit_prefs.add_topics">ADD TOPICS</string>
+    <string name="app_settings.edit_prefs.add_topics">વિષય જોડો</string>
     <string name="app_settings.edit_prefs.more_topics">વધુ...</string>
-    <string name="app_settings.edit_prefs.pref_lang">PREFERRED LANGUAGES</string>
+    <string name="app_settings.edit_prefs.pref_lang">પસંદ ની ભાષા</string>
     <string name="app_settings.edit_prefs.subscribe_top_reads">Subscribe to the Top Reads Of The Month</string>
     <string name="app_settings.edit_prefs.subscribe_trending_blog">Subscribe to the Trending Blog Of The Day</string>
     <string name="app_settings.edit_prefs.subscribe_momspresso">Subscribe to the Momspresso TV</string>
     <string name="app_settings.edit_prefs.subscribe_city_best">Subscribe to the Best In Your City</string>
 
-    <string name="app_settings.change_pass.hint_current_pass">Current Password</string>
+    <string name="app_settings.change_pass.hint_current_pass">વર્તમાન પાસવર્ડ </string>
     <string name="app_settings.change_pass.hint_new_pass">નવો પાસવર્ડ </string>
     <string name="app_settings.change_pass.hint_confirm_pass">પાસવર્ડ ની ખાતરી કરો</string>
     <string name="app_settings.change_pass.save">સેવ </string>
@@ -520,7 +522,7 @@
     <string name="app_settings.change_pass.pass_update_fail">Current password is incorrect</string>
     <string name="app_settings.change_pass.pass_update_success">Password updated successfully</string>
 
-    <string name="blog_setup.toolbar.title">SETUP A BLOG</string>
+    <string name="blog_setup.toolbar.title">બ્લોગ સેટ કરવો</string>
     <string name="blog_setup.get_started_label">LET\'S GET YOU STARTED FOR YOUR FIRST BLOG</string>
     <string name="blog_setup.one_time_label">બ્લોગ બનાવવું એક વાર નું કામ છે.</string>
     <string name="blog_setup.okay">ભલે </string>
@@ -528,7 +530,7 @@
     <string name="blog_setup.blog_title_desc">This is like a title of your digital book and encompasses a description of all your blog posts that you\'ll be publishing here. Eg: Mums diary, My monologue.</string>
     <string name="blog_setup.hint_blog_title">અહીં ટાઇપ કરો</string>
     <string name="blog_setup.about_yourself_label">તમારા વિષે</string>
-    <string name="blog_setup.about_desc">Tell the readers about yourself.</string>
+    <string name="blog_setup.about_desc">વાંચનારાઓને તમારા વિષે કહો.</string>
     <string name="blog_setup.profile_pic_label">પ્રોફાઈલ પિકચર</string>
     <string name="blog_setup.profile_pic_desc">This is visible to your readers and helps them associate with your writing.</string>
     <string name="blog_setup.your_details">તમારી વિગતો</string>
@@ -554,36 +556,32 @@
     <string name="ranking.followers_label">અનુયાયીઓ</string>
     <string name="ranking.in">અંદર</string>
     <string name="ranking.toast_start_end_date">Start date must be less than end date</string>
-
     <string name="editor.publish">પ્રકાશિત કરો</string>
-
     <string name="add_article_topics.toolbar.title">વિષય પસંદ કરો</string>
     <string name="add_article_topics.clear_all">બધું ભૂસી નાખો</string>
-    <string name="add_article_topics.min_topics">Please select atleast one topic to continue</string>
-    <string name="add_article_topics.max_topics">You can choose a maximum of 8 topics</string>
+    <string name="add_article_topics.min_topics">કૃપા કરી આગળ વધવા ઓછા માં ઓછો ૧ વિષય પસંદ</string>
+    <string name="add_article_topics.max_topics">તમે સર્વાધિક ૮ વિષય પસંદ કરી શકો છો</string>
     <string name="add_article_topics.apply">અરજી કરો</string>
-
     <string name="choose_article_image.toolbar.title">ઈમેજ પસંદ કરો</string>
-    <string name="choose_article_image.upload_photo">CLICK TO UPLOAD PHOTO</string>
+    <string name="choose_article_image.upload_photo">ફોટો અપલોડ કરવા ક્લિક કરો</string>
     <string name="choose_article_image.publish">પ્રકાશિત કરો</string>
-
     <string name="add_article_or_video.upload_video">વિડીઓ જોડો </string>
     <string name="add_article_or_video.write_article">WRITE AN ARTICLE</string>
     <string name="add_article_or_video.suggested_topic">શીર્ષક સુચન </string>
     <string name="add_article_or_video.become_blogger">બ્લોગર  બનો </string>
 
-    <string name="become_blogger.get_started">LET\'S GET STARTED</string>
+    <string name="become_blogger.get_started">ચાલો શરુ કરીએ </string>
     <string-array name="become_blogger_title_array">
-        <item>BECOME A BLOGGER</item>
-        <item>HOW CAN YOU CONTRIBUTE?</item>
+        <item>બ્લોગર બનો </item>
+        <item>તમે કેવી રીતે ફાળો આપી શકો ?</item>
         <item>શું તમને મળે છે તમારા યોગદાન માટે વળતર?</item>
-        <item>WHO CAN CONTRIBUTE?</item>
+        <item>કોણ ફાળો આપી શકે છે ?</item>
     </string-array>
     <string-array name="become_blogger_desc_array">
-        <item>You are one click away from sharing your thoughts, opinions, and stories on India\'s largest parenting community, in the language of your choice. With a reach of over 8 million Mums per month, your voice can be the source of hope, inspiration, comfort and knowledge.</item>
+        <item>તમે એક ક્લિક દુર છો પોતાના વિચાર, અભીપ્રાય  અને વાર્તાઓ; પોતાની પસંદગી ની ભાષા માં  ભારત ની  સવ થી મોટી પાલક કોમ્મ્યુંનીટી જોડે વેહ્ચવા થી.જેની પોહોચ દર મહીને ૮૦ લાખ માતાઓ સુધી છે. તમારો સાદ બની શકે છે આશા, પ્રેરણા, સંભાળ અને જ્ઞાન નો સ્તોત્ર. .</item>
         <item>તમે તમારા  પેરેન્ટીંગ વિશેના લેખો -- દ્વારા શેર કરી શકો છો વેબસાઈટ  કે અમારું  આઈઓસ  અને  એન્ડ્રોઇડ . એપ. તમારી મનની વાત તમારી ભાષામાં રજૂ કરો. - ઈંગલીશ, હિન્દી બંગાળી, મરાઠી, તેલુગુ, તમિલ, કન્નડા કે પછી મલયાલમ </item>
-        <item>Momspresso does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
-        <item>Whether your story is about parenthood, womanhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 5000+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
+        <item>મોમ્સ્પ્રેસ્સો બધા બ્લોગેર ને પોતાની પોસ્ટ પ્રકાશિત કરવા પર પગાર બાધ્ય નથી. અમે પગાર દાર લખાણ ના નમુના જરૂર લખાવીયે છે  જે કે બ્રાંડ દ્વારા નક્કી થઇ છે. આ બ્લોગેર ને તેની લખાણ ની ઉત્તમતા થી આપવામાં આવે છે.</item>
+        <item>તમારી વાર્તા ભલે લાલન પાલન પર, સ્ત્રીત્વ પર,સંબંધો પર, લડત પર, પ્રસન્નતા પર કા જાતીય સ્વાસ્થ્ય પર હોય, આજ  મંચ છે લખવા માટે. ૫૦૦૦+માતાઓ થી જોડાઓ સલાહ, વિચાર અને ભલામણ  ની લે વેહ્ચ થી. કોપી કરેલ લેખ કાં તો અમુક બદલાવો સાથે પ્રકાશિત કરેલ જુના લેખો થી દુર રહો.</item>
     </string-array>
 
     <string name="upload_video.title">SHARE A MomVlog\n THAT CAPTURES #MOMLIFE</string>
@@ -613,18 +611,18 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
 
     <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
-    <string name="add_video_details.mute_label">MUTE SOUND</string>
+    <string name="add_video_details.mute_label">અવાજ બંદ</string>
     <string name="add_video_details.add_music">ADD MUSIC</string>
     <string name="add_video_details.remove">REMOVE</string>
     <string name="add_video_details.error_empty_title">Please enter the title of the video</string>
-    <string name="add_video_details.save_upload">SAVE &amp; UPLOAD</string>
-    <string name="add_video_details.toolbar.title">UPLOAD A VIDEO</string>
+    <string name="add_video_details.save_upload">સેવ  કરી અપલોડ કરો</string>
+    <string name="add_video_details.toolbar.title">વીડિઓ અપલોડ કરો</string>
     <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
 
     <string name="video_progress.uploading_label">UPLOADING ...</string>
-    <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically.</string>
+    <string name="video_progress.uploading_msg">કૃપા કરી એપ છોડશો કે બંધ કરશો નહિ, એનાથી આપમેળે અપલોડ અટકી જશે .</string>
     <string name="video_progress.way_to_go">જવા માટે તૈયાર!</string>
-    <string name="video_progress.success_msg">Video has been successfully uploaded and will be moderated within 2 working days. We will notify you once it is moderated.
+    <string name="video_progress.success_msg">વીડિઓ અપલોડ થઇ  નિયમન માટે મોકલાયો છે. નિયમન પત્યે અમે જણાવીશું.
 </string>
     <string name="video_progress.okay">સમજાયું </string>
     <string name="video_progress.uploading_failed">Uploading Failed.</string>
@@ -870,8 +868,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="short_s.add_story">#૧૦૦ શબ્દોની વાર્તા લાખો </string>
     <string name="short_s.add_comment">ટીપ્પણી જોડો</string>
-    <string name="short_s.add.title_hint">Write an exciting title that suits your story. Character limit is 60.</string>
-    <string name="short_s.add.body_hint">Write your amazing story or poem in 100 words or less.</string>
+    <string name="short_s.add.title_hint">તમારી વાર્તા ને અનુરૂપ ઉતેજક શીર્ષક લખો. પાત્ર મર્યાદા ૬૦ છે.</string>
+    <string name="short_s.add.body_hint">૧૦૦ શબ્દોમાં તમારી આશ્ચર્યજનક વાર્તા કે કવિતા લખો.</string>
     <string name="short_s.publish_message">અભિનંદન! તમારો  લેખ બહાર પડી ગયો છે. તમે હવે તમારા મિત્રો અને સગા સંબંધીઓ સાથે તેને શેર કરી શકો છો</string>
     <string name="short_s.max_word">Your story can have maximum 100 words.</string>
     <string name="short_s.choose_genre">તમારી વાર્તા ની શૈલી પસંદ કરો</string>
@@ -936,7 +934,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="coachmark.app_setting">You can edit your app preferences and language preferences at one place. Subscribe to notifications and categories here.</string>
     <string name="coachmark.publish">View your published articles, stories, and mom vlogs at one place.</string>
     <string name="mobile">MOBILE NO</string>
-    <string name="continue_writing">Continue Writing(Drafts)</string>
+    <string name="continue_writing">લાખા રહો (ડ્રાફ્ટ)</string>
     <string name="app_settings">એપ સેટ્ટીગ</string>
     <string name="create_new">નવું સર્જન કરો</string>
     <string name="name_optional">નામ (સ્વેચ્છિક)</string>
@@ -999,7 +997,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
     <string name="successfully_updated">સફળતાપૂર્વક અપડેટ કરાયું!</string>
 
-    <string name="submit_story_text">SUBMIT YOUR STORY </string>
+    <string name="submit_story_text">વાર્તા સબમિટ કરો.</string>
     <string name="this_week_challenge">આ અઠવાડિયા નો ૧૦૦શબ્દોનીવાર્તાચેલેન્જ સ્વીકારો
 </string>
     <string name="previous_week_challenge">ગયા અઠવાડિયા નો પડકાર	</string>
@@ -1007,7 +1005,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="use_picture_word_to_write_one">નીચે આપેલ ફોટો, શબ્દ, શબ્દસમૂહ કાં તો વીડિઓ વાપરી લખો</string>
     <string name="challenge_write_story_for_this_picture">આ દૃશ્ય પર થી વાર્તા લખો 	</string>
     <string name="choose_challenge_label">ચેલેન્જ સ્વીકારો	</string>
-    <string name="start_writing">Start Writing </string>
+    <string name="start_writing">લખવાની શરૂઆત કરો</string>
 
     <string name="male">પુરુષ</string>
     <string name="female">સ્ત્રી</string>
@@ -1024,7 +1022,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="last_name">LAST NAME</string>
     <string name="first_name">FIRST NAME</string>
     <string name="phone">ફોન</string>
-    <string name="language">LANGUAGE</string>
+    <string name="language">ભાષા</string>
     <string name="not_working">Not Working</string>
     <string name="working">Working</string>
     <string name="save_continue"><![CDATA[SAVE & CONTINUE]]></string>
@@ -1043,9 +1041,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="please_hold_for_3_seconds">Please hold for minimum 3 seconds, to post comment</string>
     <string name="stop_recording">First stop recording then save</string>
     <string name="cancel_audio">રદ્દ કરો</string>
-    <string name="add">Add Video</string>
+    <string name="add">ઉમેરો વિડિઓનો</string>
     <string name="rewards_enter_otp">Enter OTP</string>
-    <string name="rewards_confirm">Confirm</string>
+    <string name="rewards_confirm">ખાતરી કરો</string>
     <string name="rewards_first_name">પેહલું નામ</string>
     <string name="rewards_last_name">છેલું નામ</string>
     <string name="rewards_verify">Verify</string>
@@ -1079,19 +1077,19 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="please_enter_a_valid">Please enter a valid\u0020 %1$s</string>
     <string name="need_to_select_option">You need to select an option for\u0020 %1$s</string>
     <string name="rewards_tab_detail">MyMoney</string>
-    <string name="rewards_gender">Gender</string>
+    <string name="rewards_gender">લિંગ</string>
     <string name="rewards_expected_date">Expected date</string>
     <string name="rewards_mobile_number_verified">Mobile number is verified</string>
     <string name="rewards_have_children">Do you have children?</string>
     <string name="rewards_add_child">Add More</string>
-    <string name="rewards_kid_detail">Child detail</string>
-    <string name="app_name">Momspresso</string>
+    <string name="rewards_kid_detail">બાળકો ની વિગત</string>
+    <string name="app_name">મોમ્સ્પ્રસો</string>
 
 
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text"> પડકારો (ચેલેન્જીસ)</string>
-    <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="choose_video_categories_text">શ્રેણીઓ</string>
     <string name="dialog_header_choose_sort_type">સોર્ટ કરો</string>
     <string name="reply_groups">જવાબ આપો</string>
 
@@ -1101,7 +1099,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="group_add_comment_text">ADD COMMENT</string>
     <string name="group_invite_text">આમંત્રો</string>
     <string name="group_comment_type_here_text">અહીં ટાઇપ કરો</string>
-    <string name="group_comment_start_type_here_text">Start typing</string>
+    <string name="group_comment_start_type_here_text">ટાઇપ કરવાનું શરુ કરો </string>
     <string name="group_comment_be_the_first_text">Be the first one to comment</string>
 
     //tooltip groups
@@ -1110,7 +1108,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_instagram_handler">Enter your Instagram handle</string>
     <string name="rewards_facebook_handler">Connect your Facebook</string>
     <string name="rewards_participate_and_earn"><![CDATA[Participate & Earn]]></string>
-    <string name="notification">Notification</string>
+    <string name="notification">નોટીફીકેશન</string>
     <string name="about_video">વિષે</string>
     <string name="story_text_title_hindi">विचारसागर</string>
     <string name="story_text_description_hindi">यहाँ आप सुविचार (कोट्स) लिख सकते हैं.</string>

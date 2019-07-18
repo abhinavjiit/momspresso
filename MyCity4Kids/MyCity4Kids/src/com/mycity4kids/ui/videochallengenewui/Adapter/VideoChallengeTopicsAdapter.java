@@ -25,12 +25,13 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
     private int m;
     private int count = 0;
     private LayoutInflater mInflator;
-    private Topics challengeTopics;
+    private ArrayList<Topics> challengeTopics = new ArrayList<>();
     private ArrayList<String> challengeId;
     private ArrayList<String> Display_Name;
     private ArrayList<String> activeImageUrl;
     private ArrayList<String> activeStreamUrl;
     private ArrayList<String> info;
+    private ArrayList<String> mappedCategory = new ArrayList<>();
 
     public VideoChallengeTopicsAdapter(Context mContext, RecyclerViewClickListener recyclerViewClickListener, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info) {
         this.recyclerViewClickListener = recyclerViewClickListener;
@@ -57,82 +58,53 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        switch (position) {
+       /* switch (position) {
             case 0:
-                for (int i = challengeTopics.getChild().size() - 1; i >= 0; i--) {
-                    if ("1".equals(challengeTopics.getChild().get(i).getPublicVisibility())) {
-                        if (challengeTopics.getChild().get(i).getExtraData() != null) {
-                            if ("1".equals(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
-                                holder.challengeNameText.setText(challengeTopics.getChild().get(i).getDisplay_name());
-                                holder.liveTextViewVideoChallenge.setVisibility(View.VISIBLE);
-                                challengeId.add(challengeTopics.getChild().get(i).getId());
-                                Display_Name.add(challengeTopics.getChild().get(i).getDisplay_name());
-                                if (!StringUtils.isNullOrEmpty(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getRules())) {
-                                    info.add(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getRules());
-                                }
-                                try {
-                                    Picasso.with(mContext).load(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                                            .fit().into(holder.cureentChallengesImage);
-                                    activeImageUrl.add(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl());
-                                    activeStreamUrl.add(challengeTopics.getChild().get(i).getExtraData().get(0).getChallenge().getVideoUrl());
-                                } catch (Exception e) {
-                                    holder.cureentChallengesImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
-                                }
-                                m = i;
-                                //  }
-                                break;
-                            }
-                        }
-                    }
-
-
-                }
-
-
-                break;
-            default:
-                for (int j = m - n; j >= 0; j--) {
-                    if ("1".equals(challengeTopics.getChild().get(j).getPublicVisibility())) {
-                        if (challengeTopics.getChild().get(j).getExtraData() != null) {
-                            challengeId.add(challengeTopics.getChild().get(j).getId());
-                            Display_Name.add(challengeTopics.getChild().get(j).getDisplay_name());
-                            holder.challengeNameText.setText(challengeTopics.getChild().get(j).getDisplay_name());
-                            if (!StringUtils.isNullOrEmpty(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getRules())) {
-                                info.add(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getRules());
-                            } else {
-                                info.add("");
-                            }
-                            try {
-                                Picasso.with(mContext).load(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                                        .fit().into(holder.cureentChallengesImage);
-                                activeImageUrl.add(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getImageUrl());
-                                activeStreamUrl.add(challengeTopics.getChild().get(j).getExtraData().get(0).getChallenge().getVideoUrl());
-                            } catch (Exception e) {
-                                holder.cureentChallengesImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
-                            }
-                            n++;
-                            break;
-                            //  }
-                        } else if (challengeTopics.getChild().get(j).getExtraData() == null) {
-                            n++;
-                        } /*else if (challengeTopics.getChild().get(j).getPublicVisibility().equals("0")) {
-                            n++;
-                            break;*/
-                        //}
+                for (int i = challengeTopics.getChild().size() - 1; i >= 0; i--) {*/
+        if ("1".equals(challengeTopics.get(position).getPublicVisibility())) {
+            if (challengeTopics.get(position).getExtraData() != null) {
+                if ("1".equals(challengeTopics.get(position).getExtraData().get(0).getChallenge().getActive())) {
+                    holder.challengeNameText.setText(challengeTopics.get(position).getDisplay_name());
+                    if (challengeTopics.get(position).getExtraData().get(0).getChallenge().getIs_live().equals("1")) {
+                        holder.liveTextViewVideoChallenge.setVisibility(View.VISIBLE);
                     } else {
-                        m--;
+                        holder.liveTextViewVideoChallenge.setVisibility(View.GONE);
+
+
                     }
+                    challengeId.add(challengeTopics.get(position).getId());
+                    if (challengeTopics.get(position).getExtraData().get(0).getChallenge().getMapped_category() != null && !challengeTopics.get(position).getExtraData().get(0).getChallenge().getMapped_category().trim().isEmpty()) {
+                        mappedCategory.add(challengeTopics.get(position).getExtraData().get(0).getChallenge().getMapped_category());
+                    } else {
+                        mappedCategory.add("category-6dfcf8006c794d4e852343776302f588");
 
+
+                    }
+                    Display_Name.add(challengeTopics.get(position).getDisplay_name());
+                    if (!StringUtils.isNullOrEmpty(challengeTopics.get(position).getExtraData().get(0).getChallenge().getRules())) {
+                        info.add(challengeTopics.get(position).getExtraData().get(0).getChallenge().getRules());
+                    }
+                    try {
+                        Picasso.with(mContext).load(challengeTopics.get(position).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+                                .fit().into(holder.cureentChallengesImage);
+                        activeImageUrl.add(challengeTopics.get(position).getExtraData().get(0).getChallenge().getImageUrl());
+                        activeStreamUrl.add(challengeTopics.get(position).getExtraData().get(0).getChallenge().getVideoUrl());
+                    } catch (Exception e) {
+                        holder.cureentChallengesImage.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
+                    }
                 }
-                break;
-
-
+            }
         }
+
+
     }
+
 
     @Override
     public int getItemCount() {
-        return count;
+
+        return challengeTopics.size();
+
     }
 
     @Override
@@ -145,11 +117,14 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
         return position;
     }
 
-    public void setData(Topics challengeTopics) {
+    public void setData(ArrayList<Topics> challengeTopics) {
         this.challengeTopics = challengeTopics;
-        for (int i = 0; i < challengeTopics.getChild().size(); i++) {
-            if (AppConstants.PUBLIC_VISIBILITY.equals(challengeTopics.getChild().get(i).getPublicVisibility())) {
+        for (int i = 0; i < challengeTopics.size(); i++) {
+            if (AppConstants.PUBLIC_VISIBILITY.equals(challengeTopics.get(i).getPublicVisibility())) {
                 count++;
+            } else {
+                challengeTopics.remove(i);
+
             }
         }
     }
@@ -171,14 +146,14 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
 
         @Override
         public void onClick(View view) {
-            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, challengeTopics, activeImageUrl, activeStreamUrl, info);
+            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, challengeTopics.get(getAdapterPosition()), activeImageUrl, activeStreamUrl, info, mappedCategory);
 
         }
     }
 
 
     public interface RecyclerViewClickListener {
-        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info);
+        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory);
 
     }
 }

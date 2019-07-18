@@ -1,27 +1,39 @@
 package com.mycity4kids.ui.fragment;
 
+import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.ChallengeVideoRecycleAdapter;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class ChallengeCategoryVideoTabFragment extends BaseFragment implements View.OnClickListener, ChallengeVideoRecycleAdapter.RecyclerViewClickListener {
     private RecyclerView recyclerView;
@@ -35,7 +47,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
     private ArrayList<String> activeImageUrl = new ArrayList<String>();
     private ArrayList<String> activeStreamUrl = new ArrayList<String>();
     private ArrayList<String> rules = new ArrayList<>();
-
+    private ArrayList<Topics> liveChallenges, previousWeekChallenges;
     private ChallengeVideoRecycleAdapter recyclerAdapter;
     private String jsonMyObject;
 
@@ -58,7 +70,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(recyclerAdapter);
-        recyclerAdapter.setListData(selectedTopic);
+        // recyclerAdapter.setListData(selectedTopic);
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
 
@@ -69,11 +81,64 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
 
 
     private void getChallenges() {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            removeProgressDialog();
+            return;
+        }
 
-
-
-
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<TopicsResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogChallenges();
+        callRecentVideoArticles.enqueue(vlogChallengeResponseCallBack);
     }
+
+    private Callback<TopicsResponse> vlogChallengeResponseCallBack = new Callback<TopicsResponse>() {
+        @Override
+        public void onResponse(Call<TopicsResponse> call, retrofit2.Response<TopicsResponse> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                return;
+            }
+            if (response.isSuccessful()) {
+                try {
+                    TopicsResponse responseData = response.body();
+                    if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                        /*for (int i = 0; i < responseData.getData().size(); i++) {
+                            if (responseData.getData().get(i).getPublicVisibility().equals("1")) {
+                                if (responseData.getData().get(i).getExtraData().get(0).getChallenge().getActive().equals("1") && responseData.getData().get(i).getExtraData().get(0).getChallenge().getIs_live().equals("1")) {
+                                    liveChallenges.addAll(responseData.getData());
+                                }
+                                else
+                                {
+                                    if(responseData.getData().get(i).getExtraData().get(0).getChallenge().getActive().equals("1"))
+                                    {
+
+                                    }
+                                }
+                            }
+                        }*/
+
+//                        recyclerView.setAdapter(recyclerAdapter);
+                        recyclerAdapter.setListData(responseData.getData());
+                        recyclerAdapter.notifyDataSetChanged();
+
+
+                    }
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            }
+
+
+        }
+
+        @Override
+        public void onFailure(Call<TopicsResponse> call, Throwable t) {
+
+        }
+    };
 
     @Override
     protected void updateUi(Response response) {
@@ -85,7 +150,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
     }
 
     @Override
-    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodal, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> rules) {
+    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodal, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> rules, ArrayList<String> mappedCategory) {
         switch (view.getId()) {
             case R.id.mainView:
             case R.id.getStartedTextView:
@@ -101,6 +166,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
                 intent.putExtra("position", position);
                 intent.putExtra("StreamUrl", activeStreamUrl);
                 intent.putExtra("rules", rules);
+                intent.putExtra("mappedCategory", mappedCategory);
                 intent.putExtra("topics", articledatamodal.getParentName());
                 intent.putExtra("parentId", articledatamodal.getParentId());
                 intent.putExtra("StringUrl", activeImageUrl);

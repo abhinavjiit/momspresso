@@ -49,11 +49,13 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     private String authorId, authorName;
     private String title, body;
     private RelativeLayout shareContainerLayout;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_moderation_share_activity);
+        root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         shareUrl = getIntent().getStringExtra("shareUrl");
@@ -107,6 +109,12 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         instagramImageView.setOnClickListener(this);
         laterTextView.setOnClickListener(this);
         okayTextView.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((BaseApplication) getApplication()).setView(root);
     }
 
     @Override

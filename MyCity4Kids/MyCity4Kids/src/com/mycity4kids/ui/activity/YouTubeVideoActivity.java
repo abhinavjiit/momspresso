@@ -18,6 +18,7 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -43,11 +44,14 @@ import java.util.regex.Pattern;
 public class YouTubeVideoActivity extends YouTubeFailureRecoveryActivity {
     String youTubeId;
     private static final int RECOVERY_DIALOG_REQUEST = 1;
+    private LinearLayout root;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playerview_demo);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(YouTubeVideoActivity.this, "Youtube Video", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

@@ -142,6 +142,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private TaskFragment mTaskFragment;
     private MediaPlayer mMediaplayer;
     private String userDynamoId;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +151,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         }
         setContentView(R.layout.group_post_detail_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(this, "GroupPostDetailsScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());

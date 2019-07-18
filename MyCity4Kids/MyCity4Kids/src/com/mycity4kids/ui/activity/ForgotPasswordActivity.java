@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonSyntaxException;
@@ -32,11 +33,14 @@ public class ForgotPasswordActivity extends BaseActivity {
     private EditText mEmailId;
     private ForgotPasswordController _controller;
     private Toolbar mToolbar;
+    private LinearLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_forgotpswd);
+        root = findViewById(R.id.rootLayout);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         Utils.pushOpenScreenEvent(ForgotPasswordActivity.this, "ForgotPasswordScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");

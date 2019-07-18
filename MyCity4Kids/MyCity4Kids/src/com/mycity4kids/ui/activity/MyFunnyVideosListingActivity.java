@@ -93,6 +93,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         ((BaseApplication) getApplication()).setActivity(this);
 
         rootLayout = findViewById(R.id.rootLayout);
+        ((BaseApplication) getApplication()).setView(rootLayout);
         listView = (ListView) findViewById(R.id.vlogsListView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);

@@ -145,12 +145,15 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String ssTopicsText;
     private TextView topicHeading;
     private TextView wordCounterTextView;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_short_story_activity);
+        root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
+        ((BaseApplication) getApplication()).setView(root);
 
         Utils.pushOpenScreenEvent(this, "AddShortStoryScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mLayout = findViewById(R.id.rootLayout);

@@ -59,11 +59,14 @@ public class UsersBookmarkListActivity extends BaseActivity implements UsersBook
     private TextView noBlogsTextView;
     private RelativeLayout mLodingView;
     private Toolbar toolbar;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_bookmark_list_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

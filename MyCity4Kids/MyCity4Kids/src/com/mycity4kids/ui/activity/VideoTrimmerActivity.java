@@ -71,6 +71,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
         mProgressDialog.setMessage(getString(R.string.trimming_progress));
 
         mVideoTrimmer = ((K4LVideoTrimmer) findViewById(R.id.timeLine));
+        ((BaseApplication) getApplication()).setView(mVideoTrimmer);
 
         if (mVideoTrimmer != null) {
             mVideoTrimmer.setMaxDuration(Integer.parseInt(duration));

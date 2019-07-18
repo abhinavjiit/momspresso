@@ -149,6 +149,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
     private String TAG;
     private String screenTitle = "Resources List";
     private int openBookmarkResources;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +162,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
         Constants.IS_RESET = true;
         try {
             setContentView(R.layout.business_list_activitykidsres);
+            root = findViewById(R.id.businessRoot);
+            ((BaseApplication) getApplication()).setView(root);
             ((BaseApplication) getApplication()).setActivity(this);
 
             mLocalitySearchEtxt = (EditText) findViewById(R.id.locality_search);

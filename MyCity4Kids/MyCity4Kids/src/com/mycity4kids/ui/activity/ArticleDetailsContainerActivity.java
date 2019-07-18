@@ -65,7 +65,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private String userDynamoId;
     private String preferredLang;
     private long audioStartTime = 0;
-    private RelativeLayout guideOverlay;
+    private RelativeLayout guideOverlay, root;
     private Toolbar guidetoolbar;
 
     static {
@@ -76,6 +76,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_details_container);
+        root = findViewById(R.id.content_frame);
         ((BaseApplication) getApplication()).setActivity(this);
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -130,7 +131,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         } else {
             final int pos = Integer.parseInt(bundle.getString(Constants.ARTICLE_INDEX));
 
-            mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen,parentId);
+            mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen, parentId);
             mViewPager.setAdapter(mViewPagerAdapter);
             mViewPager.setCurrentItem(pos);
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -177,6 +178,12 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         Intent readArticleIntent = new Intent(this, ReadArticleService.class);
         startService(readArticleIntent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((BaseApplication) getApplication()).setView(root);
     }
 
     public void hideMainToolbar() {
@@ -478,7 +485,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     };
 
     private void initializeViewPager() {
-        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, "dw",parentId);
+        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, "dw", parentId);
         mViewPager.setAdapter(mViewPagerAdapter);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

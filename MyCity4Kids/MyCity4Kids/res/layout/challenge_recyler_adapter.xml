@@ -27,7 +27,7 @@
         android:text="adssasa kjsdjk kjdsb"
         android:textColor="@color/greytxt_color"
         android:textSize="20sp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:fontName="oswald.ttf" />
 
 
@@ -202,4 +202,19 @@
 
         </RelativeLayout>
     </RelativeLayout>
+
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/previous_week_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rootView"
+        android:layout_margin="10dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:text="adssasa kjsdjk kjdsb"
+        android:textColor="@color/greytxt_color"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
 </RelativeLayout>

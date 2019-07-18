@@ -62,11 +62,14 @@ public class GroupSettingsActivity extends BaseActivity implements View.OnClickL
     private TextView groupNameTextView;
     private RelativeLayout inviteMemberContainer;
     private MixpanelAPI mixpanel;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_settings_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

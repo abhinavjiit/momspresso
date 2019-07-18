@@ -76,11 +76,13 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     private LinearLayout addTopicsLayout;
     private FrameLayout headerArticleCardLayout;
     ShimmerFrameLayout ashimmerFrameLayout;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_listing_activity);
+        root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -465,6 +467,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
 
     protected void onResume() {
         super.onResume();
+        ((BaseApplication) getApplication()).setView(root);
         ashimmerFrameLayout.startShimmerAnimation();
     }
 

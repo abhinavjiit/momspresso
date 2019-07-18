@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -26,6 +27,7 @@ public class AppSettingsActivity extends BaseActivity implements View.OnClickLis
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private RelativeLayout root;
     //private ImageView searchAllImageView;
 
     @Override
@@ -34,6 +36,8 @@ public class AppSettingsActivity extends BaseActivity implements View.OnClickLis
         ((BaseApplication) getApplication()).setActivity(this);
 
         setContentView(R.layout.app_settings_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.pager);

@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings.PluginState;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kelltontech.network.Response;
@@ -27,6 +28,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 public class BookOrPayWebActivity extends BaseActivity implements OnClickListener{
 	private String eCommerceUrl;
 	private WebView bookOrPayWebView;
+	private LinearLayout root;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,6 +36,8 @@ public class BookOrPayWebActivity extends BaseActivity implements OnClickListene
 
 		try {
 			setContentView(R.layout.book_pay_web_view);
+			root = findViewById(R.id.root);
+			((BaseApplication) getApplication()).setView(root);
 			((BaseApplication) getApplication()).setActivity(this);
 
 			bookOrPayWebView=(WebView)findViewById(R.id.book_or_pay_web_view);

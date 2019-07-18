@@ -62,11 +62,14 @@ public class TopPicksActivity extends BaseActivity implements OnClickListener {
 	private HorizontalScrollView mHorizontalScrollView;
 	private ParentingSort mCurrentSortByModel=null;
 	private boolean isCommingFromSort;
+	private RelativeLayout root;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_top_picks);
+		root = findViewById(R.id.businessRoot);
+		((BaseApplication) getApplication()).setView(root);
 		((BaseApplication) getApplication()).setActivity(this);
 
 		findViewById(R.id.imgBack).setOnClickListener(this);

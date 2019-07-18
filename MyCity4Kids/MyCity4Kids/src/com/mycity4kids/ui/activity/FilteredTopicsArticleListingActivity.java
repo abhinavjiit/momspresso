@@ -135,11 +135,14 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
     private TextView toolbarTitle;
+    private RelativeLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filtered_topics_articles_activity);
+        root = findViewById(R.id.root);
+        ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
