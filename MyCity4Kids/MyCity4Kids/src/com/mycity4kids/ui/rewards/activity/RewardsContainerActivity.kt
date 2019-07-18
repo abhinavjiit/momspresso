@@ -91,7 +91,7 @@ class RewardsContainerActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rewards_container)
-        root = findViewById(R.id.dash_root)
+        root = findViewById(R.id.root)
         (application as BaseApplication).view = root
 
         (application as BaseApplication).activity = this

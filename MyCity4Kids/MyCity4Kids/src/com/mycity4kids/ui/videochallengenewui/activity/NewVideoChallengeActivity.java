@@ -78,9 +78,11 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     private ArrayList<String> Display_Name = new ArrayList<>();
     private ArrayList<String> rules = new ArrayList<>();
     private ArrayList<String> mappedCategory = new ArrayList<>();
+    private int max_Duration;
     private String parentName, parentId;
     private CoordinatorLayout coordinatorLayout;
     private ImageView thumbNail;
+    private int duration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +121,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         parentId = intent.getStringExtra("parentId");
         parentName = intent.getStringExtra("topics");
         screen = intent.getStringExtra("screenName");
+        max_Duration = intent.getIntExtra("maxDuration", 0);
         activeStreamUrl = intent.getStringArrayListExtra("StreamUrl");
         rules = intent.getStringArrayListExtra("rules");
         mappedCategory = intent.getStringArrayListExtra("mappedCategory");
@@ -211,7 +214,9 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             FragmentManager fm = getSupportFragmentManager();
             Bundle _args = new Bundle();
             _args.putString("activity", "newVideoChallengeActivity");
-            _args.putString("duration", "420");
+            if (max_Duration != 0) {
+                _args.putString("duration", String.valueOf(max_Duration));
+            }
 
             chooseVideoUploadOptionDialogFragment.setArguments(_args);
             chooseVideoUploadOptionDialogFragment.setCancelable(true);
@@ -403,7 +408,10 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
      /*   intent.putExtra("categoryId", categoryId);
         intent.putExtra("duration", duration);*/
         /**/
-        intent.putExtra("duration", "420");
+        if (max_Duration != 0) {
+            intent.putExtra("duration", String.valueOf(max_Duration));
+        }
+
         intent.putExtra("ChallengeId", selectedId);
         intent.putExtra("categoryId", mappedId);
         intent.putExtra("comingFrom", "Challenge");

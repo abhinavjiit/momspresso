@@ -88,7 +88,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private String duration;
     private String thumbnailTime;
     private SharedPreferences pref;
-    private String comingFrom, challengeId, challengeName,extension;
+    private String comingFrom, challengeId, challengeName, extension;
     private RelativeLayout root;
 
     @Override
@@ -318,14 +318,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
     public void resumeUpload() {
         getBlogPage();
-        /*pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
-        blogSetup = pref.getBoolean("blogSetup", false);
-        Log.e("blogsetup", blogSetup + "");
-        if (!blogSetup) {
-            getBlogPage();
-        } else {
-            launchUploadActivity();
-        }*/
     }
 
     private void launchUploadActivity() {
@@ -338,7 +330,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         intt.putExtra("categoryId", categoryId);
         intt.putExtra("duration", duration);
         intt.putExtra("thumbnailTime", thumbnailTime);
-        intt.putExtra("extension",originalUri.getPath().substring(originalUri.getPath().lastIndexOf(".")));
+        intt.putExtra("extension", originalUri.getPath().substring(originalUri.getPath().lastIndexOf(".")));
         if (comingFrom.equals("Challenge")) {
             intt.putExtra("ChallengeId", challengeId);
             intt.putExtra("ChallengeName", challengeName);

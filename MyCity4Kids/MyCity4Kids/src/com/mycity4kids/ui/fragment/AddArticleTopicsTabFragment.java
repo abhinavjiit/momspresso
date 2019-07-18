@@ -54,35 +54,14 @@ public class AddArticleTopicsTabFragment extends BaseFragment implements AddArti
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.add_article_topics_tab_fragment, container, false);
-//        popularTopicsRecyclerView = (RecyclerView) view.findViewById(R.id.popularTopicsRecyclerView);
         rootView = (FlowLayout) view.findViewById(R.id.rootView);
-
-//        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-//        llm.setOrientation(LinearLayoutManager.VERTICAL);
-//        popularTopicsRecyclerView.setLayoutManager(llm);
-
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
-
         selectedTopicsMap = new HashMap<>();
-
-        /*Bundle extras = getArguments();
-
-        if (extras != null) {
-            jsonMyObject = extras.getString("selectTopicList");
-            Type listOfdoctorType = new TypeToken<ArrayList<Topics>>() {
-            }.getType();
-            selectTopic = new Gson().fromJson(jsonMyObject, listOfdoctorType);
-
-        }*/
-
         selectTopic = getArguments().getParcelableArrayList("selectTopicList");
-
         position = getArguments().getInt("position");
         previouslyFollowedTopics = getArguments().getStringArrayList("previouslyFollowedTopics");
         processTopicsDataForList();
         createTopicsData();
-//        trendingArraylist = new ArrayList<>();
-//        hitTrendingDataAPI();
         return view;
     }
 

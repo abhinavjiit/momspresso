@@ -34,6 +34,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
     private ArrayList<String> activeStreamUrl = new ArrayList<>();
     private ArrayList<String> rules = new ArrayList<>();
     private ArrayList<String> mappedCategory = new ArrayList<>();
+    private ArrayList<Integer> max_Duration = new ArrayList<>();
     private boolean previousKey = false;
 
 
@@ -135,6 +136,8 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
 
 
                     }
+
+                    max_Duration.add(articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getMax_duration());
                     // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
                     Display_Name.add(articleDataModelsNew.get(position).getDisplay_name());
                     holder.storyTitleTextView.setVisibility(View.GONE);
@@ -178,6 +181,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
         for (int i = 0; i < articleDataModelsNew.size(); i++) {
             if (AppConstants.PUBLIC_VISIBILITY.equals(articleDataModelsNew.get(i).getPublicVisibility())) {
                 // if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
+
                 count++;
 
                 //}
@@ -228,13 +232,13 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
 
         @Override
         public void onClick(View view) {
-            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, articleDataModelsNew.get(getAdapterPosition()), activeImageUrl, activeStreamUrl, rules, mappedCategory);
+            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, articleDataModelsNew.get(getAdapterPosition()), activeImageUrl, activeStreamUrl, rules, mappedCategory, max_Duration.get(getAdapterPosition()));
 
         }
     }
 
     public interface RecyclerViewClickListener {
-        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> rules, ArrayList<String> mappedCategory);
+        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> rules, ArrayList<String> mappedCategory, int max_Duration);
     }
 
 }

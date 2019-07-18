@@ -8,7 +8,6 @@ import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -1278,14 +1277,16 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     fun fetchLangLat(address: String) {
         val coder = Geocoder(activity as RewardsContainerActivity)
         var addresses: List<Address>
-        addresses = coder.getFromLocationName(address, 5)
-        if (addresses == null) {
-        }
-        val location: Address = addresses.get(0)
-        lat = location.getLatitude()
-        lng = location.getLongitude()
-        Log.i("lat", lat.toString())
-        Log.i("lat", lng.toString())
+        (activity as RewardsContainerActivity).runOnUiThread(Runnable {
+            addresses = coder.getFromLocationName(address, 5)
+            if (addresses == null) {
+            }
+            val location: Address = addresses.get(0)
+            lat = location.getLatitude()
+            lng = location.getLongitude()
+            Log.i("lat", lat.toString())
+            Log.i("lat", lng.toString())
+        })
     }
 
 }

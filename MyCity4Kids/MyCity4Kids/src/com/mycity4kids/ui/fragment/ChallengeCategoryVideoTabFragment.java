@@ -150,7 +150,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
     }
 
     @Override
-    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodal, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> rules, ArrayList<String> mappedCategory) {
+    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodal, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> rules, ArrayList<String> mappedCategory, int max_Duration) {
         switch (view.getId()) {
             case R.id.mainView:
             case R.id.getStartedTextView:
@@ -166,6 +166,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
                 intent.putExtra("position", position);
                 intent.putExtra("StreamUrl", activeStreamUrl);
                 intent.putExtra("rules", rules);
+                intent.putExtra("maxDuration", max_Duration);
                 intent.putExtra("mappedCategory", mappedCategory);
                 intent.putExtra("topics", articledatamodal.getParentName());
                 intent.putExtra("parentId", articledatamodal.getParentId());

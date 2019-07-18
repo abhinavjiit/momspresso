@@ -362,7 +362,7 @@
     <string name="onboarding.desc_4">Harness the power of our mom community. Share your queries and help others!</string>
 
 
-    <string name="onboarding_desc_array.tutorial_1.blogs">BLOGS</string>
+    <string name="onboarding_desc_array.tutorial_1.blogs">બ્લોગ</string>
     <string name="onboarding_desc_array.tutorial_1.videos">MOMVLOGS</string>
     <string name="onboarding_desc_array.tutorial_2.english">અંગ્રેજી</string>
     <string name="onboarding_desc_array.tutorial_2.hindi">હિન્દી </string>
@@ -607,19 +607,19 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     <string name="complete_blogger_profile.complete_label">COMPLETE YOUR BLOGGERS PROFILE</string>
     <string name="complete_blogger_profile.paid_eligibility">Be eligible for paid writing assignments.\n All this information is safe with us.</string>
-    <string name="complete_blogger_profile.save">સેવ </string>
+    <string name="complete_blogger_profile.save">સેવ</string>
     <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
 
-    <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
+    <string name="add_video_details.title_hint">વીડિઓ માટે શીર્ષક એન્ટર કરો</string>
     <string name="add_video_details.mute_label">અવાજ બંદ</string>
-    <string name="add_video_details.add_music">ADD MUSIC</string>
-    <string name="add_video_details.remove">REMOVE</string>
+    <string name="add_video_details.add_music">ઉમેરો સંગીત</string>
+    <string name="add_video_details.remove">દૂર કરો</string>
     <string name="add_video_details.error_empty_title">Please enter the title of the video</string>
     <string name="add_video_details.save_upload">સેવ  કરી અપલોડ કરો</string>
     <string name="add_video_details.toolbar.title">વીડિઓ અપલોડ કરો</string>
     <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
 
-    <string name="video_progress.uploading_label">UPLOADING ...</string>
+    <string name="video_progress.uploading_label">અપલોડ કરી રહ્યું છે ...</string>
     <string name="video_progress.uploading_msg">કૃપા કરી એપ છોડશો કે બંધ કરશો નહિ, એનાથી આપમેળે અપલોડ અટકી જશે .</string>
     <string name="video_progress.way_to_go">જવા માટે તૈયાર!</string>
     <string name="video_progress.success_msg">વીડિઓ અપલોડ થઇ  નિયમન માટે મોકલાયો છે. નિયમન પત્યે અમે જણાવીશું.
@@ -667,8 +667,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="article_listing.toolbar.title_popular">લોકપ્રિય </string>
     <string name="article_listing.toolbar.title_trending">વલણ </string>
     <string name="article_listing.toolbar.title_for_you">આપના માટે </string>
-    <string name="article_listing.toolbar.title_todays_best">TODAY\'S BEST</string>
-    <string name="article_listing.toolbar.title_editor_picks">EDITOR\'S PICKS</string>
+    <string name="article_listing.toolbar.title_todays_best">આજ નું સર્વસ્રેષ્ઠ</string>
+    <string name="article_listing.toolbar.title_editor_picks">તંત્રી ની પસંદ</string>
     <string name="groups_sections_ask">ASK AN EXPERT</string>
 
 
@@ -677,18 +677,18 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     <string name="city_picker.toolbar.title">શહેર પસંદ કરો</string>
 
-    <string name="rate_now">RATE NOW</string>
-    <string name="rate_us.dialog.title">RATE OUR APP?</string>
+    <string name="rate_now">રેટ કરો</string>
+    <string name="rate_us.dialog.title">Rએપ ક્રમ?</string>
     <string name="rate_us.dialog.not_now">હમણાં નહીં</string>
-    <string name="rate_us.dialog.message1">If you enjoy using the Momspresso app, please take a moment to rate it.</string>
-    <string name="rate_us.dialog.message2">Thank you for your support !!!</string>
+    <string name="rate_us.dialog.message1">જો તમને મોમ્સ્પ્રેસ્સો એપ પર મજા પડે છે તો એક ક્ષણ લાગશે તેને ક્રમાંકિત કરો.</string>
+    <string name="rate_us.dialog.message2">તમારા સહેકાર બદલ ધન્યવાદ  !!!</string>
 
     <string name="suggested_topic.start_writing">લખવાની શરૂઆત કરો</string>
 
     <string name="no_articles_found">No articles found</string>
     <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
     <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
-    <string name="contributors">Contributors</string>
+    <string name="contributors">સહયોગીઓને</string>
     <string name="contributor_in">Contributors in</string>
     <string name="recent_article">સંબંધિત લેખ </string>
     <string name="upload_bigger_image">Please upload bigger image</string>
@@ -754,12 +754,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="guide.groups_tour">Join Support Groups. Ask questions (even anonymously) \nand get answers from the community.</string>
 
     <string name="author_type.blogger">બ્લોગર </string>
-    <string name="author_type.editor">EDITOR</string>
+    <string name="author_type.editor">તંત્રી</string>
     <string name="author_type.editorial">સંપાદક ટુકડી </string>
     <string name="author_type.collaboration">VIDEO COLLABORATOR</string>
     <string name="author_type.expert">વિશેશગ્ય</string>
     <string name="author_type.featured">ફીચર્ડ લેખક </string>
-    <string name="author_type.user">USER</string>
+    <string name="author_type.user">વાપરનાર</string>
 
     <string name="no_article.be_first">આ કેટેગરીમાં સૌપ્રથમ લેખ લખો </string>
 
@@ -925,14 +925,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="navigation_bar.notifications">નોટીફીકેશન</string>
     <string name="navigation_bar.groups">સમૂહો </string>
 
-    <string name="coachmark.home">Welcome to Momspresso! You can explore the app in the language of your choice.</string>
-    <string name="coachmark.explore">What do you want to do today? Read a 100 Word Story or watch Videos. You can also explore the various categories and read blogs</string>
-    <string name="coachmark.create">Add your #100WordStory, blog post, or your videos. View/ edit your drafts too.</string>
+    <string name="coachmark.home">મોમ્સ્પ્રેસો માં આપનું સ્વાગત છે! તમે તમારી પસંદગી ની ભાષા માં એપ્પ પર શોધ ખોળ કરી શકો છો.</string>
+    <string name="coachmark.explore">તમે આજે શું કરવા માંગો છો? ૧૦૦ શબ્દોની વાર્તા વાંચવા કે વીડિઓ જોવા. તમે વિવિધ શ્રેણીઓ શોધી બ્લોગ્સ  વાંચી શકો છો.</string>
+    <string name="coachmark.create">તમારી #૧૦૦શબ્દોનીવાર્તા જોડો, બ્લોગ પોસ્ટ ક તો વીડિઓ. રૂપરેખા જુઓ /ચકાસો.</string>
     <string name="coachmark.menu">Browse, participate, earn in MyMoney campaigns</string>
-    <string name="coachmark.drawer">View your personal profile and see all your blogs, 100 word stories, and Mom Vlogs at one place.</string>
-    <string name="coachmark.edit_profile">Edit and update your profile to stay updated on blogger meets and sponsored articles.</string>
-    <string name="coachmark.app_setting">You can edit your app preferences and language preferences at one place. Subscribe to notifications and categories here.</string>
-    <string name="coachmark.publish">View your published articles, stories, and mom vlogs at one place.</string>
+    <string name="coachmark.drawer">તમારી પોતાની પ્રોફાઈલ નીહાળો  અને તમારા બધા બ્લોગ્સ, ૧૦૦ શબ્દોની વાર્તાઓ અને મોમ વી લોગ્સ એકજ જગ્યાએ જુઓ.</string>
+    <string name="coachmark.edit_profile">બ્લોગર મિટ અને સ્પોન્સર્ડ લેખ માટે અપડેટ રેહવા ચકાસો અનેતમારી  પ્રોફાઈલ અપડેટ રાખો.</string>
+    <string name="coachmark.app_setting">તમારા પસંદગી ના અપ્પ અને ભાષાઓ એક અજ જગ્યા થી એડિટ કરો. નિયમિત નોટીફીકેશન અને શ્રેણીઓ મેળવો.</string>
+    <string name="coachmark.publish">તમારા પ્રકાશિત લેખ, વાર્તા, અને વીલોગ્સ એક અજ જગ્યાએ મેળવો</string>
     <string name="mobile">MOBILE NO</string>
     <string name="continue_writing">લાખા રહો (ડ્રાફ્ટ)</string>
     <string name="app_settings">એપ સેટ્ટીગ</string>
@@ -980,7 +980,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="megabyte">MB</string>
     <string name="kilobyte">KB</string>
     <string name="choose_video_category">વિડીઓ ની શ્રેણી પસંદ કરો </string>
-    <string name="time_limit">(Maximum Time %1$s)</string>
+    <string name="time_limit">(વધુ માં વધુ સમય  %1$s)</string>
     <string name="upload_larger_video">Oops! Your video should be at least 5 seconds long.</string>
     <string name="seconds_label">seconds</string>
     <string name="minutes_label">minutes</string>
@@ -992,7 +992,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="popular_videos">લોકપ્રિય વિડીઓજ </string>
     <string name="delete_comment">ડીલીટ ટીપ્પણી</string>
     <string name="edit_comment">એડિટ ટીપ્પણી</string>
-    <string name="report">REPORT</string>
+    <string name="report">રિપોર્ટ</string>
     <string name="select_atleast_one_topic">Please choose atleast one topic to continue</string>
     <string name="your_article_is_successfully_bookmarked">Your article is successfully bookmarked.</string>
     <string name="successfully_updated">સફળતાપૂર્વક અપડેટ કરાયું!</string>
@@ -1019,8 +1019,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="use_picture_word_to_upload_one">Use The Picture ,Word, Phrase Or Video Given Below To Upload One</string>
 
 
-    <string name="last_name">LAST NAME</string>
-    <string name="first_name">FIRST NAME</string>
+    <string name="last_name">છેલું નામ</string>
+    <string name="first_name">પેહલું નામ</string>
     <string name="phone">ફોન</string>
     <string name="language">ભાષા</string>
     <string name="not_working">Not Working</string>
@@ -1052,7 +1052,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_male">પુરષ </string>
     <string name="rewards_female">સ્ત્રી</string>
     <string name="rewards_location">જગ્યા</string>
-    <string name="rewards_save_continue"> Save And Continue</string>
+    <string name="rewards_save_continue">Save And Continue</string>
     <string name="rewards.social.facebook_connected">FACEBOOK CONNECTED</string>
     <string name="rewards.social.instagram_connected">INSTAGRAM CONNECTED</string>
     <string name="rewards_participate">Participate and earn now by completing your profile!</string>

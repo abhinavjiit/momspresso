@@ -31,6 +31,7 @@ public class Topics implements Parcelable {
     private String is_live;
     private String mapped_category;
 
+
     public static class ExtraData implements Parcelable {
         private Challenges challenge;
         private CategoryTag categoryTag;
@@ -126,6 +127,15 @@ public class Topics implements Parcelable {
             private String desc;
             private String is_live;
             private String mapped_category;
+            private int max_duration = 5000;
+
+            public int getMax_duration() {
+                return max_duration;
+            }
+
+            public void setMax_duration(int max_duration) {
+                this.max_duration = max_duration;
+            }
 
             public String getMapped_category() {
                 return mapped_category;
@@ -214,6 +224,8 @@ public class Topics implements Parcelable {
                 rules = in.readString();
                 is_live = in.readString();
                 mapped_category = in.readString();
+                max_duration = in.readInt();
+
 
             }
 
@@ -227,6 +239,7 @@ public class Topics implements Parcelable {
                 dest.writeString(rules);
                 dest.writeString(is_live);
                 dest.writeString(mapped_category);
+                dest.writeInt(max_duration);
 
             }
 
