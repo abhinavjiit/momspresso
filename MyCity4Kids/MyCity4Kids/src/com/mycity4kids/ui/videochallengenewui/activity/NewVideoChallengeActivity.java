@@ -83,6 +83,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     private CoordinatorLayout coordinatorLayout;
     private ImageView thumbNail;
     private int duration;
+    private String comingFrom = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +125,13 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         max_Duration = intent.getIntExtra("maxDuration", 0);
         activeStreamUrl = intent.getStringArrayListExtra("StreamUrl");
         rules = intent.getStringArrayListExtra("rules");
+        if (intent.hasExtra("comingFrom")) {
+            comingFrom = intent.getStringExtra("comingFrom");
+            if (comingFrom.equals("chooseVideoCategory")) {
+                saveTextView.setVisibility(View.VISIBLE);
+            }
+
+        }
         mappedCategory = intent.getStringArrayListExtra("mappedCategory");
         if (mappedCategory != null && mappedCategory.size() != 0) {
             mappedId = mappedCategory.get(pos);
@@ -221,35 +229,25 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             chooseVideoUploadOptionDialogFragment.setArguments(_args);
             chooseVideoUploadOptionDialogFragment.setCancelable(true);
             chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
-          /*  Intent intent1 = new Intent(this, VideoTrimmerActivity.class);
-            String filepath = FileUtils.getPath(this, uri);
 
-
-            intent.putExtra("ChallengeId", selectedId);
-            intent.putExtra("ChallengeName", selected_Name);
-            intent.putExtra("categoryId", mappedId);
-            intent.putExtra("comingFrom", "Challenge");
-
-
-            // if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
-            intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
-            startActivity(intent);*/
-
-
-
-
-           /* Intent intent1 = new Intent(NewVideoChallengeActivity.this, ChooseVideoCategoryActivity.class);
-            if (selected_Name != null && !selected_Name.isEmpty() && selectedId != null && !selectedId.isEmpty()) {
-                intent1.putExtra("selectedId", selectedId);
-                intent1.putExtra("selectedName", selected_Name);
-                intent1.putExtra("mappedId", mappedId);
-                intent1.putExtra("comingFrom", "Challenge");
-                startActivity(intent1);
-
-            } else {
-                ToastUtils.showToast(NewVideoChallengeActivity.this, "something went wrong at the server");
-            }*/
         });
+
+        if (comingFrom.equals("chooseVideoCategory")) {
+
+
+            ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
+            FragmentManager fm = getSupportFragmentManager();
+            Bundle _args = new Bundle();
+            _args.putString("activity", "newVideoChallengeActivity");
+            if (max_Duration != 0) {
+                _args.putString("duration", String.valueOf(max_Duration));
+            }
+
+            chooseVideoUploadOptionDialogFragment.setArguments(_args);
+            chooseVideoUploadOptionDialogFragment.setCancelable(true);
+            chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
+
+        }
 
     }
 

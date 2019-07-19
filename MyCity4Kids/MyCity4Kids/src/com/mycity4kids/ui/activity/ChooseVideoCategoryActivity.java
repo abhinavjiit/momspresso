@@ -418,7 +418,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     }
 
     @Override
-    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory) {
+    public void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory, int max_Duration) {
 
 
         switch (view.getId()) {
@@ -429,12 +429,14 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                 intent.putExtra("screenName", "creation");
                 intent.putExtra("challenge", challengeId);
                 intent.putExtra("position", position);
+                intent.putExtra("maxDuration", max_Duration);
                 intent.putExtra("StreamUrl", activeStreamUrl);
                 intent.putExtra("topics", articledatamodelsnew.getParentName());
                 intent.putExtra("parentId", articledatamodelsnew.getParentId());
                 intent.putExtra("mappedCategory", mappedCategory);
                 intent.putExtra("StringUrl", activeImageUrl);
                 intent.putExtra("rules", info);
+                intent.putExtra("comingFrom", "chooseVideoCategory");
                 intent.putExtra("Topic", new Gson().toJson(articledatamodelsnew));
                 startActivity(intent);
                 Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Listing_challenge_container", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Challenge_Detail", "", challengeId.toString());

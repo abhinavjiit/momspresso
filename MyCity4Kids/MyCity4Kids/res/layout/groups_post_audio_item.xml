@@ -262,20 +262,21 @@
 
                 <ImageView
                     android:id="@+id/upvoteImageVIew"
-                    android:layout_width="wrap_content"
+                    android:layout_width="16dp"
                     android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_recommend"
                     android:tint="@color/app_red" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/upvoteCommentTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:gravity="center"
+
                     android:text="0"
                     android:textColor="#4A4A4A"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     app:fontName="oswald_regular.ttf" />
             </LinearLayout>
 

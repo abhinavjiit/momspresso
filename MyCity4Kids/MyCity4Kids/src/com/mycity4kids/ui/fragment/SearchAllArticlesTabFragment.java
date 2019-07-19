@@ -184,9 +184,15 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements Search
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            if (response == null || response.body() == null) {
-                ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                return;
+            if (isAdded()) {
+                if (response == null || response.body() == null) {
+                    if (mLodingView.getVisibility() == View.VISIBLE) {
+                        mLodingView.setVisibility(View.GONE);
+                    }
+                    ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+
+                    return;
+                }
             }
             try {
                 SearchResponse responseData = response.body();

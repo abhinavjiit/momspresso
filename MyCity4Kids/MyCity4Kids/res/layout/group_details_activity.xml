@@ -541,7 +541,7 @@
         android:visibility="visible"
         app:fab_colorNormal="@color/app_red"
         app:fab_colorPressed="@color/app_red"
-        app:fab_icon="@drawable/ic_plus" />
+        app:fab_icon="@drawable/ic_edit" />
 
     <ProgressBar
         android:id="@+id/progressBar"

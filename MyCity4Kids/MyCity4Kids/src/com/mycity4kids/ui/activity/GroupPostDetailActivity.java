@@ -277,6 +277,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         postType = AppConstants.POST_TYPE_AUDIO;
                     } else if (postData.getType().equals("4")) {
                         postType = AppConstants.POST_TYPE_ASK_AN_EXPERT;
+                    } else {
+                        postType = AppConstants.POST_TYPE_TEXT;
+
                     }
 
                     if (postData.getDisableComments() == 1) {

@@ -32,6 +32,7 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
     private ArrayList<String> activeStreamUrl;
     private ArrayList<String> info;
     private ArrayList<String> mappedCategory = new ArrayList<>();
+    private ArrayList<Integer> max_Duration = new ArrayList<>();
 
     public VideoChallengeTopicsAdapter(Context mContext, RecyclerViewClickListener recyclerViewClickListener, ArrayList<String> challengeId, ArrayList<String> Display_Name, ArrayList<String> activeImageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info) {
         this.recyclerViewClickListener = recyclerViewClickListener;
@@ -80,6 +81,8 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
 
 
                     }
+                    max_Duration.add(challengeTopics.get(position).getExtraData().get(0).getChallenge().getMax_duration());
+
                     Display_Name.add(challengeTopics.get(position).getDisplay_name());
                     if (!StringUtils.isNullOrEmpty(challengeTopics.get(position).getExtraData().get(0).getChallenge().getRules())) {
                         info.add(challengeTopics.get(position).getExtraData().get(0).getChallenge().getRules());
@@ -146,14 +149,14 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
 
         @Override
         public void onClick(View view) {
-            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, challengeTopics.get(getAdapterPosition()), activeImageUrl, activeStreamUrl, info, mappedCategory);
+            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, challengeTopics.get(getAdapterPosition()), activeImageUrl, activeStreamUrl, info, mappedCategory,max_Duration.get(getAdapterPosition()));
 
         }
     }
 
 
     public interface RecyclerViewClickListener {
-        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory);
+        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory,int max_Duration);
 
     }
 }

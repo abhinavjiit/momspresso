@@ -77,9 +77,12 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             timeLimitTextView.setVisibility(View.VISIBLE);
             timeLimitTextView.setText(getString(R.string.time_limit, AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(R.string.minutes_label)));
             timeLimitTextView.setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
-        } else {
-            timeLimitTextView.setVisibility(View.INVISIBLE);
+        } else if (getActivity() instanceof NewVideoChallengeActivity) {
 
+
+            timeLimitTextView.setVisibility(View.VISIBLE);
+            timeLimitTextView.setText(getString(R.string.time_limit, AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(R.string.minutes_label)));
+            timeLimitTextView.setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
         }
 
         return rootView;
@@ -133,6 +136,8 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                             ((UserFunnyVideosTabFragment) getTargetFragment()).requestPermissions("gallery");
                         } else if ("video_category_activity".equals(activity)) {
                             ((ChooseVideoCategoryActivity) getActivity()).requestPermissions("gallery");
+                        } else if ("newVideoChallengeActivity".equals(activity)) {
+                            ((NewVideoChallengeActivity) getActivity()).requestPermissions("gallery");
                         } else if ("vlogslisting".equals(activity)) {
                         } else if ("allvideosection".equals(activity)) {
                         }

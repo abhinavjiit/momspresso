@@ -100,28 +100,6 @@
                     app:fontName="oswald.ttf" />
             </RelativeLayout>
 
-            <!--    <ImageView
-
-                    android:id="@+id/ChallengeNameImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-        <<<<<<< HEAD
-                    android:layout_below="@id/ChallengeNameText"
-        =======
-        >>>>>>> design changes in video challenges
-                    android:background="@drawable/short_story_border_bg"
-                    android:src="@drawable/groups_generic"
-                    android:visibility="visible" />-->
-            <!--
-                        <ImageView
-                            android:id="@+id/videoIndicatorImageView"
-                            android:layout_width="70dp"
-                            android:layout_height="65dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="80dp"
-                            android:src="@drawable/ic_videos"
-                            android:visibility="gone" />-->
-
             <LinearLayout
                 android:id="@+id/submit_challenge_relative_Layout"
                 android:layout_width="match_parent"
@@ -197,16 +175,17 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/space_20"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="25dp"
             android:layout_marginBottom="10dp"
             android:elevation="4dp"
             android:padding="15dp"
-            android:src="@drawable/ic_plus"
+            android:tint="@color/white"
             android:visibility="visible"
-            android:layout_margin="@dimen/space_20"
-            app:backgroundTint="@color/app_red" />
+            app:backgroundTint="@color/app_red"
+            app:srcCompat="@drawable/ic_video" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

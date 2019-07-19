@@ -163,7 +163,7 @@ public class GroupBlogsRecyclerAdapter extends RecyclerView.Adapter<GroupBlogsRe
                 holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
             }
         } else {
-            holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
+            holder.bookmarkArticleImageView.setVisibility(View.INVISIBLE);
             holder.watchLaterImageView.setVisibility(View.INVISIBLE);
 
             if (articleDataList.get(position).getListingBookmarkStatus() == 0) {

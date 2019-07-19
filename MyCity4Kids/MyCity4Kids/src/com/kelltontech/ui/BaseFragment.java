@@ -56,7 +56,7 @@ public abstract class BaseFragment extends Fragment implements IScreen {
 
         mProgressDialog.setMessage(bodyText);
 
-        if (!mProgressDialog.isShowing()) {
+        if (!mProgressDialog.isShowing() && isAdded()) {
             mProgressDialog.show();
         }
     }
@@ -65,7 +65,7 @@ public abstract class BaseFragment extends Fragment implements IScreen {
      *
      */
     public void removeProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+        if (mProgressDialog != null && mProgressDialog.isShowing() && isAdded()) {
             mProgressDialog.dismiss();
         }
     }

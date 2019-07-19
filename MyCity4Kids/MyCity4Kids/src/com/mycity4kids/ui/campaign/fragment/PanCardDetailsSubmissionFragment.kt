@@ -116,7 +116,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                     panNumber = response.data!!.result.pan
                     panCardDetailEditTextView.setText(panNumber)
                 } else {
-                    
+
                 }
             }
 
@@ -139,8 +139,6 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
 
 
             if (matcher.matches()) {
-
-
                 if (!panNumber.isNullOrEmpty()) {
                     val proofPostModel = ProofPostModel(pan = panCardDetailEditTextView.text.toString())
                     showProgressDialog(resources.getString(R.string.please_wait))
@@ -163,8 +161,6 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                                             CampaignCongratulationFragment::class.java.simpleName).addToBackStack("CampaignCongratulationFragment")
                                             .commit()
                                 }
-
-
                             }
                         }
 

@@ -1,17 +1,22 @@
 package com.mycity4kids.ui.fragment;
 
+import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +48,7 @@ import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
 import com.mycity4kids.ui.activity.ExploreEventsResourcesActivity;
 import com.mycity4kids.utils.NearMyCity;
+import com.mycity4kids.utils.PermissionUtil;
 
 import java.util.ArrayList;
 
@@ -67,12 +73,15 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
     private int selectedCityId;
     private String newSelectedCityId;
     private String currentCityName;
+    private int MY_PERMISSION_LOCATION = 10001;
+    private RelativeLayout mLayout;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.explore_fragment, container, false);
-
+        mLayout = view.findViewById(R.id.root);
         cityNameTextView = (TextView) view.findViewById(R.id.cityNameTextView);
         noResourcesTextView = (TextView) view.findViewById(R.id.noResourcesTextView);
         eventsImageView = (ImageView) view.findViewById(R.id.eventsImageView);
@@ -209,7 +218,7 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                 break;
             case R.id.cityNameTextView:
                 cityFragment = new CityListingDialogFragment();
-              //  cityFragment.setTargetFragment(this, 0);
+                //  cityFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putParcelableArrayList("cityList", mDatalist);
                 _args.putString("fromScreen", "explore");
@@ -226,7 +235,7 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
         currentCityName = cityItem.getCityName();
         selectedCityId = Integer.parseInt(cityItem.getId().replace("city-", ""));
         newSelectedCityId = cityItem.getId();
-        saveCityData();
+        checkLocationPermission();
     }
 
     @Override
@@ -236,7 +245,49 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
         newSelectedCityId = mDatalist.get(pos).getId();
         mDatalist.get(pos).setCityName("Others(" + cityName + ")");
         cityNameTextView.setText(mDatalist.get(pos).getCityName());
-        saveCityData();
+        checkLocationPermission();
+    }
+
+    private void checkLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_LOCATION);
+        } else {
+            saveCityData();
+        }
+
+        /*if (Build.VERSION.SDK_INT >= 23) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                saveCityData();
+            } else {
+                saveCityData();
+            }
+        } else {
+            saveCityData();
+        }*/
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == MY_PERMISSION_LOCATION) {
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(mLayout, R.string.permission_location_rationale,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                saveCityData();
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     public void saveCityData() {

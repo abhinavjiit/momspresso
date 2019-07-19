@@ -1173,6 +1173,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 break;
                 case R.id.writeArticleTextView:
                 case R.id.writeArticleImageView:
+                    ((ArticleDetailsContainerActivity) getActivity()).checkAudioPlaying();
                     Intent intentt = new Intent(getActivity(), CampaignContainerActivity.class);
                     startActivity(intentt);
                     break;
@@ -1318,6 +1319,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
                 case R.id.viewCommentsTextView:
                     openViewCommentDialog();
+                    ((ArticleDetailsContainerActivity) getActivity()).checkAudioPlaying();
+
                     break;
 //                case R.id.commentFloatingActionButton:
 //                    openCommentDialog(null, "ADD");

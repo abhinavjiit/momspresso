@@ -348,18 +348,23 @@
     <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
     <string name="campaign_maybe_later_text">પછી થી </string>
 
+
+
+
+
+
     <string-array name="onboarding_title_array">
-        <item>Create a Blog</item>
-        <item>Enjoy Blogs in any of 8 Languages</item>
-        <item>Upload your Mom Vlogs or watch on the go</item>
-        <item>With Support Groups, you are not alone</item>
+        <item>બ્લોગ પોસ્ટ બનાઓ </item>
+        <item>તમે તમારી ટેક્સ્ટ નવ ભાષાઓમાં મોકલી શકો છો</item>
+        <item> મોકળાશ થી વીડિઓ નીહાળો</item>
+        <item>સમર્થક સમૂહ સાથે, તમે એકલા નથી </item>
         <item>Start earning with MyMoney!</item>
     </string-array>
 
-    <string name="onboarding.desc_1">Every mom has a story. What\'s yours? Share it in text or video.</string>
-    <string name="onboarding.desc_2">Choose from English, Hindi, Bangla, Marathi, Tamil, Telugu, Kannada and Malayalam.</string>
-    <string name="onboarding.desc_3">Share your home videos in Mom Vlogs or watch beautiful, inspiring, useful and funny videos on Momspresso TV.</string>
-    <string name="onboarding.desc_4">Harness the power of our mom community. Share your queries and help others!</string>
+    <string name="onboarding.desc_1">દરેક માં પાસે વાર્તા હોય  છે. તમારી શું છે? લખાણ અથવા વીડિઓ દ્વારા શેયર કરો.</string>
+    <string name="onboarding.desc_2">અંગ્રેજી, હિન્દી, બંગાળી, મરાઠી, તમીળ, તેલુગુ, મલયાલી અને કન્નડ માં થી પસંદ કરો.</string>
+    <string name="onboarding.desc_3">મોમ્સ્પ્રેસો TV દેખાડે છે સુંદર, પ્રેરણાદાયી, ઉપયોગી, અને રમુજી વીડિઓ. એક અજ જગ્યાએ!</string>
+    <string name="onboarding.desc_4">અમારી મોમ કોમ્મ્યુંનીટી  ની તાકાત નો ઉપયોગ કરો. તમારી શંકાઓ શેયર કરો અને બીજા ની મદદ કરો!</string>
 
 
     <string name="onboarding_desc_array.tutorial_1.blogs">બ્લોગ</string>
@@ -840,7 +845,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.member_label">સાભ્ય</string>
     <string name="groups.sections.about">વિષે</string>
     <string name="groups.sections.discussions">વાર્તાલાપ</string>
-    <string name="groups.sections.blogs">બ્લોગ્સ/લેખ</string>
+    <string name="groups.sections.blogs">બ્લોગ્સ</string>
     <string name="groups.sections.photos">ફોટા</string>
     <string name="groups.sections.videos">વિડિઓઝ</string>
     <string name="groups.sections.top_posts">ટોચ ની પોસ્ટ</string>

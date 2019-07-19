@@ -524,4 +524,21 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
+    public void checkAudioPlaying() {
+        Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
+        stopService(readArticleIntent);
+        playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
+        isAudioPlaying = false;
+
+        ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+        long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        checkAudioPlaying();
+    }
 }
