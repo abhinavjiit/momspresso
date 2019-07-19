@@ -96,6 +96,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="@string/navigation_bar.home"
+                        android:textAllCaps="true"
                         android:textColor="@color/home.toolbar.titlecolor"
                         android:textSize="20sp"
                         app:fontName="oswald_regular.ttf" />
