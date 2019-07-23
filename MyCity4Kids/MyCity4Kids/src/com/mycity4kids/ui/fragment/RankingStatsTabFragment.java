@@ -525,7 +525,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                 break;
             case R.id.fromDateTextView: {
                 PageViewsDatePickerFragment fromFragment = new PageViewsDatePickerFragment();
-                fromFragment.setTargetFragment(this, 0);
+//                fromFragment.setTargetFragment(this, 0);
                 Bundle b1 = new Bundle();
                 b1.putString("type", "from");
                 fromFragment.setArguments(b1);
@@ -534,7 +534,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
             break;
             case R.id.toDateTextView: {
                 PageViewsDatePickerFragment toFragment = new PageViewsDatePickerFragment();
-                toFragment.setTargetFragment(this, 0);
+//                toFragment.setTargetFragment(this, 0);
                 Bundle b1 = new Bundle();
                 b1.putString("type", "to");
                 toFragment.setArguments(b1);

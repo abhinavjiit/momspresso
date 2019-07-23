@@ -21,7 +21,7 @@
             android:drawableLeft="@drawable/back_arroow"
             android:drawablePadding="@dimen/space_10"
             android:drawableTint="@color/black"
-            android:text="PAN CARD DETAIL"
+            android:text="@string/rewards_pancard_toolbar_text"
             android:textColor="#515151"
             android:textSize="20sp"
             app:fontName="oswald_regular.ttf" />
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="31dp"
-            android:text="Please enter your PAN card details"
+            android:text="@string/reawrds_pancard_detail_text"
             android:textColor="#515151" />
 
         <com.mycity4kids.widget.CustomFontEditText
@@ -80,14 +80,14 @@
         <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NOTE : "
+            android:text="@string/rewards_pancard_Note_textview"
             android:textColor="@color/app_red"
             android:textSize="16sp" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment."
+            android:text="@string/rewards_pancard_note_detail"
             android:textColor="#4A4A4A"
             android:textSize="16sp" />
     </LinearLayout>

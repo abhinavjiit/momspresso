@@ -101,6 +101,12 @@
         android:layout_centerVertical="true"
         android:visibility="invisible" />
 
+    <include
+        layout="@layout/trending_list_header_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbarUnderline"
+        android:visibility="gone" />
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"

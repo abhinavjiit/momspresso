@@ -136,6 +136,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         return 2;
     }
 
+
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
         if (getItemViewType(position) == 2) {

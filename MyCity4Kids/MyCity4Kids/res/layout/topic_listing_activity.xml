@@ -115,6 +115,6 @@
         app:fab_colorPressed="@color/app_red"
         app:layout_anchorGravity="top|end"
         app:rippleColor="@color/app_red"
-        app:srcCompat="@drawable/ic_video" />
+        app:srcCompat="@drawable/icon_video" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -202,7 +202,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             }
         }
 
-        linearInstruction= view.findViewById(R.id.linearInstruction)
+        linearInstruction = view.findViewById(R.id.linearInstruction)
         textAddUrlProof = view.findViewById(R.id.textAddUrlProof)
         textAddUrlProof.setOnClickListener {
             var isEmpty = false
@@ -236,7 +236,6 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
         back.setOnClickListener {
             (activity as CampaignContainerActivity).onBackPressed()
-//            Utils.campaignEvent(activity, "Campaign Detail", "Proof Submission", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Detail")
         }
 
         relativeMediaProof = view.findViewById(R.id.relativeMediaProof)
@@ -321,7 +320,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                     Log.e("adapter size is ", faqRecyclerAdapter.itemCount.toString())
 
 
-                     /*this will fetch proof instruction from server*/
+                    /*this will fetch proof instruction from server*/
                     fetchProofInstruction()
                 } else {
                 }

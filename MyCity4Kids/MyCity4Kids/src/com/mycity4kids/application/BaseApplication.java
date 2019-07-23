@@ -93,7 +93,6 @@ public class BaseApplication extends Application {
     public String appVersion;
     private boolean askPermission = true;
     public static boolean isFirstSwipe = true;
-    private Socket mSocket;
     private View view;
 
     // Placeholder property ID.this was old which create by own account.
@@ -350,12 +349,6 @@ public class BaseApplication extends Application {
         } catch (ClassNotFoundException e) {
         }
 
-        try {
-            mSocket = IO.socket("http://socketio.momspresso.com:5000/");
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-
         CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
         Fabric.with(this, new Crashlytics.Builder().core(core).build());
 
@@ -396,10 +389,6 @@ public class BaseApplication extends Application {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-    }
-
-    public Socket getSocket() {
-        return mSocket;
     }
 
     /**

@@ -29,7 +29,7 @@ import io.reactivex.schedulers.Schedulers
 class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.SubmitListener, CampaignCongratulationFragment.SubmitListener, CampaignPaymentModesFragment.SubmitListener {
 
 
-    override fun onPaymentModeDone(paymentModeId :Int) {
+    override fun onPaymentModeDone(paymentModeId: Int) {
 
     }
 

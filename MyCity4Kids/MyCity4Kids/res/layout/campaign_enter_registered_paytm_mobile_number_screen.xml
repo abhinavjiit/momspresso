@@ -32,7 +32,7 @@
                 android:drawableLeft="@drawable/back_arroow"
                 android:drawablePadding="@dimen/space_10"
                 android:drawableTint="@color/black"
-                android:text="ADD DETAILS"
+                android:text="@string/rewards_add_detail"
                 android:textColor="#515151"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
@@ -176,7 +176,7 @@
                 android:layout_marginTop="43dp"
                 android:layout_marginRight="12dp"
                 android:gravity="center"
-                android:text="PLEASE ENTER YOUR BANK DETAILS"
+                android:text="@string/rewards_payment_submission_enter_bank_detail_text"
                 android:textColor="#4A4A4A"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
@@ -190,7 +190,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="4dp"
-                android:text="Account Holder’s Name"
+                android:text="@string/rewards_bank_detail_holder_nmae_text"
                 android:textColor="#A1A1A1"
                 android:textSize="16sp" />
 
@@ -218,7 +218,7 @@
                 android:layout_below="@+id/addAccountHolderNameEditTextView"
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="4dp"
-                android:text="Select Bank Name"
+                android:text="@string/rewards_bank_detail_select_bank_text"
                 android:textColor="#A1A1A1"
                 android:textSize="16sp" />
 
@@ -242,7 +242,7 @@
                 android:layout_below="@+id/selectBankAccountspinner"
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="4dp"
-                android:text="Account Number"
+                android:text="@string/rewards_bank_detail_account_number"
                 android:textColor="#A1A1A1"
                 android:textSize="16sp" />
 
@@ -271,7 +271,7 @@
                 android:layout_below="@+id/accountNumberEditTextView"
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="4dp"
-                android:text="Confirm Account Number"
+                android:text="@string/rewards_bank_detail_confirm_account_number"
                 android:textColor="#A1A1A1"
                 android:textSize="16sp" />
 
@@ -301,7 +301,7 @@
                 android:layout_below="@+id/confirmAccountNumberEditTextView"
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="4dp"
-                android:text="IFSC Code"
+                android:text="@string/rewards_bank_detail_ifsc_text"
                 android:textColor="#A1A1A1"
                 android:textSize="16sp" />
 
@@ -333,7 +333,7 @@
             android:layout_alignParentBottom="true"
             android:background="#D03F56"
             android:gravity="center"
-            android:text="SUBMIT"
+            android:text="@string/submit"
             android:textColor="@color/white"
             android:textSize="25sp"
             app:fontName="oswald_regular.ttf" />

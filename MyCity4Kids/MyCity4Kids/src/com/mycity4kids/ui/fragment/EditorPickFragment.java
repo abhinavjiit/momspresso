@@ -71,25 +71,23 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     //    private ImageView menuImageView;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
-//    private LinearLayout addTopicsLayout;
+    private LinearLayout addTopicsLayout;
     private FrameLayout headerArticleCardLayout;
     ShimmerFrameLayout ashimmerFrameLayout;
 
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.new_article_layout, container, false);
+    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.new_article_layout, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         ashimmerFrameLayout = (ShimmerFrameLayout) rootView.findViewById(R.id.shimmer1);
         mLodingView = (RelativeLayout) rootView.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) rootView.findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-//        addTopicsLayout = (LinearLayout) rootView.findViewById(R.id.addTopicsLayout);
+        addTopicsLayout = (LinearLayout) rootView.findViewById(R.id.addTopicsLayout);
         headerArticleCardLayout = (FrameLayout) rootView.findViewById(R.id.headerArticleView);
 
-//        addTopicsLayout.setOnClickListener(this);
+        addTopicsLayout.setOnClickListener(this);
 
 
         rootView.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
@@ -100,7 +98,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
 
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, sortType, true);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, sortType, false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -210,7 +208,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     private void processForYouResponse(ArticleListingResponse responseData) {
         try {
             if (responseData.getData().get(0).getResult() == null && (articleDataModelsNew == null || articleDataModelsNew.isEmpty())) {
-//                addTopicsLayout.setVisibility(View.VISIBLE);
+                addTopicsLayout.setVisibility(View.VISIBLE);
                 headerArticleCardLayout.setVisibility(View.GONE);
                 return;
             }
@@ -427,12 +425,12 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.addTopicsLayout:
-//                Intent intent1 = new Intent(getActivity(), ExploreArticleListingTypeActivity.class);
-//                intent1.putExtra("fragType", "search");
-//                intent1.putExtra("source", "foryou");
-//                startActivity(intent1);
-//                break;
+            case R.id.addTopicsLayout:
+                Intent intent1 = new Intent(getActivity(), ExploreArticleListingTypeActivity.class);
+                intent1.putExtra("fragType", "search");
+                intent1.putExtra("source", "foryou");
+                startActivity(intent1);
+                break;
         }
     }
 

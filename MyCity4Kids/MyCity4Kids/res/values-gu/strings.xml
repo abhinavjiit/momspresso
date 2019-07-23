@@ -1209,4 +1209,31 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="social_page_add_website_hint">www.momvlogger.com/sheetal</string>
     <string name="social_page_add_website">ADD WEBSITE</string>
 
+
+    <string name="drawer_referra_mymoney">Refer MyMoney</string>
+    <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
+    <string name="share_referral_screen">Share your referral code and start earning</string>
+    <string name="referral_screen_whatsapp">WhatsApp</string>
+    <string name="referral_screen_facebook">Facebook</string>
+    <string name="rewards_tab_fragment_personalInfo_text">PERSONAL INFO</string>
+    <string name="rewards_tab_fragment_socialLink_text">SOCIAL LINKS</string>
+    <string name="rewards_tab_fragment_paymentMode">PAYMENT MODE</string>
+    <string name="rewards_tab_fragment_panCard">PAN CARD DETAILS</string>
+    <string name="rewards_tab_fragment_myEarning">MY EARNING</string>
+    <string name="rewards_tab_fragment_referrer_myMoney">refer mymoney</string>
+    <string name="rewards_pancard_toolbar_text">PAN CARD DETAIL</string>
+    <string name="reawrds_pancard_detail_text">Please enter your PAN card details</string>
+    <string name="rewards_pancard_note_detail">In case of Invalid/No Pan card attached, 20% tax will be deducted from the payment.</string>
+    <string name="rewards_pancard_Note_textview">NOTE :</string>
+    <string name="rewards_payment_submission_enter_bank_detail_text">PLEASE ENTER YOUR BANK DETAILS</string>
+    <string name="rewards_bank_detail_holder_nmae_text">Account Holder’s Name</string>
+    <string name="rewards_bank_detail_select_bank_text">Select Bank Name</string>
+    <string name="rewards_bank_detail_account_number">Account Number</string>
+    <string name="rewards_bank_detail_confirm_account_number">Confirm Account Number</string>
+    <string name="rewards_bank_detail_ifsc_text">IFSC Code</string>
+    <string name="rewards_add_detail">ADD DETAILS</string>
+    <string name="rewards_payment_history">Payment History</string>
+    <string name="participate_on_this_campaign">Please participate in ongoing campaigns to start earning</string>
+    <string name="participate_now">Participate now</string>
+
 </resources>

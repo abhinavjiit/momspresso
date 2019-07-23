@@ -557,7 +557,7 @@
                 android:paddingTop="15dp"
                 android:paddingRight="35dp"
                 android:paddingBottom="15dp"
-                android:text="SUBMIT"
+                android:text="@string/submit"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 app:fontName="oswald_regular.ttf" />

@@ -45,7 +45,7 @@ public class PageViewsDatePickerFragment extends DialogFragment implements DateP
 
         String sel_date = "" + day + "-" + (month + 1) + "-" + year;
 
-        IDateSelection iDateSelection = (IDateSelection) getTargetFragment();
+        IDateSelection iDateSelection = (IDateSelection) getParentFragment();
         iDateSelection.onDateSelection(type, sel_date, year, month, day);
 
     }

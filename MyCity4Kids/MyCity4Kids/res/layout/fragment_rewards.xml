@@ -154,7 +154,7 @@
                 android:drawableLeft="@drawable/ic_personal_info"
                 android:drawablePadding="15dp"
                 android:padding="@dimen/space_20"
-                android:text="PERSONAL INFO"
+                android:text="@string/rewards_tab_fragment_personalInfo_text"
                 android:textSize="14sp"
                 app:fontName="oswald.ttf" />
 
@@ -173,7 +173,7 @@
                 android:drawableLeft="@drawable/ic_social_links"
                 android:drawablePadding="12dp"
                 android:padding="@dimen/space_20"
-                android:text="SOCIAL LINKS"
+                android:text="@string/rewards_tab_fragment_socialLink_text"
                 android:textSize="14sp"
                 app:fontName="oswald.ttf" />
 
@@ -192,7 +192,7 @@
                 android:drawableLeft="@drawable/ic_payment_mode"
                 android:drawablePadding="15dp"
                 android:padding="@dimen/space_20"
-                android:text="PAYMENT MODE"
+                android:text="@string/rewards_tab_fragment_paymentMode"
                 android:textSize="14sp"
                 app:fontName="oswald.ttf" />
 
@@ -211,7 +211,7 @@
                 android:drawableLeft="@drawable/ic_pan_details"
                 android:drawablePadding="15dp"
                 android:padding="@dimen/space_20"
-                android:text="PAN CARD DETAILS"
+                android:text="@string/rewards_tab_fragment_panCard"
                 android:textSize="14sp"
                 app:fontName="oswald.ttf" />
 
@@ -235,7 +235,7 @@
                     android:drawableLeft="@drawable/ic_my_earning_profile_page"
                     android:drawablePadding="15dp"
                     android:padding="@dimen/space_20"
-                    android:text="MY EARNING"
+                    android:text="@string/rewards_tab_fragment_myEarning"
                     android:textColor="#676767"
                     android:textSize="14sp"
                     app:fontName="oswald.ttf" />
@@ -249,7 +249,7 @@
                     android:backgroundTint="@color/color_23CAAD"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="NEW"
+                    android:text="@string/new_label"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="14sp"
@@ -293,7 +293,7 @@
                     android:drawablePadding="15dp"
                     android:drawableTint="@color/black"
                     android:padding="@dimen/space_20"
-                    android:text="refer mymoney"
+                    android:text="@string/rewards_tab_fragment_referrer_myMoney"
                     android:textAllCaps="true"
                     android:textColor="#676767"
                     android:textSize="14sp"
@@ -309,7 +309,7 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="NEW"
+                    android:text="@string/new_label"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="14sp"

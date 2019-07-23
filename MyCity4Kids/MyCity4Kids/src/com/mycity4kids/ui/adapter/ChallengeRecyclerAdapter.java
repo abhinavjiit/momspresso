@@ -27,6 +27,7 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
     private final float density;
     private LayoutInflater mInflator;
     private Topics articleDataModelsNew;
+    private ArrayList<Topics> articleDataModels = new ArrayList<>();
     boolean current = true;
     private ArrayList<String> challengeId;
     private ArrayList<String> Display_Name;
@@ -65,11 +66,16 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
 
     public void setListData(Topics mParentingLists) {
         articleDataModelsNew = mParentingLists;
-        for (int i = 0; i < articleDataModelsNew.getChild().size(); i++) {
-            if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
-                if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
-                    if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
-                        count++;
+        if (articleDataModelsNew != null) {
+            for (int i = articleDataModelsNew.getChild().size() - 1; i >= 0; i--) {
+                if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
+                    if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
+                        if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
+
+                            articleDataModels.add(articleDataModelsNew.getChild().get(i));
+
+                            count++;
+                        }
                     }
                 }
             }
@@ -78,17 +84,87 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
 
     @Override
     public void onBindViewHolder(ChallengeViewHolder holder, int position) {
-        //   holder.setIsRecyclable(false);
+
         switch (position) {
+
             case 0:
-                // holder.rootView.setVisibility(View.VISIBLE);
+                holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
+                if ("1".equals(articleDataModels.get(position).getPublicVisibility())) {
+
+
+                    if (articleDataModels.get(position).getExtraData() != null) {
+
+                        if ("1".equals(articleDataModels.get(position).getExtraData().get(0).getChallenge().getActive())) {
+                            challengeId.add(articleDataModels.get(position).getId());
+                            Display_Name.add(articleDataModels.get(position).getDisplay_name());
+                            holder.imageBody.setVisibility(View.VISIBLE);
+                            holder.rootView.setVisibility(View.VISIBLE);
+                            holder.useThePictureTextView.setVisibility(View.VISIBLE);
+                            holder.StorytextViewLayout.setVisibility(View.VISIBLE);
+                            holder.yourStoryTextView.setVisibility(View.VISIBLE);
+                            holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
+                            try {
+                                Glide.with(mcontext).load(articleDataModels.get(position).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
+                                activeImageUrl.add(articleDataModels.get(position).getExtraData().get(0).getChallenge().getImageUrl());
+                            } catch (Exception e) {
+                                holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
+                            }
+                        }
+
+
+                    }
+                }
+                break;
+
+            default:
+                if ("1".equals(articleDataModels.get(position).getPublicVisibility())) {
+                    if (articleDataModels.get(position).getExtraData() != null) {
+                        if ("1".equals(articleDataModels.get(position).getExtraData().get(0).getChallenge().getActive())) {
+
+                            holder.rootView.setVisibility(View.VISIBLE);
+
+                            if (position == 1) {
+                                holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
+                                holder.previousAndThisWeekTextView.setText(R.string.previous_week_challenge);
+                            } else {
+                                holder.previousAndThisWeekTextView.setVisibility(View.GONE);
+                            }
+                            challengeId.add(articleDataModels.get(position).getId());
+                            Display_Name.add(articleDataModels.get(position).getDisplay_name());
+                            holder.storyTitleTextView.setVisibility(View.GONE);
+                            holder.titleTextUnderLine.setVisibility(View.GONE);
+
+                            if (articleDataModels.get(position).getExtraData().get(0).getChallenge().getImageUrl() != null && !articleDataModels.get(position).getExtraData().get(0).getChallenge().getImageUrl().isEmpty()) {
+                                holder.imageBody.setVisibility(View.VISIBLE);
+                                try {
+                                    Glide.with(mcontext).load(articleDataModels.get(position).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
+                                    activeImageUrl.add(articleDataModels.get(position).getExtraData().get(0).getChallenge().getImageUrl());
+                                } catch (Exception e) {
+                                    holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
+                                }
+
+                            }
+                        }
+
+                    }
+
+
+                }
+
+
+        }
+
+
+        //   holder.setIsRecyclable(false);
+       /* switch (position) {
+            case 0:
+
                 holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
                 for (int i = articleDataModelsNew.getChild().size() - 1; i >= 0; i--) {
                     if ("1".equals(articleDataModelsNew.getChild().get(i).getPublicVisibility())) {
                         if (articleDataModelsNew.getChild().get(i).getExtraData() != null) {
                             if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                                 challengeId.add(articleDataModelsNew.getChild().get(i).getId());
-                                // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
                                 Display_Name.add(articleDataModelsNew.getChild().get(i).getDisplay_name());
                                 if (articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl() != null && !articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl().isEmpty()) {
                                     holder.imageBody.setVisibility(View.VISIBLE);
@@ -164,7 +240,9 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                     }
                 }
                 break;
-        }
+        }*/
+
+
     }
 
     @Override

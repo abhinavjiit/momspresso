@@ -185,7 +185,7 @@
             android:tint="@color/white"
             android:visibility="visible"
             app:backgroundTint="@color/app_red"
-            app:srcCompat="@drawable/ic_video" />
+            app:srcCompat="@drawable/icon_video" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

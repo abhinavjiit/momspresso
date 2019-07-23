@@ -19,13 +19,13 @@ public class Topics implements Parcelable {
     private String publicVisibility;
 
     private String showInMenu;
-    private ArrayList<Topics> child;
+    private ArrayList<Topics> child = new ArrayList<>();
     private String parentId;
     private String parentName;
     private boolean isSelected;
     private String slug;
     private boolean prevKey = false;
-    private List<ExtraData> extraData = new ArrayList<>();
+    private List<ExtraData> extraData;
     private String sponsoredCategoryImage;
     private String sponsoredCategoryBadge;
     private String is_live;
