@@ -95,6 +95,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var referCodeHeader: TextView
     private lateinit var readThisBox: LinearLayout
     private lateinit var detail_recyclerview: RecyclerView
+    private lateinit var txtTrackerStatus: TextView
     private var forYouStatus: Int = 0
     private var userId: String? = null
     private val urlPattern = Pattern.compile(
@@ -158,7 +159,7 @@ class CampaignDetailFragment : BaseFragment() {
             startActivity(Intent.createChooser(emailIntent, "Send email..."))
         }
 
-        ((containerView.findViewById<TextView>(R.id.txtTrackerStatus)).setOnClickListener {
+        txtTrackerStatus.setOnClickListener {
             var intent = Intent(activity, TrackerActivity::class.java)
             intent.putExtra("campaign_id", id!!)
             intent.putExtra("brand_name", apiGetResponse!!.brandDetails!!.name)
@@ -166,7 +167,7 @@ class CampaignDetailFragment : BaseFragment() {
             intent.putExtra("total_payout", apiGetResponse!!.totalPayout)
             intent.putExtra("image_url", apiGetResponse!!.brandDetails!!.imageUrl)
             startActivity(intent)
-        })
+        }
 
         referCodeApply.setOnClickListener {
             applyCode()
@@ -231,6 +232,7 @@ class CampaignDetailFragment : BaseFragment() {
         readThisBox = containerView.findViewById(R.id.read_this_box)
         getHelp = containerView.findViewById(R.id.get_help)
         detail_recyclerview = containerView.findViewById(R.id.detail_recyclerview)
+        txtTrackerStatus = containerView.findViewById(R.id.txtTrackerStatus);
     }
 
     private fun fetchCampaignDetail() {

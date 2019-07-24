@@ -463,9 +463,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private void getFilteredGroupPosts() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        Call<GroupPostResponse> call = groupsAPI.getAllFilteredPostsForAGroup(selectedGroup.getId(), skip, limit, postType);
-        call.enqueue(groupPostResponseCallback);
+        if (selectedGroup != null) {
+            Call<GroupPostResponse> call = groupsAPI.getAllFilteredPostsForAGroup(selectedGroup.getId(), skip, limit, postType);
+            call.enqueue(groupPostResponseCallback);
+        }
     }
 
     private Callback<GroupPostResponse> groupPostResponseCallback = new Callback<GroupPostResponse>() {

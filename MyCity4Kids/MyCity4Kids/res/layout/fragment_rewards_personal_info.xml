@@ -881,7 +881,7 @@
                         android:lineSpacingExtra="2.2dp"
                         android:paddingStart="15dp"
                         android:paddingLeft="15dp"
-                        android:textAllCaps="true"
+                        android:inputType="textCapCharacters"
                         android:textColor="@color/app_light_black"
                         app:fontName="oswald_regular.ttf" />
 
