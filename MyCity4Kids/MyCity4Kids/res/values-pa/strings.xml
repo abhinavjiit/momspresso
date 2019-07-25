@@ -595,7 +595,7 @@
     <string name="moderation_message">100WordStory under moderation.\n
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
-    <string name="moderation_or_share.later">MAYBE LATER</string>
+    <string name="moderation_or_share.later">ਫੇਰ ਕਦੇ/string>
     <string name="moderation_or_share.okay">ਠੀਕ ਹੈ</string>
     <string name="moderation_or_share.gplus_fail">Unable to share with google plus.</string>
     <string name="moderation_or_share.whatsapp_fail">Unable to share with whatsapp.</string>
@@ -610,19 +610,19 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="complete_blogger_profile.save">SAVE</string>
     <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
 
-    <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
-    <string name="add_video_details.mute_label">MUTE SOUND</string>
+    <string name="add_video_details.title_hint">ਵੀਡੀਓ ਲਈ ਇੱਕ  ਟਾਈਟਲ ਦਰਜ ਕਰੋ</string>
+    <string name="add_video_details.mute_label">ਆਵਾਜ਼ ਬੰਦ ਕਰੋ</string>
     <string name="add_video_details.add_music">ADD MUSIC</string>
     <string name="add_video_details.remove">REMOVE</string>
-    <string name="add_video_details.error_empty_title">Please enter the title of the video</string>
-    <string name="add_video_details.save_upload">SAVE &amp; UPLOAD</string>
-    <string name="add_video_details.toolbar.title">UPLOAD A VIDEO</string>
+    <string name="add_video_details.error_empty_title">ਵੀਡੀਓ ਅੱਪਲੋਡ ਕਰੋ</string>
+    <string name="add_video_details.save_upload">ਸੇਵ ਕਰੋ ਅਤੇ ਅੱਪਲੋਡ ਕਰੋ</string>
+    <string name="add_video_details.toolbar.title">ਵੀਡੀਓ ਅੱਪਲੋਡ ਕਰੋ</string>
     <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
 
     <string name="video_progress.uploading_label">UPLOADING ...</string>
     <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically.</string>
     <string name="video_progress.way_to_go">Way to go!</string>
-    <string name="video_progress.success_msg">Video has been successfully uploaded and will be moderated within 2 working days. We will notify you once it is moderated.
+    <string name="video_progress.success_msg">ਵੀਡੀਓ ਸਫਲਤਾਪੂਰਵਕ ਅਪਲੋਡ ਕੀਤਾ ਗਿਆ ਹੈ ਅਤੇ ਮੋਡਰੇਸ਼ਨ ਲਈ ਭੇਜਿਆ ਗਿਆ ਹੈ। ਮੋਡਰੇਟ ਹੋਣ ਤੇ ਅਸੀਂ ਤੁਹਾਨੂੰ ਸੂਚਿਤ ਕਰਾਂਗੇ
 </string>
     <string name="video_progress.okay">Okay, got it.</string>
     <string name="video_progress.uploading_failed">Uploading Failed.</string>

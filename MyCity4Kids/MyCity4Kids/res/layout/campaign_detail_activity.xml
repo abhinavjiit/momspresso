@@ -539,7 +539,7 @@
                 android:paddingLeft="@dimen/space_30"
                 android:paddingTop="@dimen/space_10"
                 android:paddingBottom="@dimen/space_10"
-                android:textAllCaps="true"
+                android:inputType="textCapCharacters"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="15sp"
                 app:fontName="oswald_regular.ttf"
