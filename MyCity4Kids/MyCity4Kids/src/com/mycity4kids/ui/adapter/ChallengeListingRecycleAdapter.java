@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 

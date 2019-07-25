@@ -128,11 +128,11 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
 
             //        Bundle extras = getIntent().getExtras();
             if (intent != null) {
-                jasonMyObject = intent.getStringExtra("currentChallengesTopic");
+               // jasonMyObject = intent.getStringExtra("currentChallengesTopic");
 
             }
-            getChallengeData();
-            videoChallengeTopics = new Gson().fromJson(jasonMyObject, Topics.class);
+
+         //   videoChallengeTopics = new Gson().fromJson(jasonMyObject, Topics.class);
             categoriesTextView.setVisibility(View.VISIBLE);
             challengesTextView.setVisibility(View.VISIBLE);
             horizontalRecyclerViewForVideoChallenge.setVisibility(View.VISIBLE);
@@ -144,7 +144,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             comingFrom = "notFromChallenge";
         }
 
-
+        getChallengeData();
         try {
             FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);

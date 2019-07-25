@@ -19,7 +19,7 @@ import com.mycity4kids.ui.campaign.PaymentModeListModal
 import com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment
 import com.mycity4kids.ui.campaign.fragment.CampaignCongratulationFragment
 import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
-import com.mycity4kids.ui.fragment.CampaignDetailFragment
+import com.mycity4kids.ui.campaign.fragment.CampaignDetailFragment
 import com.mycity4kids.ui.fragment.CampaignListFragment
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers

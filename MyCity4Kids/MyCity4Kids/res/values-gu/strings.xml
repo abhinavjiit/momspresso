@@ -349,10 +349,6 @@
     <string name="campaign_maybe_later_text">પછી થી </string>
 
 
-
-
-
-
     <string-array name="onboarding_title_array">
         <item>બ્લોગ પોસ્ટ બનાઓ </item>
         <item>તમે તમારી ટેક્સ્ટ નવ ભાષાઓમાં મોકલી શકો છો</item>
@@ -1126,6 +1122,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
 
     //campaigndetails
+    <string name="campaign_proofs_approved">PROOFS APPROVED</string>
+    <string name="campaign_detail_toolbar_text">CAMPAIGN DETAILS</string>
+    <string name="campaign_read_this_first">READ THIS FIRST"</string>
+    <string name="campaign_discription">DESCRIPTION</string>
+    <string name="deliverable_types">DELIVERABLE TERMS</string>
+    <string name="referral_code_option">REFERRAL CODE(Optional)</string>
     <string name="campaign_details_apply_now">APPLY NOW</string>
     <string name="campaign_details_submission_open">SUBMIT PROOF</string>
     <string name="campaign_details_application_full">APPLICATION FULL</string>
@@ -1140,6 +1142,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="end_date">અંતિમ તારીખ </string>
     <string name="start_date">શરૂઆતની તારીખ </string>
     <string name="campaign_details_not_eligible">Not Eligible</string>
+    <string name="payment_in_progress">PAYMENT IN PROCESS</string>
+    <string name="payment_done">PAYMENT DONE</string>
+    <string name="proof_sublitted">"PROOFS SUBMITTED"</string>
 
     <string name="label_campaign_expired">This campaign is now closed.</string>
     <string name="label_campaign_not_eligible">Share the campaign with your friends.</string>
@@ -1149,6 +1154,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="label_campaign_applied">We will notify you within 7 days on the status of your application.</string>
     <string name="label_campaign_apply"><![CDATA[By clicking on Apply Now, you agree to the <a href="https://www.momspresso.com/home/terms">Terms &amp; Conditions</a>.]]></string>
     <string name="label_campaign_completed">Congratulations! Your submission is approved. Your payment will be processed within 14 days.</string>
+    <string name="proofs_under_review">PROOFS UNDER REVIEW</string>
 
 
     <string name="label_campaign_not_started">Campaign starts on </string>
@@ -1169,6 +1175,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="toast_campaign_invite_thankyou">Thank you, we will get in touch with you.</string>
     <string name="toast_campaign_proof_moderation">We will check your submitted proofs within 7 days. </string>
     <string name="toast_campaign_proof_reject">Your proof was rejected!</string>
+    <string name="application_under_review">APPLICATION UNDER REVIEW</string>
 
     <string name="detail_bottom_apply_now">APPLY NOW</string>
     <string name="detail_bottom_applied">APPLIED</string>
@@ -1235,5 +1242,35 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_payment_history">Payment History</string>
     <string name="participate_on_this_campaign">Please participate in ongoing campaigns to start earning</string>
     <string name="participate_now">Participate now</string>
+
+    <string name="congratulation_text">CONGRATULATIONS!</string>
+    <string name="thanks_for_submitting">Thanks for submitting proof and payment details</string>
+    <string name="be_in_touch_text">We/ll review and be in touch in next 7 working days till then you can take part in other interesting campaigns</string>
+    <string name="share_joy">SHARE THE JOY</string>
+    <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
+
+
+    //campaignListing
+    <string name="campaign_listing_mymoney_campaign_toolbar_text">MYMONEY CAMPAIGNS</string>
+    <string name="brows_participate_earn_text">Browse. Participate. Earn</string>
+    <string name="participate_text">REGISTER</string>
+    <string name="total_payout">Total Payout</string>
+
+
+    //addProof
+    <string name="add_proof">ADD PROOF</string>
+    <string name="please_add_image_proof">Please add image proofs</string>
+    <string name="please_add_link">Please add a link</string>
+    <string name="proof_instructions">Proof Instructions</string>
+    <string name="faq">FAQS</string>
+
+    //trackerActivity
+    <string name="tracker_Activity_submit_corrected_proof">Please submit corrected proofs again.</string>
+    <string name="tracker_Activity_expected_date">Expected Date</string>
+    <string name="tracker_activity_proof_submitted_rejected">PROOFS SUBMITTED REJECTED</string>
+
+
+
+
 
 </resources>

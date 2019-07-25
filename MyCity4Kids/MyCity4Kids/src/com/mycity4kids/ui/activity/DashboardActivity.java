@@ -98,7 +98,6 @@ import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
-import com.mycity4kids.ui.fragment.GroupMyFeedFragment;
 import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
@@ -684,7 +683,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
         findActiveChallenge();
-        findActiveVideoChallenge();
+        //     findActiveVideoChallenge();
 
         getUsersData();
     }
@@ -1857,15 +1856,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.videoContainer: {
                 hideCreateContentView();
                 mDrawerLayout.closeDrawers();
-                if (videoChallengeTopics == null) {
-                    findActiveVideoChallenge();
-                } else {
-                    MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
-                    Intent cityIntent = new Intent(this, ChooseVideoCategoryActivity.class);
-                    cityIntent.putExtra("comingFrom", "createDashboardIcon");
-                    cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
-                    startActivity(cityIntent);
-                }
+
+                MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
+                Intent cityIntent = new Intent(this, ChooseVideoCategoryActivity.class);
+                cityIntent.putExtra("comingFrom", "createDashboardIcon");
+                // cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
+                startActivity(cityIntent);
+
             }
             break;
             case R.id.overlayView:

@@ -38,7 +38,7 @@
                 android:layout_marginLeft="@dimen/space_10"
                 android:layout_toEndOf="@id/back"
                 android:layout_toRightOf="@id/back"
-                android:text="MYMONEY CAMPAIGNS"
+                android:text="@string/campaign_listing_mymoney_campaign_toolbar_text"
                 android:textColor="@color/home.toolbar.titlecolor"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
@@ -51,6 +51,6 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <include layout="@layout/content_tracker"/>
+    <include layout="@layout/content_tracker" />
 
 </android.support.design.widget.CoordinatorLayout>

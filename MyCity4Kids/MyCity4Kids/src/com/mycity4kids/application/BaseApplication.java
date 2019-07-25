@@ -194,7 +194,6 @@ public class BaseApplication extends Application {
     }
 
 
-
     public View getView() {
         return view;
     }
@@ -277,7 +276,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getCampaignRetrofit() {
         if (null == campaignRewards) {
-            createRetrofitInstanceForCampaign("http://192.168.1.49:3040");
+            createRetrofitInstanceForCampaign(AppConstants.DEV_REWARDS_URL);
         }
         return campaignRewards;
     }

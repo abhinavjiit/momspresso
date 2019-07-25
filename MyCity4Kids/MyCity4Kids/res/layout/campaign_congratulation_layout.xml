@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -40,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"
-        android:text="CONGRATULATIONS!"
+        android:text="@string/congratulation_text"
         android:textColor="#4A4A4A"
         android:textSize="30dp"
         app:fontName="oswald_regular.ttf"
@@ -70,7 +69,7 @@
         android:layout_marginTop="@dimen/space_20"
         android:clickable="false"
         android:gravity="center_horizontal"
-        android:text="Thanks for submitting proof and payment details"
+        android:text="@string/thanks_for_submitting"
         android:textColor="#4A4A4A"
         android:textSize="20sp"
         android:visibility="visible"
@@ -118,7 +117,7 @@
         android:clickable="false"
         android:fontFamily="sans-serif"
         android:gravity="center"
-        android:text="We'll review and be in touch in next 7 working days till then you can take part in other interesting campaigns"
+        android:text="@string/be_in_touch_text"
         android:textSize="16sp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -182,7 +181,7 @@
             android:shadowColor="#EBABB5"
             android:shadowDx="0"
             android:shadowDy="3"
-            android:text="SHARE THE JOY"
+            android:text="@string/share_joy"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -232,7 +231,7 @@
         android:gravity="center"
         android:paddingTop="18dp"
         android:paddingBottom="18dp"
-        android:text="CONTINUE BROWSING CAMPAIGNS"
+        android:text="@string/continue_browsing_campaign"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:fontName="oswald_regular.ttf"

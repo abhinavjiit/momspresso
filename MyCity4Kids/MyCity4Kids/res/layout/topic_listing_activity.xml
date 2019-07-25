@@ -101,18 +101,20 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="right|bottom"
         android:layout_margin="@dimen/space_20"
+        android:scaleType="center"
         android:tint="@color/white"
         android:visibility="gone"
         app:backgroundTint="@color/app_red"
         app:fab_colorNormal="@color/app_red"
         app:fab_colorPressed="@color/app_red"
+
         app:layout_anchorGravity="top|end"
         app:rippleColor="@color/app_red"
         app:srcCompat="@drawable/icon_video" />

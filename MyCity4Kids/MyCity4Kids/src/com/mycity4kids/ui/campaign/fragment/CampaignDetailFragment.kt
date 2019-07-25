@@ -1,4 +1,4 @@
-package com.mycity4kids.ui.fragment
+package com.mycity4kids.ui.campaign.fragment
 
 import android.accounts.NetworkErrorException
 import android.app.Activity

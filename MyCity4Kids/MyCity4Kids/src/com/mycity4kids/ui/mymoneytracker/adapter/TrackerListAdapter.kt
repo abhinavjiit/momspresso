@@ -67,9 +67,9 @@ class TrackerListAdapter(var context: Context, var trackerDataModel: ArrayList<T
                     }
                     setColorsAndImage(Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status), holder.imageStatus, context, holder.textDate, holder.textStatusName)
                     holder.textDateError.text = ""
-                    if (Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status).equals("PROOFS SUBMITTED REJECTED")) {
+                    if (Constants.TrackerStatusMapping.findById(trackerDataModel.tracker_status).equals(context.resources.getString(R.string.tracker_activity_proof_submitted_rejected))) {
                         if (errorStatus) {
-                            holder.textstatusError.text = "Please submit corrected proofs again."
+                            holder.textstatusError.text = context.resources.getString(R.string.tracker_Activity_submit_corrected_proof)
                         } else {
                             holder.textstatusError.text = ""
 
@@ -81,7 +81,7 @@ class TrackerListAdapter(var context: Context, var trackerDataModel: ArrayList<T
                     if (trackerDataModel.expected_time > 0) {
                         holder.textDate.setText(convertDate(trackerDataModel.expected_time))
                         holder.textDate.visibility = View.VISIBLE
-                        holder.textDateError.text = "Expected Date"
+                        holder.textDateError.text = context.resources.getString(R.string.tracker_Activity_expected_date)
 
                     } else {
                         holder.textDate.visibility = View.GONE

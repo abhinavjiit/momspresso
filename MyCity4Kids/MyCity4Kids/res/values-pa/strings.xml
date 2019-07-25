@@ -50,12 +50,12 @@
     <string name="event_dates_txt">Event Dates</string>
     <string name="description_txt">Description</string>
     <string name="contact_txt">Contact</string>
-    <string name="about_txt">About</string>
+    <string name="about_txt">ਬਾਰੇ</string>
     <string name="event_list">There are no listings found.</string>
     <string name="additional_info">Additional Information</string>
-    <string name="address_txt">Address</string>
-    <string name="sub_address_txt">Address</string>
-    <string name="address_locality_txt">Address</string>
+    <string name="address_txt">ਪਤਾ</string>
+    <string name="sub_address_txt">ਪਤਾ</string>
+    <string name="address_locality_txt">ਪਤਾ</string>
 
     <!-- Top Picks Screen -->
     <string name="top_picks">Top Picks</string>
@@ -358,7 +358,7 @@
     <string name="onboarding.desc_4">Harness the power of our mom community. Share your queries and help others!</string>
 
 
-    <string name="onboarding_desc_array.tutorial_1.blogs">BLOGS</string>
+    <string name="onboarding_desc_array.tutorial_1.blogs">ਬਲੋਗਸ</string>
     <string name="onboarding_desc_array.tutorial_1.videos">MOMVLOGS</string>
     <string name="onboarding_desc_array.tutorial_2.english">ENGLISH</string>
     <string name="onboarding_desc_array.tutorial_2.hindi">HINDI</string>
@@ -373,11 +373,11 @@
     <string name="onboarding_desc_array.tutorial_4.events">EVENTS</string>
     <string name="onboarding_desc_array.tutorial_4.resources">RESOURCES</string>
 
-    <string name="onboarding.signin">SIGN IN</string>
+    <string name="onboarding.signin">ਸਾਈਨ - ਇਨ</string>
     <string name="onboarding.already_member">Already a member?</string>
-    <string name="onboarding.get_started">GET STARTED</string>
-    <string name="sign_in.welcome_back">WELCOME BACK</string>
-    <string name="sign_in.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
+    <string name="onboarding.get_started">ਸ਼ੁਰੂ ਕਰੋ</string>
+    <string name="sign_in.welcome_back">ਵਾਪਸ ਸਵਾਗਤ</string>
+    <string name="sign_in.desc">ਮਾਂ ਹੋਣ ਦੀ ਖ਼ੁਸ਼ੀ ਬਾਰੇ ਜਾਣੋ । ਪ੍ਰੇਰਨਾ ਲੈਣ ਅਤੇ ਉਮੀਦ ਲਈ ਸਾਡੀ ਮਾਂ ਕਮਿਊਨਟੀ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ.</string>
     <string name="sign_in.no_account">Don\'t have an account?\u0020</string>
     <string name="sign_in.sign_up_btn">SIGNUP</string>
 
@@ -392,26 +392,26 @@
     <string name="login_email.password_hint">Password</string>
 
 
-    <string name="signin.login_via_facebook">LOGIN USING FACEBOOK</string>
-    <string name="signin.login_via_google">LOGIN USING GOOGLE</string>
-    <string name="signin.login_via_email">LOGIN USING EMAIL</string>
-    <string name="signin.login_via_phone">LOGIN USING PHONE</string>
+    <string name="signin.login_via_facebook">ਫੇਸਬੁੱਕ ਦੀ ਵਰਤੋਂ ਨਾਲ ਲਾਗਇਨ ਕਰੋ</string>
+    <string name="signin.login_via_google">ਗੂਗਲ ਦੀ ਵਰਤੋਂ ਨਾਲ ਲਾਗਇਨ ਕਰੋ</string>
+    <string name="signin.login_via_email">ਈ-ਮੇਲ ਦੀ ਵਰਤੋਂ ਨਾਲ ਲਾਗਇਨ ਕਰੋ</string>
+    <string name="signin.login_via_phone">ਫੋਨ ਦੀ ਵਰਤੋਂ ਨਾਲ ਲਾਗਇਨ ਕਰੋ</string>
 
-    <string name="signup.connect_via_facebook">CONNECT USING FACEBOOK</string>
-    <string name="signup.connect_via_google">CONNECT USING GOOGLE</string>
-    <string name="signup.connect_via_phone">CONNECT USING PHONE</string>
+    <string name="signup.connect_via_facebook">ਫੇਸਬੁੱਕ ਰਾਹੀਂ ਜੁੜੋ</string>
+    <string name="signup.connect_via_google">ਗੂਗਲ ਰਾਹੀਂ ਜੁੜੋ</string>
+    <string name="signup.connect_via_phone">ਫੋਨ ਰਾਹੀਂ ਜੁੜੋ</string>
 
     <string name="for_you.reason.why_label">Why am I seeing this?</string>
     <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
-    <string name="for_you.reason.okay">OKAY</string>
+    <string name="for_you.reason.okay">ਠੀਕ ਹੈ</string>
 
     <string name="lang_specific.toolbar.title">LANGUAGES</string>
 
     <string name="lang_setting.stories_label">Stories</string>
 
     <string name="search.article_label">ARTICLE</string>
-    <string name="search.author_label">AUTHOR</string>
-    <string name="search.topic_label">TOPIC</string>
+    <string name="search.author_label">ਲੇਖਕ</string>
+    <string name="search.topic_label">ਟੋਪੀਕ</string>
     <string name="search.video_label">VIDEO</string>
     <string name="search.show_more">SHOW MORE</string>
     <string name="search.article_topic_tab_label">ARTICLES</string>
@@ -431,7 +431,7 @@
     <string name="myprofile.following_label">FOLLOWING</string>
     <string name="myprofile.followers_label">FOLLOWERS</string>
     <string name="myprofile.section.articles_label">ARTICLES</string>
-    <string name="myprofile.section.short_story_label">100 WORD STORY</string>
+    <string name="myprofile.section.short_story_label">100 ਸ਼ਬਦਾਂ ਦੀ ਕਹਾਣੀ</string>
     <string name="myprofile.section.videos_label">MOM VLOGS</string>
     <string name="myprofile.section.mom_bottom_label">Mom vlogs</string>
     <string name="myprofile.section.activity_label">ACTIVITY</string>
@@ -518,23 +518,23 @@
     <string name="app_settings.change_pass.pass_update_fail">Current password is incorrect</string>
     <string name="app_settings.change_pass.pass_update_success">Password updated successfully</string>
 
-    <string name="blog_setup.toolbar.title">SETUP A BLOG</string>
-    <string name="blog_setup.get_started_label">LET\'S GET YOU STARTED FOR YOUR FIRST BLOG</string>
-    <string name="blog_setup.one_time_label">Setup a blog is a one time process.</string>
-    <string name="blog_setup.okay">OKAY</string>
+    <string name="blog_setup.toolbar.title">ਇੱਕ ਬਲਾਗ ਸਥਾਪਤ ਕਰੋ</string>
+    <string name="blog_setup.get_started_label">ਆਓ ਤੁਹਾਡੇ ਪਹਿਲੇ ਬਲਾਗ ਲਈ ਸ਼ੁਰੂ ਕਰੀਏ</string>
+    <string name="blog_setup.one_time_label">ਇਕ ਬਲੋਗ ਸੈੱਟ ਅਪ ਕਰਨਾ ਇਕ ਵਾਰ ਦੀ ਪ੍ਰਕਿਰਿਆ ਹੈ.</string>
+    <string name="blog_setup.okay">ਠੀਕ ਹੈ</string>
     <string name="blog_setup.blog_title_label">BLOG TITLE</string>
-    <string name="blog_setup.blog_title_desc">This is like a title of your digital book and encompasses a description of all your blog posts that you\'ll be publishing here. Eg: Mums diary, My monologue.</string>
+    <string name="blog_setup.blog_title_desc">ਇਹ ਤੁਹਾਡੀ ਡਿਜੀਟਲ ਕਿਤਾਬ ਦੇ ਸਿਰਲੇਖ ਦੀ ਤਰਾਂ ਹੈ ਅਤੇ ਤੁਹਾਡੇ ਸਾਰੇ ਬਲੋਗ ਪੋਸਟਾਂ ਦਾ ਵਰਨਣ ਹੈ ਜੋ ਤੁਸੀਂ ਇਥੇ ਪ੍ਰਕਾਸ਼ਿਤ ਕਰੋਗੇ, ਉਦਾਹਰਣ: ਮਾਂ ਦੀ ਡਾਇਰੀ,  ਮੇਰਾ ਆਤਮ ਭਾਸ਼ਣ .</string>
     <string name="blog_setup.hint_blog_title">Type here </string>
     <string name="blog_setup.about_yourself_label">ABOUT YOURSELF</string>
     <string name="blog_setup.about_desc">Tell the readers about yourself.</string>
     <string name="blog_setup.profile_pic_label">PROFILE PICTURE</string>
     <string name="blog_setup.profile_pic_desc">This is visible to your readers and helps them associate with your writing.</string>
-    <string name="blog_setup.your_details">YOUR DETAILS</string>
-    <string name="blog_setup.hint_phone">Phone Number</string>
-    <string name="blog_setup.save_publish">SAVE &amp; PUBLISH</string>
+    <string name="blog_setup.your_details">ਤੁਹਾਡੇ ਵੇਰਵੇ</string>
+    <string name="blog_setup.hint_phone">ਫੋਨ ਨੰਬਰ</string>
+    <string name="blog_setup.save_publish">ਸੇਵ ਕਰੋ ਅਤੇ ਪਬਲਿਸ਼ ਕਰੋ</string>
 
     <string name="ranking.toolbar.title">MY RANKING</string>
-    <string name="ranking.improve_view.title">ABOUT</string>
+    <string name="ranking.improve_view.title">ਬਾਰੇ</string>
     <string name="ranking.tabs_your_rank_label">YOUR RANK</string>
     <string name="ranking.tabs_page_views_label">YOUR PAGE VIEWS</string>
     <string name="ranking.views_label">BLOG PAGE VIEWS</string>
@@ -555,10 +555,10 @@
 
     <string name="editor.publish">PUBLISH</string>
 
-    <string name="add_article_topics.toolbar.title">CHOOSE TOPICS</string>
-    <string name="add_article_topics.clear_all">CLEAR ALL</string>
-    <string name="add_article_topics.min_topics">Please select atleast one topic to continue</string>
-    <string name="add_article_topics.max_topics">You can choose a maximum of 8 topics</string>
+    <string name="add_article_topics.toolbar.title">ਵਿਸ਼ਾ ਚੁਣੋ</string>
+    <string name="add_article_topics.clear_all">ਸਾਰਾ ਸਾਫ ਕਰੋ</string>
+    <string name="add_article_topics.min_topics">ਕਿਰਪਾ ਕਰਕੇ ਜਾਰੀ ਰੱਖਣ ਲਈ ਘੱਟੋ ਘੱਟ ਇਕ ਵਿਸ਼ਾ ਚੁਣੋ</string>
+    <string name="add_article_topics.max_topics">ਤੁਸੀਂ ਵੱਧ ਤੋਂ ਵੱਧ 8 ਵਿਸ਼ੇ ਚੁਣ ਸਕਦੇ ਹੋ</string>
     <string name="add_article_topics.apply">APPLY</string>
 
     <string name="choose_article_image.toolbar.title">CHOOSE IMAGE</string>
@@ -596,7 +596,7 @@
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
     <string name="moderation_or_share.later">MAYBE LATER</string>
-    <string name="moderation_or_share.okay">OKAY</string>
+    <string name="moderation_or_share.okay">ਠੀਕ ਹੈ</string>
     <string name="moderation_or_share.gplus_fail">Unable to share with google plus.</string>
     <string name="moderation_or_share.whatsapp_fail">Unable to share with whatsapp.</string>
     <string name="moderation_or_share.facebook_fail">Unable to share with facebook.</string>
@@ -714,7 +714,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
     <string name="article_listing.type.for_you_label">FOR YOU</string>
     <string name="article_listing.type.short_story_label">100 WORD STORY</string>
-    <string name="article_listing.type.languages_label">LANGUAGES</string>
+    <string name="article_listing.type.languages_label">ਭਾਸ਼ਾਵਾਂ</string>
     <string name="article_listing.type.videos_label">VIDEOS</string>
     <string name="article_listing.type.recent_label">RECENT</string>
 
@@ -840,7 +840,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.invitation_only_gp">Invitation only group</string>
     <string name="groups.created">Created</string>
     <string name="groups.member_label">MEMBERS</string>
-    <string name="groups.sections.about">ABOUT</string>
+    <string name="groups.sections.about">ਬਾਰੇ</string>
     <string name="groups.sections.discussions">DISCUSSION</string>
     <string name="groups.sections.blogs">BLOGS</string>
     <string name="groups.sections.photos">PHOTOS</string>
@@ -1109,7 +1109,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_facebook_handler">Connect your Facebook</string>
     <string name="rewards_participate_and_earn"><![CDATA[Participate & Earn]]></string>
     <string name="notification">Notification</string>
-    <string name="about_video">About</string>
+    <string name="about_video">ਬਾਰੇ</string>
     <string name="story_text_title_hindi">विचारसागर</string>
     <string name="story_text_description_hindi">यहाँ आप सुविचार (कोट्स) लिख सकते हैं.</string>
     <string name="campaign_name">Campaign Name \n Facebook Campaign</string>

@@ -22,6 +22,7 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
@@ -178,6 +179,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         Intent readArticleIntent = new Intent(this, ReadArticleService.class);
         startService(readArticleIntent);
+
+
     }
 
     @Override
@@ -532,8 +535,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
         isAudioPlaying = false;
 
-        ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
-        long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
     }
 
     @Override
