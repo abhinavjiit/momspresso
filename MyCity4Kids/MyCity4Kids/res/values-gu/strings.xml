@@ -209,6 +209,8 @@
         <item>తెలుగు</item>
         <item>ಕನ್ನಡ</item>
         <item>മലയാളം</item>
+        <item>ગુજરાતી</item>
+        <item>ਪੰਜਾਬੀ</item>
     </string-array>
 
 
@@ -740,6 +742,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="language_label.telegu">తెలుగు</string>
     <string name="language_label.kannada">ಕನ್ನಡ</string>
     <string name="language_label.malayalam">മലയാളം</string>
+    <string name="language_label.gujrati">ગુજરાતી </string>
+    <string name="language_label.punjabi">ਪੰਜਾਬੀ</string>
+
 
     <string name="choose_pref_lang">તમારી પસંદગી ની ભાષા દર્શાઓ	</string>
     <string name="choose_pref_lang.cancel">રદ્દ કરો</string>

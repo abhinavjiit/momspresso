@@ -130,6 +130,7 @@
         android:textColor="@color/videos.upload_option.gallery"
         android:textSize="18sp"
         app:fontName="oswald.ttf" />
+
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/gujratiTextView"
         android:layout_width="match_parent"
@@ -140,6 +141,20 @@
         android:paddingRight="23dp"
         android:paddingBottom="10dp"
         android:text="@string/language_label.gujrati"
+        android:textColor="@color/videos.upload_option.gallery"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/punjabiTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="23dp"
+        android:paddingTop="8dp"
+        android:paddingRight="23dp"
+        android:paddingBottom="10dp"
+        android:text="@string/language_label.punjabi"
         android:textColor="@color/videos.upload_option.gallery"
         android:textSize="18sp"
         app:fontName="oswald.ttf" />

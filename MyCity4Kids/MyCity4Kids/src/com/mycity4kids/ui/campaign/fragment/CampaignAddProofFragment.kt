@@ -72,6 +72,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 }
                 notifyUrlAdapter()
             }
+
+
         }
     }
 

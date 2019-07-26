@@ -52,28 +52,12 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
         languageRecyclerView = (RecyclerView) findViewById(R.id.languageRecyclerView);
         String[] langArray = {getString(R.string.language_label_english), getString(R.string.language_label_hindi), getString(R.string.language_label_marathi),
                 getString(R.string.language_label_bengali), getString(R.string.language_label_telegu), getString(R.string.language_label_tamil)
-                , getString(R.string.language_label_kannada), getString(R.string.language_label_malayalam), getString(R.string.language_label_gujrati)};
+                , getString(R.string.language_label_kannada), getString(R.string.language_label_malayalam), getString(R.string.language_label_gujrati), getString(R.string.language_label_punjabi)};
         ArrayList<String> langList = new ArrayList<String>(Arrays.asList(langArray));
-//        currentLangTextView = (TextView) findViewById(R.id.currentLangTextView);
-//        englishTextView = (TextView) findViewById(R.id.englishTextView);
-//        hindiTextView = (TextView) findViewById(R.id.hindiTextView);
-//        marathiTextView = (TextView) findViewById(R.id.marathiTextView);
-//        bengaliTextView = (TextView) findViewById(R.id.bengaliTextView);
-//        tamilTextView = (TextView) findViewById(R.id.tamilTextView);
-//        teluguTextView = (TextView) findViewById(R.id.teluguTextView);
-//        langListOverlay = (RelativeLayout) findViewById(R.id.langListOverlay);
-//        selectMoreTextView = (TextView) findViewById(R.id.selectMoreTextView);
-//        okayTextView = (TextView) findViewById(R.id.okayTextView);
+
         continueTextView = (TextView) findViewById(R.id.continueTextView);
 
-//        englishTextView.setOnClickListener(this);
-//        hindiTextView.setOnClickListener(this);
-//        marathiTextView.setOnClickListener(this);
-//        bengaliTextView.setOnClickListener(this);
-//        tamilTextView.setOnClickListener(this);
-//        teluguTextView.setOnClickListener(this);
-//        selectMoreTextView.setOnClickListener(this);
-//        okayTextView.setOnClickListener(this);
+
         continueTextView.setOnClickListener(this);
 
         final LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -85,21 +69,6 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
 
         languageRecyclerView.setAdapter(languageSelectionRecyclerAdapter);
 
-//        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(this))) {
-//            currentLangTextView.setText(getString(R.string.lang_sel_app_lang_desc, getString(R.string.language_label_english)));
-//        } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(this))) {
-//            currentLangTextView.setText(getString(R.string.lang_sel_app_lang_desc, getString(R.string.language_label_hindi)));
-//        } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(this))) {
-//            currentLangTextView.setText(getString(R.string.lang_sel_app_lang_desc, getString(R.string.language_label_marathi)));
-//        } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
-//            currentLangTextView.setText(getString(R.string.lang_sel_app_lang_desc, getString(R.string.language_label_bengali)));
-//        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(this))) {
-//            currentLangTextView.setText(getString(R.string.lang_sel_app_lang_desc, getString(R.string.language_label_tamil)));
-//        } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
-//            currentLangTextView.setText(getString(R.string.lang_sel_app_lang_desc, getString(R.string.language_label_telegu)));
-//        } else {
-//            langListOverlay.setVisibility(View.GONE);
-//        }
 
     }
 
@@ -111,75 +80,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.okayTextView:
-//                Intent intent = new Intent(LanguageSelectionActivity.this, TutorialActivity.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(intent);
-//                finish();
-//                break;
-//            case R.id.selectMoreTextView:
-//                langListOverlay.setVisibility(View.GONE);
-//                break;
-//            case R.id.englishTextView:
-//                continueTextView.setVisibility(View.VISIBLE);
-//                selectedLang = AppConstants.LOCALE_ENGLISH;
-//                englishTextView.setSelected(true);
-//                hindiTextView.setSelected(false);
-//                marathiTextView.setSelected(false);
-//                bengaliTextView.setSelected(false);
-//                tamilTextView.setSelected(false);
-//                teluguTextView.setSelected(false);
-//                break;
-//            case R.id.hindiTextView:
-//                continueTextView.setVisibility(View.VISIBLE);
-//                selectedLang = AppConstants.LOCALE_HINDI;
-//                englishTextView.setSelected(false);
-//                hindiTextView.setSelected(true);
-//                marathiTextView.setSelected(false);
-//                bengaliTextView.setSelected(false);
-//                tamilTextView.setSelected(false);
-//                teluguTextView.setSelected(false);
-//                break;
-//            case R.id.marathiTextView:
-//                continueTextView.setVisibility(View.VISIBLE);
-//                selectedLang = AppConstants.LOCALE_MARATHI;
-//                englishTextView.setSelected(false);
-//                hindiTextView.setSelected(false);
-//                marathiTextView.setSelected(true);
-//                bengaliTextView.setSelected(false);
-//                tamilTextView.setSelected(false);
-//                teluguTextView.setSelected(false);
-//                break;
-//            case R.id.bengaliTextView:
-//                continueTextView.setVisibility(View.VISIBLE);
-//                selectedLang = AppConstants.LOCALE_BENGALI;
-//                englishTextView.setSelected(false);
-//                hindiTextView.setSelected(false);
-//                marathiTextView.setSelected(false);
-//                bengaliTextView.setSelected(true);
-//                tamilTextView.setSelected(false);
-//                teluguTextView.setSelected(false);
-//                break;
-//            case R.id.tamilTextView:
-//                continueTextView.setVisibility(View.VISIBLE);
-//                selectedLang = AppConstants.LOCALE_TAMIL;
-//                englishTextView.setSelected(false);
-//                hindiTextView.setSelected(false);
-//                marathiTextView.setSelected(false);
-//                bengaliTextView.setSelected(false);
-//                tamilTextView.setSelected(true);
-//                teluguTextView.setSelected(false);
-//                break;
-//            case R.id.teluguTextView:
-//                continueTextView.setVisibility(View.VISIBLE);
-//                selectedLang = AppConstants.LOCALE_TELUGU;
-//                englishTextView.setSelected(false);
-//                hindiTextView.setSelected(false);
-//                marathiTextView.setSelected(false);
-//                bengaliTextView.setSelected(false);
-//                tamilTextView.setSelected(false);
-//                teluguTextView.setSelected(true);
-//                break;
+
             case R.id.continueTextView:
                 if (StringUtils.isNullOrEmpty(selectedLang)) {
                     showToast(getString(R.string.lang_sel_choose_lang_toast));
@@ -236,6 +137,9 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 break;
             case 8:
                 selectedLang = AppConstants.LOCAL_GUJRATI;
+                break;
+            case 9:
+                selectedLang = AppConstants.LOCAL_PUNJABI;
                 break;
             default:
                 continueTextView.setVisibility(View.GONE);

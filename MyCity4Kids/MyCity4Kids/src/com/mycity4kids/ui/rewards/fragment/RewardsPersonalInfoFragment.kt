@@ -665,7 +665,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             apiGetResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textDOB.text.toString())
         }
 
+
+        preSelectedLanguage.removeAll(Collections.singleton(""))
+
+
         if (preSelectedLanguage.isEmpty()) {
+
+
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_language)), Toast.LENGTH_SHORT).show()
             return false
         } else {

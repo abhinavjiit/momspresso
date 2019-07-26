@@ -195,6 +195,9 @@
     public static final String LOCALE_TELUGU = "te";
     public static final String LOCALE_KANNADA = "kn";
     public static final String LOCALE_MALAYALAM = "ml";
+    public static final String LOCALE_GUJRATI = "gu";
+    public static final String LOCALE_PUNJABI= "pa";
+
 
 
     <string-array name="popup_language_list">
@@ -206,6 +209,8 @@
         <item>తెలుగు</item>
         <item>ಕನ್ನಡ</item>
         <item>മലയാളം</item>
+        <item>ગુજરાતી</item>
+        <item>ਪੰਜਾਬੀ</item>
     </string-array>
 
 
@@ -346,7 +351,7 @@
 
     <string-array name="onboarding_title_array">
         <item>Create a Blog</item>
-        <item>Enjoy Blogs in any of 8 Languages</item>
+        <item>Enjoy Blogs in any of 9 Languages</item>
         <item>Upload your Mom Vlogs or watch on the go</item>
         <item>With Support Groups, you are not alone</item>
         <item>Start earning with MyMoney!</item>
@@ -740,6 +745,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="language_label.kannada">ಕನ್ನಡ</string>
     <string name="language_label.malayalam">മലയാളം</string>
     <string name="language_label.gujrati">ગુજરાતી </string>
+    <string name="language_label.punjabi">ਪੰਜਾਬੀ</string>
+
 
 
     <string name="choose_pref_lang">Choose your preferred language</string>

@@ -639,6 +639,7 @@
     <string name="lang_sel.choose_lang_toast">অব্যাহত থাকতে একটি ভাষা পছন্দ করুন</string>
 
     <string name="all_categories_label">সকল</string>
+    <string name="cancel">Cancel</string>
 
     <string name="language_label.english">English</string>
     <string name="language_label.hindi">हिंदी</string>
@@ -648,6 +649,8 @@
     <string name="language_label.telegu">తెలుగు</string>
     <string name="language_label.kannada">ಕನ್ನಡ</string>
     <string name="language_label.malayalam">മലയാളം</string>
+    <string name="language_label.gujrati">ગુજરાતી </string>
+    <string name="language_label.punjabi">ਪੰਜਾਬੀ</string>
 
     <string name="choose_pref_lang">আপনার পছন্দের ভাষা নির্বাচন করুন</string>
     <string name="choose_pref_lang.cancel">বাতিল</string>
@@ -670,6 +673,18 @@
     <string name="author_type.user">ব্যবহারকারী</string>
 
     <string name="no_article.be_first">এই ক্যাটাগরি তে প্রথম আর্টিকেল টি আপনি লিখুন</string>
+    <string-array name="popup_language_list">
+        <item>English</item>
+        <item>हिंदी</item>
+        <item>मराठी</item>
+        <item>বাংলা</item>
+        <item>தமிழ்</item>
+        <item>తెలుగు</item>
+        <item>ಕನ್ನಡ</item>
+        <item>മലയാളം</item>
+        <item>ગુજરાતી</item>
+        <item>ਪੰਜਾਬੀ</item>
+    </string-array>
 
     <!--<string name="home_screen.groups.title">SUPPORT GROUPS</string>-->
     <!--<string name="groups.summary">SUMMARY</string>-->
@@ -968,9 +983,6 @@
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
 
-
-
-
     <string name="drawer_referra_mymoney">Refer MyMoney</string>
     <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
     <string name="share_referral_screen">Share your referral code and start earning</string>
@@ -1003,7 +1015,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="be_in_touch_text">We/ll review and be in touch in next 7 working days till then you can take part in other interesting campaigns</string>
     <string name="share_joy">SHARE THE JOY</string>
     <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
-
 
 
     //campaigndetails
@@ -1125,7 +1136,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     //rewardsCampaignString
     <string name="reward_campaign_add_proof">ADD PROOF</string>
     <string name="select_payment_method">SELECT YOUR \n PREFERRED METHOD OF PAYMENT</string>
-
 
 
     <string name="rewards_link_social">Link Account</string>

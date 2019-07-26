@@ -653,6 +653,7 @@
     <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
 
     <string name="all_categories_label">എല്ലാം</string>
+    <string name="cancel">Cancel</string>
 
     <string name="language_label.english">English</string>
     <string name="language_label.hindi">हिंदी</string>
@@ -662,6 +663,21 @@
     <string name="language_label.telegu">తెలుగు</string>
     <string name="language_label.kannada">ಕನ್ನಡ</string>
     <string name="language_label.malayalam">മലയാളം</string>
+    <string name="language_label.gujrati">ગુજરાતી </string>
+    <string name="language_label.punjabi">ਪੰਜਾਬੀ</string>
+
+    <string-array name="popup_language_list">
+        <item>English</item>
+        <item>हिंदी</item>
+        <item>मराठी</item>
+        <item>বাংলা</item>
+        <item>தமிழ்</item>
+        <item>తెలుగు</item>
+        <item>ಕನ್ನಡ</item>
+        <item>മലയാളം</item>
+        <item>ગુજરાતી</item>
+        <item>ਪੰਜਾਬੀ</item>
+    </string-array>
 
     <string name="choose_pref_lang">താങ്കളുടെ താല്പര്യമുള്ള ഭാഷ തെരഞ്ഞെടുക്കൂ</string>
     <string name="choose_pref_lang.cancel">ക്യാൻസൽ</string>

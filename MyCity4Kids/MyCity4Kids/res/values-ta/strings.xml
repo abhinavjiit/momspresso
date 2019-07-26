@@ -617,6 +617,7 @@
     <string name="image_upload_fail">படத்தை பதிவேற்ற முடியவில்லை, தயவுசெய்து பின்னர் முயற்சிக்கவும்</string>
     <string name="android_version_unsupported">படத்தை பதிவேற்ற முடியவில்லை, தயவுசெய்து பின்னர் முயற்சிக்கவும்</string>
     <string name="choose_mp4_file">தயவுசெய்து ஒரு .mp4 வடிவமைப்பு கோப்பை தேர்வு செய்யவும்</string>
+    <string name="cancel">Cancel</string>
 
     <string name="article_listing.type.trending_label">ட்ரென்டிங்</string>
     <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
@@ -626,6 +627,19 @@
     <string name="article_listing.type.languages_label">உங்களுக்காக</string>
     <string name="article_listing.type.videos_label">காணொளிகள்</string>
     <string name="article_listing.type.recent_label">அண்மையில்</string>
+
+    <string-array name="popup_language_list">
+        <item>English</item>
+        <item>हिंदी</item>
+        <item>मराठी</item>
+        <item>বাংলা</item>
+        <item>தமிழ்</item>
+        <item>తెలుగు</item>
+        <item>ಕನ್ನಡ</item>
+        <item>മലയാളം</item>
+        <item>ગુજરાતી</item>
+        <item>ਪੰਜਾਬੀ</item>
+    </string-array>
 
     <string name="lang_sel.welcome_msg">WELCOME TO MOMSPRESSO</string>
     <string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>
@@ -646,6 +660,9 @@
     <string name="language_label.telegu">తెలుగు</string>
     <string name="language_label.kannada">ಕನ್ನಡ</string>
     <string name="language_label.malayalam">മലയാളം</string>
+    <string name="language_label.gujrati">ગુજરાતી </string>
+    <string name="language_label.punjabi">ਪੰਜਾਬੀ</string>
+
 
     <string name="choose_pref_lang">Choose your preferred language</string>
     <string name="choose_pref_lang.cancel">ரத்து</string>

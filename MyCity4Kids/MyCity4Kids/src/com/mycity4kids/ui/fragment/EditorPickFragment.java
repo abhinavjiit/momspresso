@@ -76,7 +76,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     ShimmerFrameLayout ashimmerFrameLayout;
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.new_article_layout, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
@@ -412,6 +412,8 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
             intent.putExtra(Constants.FROM_SCREEN, "TodaysBestScreen");
         }
+
+
         intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
         intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
         intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());

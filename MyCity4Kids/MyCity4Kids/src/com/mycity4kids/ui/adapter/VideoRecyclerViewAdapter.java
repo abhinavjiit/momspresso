@@ -247,6 +247,12 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     ((ParallelFeedActivity) mContext).openPublicProfile(responseData.getAuthor().getUserType(), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + responseData.getAuthor().getLastName());
                 }
             });
+            userHandle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((ParallelFeedActivity) mContext).openPublicProfile(responseData.getAuthor().getUserType(), responseData.getAuthor().getId(), responseData.getAuthor().getFirstName() + responseData.getAuthor().getLastName());
+                }
+            });
             heart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
