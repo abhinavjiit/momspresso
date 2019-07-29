@@ -9,7 +9,6 @@ import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
-import com.mycity4kids.newmodels.BranchIoModal.BranchData;
 
 import java.util.Locale;
 

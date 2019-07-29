@@ -207,7 +207,7 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(PhoneLoginUserDetailActivity.this,
                 Manifest.permission.CAMERA)) {
 
-            Snackbar.make(rootView, R.string.permission_storage_rationale,
+            Snackbar.make(root, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
                         @Override
@@ -226,7 +226,7 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
     private void requestCameraPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
-            Snackbar.make(rootView, R.string.permission_camera_rationale,
+            Snackbar.make(root, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
                         @Override
