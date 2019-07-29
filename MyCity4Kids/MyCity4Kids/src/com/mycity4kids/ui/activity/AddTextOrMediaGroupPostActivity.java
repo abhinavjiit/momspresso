@@ -631,6 +631,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                                  showToast(getString(R.string.server_went_wrong));
                                  return;
                              }
+
+                             file.delete();
+
                              ImageUploadResponse responseModel = response.body();
                              if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));

@@ -602,8 +602,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                     try {
                         val storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com")
                         var file = File(data.getData().getPath());//create path from uri
-                        var split = file.getPath().split(":");//split the path.
-                        var path = split[1];
+                        /*  var split = file.getPath().split(":");//split the path.
+                          var path = split[1];*/
                         val storageRef = storage.reference
                         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
                         val riversRef = storageRef.child("user/" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId

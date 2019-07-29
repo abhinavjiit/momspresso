@@ -769,28 +769,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     <string name="no_article.be_first">ਇਸ ਸ਼੍ਰੇਣੀ ਵਿੱਚ ਲੇਖ ਲਿਖਣ ਵਾਲਾ ਪਹਿਲਾ ਵਿਅਕਤੀ ਬਣੋ!</string>
 
-    <!--<string name="groups.sections.about">ABOUT</string>-->
-    <!--<string name="groups.sections.discussions">DISCUSSION</string>-->
-    <!--<string name="groups.sections.blogs">BLOGS</string>-->
-    <!--<string name="groups.sections.photos">PHOTOS</string>-->
-    <!--<string name="groups.sections.videos">VIDEOS</string>-->
-    <!--<string name="groups.sections.top_posts">TOP POSTS</string>-->
-    <!--<string name="groups.sections.polls">POLLS</string>-->
-    <!--<string name="groups.created">Created</string>-->
-    <!--<string name="groups.anyone_join">Anyone can join</string>-->
-    <!--<string name="groups.closed_gp">Closed group</string>-->
-    <!--<string name="groups.invitation_only_gp">Invitation only group</string>-->
-    <!--<string name="groups.join_group">JOIN GROUP</string>-->
-    <!--<string name="groups.choose_media">Choose media to upload</string>-->
-    <!--<string name="groups.search_in">Search</string>-->
-    <!--<string name="groups.post_comment">Comments</string>-->
-    <!--<string name="groups.post_helpful">Helpful</string>-->
-    <!--<string name="groups.post_nothelpful">Not Helpful</string>-->
-    <!--<string name="groups.post_label">POST</string>-->
-    <!--<string name="groups.join_form">JOINING FORM</string>-->
-    <!--<string name="groups.member_label">MEMBERS</string>-->
-    <!--<string name="groups.anonymous">ANONYMOUS</string>-->
-    <!--<string name="groups.membership_request_msg">We have received your request for joining this group. Your membership will be confirmed once it is approved by the moderators of this group.</string>-->
 
     <string name="groups.join_label">ਗ੍ਰੁਪਸ, ਜਿਨ੍ਹਾਂ ਦੇ ਤੁਸੀਂ ਮੈਂਬਰ ਹੋ</string>
     <string name="groups.reported_content">ਰਿਪੋਰਟ ਕੀਤੀ ਸਮੱਗਰੀ</string>
@@ -953,33 +931,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="view_profile">ਪ੍ਰੋਫਾਈਲ ਦੇਖੋ</string>
     <string name="enter_valid_email">Please enter valid email id</string>
 
-
-    <!--<string name="application_name">ExoPlayer</string>-->
-    <!--<string name="unexpected_intent_action">Unexpected intent action: <xliff:g id="action">%1$s</xliff:g></string>-->
-    <!--<string name="error_cleartext_not_permitted">Cleartext traffic not permitted</string>-->
-    <!--<string name="error_generic">Playback failed</string>-->
-    <!--<string name="error_unrecognized_abr_algorithm">Unrecognized ABR algorithm</string>-->
-    <!--<string name="error_unrecognized_stereo_mode">Unrecognized stereo mode</string>-->
-    <!--<string name="error_drm_not_supported">Protected content not supported on API levels below 18</string>-->
-    <!--<string name="error_drm_unsupported_scheme">This device does not support the required DRM scheme</string>-->
-    <!--<string name="error_drm_unknown">An unknown DRM error occurred</string>-->
-    <!--<string name="error_no_decoder">This device does not provide a decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>-->
-    <!--<string name="error_no_secure_decoder">This device does not provide a secure decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>-->
-    <!--<string name="error_querying_decoders">Unable to query device decoders</string>-->
-    <!--<string name="error_instantiating_decoder">Unable to instantiate decoder <xliff:g id="decoder_name">%1$s</xliff:g></string>-->
-    <!--<string name="error_unsupported_video">Media includes video tracks, but none are playable by this device</string>-->
-    <!--<string name="error_unsupported_audio">Media includes audio tracks, but none are playable by this device</string>-->
-    <!--<string name="storage_permission_denied">Permission to access storage was denied</string>-->
-    <!--<string name="sample_list_load_error">One or more sample lists failed to load</string>-->
-    <!--<string name="ima_not_loaded">Playing sample without ads, as the IMA extension was not loaded</string>-->
-    <!--<string name="download_start_error">Failed to start download</string>-->
-    <!--<string name="download_playlist_unsupported">This demo app does not support downloading playlists</string>-->
-    <!--<string name="download_drm_unsupported">This demo app does not support downloading protected content</string>-->
-    <!--<string name="download_scheme_unsupported">This demo app only supports downloading http streams</string>-->
-    <!--<string name="download_ads_unsupported">IMA does not support offline ads</string>-->
-    <!--<string name="prefer_extension_decoders">Prefer extension decoders</string>-->
-    <!--<string name="random_abr">Enable random ABR</string>-->
-    <!--<string name="choose_video_category">Choose Video Category</string>-->
 
     <string name="short_seconds">sec</string>
     <string name="megabyte">MB</string>

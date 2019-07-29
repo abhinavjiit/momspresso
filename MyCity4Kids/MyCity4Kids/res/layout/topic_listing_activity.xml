@@ -120,6 +120,6 @@
 
         app:layout_anchorGravity="top|end"
         app:rippleColor="@color/app_red"
-        app:srcCompat="@drawable/icon_video" />
+        app:srcCompat="@drawable/ic_video_new" />
 
 </android.support.design.widget.CoordinatorLayout>
