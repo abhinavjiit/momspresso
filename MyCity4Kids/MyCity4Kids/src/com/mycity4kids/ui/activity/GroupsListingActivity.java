@@ -37,10 +37,7 @@ import com.mycity4kids.widget.SpacesItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -307,29 +304,29 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 groupList.addAll(dataList);
             }
 
-
-          /*  for (int i = 0; i < groupList.size(); i++) {
+            for (int i = 0; i < groupList.size(); i++) {
                 int count = 0;
                 for (int j = 0; j < joinList.size(); j++) {
                     if (groupList.get(i).getId() == joinList.get(j).getId()) {
                         count++;
+                        break;
                     }
                 }
                 if (count == 0) {
-                    listOutput1.add(joinList.get(i));
+                    listOutput1.add(groupList.get(i));
                 }
 
-            }*/
+            }
 
 
-            List<GroupResult> listOutput =
+         /*   List<GroupResult> listOutput =
                     groupList.stream()
                             .filter(e -> joinList.stream().map(GroupResult::getId).noneMatch(id -> id.equals(e.getId())))
-                            .collect(Collectors.toList());
+                            .collect(Collectors.toList());*/
 
 
-            adapter.setNewListData((ArrayList<GroupResult>) listOutput);
-      //      Observable.merge(Observable.just(groupList), Observable.just(joinList)).flatMap(Observable::fromIterable).toList();
+            adapter.setNewListData((ArrayList<GroupResult>) listOutput1);
+            //  Observable.merge(Observable.just(groupList), Observable.just(joinList)).flatMap(Observable::fromIterable).toList();
             skip = skip + limit;
             if (skip >= totalGroupCount) {
                 isLastPageReached = true;

@@ -1864,6 +1864,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.videoContainer: {
                 hideCreateContentView();
                 mDrawerLayout.closeDrawers();
+                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
 
                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
                 Intent cityIntent = new Intent(this, ChooseVideoCategoryActivity.class);

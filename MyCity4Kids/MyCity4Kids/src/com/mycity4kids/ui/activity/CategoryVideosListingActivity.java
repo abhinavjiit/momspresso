@@ -37,7 +37,6 @@ import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-import com.mycity4kids.utils.MixPanelUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -77,6 +76,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     private int num_of_categorys;
     private TopicsResponse res;
     private CoordinatorLayout root;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

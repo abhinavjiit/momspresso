@@ -9,6 +9,7 @@ import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
+import com.mycity4kids.newmodels.BranchIoModal.BranchData;
 
 import java.util.Locale;
 
@@ -237,6 +238,22 @@ public class SharedPrefUtils {
         _editor.putString(USER_TYPE, pModel.getUserType());
         _editor.putString(GENDER, pModel.getGender());
         _editor.commit();
+    }
+
+
+    public static void setBranchModel(Context pContext, String pModel) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString("branchData", pModel);
+
+        _editor.commit();
+    }
+
+    public static String getBranchModel(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString("branchData", "0");
+
+
     }
 
     public static UserInfo getUserDetailModel(Context pContext) {
@@ -810,6 +827,7 @@ public class SharedPrefUtils {
         _editor.putInt("count", count);
         _editor.apply();
     }
+
     public static int getMyMoney(Context pContext) {
         SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return (_sharedPref1.getInt("count", 0));

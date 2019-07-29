@@ -30,7 +30,6 @@ import com.mycity4kids.models.response.GroupsMembershipResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
-import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
@@ -46,8 +45,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by hemant on 10/4/18.

@@ -1,8 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.media.Image;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,12 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kelltontech.utils.StringUtils;
 import com.lid.lib.LabelImageView;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.GroupResult;
-import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -85,13 +81,10 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
         }
         holder.groupsNameTextView.setText(groupsDataList.get(position).getTitle());
         if (System.currentTimeMillis() - groupsDataList.get(position).getCreatedAt() * 1000 < AppConstants.DAYS_10_TIMESTAMP) {
-//            holder.groupImageView.setLabelBackgroundAlpha(0);
             holder.groupNewLabelImageView.setLabelVisual(true);
         } else {
             holder.groupNewLabelImageView.setLabelVisual(false);
-//            holder.groupImageView.setLabelBackgroundAlpha(1);
         }
-//        holder.groupsNameTextView.setSelected(position == selectedPosition);
     }
 
     public class GroupsViewHolder extends RecyclerView.ViewHolder {
@@ -104,14 +97,11 @@ public class GroupsRecyclerGridAdapter extends RecyclerView.Adapter<GroupsRecycl
             groupImageView = (ImageView) view.findViewById(R.id.groupImageView);
             groupsNameTextView = (TextView) view.findViewById(R.id.groupNameTextView);
             groupNewLabelImageView = (LabelImageView) view.findViewById(R.id.groupNewLabelImageView);
-            //  hightLightImageView = (ImageView) view.findViewById(R.id.highlights);
             badge = (TextView) view.findViewById(R.id.badge);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mListener.onRecyclerItemClick(v, getAdapterPosition(), isMember);
-                    // ((SetHighLights) this).setHighLight(getAdapterPosition());
-                    //((GroupsFragment) this).setHightlight(getAdapterPosition());
                     groupsDataList.get(getAdapterPosition()).setHighlight(0);
                     notifyDataSetChanged();
                 }

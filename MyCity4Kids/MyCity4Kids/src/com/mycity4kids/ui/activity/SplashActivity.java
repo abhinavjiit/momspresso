@@ -8,16 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -70,15 +67,12 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.utils.LocaleManager;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.location.GPSTracker;
 
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -109,6 +103,7 @@ public class SplashActivity extends BaseActivity {
     private boolean shouldResumeSplash = false;
     MixpanelAPI mixpanel;
     private RelativeLayout root;
+    private String branchData;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -421,6 +416,17 @@ public class SplashActivity extends BaseActivity {
             public void onInitFinished(JSONObject referringParams, BranchError error) {
                 if (error == null) {
                     Log.i("BRANCH SDK", referringParams.toString());
+                    branchData = referringParams.toString();
+                    // _deepLinkURL=referringParams.toString();
+
+
+                  /*  Gson gson = new Gson();
+                    BranchData object = gson.fromJson(branchData, BranchData.class);
+                    SharedPrefUtils.setBranchModel(SplashActivity.this, object);*/
+                    /*Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
+                    intent.putExtra("data", referringParams.toString());
+                    startActivity(intent);*/
+                    //  navigateToNextScreen(true);
                     // Retrieve deeplink keys from 'referringParams' and evaluate the values to determine where to route the user
                     // Check '+clicked_branch_link' before deciding whether to use your Branch routing logic
                 } else {

@@ -18,7 +18,6 @@ import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.utils.StringUtils;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -30,7 +29,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-import com.mycity4kids.utils.MixPanelUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileInputStream;
@@ -103,7 +101,7 @@ public class VlogsListingAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (position != 0 && position % 5 == 0) {
+        if (position != 0 && position % 9 == 0) {
             return 0;
         } else {
             return 1;

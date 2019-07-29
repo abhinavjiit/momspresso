@@ -41,7 +41,6 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.LocaleManager;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,8 +49,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
-import io.socket.client.IO;
-import io.socket.client.Socket;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;

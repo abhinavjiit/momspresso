@@ -2,6 +2,7 @@ package com.mycity4kids.ui.adapter
 
 import android.accounts.NetworkErrorException
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.support.v4.app.FragmentActivity
@@ -23,6 +24,10 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.squareup.picasso.Picasso
+import io.branch.indexing.BranchUniversalObject
+import io.branch.referral.Branch
+import io.branch.referral.util.ContentMetadata
+import io.branch.referral.util.LinkProperties
 import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -86,6 +91,43 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 if (shareIntent.resolveActivity(context!!.packageManager) != null) {
                     context!!.startActivity(shareIntent)
                 }
+                /*   val buo = BranchUniversalObject()
+                           .setCanonicalIdentifier("content/12345")
+                           .setTitle("My Content Title")
+
+                           .setContentDescription("My Content Description")
+                           .setContentImageUrl("https://tinyjpg.com/images/social/website.jpg")
+                           .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                           .setLocalIndexMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                           .setContentMetadata(ContentMetadata().addCustomMetadata("key1", "https://lorempixel.com/400/400"))*/
+
+                /*  val lp = LinkProperties()
+                          .setChannel("WhatsApp").setChannel("facebook").setChannel("Instagram")
+                          .setFeature("sharing")
+                          .setCampaign("content 123 launch")
+                          .setStage("new user")
+                          .addControlParameter("desktop_url", "http://example.com/home")
+                          .addControlParameter("custom", "data").addControlParameter("deeplink_path", "content/123")
+                          .addControlParameter("custom_random", (Calendar.getInstance().timeInMillis).toString())*/
+
+                /*      buo.generateShortUrl(context as CampaignContainerActivity, lp) { url, error ->
+                          if (error == null) {
+                              Log.i("BRANCH SDK", "got my Branch link to share: " + url)
+                              val shareIntent = ShareCompat.IntentBuilder
+                                      .from(context)
+                                      .setType("text/plain")
+                                      .setChooserTitle("Share URL")
+                                      .setText(url)
+                                      .intent
+                              shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "check this out")
+
+                              if (shareIntent.resolveActivity(context!!.packageManager) != null) {
+                                  context!!.startActivity(shareIntent)
+                              }
+
+                          }
+                      }*/
+
             } else {
                 Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "Click_listing_card", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
                 if (campaignList!!.campaignStatus == 8)
