@@ -122,7 +122,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     override fun onCellClick() {
         val intent = Intent()
         intent.setType("image/*")
-        intent.setAction(Intent.ACTION_GET_CONTENT)
+        intent.setAction(Intent.ACTION_PICK)
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE)
     }
 
@@ -601,7 +601,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 if (data != null) {
                     try {
                         val storage = FirebaseStorage.getInstance("gs://api-project-3577377239.appspot.com")
-                        var file = File(data.getData().getPath());//create path from uri
+                        var file = File(data.data.path);//create path from uri
                         /*  var split = file.getPath().split(":");//split the path.
                           var path = split[1];*/
                         val storageRef = storage.reference
