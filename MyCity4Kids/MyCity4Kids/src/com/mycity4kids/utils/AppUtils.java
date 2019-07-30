@@ -616,6 +616,9 @@ public class AppUtils {
                 View tabViewChild = vgTab.getChildAt(i);
                 if (tabViewChild instanceof TextView) {
                     ((TextView) tabViewChild).setTypeface(myTypeface, Typeface.NORMAL);
+                    if (((TextView) tabViewChild).getText().toString().equals("Challenges") || ((TextView) tabViewChild).getText().toString().equals("challenges")) {
+                        ((TextView) tabViewChild).setTextColor(mContext.getResources().getColor(R.color.app_red));
+                    }
                 }
             }
         }
@@ -961,9 +964,9 @@ public class AppUtils {
     }
 
     public static String convertTimestampToDate(Long timestamp) {
-        if(timestamp!=null){
+        if (timestamp != null) {
             return new SimpleDateFormat("dd-MM-yyyy").format(new Date(timestamp * 1000));
-        }else{
+        } else {
             return "";
         }
 

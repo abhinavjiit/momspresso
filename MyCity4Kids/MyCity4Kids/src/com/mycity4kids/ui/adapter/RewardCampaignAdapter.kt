@@ -85,7 +85,8 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                         .from(context)
                         .setType("text/plain")
                         .setChooserTitle("Share URL")
-                        .setText("https://www.momspresso.com/mymoney/" + campaignList!!.nameSlug + "/" + campaignList!!.id + "?referrer=" + userId)
+                        .setText("https://mycity4kids.app.link/rewards")
+                        //   .setText("https://www.momspresso.com/mymoney/" + campaignList!!.nameSlug + "/" + campaignList!!.id + "?referrer=" + userId)
                         .intent
 
                 if (shareIntent.resolveActivity(context!!.packageManager) != null) {

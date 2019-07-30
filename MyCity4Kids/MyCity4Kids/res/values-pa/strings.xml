@@ -297,10 +297,10 @@
     <string name="confirmation_dialog.no">ਨਹੀਂ</string>
     <string name="confirmation_dialog.yes">ਹਾਂ</string>
 
-    <string name="editor.spell_check.title">Spellcheck</string>
+    <string name="editor.spell_check.title">ਸਪੈੱਲ ਚੈੱਕ</string>
     <string name="editor.spell_check.message">ਕੀ ਤੁਸੀਂ ਸੁਨਿਸ਼ਚਿਤ ਹੋ ਕਿ ਤੁਸੀਂ ਸਪੇਲਚੇਕ ਪੁਰਾ ਕਰ ਲਿਆ ਹੈ?</string>
     <string name="editor.spell_check.no">ਨਹੀਂ</string>
-    <string name="editor.spell_check.continue">YES CONTINUE PUBLISHING</string>
+    <string name="editor.spell_check.continue">ਹਾਂ, ਪਬਲਿਸ਼ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ</string>
     <string name="editor.banner.message">Blog in a language of your choice</string>
     <string name="editor.last_saved_at">Last saved at %1$s</string>
     <string name="editor.last_saved_on">Last saved on %1$s</string>
@@ -349,15 +349,15 @@
 
     <string-array name="onboarding_title_array">
         <item>ਬਲੋਗ ਬਣਾਓ</item>
-        <item>8 ਭਾਸ਼ਾਵਾਂ ਵਿੱਚੋਂ ਕਿਸੇ ਵਿੱਚ ਬਲੌਗ ਦਾ ਆਨੰਦ ਮਾਣੋ</item>
+        <item>ਕਿਸੇ ਵੀ10 ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਬਲੌਗ ਦਾ ਅਨੰਦ ਮਾਣੋ</item>
         <item>Upload your Mom Vlogs or watch on the go</item>
         <item>ਸਪੋਰਟ ਗਰੁੱਪਾਂ ਦੇ ਨਾਲ ਤੁਸੀਂ ਇਕੱਲੇ ਨਹੀਂ ਹੋ</item>
-        <item>Start earning with MyMoney!</item>
+        <item>MyMoney ਨਾਲ ਕਮਾਣਾ ਸ਼ੁਰੂ ਕਰੋ</item>
     </string-array>
 
     <string name="onboarding.desc_1">ਹਰੇਕ ਮਾਂ ਦੀ ਇੱਕ ਕਹਾਣੀ ਹੈ। ਤੁਹਾਡੀ ਕੀ ਹੈ? ਸ਼ਬਦਾਂ ਜਾਂ ਵੀਡੀਓ ਰਾਹੀਂ ਸਾਂਝੀ ਕਰੋ</string>
     <string name="onboarding.desc_2">ਅੰਗਰੇਜ਼ੀ, ਹਿੰਦੀ, ਬੰਗਲਾ, ਮਰਾਠੀ, ਤਮਿਲ, ਤੇਲਗੂ, ਮਲਿਆਲਮ ਅਤੇ ਕੰਨੜ ਵਿਚੋਂ ਚੁਣੋ</string>
-    <string name="onboarding.desc_3">Share your home videos in Mom Vlogs or watch beautiful, inspiring, useful and funny videos on Momspresso TV.</string>
+    <string name="onboarding.desc_3">ਆਪਣੇ ਘਰੇਲੂ ਵੀਡੀਓਜ਼ ਨੂੰ ਸਾਂਝਾ ਕਰੋ ਜਾਂ ਮੋਮਸਪ੍ਰੈਸੋ ਟੀਵੀ ਤੇ ਸੁੰਦਰ, ਪ੍ਰੇਰਨਾਦਾਇਕ, ਉਪਯੋਗੀ ਅਤੇ ਮਜ਼ੇਦਾਰ ਵੀਡੀਓ ਦੇਖੋ</string>
     <string name="onboarding.desc_4">ਸਾਡੀ ਮਾਂ ਕਮਿਊਨਟੀ ਦੀ ਤਾਕਤ ਦਾ ਇਸਤੇਮਾਲ ਕਰੋ ਆਪਣੇ ਸਵਾਲ ਸਾਂਝੇ ਕਰੋ ਅਤੇ ਦੂਜਿਆਂ ਦੀ ਮਦਦ ਕਰੋ!</string>
 
 
@@ -387,7 +387,7 @@
     <string name="sign_up.welcome_back">ਸਾਇਨ ਅਪ</string>
     <string name="sign_up.desc">ਮਾਂ ਹੋਣ ਦੀ ਖ਼ੁਸ਼ੀ ਬਾਰੇ ਜਾਣੋ । ਪ੍ਰੇਰਨਾ ਲੈਣ ਅਤੇ ਉਮੀਦ ਲਈ ਸਾਡੀ ਮਾਂ ਕਮਿਊਨਟੀ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ</string>
     <string name="sign_up.already_account">ਪਹਿਲਾਂ ਹੀ ਖਾਤਾ ਹੈ?\u0020</string>
-    <string name="sign_up.sign_in_btn">SIGNIN</string>
+    <string name="sign_up.sign_in_btn">ਸਾਈਨ - ਇਨ</string>
 
     <string name="login_email.login">ਲੋਗ ਇਨ</string>
     <string name="login_email.forgot_password">ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ?</string>
@@ -422,7 +422,7 @@
     <string name="search.article_no_result">ਕੋਈ ਟੋਪੀਕਸ ਮੌਜੂਦ ਨਹੀਂ.</string>
     <string name="search.author_no_result">ਕੋਈ ਲੇਖਕ ਨਹੀਂ ਮਿਲਿਆ.</string>
 
-    <string name="search_topics.toolbar_title">SELECT CATEGORIES</string>
+    <string name="search_topics.toolbar_title">ਕੈਟੇਗਰੀ ਚੁਣੋ</string>
     <string name="search_topics.hint">Search with Topics</string>
     <string name="search_topics.title">ਸ਼੍ਰੇਣੀਆਂ</string>
 
@@ -787,7 +787,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.pin_post">PIN THIS POST TO TOP</string>
     <string name="groups.unpin_post">UNPIN THIS POST</string>
     <string name="groups.all_groups">ਸਾਰੇ ਗ੍ਰੁਪਸ</string>
-    <string name="groups.other_groups">OTHER GROUPS</string>
+    <string name="groups.other_groups">ਹੋਰ ਗਰੁੱਪ</string>
     <string name="groups_groups_myfeed">ਗ੍ਰੁਪਸ</string>
     <string name="groups_enable_notification">ENABLE NOTIFICATION</string>
 
@@ -830,7 +830,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.sections.top_posts">Tਟਾਪ ਪੋਸਟਸ</string>
     <string name="groups_sections_polls">ਪੋਲਸ</string>
     <string name="groups_sections_ask">ASK AN EXPERT</string>
-    <string name="groups_sections_myfeed">My Feed</string>
+    <string name="groups_sections_myfeed">ਮੇਰੀ ਫੀਡ</string>
     <string name="groups.search_in">Search</string>
     <string name="groups.join_form">JOINING FORM</string>
     <string name="groups.membership_pending">Membership Pending</string>
@@ -843,7 +843,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="groups.user_membership_rejected_msg">Your membership has been rejected for this group</string>
     <string name="groups.join_group">ਗਰੁਪ ਨਾਲ ਜੁੜੋ</string>
     <string name="groups.ask_something">ਕੁਝ ਪੁਛੋ ...</string>
-    <string name="groups.post_label">POST</string>
+    <string name="groups.post_label">Pਪੋਸਟ</string>
     <string name="groups.edit_post">EDIT POST</string>
     <string name="groups.total_votes">ਕੁੱਲ ਵੋਟਾਂ: %1$s</string>
 
@@ -958,7 +958,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="previous_week_challenge">ਪਿਛਲੇ ਹਫਤੇ ਦੇ ਚੁਣੌਤੀਆਂ</string>
     <string name="what_is_your_story">ਤੁਹਾਡਾ 100 ਸ਼ਬਦ ਕਹਾਣੀ ਕੀ ਹੈ?</string>
     <string name="use_picture_word_to_write_one">ਲਿਖਣ ਲਈ ਹੇਠਾਂ ਦਿੱਤੇ ਚਿੱਤਰ, ਸ਼ਬਦ, ਕਹਾਵਤ  ਜਾਂ ਵੀਡੀਓ ਦੀ ਵਰਤੋਂ ਕਰੋ</string>
-    <string name="challenge_write_story_for_this_picture">Write Your Story Around This Picture</string>
+    <string name="challenge_write_story_for_this_picture">ਇਸ ਤਸਵੀਰ ਦੇ ਦੁਆਲੇ ਆਪਣੀ ਕਹਾਣੀ ਲਿਖੋ</string>
     <string name="choose_challenge_label">ਚੈਲੇੰਜ ਲਵੋ</string>
     <string name="start_writing">ਲਿਖਣ ਦੀ ਸ਼ੁਰੂਆਤ ਕਰੋ</string>
 
@@ -1044,7 +1044,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     //new Video Challenge Ui Strings
     <string name="video_challenge_live_text">LIVE</string>
     <string name="video_challenge_text">ਚੁਣੌਤੀਆਂ</string>
-    <string name="choose_video_categories_text">CATEGORIES</string>
+    <string name="choose_video_categories_text">ਸ਼੍ਰੇਣੀਆਂ</string>
     <string name="dialog_header_choose_sort_type">ਸੋਰਟ ਬਾਈ</string>
     <string name="reply_groups">ਜਵਾਬ ਦਿਉ</string>
 
@@ -1055,11 +1055,12 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="group_invite_text">Invite</string>
     <string name="group_comment_type_here_text">ਇੱਥੇ ਟਾਈਪ ਕਰੋ</string>
     <string name="group_comment_start_type_here_text">ਟਾਈਪ ਕਰਨਾ ਸ਼ੁਰੂ ਕਰੋ</string>
-    <string name="group_comment_be_the_first_text">Be the first one to comment</string>
+    <string name="group_comment_be_the_first_text">ਸਭ ਤੋਂ ਪਿਹਲਾਂ ਕ੍ਮੇਂਟ ਕਰੋ</string>
 
     //tooltip groups
-    <string name="add_text_or_media_group_post_activity_tooltip_text">TRY AUDIO POST</string>
-    <string name="audio_post">AUDIO</string>
+    <string name="add_text_or_media_group_post_activity_tooltip_text">ਆਡੀਓ ਪੋਸਟ ਟਰਾਈ ਕਰੋ
+</string>
+    <string name="audio_post">ਆਡੀਓ</string>
     <string name="rewards_instagram_handler">Enter your Instagram handle</string>
     <string name="rewards_facebook_handler">Connect your Facebook</string>
     <string name="rewards_participate_and_earn"><![CDATA[Participate & Earn]]></string>

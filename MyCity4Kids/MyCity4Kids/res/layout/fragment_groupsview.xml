@@ -33,10 +33,10 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="right|bottom"
-        android:visibility="gone"
+        android:visibility="visible"
         app:fab_colorNormal="@color/app_red"
         app:fab_colorPressed="@color/app_red"
-        app:fab_icon="@drawable/ic_edit" />
+        app:fab_icon="@drawable/ic_edit_new" />
 
 
 </RelativeLayout>

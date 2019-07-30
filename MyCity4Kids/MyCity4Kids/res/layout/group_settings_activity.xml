@@ -93,7 +93,7 @@
             android:layout_alignRight="@+id/groupImageView"
             android:layout_alignTop="@+id/groupImageView"
             android:padding="12dp"
-            android:src="@drawable/ic_edit"
+            android:src="@drawable/ic_edit_new"
             android:visibility="gone" />
     </RelativeLayout>
 

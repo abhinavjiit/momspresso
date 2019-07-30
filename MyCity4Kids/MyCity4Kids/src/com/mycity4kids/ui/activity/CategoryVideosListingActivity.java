@@ -78,7 +78,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     private CoordinatorLayout root;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -251,10 +250,13 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             Log.d("VIDEO TOPIC", subTopicsList.get(i).getDisplay_name() + "  --  " + subTopicsList.get(i).getId());
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
         }
+
+
         AppUtils.changeTabsFont(this, tabLayout);
         pagerAdapter = new VideoTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -265,17 +267,21 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 if (fragment != null) {
                     if (fragment instanceof ChallengeCategoryVideoTabFragment) {
 
+
                         fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.GONE);
                     } else {
                         fabAdd.setVisibility(View.VISIBLE);
                         imageSortBy.setVisibility(View.VISIBLE);
+
+
                     }
                 }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+
 
             }
 

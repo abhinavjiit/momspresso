@@ -69,7 +69,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
     private BottomSheetBehavior sheetBehavior;
     private TextView textHeaderUpdate, textUpdate;
     private ImageView imageSortBy;
-    private android.support.design.widget.FloatingActionButton fabAdd;
+    private android.support.design.widget.FloatingActionButton fabAdd, fabAddShortStory;
     private CoordinatorLayout root;
 
     @Override
@@ -85,7 +85,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
-        fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
+        fabAddShortStory = findViewById(R.id.fabAddShortStory);
 
 
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(ShortStoriesListingContainerActivity.this);
@@ -122,12 +122,13 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
                 @Override
                 public void run() {
                     bottom_sheet.setVisibility(View.GONE);
-                    fabAdd.setVisibility(View.VISIBLE);
+                    fabAddShortStory.setVisibility(View.VISIBLE);
                 }
             }, 10000);
         } else {
             bottom_sheet.setVisibility(View.GONE);
-            fabAdd.setVisibility(View.VISIBLE);
+            fabAddShortStory.setVisibility(View.VISIBLE);
+
 
         }
 
@@ -154,7 +155,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
+        fabAddShortStory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setResult(Activity.RESULT_OK);
@@ -250,11 +251,13 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
                 if (fragment != null) {
                     if (fragment instanceof TopicChallengeTabFragment) {
-                        fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.GONE);
+                        fabAddShortStory.setVisibility(View.GONE);
                     } else {
-                        fabAdd.setVisibility(View.VISIBLE);
+
                         imageSortBy.setVisibility(View.VISIBLE);
+                        fabAddShortStory.setVisibility(View.VISIBLE);
+
                     }
                 }
             }

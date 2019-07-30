@@ -265,7 +265,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         }
         TOOLTIP_SHOW_TIMES = SharedPrefUtils.getTooltipCount(this);
 
-        if (TOOLTIP_SHOW_TIMES < 3) {
+
             new SimpleTooltip.Builder(this)
                     .anchorView(audioRecordView)
                     .backgroundColor(getResources().getColor(R.color.app_red))
@@ -280,7 +280,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                     .show();
             TOOLTIP_SHOW_TIMES++;
             SharedPrefUtils.toolTipChecking(this, TOOLTIP_SHOW_TIMES);
-        }
+
     }
 
     @Override
