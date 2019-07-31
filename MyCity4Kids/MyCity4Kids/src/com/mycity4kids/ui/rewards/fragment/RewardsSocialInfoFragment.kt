@@ -2,17 +2,10 @@ package com.mycity4kids.ui.rewards.fragment
 
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import android.support.customtabs.CustomTabsClient.getPackageName
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.AppCompatSpinner
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -30,38 +23,26 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.kelltontech.ui.BaseFragment
 import com.kelltontech.utils.ConnectivityUtils
-import com.kelltontech.utils.ToastUtils.showToast
+import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
 import com.mycity4kids.instagram.InstagramApp
 import com.mycity4kids.interfaces.IFacebookUser
-import com.mycity4kids.models.city.City
-import com.mycity4kids.models.request.LoginRegistrationRequest
 import com.mycity4kids.models.response.BaseResponseGeneric
-import com.mycity4kids.models.response.SetupBlogData
-import com.mycity4kids.models.response.UserDetailData
 import com.mycity4kids.models.rewardsmodels.RewardsDetailsResultResonse
 import com.mycity4kids.models.rewardsmodels.RewardsPersonalResponse
 import com.mycity4kids.models.rewardsmodels.SocialAccountObject
-import com.mycity4kids.preference.SharedPrefUtils
-import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI
 import com.mycity4kids.retrofitAPIsInterfaces.RewardsAPI
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
-import com.mycity4kids.ui.rewards.dialog.PickerDialogFragment
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.event_details_activity.*
-import kotlinx.android.synthetic.main.fragment_rewards_family_info.*
-import org.apmem.tools.layouts.FlowLayout
-import java.security.MessageDigest
 import java.util.*
-import java.util.stream.Collectors
+import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 
 /**
@@ -258,6 +239,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
                 if (socialAccountsListByGivenPlatform.get(0).platform_name.equals(Constants.SocialPlatformName.facebook.name, true)) {
 //                    SocialAccountsListByGivenPlatform.get(0).access_token = token
 //                    SocialAccountsListByGivenPlatform.get(0).platform_name = platformName.name
+
                     localSocialAccout.platform_name = platformName.name
                     localSocialAccout.access_token = token
                     localSocialAccout.id = socialAccountsListByGivenPlatform.get(0).id
@@ -405,20 +387,87 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     private fun prepareDataForPosting(): Boolean {
         if (!editInstagram.text.isNullOrEmpty()) {
-            setValuesForSocial(Constants.SocialPlatformName.instagram, editInstagram.text.toString())
+            if (isvalid(editInstagram.text.toString(), 1)) {
+                setValuesForSocial(Constants.SocialPlatformName.instagram, editInstagram.text.toString().trim())
+            } else {
+                ToastUtils.showToast(context, "space is not allowed")
+                return false
+            }
         }
         if (!editTwitter.text.isNullOrEmpty()) {
-            setValuesForSocial(Constants.SocialPlatformName.twitter, editTwitter.text.toString())
+            if (isvalid(editTwitter.text.toString().trim(), 2)) {
+                setValuesForSocial(Constants.SocialPlatformName.twitter, editTwitter.text.toString().trim())
+            } else {
+                ToastUtils.showToast(context, "not valid Twitter handle")
+                return false
+            }
         }
         if (!editWebsite.text.isNullOrEmpty()) {
-            setValuesForSocial(Constants.SocialPlatformName.website, editWebsite.text.toString())
+            if (isvalid(editWebsite.text.toString(), 3)) {
+                setValuesForSocial(Constants.SocialPlatformName.website, editWebsite.text.toString().trim())
+            } else {
+                ToastUtils.showToast(context, "space is not allowed")
+                return false
+            }
         }
         if (!editYoutube.text.isNullOrEmpty()) {
-            setValuesForSocial(Constants.SocialPlatformName.youtube, editYoutube.text.toString())
+            if (isvalid(editYoutube.text.toString().trim(), 4)) {
+                setValuesForSocial(Constants.SocialPlatformName.youtube, editYoutube.text.toString().trim())
+            } else {
+                ToastUtils.showToast(context, "space is not allowed")
+                return false
+
+            }
         }
 
         return true
     }
+
+    private fun isvalid(handle: String, accountType: Int): Boolean {
+
+        when (accountType) {
+
+            2 -> {
+                val pattern = Pattern.compile("^@?([a-zA-Z0-9_]){1,15}\$")
+                val matcher = pattern.matcher(handle)
+
+                if (matcher.matches()) {
+                    return true
+                }
+
+
+            }
+
+            1 -> {
+
+                if (!handle.trim().contains(" ")) {
+                    return true
+
+                }
+            }
+            3 -> {
+
+                if (!handle.trim().contains(" ")) {
+                    return true
+
+                }
+            }
+            4 -> {
+                if (!handle.trim().contains(" ")) {
+                    return true
+
+                }
+
+            }
+
+
+        }
+
+
+
+        return false
+    }
+
 
     /*fetch data from server*/
     private fun postDataofRewardsToServer() {

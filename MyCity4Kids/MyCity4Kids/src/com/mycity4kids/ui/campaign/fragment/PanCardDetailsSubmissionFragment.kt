@@ -13,6 +13,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
+import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.gtmutils.Utils
@@ -153,6 +154,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
                         override fun onNext(response: BaseResponseGeneric<ProofPostModel>) {
                             if (response != null && response.code == 200 && response.data != null && response.data!!.result != null) {
                                 if (isComingFromRewards) {
+                                    ToastUtils.showToast(context, "panCard Updated Successfully")
                                     submitOnClickListener.onPanCardDone()
                                 } else {
                                     Utils.campaignEvent(activity, "Thank you screen", "Pan Card", "Submit", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Submission_Success")

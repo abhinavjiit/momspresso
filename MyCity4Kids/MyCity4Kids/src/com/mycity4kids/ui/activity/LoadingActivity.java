@@ -44,6 +44,7 @@ public class LoadingActivity extends BaseActivity {
 
     private int cityIdFromLocation;
     private RelativeLayout root;
+    String id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,8 @@ public class LoadingActivity extends BaseActivity {
         } catch (NumberFormatException e) {
             navigateToDashboard();
         }
+
+        id = BaseApplication.getInstance().getBranchData();
     }
 
     private void fetchingLocation() {
@@ -216,7 +219,11 @@ public class LoadingActivity extends BaseActivity {
                 } else {
                     showToast(responseData.getReason());
                 }
+
                 Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
+                if (!StringUtils.isNullOrEmpty(id)) {
+                    intent.putExtra(AppConstants.BRANCH_DEEPLINK, id);
+                }
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
@@ -224,6 +231,9 @@ public class LoadingActivity extends BaseActivity {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
+                if (!StringUtils.isNullOrEmpty(id)) {
+                    intent.putExtra(AppConstants.BRANCH_DEEPLINK, id);
+                }
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
@@ -236,6 +246,9 @@ public class LoadingActivity extends BaseActivity {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
+            if (!StringUtils.isNullOrEmpty(id)) {
+                intent.putExtra(AppConstants.BRANCH_DEEPLINK, id);
+            }
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();

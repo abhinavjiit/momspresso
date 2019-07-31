@@ -857,7 +857,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                             }
                             saveAndContinueListener.profileOnSaveAndContinue()
                         } else if (Constants.FAILURE == response.status) {
-                            Toast.makeText(activity, response?.reason, Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, response?.reason, Toast.LENGTH_LONG).show()
                         }
                     }
                 }
@@ -1283,16 +1283,17 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     fun fetchLangLat(address: String) {
         val coder = Geocoder(activity as RewardsContainerActivity)
         var addresses: List<Address>
-        (activity as RewardsContainerActivity).runOnUiThread(Runnable {
+        (activity as RewardsContainerActivity).runOnUiThread {
             addresses = coder.getFromLocationName(address, 5)
-            if (addresses == null) {
+            if (addresses == null || addresses.isNotEmpty() || addresses.isNullOrEmpty()) {
+            } else {
+                val location: Address = addresses.get(0)
+                lat = location.getLatitude()
+                lng = location.getLongitude()
+                Log.i("lat", lat.toString())
+                Log.i("lat", lng.toString())
             }
-            val location: Address = addresses.get(0)
-            lat = location.getLatitude()
-            lng = location.getLongitude()
-            Log.i("lat", lat.toString())
-            Log.i("lat", lng.toString())
-        })
+        }
     }
 
 }

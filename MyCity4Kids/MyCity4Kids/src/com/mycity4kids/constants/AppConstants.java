@@ -473,6 +473,7 @@ public class AppConstants {
     public static final String DEEPLINK_UPCOMING_EVENTS = "/Events_el";
     public static final String DEEPLINK_SETUP_BLOG = "setupablog";
     public static final String DEEPLINK_GROUPS = "momspresso.com/groups/";
+    public static final String BRANCH_DEEPLINK = "https://mycity4kids.app.link";
 
     public static final String IGNORE_TAG = "ignore";
     public static final String EDITOR_PICKS_CATEGORY_ID = "category-66b6883fd0434683b053f18aa4d52b59";

@@ -76,7 +76,7 @@ public class BaseApplication extends Application {
     private static ArrayList<Topics> shortStoryTopicList;
     private static HashMap<Topics, List<Topics>> topicsMap;
     private static HashMap<String, Topics> selectedTopicsMap;
-
+    String branchData = "";
     private Activity dashboardActivity;
 
     private Activity activity;
@@ -704,5 +704,13 @@ public class BaseApplication extends Application {
         return customTimeoutRetrofit;
     }
 
+
+    public void setBranchData(String branchData) {
+        this.branchData = branchData;
+    }
+
+    public String getBranchData() {
+        return branchData;
+    }
 
 }

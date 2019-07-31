@@ -49,6 +49,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.model.Dash;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -1204,6 +1205,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
             }
+        } else if (intent.hasExtra(AppConstants.BRANCH_DEEPLINK)) {
+            // String nevigateTo = BaseApplication.getInstance().getBranchData();
+            Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+            startActivity(intent1);
         } else {
             String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
             try {

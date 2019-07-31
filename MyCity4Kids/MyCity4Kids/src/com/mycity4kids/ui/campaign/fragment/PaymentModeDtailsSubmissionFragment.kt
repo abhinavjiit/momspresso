@@ -9,9 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
-import com.googlecode.mp4parser.authoring.Edit
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
+import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
@@ -28,6 +30,8 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.adapter.rxjava2.HttpException
+import java.io.InputStreamReader
 
 
 class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener {
@@ -208,16 +212,16 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
             when (paymantModeId) {
                 1 -> {
-                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString(), account_number = addMobileNumberEditText.text.toString())
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addMobileNumberEditText.text.toString().trim())
                 }
                 2 -> {
-                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString(), account_number = addUpiEditTextView.text.toString())
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addUpiEditTextView.text.toString().trim())
                 }
                 3 -> {
-                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString(), account_number = accountNumberEditTextView.text.toString(), account_ifsc_code = ifscEditTextView.text.toString(), account_name = addAccountHolderNameEditTextView.text.toString())
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = accountNumberEditTextView.text.toString().trim(), account_ifsc_code = ifscEditTextView.text.toString().trim(), account_name = addAccountHolderNameEditTextView.text.toString().trim())
                 }
                 else -> {
-                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString(), account_number = addMobileNumberEditText.text.toString())
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addMobileNumberEditText.text.toString().trim())
                 }
 
             }
@@ -238,6 +242,14 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                                 CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PanCardDetailsSubmissionFragment")
                                 .commit()
                     } else {
+                        when (paymantModeId) {
+                            1 -> {
+                                ToastUtils.showToast(context, "PaytmNumber is Updated Successfully")
+                            }
+                            else -> {
+                                ToastUtils.showToast(context, "BankDetails are Updated Successfully")
+                            }
+                        }
                         activity!!.supportFragmentManager.popBackStack()
                         var fragment = targetFragment
                         if (fragment != null && fragment is CampaignPaymentModesFragment) {
@@ -249,7 +261,19 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                 }
 
                 override fun onError(e: Throwable) {
+
+
                     removeProgressDialog()
+                    val code = (e as HttpException).code()
+                    if (code == 400) {
+                        var data = (e as HttpException).response().errorBody()!!.byteStream()
+                        var jsonParser = JsonParser()
+                        var jsonObject = jsonParser.parse(
+                                InputStreamReader(data, "UTF-8")) as JsonObject
+                        var reason = jsonObject.get("reason")
+                        Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
+                    }
+
                     Log.e("exception in error", e.message.toString())
                 }
             })
@@ -260,7 +284,15 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
         if (bankTransferContainer.visibility == View.VISIBLE) {
 
-            if (!addAccountHolderNameEditTextView.text.isNullOrEmpty() && !accountNumberEditTextView.text.isNullOrEmpty() && !confirmAccountNumberEditTextView.text.isNullOrEmpty() && !ifscEditTextView.text.isNullOrEmpty()) {
+
+            if (!addAccountHolderNameEditTextView.text.isNullOrEmpty() && !accountNumberEditTextView.text.isNullOrEmpty() && !confirmAccountNumberEditTextView.text.isNullOrEmpty() && !ifscEditTextView.text.toString().trim().isNullOrEmpty()) {
+
+                if (ifscEditTextView.text.toString().trim().contains(" ")) {
+                    Toast.makeText(activity, "Space is not allowed", Toast.LENGTH_SHORT).show()
+                    return false
+                }
+
+
 
                 if (accountNumberEditTextView.text.toString().equals(confirmAccountNumberEditTextView.text.toString())) {
                     return true
@@ -277,7 +309,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
 
         } else if (paytmContainer.visibility == View.VISIBLE) {
-            if (!addMobileNumberEditText.text.isNullOrEmpty() && addMobileNumberEditText.text.toString().length == 10) {
+            if (!addMobileNumberEditText.text.isNullOrEmpty() && addMobileNumberEditText.text.toString().trim().length == 10) {
                 return true
             }
             Toast.makeText(activity, "enter valid phone number", Toast.LENGTH_SHORT).show()

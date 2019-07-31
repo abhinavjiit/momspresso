@@ -34,6 +34,7 @@ import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.gson.JsonArray;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -71,6 +72,7 @@ import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.location.GPSTracker;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -113,6 +115,8 @@ public class SplashActivity extends BaseActivity {
         if (Intent.ACTION_VIEW.equals(action) && data != null) {
             _deepLinkURL = data;
         }
+
+
     }
 
     /*don't delete this function we can use this function to generate facebook hashcode*/
@@ -415,12 +419,25 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onInitFinished(JSONObject referringParams, BranchError error) {
                 if (error == null) {
+                    String campaignId = "";
                     Log.i("BRANCH SDK", referringParams.toString());
                     branchData = referringParams.toString();
+                    try {
+                        campaignId = referringParams.getString("campaign_id");
+                        ToastUtils.showToast(SplashActivity.this, campaignId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (!StringUtils.isNullOrEmpty(campaignId)) {
+
+                        BaseApplication.getInstance().setBranchData(campaignId);
+
+                    }
+
+
                     // _deepLinkURL=referringParams.toString();
-
-
-                  /*  Gson gson = new Gson();
+                    /*  Gson gson = new Gson();
                     BranchData object = gson.fromJson(branchData, BranchData.class);
                     SharedPrefUtils.setBranchModel(SplashActivity.this, object);*/
                     /*Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
@@ -614,7 +631,11 @@ public class SplashActivity extends BaseActivity {
     private void gotoDashboard() {
         Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
         if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
-            intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
+            if (_deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK)) {
+                intent.putExtra(AppConstants.BRANCH_DEEPLINK, _deepLinkURL);
+            } else {
+                intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
+            }
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         } else if (extras != null && extras.getString("type") != null) {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
