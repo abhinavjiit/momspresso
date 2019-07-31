@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -79,6 +80,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -112,7 +114,19 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         width = displayMetrics.widthPixels;
         baseApplication = (BaseApplication) getApplication();
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
-        Log.i(getClass().getSimpleName(), "onCreate()");
+        String isRewardAdded = SharedPrefUtils.getIsRewardsAdded(getApplicationContext());
+        try {
+            if(BaseApplication.getMSocket() != null && (TextUtils.isEmpty(isRewardAdded) || !isRewardAdded.equals("1"))) {
+                JSONObject obj = new JSONObject();
+                obj.put("pagename", this.getClass().getName());
+                obj.put("userid", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                BaseApplication.getMSocket().emit("pageview", obj);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void registerEventBus() {

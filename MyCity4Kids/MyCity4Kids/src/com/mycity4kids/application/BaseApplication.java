@@ -104,6 +104,7 @@ public class BaseApplication extends Application {
     private boolean askPermission = true;
     public static boolean isFirstSwipe = true;
     private View view;
+    private static Socket mSocket;
 
     // Placeholder property ID.this was old which create by own account.
     //private static final String GA_PROPERTY_ID = "UA-50870780-1";
@@ -402,7 +403,7 @@ public class BaseApplication extends Application {
     public static void startSocket() {
         try {
             if(!TextUtils.isEmpty(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId())) {
-                Socket mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId()
+                mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId()
                         + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(mInstance).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
                 mSocket.on(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId(), onNewMessage);
                 if (!mSocket.connected()) {
@@ -414,6 +415,9 @@ public class BaseApplication extends Application {
         }
     }
 
+    public static Socket getMSocket() {
+        return mSocket;
+    }
 
     private static Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
