@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -42,7 +41,6 @@ import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.response.GroupPostResult;
@@ -50,7 +48,6 @@ import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsActionVoteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
-import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
@@ -194,7 +191,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(textPostViewHolder.postDataTextView);
 
-            textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+            if (postList.get(position).getHelpfullCount() > 0)
+                textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             textPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPostViewHolder.commentLayout.setVisibility(View.GONE);
@@ -330,7 +328,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 audioCommentViewHolder.postCommentsTextView.setVisibility(View.VISIBLE);
                 audioCommentViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
             }
-            audioCommentViewHolder.upvoteCommentCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+            if (postList.get(position).getHelpfullCount() > 0)
+                audioCommentViewHolder.upvoteCommentCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             audioCommentViewHolder.downvoteCommentCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             audioCommentViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
             if (postList.get(position).getGroupInfo().getColor() != null) {
@@ -377,8 +376,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(mediaPostViewHolder.postDataTextView);
-
-            mediaPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+            if (postList.get(position).getHelpfullCount() > 0)
+                mediaPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             mediaPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 mediaPostViewHolder.commentLayout.setVisibility(View.GONE);
@@ -452,7 +451,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
 
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
-            textPollPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+            if (postList.get(position).getHelpfullCount() > 0)
+                textPollPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             textPollPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPollPostViewHolder.commentLayout.setVisibility(View.GONE);
@@ -566,7 +566,9 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
-            imageHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+
+            if (postList.get(position).getHelpfullCount() > 0)
+                imageHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
             imageHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 imageHolder.commentLayout.setVisibility(View.GONE);

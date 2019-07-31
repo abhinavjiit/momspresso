@@ -625,7 +625,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_email)), Toast.LENGTH_SHORT).show()
             return false
         } else if (isMailValid()) {
-            apiGetResponse.email = editEmail.text.toString()
+            apiGetResponse.email = editEmail.text.toString().trim()
         } else {
             Toast.makeText(activity, resources.getString(R.string.please_enter_a_valid, resources.getString(R.string.rewards_email)), Toast.LENGTH_SHORT).show()
             return false
@@ -828,7 +828,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
 
     fun isMailValid(): Boolean {
-        return !editEmail.text.isNullOrBlank() && StringUtils.isValidEmail(editEmail.text.toString())
+        return !editEmail.text.isNullOrBlank() && StringUtils.isValidEmail(editEmail.text.toString().trim())
     }
 
     /*post data to server*/

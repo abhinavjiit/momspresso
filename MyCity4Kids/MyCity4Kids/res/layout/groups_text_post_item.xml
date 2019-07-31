@@ -148,7 +148,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/postDataTextView"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:orientation="horizontal">
@@ -168,7 +168,7 @@
                 android:layout_marginLeft="5dp"
 
                 android:text="20"
-                android:textColor="#4A4A4A"
+                android:textColor="@color/groups.grey"
                 android:textSize="16sp"
                 app:fontName="oswald_regular.ttf" />
         </LinearLayout>

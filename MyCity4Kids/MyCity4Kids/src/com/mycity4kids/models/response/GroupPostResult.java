@@ -3,9 +3,11 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.mycity4kids.models.user.UserInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,7 +22,8 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
     private String type;
     private String lang;
     private int isActive;
-    private Object mediaUrls;
+    //    private Object mediaUrls;
+    private LinkedTreeMap<String, String> mediaUrls;
     private int disableComments;
     private int isAnnon;
     private String pinnedBy;
@@ -85,6 +88,13 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         commentType = in.readInt();
         markedHelpful = in.readInt();
         groupInfo = in.readParcelable(GroupInfoResult.class.getClassLoader());
+        int mediaUrlsSize = in.readInt();
+        mediaUrls = new LinkedTreeMap<String, String>();
+        for (int i = 0; i < mediaUrlsSize; i++) {
+            String key = in.readString();
+            String value = (String) in.readValue(String.class.getClassLoader());
+            mediaUrls.put(key, value);
+        }
     }
 
     public static final Creator<GroupPostResult> CREATOR = new Creator<GroupPostResult>() {
@@ -147,13 +157,21 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         this.isActive = isActive;
     }
 
-    public Object getMediaUrls() {
+    public LinkedTreeMap<String, String> getMediaUrls() {
+        return mediaUrls;
+    }
+
+    public void setMediaUrls(LinkedTreeMap<String, String> mediaUrls) {
+        this.mediaUrls = mediaUrls;
+    }
+
+    /*public Object getMediaUrls() {
         return mediaUrls;
     }
 
     public void setMediaUrls(Object mediaUrls) {
         this.mediaUrls = mediaUrls;
-    }
+    }*/
 
     public int getDisableComments() {
         return disableComments;
@@ -429,6 +447,11 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         dest.writeInt(commentType);
         dest.writeInt(markedHelpful);
         dest.writeParcelable(groupInfo, flags);
+        dest.writeInt(this.mediaUrls.size());
+        for (Map.Entry<String, String> entry : this.mediaUrls.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeValue(entry.getValue());
+        }
     }
 }
 
