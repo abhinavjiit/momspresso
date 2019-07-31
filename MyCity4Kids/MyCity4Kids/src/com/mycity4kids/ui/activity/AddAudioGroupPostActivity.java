@@ -124,7 +124,6 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     private Uri imageUri;
     private File photoFile;
     static int count;
-    static int TOOLTIP_SHOW_TIMES;
     private String mCurrentPhotoPath, absoluteImagePath;
     private boolean isRequestRunning = false;
     private View mLayout;
@@ -260,27 +259,18 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         } else {
             anonymousCheckbox.setChecked(false);
         }
-        TOOLTIP_SHOW_TIMES = SharedPrefUtils.getTooltipCount(this);
-
-        if (TOOLTIP_SHOW_TIMES < 3) {
-            new SimpleTooltip.Builder(this)
-                    .anchorView(audioRecordView)
-                    .backgroundColor(getResources().getColor(R.color.app_red))
-                    .text(getResources().getString(R.string.add_text_or_media_group_post_activity_tooltip_text))
-                    .textColor(getResources().getColor(R.color.white))
-                    .arrowColor(getResources().getColor(R.color.app_red))
-                    .gravity(Gravity.TOP)
-                    .arrowWidth(40)
-                    .animated(true)
-                    .transparentOverlay(true)
-                    .build()
-                    .show();
-            TOOLTIP_SHOW_TIMES++;
-            SharedPrefUtils.toolTipChecking(this, TOOLTIP_SHOW_TIMES);
-
-        }
-
-
+        new SimpleTooltip.Builder(this)
+                .anchorView(audioRecordView)
+                .backgroundColor(getResources().getColor(R.color.app_red))
+                .text(getResources().getString(R.string.add_text_or_media_group_post_activity_tooltip_text))
+                .textColor(getResources().getColor(R.color.white))
+                .arrowColor(getResources().getColor(R.color.app_red))
+                .gravity(Gravity.TOP)
+                .arrowWidth(40)
+                .animated(true)
+                .transparentOverlay(true)
+                .build()
+                .show();
     }
 
     @Override
@@ -827,7 +817,6 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     @Override
     public void onRecordingStarted() {
         Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Audio Button", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
-
         if (mMediaplayer != null && isCommentPlay) {
             mMediaplayer.release();
             mMediaplayer = null;
@@ -836,9 +825,6 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
             audioSeekBar.setProgress(0);
             audioTimeElapsedComment.setVisibility(View.GONE);
         }
-        TOOLTIP_SHOW_TIMES = 3;
-        SharedPrefUtils.toolTipChecking(this, TOOLTIP_SHOW_TIMES);
-
         startRecording();
     }
 
