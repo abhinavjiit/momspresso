@@ -1206,9 +1206,36 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         } else if (intent.hasExtra(AppConstants.BRANCH_DEEPLINK)) {
+            if (intent.getStringExtra(AppConstants.BRANCH_DEEPLINK).contains(AppConstants.BRANCH_DEEPLINK)) {
+
+                if (BaseApplication.getInstance().getBranchData().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
+
+                    Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+                    startActivity(intent1);
+
+                } else if (BaseApplication.getInstance().getBranchData().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
+                    String campaignID = intent.getStringExtra("campaign_id");
+                    Intent campaignIntent = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                    startActivity(campaignIntent);
+
+
+                } else if (BaseApplication.getInstance().getBranchData().equals(AppConstants.BRANCH_MOMVLOGS)) {
+
+                } else if (BaseApplication.getInstance().getBranchData().equals(AppConstants.BRANCH_PERSONALINFO)) {
+
+                    Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
+                    intent1.putExtra("pageNumber", 1);
+                    startActivity(intent1);
+
+
+                }
+            }
+
+
             // String nevigateTo = BaseApplication.getInstance().getBranchData();
-            Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
-            startActivity(intent1);
+           /* Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+            startActivity(intent1);*/
         } else {
             String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
             try {
