@@ -410,7 +410,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="20"
-                android:textColor="#4A4A4A"
+                android:textColor="@color/groups.grey"
                 android:textSize="16sp"
                 app:fontName="oswald_regular.ttf" />
         </LinearLayout>

@@ -255,9 +255,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/timerLayout"
                 android:layout_marginLeft="@dimen/space_10"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -275,7 +278,7 @@
                     android:layout_marginLeft="5dp"
 
                     android:text="0"
-                    android:textColor="#4A4A4A"
+                    android:textColor="@color/groups.grey"
                     android:textSize="16sp"
                     app:fontName="oswald_regular.ttf" />
             </LinearLayout>
@@ -365,12 +368,11 @@
                 android:layout_height="24dp"
                 android:layout_below="@+id/timerLayout"
                 android:layout_marginLeft="@dimen/space_10"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_toRightOf="@id/shareTextView"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:paddingLeft="5dp"
-                android:paddingTop="5dp"
                 android:paddingRight="5dp"
                 android:paddingBottom="5dp"
                 android:src="@drawable/ic_whats_app"

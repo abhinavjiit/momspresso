@@ -1163,21 +1163,20 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     try {
                         if (getActivity() instanceof GroupPostDetailActivity) {
                             ((GroupPostDetailActivity) getActivity()).processImage(imageUri);
-                        }
-                        if (getActivity() instanceof GroupDetailsActivity) {
+                        } else if (getActivity() instanceof GroupDetailsActivity) {
                             ((GroupDetailsActivity) getActivity()).processImage(imageUri);
                         } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
-//                            ((ViewGroupPostCommentsRepliesActivity) getActivity()).processImage();
-                        }
-
-                        android.app.FragmentManager fm = getActivity().getFragmentManager();
-                        mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
-                        if (mTaskFragment == null) {
-                            mTaskFragment = new TaskFragment();
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable("uri", imageUri);
-                            mTaskFragment.setArguments(bundle);
-                            fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+//                            ((ViewGroupPostCommentsRepliesActivity) getActivity()).processImage(imageUri);
+                        } else {
+                            android.app.FragmentManager fm = getActivity().getFragmentManager();
+                            mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                            if (mTaskFragment == null) {
+                                mTaskFragment = new TaskFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("uri", imageUri);
+                                mTaskFragment.setArguments(bundle);
+                                fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+                            }
                         }
 //                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
 //                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -1410,6 +1409,11 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                     params.addRule(RelativeLayout.LEFT_OF, R.id.recordingView);
                     addMediaImageView.setLayoutParams(params);
+                    android.app.FragmentManager fm = getActivity().getFragmentManager();
+                    mTaskFragment = null;
+                    mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+                    if(mTaskFragment != null)
+                        fm.beginTransaction().remove(mTaskFragment).commit();
                 }
             });
         } catch (Exception e) {

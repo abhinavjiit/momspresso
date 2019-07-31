@@ -120,7 +120,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Animation slideAnim, fadeAnim;
 
     private RecyclerView recyclerView;
-    private HashMap<String, String> mediaUrls, pollOptions;
+    private LinkedTreeMap<String,String> mediaUrls;
+    private HashMap<String, String> pollOptions;
     private GroupPostResult postData;
     private Toolbar toolbar;
     private ViewGroupPostCommentsRepliesDialogFragment viewGroupPostCommentsRepliesDialogFragment;
@@ -293,7 +294,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     }
 
                     if (postType.equals("1")) {
-                        mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
+                        mediaUrls = (LinkedTreeMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
                         postData.setMediaUrls(mediaUrls);
                     } else if (postType.equals("2")) {
                         pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");

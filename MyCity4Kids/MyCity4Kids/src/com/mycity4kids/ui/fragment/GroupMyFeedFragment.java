@@ -95,7 +95,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
     private String memberType;
     private int groupId;
 
-    private GroupPostResult selectedPost;
+    private GroupPostResult selectedPost, editedPost;
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
     private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView, editPostTextView, deletePostTextView, blockUserTextView, pinPostTextView, emptyListTextView;
@@ -387,7 +387,11 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                 if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
                     postSettingsContainerMain.setVisibility(View.GONE);
                 }
-                selectedPost.setContent(data.getStringExtra("updatedContent"));
+                editedPost = data.getParcelableExtra("editedPost");
+                selectedPost.setMediaUrls(editedPost.getMediaUrls());
+                selectedPost.setContent(editedPost.getContent());
+                selectedPost.setType(editedPost.getType());
+//                selectedPost.setContent(data.getStringExtra("updatedContent"));
                 myFeedPollGenericRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 2222) {
                 if (data != null && data.getParcelableArrayListExtra("completeResponseList") != null && data.getIntExtra("postId", -1) != -1 && data.getIntExtra("replyCount", -1) != -1) {
