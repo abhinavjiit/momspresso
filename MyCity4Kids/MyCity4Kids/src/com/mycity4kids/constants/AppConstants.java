@@ -21,6 +21,11 @@ public class AppConstants {
     public static final String GROUPS_LIVE_URL = BuildConfig.GROUPS_LIVE_URL;
     public static final String VIDEOS_URL = "http://35.200.233.99:3040/";
     public static final String READ_ARTICLES_URL = "35.200.142.199";
+    public static final String BRANCH_MOMVLOGS = "momvlog_challenge";
+    public static final String BRANCH_PERSONALINFO = "personal_info";
+    public static final String BRANCH__CAMPAIGN_LISTING = "campaign_listing";
+    public static final String BRANCH_CAMPAIGN_DETAIL = "campaign_detail";
+
 
     //Enable For Testing
     //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());
@@ -474,6 +479,7 @@ public class AppConstants {
     public static final String DEEPLINK_SETUP_BLOG = "setupablog";
     public static final String DEEPLINK_GROUPS = "momspresso.com/groups/";
     public static final String BRANCH_DEEPLINK = "https://mycity4kids.app.link";
+
 
     public static final String IGNORE_TAG = "ignore";
     public static final String EDITOR_PICKS_CATEGORY_ID = "category-66b6883fd0434683b053f18aa4d52b59";

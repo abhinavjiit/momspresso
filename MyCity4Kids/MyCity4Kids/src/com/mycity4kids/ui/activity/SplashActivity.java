@@ -419,19 +419,19 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onInitFinished(JSONObject referringParams, BranchError error) {
                 if (error == null) {
-                    String campaignId = "";
+                    String type = "";
                     Log.i("BRANCH SDK", referringParams.toString());
                     branchData = referringParams.toString();
                     try {
-                        campaignId = referringParams.getString("campaign_id");
-                        ToastUtils.showToast(SplashActivity.this, campaignId);
+                        type = referringParams.getString("type");
+                        ToastUtils.showToast(SplashActivity.this, type);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    if (!StringUtils.isNullOrEmpty(campaignId)) {
+                    if (!StringUtils.isNullOrEmpty(type)) {
 
-                        BaseApplication.getInstance().setBranchData(campaignId);
+                        BaseApplication.getInstance().setBranchData(type);
 
                     }
 
