@@ -52,6 +52,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.Dash;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -70,6 +72,7 @@ import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.AllDraftsResponse;
@@ -199,7 +202,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
     private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, drawerProfileCoachmark,
-            drawerSettingsCoachmark, menuCoachmark, languageLayout, drawerMyMoneyCoachmark;
+            drawerSettingsCoachmark, menuCoachmark, languageLayout, drawerMyMoneyCoachmark, drawerMyMoneyContainer;
     private RecyclerView draftsRecyclerView;
     private ShimmerFrameLayout draftsShimmerLayout;
     private TextView createLabelTextView, continueWritingLabelTV;
@@ -229,6 +232,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        BaseApplication.startSocket();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         root = findViewById(R.id.dash_root);
 
@@ -318,6 +323,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         homeTextView = (TextView) findViewById(R.id.homeTextView);
         drawerTopContainer = (LinearLayout) findViewById(R.id.topContainer);
         drawerContainer = (LinearLayout) findViewById(R.id.drawerProfileContainer);
+        drawerMyMoneyContainer = (RelativeLayout) findViewById(R.id.drawerMyMoneyContainer);
         drawerSettingsContainer = (RelativeLayout) findViewById(R.id.drawerSettingsContainer);
         homeCoachmark = (RelativeLayout) findViewById(R.id.homeCoachmark);
         exploreCoachmark = (RelativeLayout) findViewById(R.id.exploreCoachmark);
@@ -452,8 +458,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             public void onDrawerOpened(View drawerView) {
                 if (!SharedPrefUtils.isCoachmarksShownFlag(DashboardActivity.this, "Drawer")) {
                     drawerContainer.getLayoutParams().width = drawerView.getWidth();
+                    drawerMyMoneyContainer.getLayoutParams().width = drawerView.getWidth();
                     drawerSettingsContainer.getLayoutParams().width = drawerView.getWidth();
                     drawerContainer.requestLayout();
+                    drawerMyMoneyContainer.requestLayout();
                     drawerSettingsContainer.requestLayout();
                     drawerProfileCoachmark.setVisibility(View.VISIBLE);
                     if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
@@ -1207,27 +1215,41 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         } else if (intent.hasExtra(AppConstants.BRANCH_DEEPLINK)) {
             if (intent.getStringExtra(AppConstants.BRANCH_DEEPLINK).contains(AppConstants.BRANCH_DEEPLINK)) {
+                String branchdata = BaseApplication.getInstance().getBranchData();
 
-                if (BaseApplication.getInstance().getBranchData().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
+                JsonParser parser = new JsonParser();
+                JsonElement mJson = parser.parse(branchdata);
+                Gson gson = new Gson();
+                BranchModel branchModel = gson.fromJson(mJson, BranchModel.class);
+/*
+                BaseApplication.getInstance().setBranchModel(branchModel);
+*/
+                Log.i("Data", branchdata+":");
+              //  BranchModel branchModel = BaseApplication.getInstance().getBranchmodel();
+
+                if (branchModel.getType().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
 
                     Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
                     startActivity(intent1);
 
-                } else if (BaseApplication.getInstance().getBranchData().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
-                    String campaignID = intent.getStringExtra("campaign_id");
+                } else if (branchModel.getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
+                    String campaignID = branchModel.getId();
                     Intent campaignIntent = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
                     campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
                     startActivity(campaignIntent);
 
 
-                } else if (BaseApplication.getInstance().getBranchData().equals(AppConstants.BRANCH_MOMVLOGS)) {
+                } else if (branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
 
-                } else if (BaseApplication.getInstance().getBranchData().equals(AppConstants.BRANCH_PERSONALINFO)) {
+
+                } else if (branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
 
                     Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
                     intent1.putExtra("pageNumber", 1);
                     startActivity(intent1);
 
+
+                } else {
 
                 }
             }
@@ -1816,7 +1838,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.drawerProfileCoachmark: {
                 drawerProfileCoachmark.setVisibility(View.GONE);
-                drawerMyMoneyCoachmark.setVisibility(View.GONE);
+                drawerMyMoneyCoachmark.setVisibility(View.VISIBLE);
                 SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "Drawer", true);
 
             }

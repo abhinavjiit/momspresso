@@ -1151,4 +1151,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="phone">PHONE</string>
     <string name="not_working">Not Working</string>
     <string name="working">Working</string>
+
+    <string name="voise_post_group">మీ వాయిస్‌ని ఉపయోగించండి\nమీ ఆలోచనలను రికార్డ్ చేయండి లేదా మీ  ప్రశ్న అడగండి</string>
+    <string name="poll_post_group">పోల్ సృష్టించండి\nమీకు ముఖ్యమైన వాటిపై కమ్యూనిటీ అభిప్రాయాన్ని పొందండిu</string>
+    <string name="blog_post_group">ఏదైనా రాయండి\nఒక ప్రశ్న అడగండి లేదా మీ ఆలోచనను పంచుకోండి</string>
 </resources>

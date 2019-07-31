@@ -138,8 +138,9 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="transparent_status" parent="AppBaseTheme"></style>
-    -
+    <style name="transparent_status" parent="AppBaseTheme">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
 
     <style name="style_dialog_btn_cancel">
         <item name="android:layout_height">wrap_content</item>

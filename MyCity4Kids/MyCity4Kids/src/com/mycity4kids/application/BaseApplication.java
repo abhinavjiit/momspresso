@@ -9,7 +9,9 @@ import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.StrictMode;
+import android.support.design.widget.Snackbar;
 import android.support.multidex.MultiDex;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -27,9 +29,11 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycity4kids.BuildConfig;
+import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.database.BaseDbHelper;
+import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
@@ -40,7 +44,12 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.LocaleManager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +58,9 @@ import java.util.concurrent.TimeUnit;
 
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -62,12 +74,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * This class holds some application-global instances.
  */
 public class BaseApplication extends Application {
+
+
     private final String LOG_TAG = "BaseApplication";
     public static final String TAG = BaseApplication.class.getName();
     private ArticleFilterListModel filterList;
 
     private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
+    BranchModel data;
     private static BaseApplication mInstance;
     private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, testRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
@@ -76,7 +91,7 @@ public class BaseApplication extends Application {
     private static ArrayList<Topics> shortStoryTopicList;
     private static HashMap<Topics, List<Topics>> topicsMap;
     private static HashMap<String, Topics> selectedTopicsMap;
-    String branchData = "";
+    private static String branchData = "";
     private Activity dashboardActivity;
 
     private Activity activity;
@@ -384,8 +399,32 @@ public class BaseApplication extends Application {
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
-
     }
+
+    public static void startSocket() {
+        try {
+            if (!TextUtils.isEmpty(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId())) {
+                Socket mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId()
+                        + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(mInstance).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
+                mSocket.on(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId(), onNewMessage);
+                if (!mSocket.connected()) {
+                    mSocket.connect();
+                }
+            }
+        } catch (URISyntaxException e) {
+            Log.e("Exception", e.toString());
+        }
+    }
+
+
+    private static Emitter.Listener onNewMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if (EventBus.getDefault() != null) {
+                EventBus.getDefault().post(new MessageEvent(args));
+            }
+        }
+    };
 
     /**
      * Get the database instance.
@@ -711,6 +750,15 @@ public class BaseApplication extends Application {
 
     public String getBranchData() {
         return branchData;
+    }
+
+
+    public void setBranchModel(BranchModel data) {
+        this.data = data;
+    }
+
+    public BranchModel getBranchmodel() {
+        return data;
     }
 
 }
