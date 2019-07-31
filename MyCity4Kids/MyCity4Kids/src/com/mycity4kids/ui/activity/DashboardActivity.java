@@ -199,7 +199,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
     private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, drawerProfileCoachmark,
-            drawerSettingsCoachmark, menuCoachmark, languageLayout, drawerMyMoneyCoachmark;
+            drawerSettingsCoachmark, menuCoachmark, languageLayout, drawerMyMoneyCoachmark, drawerMyMoneyContainer;
     private RecyclerView draftsRecyclerView;
     private ShimmerFrameLayout draftsShimmerLayout;
     private TextView createLabelTextView, continueWritingLabelTV;
@@ -229,6 +229,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        BaseApplication.startSocket();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         root = findViewById(R.id.dash_root);
 
@@ -318,6 +320,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         homeTextView = (TextView) findViewById(R.id.homeTextView);
         drawerTopContainer = (LinearLayout) findViewById(R.id.topContainer);
         drawerContainer = (LinearLayout) findViewById(R.id.drawerProfileContainer);
+        drawerMyMoneyContainer = (RelativeLayout) findViewById(R.id.drawerMyMoneyContainer);
         drawerSettingsContainer = (RelativeLayout) findViewById(R.id.drawerSettingsContainer);
         homeCoachmark = (RelativeLayout) findViewById(R.id.homeCoachmark);
         exploreCoachmark = (RelativeLayout) findViewById(R.id.exploreCoachmark);
@@ -452,8 +455,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             public void onDrawerOpened(View drawerView) {
                 if (!SharedPrefUtils.isCoachmarksShownFlag(DashboardActivity.this, "Drawer")) {
                     drawerContainer.getLayoutParams().width = drawerView.getWidth();
+                    drawerMyMoneyContainer.getLayoutParams().width = drawerView.getWidth();
                     drawerSettingsContainer.getLayoutParams().width = drawerView.getWidth();
                     drawerContainer.requestLayout();
+                    drawerMyMoneyContainer.requestLayout();
                     drawerSettingsContainer.requestLayout();
                     drawerProfileCoachmark.setVisibility(View.VISIBLE);
                     if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
@@ -1789,7 +1794,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.drawerProfileCoachmark: {
                 drawerProfileCoachmark.setVisibility(View.GONE);
-                drawerMyMoneyCoachmark.setVisibility(View.GONE);
+                drawerMyMoneyCoachmark.setVisibility(View.VISIBLE);
                 SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "Drawer", true);
 
             }

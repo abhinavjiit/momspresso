@@ -38,6 +38,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.BuildConfig;
+import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -67,6 +68,9 @@ import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.LocaleManager;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -109,62 +113,62 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         baseApplication = (BaseApplication) getApplication();
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
-        try {
-            mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
-            mSocket.on(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId(), onNewMessage);
-            if (mSocket != null && !mSocket.connected()) {
-                mSocket.connect();
-            }
-        } catch (URISyntaxException e) {
-
-        }
     }
 
-    private Emitter.Listener onNewMessage = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String str;
-                    JSONObject data = null;
+    private void registerEventBus() {
+        EventBus.getDefault().register(this);
+    }
 
-                    try {
-                        data = new JSONObject(args[0].toString());
-                        userId = data.getString("user_id");
-                        title = data.getString("title");
-                        body = data.getString("body");
-                        type = data.getString("type");
-                        image_url = data.getString("image_url");
-                        id = data.getString("id");
-                        titleSlug = data.getString("title_slug");
-                        blogSlug = data.getString("blog_slug");
-                        groupId = data.getString("group_id");
-                        postId = data.getString("post_id");
-                        responseId = data.getString("response_id");
-                        campaignId = data.getString("campaign_id");
-                        url = data.getString("url");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        emitter(event.getObject());
+    }
+
+    private void unregisterEventBus() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    private void emitter(Object... object) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String str;
+                JSONObject data = null;
+                try {
+                    data = new JSONObject(object[0].toString());
+                    userId = data.getString("user_id");
+                    title = data.getString("title");
+                    body = data.getString("body");
+                    type = data.getString("type");
+                    image_url = data.getString("image_url");
+                    id = data.getString("id");
+                    titleSlug = data.getString("title_slug");
+                    blogSlug = data.getString("blog_slug");
+                    groupId = data.getString("group_id");
+                    postId = data.getString("post_id");
+                    responseId = data.getString("response_id");
+                    campaignId = data.getString("campaign_id");
+                    url = data.getString("url");
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        });
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-                    try {
-                        Snackbar snackbar = showSnackbar(60000);
-                        snackbar.show();
-                    } catch (Exception e) {
-
-                    }
+                try {
+                    Snackbar snackbar = showSnackbar(60000);
+                    snackbar.show();
+                } catch (Exception e) {
 
                 }
-            });
-        }
-    };
+
+            }
+        });
+    }
 
     private Snackbar showSnackbar(int duration) { // Create the Snackbar
         snackbar = Snackbar.make(BaseApplication.getInstance().getView(), "", duration);
@@ -766,6 +770,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             isChangeScrFg = true;
         }
         isScrInFg = true;
+        registerEventBus();
         super.onStart();
         /*AnalyticsHelper.onActivityStart(this);
         AnalyticsHelper.setLogEnabled(Constants.IS_GOOGLE_ANALYTICS_ENABLED);*/
@@ -780,6 +785,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             onAppPause();
         }
         isScrInFg = false;
+        unregisterEventBus();
     }
 
     public void onAppStart() {
@@ -799,10 +805,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mSocket != null) {
-            mSocket.off(SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
-            mSocket.disconnect();
-        }
     }
 
     @Override

@@ -1,12 +1,16 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +24,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -75,6 +80,7 @@ import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment;
 import com.mycity4kids.ui.fragment.TaskFragment;
+import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -160,6 +166,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private ImageView clearSearchImageView;
     private ImageView shareGroupImageView;
     private CoordinatorLayout root;
+    private View hideBottomDrawer;
+    private LinearLayout bottom_sheet;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private RelativeLayout announcementContainerR, pollContainerR, postContainerR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +184,12 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         Utils.pushOpenScreenEvent(this, "GroupDetailsScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        postContainerR = (RelativeLayout) findViewById(R.id.postContainerR);
+        pollContainerR = (RelativeLayout) findViewById(R.id.pollContainerR);
+        announcementContainerR = (RelativeLayout) findViewById(R.id.announcementContainerR);
+        hideBottomDrawer = (View) findViewById(R.id.hideBottomDrawer);
+        bottom_sheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         groupPostTabLayout = (TabLayout) findViewById(R.id.groupPostTabLayout);
         addPostContainer = (RelativeLayout) findViewById(R.id.addPostContainer);
@@ -230,7 +246,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
 
-
+        postContainerR.setOnClickListener(this);
+        pollContainerR.setOnClickListener(this);
+        announcementContainerR.setOnClickListener(this);
+        hideBottomDrawer.setOnClickListener(this);
         addPostFAB.setOnClickListener(this);
         pollContainer.setOnClickListener(this);
         postContainer.setOnClickListener(this);
@@ -752,42 +771,48 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             break;
             case R.id.addPostFAB:
-                Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Post +", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "create post screen", "", String.valueOf(groupId));
-
-                if (groupsGenericPostRecyclerAdapter != null) {
-                    groupsGenericPostRecyclerAdapter.releasePlayer();
-                }
-
-                addPostContainer.setVisibility(View.VISIBLE);
+                hideBottomDrawer.setVisibility(View.VISIBLE);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//                Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Post +", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "create post screen", "", String.valueOf(groupId));
+//
+//                if (groupsGenericPostRecyclerAdapter != null) {
+//                    groupsGenericPostRecyclerAdapter.releasePlayer();
+//                }
+//
+//                addPostContainer.setVisibility(View.VISIBLE);
                 break;
+            case R.id.hideBottomDrawer:
+                hideBottomSheet();
+                break;
+            case R.id.postContainerR:
             case R.id.postContainer: {
                 Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "Post", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "cCreate post screen", "", String.valueOf(groupId));
-
                 Intent intent = new Intent(GroupDetailsActivity.this, AddTextOrMediaGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
                 startActivityForResult(intent, 1111);
+                hideBottomSheet();
             }
             break;
+            case R.id.announcementContainerR:
             case R.id.postAudioContainer: {
                 Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "Audio", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Audio post screen", "", String.valueOf(groupId));
-
                 Intent intent = new Intent(GroupDetailsActivity.this, AddAudioGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
                 startActivityForResult(intent, 1111);
+                hideBottomSheet();
             }
             break;
-
+            case R.id.pollContainerR:
             case R.id.pollContainer: {
                 Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "polls", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Create poll screen", "", String.valueOf(groupId));
-
                 Intent intent = new Intent(GroupDetailsActivity.this, AddPollGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
                 startActivityForResult(intent, 1111);
+                hideBottomSheet();
             }
             break;
             case R.id.closeImageView:
                 Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
-
                 if (addPostContainer.getVisibility() == View.VISIBLE) {
                     addPostContainer.setVisibility(View.GONE);
                 }
@@ -909,6 +934,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         Call<GroupPostResponse> call = groupsAPI.updatePost(selectedPost.getId(), request);
         call.enqueue(updateAdminLvlPostSettingResponseCallback);
+    }
+
+    private void hideBottomSheet() {
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        hideBottomDrawer.setVisibility(View.GONE);
     }
 
     private void getPostingUsersMembershipDetails(int groupId, String postsUserId) {

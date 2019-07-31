@@ -541,7 +541,7 @@
         android:visibility="visible"
         app:fab_colorNormal="@color/app_red"
         app:fab_colorPressed="@color/app_red"
-        app:fab_icon="@drawable/ic_edit_new" />
+        app:fab_icon="@drawable/ic_edit" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -550,6 +550,15 @@
         android:layout_gravity="center"
         android:elevation="6dp"
         android:visibility="gone" />
+
+    <View
+        android:id="@+id/hideBottomDrawer"
+        android:visibility="gone"
+        android:background="@color/trans_gray"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include layout="@layout/group_add_post_fab" />
 
 </android.support.design.widget.CoordinatorLayout>
 

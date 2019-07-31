@@ -1226,5 +1226,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="tracker_Activity_submit_corrected_proof">Please submit corrected proofs again.</string>
     <string name="tracker_Activity_expected_date">Expected Date</string>
     <string name="tracker_activity_proof_submitted_rejected">PROOFS SUBMITTED REJECTED</string>
+
+    <string name="voise_post_group">Use your voice\nRecord your thoughts or ask a question in your voice</string>
+    <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
+    <string name="blog_post_group">Write something\nAsk a question or share your thought</string>
 </resources>
 
