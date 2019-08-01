@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque">
-    <item android:drawable="?colorPrimary"/>
-    <item
-        android:gravity="center">
+    <item android:drawable="?colorPrimary" />
+    <item android:gravity="center">
         <bitmap
-            android:src="@drawable/momspresso_logo"
-            android:gravity="center" />
+            android:gravity="center"
+            android:src="@drawable/momspresso_logo" />
     </item>
 </layer-list>

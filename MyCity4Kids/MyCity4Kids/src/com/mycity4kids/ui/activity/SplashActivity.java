@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -34,7 +35,9 @@ import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.JsonArray;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -55,6 +58,7 @@ import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
@@ -72,7 +76,6 @@ import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.location.GPSTracker;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -81,6 +84,13 @@ import java.util.concurrent.TimeUnit;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -410,47 +420,41 @@ public class SplashActivity extends BaseActivity {
                 .build();
     }
 
+    Handler handler;
+
     @Override
     public void onStart() {
         super.onStart();
 
         // Branch init
-        Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onInitFinished(JSONObject referringParams, BranchError error) {
-                if (error == null) {
-                    String type = "";
-                    Log.i("BRANCH SDK", referringParams.toString());
-                    branchData = referringParams.toString();
-                    try {
-                        type = referringParams.getString("type");
-                        ToastUtils.showToast(SplashActivity.this, type);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            public void run() {
+                Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
+                    @Override
+                    public void onInitFinished(JSONObject referringParams, BranchError error) {
+                        if (error == null) {
+                            String type = "";
+                            Log.i("BRANCH_SDK", referringParams.toString());
+                            branchData = referringParams.toString();
+
+
+                  /*  JsonParser parser = new JsonParser();
+                    JsonElement mJson = parser.parse(branchData);
+                    Gson gson = new Gson();
+                    BranchModel object = gson.fromJson(mJson, BranchModel.class);
+                    BaseApplication.getInstance().setBranchModel(object);
+                    Log.i("Data", object.toString());*/
+                            BaseApplication.getInstance().setBranchData(branchData);
+
+                        } else {
+                            Log.i("BRANCH SDK", error.getMessage());
+                        }
                     }
-
-                    if (!StringUtils.isNullOrEmpty(type)) {
-
-                        BaseApplication.getInstance().setBranchData(type);
-
-                    }
-
-
-                    // _deepLinkURL=referringParams.toString();
-                    /*  Gson gson = new Gson();
-                    BranchData object = gson.fromJson(branchData, BranchData.class);
-                    SharedPrefUtils.setBranchModel(SplashActivity.this, object);*/
-                    /*Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
-                    intent.putExtra("data", referringParams.toString());
-                    startActivity(intent);*/
-                    //  navigateToNextScreen(true);
-                    // Retrieve deeplink keys from 'referringParams' and evaluate the values to determine where to route the user
-                    // Check '+clicked_branch_link' before deciding whether to use your Branch routing logic
-                } else {
-                    Log.i("BRANCH SDK", error.getMessage());
-                }
+                }, SplashActivity.this.getIntent().getData(), SplashActivity.this);
             }
-        }, this.getIntent().getData(), this);
+        }, 1000);
 
         mClient.connect();
         if (!BuildConfig.DEBUG)
@@ -627,22 +631,40 @@ public class SplashActivity extends BaseActivity {
         }
 
     };
+    Handler handler1;
 
     private void gotoDashboard() {
-        Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
-        if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
-            if (_deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK)) {
-                intent.putExtra(AppConstants.BRANCH_DEEPLINK, _deepLinkURL);
-            } else {
+
+        if (!StringUtils.isNullOrEmpty(_deepLinkURL) && _deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK)) {
+            handler1 = new Handler();
+            handler1.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
+                            intent.putExtra(AppConstants.BRANCH_DEEPLINK, _deepLinkURL);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+                }
+            }, 1000);
+        } else {
+            Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
+            if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
                 intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            } else if (extras != null && extras.getString("type") != null) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("notificationExtras", extras);
             }
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        } else if (extras != null && extras.getString("type") != null) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra("notificationExtras", extras);
+            startActivity(intent);
+            finish();
+
         }
-        startActivity(intent);
-        finish();
     }
 
     @Override
@@ -857,6 +879,13 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         mixpanel.flush();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+        if (handler1 != null) {
+            handler1.removeCallbacksAndMessages(null);
+        }
         super.onDestroy();
+
     }
 }

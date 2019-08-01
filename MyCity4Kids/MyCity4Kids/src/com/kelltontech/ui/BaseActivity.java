@@ -834,7 +834,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     protected void onPause() {
         super.onPause();
         comScore.onExitForeground();
-        if (snackbar != null){
+        if (snackbar != null) {
             snackbar.dismiss();
         }
     }

@@ -52,6 +52,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.Dash;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -70,6 +72,7 @@ import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.AllDraftsResponse;
@@ -1211,9 +1214,50 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         } else if (intent.hasExtra(AppConstants.BRANCH_DEEPLINK)) {
+            if (intent.getStringExtra(AppConstants.BRANCH_DEEPLINK).contains(AppConstants.BRANCH_DEEPLINK)) {
+                String branchdata = BaseApplication.getInstance().getBranchData();
+
+                JsonParser parser = new JsonParser();
+                JsonElement mJson = parser.parse(branchdata);
+                Gson gson = new Gson();
+                BranchModel branchModel = gson.fromJson(mJson, BranchModel.class);
+/*
+                BaseApplication.getInstance().setBranchModel(branchModel);
+*/
+                Log.i("Data", branchdata+":");
+              //  BranchModel branchModel = BaseApplication.getInstance().getBranchmodel();
+
+                if (branchModel.getType().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
+
+                    Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+                    startActivity(intent1);
+
+                } else if (branchModel.getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
+                    String campaignID = branchModel.getId();
+                    Intent campaignIntent = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                    startActivity(campaignIntent);
+
+
+                } else if (branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
+
+
+                } else if (branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
+
+                    Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
+                    intent1.putExtra("pageNumber", 1);
+                    startActivity(intent1);
+
+
+                } else {
+
+                }
+            }
+
+
             // String nevigateTo = BaseApplication.getInstance().getBranchData();
-            Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
-            startActivity(intent1);
+           /* Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+            startActivity(intent1);*/
         } else {
             String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
             try {

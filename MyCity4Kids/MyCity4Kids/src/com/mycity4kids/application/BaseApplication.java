@@ -33,6 +33,7 @@ import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.database.BaseDbHelper;
+import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
@@ -81,6 +82,7 @@ public class BaseApplication extends Application {
 
     private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
+    BranchModel data;
     private static BaseApplication mInstance;
     private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, testRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
@@ -89,7 +91,7 @@ public class BaseApplication extends Application {
     private static ArrayList<Topics> shortStoryTopicList;
     private static HashMap<Topics, List<Topics>> topicsMap;
     private static HashMap<String, Topics> selectedTopicsMap;
-    String branchData = "";
+    private static String branchData = "";
     private Activity dashboardActivity;
 
     private Activity activity;
@@ -402,8 +404,13 @@ public class BaseApplication extends Application {
 
     public static void startSocket() {
         try {
-            if(!TextUtils.isEmpty(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId())) {
+
+         /*   if (!TextUtils.isEmpty(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId())) {
+                Socket mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId()*/
+
+            if (!TextUtils.isEmpty(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId())) {
                 mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId()
+
                         + "&mc4kToken=" + SharedPrefUtils.getUserDetailModel(mInstance).getMc4kToken() + "&lang=" + Locale.getDefault().getLanguage() + "&agent=android");
                 mSocket.on(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId(), onNewMessage);
                 if (!mSocket.connected()) {
@@ -422,7 +429,7 @@ public class BaseApplication extends Application {
     private static Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            if(EventBus.getDefault() != null) {
+            if (EventBus.getDefault() != null) {
                 EventBus.getDefault().post(new MessageEvent(args));
             }
         }
@@ -747,11 +754,20 @@ public class BaseApplication extends Application {
 
 
     public void setBranchData(String branchData) {
-        this.branchData = branchData;
+        BaseApplication.branchData = branchData;
     }
 
     public String getBranchData() {
         return branchData;
+    }
+
+
+    public void setBranchModel(BranchModel data) {
+        this.data = data;
+    }
+
+    public BranchModel getBranchmodel() {
+        return data;
     }
 
 }

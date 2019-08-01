@@ -44,7 +44,7 @@ public class LoadingActivity extends BaseActivity {
 
     private int cityIdFromLocation;
     private RelativeLayout root;
-    String id = "";
+    String type = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class LoadingActivity extends BaseActivity {
             navigateToDashboard();
         }
 
-        id = BaseApplication.getInstance().getBranchData();
+        type = BaseApplication.getInstance().getBranchData();
     }
 
     private void fetchingLocation() {
@@ -221,8 +221,8 @@ public class LoadingActivity extends BaseActivity {
                 }
 
                 Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-                if (!StringUtils.isNullOrEmpty(id)) {
-                    intent.putExtra(AppConstants.BRANCH_DEEPLINK, id);
+                if (!StringUtils.isNullOrEmpty(type)) {
+                    intent.putExtra(AppConstants.BRANCH_DEEPLINK, AppConstants.BRANCH_DEEPLINK);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -231,8 +231,8 @@ public class LoadingActivity extends BaseActivity {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-                if (!StringUtils.isNullOrEmpty(id)) {
-                    intent.putExtra(AppConstants.BRANCH_DEEPLINK, id);
+                if (!StringUtils.isNullOrEmpty(type)) {
+                    intent.putExtra(AppConstants.BRANCH_DEEPLINK, AppConstants.BRANCH_DEEPLINK);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -246,8 +246,8 @@ public class LoadingActivity extends BaseActivity {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-            if (!StringUtils.isNullOrEmpty(id)) {
-                intent.putExtra(AppConstants.BRANCH_DEEPLINK, id);
+            if (!StringUtils.isNullOrEmpty(type)) {
+                intent.putExtra(AppConstants.BRANCH_DEEPLINK, AppConstants.BRANCH_DEEPLINK);
             }
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
