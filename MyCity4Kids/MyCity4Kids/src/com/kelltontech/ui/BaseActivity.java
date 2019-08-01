@@ -115,11 +115,13 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         baseApplication = (BaseApplication) getApplication();
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         String isRewardAdded = SharedPrefUtils.getIsRewardsAdded(getApplicationContext());
+        String userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         try {
-            if(BaseApplication.getMSocket() != null && (TextUtils.isEmpty(isRewardAdded) || !isRewardAdded.equals("1"))) {
+            if(BaseApplication.getMSocket() != null && !TextUtils.isEmpty(userId) &&
+                    (TextUtils.isEmpty(isRewardAdded) || !isRewardAdded.equals("1"))) {
                 JSONObject obj = new JSONObject();
                 obj.put("pagename", this.getClass().getName());
-                obj.put("userid", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                obj.put("user_id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 BaseApplication.getMSocket().emit("pageview", obj);
             }
         } catch (JSONException e) {
