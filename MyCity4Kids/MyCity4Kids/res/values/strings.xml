@@ -1038,8 +1038,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="add_website">ADD WEBSITE</string>
-    <string name="add_youtube">Enter your Youtube channel link</string>
-    <string name="add_twitter">Enter your Twitter handle</string>
+    <string name="add_youtube">Add Youtube channel link</string>
+    <string name="add_twitter">Add Twitter handle</string>
     <string name="kids_number">"KID %d DETAIL</string>
 
     <string name="hold_to_release">Hold to record, Release to send</string>
