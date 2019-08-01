@@ -28,6 +28,7 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -147,6 +148,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
         articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
         nextPageNumber = 1;
+        hitRecommendedVideoAdApi();
         hitArticleListingApi();
 
         articlesListingAdapter = new VlogsListingAdapter(getActivity(), topic);
@@ -197,6 +199,17 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         return view;
     }
 
+    public void hitRecommendedVideoAdApi() {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            removeProgressDialog();
+            return;
+        }
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<Topics> topicsCall = vlogsListingAndDetailsAPI.getRecommendedVideoAd();
+        topicsCall.enqueue(topicsCallback);
+    }
+
     public void hitArticleListingApi() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
@@ -210,6 +223,24 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(from, from + limit - 1, sortType, 3, videoCategory);
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
+
+    private Callback<Topics> topicsCallback = new Callback<Topics>() {
+        @Override
+        public void onResponse(Call<Topics> call, retrofit2.Response<Topics> response) {
+            if (response == null || null == response.body()) {
+                return;
+            }
+            try {
+                articlesListingAdapter.setRecommendedVideoAd(response.body());
+                articlesListingAdapter.notifyDataSetChanged();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Topics> call, Throwable t) {}
+    };
 
     private Callback<VlogsListingResponse> recentArticleResponseCallback = new Callback<VlogsListingResponse>() {
         @Override
