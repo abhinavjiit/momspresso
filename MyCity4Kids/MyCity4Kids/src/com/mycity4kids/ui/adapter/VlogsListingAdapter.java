@@ -129,9 +129,6 @@ public class VlogsListingAdapter extends BaseAdapter {
                 addVlogViewHolder = new AddVlogViewHolder();
                 view = mInflator.inflate(R.layout.add_momvlog_list_item, null);
                 addVlogViewHolder.videoLogBanner = (CustomFontTextView) view.findViewById(R.id.videoLogBanner);
-                addVlogViewHolder.title = (CustomFontTextView) view.findViewById(R.id.title);
-                addVlogViewHolder.subTitle = (CustomFontTextView) view.findViewById(R.id.sub_title);
-                addVlogViewHolder.button = (CustomFontTextView) view.findViewById(R.id.button);
                 addVlogViewHolder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
                 addVlogViewHolder.goldLogo = (TextView) view.findViewById(R.id.goldLogo);
                 addVlogViewHolder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
@@ -150,36 +147,6 @@ public class VlogsListingAdapter extends BaseAdapter {
                 DrawableCompat.setTint(drawable, mContext.getResources().getColor(R.color.gold_color_video_listing));
                 DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
                 addVlogViewHolder.goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-                Typeface myTypeface;
-                switch (Locale.getDefault().getLanguage()) {
-                    case AppConstants.LOCALE_ENGLISH:
-                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Oswald-Medium.ttf");
-                        break;
-                    case AppConstants.LOCALE_HINDI:
-                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Kruti_Dev_010.ttf");
-                        break;
-                    case AppConstants.LOCALE_BENGALI:
-                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "kalpurush.ttf");
-                        break;
-                    case AppConstants.LOCALE_MARATHI:
-                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Kruti_Dev_010.ttf");
-                        break;
-                    case AppConstants.LOCALE_MALAYALAM:
-                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Kartika.ttf");
-                        break;
-                    case AppConstants.LOCALE_TAMIL:
-                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Oswald-Medium.ttf");
-                        break;
-                    case AppConstants.LOCALE_TELUGU:
-                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "gautami.ttf");
-                        break;
-                    default:
-                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Oswald-Medium.ttf");
-                }
-                addVlogViewHolder.title.setTypeface(myTypeface);
-                addVlogViewHolder.subTitle.setTypeface(myTypeface);
-                addVlogViewHolder.button.setTypeface(myTypeface);
-                addVlogViewHolder.videoLogBanner.setTypeface(myTypeface);
                 view.setTag(addVlogViewHolder);
             } else {
                 addVlogViewHolder = (AddVlogViewHolder) view.getTag();
@@ -339,9 +306,6 @@ public class VlogsListingAdapter extends BaseAdapter {
         TextView commentCountTextView;
         TextView recommendCountTextView;
         CustomFontTextView videoLogBanner;
-        CustomFontTextView title;
-        CustomFontTextView subTitle;
-        CustomFontTextView button;
     }
 
     private void findActiveVideoChallenge() {
