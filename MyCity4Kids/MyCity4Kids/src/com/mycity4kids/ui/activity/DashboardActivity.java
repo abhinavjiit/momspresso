@@ -440,7 +440,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         menuItem.setChecked(true);
                         // close drawer when item is tapped
                         mDrawerLayout.closeDrawers();
-
                         return true;
                     }
                 });
@@ -448,7 +447,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-
+                if(slideOffset < 1) {
+                    drawerProfileCoachmark.setVisibility(View.GONE);
+                    drawerMyMoneyCoachmark.setVisibility(View.GONE);
+                }
             }
 
 
@@ -512,13 +514,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onDrawerClosed(View drawerView) {
-
-
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
-
                 if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
                     langTextView.setText(getString(R.string.language_label_english));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_english));
