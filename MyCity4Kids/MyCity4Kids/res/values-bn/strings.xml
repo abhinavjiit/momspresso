@@ -1153,4 +1153,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="voise_post_group">আপনার নিজস্ব স্বর ব্যবহার করুন\nআপনার নিজস্ব স্বরে প্রশ্ন করুন বা আপনার ভাবনা রেকর্ড করে জানান</string>
     <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
     <string name="blog_post_group">এখানে লিখুন\nআপনার ভাবনা ভাগ করে নিন বা কোনো প্রশ্ন থাকলে করুন </string>
+
+    <string name="mom_vlog_banner_title">অংশগ্রহণ করুন চ্যালেঞ্জে</string>
+    <string name="mom_vlog_banner_subtitle">পুরস্কার মূল্য- ১০,০০০ টাকা</string>
+    <string name="mom_vlog_banner_button">ভিডিও আপলোড করুন</string>
 </resources>

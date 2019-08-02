@@ -3,6 +3,7 @@ package com.mycity4kids.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,12 +34,14 @@ import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.widget.CustomFontTextView;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -124,6 +128,10 @@ public class VlogsListingAdapter extends BaseAdapter {
             if (view == null) {
                 addVlogViewHolder = new AddVlogViewHolder();
                 view = mInflator.inflate(R.layout.add_momvlog_list_item, null);
+                addVlogViewHolder.videoLogBanner = (CustomFontTextView) view.findViewById(R.id.videoLogBanner);
+                addVlogViewHolder.title = (CustomFontTextView) view.findViewById(R.id.title);
+                addVlogViewHolder.subTitle = (CustomFontTextView) view.findViewById(R.id.sub_title);
+                addVlogViewHolder.button = (CustomFontTextView) view.findViewById(R.id.button);
                 addVlogViewHolder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
                 addVlogViewHolder.goldLogo = (TextView) view.findViewById(R.id.goldLogo);
                 addVlogViewHolder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
@@ -134,7 +142,6 @@ public class VlogsListingAdapter extends BaseAdapter {
                 addVlogViewHolder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
                 addVlogViewHolder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
                 addVlogViewHolder.addMomVlogImageView = (ImageView) view.findViewById(R.id.addMomVlogImageView);
-                addVlogViewHolder.challengeNameTextMomVlog = (TextView) view.findViewById(R.id.challengeNameTextMomVlog);
                 /*addVlogViewHolder.goldLogo.setCompoundDrawablesWithIntrinsicBounds(mContext.getResources().getDrawable(R.drawable.ic_star_gold_videos), null, null, null);
                 DrawableCompat.setTint();*/
 
@@ -143,23 +150,46 @@ public class VlogsListingAdapter extends BaseAdapter {
                 DrawableCompat.setTint(drawable, mContext.getResources().getColor(R.color.gold_color_video_listing));
                 DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
                 addVlogViewHolder.goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-                addVlogViewHolder.challengeNameTextMomVlog.setText(videoAd.getDisplay_name());
-                if(videoAd.getExtraData().size() > 0) {
-                    addVlogViewHolder.challengeNameTextMomVlog.setVisibility(View.VISIBLE);
-                    Picasso.with(mContext).load(videoAd.getExtraData().get(0).getChallenge().getImageUrl()).into(addVlogViewHolder.addMomVlogImageView);
-                } else {
-                    addVlogViewHolder.challengeNameTextMomVlog.setVisibility(View.GONE);
+                Typeface myTypeface;
+                switch (Locale.getDefault().getLanguage()) {
+                    case AppConstants.LOCALE_ENGLISH:
+                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Oswald-Medium.ttf");
+                        break;
+                    case AppConstants.LOCALE_HINDI:
+                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Kruti_Dev_010.ttf");
+                        break;
+                    case AppConstants.LOCALE_BENGALI:
+                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "kalpurush.ttf");
+                        break;
+                    case AppConstants.LOCALE_MARATHI:
+                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Kruti_Dev_010.ttf");
+                        break;
+                    case AppConstants.LOCALE_MALAYALAM:
+                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Kartika.ttf");
+                        break;
+                    case AppConstants.LOCALE_TAMIL:
+                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Oswald-Medium.ttf");
+                        break;
+                    case AppConstants.LOCALE_TELUGU:
+                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "gautami.ttf");
+                        break;
+                    default:
+                        myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "Oswald-Medium.ttf");
                 }
+                addVlogViewHolder.title.setTypeface(myTypeface);
+                addVlogViewHolder.subTitle.setTypeface(myTypeface);
+                addVlogViewHolder.button.setTypeface(myTypeface);
+                addVlogViewHolder.videoLogBanner.setTypeface(myTypeface);
                 view.setTag(addVlogViewHolder);
             } else {
                 addVlogViewHolder = (AddVlogViewHolder) view.getTag();
             }
 
+            addVlogViewHolder.videoLogBanner.setText(videoAd.getDisplay_name());
             addVlogViewHolder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
             addVlogViewHolder.viewCountTextView.setText(articleDataModelsNew.get(position).getView_count());
             addVlogViewHolder.commentCountTextView.setText(articleDataModelsNew.get(position).getComment_count());
             addVlogViewHolder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLike_count());
-
 
             try {
                 String userName = articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName();
@@ -181,21 +211,17 @@ public class VlogsListingAdapter extends BaseAdapter {
                 addVlogViewHolder.goldLogo.setVisibility(View.VISIBLE);
             } else {
                 addVlogViewHolder.goldLogo.setVisibility(View.GONE);
-
-
             }
 
             if (articleDataModelsNew.get(position).getWinner() != 0) {
                 addVlogViewHolder.winnerLayout.setVisibility(View.VISIBLE);
             } else {
                 addVlogViewHolder.winnerLayout.setVisibility(View.GONE);
-
             }
 
             addVlogViewHolder.addMomVlogImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     if (videoChallengeTopics == null) {
                         findActiveVideoChallenge();
                     } else {
@@ -312,7 +338,10 @@ public class VlogsListingAdapter extends BaseAdapter {
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        TextView challengeNameTextMomVlog;
+        CustomFontTextView videoLogBanner;
+        CustomFontTextView title;
+        CustomFontTextView subTitle;
+        CustomFontTextView button;
     }
 
     private void findActiveVideoChallenge() {
