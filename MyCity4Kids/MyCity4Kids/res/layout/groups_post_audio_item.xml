@@ -258,10 +258,10 @@
                 android:layout_marginTop="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:orientation="horizontal"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:paddingBottom="5dp"
-                android:orientation="horizontal">
+                android:paddingBottom="5dp">
 
                 <ImageView
                     android:id="@+id/upvoteImageVIew"
