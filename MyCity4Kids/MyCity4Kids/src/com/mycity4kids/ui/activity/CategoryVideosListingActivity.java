@@ -253,6 +253,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
 
         AppUtils.changeTabsFont(this, tabLayout);
+
         pagerAdapter = new VideoTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

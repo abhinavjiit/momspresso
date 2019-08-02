@@ -82,7 +82,7 @@ public class BaseApplication extends Application {
 
     private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
-    BranchModel data;
+    String data = "";
     private static BaseApplication mInstance;
     private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, testRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
@@ -91,7 +91,7 @@ public class BaseApplication extends Application {
     private static ArrayList<Topics> shortStoryTopicList;
     private static HashMap<Topics, List<Topics>> topicsMap;
     private static HashMap<String, Topics> selectedTopicsMap;
-    private static String branchData = "";
+    private String branchData = "";
     private Activity dashboardActivity;
 
     private Activity activity;
@@ -754,7 +754,7 @@ public class BaseApplication extends Application {
 
 
     public void setBranchData(String branchData) {
-        BaseApplication.branchData = branchData;
+        this.branchData = branchData;
     }
 
     public String getBranchData() {
@@ -762,11 +762,11 @@ public class BaseApplication extends Application {
     }
 
 
-    public void setBranchModel(BranchModel data) {
+    public void setBranchLink(String data) {
         this.data = data;
     }
 
-    public BranchModel getBranchmodel() {
+    public String getBranchLink() {
         return data;
     }
 

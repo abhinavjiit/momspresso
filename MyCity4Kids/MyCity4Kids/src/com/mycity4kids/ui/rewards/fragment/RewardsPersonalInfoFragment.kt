@@ -1286,6 +1286,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         (activity as RewardsContainerActivity).runOnUiThread {
             addresses = coder.getFromLocationName(address, 5)
             if (addresses == null || addresses.isNotEmpty() || addresses.isNullOrEmpty()) {
+
             } else {
                 val location: Address = addresses.get(0)
                 lat = location.getLatitude()

@@ -71,7 +71,7 @@ public class LoadingActivity extends BaseActivity {
             navigateToDashboard();
         }
 
-        type = BaseApplication.getInstance().getBranchData();
+        type = BaseApplication.getInstance().getBranchLink();
     }
 
     private void fetchingLocation() {
@@ -221,7 +221,7 @@ public class LoadingActivity extends BaseActivity {
                 }
 
                 Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-                if (!StringUtils.isNullOrEmpty(type)) {
+                if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
                     intent.putExtra(AppConstants.BRANCH_DEEPLINK, AppConstants.BRANCH_DEEPLINK);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -231,7 +231,7 @@ public class LoadingActivity extends BaseActivity {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-                if (!StringUtils.isNullOrEmpty(type)) {
+                if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
                     intent.putExtra(AppConstants.BRANCH_DEEPLINK, AppConstants.BRANCH_DEEPLINK);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -246,7 +246,7 @@ public class LoadingActivity extends BaseActivity {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
             Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-            if (!StringUtils.isNullOrEmpty(type)) {
+            if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
                 intent.putExtra(AppConstants.BRANCH_DEEPLINK, AppConstants.BRANCH_DEEPLINK);
             }
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

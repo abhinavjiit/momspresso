@@ -100,8 +100,10 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
 
         frameLayout.getBackground().setAlpha(0);
 
-        selectedId = getArguments().getString("selectedId");
-        topic = getArguments().getParcelable("topics");
+        if (getArguments() != null) {
+            selectedId = getArguments().getString("selectedId");
+            topic = getArguments().getParcelable("topics");
+        }
 
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);

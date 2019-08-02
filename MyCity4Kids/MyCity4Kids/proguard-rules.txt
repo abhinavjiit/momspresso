@@ -30,3 +30,8 @@
 -dontwarn com.googlecode.mp4parser.authoring.tracks.ttml.**
 -dontwarn com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar
 -dontwarn com.android.installreferrer.api.*
+-keepattributes *Annotation*
+-keepclassmembers class * {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }

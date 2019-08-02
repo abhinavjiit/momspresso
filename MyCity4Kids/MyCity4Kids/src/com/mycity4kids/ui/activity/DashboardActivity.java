@@ -91,6 +91,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.adapter.UserAllDraftsRecyclerAdapter;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
@@ -111,6 +112,7 @@ import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsShareReferralCodeActivity;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.MixPanelUtils;
@@ -157,6 +159,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<String> deepLinkImageUrl;
     private ArrayList<Topics> shortStoriesTopicList;
     private ArrayList<Topics> videoTopicList;
+    private ArrayList<String> branchDisplay_Name;
+    private ArrayList<String> branchChallengeId;
+    private ArrayList<String> branchActiveStreamUrl;
+    private ArrayList<String> branchRules;
+    private ArrayList<String> branchMappedCategory;
+    private ArrayList<String> branchImageUrl;
+
+
     private String parentTopicId;
     int groupId;
     int postId;
@@ -165,7 +175,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<Topics> subTopicsList;
     public boolean filter = false;
     Tracker t;
-    Topics videoChallengeTopics;
+    Topics videoChallengeTopics, branchArticledatamodal;
+
     private String TAG = "PhoneDetails";
     private String deepLinkUrl;
     private String mToolbarTitle = "";
@@ -218,7 +229,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout chooseLayout;
     private RelativeLayout chooseLayoutVideo;
     private View overLayChooseVideo;
-    private String isRewardsAdded;
+    private String isRewardsAdded, branchVideoChallengeId;
     private int lastActivieIndex = -1;
     private FrameLayout root;
 
@@ -1221,11 +1232,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 JsonElement mJson = parser.parse(branchdata);
                 Gson gson = new Gson();
                 BranchModel branchModel = gson.fromJson(mJson, BranchModel.class);
-/*
-                BaseApplication.getInstance().setBranchModel(branchModel);
-*/
-                Log.i("Data", branchdata+":");
-              //  BranchModel branchModel = BaseApplication.getInstance().getBranchmodel();
+
+                Log.i("Data", branchdata + ":");
 
                 if (branchModel.getType().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
 
@@ -1240,6 +1248,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
 
                 } else if (branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
+                    String challengeId = branchModel.getId();
+
+                    getChallenges(challengeId);
 
 
                 } else if (branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
@@ -2948,5 +2959,91 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+
+    private void getChallenges(String branchVideoChallengeId) {
+        this.branchVideoChallengeId = branchVideoChallengeId;
+        branchDisplay_Name = new ArrayList<>();
+        branchChallengeId = new ArrayList<>();
+        branchActiveStreamUrl = new ArrayList<>();
+        branchRules = new ArrayList<>();
+        branchMappedCategory = new ArrayList<>();
+        branchImageUrl = new ArrayList<>();
+
+
+        if (!ConnectivityUtils.isNetworkEnabled(DashboardActivity.this)) {
+            removeProgressDialog();
+            return;
+        }
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<TopicsResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogChallenges();
+        callRecentVideoArticles.enqueue(vlogChallengeResponseCallBack);
+    }
+
+    private Callback<TopicsResponse> vlogChallengeResponseCallBack = new Callback<TopicsResponse>() {
+        @Override
+        public void onResponse(Call<TopicsResponse> call, retrofit2.Response<TopicsResponse> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                return;
+            }
+            if (response.isSuccessful()) {
+                try {
+                    TopicsResponse responseData = response.body();
+                    if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                        for (int i = 0; i < responseData.getData().size(); i++) {
+
+                            if (responseData.getData().get(i).getId().equals(branchVideoChallengeId)) {
+
+
+                                branchDisplay_Name.add(responseData.getData().get(i).getDisplay_name());
+                                branchChallengeId.add(responseData.getData().get(i).getId());
+                                branchActiveStreamUrl.add(responseData.getData().get(i).getExtraData().get(0).getChallenge().getVideoUrl());
+                                branchRules.add(responseData.getData().get(i).getExtraData().get(0).getChallenge().getRules());
+                                branchMappedCategory.add(responseData.getData().get(i).getExtraData().get(0).getChallenge().getMapped_category());
+                                branchImageUrl.add(responseData.getData().get(i).getExtraData().get(0).getChallenge().getImageUrl());
+                                branchArticledatamodal = responseData.getData().get(i);
+
+
+                                Intent intent = new Intent(DashboardActivity.this, NewVideoChallengeActivity.class);
+                                //  Utils.momVlogEvent(Dash, "Video Listing", "Challenge container", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", challengeId.toString());
+
+                                intent.putExtra("Display_Name", branchDisplay_Name);
+                                intent.putExtra("screenName", "MomVlogs");
+                                intent.putExtra("challenge", branchChallengeId);
+                                intent.putExtra("position", 0);
+                                intent.putExtra("StreamUrl", branchActiveStreamUrl);
+                                intent.putExtra("rules", branchRules);
+                                intent.putExtra("maxDuration", responseData.getData().get(i).getExtraData().get(0).getChallenge().getMax_duration());
+                                intent.putExtra("mappedCategory", branchMappedCategory);
+                                intent.putExtra("topics", branchArticledatamodal.getParentName());
+                                intent.putExtra("parentId", branchArticledatamodal.getParentId());
+                                intent.putExtra("StringUrl", branchImageUrl);
+                                intent.putExtra("Topic", new Gson().toJson(branchArticledatamodal));
+
+                                startActivity(intent);
+
+
+                            }
+                        }
+
+
+                    }
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                }
+            }
+
+
+        }
+
+        @Override
+        public void onFailure(Call<TopicsResponse> call, Throwable t) {
+
+        }
+    };
 
 }

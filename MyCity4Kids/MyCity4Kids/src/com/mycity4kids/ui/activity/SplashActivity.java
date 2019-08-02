@@ -35,9 +35,6 @@ import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -58,7 +55,6 @@ import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
-import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
@@ -84,13 +80,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -124,9 +113,14 @@ public class SplashActivity extends BaseActivity {
         String data = intent.getDataString();
         if (Intent.ACTION_VIEW.equals(action) && data != null) {
             _deepLinkURL = data;
+            Log.i("deepLinkUrl", _deepLinkURL);
+            if (_deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK)) {
+                BaseApplication.getInstance().setBranchLink("true");
+
+
+            }
+
         }
-
-
     }
 
     /*don't delete this function we can use this function to generate facebook hashcode*/
@@ -438,15 +432,15 @@ public class SplashActivity extends BaseActivity {
                             String type = "";
                             Log.i("BRANCH_SDK", referringParams.toString());
                             branchData = referringParams.toString();
+                            try {
+                                if (StringUtils.isNullOrEmpty(referringParams.getString("type"))) {
+                                    BaseApplication.getInstance().setBranchData(branchData);
+                                    BaseApplication.getInstance().setBranchLink("true");
+                                }
+                            } catch (Exception e) {
+                                Log.e("Branch_Tag", e.getMessage());
+                            }
 
-
-                  /*  JsonParser parser = new JsonParser();
-                    JsonElement mJson = parser.parse(branchData);
-                    Gson gson = new Gson();
-                    BranchModel object = gson.fromJson(mJson, BranchModel.class);
-                    BaseApplication.getInstance().setBranchModel(object);
-                    Log.i("Data", object.toString());*/
-                            BaseApplication.getInstance().setBranchData(branchData);
 
                         } else {
                             Log.i("BRANCH SDK", error.getMessage());
@@ -516,14 +510,28 @@ public class SplashActivity extends BaseActivity {
                 });
                 return;
             } else {
-                Intent intent;
-                if (SharedPrefUtils.getLogoutFlag(this))
-                    intent = new Intent(SplashActivity.this, ActivityLogin.class);
-                else
-                    intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                if (SharedPrefUtils.getLogoutFlag(this)) {
+                    Intent intent = new Intent(SplashActivity.this, ActivityLogin.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    handler1 = new Handler();
+                    handler1.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+                        }
+                    }, 1000);
+                }
             }
         }
         Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(this));
