@@ -7,21 +7,141 @@
     android:layout_margin="5dp"
     android:background="@drawable/short_story_border_bg">
 
-    <ImageView
-        android:id="@+id/addMomVlogImageView"
+    <RelativeLayout
+        android:id="@+id/momVlogLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="4dp"
-        android:adjustViewBounds="true"
-        android:src="@drawable/add_mom_vlog_en" />
+        android:layout_marginBottom="4dp">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/addMomVlogImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@drawable/mom_vlogs_background_ad"
+            android:scaleType="fitXY" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/title"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/mom_vlog_banner_title"
+            android:gravity="bottom|center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            android:lines="2"
+            android:maxLines="2"
+            android:ellipsize="end"
+            card_view:fontName="Oswald-Medium.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/videoLogBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title"
+            android:layout_above="@+id/sub_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="#GotItFromMyMom"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            android:gravity="center"
+            android:lines="1"
+            android:maxLines="1"
+            android:ellipsize="end"
+            card_view:fontName="Oswald-Medium.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/sub_title"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_above="@+id/buttonsLayout"
+            android:text="@string/mom_vlog_banner_subtitle"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:gravity="top|center_horizontal"
+            android:lines="2"
+            android:maxLines="2"
+            android:ellipsize="end"
+            card_view:fontName="Oswald-Medium.ttf" />
+
+        <LinearLayout
+            android:id="@+id/buttonsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/addMomVlogImageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0.0px"
+                android:elevation="8dp"
+                card_view:cardElevation="10dp"
+                card_view:cardPreventCornerOverlap="false">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/mom_vlog_banner_button">
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginRight="22dp"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/button"
+                        android:drawableLeft="@drawable/ic_mom_vlog_banner_button"
+                        android:drawablePadding="10dp"
+                        android:text="@string/mom_vlog_banner_button"
+                        android:textColor="@color/app_red"
+                        card_view:fontName="Oswald-Medium.ttf" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/challengeNameTextMomVlog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/addMomVlogImageView"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="@dimen/space_10"
+            android:shadowColor="@color/black"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            card_view:fontName="oswald_regular.ttf" />
+
+    </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/addMomVlogImageView">
+        android:layout_below="@+id/momVlogLayout">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"

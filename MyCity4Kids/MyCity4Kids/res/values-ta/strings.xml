@@ -1152,4 +1152,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="voise_post_group">உங்கள் குரலை பயன்படுத்தலாம்\nஎண்ணங்களையோ (அ) கேள்வியையோ உங்கள் குரலில் பதிவு செய்யலாம்</string>
     <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
     <string name="blog_post_group">எதாவது எழுதலாம்\nகேள்வி கேட்கலாம் (அ) உங்கள் எண்ணத்தை பகிரலாம்</string>
+
+    <string name="mom_vlog_banner_title">ஏற்றுக்கொள்ளுங்கள்</string>
+    <string name="mom_vlog_banner_subtitle">10,000/- ரூபாய் மதிப்புள்ள பரிசுகளை வெல்லுங்கள்</string>
+    <string name="mom_vlog_banner_button">வீடியோவை பதிவேற்றுங்கள்</string>
 </resources>

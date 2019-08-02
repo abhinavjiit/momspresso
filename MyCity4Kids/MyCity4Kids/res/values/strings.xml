@@ -1038,8 +1038,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="add_website">ADD WEBSITE</string>
-    <string name="add_youtube">Enter your Youtube channel link</string>
-    <string name="add_twitter">Enter your Twitter handle</string>
+    <string name="add_youtube">Add Youtube channel link</string>
+    <string name="add_twitter">Add Twitter handle</string>
     <string name="kids_number">"KID %d DETAIL</string>
 
     <string name="hold_to_release">Hold to record, Release to send</string>
@@ -1282,5 +1282,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="voise_post_group">Use your voice\nRecord your thoughts or ask a question in your voice</string>
     <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
     <string name="blog_post_group">Write something\nAsk a question or share your thought</string>
+
+    <string name="mom_vlog_banner_title">Mom Vlogs Challenge Alert</string>
+    <string name="mom_vlog_banner_subtitle">Prizes worth Rs. 10,000</string>
+    <string name="mom_vlog_banner_button">Upload Video</string>
 </resources>
 

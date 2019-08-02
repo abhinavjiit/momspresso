@@ -1196,4 +1196,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="voise_post_group">Use your voice\nRecord your thoughts or ask a question in your voice</string>
     <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
     <string name="blog_post_group">Write something\nAsk a question or share your thought</string>
+
+    <string name="mom_vlog_banner_title">എടുക്കുക  ചാലഞ്ച</string>
+    <string name="mom_vlog_banner_subtitle">10,000 രൂപ വിലമതിക്കുന്ന സമ്മാനങ്ങൾ</string>
+    <string name="mom_vlog_banner_button">വീഡിയോ അപ്‌ലോഡുചെയ്യുക</string>
 </resources>

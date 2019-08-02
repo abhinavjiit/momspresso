@@ -3,13 +3,16 @@ package com.mycity4kids.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,19 +24,24 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.widget.CustomFontTextView;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -62,6 +70,7 @@ public class VlogsListingAdapter extends BaseAdapter {
     ArrayList<String> Display_Name, videoDisplay_Name;
     private int num_of_categorys;
     private TopicsResponse res;
+    private Topics videoAd;
 
     public VlogsListingAdapter(Context pContext, Topics topic) {
         density = pContext.getResources().getDisplayMetrics().density;
@@ -77,6 +86,10 @@ public class VlogsListingAdapter extends BaseAdapter {
 
     public void setNewListData(ArrayList<VlogsListingAndDetailResult> mParentingLists_new) {
         articleDataModelsNew = mParentingLists_new;
+    }
+
+    public void setRecommendedVideoAd(Topics videoAd) {
+        this.videoAd = videoAd;
     }
 
     @Override
@@ -101,7 +114,7 @@ public class VlogsListingAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (position != 0 && position % 9 == 0) {
+        if (position != 0 && position % 9 == 0 && videoAd != null) {
             return 0;
         } else {
             return 1;
@@ -115,6 +128,7 @@ public class VlogsListingAdapter extends BaseAdapter {
             if (view == null) {
                 addVlogViewHolder = new AddVlogViewHolder();
                 view = mInflator.inflate(R.layout.add_momvlog_list_item, null);
+                addVlogViewHolder.videoLogBanner = (CustomFontTextView) view.findViewById(R.id.videoLogBanner);
                 addVlogViewHolder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
                 addVlogViewHolder.goldLogo = (TextView) view.findViewById(R.id.goldLogo);
                 addVlogViewHolder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
@@ -133,21 +147,16 @@ public class VlogsListingAdapter extends BaseAdapter {
                 DrawableCompat.setTint(drawable, mContext.getResources().getColor(R.color.gold_color_video_listing));
                 DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
                 addVlogViewHolder.goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-                if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(mContext))) {
-                    addVlogViewHolder.addMomVlogImageView.setImageResource(R.drawable.add_mom_vlog_hi);
-                } else {
-                    addVlogViewHolder.addMomVlogImageView.setImageResource(R.drawable.add_mom_vlog_en);
-                }
                 view.setTag(addVlogViewHolder);
             } else {
                 addVlogViewHolder = (AddVlogViewHolder) view.getTag();
             }
 
+            addVlogViewHolder.videoLogBanner.setText(videoAd.getDisplay_name());
             addVlogViewHolder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
             addVlogViewHolder.viewCountTextView.setText(articleDataModelsNew.get(position).getView_count());
             addVlogViewHolder.commentCountTextView.setText(articleDataModelsNew.get(position).getComment_count());
             addVlogViewHolder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLike_count());
-
 
             try {
                 String userName = articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName();
@@ -169,29 +178,45 @@ public class VlogsListingAdapter extends BaseAdapter {
                 addVlogViewHolder.goldLogo.setVisibility(View.VISIBLE);
             } else {
                 addVlogViewHolder.goldLogo.setVisibility(View.GONE);
-
-
             }
 
             if (articleDataModelsNew.get(position).getWinner() != 0) {
                 addVlogViewHolder.winnerLayout.setVisibility(View.VISIBLE);
             } else {
                 addVlogViewHolder.winnerLayout.setVisibility(View.GONE);
-
             }
 
             addVlogViewHolder.addMomVlogImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     if (videoChallengeTopics == null) {
                         findActiveVideoChallenge();
                     } else {
                         //MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
-                        Intent cityIntent = new Intent(mContext, ChooseVideoCategoryActivity.class);
-                        cityIntent.putExtra("comingFrom", "createDashboardIcon");
-                        cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
-                        mContext.startActivity(cityIntent);
+//                        Intent cityIntent = new Intent(mContext, ChooseVideoCategoryActivity.class);
+//                        cityIntent.putExtra("comingFrom", "createDashboardIcon");
+//                        cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
+//                        mContext.startActivity(cityIntent);
+                        Intent intent = new Intent(mContext, NewVideoChallengeActivity.class);
+                        Utils.momVlogEvent(mContext, "Video Listing", "Challenge container", "", "android",
+                                SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", videoAd.getId());
+                        if(videoAd.getExtraData().size() > 0) {
+                            Topics.ExtraData extraData = videoAd.getExtraData().get(0);
+                            intent.putExtra("Display_Name", new ArrayList<>(Arrays.asList(videoAd.getDisplay_name())));
+                            intent.putExtra("screenName", "MomVlogs");
+                            intent.putExtra("challenge", new ArrayList<>(Arrays.asList(videoAd.getId())));
+                            intent.putExtra("position", 0);
+                            intent.putExtra("StreamUrl", new ArrayList<>(Arrays.asList(extraData.getChallenge().getVideoUrl())));
+                            intent.putExtra("rules", new ArrayList<>(Arrays.asList(extraData.getChallenge().getRules())));
+                            intent.putExtra("maxDuration", extraData.getChallenge().getMax_duration());
+                            intent.putExtra("mappedCategory", new ArrayList<>(Arrays.asList(extraData.getChallenge().getMapped_category())));
+                            intent.putExtra("topics", videoAd.getParentName());
+                            intent.putExtra("parentId", videoAd.getParentId());
+                            intent.putExtra("StringUrl", new ArrayList<>(Arrays.asList(extraData.getChallenge().getImageUrl())));
+                            intent.putExtra("Topic", new Gson().toJson(videoAd));
+                            mContext.startActivity(intent);
+                        }
                     }
                 }
             });
@@ -280,6 +305,7 @@ public class VlogsListingAdapter extends BaseAdapter {
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
+        CustomFontTextView videoLogBanner;
     }
 
     private void findActiveVideoChallenge() {

@@ -125,4 +125,7 @@ public interface VlogsListingAndDetailsAPI {
     @POST("v1/articles/chronos/")
     Call<ResponseBody> updateArticleTimeSpent(@Body ArticleReadTimeRequest body);
 
+    @GET("v1/recommendations/video_ad")
+    Call<Topics> getRecommendedVideoAd();
+
 }
