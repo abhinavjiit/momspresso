@@ -49,7 +49,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.model.Dash;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -141,7 +140,6 @@ import retrofit2.Retrofit;
 public class DashboardActivity extends BaseActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener,
         GroupMembershipStatus.IMembershipStatus, UserAllDraftsRecyclerAdapter.DraftRecyclerViewClickListener {
     private int num_of_challeneges;
-    private Topics datamodal;
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -151,33 +149,24 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private String challenge = "ChallengeTake";
     private String FromDeepLink = "FromDeepLink";
     public static final String COMMON_PREF_FILE = "my_city_prefs";
-    ArrayList<String> Display_Name, videoDisplay_Name;
-    private ArrayList<String> challengeId, videoChallengeId;
-    private ArrayList<String> ImageUrl, videoImageUrl, videoStreamUrl;
+    ArrayList<String> Display_Name;
+    private ArrayList<String> challengeId;
+    private ArrayList<String> ImageUrl;
     private ArrayList<String> deepLinkchallengeId;
     private ArrayList<String> deepLinkDisplayName;
     private ArrayList<String> deepLinkImageUrl;
     private ArrayList<Topics> shortStoriesTopicList;
-    private ArrayList<Topics> videoTopicList;
     private ArrayList<String> branchDisplay_Name;
     private ArrayList<String> branchChallengeId;
     private ArrayList<String> branchActiveStreamUrl;
     private ArrayList<String> branchRules;
     private ArrayList<String> branchMappedCategory;
     private ArrayList<String> branchImageUrl;
-
-
-    private String parentTopicId;
     int groupId;
-    int postId;
     Map<String, String> image;
-    private String content;
-    private ArrayList<Topics> subTopicsList;
     public boolean filter = false;
     Tracker t;
-    Topics videoChallengeTopics, branchArticledatamodal;
-
-    private String TAG = "PhoneDetails";
+    Topics branchArticledatamodal;
     private String deepLinkUrl;
     private String mToolbarTitle = "";
     private String fragmentToLoad = "";
@@ -229,15 +218,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout chooseLayout;
     private RelativeLayout chooseLayoutVideo;
     private View overLayChooseVideo;
-    private String isRewardsAdded, branchVideoChallengeId;
-    private int lastActivieIndex = -1;
+    private String branchVideoChallengeId;
     private FrameLayout root;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    private Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1234,34 +1221,35 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 BranchModel branchModel = gson.fromJson(mJson, BranchModel.class);
 
                 Log.i("Data", branchdata + ":");
+                if (branchdata != null) {
+                    if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
 
-                if (branchModel.getType().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
+                        Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+                        startActivity(intent1);
 
-                    Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
-                    startActivity(intent1);
-
-                } else if (branchModel.getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
-                    String campaignID = branchModel.getId();
-                    Intent campaignIntent = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
-                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
-                    startActivity(campaignIntent);
-
-
-                } else if (branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
-                    String challengeId = branchModel.getId();
-
-                    getChallenges(challengeId);
+                    } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
+                        String campaignID = branchModel.getId();
+                        Intent campaignIntent = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+                        campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                        startActivity(campaignIntent);
 
 
-                } else if (branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
+                    } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
+                        String challengeId = branchModel.getId();
 
-                    Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
-                    intent1.putExtra("pageNumber", 1);
-                    startActivity(intent1);
+                        getChallenges(challengeId);
 
 
-                } else {
+                    } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
 
+                        Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
+                        intent1.putExtra("pageNumber", 1);
+                        startActivity(intent1);
+
+
+                    } else {
+
+                    }
                 }
             }
 
@@ -2968,7 +2956,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         branchRules = new ArrayList<>();
         branchMappedCategory = new ArrayList<>();
         branchImageUrl = new ArrayList<>();
-
+        //     showProgressDialog(getApplicationContext().getResources().getString(R.string.please_wait));
 
         if (!ConnectivityUtils.isNetworkEnabled(DashboardActivity.this)) {
             removeProgressDialog();
@@ -2990,6 +2978,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
             if (response.isSuccessful()) {
+                //  removeProgressDialog();
                 try {
                     TopicsResponse responseData = response.body();
                     if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
@@ -3033,6 +3022,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 } catch (Exception e) {
                     Crashlytics.logException(e);
+                    //   removeProgressDialog();
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             }

@@ -433,7 +433,7 @@ public class SplashActivity extends BaseActivity {
                             Log.i("BRANCH_SDK", referringParams.toString());
                             branchData = referringParams.toString();
                             try {
-                                if (StringUtils.isNullOrEmpty(referringParams.getString("type"))) {
+                                if (!StringUtils.isNullOrEmpty(referringParams.getString("type"))) {
                                     BaseApplication.getInstance().setBranchData(branchData);
                                     BaseApplication.getInstance().setBranchLink("true");
                                 }

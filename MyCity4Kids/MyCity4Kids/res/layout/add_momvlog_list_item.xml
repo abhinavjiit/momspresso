@@ -26,53 +26,53 @@
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/title"
-            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
             android:layout_marginRight="10dp"
-            android:text="@string/mom_vlog_banner_title"
+            android:ellipsize="end"
             android:gravity="bottom|center_horizontal"
-            android:textColor="@color/white"
-            android:textSize="26sp"
             android:lines="2"
             android:maxLines="2"
-            android:ellipsize="end"
+            android:text="@string/mom_vlog_banner_title"
+            android:textColor="@color/white"
+            android:textSize="26sp"
             card_view:fontName="Oswald-Medium.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/videoLogBanner"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_below="@+id/title"
             android:layout_above="@+id/sub_title"
+            android:layout_below="@+id/title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:text="#GotItFromMyMom"
-            android:textColor="@color/white"
-            android:textSize="26sp"
+            android:ellipsize="end"
             android:gravity="center"
             android:lines="1"
             android:maxLines="1"
-            android:ellipsize="end"
+            android:text="#GotItFromMyMom"
+            android:textColor="@color/white"
+            android:textSize="26sp"
             card_view:fontName="Oswald-Medium.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/sub_title"
-            android:layout_marginBottom="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/buttonsLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:layout_above="@+id/buttonsLayout"
-            android:text="@string/mom_vlog_banner_subtitle"
-            android:textColor="@color/white"
-            android:textSize="22sp"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
             android:gravity="top|center_horizontal"
             android:lines="2"
             android:maxLines="2"
-            android:ellipsize="end"
+            android:text="@string/mom_vlog_banner_subtitle"
+            android:textColor="@color/white"
+            android:textSize="22sp"
             card_view:fontName="Oswald-Medium.ttf" />
 
         <LinearLayout
@@ -102,12 +102,12 @@
                     android:background="@drawable/mom_vlog_banner_button">
 
                     <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="18dp"
                         android:layout_marginRight="22dp"
-                        android:layout_centerVertical="true"
-                        android:id="@+id/button"
                         android:drawableLeft="@drawable/ic_mom_vlog_banner_button"
                         android:drawablePadding="10dp"
                         android:text="@string/mom_vlog_banner_button"
@@ -237,190 +237,7 @@
                         android:src="@drawable/ic_videos"
                         android:visibility="visible" />
 
-                    <!--<org.apmem.tools.layouts.FlowLayout-->
-                    <!--android:id="@+id/flowLayout"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="24dp"-->
-                    <!--android:layout_alignBottom="@+id/articleImageView"-->
-                    <!--android:layout_marginBottom="2dp"-->
-                    <!--android:paddingLeft="10dp"-->
-                    <!--android:paddingRight="10dp">-->
 
-                    <!--<LinearLayout-->
-                    <!--android:id="@+id/popularSubcatLL_1"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="5dp"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:layout_marginRight="2dp"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:background="@drawable/topics_transparent_bg"-->
-                    <!--android:clickable="true">-->
-
-                    <!--<TextView-->
-                    <!--android:id="@+id/popularSubcatTextView_1"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:fontFamily="sans-serif-light"-->
-                    <!--android:gravity="center"-->
-                    <!--android:paddingBottom="1dp"-->
-                    <!--android:paddingLeft="4dp"-->
-                    <!--android:paddingRight="4dp"-->
-                    <!--android:text=""-->
-                    <!--android:textAllCaps="true"-->
-                    <!--android:textColor="@color/white_color"-->
-                    <!--android:textSize="9sp" />-->
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                    <!--android:id="@+id/popularSubcatLL_2"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="5dp"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:layout_marginRight="2dp"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:layout_toRightOf="@+id/popularSubcatLL_1"-->
-                    <!--android:background="@drawable/topics_transparent_bg"-->
-                    <!--android:clickable="true">-->
-
-                    <!--<TextView-->
-                    <!--android:id="@+id/popularSubcatTextView_2"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:fontFamily="sans-serif-light"-->
-                    <!--android:gravity="center"-->
-                    <!--android:paddingBottom="1dp"-->
-                    <!--android:paddingLeft="4dp"-->
-                    <!--android:paddingRight="4dp"-->
-                    <!--android:text=""-->
-                    <!--android:textAllCaps="true"-->
-                    <!--android:textColor="@color/white_color"-->
-                    <!--android:textSize="9sp" />-->
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                    <!--android:id="@+id/popularSubcatLL_3"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="5dp"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:layout_marginRight="2dp"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:layout_toRightOf="@+id/popularSubcatLL_2"-->
-                    <!--android:background="@drawable/topics_transparent_bg"-->
-                    <!--android:clickable="true">-->
-
-                    <!--<TextView-->
-                    <!--android:id="@+id/popularSubcatTextView_3"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:fontFamily="sans-serif-light"-->
-                    <!--android:gravity="center"-->
-                    <!--android:paddingBottom="1dp"-->
-                    <!--android:paddingLeft="4dp"-->
-                    <!--android:paddingRight="4dp"-->
-                    <!--android:text=""-->
-                    <!--android:textAllCaps="true"-->
-                    <!--android:textColor="@color/white_color"-->
-                    <!--android:textSize="9sp" />-->
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                    <!--android:id="@+id/popularSubcatLL_4"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="5dp"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:layout_marginRight="2dp"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:layout_toRightOf="@+id/popularSubcatLL_3"-->
-                    <!--android:background="@drawable/topics_transparent_bg"-->
-                    <!--android:clickable="true">-->
-
-                    <!--<TextView-->
-                    <!--android:id="@+id/popularSubcatTextView_4"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:fontFamily="sans-serif-light"-->
-                    <!--android:gravity="center"-->
-                    <!--android:paddingBottom="1dp"-->
-                    <!--android:paddingLeft="4dp"-->
-                    <!--android:paddingRight="4dp"-->
-                    <!--android:text=""-->
-                    <!--android:textAllCaps="true"-->
-                    <!--android:textColor="@color/white_color"-->
-                    <!--android:textSize="9sp" />-->
-                    <!--</LinearLayout>-->
-                    <!--</org.apmem.tools.layouts.FlowLayout>-->
-
-                    <!-- <com.mycity4kids.widget.CustomFontTextView
-                         android:id="@+id/txvAuthorName"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_below="@+id/articleImageView"
-                         android:layout_gravity="bottom"
-                         android:clickable="true"
-                         android:gravity="bottom"
-                         android:paddingBottom="5dp"
-                         android:paddingLeft="10dp"
-                         android:paddingRight="5dp"
-                         android:paddingTop="8dp"
-                         android:singleLine="true"
-                         android:text="@string/author_name"
-                         android:textColor="@color/article_listing.author_name"
-                         android:textSize="12sp"
-                         card_view:fontName="open_sans.ttf" />
-
-                     <com.mycity4kids.widget.CustomFontTextView
-                         android:id="@+id/viewCountTextView"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_alignLeft="@+id/txvAuthorName"
-                         android:layout_below="@id/txvAuthorName"
-                         android:layout_marginLeft="9dp"
-                         android:drawableLeft="@drawable/ic_views"
-                         android:drawablePadding="4dp"
-                         android:gravity="center"
-                         android:paddingLeft="2dp"
-                         android:text="0"
-                         android:textColor="@color/article_listing.stats"
-                         android:textSize="12sp"
-                         card_view:fontName="open_sans.ttf" />
-
-                     <com.mycity4kids.widget.CustomFontTextView
-                         android:id="@+id/commentCountTextView"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_alignBottom="@+id/viewCountTextView"
-                         android:layout_alignTop="@+id/viewCountTextView"
-                         android:layout_below="@id/txvAuthorName"
-                         android:layout_marginLeft="11dp"
-                         android:layout_toRightOf="@+id/viewCountTextView"
-                         android:drawableLeft="@drawable/ic_comments"
-                         android:drawablePadding="4dp"
-                         android:gravity="center"
-                         android:text="0"
-                         android:textColor="@color/article_listing.stats"
-                         android:textSize="12sp"
-                         card_view:fontName="open_sans.ttf" />
-
-                     <com.mycity4kids.widget.CustomFontTextView
-                         android:id="@+id/recommendCountTextView"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_alignBottom="@+id/viewCountTextView"
-                         android:layout_alignTop="@+id/viewCountTextView"
-                         android:layout_below="@id/txvAuthorName"
-                         android:layout_marginLeft="11dp"
-                         android:layout_toRightOf="@+id/commentCountTextView"
-                         android:drawableLeft="@drawable/ic_likes"
-                         android:drawablePadding="4dp"
-                         android:gravity="center"
-                         android:text="0"
-                         android:textColor="@color/article_listing.stats"
-                         android:textSize="12sp"
-                         card_view:fontName="open_sans.ttf" />-->
                     <RelativeLayout
                         android:id="@+id/relativeUserCountNameViews"
                         android:layout_width="match_parent"
