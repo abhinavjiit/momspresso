@@ -131,7 +131,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private UserPostSettingResult currentPostPrefsForUser;
     private GroupResult selectedGroup;
-    private GroupPostResult selectedPost;
+    private GroupPostResult selectedPost, editedPost;
     private String memberType;
     private int groupId;
     private String commaSepCategoryList = "";
@@ -1977,7 +1977,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
                     postSettingsContainerMain.setVisibility(View.GONE);
                 }
-                selectedPost.setContent(data.getStringExtra("updatedContent"));
+                editedPost = data.getParcelableExtra("editedPost");
+                selectedPost.setMediaUrls(editedPost.getMediaUrls());
+                selectedPost.setContent(editedPost.getContent());
+                selectedPost.setType(editedPost.getType());
+//                selectedPost.setContent(data.getStringExtra("updatedContent"));
                 groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 2222) {
               /*  Intent intent = getIntent();
