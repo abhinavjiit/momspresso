@@ -190,9 +190,11 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             textPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(textPostViewHolder.postDataTextView);
-
-
+            if(postList.get(position).getHelpfullCount() < 1) {
+                textPostViewHolder.upvoteCountTextView.setText("");
+            } else {
                 textPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+            }
             textPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPostViewHolder.commentLayout.setVisibility(View.GONE);
@@ -222,7 +224,6 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 textPostViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
             if (postList.get(position).getMarkedHelpful() == 1) {
-
                 textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
             } else {
                 textPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
@@ -240,10 +241,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                         if (postList.get(position).getUserInfo().getUserTag().size() != 0 && postList.get(position).getUserInfo().getUserTag().get(0) != null) {
                             audioCommentViewHolder.userTag.setText(postList.get(position).getUserInfo().getUserTag().get(0));
                             audioCommentViewHolder.userTag.setVisibility(View.VISIBLE);
-
                         } else {
                             audioCommentViewHolder.userTag.setVisibility(View.GONE);
-
                         }
                     } else {
                         audioCommentViewHolder.userTag.setVisibility(View.GONE);
@@ -251,7 +250,6 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
                 } else {
                     audioCommentViewHolder.userTag.setVisibility(View.GONE);
-
                 }
             }
 
@@ -329,7 +327,11 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 audioCommentViewHolder.postCommentsTextView.setText(mContext.getResources().getString(R.string.group_add_comment_text));
             }
 
+            if(postList.get(position).getHelpfullCount() < 1) {
+                audioCommentViewHolder.upvoteCommentCountTextView.setText("");
+            } else {
                 audioCommentViewHolder.upvoteCommentCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+            }
 
             audioCommentViewHolder.downvoteCommentCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             audioCommentViewHolder.groupName.setText(postList.get(position).getGroupInfo().getName());
@@ -338,13 +340,10 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 audioCommentViewHolder.groupNameView.setBackgroundColor(Color.parseColor(postList.get(position).getGroupInfo().getColor()));
             }
 
-
             if (postList.get(position).getMarkedHelpful() == 1) {
-
                 audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
             } else {
                 audioCommentViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
-
             }
 
         } else if (holder instanceof MediaPostViewHolder) {
@@ -377,8 +376,11 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             mediaPostViewHolder.postDataTextView.setMovementMethod(LinkMovementMethod.getInstance());
             mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(mediaPostViewHolder.postDataTextView);
-
+            if(postList.get(position).getHelpfullCount() < 1) {
+                mediaPostViewHolder.upvoteCountTextView.setText("");
+            } else {
                 mediaPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+            }
             mediaPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 mediaPostViewHolder.commentLayout.setVisibility(View.GONE);
@@ -452,7 +454,11 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
 
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
+            if(postList.get(position).getHelpfullCount() < 1) {
+                textPollPostViewHolder.upvoteCountTextView.setText("");
+            } else {
                 textPollPostViewHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+            }
             textPollPostViewHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 textPollPostViewHolder.commentLayout.setVisibility(View.GONE);
@@ -520,7 +526,6 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
             } else {
                 textPollPostViewHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
-
             }
 
         } else {
@@ -566,8 +571,11 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
-
+            if(postList.get(position).getHelpfullCount() < 1) {
+                imageHolder.upvoteCountTextView.setText("");
+            } else {
                 imageHolder.upvoteCountTextView.setText(postList.get(position).getHelpfullCount() + "");
+            }
             imageHolder.downvoteCountTextView.setText(postList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             if (postList != null && postList.size() != 0 && postList.get(position).getResponseCount() != 0) {
                 imageHolder.commentLayout.setVisibility(View.GONE);
@@ -626,9 +634,7 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommended);
             } else {
                 imageHolder.upvoteImageVIew.setImageResource(R.drawable.ic_recommend);
-
             }
-
         }
     }
 

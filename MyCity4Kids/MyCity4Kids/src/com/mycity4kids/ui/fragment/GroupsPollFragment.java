@@ -54,7 +54,6 @@ import com.mycity4kids.ui.activity.GroupsEditPostActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.activity.PrivateProfileActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
-import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.MyFeedPollGenericRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
@@ -79,7 +78,6 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
     private boolean isRequestRunning = false;
     private boolean isLastPageReached = false;
     private MyFeedPollGenericRecyclerAdapter myFeedPollGenericRecyclerAdapter;
-    private GroupPostDetailsAndCommentsRecyclerAdapter groupPostDetailsAndCommentsRecyclerAdapter;
     private int skip = 0;
     private int limit = 10;
     private String postType;

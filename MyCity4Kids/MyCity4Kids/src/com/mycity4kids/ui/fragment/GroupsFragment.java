@@ -282,7 +282,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onRecyclerItemClick(View view, int position, boolean isMember) {
-
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         if (isMember) {
             selectedGroup = joinedGroupList.get(position);
@@ -331,7 +330,6 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             if (isAdded())
                 Toast.makeText(getActivity(), getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
-
             Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
             intent.putExtra("groupId", selectedGroup.getId());
             intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
