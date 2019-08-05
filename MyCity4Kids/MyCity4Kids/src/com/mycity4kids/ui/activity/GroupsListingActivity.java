@@ -3,7 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -73,10 +71,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     private String comingFrom = "";
     private ImageView audioImageView, closeImageView, suggestedTopicImageView, writeArticleImageView;
     private RelativeLayout root;
-    private View hideBottomDrawer;
-    private LinearLayout bottom_sheet;
-    private BottomSheetBehavior bottomSheetBehavior;
-    private RelativeLayout announcementContainerR, pollContainerR, postContainerR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +80,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         ((BaseApplication) getApplication()).setActivity(this);
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-        postContainerR = (RelativeLayout) findViewById(R.id.postContainerR);
-        pollContainerR = (RelativeLayout) findViewById(R.id.pollContainerR);
-        announcementContainerR = (RelativeLayout) findViewById(R.id.announcementContainerR);
-        hideBottomDrawer = (View) findViewById(R.id.hideBottomDrawer);
-        bottom_sheet = (LinearLayout) findViewById(R.id.bottom_sheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet);
         addPostContainer = (RelativeLayout) findViewById(R.id.addPostContainer);
         audioImageView = (ImageView) findViewById(R.id.audioImageView);
         closeImageView = (ImageView) findViewById(R.id.closeImageView);
@@ -106,10 +94,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         closeImageView.setOnClickListener(this);
         suggestedTopicImageView.setOnClickListener(this);
         writeArticleImageView.setOnClickListener(this);
-        postContainerR.setOnClickListener(this);
-        pollContainerR.setOnClickListener(this);
-        announcementContainerR.setOnClickListener(this);
-        hideBottomDrawer.setOnClickListener(this);
 
         final boolean isMember = getIntent().getBooleanExtra("isMember", false);
         if (!isMember) {
@@ -234,6 +218,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 // No results for search
                 noGroupsTextView.setVisibility(View.VISIBLE);
                 groupList = (ArrayList<GroupResult>) dataList;
+
                 adapter.setNewListData(groupList);
                 adapter.notifyDataSetChanged();
                 recyclerGridView.setVisibility(View.GONE);
@@ -245,6 +230,8 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             } else {
                 groupList.addAll(dataList);
             }
+
+
             adapter.setNewListData(groupList);
             skip = skip + limit;
             if (skip >= totalGroupCount) {
@@ -342,7 +329,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
 
 
             adapter.setNewListData((ArrayList<GroupResult>) listOutput1);
-            //  Observable.merge(Observable.just(groupList), Observable.just(joinList)).flatMap(Observable::fromIterable).toList();
             skip = skip + limit;
             if (skip >= totalGroupCount) {
                 isLastPageReached = true;
@@ -360,7 +346,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     public void onRecyclerItemClick(View view, int position, boolean isMember) {
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         if (isMember) {
-            selectedGroup = listOutput1.get(position);
+            selectedGroup = groupList.get(position);
         } else {
             selectedGroup = listOutput1.get(position);
             selectedQuestionnaire = (LinkedTreeMap<String, String>) listOutput1.get(position).getQuestionnaire();
@@ -403,11 +389,12 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
             Toast.makeText(this, getString(R.string.groups_user_blocked_msg), Toast.LENGTH_SHORT).show();
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_MEMBER.equals(body.getData().getResult().get(0).getStatus())) {
             if (comingFrom.equals("myFeed")) {
-                hideBottomDrawer.setVisibility(View.VISIBLE);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                if (addPostContainer.getVisibility() == View.GONE) {
-//                    addPostContainer.setVisibility(View.VISIBLE);
-//                }
+
+                if (addPostContainer.getVisibility() == View.GONE) {
+                    addPostContainer.setVisibility(View.VISIBLE);
+                }
+
+
             } else {
                 Intent intent = new Intent(this, GroupDetailsActivity.class);
                 intent.putExtra("groupId", selectedGroup.getId());
@@ -429,11 +416,6 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         }
     }
 
-    private void hideBottomSheet() {
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        hideBottomDrawer.setVisibility(View.GONE);
-    }
-
     @Override
     public void onMembershipStatusFetchFail() {
 
@@ -451,42 +433,46 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
 
     @Override
     public void onClick(View view) {
+
         switch (view.getId()) {
-            case R.id.hideBottomDrawer:
-                hideBottomSheet();
-                break;
-            case R.id.announcementContainerR:
             case R.id.audioImageView:
                 SharedPrefUtils.setSavedPostData(this, selectedGroup.getId(), "");
                 Intent intent = new Intent(GroupsListingActivity.this, AddAudioGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
                 startActivityForResult(intent, 1111);
-                hideBottomSheet();
+
                 break;
+
             case R.id.closeImageView:
+
                 if (addPostContainer.getVisibility() == View.VISIBLE) {
                     addPostContainer.setVisibility(View.GONE);
                 }
                 setResult(RESULT_OK);
                 finish();
                 break;
-            case R.id.postContainerR:
+
             case R.id.suggestedTopicImageView:
                 SharedPrefUtils.setSavedPostData(this, selectedGroup.getId(), "");
+
                 Intent intent2 = new Intent(GroupsListingActivity.this, AddTextOrMediaGroupPostActivity.class);
                 intent2.putExtra("groupItem", selectedGroup);
+
                 startActivityForResult(intent2, 1111);
-                hideBottomSheet();
                 break;
-            case R.id.pollContainerR:
             case R.id.writeArticleImageView:
                 SharedPrefUtils.setSavedPostData(this, selectedGroup.getId(), "");
+
                 Intent intent1 = new Intent(GroupsListingActivity.this, AddPollGroupPostActivity.class);
                 intent1.putExtra("groupItem", selectedGroup);
+
                 startActivityForResult(intent1, 1111);
-                hideBottomSheet();
                 break;
+
+
         }
+
+
     }
 
     @Override
