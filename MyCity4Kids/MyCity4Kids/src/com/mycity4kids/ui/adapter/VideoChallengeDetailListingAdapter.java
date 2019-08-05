@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -174,6 +175,10 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 addVlogViewHolder.goldLogo = (TextView) view.findViewById(R.id.goldLogo);
                 addVlogViewHolder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
 
+                addVlogViewHolder.title = (TextView) view.findViewById(R.id.title);
+                addVlogViewHolder.sub_title = (TextView) view.findViewById(R.id.sub_title);
+                addVlogViewHolder.videoLogBanner = (TextView) view.findViewById(R.id.videoLogBanner);
+                addVlogViewHolder.buttonsLayout = (LinearLayout) view.findViewById(R.id.buttonsLayout);
                 addVlogViewHolder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 addVlogViewHolder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 addVlogViewHolder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
@@ -187,6 +192,10 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 DrawableCompat.setTint(drawable, mContext.getResources().getColor(R.color.gold_color_video_listing));
                 DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
                 addVlogViewHolder.goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                addVlogViewHolder.title.setVisibility(View.GONE);
+                addVlogViewHolder.sub_title.setVisibility(View.GONE);
+                addVlogViewHolder.videoLogBanner.setVisibility(View.GONE);
+                addVlogViewHolder.buttonsLayout.setVisibility(View.GONE);
                 if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(mContext))) {
                     addVlogViewHolder.addMomVlogImageView.setImageResource(R.drawable.add_mom_vlog_hi);
                 } else {
@@ -437,6 +446,10 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
+        TextView title;
+        TextView videoLogBanner;
+        TextView sub_title;
+        LinearLayout buttonsLayout;
     }
 
     class VideoChallengeHeaderView {
