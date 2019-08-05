@@ -1159,4 +1159,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_title">మామ్ వీలాగ్ ఛాలెంజ్ అలర్ట్</string>
     <string name="mom_vlog_banner_subtitle">రూ.10,000 దాకా గెలుచుకోండి</string>
     <string name="mom_vlog_banner_button">వీడియో అప్లోడ్ చేయండి</string>
+
+    <string name="join_group">గ్రూపులో జాయిన్ అవ్వండి</string>
 </resources>

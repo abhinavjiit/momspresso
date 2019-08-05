@@ -788,7 +788,7 @@
     <string name="groups.how_to_use">I don\'t understand how to use Momspresso</string>
     <string name="groups.user_blocked_msg">आप इस ग्रुप से ब्लॉक कर दिए गए हैं </string>
     <string name="groups.user_membership_rejected_msg">आपकी सदयस्ता अस्वीकार कर दी गयी है </string>
-    <string name="groups.join_group">ग्रुप में शामिल हों </string>
+    <string name="groups.join_group">ग्रुप में शामिल हों</string>
     <string name="groups.ask_something">कुछ पूछिए ...</string>
     <string name="groups.post_label">पोस्ट्स </string>
     <string name="groups.edit_post">EDIT POST</string>
@@ -1161,4 +1161,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_title">मॉम व्हिलॉग चॅलेंज अलर्ट</string>
     <string name="mom_vlog_banner_subtitle">जिंका रु. १०,०००/_ ची बक्षिसं</string>
     <string name="mom_vlog_banner_button">वीडियो अपलोड करें</string>
+
+    <string name="join_group">ग्रुप में शामिल हों</string>
 </resources>
