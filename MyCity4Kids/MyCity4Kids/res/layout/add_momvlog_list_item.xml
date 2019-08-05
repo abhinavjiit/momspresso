@@ -49,7 +49,6 @@
             android:layout_above="@+id/sub_title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:text="#GotItFromMyMom"
             android:textColor="@color/white"
             android:textSize="26sp"
             android:gravity="center"
