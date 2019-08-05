@@ -122,7 +122,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private RecyclerView recyclerView;
     private LinkedTreeMap<String,String> mediaUrls;
     private HashMap<String, String> pollOptions;
-    private GroupPostResult postData;
+    private GroupPostResult postData, editedPost;
     private Toolbar toolbar;
     private ViewGroupPostCommentsRepliesDialogFragment viewGroupPostCommentsRepliesDialogFragment;
     private LinearLayout postSettingsContainer;
@@ -1982,7 +1982,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 if (postSettingsContainerMain.getVisibility() == View.VISIBLE) {
                     postSettingsContainerMain.setVisibility(View.GONE);
                 }
-                postData.setContent(data.getStringExtra("updatedContent"));
+                editedPost = data.getParcelableExtra("editedPost");
+                postData.setMediaUrls(editedPost.getMediaUrls());
+                postData.setContent(editedPost.getContent());
+                postData.setType(editedPost.getType());
+//                postData.setContent(data.getStringExtra("updatedContent"));
                 groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 1000) {
                 Intent intent = getIntent();
