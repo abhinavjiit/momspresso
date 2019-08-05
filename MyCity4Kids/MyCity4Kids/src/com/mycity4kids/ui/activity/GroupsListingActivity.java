@@ -360,10 +360,10 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     public void onRecyclerItemClick(View view, int position, boolean isMember) {
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
         if (isMember) {
-            selectedGroup = groupList.get(position);
+            selectedGroup = listOutput1.get(position);
         } else {
-            selectedGroup = groupList.get(position);
-            selectedQuestionnaire = (LinkedTreeMap<String, String>) groupList.get(position).getQuestionnaire();
+            selectedGroup = listOutput1.get(position);
+            selectedQuestionnaire = (LinkedTreeMap<String, String>) listOutput1.get(position).getQuestionnaire();
         }
         groupMembershipStatus.checkMembershipStatus(selectedGroup.getId(), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
     }

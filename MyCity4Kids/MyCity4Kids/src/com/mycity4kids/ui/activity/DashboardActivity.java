@@ -447,7 +447,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if(slideOffset < 1) {
+                if (slideOffset < 1) {
                     drawerProfileCoachmark.setVisibility(View.GONE);
                     drawerMyMoneyCoachmark.setVisibility(View.GONE);
                 }

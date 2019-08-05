@@ -185,8 +185,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             addLinkHandler(textPostViewHolder.postDataTextView);
 
             textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            if (groupPostResult.getHelpfullCount() > 0)
-                textPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
+            textPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
             textPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             textPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -379,8 +378,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
             audioCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             audioCommentViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
-            if (groupPostResult.getHelpfullCount() > 0)
-                audioCommentViewHolder.upvoteCommentCountTextView.setText(groupPostResult.getHelpfullCount() + "");
+            audioCommentViewHolder.upvoteCommentCountTextView.setText(groupPostResult.getHelpfullCount() + "");
             audioCommentViewHolder.downvoteCommentCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
 
 
@@ -413,8 +411,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             addLinkHandler(mediaPostViewHolder.postDataTextView);
 
             mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            if (groupPostResult.getHelpfullCount() > 0)
-                mediaPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
+            mediaPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
             mediaPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             mediaPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -502,8 +499,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
 
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            if (groupPostResult.getHelpfullCount() > 0)
-                textPollPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
+
+            textPollPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
             textPollPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             textPollPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
@@ -623,8 +620,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 
             imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             imageHolder.usernameTextView.setText(groupPostResult.getUserId());
-            if (groupPostResult.getHelpfullCount() > 0)
-                imageHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
+            imageHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + "");
             imageHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
             imageHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
             if (groupPostResult.getIsAnnon() == 1) {
