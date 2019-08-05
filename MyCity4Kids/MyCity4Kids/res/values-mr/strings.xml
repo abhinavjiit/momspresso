@@ -1154,4 +1154,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_title">या आठवड्याचे आव्हान घ्या.</string>
     <string name="mom_vlog_banner_subtitle">आणि जिंका रु. १०,०००/_ ची बक्षीसे!</string>
     <string name="mom_vlog_banner_button">अपलोड तुमचा व्हिडिओ</string>
+
+    <string name="join_group">Join Group</string>
 </resources>

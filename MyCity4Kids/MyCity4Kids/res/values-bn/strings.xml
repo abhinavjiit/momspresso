@@ -1157,4 +1157,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_title">এসে গেলো নতুন মম-ভিলগ চ্যালেঞ্জ</string>
     <string name="mom_vlog_banner_subtitle">পুরস্কার মূল্য- ১০,০০০ টাকা</string>
     <string name="mom_vlog_banner_button">ভিডিও আপলোড করুন</string>
+
+    <string name="join_group">গ্রুপে যোগদান করুন</string>
 </resources>

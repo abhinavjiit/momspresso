@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.google.android.gms.common.util.Strings;
@@ -57,7 +58,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
     private ArrayList<GroupPostResult> postDataList;
     private RecyclerViewClickListener mListener;
     private GroupResult groupDetails;
-    private final String localizedNotHelpful, localizedHelpful, localizedComment;
+    private final String localizedNotHelpful, localizedComment;
     private String modeList = "";
 
     public GroupSummaryPostRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
@@ -65,7 +66,6 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mListener = listener;
         localizedComment = mContext.getString(R.string.ad_comments_title);
-        localizedHelpful = mContext.getString(R.string.groups_post_helpful);
         localizedNotHelpful = mContext.getString(R.string.groups_post_nothelpful);
     }
 
@@ -169,7 +169,11 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(textPostViewHolder.postDataTextView);
 
-            textPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            if(postDataList.get(position).getHelpfullCount() < 1) {
+                textPostViewHolder.upvoteCountTextView.setText("");
+            } else {
+                textPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + "");
+            }
             textPostViewHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             textPostViewHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
             textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
@@ -215,7 +219,11 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(mediaPostViewHolder.postDataTextView);
 
-            mediaPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            if(postDataList.get(position).getHelpfullCount() < 1) {
+                mediaPostViewHolder.upvoteCountTextView.setText("");
+            } else {
+                mediaPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + "");
+            }
             mediaPostViewHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             mediaPostViewHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
 //            mediaPostViewHolder.postDataTextView.setText(postDataList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />"));
@@ -262,9 +270,13 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             textPollPostViewHolder.pollQuestionTextView.setMovementMethod(LinkMovementMethod.getInstance());
             textPollPostViewHolder.pollQuestionTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
-
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
-            textPollPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + " " + localizedHelpful);
+
+            if(postDataList.get(position).getHelpfullCount() < 1) {
+                textPollPostViewHolder.upvoteCountTextView.setText("");
+            } else {
+                textPollPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + "");
+            }
             textPollPostViewHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             textPollPostViewHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
             if (postDataList.get(position).getIsAnnon() == 1) {
@@ -372,7 +384,11 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
-            imageHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + " " + localizedHelpful);
+            if(postDataList.get(position).getHelpfullCount() < 1) {
+                imageHolder.upvoteCountTextView.setText("");
+            } else {
+                imageHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + "");
+            }
             imageHolder.downvoteCountTextView.setText(postDataList.get(position).getNotHelpfullCount() + " " + localizedNotHelpful);
             imageHolder.postCommentsTextView.setText(postDataList.get(position).getResponseCount() + " " + localizedComment);
 //            imageHolder.pollQuestionTextView.setText(postDataList.get(position).getContent().replace(" ","&nbsp;").replace("\n","<br />"));
@@ -499,6 +515,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
         LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView, userTag;
         ImageView postSettingImageView;
+        ImageView shareTextView, whatsAppShare;
 
         TextPostViewHolder(View view) {
             super(view);
@@ -513,11 +530,19 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
+            shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
+            whatsAppShare = (ImageView) view.findViewById(R.id.whatsappShare);
             postSettingImageView.setVisibility(View.GONE);
+            upvoteContainer.setOnClickListener(this);
+            upvoteCountTextView.setOnClickListener(this);
+            postCommentsTextView.setOnClickListener(this);
+            shareTextView.setOnClickListener(this);
+            whatsAppShare.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            Toast.makeText(mContext, mContext.getText(R.string.join_group), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -534,6 +559,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
         private GroupMediaPostViewPagerAdapter mViewPagerAdapter;
+        ImageView shareTextView, whatsAppShare;
 
         MediaPostViewHolder(View view) {
             super(view);
@@ -552,6 +578,13 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             dotIndicatorView = (BubblePageIndicator) view.findViewById(R.id.dotIndicatorView);
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
+            shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
+            whatsAppShare = (ImageView) view.findViewById(R.id.whatsappShare);
+            upvoteContainer.setOnClickListener(this);
+            upvoteCountTextView.setOnClickListener(this);
+            postCommentsTextView.setOnClickListener(this);
+            shareTextView.setOnClickListener(this);
+            whatsAppShare.setOnClickListener(this);
 
             mViewPagerAdapter = new GroupMediaPostViewPagerAdapter(mContext);
             postDataViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -571,13 +604,13 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
 
                 }
             });
-
             postSettingImageView.setVisibility(View.GONE);
 
         }
 
         @Override
         public void onClick(View v) {
+            Toast.makeText(mContext, mContext.getText(R.string.join_group), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -595,6 +628,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
         TextView pollResult1TextView, pollResult2TextView, pollResult3TextView, pollResult4TextView;
         TextView pollOption1ProgressTextView, pollOption2ProgressTextView, pollOption3ProgressTextView, pollOption4ProgressTextView;
         RelativeLayout option3Container, option4Container;
+        ImageView shareTextView, whatsAppShare;
 
         TextPollPostViewHolder(View view) {
             super(view);
@@ -628,12 +662,20 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             pollOption4ProgressTextView = (TextView) view.findViewById(R.id.pollOption4ProgressTextView);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+            shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
+            whatsAppShare = (ImageView) view.findViewById(R.id.whatsappShare);
+            upvoteContainer.setOnClickListener(this);
+            upvoteCountTextView.setOnClickListener(this);
+            postCommentsTextView.setOnClickListener(this);
+            shareTextView.setOnClickListener(this);
+            whatsAppShare.setOnClickListener(this);
 
             postSettingImageView.setVisibility(View.GONE);
         }
 
         @Override
         public void onClick(View v) {
+            Toast.makeText(mContext, mContext.getText(R.string.join_group), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -651,6 +693,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
         TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
         LinearLayout lastOptionsContainer;
         RelativeLayout option1Container, option2Container, option3Container, option4Container;
+        ImageView shareTextView, whatsAppShare;
 
         ImagePollPostViewHolder(View view) {
             super(view);
@@ -682,12 +725,20 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             option2Container = (RelativeLayout) view.findViewById(R.id.option2Container);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+            shareTextView = (ImageView) view.findViewById(R.id.shareTextView);
+            whatsAppShare = (ImageView) view.findViewById(R.id.whatsappShare);
+            upvoteContainer.setOnClickListener(this);
+            upvoteCountTextView.setOnClickListener(this);
+            postCommentsTextView.setOnClickListener(this);
+            shareTextView.setOnClickListener(this);
+            whatsAppShare.setOnClickListener(this);
 
             postSettingImageView.setVisibility(View.GONE);
         }
 
         @Override
         public void onClick(View v) {
+            Toast.makeText(mContext, mContext.getText(R.string.join_group), Toast.LENGTH_LONG).show();
         }
     }
 

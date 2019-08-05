@@ -1014,7 +1014,12 @@ public class NewEditorPostActivity extends BaseActivity implements View.OnClickL
             Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null/*AppConstants.ANDROID_NEW_EDITOR*/);
             call.enqueue(saveDraftBeforePublishResponseListener);
         } else {
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0", null/*AppConstants.ANDROID_NEW_EDITOR*/);
+            SaveDraftRequest saveDraftRequest = new SaveDraftRequest();
+            saveDraftRequest.setTitle(title);
+            saveDraftRequest.setBody(body);
+            saveDraftRequest.setArticleType("0");
+            saveDraftRequest.setUserAgent1(AppConstants.ANDROID_NEW_EDITOR);
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
             call.enqueue(saveDraftBeforePublishResponseListener);
         }
 
