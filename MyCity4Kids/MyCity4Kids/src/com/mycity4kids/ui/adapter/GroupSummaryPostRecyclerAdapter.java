@@ -169,7 +169,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             textPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(textPostViewHolder.postDataTextView);
 
-            if(postDataList.get(position).getHelpfullCount() < 1) {
+            if (postDataList.get(position).getHelpfullCount() < 1) {
                 textPostViewHolder.upvoteCountTextView.setText("");
             } else {
                 textPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + "");
@@ -219,7 +219,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             mediaPostViewHolder.postDataTextView.setLinkTextColor(ContextCompat.getColor(mContext, R.color.groups_blue_color));
             addLinkHandler(mediaPostViewHolder.postDataTextView);
 
-            if(postDataList.get(position).getHelpfullCount() < 1) {
+            if (postDataList.get(position).getHelpfullCount() < 1) {
                 mediaPostViewHolder.upvoteCountTextView.setText("");
             } else {
                 mediaPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + "");
@@ -272,7 +272,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
             addLinkHandler(textPollPostViewHolder.pollQuestionTextView);
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
 
-            if(postDataList.get(position).getHelpfullCount() < 1) {
+            if (postDataList.get(position).getHelpfullCount() < 1) {
                 textPollPostViewHolder.upvoteCountTextView.setText("");
             } else {
                 textPollPostViewHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + "");
@@ -384,7 +384,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
                     imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
                 }
             }
-            if(postDataList.get(position).getHelpfullCount() < 1) {
+            if (postDataList.get(position).getHelpfullCount() < 1) {
                 imageHolder.upvoteCountTextView.setText("");
             } else {
                 imageHolder.upvoteCountTextView.setText(postDataList.get(position).getHelpfullCount() + "");
