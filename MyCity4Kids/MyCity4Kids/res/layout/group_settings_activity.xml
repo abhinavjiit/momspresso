@@ -90,8 +90,8 @@
             android:id="@+id/editGroupImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/groupImageView"
             android:layout_alignTop="@+id/groupImageView"
+            android:layout_alignRight="@+id/groupImageView"
             android:padding="12dp"
             android:src="@drawable/ic_edit_new"
             android:visibility="gone" />
@@ -104,8 +104,8 @@
         android:layout_below="@+id/groupHeaderContainer"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp">
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/inviteMemberLabel"
@@ -142,14 +142,14 @@
         android:layout_below="@+id/underlineView0"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp">
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/disableNotificationTitleLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/groups.disable_notification"
+            android:text="ENABLE NOTIFICATION"
             android:textColor="@color/app_red"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />
@@ -159,7 +159,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/disableNotificationTitleLabel"
-            android:text="@string/groups.disable_notification_this_gp"
+            android:text="Enable notification for this group"
             android:textColor="@color/groups.grey"
             android:textSize="11sp"
             app:fontName="oswald.ttf" />
@@ -187,8 +187,8 @@
         android:layout_below="@+id/underlineView"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp">
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/leaveGroupTitleLabel"
@@ -225,8 +225,8 @@
         android:layout_below="@+id/underlineView1"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:paddingBottom="15dp"
         android:paddingTop="15dp"
+        android:paddingBottom="15dp"
         android:visibility="gone">
 
         <com.mycity4kids.widget.CustomFontTextView

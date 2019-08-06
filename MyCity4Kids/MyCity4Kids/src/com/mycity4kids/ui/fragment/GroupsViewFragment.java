@@ -81,6 +81,13 @@ public class GroupsViewFragment extends BaseFragment {
         return fragmentView;
     }
 
+
+    public void floatongButtonVisibilityGone()
+    {
+
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

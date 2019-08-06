@@ -49,6 +49,7 @@ import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.GroupMembershipStatus;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupPostDetailActivity;
 import com.mycity4kids.ui.activity.GroupsEditPostActivity;
@@ -490,6 +491,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                 break;
 
             case R.id.postSettingImageView:
+
 
                 selectedPost = postList.get(position);
                 getCurrentUserPostSettingsStatus(selectedPost);
