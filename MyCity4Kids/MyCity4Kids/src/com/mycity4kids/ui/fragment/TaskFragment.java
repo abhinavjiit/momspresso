@@ -133,7 +133,7 @@ public class TaskFragment extends Fragment {
 //                publishProgress(i);
 //            }
             Bitmap bitmap = params[0];
-            if (!isCancelled()) {
+            if (!isCancelled() && bitmap != null) {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
             }

@@ -302,8 +302,6 @@ public class BaseApplication extends Application {
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
                 requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
-               /* requestBuilder.addHeader("id", "0721da6e2e36482f813c2c9716fe8bdb");
-                requestBuilder.addHeader("mc4kToken", "cf4dbeddb83144689e647e5b508fc680");*/
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
@@ -404,10 +402,6 @@ public class BaseApplication extends Application {
 
     public static void startSocket() {
         try {
-
-         /*   if (!TextUtils.isEmpty(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId())) {
-                Socket mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId()*/
-
             if (!TextUtils.isEmpty(SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId())) {
                 mSocket = IO.socket("https://socketio.momspresso.com/?user_id=" + SharedPrefUtils.getUserDetailModel(mInstance).getDynamoId()
 

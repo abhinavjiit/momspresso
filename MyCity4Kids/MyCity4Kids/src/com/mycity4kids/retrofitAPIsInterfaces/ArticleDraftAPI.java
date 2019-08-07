@@ -44,13 +44,9 @@ public interface ArticleDraftAPI {
     @POST("v1/articles/")
     Call<ArticleDraftResponse> saveDraft(@Body SaveDraftRequest saveDraftRequest);
 
-    @FormUrlEncoded
     @PUT
-    Call<ArticleDraftResponse> updateDraft(@Url String url,
-                                           @Field("title") String title,
-                                           @Field("body") String body,
-                                           @Field("articleType") String articleType,
-                                           @Field("userAgent1") String userAgent1);
+    Call<ArticleDraftResponse> updateDrafts(@Url String url,
+                                            @Body SaveDraftRequest saveDraftRequest);
 
     @PUT("v1/articles/{draftId}")
     Call<ArticleDraftResponse> updateDraft(@Path("draftId") String draftId,

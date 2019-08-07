@@ -41,6 +41,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.request.SaveDraftRequest;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
@@ -622,8 +623,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 }
             });
         } else {
-
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0", null);
+            SaveDraftRequest saveDraftRequest = new SaveDraftRequest();
+            saveDraftRequest.setTitle(title);
+            saveDraftRequest.setBody(body);
+            saveDraftRequest.setArticleType("0");
+            saveDraftRequest.setUserAgent1(AppConstants.ANDROID_NEW_EDITOR);
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
@@ -875,7 +880,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null);
             call.enqueue(saveDraftBeforePublishResponseListener);
         } else {
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0", null);
+            SaveDraftRequest saveDraftRequest = new SaveDraftRequest();
+            saveDraftRequest.setTitle(title);
+            saveDraftRequest.setBody(body);
+            saveDraftRequest.setArticleType("0");
+            saveDraftRequest.setUserAgent1(AppConstants.ANDROID_NEW_EDITOR);
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
             call.enqueue(saveDraftBeforePublishResponseListener);
         }
 
