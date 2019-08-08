@@ -18,6 +18,7 @@ import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
 import android.R.id.message
 import android.util.Log
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.Toast
 import com.kelltontech.utils.ToastUtils
@@ -145,6 +146,9 @@ class RewardsContainerActivity : BaseActivity(),
             changePreferredLanguageDialogFragment.arguments = _args
             changePreferredLanguageDialogFragment.isCancelable = true
             changePreferredLanguageDialogFragment.show(fm, "Choose video option")
+        }
+        findViewById<TextView>(R.id.toolbarTitle).setOnClickListener {
+            finish()
         }
     }
 

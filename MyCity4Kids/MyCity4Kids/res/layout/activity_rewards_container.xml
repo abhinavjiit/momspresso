@@ -26,6 +26,9 @@
             android:visibility="visible">
 
             <com.mycity4kids.widget.CustomFontTextView
+                android:drawableLeft="@drawable/back_arroow"
+                android:drawablePadding="@dimen/space_10"
+                android:drawableTint="@color/black"
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -111,6 +114,7 @@
                     android:visibility="visible"
                     app:fontName="oswald_regular.ttf" />
             </LinearLayout>
+
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 

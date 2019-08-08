@@ -54,6 +54,7 @@ import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.math.roundToInt
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 
@@ -618,7 +619,7 @@ class CampaignDetailFragment : BaseFragment() {
             val showAmount = dialog.findViewById<TextView>(R.id.show_amount)
             if (apiGetResponse!!.isFixedAmount == 1) {
                 var amount: Double? = (apiGetResponse!!.amount)
-                showAmount.setText("Rs." + amount)
+                showAmount.setText("Rs." + amount?.toInt())
             } else {
                 showAmount.setText("Rs." + (apiGetResponse!!.minAmount) + "-" + "Rs." + (apiGetResponse!!.maxAmount))
             }
