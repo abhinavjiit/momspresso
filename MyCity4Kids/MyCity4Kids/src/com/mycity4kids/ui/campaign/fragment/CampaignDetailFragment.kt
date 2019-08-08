@@ -165,7 +165,7 @@ class CampaignDetailFragment : BaseFragment() {
             intent.putExtra("campaign_id", id!!)
             intent.putExtra("brand_name", apiGetResponse!!.brandDetails!!.name)
             intent.putExtra("campaign_name", apiGetResponse!!.name)
-            intent.putExtra("total_payout", apiGetResponse!!.totalPayout)
+            intent.putExtra("total_payout", apiGetResponse!!.totalPayout!!.toInt())
             intent.putExtra("image_url", apiGetResponse!!.brandDetails!!.imageUrl)
             startActivity(intent)
         }
