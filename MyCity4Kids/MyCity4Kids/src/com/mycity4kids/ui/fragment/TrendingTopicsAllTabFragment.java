@@ -383,25 +383,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
             case R.id.videoContainerFL1:
                 launchVideoDetailsActivity(position, 0);
                 break;
-            case R.id.videoContainerFL2:
-                launchVideoDetailsActivity(position, 1);
-                break;
-            case R.id.videoContainerFL3:
-                launchVideoDetailsActivity(position, 2);
-                break;
-            case R.id.videoContainerFL4:
-                launchVideoDetailsActivity(position, 3);
-                break;
-            case R.id.videoContainerFL5:
-                launchVideoDetailsActivity(position, 4);
-                break;
-            case R.id.addVideoContainer:
-            case R.id.addMomVlogTextView: {
-                MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, "TrendingAll");
-                Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
-                startActivity(intent);
-            }
-            break;
             case R.id.closeImageView:
                 mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                 try {
