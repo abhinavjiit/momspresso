@@ -74,10 +74,10 @@ public interface GroupsAPI {
                                                           @Query("status") String status);
 
     @GET("/api/v1/groups/group")
-    Call<GroupsListingResponse> getTop4SuggestedGroupsSingleExclusion(@Query("id[$ne]") String gp0);
+    Call<GroupsListingResponse> getTop4SuggestedGroupsSingleExclusion(@Query("id[$nin]") String gp0);
 
     @GET("/api/v1/groups/group")
-    Call<GroupsListingResponse> getTop4SuggestedGroups(@Query("id[$notIn]") List<String> groupIdList);
+    Call<GroupsListingResponse> getTop4SuggestedGroups(@Query("id[$nin]") List<String> groupIdList);
 
     @GET("/api/v1/groups/group?{params}")
     Call<GroupsListingResponse> getTop4SuggestedGroupss(@Path("params") String param);

@@ -28,6 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -50,6 +51,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
+import com.mycity4kids.models.request.AddGroupPostRequest;
 import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.UpdateGroupMembershipRequest;
@@ -57,6 +59,7 @@ import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdatePostSettingsRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
+import com.mycity4kids.models.response.AddGroupPostResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.GroupDetailResponse;
@@ -91,6 +94,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimerTask;
 
@@ -138,6 +142,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private String source;
     private String userDynamoId;
     private Handler handler = new Handler();
+    private boolean justJoined = false;
 
     private Animation slideAnim, fadeAnim;
 
@@ -170,6 +175,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private LinearLayout bottom_sheet;
     private BottomSheetBehavior bottomSheetBehavior;
     private RelativeLayout announcementContainerR, pollContainerR, postContainerR;
+    private TextView justJoinedPostTextView;
+    private CheckBox anonymousCheckbox;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,6 +230,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
         groupId = getIntent().getIntExtra("groupId", 0);
+        justJoined = getIntent().getBooleanExtra("justJoined", false);
         memberType = getIntent().getStringExtra(AppConstants.GROUP_MEMBER_TYPE);
         source = getIntent().getStringExtra("source");
 
@@ -268,6 +277,53 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         clearSearchImageView.setOnClickListener(this);
         shareGroupImageView.setOnClickListener(this);
         shareGroupImageViewLinearLayoutContainer.setOnClickListener(this);
+
+        if (justJoined) {
+            dialog = new Dialog(GroupDetailsActivity.this);
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_group_yourself);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+
+            justJoinedPostTextView = dialog.findViewById(R.id.post_edit);
+            anonymousCheckbox = dialog.findViewById(R.id.anonymousCheckbox);
+
+            if (SharedPrefUtils.isUserAnonymous(this)) {
+                anonymousCheckbox.setChecked(true);
+            } else {
+                anonymousCheckbox.setChecked(false);
+            }
+
+            anonymousCheckbox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (anonymousCheckbox.isChecked()) {
+                        SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
+                    } else {
+                        SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
+                    }
+
+                }
+            });
+            dialog.findViewById(R.id.cross).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.findViewById(R.id.postTextView).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isRequestRunning && validateParams()) {
+                        isRequestRunning = true;
+                        publishPost();
+                    }
+                }
+            });
+
+            dialog.show();
+        }
 
         String[] sections = {
                 getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions), getString(R.string.onboarding_desc_array_tutorial_1_blogs),
@@ -378,6 +434,73 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         });
         getGroupDetails();
     }
+
+    private boolean validateParams() {
+        if (justJoinedPostTextView.getText() == null || StringUtils.isNullOrEmpty(justJoinedPostTextView.getText().toString())) {
+            showToast("Please enter some content to continue");
+            return false;
+        }
+        return true;
+    }
+
+    private void publishPost() {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        AddGroupPostRequest addGroupPostRequest = new AddGroupPostRequest();
+        addGroupPostRequest.setContent(justJoinedPostTextView.getText().toString());
+        //   String str=postContentEditText.getText().toString();
+        addGroupPostRequest.setType("5");
+        addGroupPostRequest.setGroupId(selectedGroup.getId());
+        if (SharedPrefUtils.isUserAnonymous(this)) {
+            addGroupPostRequest.setAnnon(1);
+        }
+        addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+
+        Call<AddGroupPostResponse> call = groupsAPI.createPost(addGroupPostRequest);
+        call.enqueue(postAdditionResponseCallback);
+    }
+
+    private Callback<AddGroupPostResponse> postAdditionResponseCallback = new Callback<AddGroupPostResponse>() {
+        @Override
+        public void onResponse(Call<AddGroupPostResponse> call, retrofit2.Response<AddGroupPostResponse> response) {
+            isRequestRunning = false;
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    SharedPrefUtils.clearSavedPostData(GroupDetailsActivity.this, selectedGroup.getId());
+                    AddGroupPostResponse responseModel = response.body();
+                    setResult(RESULT_OK);
+                    justJoinedPostTextView.setText("");
+                    postList.clear();
+                    skip = 0;
+                    limit = 10;
+                    getGroupPosts();
+                    dialog.dismiss();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddGroupPostResponse> call, Throwable t) {
+            isRequestRunning = false;
+            showToast(getString(R.string.went_wrong));
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void requestSearch() {
         if (StringUtils.isNullOrEmpty(toolbarTitle.getText().toString())) {

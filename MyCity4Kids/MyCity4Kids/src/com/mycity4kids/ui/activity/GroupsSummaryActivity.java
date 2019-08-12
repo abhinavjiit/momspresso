@@ -411,6 +411,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                     if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(selectedGroup.getType())) {
                         Intent intent = new Intent(GroupsSummaryActivity.this, GroupDetailsActivity.class);
                         intent.putExtra("groupId", selectedGroup.getId());
+                        intent.putExtra("justJoined", true);
                         startActivity(intent);
                         finish();
                     } else {
@@ -551,7 +552,6 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
 }

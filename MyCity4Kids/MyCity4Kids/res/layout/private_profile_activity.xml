@@ -258,7 +258,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="10dp"
-                    android:text="@string/momspresso_rewards"
+                    android:text="@string/mymoney_profile"
                     android:textColor="@color/app_red"
                     android:textStyle="bold"
                     app:fontName="oswald_regular.ttf" />

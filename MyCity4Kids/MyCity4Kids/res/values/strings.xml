@@ -1033,6 +1033,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="save_continue"><![CDATA[SAVE & CONTINUE]]></string>
     <string name="momspresso_rewards">MyMoney</string>
     <string name="rewards_program">MyMoney</string>
+    <string name="mymoney_profile">MyMoney Profile</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="add_website">ADD WEBSITE</string>
@@ -1289,5 +1290,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_button">Upload Video</string>
 
     <string name="join_group">Join Group</string>
+
+    //Join group dialog screen
+    <string name="join_dialog_heading">Write your first post</string>
+    <string name="join_dialog_ask_question">Ask a question or share your thoughts</string>
+
 </resources>
 

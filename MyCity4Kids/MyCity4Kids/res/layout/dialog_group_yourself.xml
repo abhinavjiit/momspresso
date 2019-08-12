@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/cross"
+            android:layout_width="@dimen/space_20"
+            android:layout_height="@dimen/space_20"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/space_10"
+            android:layout_marginRight="@dimen/space_10"
+            android:src="@drawable/cross_icon_back" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cross"
+            android:layout_marginLeft="16dp"
+            android:text="@string/join_dialog_heading"
+            android:textColor="@color/campaign_515151"
+            android:textSize="18sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/subheading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/heading"
+            android:layout_marginLeft="16dp"
+            android:text="@string/join_dialog_ask_question"
+            android:textColor="@color/grey_faded"
+            android:textSize="13sp"
+            app:fontName="OpenSans-Regular.ttf" />
+
+        <View
+            android:id="@+id/border"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/subheading"
+            android:layout_marginTop="@dimen/space_13"
+            android:background="@color/color_E8E6E6" />
+
+        <com.mycity4kids.widget.CustomFontEditText
+            android:id="@+id/post_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/border"
+            android:layout_marginLeft="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_20"
+            android:background="@null"
+            android:hint="Write Something"
+            android:textColor="@color/color_A0A0A0"
+            android:textColorHint="@color/color_A0A0A0"
+            android:textSize="12sp"
+            app:fontName="OpenSans-Regular.ttf" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/post_edit"
+            android:layout_marginTop="@dimen/space_100"
+            android:layout_marginBottom="@dimen/space_20">
+
+            <ImageView
+                android:id="@+id/anonymousImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/anonymousCheckbox"
+                android:padding="10dp"
+                android:src="@drawable/ic_incognito" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/anonymousTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/anonymousImageView"
+                android:layout_alignBottom="@+id/anonymousImageView"
+                android:layout_toRightOf="@+id/anonymousImageView"
+                android:gravity="center_vertical"
+                android:paddingRight="10dp"
+                android:text="@string/groups.anonymous" />
+
+            <CheckBox
+                android:id="@+id/anonymousCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"
+                android:button="@drawable/language_selector_checkbox"
+                android:buttonTint="@color/app_red"
+                android:checked="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="10dp"
+                android:textColor="@color/app_red"
+                android:textSize="16sp" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/postTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/space_10"
+                android:background="@drawable/youself_post_bg"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/space_35"
+                android:paddingTop="@dimen/space_13"
+                android:paddingRight="@dimen/space_35"
+                android:paddingBottom="@dimen/space_13"
+                android:text="@string/groups.post_label"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:fontName="oswald_regular.ttf" />
+
+
+        </RelativeLayout>
+    </RelativeLayout>
+</ScrollView>
