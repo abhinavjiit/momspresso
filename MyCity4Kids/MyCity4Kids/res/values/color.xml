@@ -374,6 +374,7 @@
     <color name="video_progress.way_to_go">#545454</color>
     <color name="video_progress.success_msg">#545454</color>
     <color name="video_progress.okay">#507cbe</color>
+    <color name="mute_text_color">#545454</color>
 
     <color name="user_activities.toolbar.title">#545454</color>
     <color name="user_activities.tabbar.text">#545454</color>

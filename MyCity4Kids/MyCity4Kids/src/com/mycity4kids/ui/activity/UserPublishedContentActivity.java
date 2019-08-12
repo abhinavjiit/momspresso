@@ -41,6 +41,7 @@ public class UserPublishedContentActivity extends BaseActivity implements View.O
         ((BaseApplication) getApplication()).setActivity(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarTitleTextView = findViewById(R.id.toolbarTitle);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.pager);
         searchAllImageView = (ImageView) findViewById(R.id.searchAllImageView);
@@ -55,6 +56,7 @@ public class UserPublishedContentActivity extends BaseActivity implements View.O
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbarTitleTextView.setText(getResources().getString(R.string.user_article_tabbar_published_label));
 
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.search_article_topic_tab_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.lang_setting_stories_label)));

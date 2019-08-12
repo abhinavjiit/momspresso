@@ -165,16 +165,18 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.muteVideoSwitch:
                 if (muteSwitch.isChecked()) {
+                    muteSwitch.setThumbResource(getResources().getColor(R.color.app_red));
+                    muteSwitch.setTextColor(getResources().getColor(R.color.app_red));
                     final float volume = (float) (1 - (Math.log(MAX_VOLUME - 0) / Math.log(MAX_VOLUME)));
                     player.setVolume(volume, volume);
                 } else {
+                    muteSwitch.setThumbResource(getResources().getColor(R.color.mute_text_color));
+                    muteSwitch.setTextColor(getResources().getColor(R.color.mute_text_color));
                     final float volume = (float) (1 - (Math.log(MAX_VOLUME - 99) / Math.log(MAX_VOLUME)));
                     player.setVolume(volume, volume);
                 }
                 break;
-//            case R.id.audioTextView:
-//                openAudioFilePickerDialog();
-//                break;
+
             case R.id.saveUploadTextView:
                 if (StringUtils.isNullOrEmpty(videoTitleEditText.getText().toString())) {
                     videoTitleEditText.setFocusableInTouchMode(true);

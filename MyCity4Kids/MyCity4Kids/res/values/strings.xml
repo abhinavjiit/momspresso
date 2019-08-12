@@ -195,7 +195,7 @@
     public static final String LOCALE_TELUGU = "te";
     public static final String LOCALE_KANNADA = "kn";
     public static final String LOCALE_MALAYALAM = "ml";
-    public static final String LOCALE_GUJRATI = "gu";
+    public static final String LOCALE_GUJARATI = "gu";
     public static final String LOCALE_PUNJABI= "pa";
 
 
@@ -743,7 +743,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="language_label.telegu">తెలుగు</string>
     <string name="language_label.kannada">ಕನ್ನಡ</string>
     <string name="language_label.malayalam">മലയാളം</string>
-    <string name="language_label.gujrati">ગુજરાતી </string>
+    <string name="language_label.gujarati">ગુજરાતી </string>
     <string name="language_label.punjabi">ਪੰਜਾਬੀ</string>
 
 
@@ -1243,7 +1243,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="rewards_pancard_Note_textview">NOTE :</string>
     <string name="rewards_payment_submission_enter_bank_detail_text">PLEASE ENTER YOUR BANK DETAILS</string>
     <string name="rewards_bank_detail_holder_nmae_text">Account Holder’s Name</string>
-    <string name="rewards_bank_detail_select_bank_text">Select Bank Name</string>
+    <string name="rewards_bank_detail_select_bank_text">Bank Name</string>
     <string name="rewards_bank_detail_account_number">Account Number</string>
     <string name="rewards_bank_detail_confirm_account_number">Confirm Account Number</string>
     <string name="rewards_bank_detail_ifsc_text">IFSC Code</string>

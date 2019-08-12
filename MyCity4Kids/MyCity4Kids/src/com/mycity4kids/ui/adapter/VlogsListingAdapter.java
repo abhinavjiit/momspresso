@@ -3,16 +3,13 @@ package com.mycity4kids.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,7 +27,6 @@ import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -41,7 +37,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -201,7 +196,7 @@ public class VlogsListingAdapter extends BaseAdapter {
                         Utils.momVlogEvent(mContext, "Video Listing", "Challenge container", "", "android",
                                 SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                                 String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", videoAd.getId());
-                        if(videoAd.getExtraData().size() > 0) {
+                        if (videoAd.getExtraData() != null && videoAd.getExtraData().size() != 0) {
                             Topics.ExtraData extraData = videoAd.getExtraData().get(0);
                             intent.putExtra("Display_Name", new ArrayList<>(Arrays.asList(videoAd.getDisplay_name())));
                             intent.putExtra("screenName", "MomVlogs");

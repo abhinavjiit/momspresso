@@ -496,10 +496,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         langTextView.setText(getString(R.string.language_label_malayalam));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                    } else if (AppConstants.LOCAL_GUJRATI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                        langTextView.setText(getString(R.string.language_label_gujrati));
+                    } else if (AppConstants.LOCAL_GUJARATI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                        langTextView.setText(getString(R.string.language_label_gujarati));
 
-                        selectedlangGuideTextView.setText(getString(R.string.language_label_gujrati));
+                        selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
                     } else if (AppConstants.LOCAL_PUNJABI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
                         langTextView.setText(getString(R.string.language_label_punjabi));
 
@@ -550,10 +550,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     langTextView.setText(getString(R.string.language_label_malayalam));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                } else if (AppConstants.LOCAL_GUJRATI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
-                    langTextView.setText(getString(R.string.language_label_gujrati));
+                } else if (AppConstants.LOCAL_GUJARATI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    langTextView.setText(getString(R.string.language_label_gujarati));
 
-                    selectedlangGuideTextView.setText(getString(R.string.language_label_gujrati));
+                    selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
                 } else if (AppConstants.LOCAL_PUNJABI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
                     langTextView.setText(getString(R.string.language_label_punjabi));
 

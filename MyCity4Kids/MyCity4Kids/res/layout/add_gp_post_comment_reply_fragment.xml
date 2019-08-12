@@ -46,7 +46,8 @@
                 android:text="@string/short_s.add_comment"
                 android:textColor="@color/ad.comments.toolbar.title"
                 android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
+                app:fontName="oswald_regular.ttf"
+                app:textAllCaps="true" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/postCommentReplyTextView"

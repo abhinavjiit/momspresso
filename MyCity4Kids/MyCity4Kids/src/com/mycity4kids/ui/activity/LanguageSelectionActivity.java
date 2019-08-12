@@ -52,7 +52,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
         languageRecyclerView = (RecyclerView) findViewById(R.id.languageRecyclerView);
         String[] langArray = {getString(R.string.language_label_english), getString(R.string.language_label_hindi), getString(R.string.language_label_marathi),
                 getString(R.string.language_label_bengali), getString(R.string.language_label_telegu), getString(R.string.language_label_tamil)
-                , getString(R.string.language_label_kannada), getString(R.string.language_label_malayalam), getString(R.string.language_label_gujrati), getString(R.string.language_label_punjabi)};
+                , getString(R.string.language_label_kannada), getString(R.string.language_label_malayalam), getString(R.string.language_label_gujarati), getString(R.string.language_label_punjabi)};
         ArrayList<String> langList = new ArrayList<String>(Arrays.asList(langArray));
 
         continueTextView = (TextView) findViewById(R.id.continueTextView);
@@ -136,7 +136,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 selectedLang = AppConstants.LOCALE_MALAYALAM;
                 break;
             case 8:
-                selectedLang = AppConstants.LOCAL_GUJRATI;
+                selectedLang = AppConstants.LOCAL_GUJARATI;
                 break;
             case 9:
                 selectedLang = AppConstants.LOCAL_PUNJABI;

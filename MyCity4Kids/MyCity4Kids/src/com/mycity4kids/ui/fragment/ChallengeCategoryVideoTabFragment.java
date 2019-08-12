@@ -57,8 +57,6 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.challenge_tab_fragment, container, false);
         if (getArguments() != null) {
-           /* jsonMyObject = getArguments().getString("currentSubTopic");
-            currentSubTopic = new Gson().fromJson(jsonMyObject, Topics.class);*/
             currentSubTopic = getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;
         }

@@ -396,7 +396,7 @@ public class Constants {
 
     public enum TypeOfLanguages {
         LOCALE_ENGLISH("en", "English"), LOCALE_HINDI("hi", "Hindi"), LOCALE_MARATHI("mr", "Marathi"), LOCALE_BENGALI("bn", "Bangali"), LOCALE_TAMIL("ta", "Tamil"), LOCALE_TELUGU("te", "Telgu"),
-        LOCALE_KANNADA("kn", "Kannada"), LOCALE_MALAYALAM("ml", "Malayalam"), LOCALE_GUJRATI("gu", "Gujrati"), LOCALE_PUNJABI("pa", "Punjabi");
+        LOCALE_KANNADA("kn", "Kannada"), LOCALE_MALAYALAM("ml", "Malayalam"), LOCALE_GUJARATI("gu", "Gujarati"), LOCALE_PUNJABI("pa", "Punjabi");
         private final String name;
         private final String id;
 
@@ -432,7 +432,7 @@ public class Constants {
 
     public enum TypeOfLanguagesWithContent {
         LOCALE_ENGLISH("en", "English"), LOCALE_HINDI("hi", "हिंदी"), LOCALE_MARATHI("mr", "मराठी"), LOCALE_BENGALI("bn", "বাংলা"), LOCALE_TAMIL("ta", "தமிழ்"), LOCALE_TELUGU("te", "తెలుగు"),
-        LOCALE_KANNADA("kn", "ಕನ್ನಡ"), LOCALE_MALAYALAM("ml", "മലയാളം"), LOCALE_GUJRATI("gu", "ગુજરાતી"), LOCALE_PUNJABI("pa", "ਪੰਜਾਬੀ");
+        LOCALE_KANNADA("kn", "ಕನ್ನಡ"), LOCALE_MALAYALAM("ml", "മലയാളം"), LOCALE_GUJARATI("gu", "ગુજરાતી"), LOCALE_PUNJABI("pa", "ਪੰਜਾਬੀ");
         private final String name;
         private final String id;
 

@@ -39,12 +39,14 @@ public class UserDraftsContentActivity extends BaseActivity implements View.OnCl
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
+        toolbarTitleTextView = findViewById(R.id.toolbarTitle);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.pager);
         searchAllImageView = (ImageView) findViewById(R.id.searchAllImageView);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitle);
+        toolbarTitleTextView.setText(getResources().getString(R.string.user_article_tabbar_draft_label));
 
         contentType = getIntent().getStringExtra("contentType");
         searchAllImageView.setOnClickListener(this);

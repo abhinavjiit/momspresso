@@ -30,7 +30,8 @@
                 android:text="Replies"
                 android:textColor="@color/city_picker.toolbar.title"
                 android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
+                app:fontName="oswald_regular.ttf"
+                app:textAllCaps="true" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/viewPostTextView"
@@ -54,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:layout_marginBottom="50dp"/>
+        android:layout_marginBottom="50dp" />
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/openAddReplyDialog"

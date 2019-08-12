@@ -655,6 +655,9 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         || type.equalsIgnoreCase("group_new_response") || type.equalsIgnoreCase("group_new_reply")
                         || type.equalsIgnoreCase("group_admin_membership") || type.equalsIgnoreCase("group_admin_reported")) {
 
+
+
+
                 } else {
                     Log.i(TAG, " Default : " + msg);
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");

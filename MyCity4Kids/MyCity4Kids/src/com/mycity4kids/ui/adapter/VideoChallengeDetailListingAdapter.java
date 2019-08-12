@@ -248,8 +248,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                         findActiveVideoChallenge();
                     } else {
                         Intent cityIntent = new Intent(mContext, ChooseVideoCategoryActivity.class);
-                        cityIntent.putExtra("comingFrom", "createDashboardIcon");
-                        cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
+                        cityIntent.putExtra("comingFrom", "notFromChallenge");
+                        // cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
                         mContext.startActivity(cityIntent);
                     }
 //                    Intent intent = new Intent(mContext, ChooseVideoCategoryActivity.class);

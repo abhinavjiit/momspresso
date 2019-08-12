@@ -87,4 +87,5 @@ public abstract class BaseFragment extends Fragment implements IScreen {
             tracker.send(new HitBuilders.ScreenViewBuilder().build());
         }
     }
+
 }

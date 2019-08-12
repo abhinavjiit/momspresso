@@ -185,10 +185,25 @@
 
 
             <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/enterBankDetailTextView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:gravity="center"
+                android:text="Note: Please enter your bank information in English only"
+                android:textColor="@color/app_red"
+                android:textSize="12sp"
+                app:fontName="oswald_regular.ttf" />
+
+
+            <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/accountHolderNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/enterBankDetailTextView"
+                android:layout_below="@+id/note"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="4dp"
@@ -205,6 +220,7 @@
                 android:layout_marginRight="12dp"
                 android:layout_marginBottom="25dp"
                 android:background="@drawable/border_layout_for_campaign"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                 android:fontFamily="sans-serif"
                 android:lines="1"
                 android:maxLines="1"
@@ -226,6 +242,26 @@
                 android:textColor="#A1A1A1"
                 android:textSize="16sp" />
 
+
+            <com.mycity4kids.widget.CustomFontEditText
+                android:id="@+id/selectBankAccountEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@id/selectBankAccountTextView"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/border_layout_for_campaign"
+                android:fontFamily="sans-serif"
+                android:lines="1"
+
+                android:maxLines="1"
+                android:paddingLeft="12dp"
+                android:textColor="#4A4A4A"
+                android:textSize="14sp"
+
+                />
+
             <Spinner
                 android:id="@+id/selectBankAccountspinner"
                 android:layout_width="match_parent"
@@ -236,14 +272,15 @@
                 android:layout_marginBottom="25dp"
                 android:background="@drawable/campaign_spinner_border_layout"
                 android:paddingLeft="12dp"
-                android:spinnerMode="dropdown" />
+                android:spinnerMode="dropdown"
+                android:visibility="gone" />
 
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/accountNumberTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/selectBankAccountspinner"
+                android:layout_below="@+id/selectBankAccountEditText"
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="4dp"
                 android:text="@string/rewards_bank_detail_account_number"
@@ -318,12 +355,11 @@
                 android:layout_height="50dp"
                 android:layout_below="@id/ifscCodeTextView"
                 android:layout_marginLeft="12dp"
-
                 android:layout_marginRight="12dp"
                 android:layout_marginBottom="25dp"
                 android:background="@drawable/border_layout_for_campaign"
                 android:fontFamily="sans-serif"
-
+                android:inputType="text"
                 android:lines="1"
                 android:maxLines="1"
                 android:paddingLeft="12dp"

@@ -151,21 +151,19 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 }
             }
         });
-        findActiveVideoChallenge();
+        //      findActiveVideoChallenge();
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (videoChallengeTopics == null) {
-                    findActiveVideoChallenge();
-                } else {
-                    Intent cityIntent = new Intent(CategoryVideosListingActivity.this, ChooseVideoCategoryActivity.class);
-                    cityIntent.putExtra("comingFrom", "createDashboardIcon");
-                    cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
 
-                    startActivity(cityIntent);
-                    Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+                Intent cityIntent = new Intent(CategoryVideosListingActivity.this, ChooseVideoCategoryActivity.class);
+                cityIntent.putExtra("comingFrom", "createDashboardIcon");
+                //   cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
 
-                }
+                startActivity(cityIntent);
+                Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+
+
             }
         });
 

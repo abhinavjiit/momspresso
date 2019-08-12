@@ -60,6 +60,7 @@ import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.MyFeedPollGenericRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -415,54 +416,6 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
         }
     }
 
-    /*private void getGroupDetails(int groupId) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-
-        Call<GroupDetailResponse> call = groupsAPI.getGroupById(groupId);
-        call.enqueue(groupDetailsResponseCallback);
-    }
-
-    private Callback<GroupDetailResponse> groupDetailsResponseCallback = new Callback<GroupDetailResponse>() {
-        @Override
-        public void onResponse(Call<GroupDetailResponse> call, retrofit2.Response<GroupDetailResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    GroupDetailResponse groupPostResponse = response.body();
-                    selectedGroup = groupPostResponse.getData().getResult();
-                    toolbarTitle.setHint(getString(R.string.groups_search_in));
-                    memberCountTextView.setText(selectedGroup.getMemberCount() + " " + getString(R.string.groups_member_label));
-                    groupNameTextView.setText(selectedGroup.getTitle());
-
-                    Picasso.with(getActivity()).load(selectedGroup.getHeaderImage())
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(groupImageView);
-
-                    groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(getContext(), getActivity());
-                    groupAboutRecyclerAdapter.setData(selectedGroup);
-                    TabLayout.Tab tab = groupPostTabLayout.getTabAt(1);
-                    tab.select();
-                } else {
-
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<GroupDetailResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };*/
 
     @Override
     protected void updateUi(Response response) {
@@ -492,7 +445,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
 
             case R.id.postSettingImageView:
 
-
+                EventBus.getDefault().post("clicked");
                 selectedPost = postList.get(position);
                 getCurrentUserPostSettingsStatus(selectedPost);
                 if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
@@ -1321,8 +1274,8 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                 groupPostReportDialogFragment.setCancelable(true);
                 groupPostReportDialogFragment.show(fm, "Choose video report option");
 //                reportPostTextView.setText("UNREPORT");
-                break;
             case R.id.overlayView:
+                EventBus.getDefault().post("unclicked");
                 postSettingsContainerMain.setVisibility(View.GONE);
                 overlayView.setVisibility(View.GONE);
                 postSettingsContainer.setVisibility(View.GONE);

@@ -127,10 +127,10 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
         } else if (comingFrom.equals("createDashboardIcon")) {
 
             //        Bundle extras = getIntent().getExtras();
-            if (intent != null) {
+         //   if (intent != null) {
                // jasonMyObject = intent.getStringExtra("currentChallengesTopic");
 
-            }
+         //   }
 
          //   videoChallengeTopics = new Gson().fromJson(jasonMyObject, Topics.class);
             categoriesTextView.setVisibility(View.VISIBLE);

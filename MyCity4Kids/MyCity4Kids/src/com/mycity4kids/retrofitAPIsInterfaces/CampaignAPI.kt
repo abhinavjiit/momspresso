@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces
 
+import com.mycity4kids.models.GetAllPaymentDetails
 import com.mycity4kids.models.campaignmodels.*
 import com.mycity4kids.models.request.CampaignParticipate
 import com.mycity4kids.models.request.CampaignReferral
@@ -50,6 +51,9 @@ interface CampaignAPI {
     @PUT("/payments/v1/account/default")
     fun postForDefaultAccount(@Body proofPostModel: ProofPostModel): Observable<BaseResponseGeneric<ProofPostModel>>
 
+    @GET("/payments/v1/account/{id}")
+    fun getAllPaymentModeDetails(@Path("id") id: Int): Observable<BaseResponseGeneric<GetAllPaymentDetails>>
+
     @POST("rewards/v1/campaigns/proofs/")
     fun postProofToServer(@Body proofPostModel: ProofPostModel)
             : Observable<BaseResponseGeneric<RewardsDetailsResultResonse>>
@@ -79,7 +83,7 @@ interface CampaignAPI {
     fun getPanNumber(): Observable<BaseResponseGeneric<ProofPostModel>>
 
     @GET("/rewards/v1/campaigns/trackers/{campaignId}")
-    fun getTrackerData(@Path("campaignId") campaignId : Int): Observable<BaseResponseGeneric<ArrayList<TrackerDataModel>>>
+    fun getTrackerData(@Path("campaignId") campaignId: Int): Observable<BaseResponseGeneric<ArrayList<TrackerDataModel>>>
 
     @PATCH("/payments/v1/user/pan/")
     fun updatePanNumber(@Body proofPostModel: ProofPostModel): Observable<BaseResponseGeneric<ProofPostModel>>
@@ -98,5 +102,7 @@ interface CampaignAPI {
 
 
     @GET("rewards/v1/campaigns/proofs/instructions/{campaignId}")
-    fun getProofInstruction(@Path("campaignId") campaignId : Int): Observable<BaseResponseGeneric<ProofInstructionResult>>
+    fun getProofInstruction(@Path("campaignId") campaignId: Int): Observable<BaseResponseGeneric<ProofInstructionResult>>
+
+
 }

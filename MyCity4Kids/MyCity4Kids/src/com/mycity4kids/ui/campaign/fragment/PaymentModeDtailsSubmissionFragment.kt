@@ -18,6 +18,7 @@ import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.gtmutils.Utils
+import com.mycity4kids.models.GetAllPaymentDetails
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
@@ -47,16 +48,18 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
     private var bankNames = mutableListOf<String>()
     private lateinit var selectedBankName: String
     private lateinit var submitTextViewCampaign: TextView
-    private lateinit var addAccountHolderNameEditTextView: EditText
-    private lateinit var accountNumberEditTextView: EditText
-    private lateinit var confirmAccountNumberEditTextView: EditText
-    private lateinit var ifscEditTextView: EditText
+    private var addAccountHolderNameEditTextView: EditText? = null
+    private var accountNumberEditTextView: EditText? = null
+    private var selectBankAccountEditText: EditText? = null
+    private var confirmAccountNumberEditTextView: EditText? = null
+
+    private var ifscEditTextView: EditText? = null
     private lateinit var addUpiEditTextView: EditText
     private lateinit var addMobileNumberEditText: EditText
     private lateinit var back: TextView
     private lateinit var toolbar: Toolbar
     private var source: String? = null
-
+    private var ID: Int = -1
     private var isComingFromRewards: Boolean = false
 
 
@@ -66,12 +69,13 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
 
     companion object {
         @JvmStatic
-        fun newInstance(id: Int, comingFrom: String, isComingFromRewards: Boolean = false) =
+        fun newInstance(id: Int, comingFrom: String, isComingFromRewards: Boolean = false, Id: Int) =
                 PaymentModeDtailsSubmissionFragment().apply {
                     arguments = Bundle().apply {
                         this.putInt("id", id)
                         this.putString("comingFrom", comingFrom)
                         this.putBoolean("isComingFromRewards", isComingFromRewards)
+                        this.putInt("Id", Id)
                     }
 
                 }
@@ -86,6 +90,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         bankTransferContainer = view.findViewById(R.id.bankTransferContainer)
         selectBankAccountspinner = view.findViewById(R.id.selectBankAccountspinner)
         submitTextViewCampaign = view.findViewById(R.id.submitTextViewCampaign)
+        selectBankAccountEditText = view.findViewById(R.id.selectBankAccountEditText)
         addAccountHolderNameEditTextView = view.findViewById(R.id.addAccountHolderNameEditTextView)
         accountNumberEditTextView = view.findViewById(R.id.accountNumberEditTextView)
         confirmAccountNumberEditTextView = view.findViewById(R.id.confirmAccountNumberEditTextView)
@@ -104,6 +109,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         if (arguments != null && arguments!!.containsKey("id")) {
             paymantModeId = arguments!!.getInt("id")
             comingFrom = arguments!!.getString("comingFrom")
+            ID = arguments!!.getInt("Id")
 
             isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
                 arguments!!.getBoolean("isComingFromRewards")
@@ -111,6 +117,8 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                 false
             }
         }
+
+
 
 
         when (paymantModeId) {
@@ -123,6 +131,13 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         if (bankTransferContainer.visibility == View.VISIBLE) {
             fetchAllBankName()
         }
+        if (ID != -1 && comingFrom.equals("comingForEdit")) {
+
+            fetchLastUpdatedDetails(ID)
+
+        }
+
+
         submitTextViewCampaign.setOnClickListener(this)
 
         if (isComingFromRewards) {
@@ -218,7 +233,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                     addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addUpiEditTextView.text.toString().trim())
                 }
                 3 -> {
-                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = accountNumberEditTextView.text.toString().trim(), account_ifsc_code = ifscEditTextView.text.toString().trim(), account_name = addAccountHolderNameEditTextView.text.toString().trim())
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = accountNumberEditTextView?.text.toString().trim(), account_ifsc_code = ifscEditTextView?.text.toString().trim(), account_name = addAccountHolderNameEditTextView?.text.toString().trim())
                 }
                 else -> {
                     addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addMobileNumberEditText.text.toString().trim())
@@ -285,18 +300,19 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
         if (bankTransferContainer.visibility == View.VISIBLE) {
 
 
-            if (!addAccountHolderNameEditTextView.text.isNullOrEmpty() && !accountNumberEditTextView.text.isNullOrEmpty() && !confirmAccountNumberEditTextView.text.isNullOrEmpty() && !ifscEditTextView.text.toString().trim().isNullOrEmpty()) {
+            if (!addAccountHolderNameEditTextView?.text.isNullOrEmpty() && !accountNumberEditTextView?.text.isNullOrEmpty() && !confirmAccountNumberEditTextView?.text.isNullOrEmpty() && !ifscEditTextView?.text.toString().trim().isNullOrEmpty() && !selectBankAccountEditText?.text.toString().trim().isNullOrEmpty()) {
 
-                if (ifscEditTextView.text.toString().trim().contains(" ")) {
+                if (ifscEditTextView?.text.toString().trim().contains(" ")) {
                     Toast.makeText(activity, "Space is not allowed", Toast.LENGTH_SHORT).show()
                     return false
                 }
 
 
 
-                if (accountNumberEditTextView.text.toString().equals(confirmAccountNumberEditTextView.text.toString())) {
+                if (accountNumberEditTextView?.text.toString().equals(confirmAccountNumberEditTextView?.text.toString())) {
                     return true
                 }
+
                 Toast.makeText(activity, "account number is not matching", Toast.LENGTH_SHORT).show()
                 return false
 
@@ -324,6 +340,48 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
             return false
 
         }
+    }
+
+
+    private fun fetchLastUpdatedDetails(ID: Int) {
+        showProgressDialog(resources.getString(R.string.please_wait))
+
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getAllPaymentModeDetails(ID).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<GetAllPaymentDetails>> {
+            override fun onComplete() {
+                removeProgressDialog(); }
+
+            override fun onSubscribe(d: Disposable) {
+            }
+
+            override fun onNext(response: BaseResponseGeneric<GetAllPaymentDetails>) {
+
+                if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
+
+
+                    addAccountHolderNameEditTextView?.setText(response.data!!.result.account_name)
+                    accountNumberEditTextView?.setText(response.data!!.result.account_number)
+                    confirmAccountNumberEditTextView?.setText(response.data!!.result.account_number)
+                    ifscEditTextView?.setText(response.data!!.result.account_ifsc_code)
+                    selectBankAccountEditText?.setText(response.data!!.result.bank_name)
+                    if (paytmContainer.visibility == View.VISIBLE && response.data!!.result.account_ifsc_code.isNullOrEmpty()) {
+                        addMobileNumberEditText.setText(response.data!!.result.account_number)
+
+
+                    }
+
+
+                }
+
+
+            }
+
+            override fun onError(e: Throwable) {
+                removeProgressDialog()
+                Log.e("exception in error", e.message.toString())
+            }
+
+        })
+
     }
 
 }

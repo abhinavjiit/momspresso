@@ -38,6 +38,8 @@ public class UserReadArticlesContentActivity extends BaseActivity implements Vie
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.pager);
+        toolbarTitleTextView = findViewById(R.id.toolbarTitle);
+
         searchAllImageView = (ImageView) findViewById(R.id.searchAllImageView);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitle);
 
@@ -50,9 +52,11 @@ public class UserReadArticlesContentActivity extends BaseActivity implements Vie
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbarTitleTextView.setText("READ");
+
 
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.search_article_topic_tab_label)));
-         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.lang_setting_stories_label)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.lang_setting_stories_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.myprofile_section_videos_label)));
         AppUtils.changeTabsFont(this, tabLayout);
 //        toolbarTitleTextView.setText(getString(R.string.myprofile_section_short_story_label));

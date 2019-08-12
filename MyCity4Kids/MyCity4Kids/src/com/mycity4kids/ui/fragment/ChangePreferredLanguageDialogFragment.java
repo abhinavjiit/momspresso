@@ -228,9 +228,9 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
 
             case R.id.gujratiTextView:
                 if (isAdded()) {
-                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_gujrati));
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_gujarati));
                 }
-                selectedLang = AppConstants.LOCAL_GUJRATI;
+                selectedLang = AppConstants.LOCAL_GUJARATI;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(false);
                 marathiTextView.setSelected(false);

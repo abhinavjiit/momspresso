@@ -140,7 +140,7 @@
         android:paddingTop="8dp"
         android:paddingRight="23dp"
         android:paddingBottom="10dp"
-        android:text="@string/language_label.gujrati"
+        android:text="@string/language_label.gujarati"
         android:textColor="@color/videos.upload_option.gallery"
         android:textSize="18sp"
         app:fontName="oswald.ttf" />

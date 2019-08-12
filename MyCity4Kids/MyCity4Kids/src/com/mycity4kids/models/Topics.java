@@ -27,6 +27,8 @@ public class Topics implements Parcelable {
     private boolean prevKey = false;
     private List<ExtraData> extraData;
     private String sponsoredCategoryImage;
+
+
     private String sponsoredCategoryBadge;
     private String is_live;
     private String mapped_category;
@@ -318,6 +320,8 @@ public class Topics implements Parcelable {
         showInMenu = in.readString();
         isSelected = in.readByte() != 0;
         slug = in.readString();
+        //   extraData = in.readParcelable(ExtraData.class.getClassLoader());
+
         in.readTypedList(this.extraData, ExtraData.CREATOR);
         is_live = in.readString();
         prevKey = in.readByte() != 0;
@@ -330,6 +334,15 @@ public class Topics implements Parcelable {
 
 
     }
+
+
+ /*   public ExtraData getExtraData() {
+        return extraData;
+    }
+
+    public void setExtraData(ExtraData extraData) {
+        this.extraData = extraData;
+    }*/
 
     public List<ExtraData> getExtraData() {
         return extraData;
@@ -483,6 +496,8 @@ public class Topics implements Parcelable {
         dest.writeString(showInMenu);
         dest.writeByte((byte) (isSelected ? 1 : 0));
         dest.writeString(slug);
+        //  dest.writeParcelable(extraData, flags);
+
         dest.writeTypedList(extraData);
         dest.writeString(is_live);
         dest.writeByte((byte) (prevKey ? 1 : 0));

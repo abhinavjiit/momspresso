@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,10 @@ import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.ui.activity.GroupsListingActivity;
 import com.mycity4kids.utils.AppUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -82,12 +87,6 @@ public class GroupsViewFragment extends BaseFragment {
     }
 
 
-    public void floatongButtonVisibilityGone()
-    {
-
-    }
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -99,6 +98,31 @@ public class GroupsViewFragment extends BaseFragment {
                 viewPager.setCurrentItem(1);
 
             }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        EventBus.getDefault().unregister(this);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        EventBus.getDefault().register(this);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String click) {
+        if (click.equals("clicked")) {
+            createFabButton.setVisibility(View.GONE);
+        } else {
+            createFabButton.setVisibility(View.VISIBLE);
         }
     }
 }

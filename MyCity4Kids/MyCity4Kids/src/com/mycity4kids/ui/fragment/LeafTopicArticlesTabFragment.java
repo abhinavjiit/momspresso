@@ -97,7 +97,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         guideOverlay.setOnClickListener(this);
         writeArticleCell.setOnClickListener(this);
         frameLayout.setVisibility(View.VISIBLE);
-        fabSort.setVisibility(View.VISIBLE);
+        fabSort.setVisibility(View.GONE);
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
         fabSort.setOnClickListener(new View.OnClickListener() {
