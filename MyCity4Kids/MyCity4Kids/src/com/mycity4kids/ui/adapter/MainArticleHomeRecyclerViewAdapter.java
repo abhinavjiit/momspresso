@@ -714,30 +714,11 @@ public class MainArticleHomeRecyclerViewAdapter extends RecyclerView.Adapter<Rec
 
         VideoCarouselViewHolder(View view) {
             super(view);
-            videoCarouselContainer = (HorizontalScrollView) view.findViewById(R.id.videoCarouselContainer);
-            addVideoContainer = (FrameLayout) view.findViewById(R.id.addVideoContainer);
-            addMomVlogTextView = (TextView) view.findViewById(R.id.addMomVlogTextView);
             videoContainerFL1 = (FrameLayout) view.findViewById(R.id.videoContainerFL1);
-            videoContainerFL2 = (FrameLayout) view.findViewById(R.id.videoContainerFL2);
-            videoContainerFL3 = (FrameLayout) view.findViewById(R.id.videoContainerFL3);
-            videoContainerFL4 = (FrameLayout) view.findViewById(R.id.videoContainerFL4);
-            videoContainerFL5 = (FrameLayout) view.findViewById(R.id.videoContainerFL5);
 
             txvArticleTitle1 = (TextView) view.findViewById(R.id.txvArticleTitle1);
             txvAuthorName1 = (TextView) view.findViewById(R.id.txvAuthorName1);
             articleImageView1 = (ImageView) view.findViewById(R.id.articleImageView1);
-            txvArticleTitle2 = (TextView) view.findViewById(R.id.txvArticleTitle2);
-            txvAuthorName2 = (TextView) view.findViewById(R.id.txvAuthorName2);
-            articleImageView2 = (ImageView) view.findViewById(R.id.articleImageView2);
-            txvArticleTitle3 = (TextView) view.findViewById(R.id.txvArticleTitle3);
-            txvAuthorName3 = (TextView) view.findViewById(R.id.txvAuthorName3);
-            articleImageView3 = (ImageView) view.findViewById(R.id.articleImageView3);
-            txvArticleTitle4 = (TextView) view.findViewById(R.id.txvArticleTitle4);
-            txvAuthorName4 = (TextView) view.findViewById(R.id.txvAuthorName4);
-            articleImageView4 = (ImageView) view.findViewById(R.id.articleImageView4);
-            txvArticleTitle5 = (TextView) view.findViewById(R.id.txvArticleTitle5);
-            txvAuthorName5 = (TextView) view.findViewById(R.id.txvAuthorName5);
-            articleImageView5 = (ImageView) view.findViewById(R.id.articleImageView5);
 
             headerArticleView = (FrameLayout) view.findViewById(R.id.headerArticleView);
             txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);

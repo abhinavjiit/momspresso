@@ -272,7 +272,7 @@ class CampaignDetailFragment : BaseFragment() {
         Picasso.with(context).load(apiGetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg)
         brandName.setText(apiGetResponse!!.brandDetails!!.name)
         campaignName.setText(apiGetResponse!!.name)
-        amount.setText("Rs. " + apiGetResponse!!.totalPayout)
+        amount.setText("Rs. " + apiGetResponse!!.totalPayout?.toInt())
         startDateText.setText(getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy"))
         endDateText.setText(getDate(apiGetResponse!!.endTime!!, "dd MMM yyyy"))
 
