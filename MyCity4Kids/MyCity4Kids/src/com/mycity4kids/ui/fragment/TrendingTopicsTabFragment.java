@@ -276,27 +276,6 @@ public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCa
             case R.id.videoContainerFL1:
                 launchVideoDetailsActivity(position, 0);
                 break;
-            case R.id.videoContainerFL2:
-                launchVideoDetailsActivity(position, 1);
-                break;
-            case R.id.videoContainerFL3:
-                launchVideoDetailsActivity(position, 2);
-                break;
-            case R.id.videoContainerFL4:
-                launchVideoDetailsActivity(position, 3);
-                break;
-            case R.id.videoContainerFL5:
-                launchVideoDetailsActivity(position, 4);
-                break;
-            case R.id.addMomVlogTextView:
-            case R.id.addVideoContainer: {
-                MixPanelUtils.pushAddMomVlogClickEvent(mixpanel, "Trending-" + trendingTopicData.getDisplay_name());
-                Utils.momVlogEvent(getActivity(), "Home Screen", "Carousel_banner_add_vlog", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
-
-                Intent intent = new Intent(getActivity(), ChooseVideoCategoryActivity.class);
-                startActivity(intent);
-            }
-            break;
             default:
                 if ("1".equals(trendingTopicData.getArticleList().get(position).getContentType())) {
                     Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);

@@ -679,13 +679,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     public class VideoCarouselViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        HorizontalScrollView videoCarouselContainer;
-        FrameLayout addVideoContainer;
-        TextView addMomVlogTextView;
-        FrameLayout videoContainerFL1, videoContainerFL2, videoContainerFL3, videoContainerFL4, videoContainerFL5;
-        TextView txvArticleTitle1, txvArticleTitle2, txvArticleTitle3, txvArticleTitle4, txvArticleTitle5;
-        TextView txvAuthorName1, txvAuthorName2, txvAuthorName3, txvAuthorName4, txvAuthorName5;
-        ImageView articleImageView1, articleImageView2, articleImageView3, articleImageView4, articleImageView5;
+        FrameLayout videoContainerFL1;
+        TextView txvArticleTitle1;
+        TextView txvAuthorName1;
+        ImageView articleImageView1;
 
         FrameLayout headerArticleView;
         TextView txvArticleTitle;
@@ -699,6 +696,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
+        TextView viewCountTextView1;
+        TextView commentCountTextView1;
+        TextView recommendCountTextView1;
 
         RelativeLayout storyHeaderView;
         TextView storyTitleTextView;
@@ -713,30 +713,13 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         VideoCarouselViewHolder(View view) {
             super(view);
-            videoCarouselContainer = (HorizontalScrollView) view.findViewById(R.id.videoCarouselContainer);
-            addVideoContainer = (FrameLayout) view.findViewById(R.id.addVideoContainer);
-            addMomVlogTextView = (TextView) view.findViewById(R.id.addMomVlogTextView);
             videoContainerFL1 = (FrameLayout) view.findViewById(R.id.videoContainerFL1);
-            videoContainerFL2 = (FrameLayout) view.findViewById(R.id.videoContainerFL2);
-            videoContainerFL3 = (FrameLayout) view.findViewById(R.id.videoContainerFL3);
-            videoContainerFL4 = (FrameLayout) view.findViewById(R.id.videoContainerFL4);
-            videoContainerFL5 = (FrameLayout) view.findViewById(R.id.videoContainerFL5);
-
             txvArticleTitle1 = (TextView) view.findViewById(R.id.txvArticleTitle1);
             txvAuthorName1 = (TextView) view.findViewById(R.id.txvAuthorName1);
             articleImageView1 = (ImageView) view.findViewById(R.id.articleImageView1);
-            txvArticleTitle2 = (TextView) view.findViewById(R.id.txvArticleTitle2);
-            txvAuthorName2 = (TextView) view.findViewById(R.id.txvAuthorName2);
-            articleImageView2 = (ImageView) view.findViewById(R.id.articleImageView2);
-            txvArticleTitle3 = (TextView) view.findViewById(R.id.txvArticleTitle3);
-            txvAuthorName3 = (TextView) view.findViewById(R.id.txvAuthorName3);
-            articleImageView3 = (ImageView) view.findViewById(R.id.articleImageView3);
-            txvArticleTitle4 = (TextView) view.findViewById(R.id.txvArticleTitle4);
-            txvAuthorName4 = (TextView) view.findViewById(R.id.txvAuthorName4);
-            articleImageView4 = (ImageView) view.findViewById(R.id.articleImageView4);
-            txvArticleTitle5 = (TextView) view.findViewById(R.id.txvArticleTitle5);
-            txvAuthorName5 = (TextView) view.findViewById(R.id.txvAuthorName5);
-            articleImageView5 = (ImageView) view.findViewById(R.id.articleImageView5);
+            viewCountTextView1 = (TextView) view.findViewById(R.id.viewCountTextView1);
+            commentCountTextView1 = (TextView) view.findViewById(R.id.commentCountTextView1);
+            recommendCountTextView1 = (TextView) view.findViewById(R.id.recommendCountTextView1);
 
             headerArticleView = (FrameLayout) view.findViewById(R.id.headerArticleView);
             txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
@@ -767,17 +750,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             instagramShareImageView = (ImageView) view.findViewById(R.id.instagramShareImageView);
             genericShareImageView = (ImageView) view.findViewById(R.id.genericShareImageView);
 
-
             whatsappShareImageView.setTag(view);
-
-            addVideoContainer.setOnClickListener(this);
             videoContainerFL1.setOnClickListener(this);
-            videoContainerFL2.setOnClickListener(this);
-            videoContainerFL3.setOnClickListener(this);
-            videoContainerFL4.setOnClickListener(this);
-            videoContainerFL5.setOnClickListener(this);
-            addMomVlogTextView.setOnClickListener(this);
-
             headerArticleView.setOnClickListener(this);
             storyHeaderView.setOnClickListener(this);
             storyRecommendationContainer.setOnClickListener(this);
@@ -1267,42 +1241,45 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 articleDataModelsNew.get(pos).setResponseReceived(true);
             }
         }
-
     }
 
     private void populateCarouselVideos(VideoCarouselViewHolder viewHolder, ArrayList<VlogsListingAndDetailResult> result) {
         ArrayList<VlogsListingAndDetailResult> videoList = result;
         if (videoList.isEmpty()) {
-            viewHolder.videoCarouselContainer.setVisibility(View.GONE);
+            viewHolder.videoContainerFL1.setVisibility(View.GONE);
             return;
         } else {
-            viewHolder.videoCarouselContainer.setVisibility(View.VISIBLE);
+            viewHolder.videoContainerFL1.setVisibility(View.VISIBLE);
         }
-        if (videoList.size() == 1) {
-            updateCarouselView(viewHolder.txvArticleTitle1, viewHolder.articleImageView1, viewHolder.txvAuthorName1, videoList.get(0));
-        } else if (videoList.size() == 2) {
-            updateCarouselView(viewHolder.txvArticleTitle1, viewHolder.articleImageView1, viewHolder.txvAuthorName1, videoList.get(0));
-            updateCarouselView(viewHolder.txvArticleTitle2, viewHolder.articleImageView2, viewHolder.txvAuthorName2, videoList.get(1));
-        } else if (videoList.size() == 3) {
-            updateCarouselView(viewHolder.txvArticleTitle1, viewHolder.articleImageView1, viewHolder.txvAuthorName1, videoList.get(0));
-            updateCarouselView(viewHolder.txvArticleTitle2, viewHolder.articleImageView2, viewHolder.txvAuthorName2, videoList.get(1));
-            updateCarouselView(viewHolder.txvArticleTitle3, viewHolder.articleImageView3, viewHolder.txvAuthorName3, videoList.get(2));
-        } else if (videoList.size() == 4) {
-            updateCarouselView(viewHolder.txvArticleTitle1, viewHolder.articleImageView1, viewHolder.txvAuthorName1, videoList.get(0));
-            updateCarouselView(viewHolder.txvArticleTitle2, viewHolder.articleImageView2, viewHolder.txvAuthorName2, videoList.get(1));
-            updateCarouselView(viewHolder.txvArticleTitle3, viewHolder.articleImageView3, viewHolder.txvAuthorName3, videoList.get(2));
-            updateCarouselView(viewHolder.txvArticleTitle4, viewHolder.articleImageView4, viewHolder.txvAuthorName4, videoList.get(3));
-        } else {
-            updateCarouselView(viewHolder.txvArticleTitle1, viewHolder.articleImageView1, viewHolder.txvAuthorName1, videoList.get(0));
-            updateCarouselView(viewHolder.txvArticleTitle2, viewHolder.articleImageView2, viewHolder.txvAuthorName2, videoList.get(1));
-            updateCarouselView(viewHolder.txvArticleTitle3, viewHolder.articleImageView3, viewHolder.txvAuthorName3, videoList.get(2));
-            updateCarouselView(viewHolder.txvArticleTitle4, viewHolder.articleImageView4, viewHolder.txvAuthorName4, videoList.get(3));
-            updateCarouselView(viewHolder.txvArticleTitle5, viewHolder.articleImageView5, viewHolder.txvAuthorName5, videoList.get(4));
+        if (videoList.size() > 0) {
+            updateCarouselView(viewHolder.txvArticleTitle1, viewHolder.articleImageView1, viewHolder.txvAuthorName1,
+                    viewHolder.viewCountTextView1, viewHolder.commentCountTextView1, viewHolder.recommendCountTextView1, videoList.get(0));
         }
     }
 
-    private void updateCarouselView(TextView textView, ImageView imageView, TextView authorTextView, VlogsListingAndDetailResult data) {
+    private void updateCarouselView(TextView textView, ImageView imageView, TextView authorTextView, TextView viewCountTextView1,
+                                    TextView commentCountTextView1, TextView recommendCountTextView1, VlogsListingAndDetailResult data) {
         textView.setText(data.getTitle());
+        if (null == data.getView_count() || "0".equals(data.getView_count())) {
+            viewCountTextView1.setVisibility(View.GONE);
+        } else {
+            viewCountTextView1.setVisibility(View.VISIBLE);
+            viewCountTextView1.setText(data.getView_count());
+        }
+
+        if (null == data.getComment_count() || "0".equals(data.getComment_count())) {
+            commentCountTextView1.setVisibility(View.GONE);
+        } else {
+            commentCountTextView1.setVisibility(View.VISIBLE);
+            commentCountTextView1.setText(data.getComment_count());
+        }
+
+        if (null == data.getLike_count() || "0".equals(data.getLike_count())) {
+            recommendCountTextView1.setVisibility(View.GONE);
+        } else {
+            recommendCountTextView1.setVisibility(View.VISIBLE);
+            recommendCountTextView1.setText(data.getLike_count());
+        }
         try {
             String userName = data.getAuthor().getFirstName() + " " + data.getAuthor().getLastName();
             if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
@@ -1313,7 +1290,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         } catch (Exception e) {
             authorTextView.setText("NA");
         }
-
         try {
             Picasso.with(mContext).load(data.getThumbnail())
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageView);

@@ -889,7 +889,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 groupPostReportDialogFragment.setCancelable(true);
                 groupPostReportDialogFragment.show(fm, "Choose video report option");
 //                reportPostTextView.setText("UNREPORT");
-                break;
             case R.id.overlayView:
                 postSettingsContainerMain.setVisibility(View.GONE);
                 overlayView.setVisibility(View.GONE);

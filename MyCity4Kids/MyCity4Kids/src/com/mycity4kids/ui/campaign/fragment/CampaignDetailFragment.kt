@@ -54,6 +54,7 @@ import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.math.roundToInt
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 
@@ -164,7 +165,7 @@ class CampaignDetailFragment : BaseFragment() {
             intent.putExtra("campaign_id", id!!)
             intent.putExtra("brand_name", apiGetResponse!!.brandDetails!!.name)
             intent.putExtra("campaign_name", apiGetResponse!!.name)
-            intent.putExtra("total_payout", apiGetResponse!!.totalPayout)
+            intent.putExtra("total_payout", apiGetResponse!!.totalPayout!!.toInt())
             intent.putExtra("image_url", apiGetResponse!!.brandDetails!!.imageUrl)
             startActivity(intent)
         }
@@ -271,7 +272,7 @@ class CampaignDetailFragment : BaseFragment() {
         Picasso.with(context).load(apiGetResponse!!.brandDetails!!.imageUrl).placeholder(R.drawable.default_article).error(R.drawable.default_article).into(brandImg)
         brandName.setText(apiGetResponse!!.brandDetails!!.name)
         campaignName.setText(apiGetResponse!!.name)
-        amount.setText("Rs. " + apiGetResponse!!.totalPayout)
+        amount.setText("Rs. " + apiGetResponse!!.totalPayout?.toInt())
         startDateText.setText(getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy"))
         endDateText.setText(getDate(apiGetResponse!!.endTime!!, "dd MMM yyyy"))
 
@@ -618,7 +619,7 @@ class CampaignDetailFragment : BaseFragment() {
             val showAmount = dialog.findViewById<TextView>(R.id.show_amount)
             if (apiGetResponse!!.isFixedAmount == 1) {
                 var amount: Double? = (apiGetResponse!!.amount)
-                showAmount.setText("Rs." + amount)
+                showAmount.setText("Rs." + amount?.toInt())
             } else {
                 showAmount.setText("Rs." + (apiGetResponse!!.minAmount) + "-" + "Rs." + (apiGetResponse!!.maxAmount))
             }

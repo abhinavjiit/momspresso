@@ -140,11 +140,21 @@
             android:textSize="14sp"
             app:fontName="oswald.ttf" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/groupsTextView"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/app_nav_bg" />
+
         <LinearLayout
             android:id="@+id/rewardsTextView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/groupsTextView"
+            android:layout_below="@+id/divider"
             android:paddingLeft="30dp"
             android:paddingRight="16dp"
             android:paddingBottom="12dp">
@@ -186,7 +196,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="@dimen/space_48"
-            android:layout_below="@+id/groupsTextView"
+            android:layout_below="@+id/divider"
             android:layout_alignParentRight="true">
 
             <com.mycity4kids.widget.CustomFontTextView
