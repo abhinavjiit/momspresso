@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -23,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -35,6 +37,7 @@ import com.mycity4kids.ui.adapter.VideoTopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
 import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
@@ -76,6 +79,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     private int num_of_categorys;
     private TopicsResponse res;
     private CoordinatorLayout root;
+    private RelativeLayout momVlogCoachMark;
 
 
     @Override
@@ -91,18 +95,29 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
+        momVlogCoachMark = (RelativeLayout) findViewById(R.id.momVlogCoachMark);
+        momVlogCoachMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                momVlogCoachMark.setVisibility(View.GONE);
+                SharedPrefUtils.setCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog", true);
+
+
+            }
+        });
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(CategoryVideosListingActivity.this);
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     } else {
                         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
                 }
             });
+
 
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -134,6 +149,14 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             fabAdd.setVisibility(View.VISIBLE);
         }
 
+        if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED && !SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
+            momVlogCoachMark.setVisibility(View.VISIBLE);
+
+        } else {
+            momVlogCoachMark.setVisibility(View.GONE);
+
+        }
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
@@ -151,7 +174,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 }
             }
         });
-        //      findActiveVideoChallenge();
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,6 +184,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
                 startActivity(cityIntent);
                 Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+                momVlogCoachMark.setVisibility(View.GONE);
+                SharedPrefUtils.setCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog", true);
 
 
             }
@@ -216,6 +240,11 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 }
             });
         }
+        if (!SharedPrefUtils.getToastMomVlog(this, "momVlog")) {
+            ToastUtils.showToast(this, "Tap to create");
+            SharedPrefUtils.setToastMomVlog(this, "momVlog", true);
+        }
+
     }
 
     @Override
@@ -405,104 +434,5 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
     }
 
-    private void findActiveVideoChallenge() {
-        try {
-            if (videoTopicList != null && videoTopicList.size() != 0) {
-                videoChallengeId = new ArrayList<>();
-                videoDisplay_Name = new ArrayList<>();
-                videoImageUrl = new ArrayList<>();
-                videoStreamUrl = new ArrayList<>();
-                num_of_categorys = videoTopicList.get(0).getChild().size();
-                if (num_of_categorys != 0) {
-                    for (int j = 0; j < num_of_categorys; j++) {
-                        if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
-                            videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
-                        }
-                    }
-                }
-            }
-            if (videoTopicList == null || videoTopicList.size() == 0) {
-                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                res = gson.fromJson(fileContent, TopicsResponse.class);
-                videoTopicList = new ArrayList<Topics>();
-                if (res != null) {
-                    for (int i = 0; i < res.getData().size(); i++) {
-                        if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
-                            videoTopicList.add(res.getData().get(i));
-                        }
-                    }
-                    videoChallengeId = new ArrayList<>();
-                    videoDisplay_Name = new ArrayList<>();
-                    videoImageUrl = new ArrayList<>();
-                    videoStreamUrl = new ArrayList<>();
-                    if (videoTopicList.get(0).getChild().size() != 0) {
-                        num_of_categorys = videoTopicList.get(0).getChild().size();
-                    }
-                    if (num_of_categorys != 0) {
-                        for (int j = 0; j < num_of_categorys; j++) {
-                            if (videoTopicList.get(0).getChild().get(j).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
 
-                                videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
-
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
-            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-            caller.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-                    try {
-                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                        res = gson.fromJson(fileContent, TopicsResponse.class);
-                        videoTopicList = new ArrayList<Topics>();
-                        if (res != null) {
-                            for (int i = 0; i < res.getData().size(); i++) {
-                                if (AppConstants.HOME_VIDEOS_CATEGORYID.equals(res.getData().get(i).getId())) {
-                                    videoTopicList.add(res.getData().get(i));
-                                }
-                            }
-                            if (videoTopicList.size() != 0 && videoTopicList != null) {
-                                videoChallengeId = new ArrayList<>();
-                                videoDisplay_Name = new ArrayList<>();
-                                videoImageUrl = new ArrayList<>();
-                                videoStreamUrl = new ArrayList<>();
-                                num_of_categorys = videoTopicList.get(0).getChild().size();
-                                if (num_of_categorys != 0) {
-                                    for (int j = 0; j < num_of_categorys; j++) {
-                                        if (videoTopicList.get(0).getChild().get(j).getId().equals(AppConstants.VIDEO_CHALLENGE_ID)) {
-
-                                            videoChallengeTopics = videoTopicList.get(0).getChild().get(j);
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } catch (FileNotFoundException e) {
-                        Crashlytics.logException(e);
-                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Crashlytics.logException(t);
-                    Log.d("MC4KException", Log.getStackTraceString(t));
-                }
-            });
-        }
-    }
 }

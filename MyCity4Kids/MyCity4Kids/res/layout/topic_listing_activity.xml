@@ -142,4 +142,146 @@
         app:rippleColor="@color/app_red"
         app:srcCompat="@drawable/ic_plus" />
 
+
+    <RelativeLayout
+        android:id="@+id/momVlogCoachMark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dark_transparent"
+        android:visibility="gone">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarCoachMark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:visibility="gone"
+            app:theme="@style/ToolbarTheme"
+            app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+            <RelativeLayout
+                android:id="@+id/toolbarRelativeLayoutCoachMark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/toolbarTitleTextViewCoachMark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/home_screen.select_an_option.title"
+                    android:textColor="@color/home.toolbar.titlecolor"
+                    android:textSize="20sp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <ImageView
+                    android:id="@+id/imageSortByCoachMark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:paddingLeft="@dimen/space_20"
+                    android:paddingTop="16dp"
+                    android:paddingRight="@dimen/space_20"
+                    android:paddingBottom="16dp"
+                    android:src="@drawable/ic_flip"
+                    android:tint="@color/greytxt_color" />
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:id="@+id/tabContainerCoachMark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbarCoachMark"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tab_layoutCoachMark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:elevation="3dp"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:visibility="gone"
+                app:tabIndicatorColor="@color/app_red"
+                app:tabIndicatorHeight="2dp"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/topic_articles.tabbar_text"
+                app:tabTextAppearance="@style/CustomTabText"
+                app:tabTextColor="@color/topic_articles.tabbar_text" />
+
+            <FrameLayout
+                android:id="@+id/topLayerGuideLayoutCoachMark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/toolbar"
+                android:layout_alignBottom="@+id/tabContainer"
+                android:background="@color/dark_transparent"
+                android:clickable="true"
+                android:elevation="6dp"
+                android:visibility="gone" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pagerCoachMark"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabAddCoachMark"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="right|bottom"
+            android:layout_margin="@dimen/space_20"
+            android:scaleType="center"
+            android:tint="@color/white"
+            android:visibility="visible"
+            app:backgroundTint="@color/app_red"
+            app:fab_colorNormal="@color/app_red"
+            app:fab_colorPressed="@color/app_red"
+
+            app:layout_anchorGravity="top|end"
+            app:rippleColor="@color/app_red"
+            app:srcCompat="@drawable/ic_video_new" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabAddShortStoryCoachMark"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="right|bottom"
+            android:layout_margin="@dimen/space_20"
+            android:scaleType="center"
+            android:tint="@color/white"
+            android:visibility="gone"
+            app:backgroundTint="@color/app_red"
+            app:fab_colorNormal="@color/app_red"
+            app:fab_colorPressed="@color/app_red"
+
+            app:layout_anchorGravity="top|end"
+            app:rippleColor="@color/app_red"
+            app:srcCompat="@drawable/ic_plus" />
+
+    </RelativeLayout>
+
+
 </android.support.design.widget.CoordinatorLayout>

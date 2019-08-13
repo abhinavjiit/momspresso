@@ -59,7 +59,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
     private FrameLayout tablayoutLayer;
 
     private TopicsShortStoriesPagerAdapter pagerAdapter;
-
+    private String comingFrom = "";
     private ArrayList<Topics> shortStoriesTopicList;
     private String parentTopicId;
     private ArrayList<Topics> subTopicsList;
@@ -94,7 +94,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
                 @Override
                 public void onClick(View view) {
                     if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     } else {
                         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
@@ -158,8 +158,10 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         fabAddShortStory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 setResult(Activity.RESULT_OK);
                 finish();
+
             }
         });
 

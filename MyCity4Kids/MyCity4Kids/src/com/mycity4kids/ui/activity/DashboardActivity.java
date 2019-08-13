@@ -1711,6 +1711,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             refreshMenu();
             setTitle("Send Feedback");
         }
+        final Fragment topFragmentt = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        Menu menu = bottomNavigationView.getMenu();
+        if (topFragmentt != null && topFragmentt instanceof ExploreArticleListingTypeFragment) {
+            menu.findItem(R.id.action_profile).setChecked(true);
+
+        } else if (topFragmentt != null && topFragmentt instanceof FragmentMC4KHomeNew) {
+            menu.findItem(R.id.action_home).setChecked(true);
+
+        } else if (topFragmentt != null && topFragmentt instanceof GroupsViewFragment) {
+            menu.findItem(R.id.action_location).setChecked(true);
+
+        }
 
 
     }
@@ -3034,5 +3046,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         }
     };
+
+    public void showChossLayoutForShortStory() {
+        chooseLayout.setVisibility(View.VISIBLE);
+        chooseStoryChallengeLayout.setVisibility(View.VISIBLE);
+        overLayViewChooseStory.setVisibility(View.VISIBLE);
+        chooseOptionLayout.setVisibility(View.VISIBLE);
+        rootChooseLayout.setVisibility(View.VISIBLE);
+    }
+
 
 }

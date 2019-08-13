@@ -126,8 +126,10 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof HeaderViewHolder) {
             ((HeaderViewHolder) holder).createdTimeTextView.setText(mContext.getString(R.string.groups_created) + " - " + DateTimeUtils.getDateFromNanoMilliTimestamp(groupDetails.getCreatedAt()));
-            Picasso.with(mContext).load(groupDetails.getHeaderImage())
-                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(((HeaderViewHolder) holder).groupImageView);
+            if (!groupDetails.getHeaderImage().trim().isEmpty()) {
+                Picasso.with(mContext).load(groupDetails.getHeaderImage())
+                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(((HeaderViewHolder) holder).groupImageView);
+            }
 
             if (AppConstants.GROUP_TYPE_OPEN_KEY.equals(groupDetails.getType())) {
                 ((HeaderViewHolder) holder).groupTypeTextView.setText(mContext.getString(R.string.groups_anyone_join));

@@ -377,7 +377,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="2dp"
+        android:layout_marginLeft="10dp"
         android:button="@drawable/language_selector_checkbox"
         android:buttonTint="@color/app_red"
         android:checked="false"

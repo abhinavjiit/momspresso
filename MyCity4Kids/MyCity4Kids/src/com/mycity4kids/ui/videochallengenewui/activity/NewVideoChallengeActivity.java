@@ -36,6 +36,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.VideoTrimmerActivity;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
@@ -85,6 +86,8 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     private int duration;
     private String comingFrom = "";
 
+    private CoordinatorLayout momVlogCoachMark;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,11 +106,13 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         thumbNail = (ImageView) findViewById(R.id.thumbNail);
         viewPager = (ViewPager) findViewById(R.id.id_viewpager);
         toolbar = (Toolbar) findViewById(R.id.id_toolbar);
+        momVlogCoachMark = findViewById(R.id.momVlogCoachMark);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbarTitleTextView.setText(getString(R.string.myprofile_section_videos_label));
+
 
         Intent intent = getIntent();
         Bundle extras = getIntent().getExtras();
@@ -131,6 +136,10 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                 saveTextView.setVisibility(View.VISIBLE);
             }
 
+        }
+        if (!SharedPrefUtils.getToastMomVlog(this, "Challenge")) {
+            ToastUtils.showToast(NewVideoChallengeActivity.this, "Tap to create");
+            SharedPrefUtils.setToastMomVlog(this, "Challenge", true);
         }
         mappedCategory = intent.getStringArrayListExtra("mappedCategory");
         if (mappedCategory != null && mappedCategory.size() != 0) {

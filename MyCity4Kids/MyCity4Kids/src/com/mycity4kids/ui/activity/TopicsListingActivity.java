@@ -89,7 +89,7 @@ public class TopicsListingActivity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     } else {
                         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }

@@ -361,6 +361,7 @@
     <color name="add_video_details.title_hint">#515556</color>
     <color name="add_video_details.title_text">#545454</color>
     <color name="add_video_details.mute_label">#545454</color>
+    <color name="add_video_details.mute_label_switch">#80545454</color>
     <color name="add_video_details.add_music">#507cbe</color>
     <color name="add_video_details.playing_audio_text">#545454</color>
     <color name="add_video_details.save_upload">#507cbe</color>

@@ -5,6 +5,9 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
@@ -132,6 +135,33 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
         saveUploadTextView.setOnClickListener(this);
 
+        ColorStateList thumbStates = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_enabled},
+                        //  new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        //  Color.BLUE,
+                        getColor(R.color.app_red),
+                        getColor(R.color.add_video_details_mute_label)
+                }
+        );
+        muteSwitch.setThumbTintList(thumbStates);
+        if (Build.VERSION.SDK_INT >= 24) {
+            ColorStateList trackStates = new ColorStateList(
+                    new int[][]{
+                            new int[]{-android.R.attr.state_enabled},
+                            new int[]{}
+                    },
+                    new int[]{
+                            getColor(R.color.app_red),
+                            getColor(R.color.add_video_details_mute_label)
+                    }
+            );
+            muteSwitch.setTrackTintList(trackStates);
+        }
+
         player.setCallback(this);
         player.setAutoPlay(true);
         // Sets the source to the HTTP URL held in the TEST_URL variable.
@@ -165,12 +195,12 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.muteVideoSwitch:
                 if (muteSwitch.isChecked()) {
-                    muteSwitch.setThumbResource(getResources().getColor(R.color.app_red));
+
                     muteSwitch.setTextColor(getResources().getColor(R.color.app_red));
                     final float volume = (float) (1 - (Math.log(MAX_VOLUME - 0) / Math.log(MAX_VOLUME)));
                     player.setVolume(volume, volume);
                 } else {
-                    muteSwitch.setThumbResource(getResources().getColor(R.color.mute_text_color));
+
                     muteSwitch.setTextColor(getResources().getColor(R.color.mute_text_color));
                     final float volume = (float) (1 - (Math.log(MAX_VOLUME - 99) / Math.log(MAX_VOLUME)));
                     player.setVolume(volume, volume);
@@ -186,28 +216,10 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     uploadVideo();
                 }
                 break;
-//            case R.id.removeCustomAudioTextView:
-//                restoreOriginalSound();
-//                removeCustomAudioTextView.setVisibility(View.GONE);
-//                audioTextView.setText(getString(R.string.add_video_details_add_music));
-//                audioTextView.setTextColor(ContextCompat.getColor(this, R.color.add_video_details_add_music));
-//                break;
+
         }
     }
 
-//    private void restoreOriginalSound() {
-//        player.stop();
-//        player.setSource(Uri.fromFile(new File(originalPath)));
-//        player.start();
-//    }
-
-//    private void openAudioFilePickerDialog() {
-//        AudioPickerDialogFragment filterTopicsDialogFragment = new AudioPickerDialogFragment();
-//        Bundle args = new Bundle();
-//        filterTopicsDialogFragment.setArguments(args);
-//        FragmentManager fm = getSupportFragmentManager();
-//        filterTopicsDialogFragment.show(fm, "Audio Picker");
-//    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void muteVideo() {

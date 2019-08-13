@@ -3,6 +3,7 @@ package com.mycity4kids.preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.transition.Scene;
 
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.VersionApiModel;
@@ -100,6 +101,7 @@ public class SharedPrefUtils {
     private static final String COACHMARK_DRAWER = "coachmarkDrawer";
     private static final String COACHMARK_HOME_SCREEN = "coachmarkHomeScreen";
     private static final String COACHMARK_PROFILE = "coachmarkProfile";
+    private static final String COACHMARK_MOMVLOG = "coachmarkMomVlog";
 
     private static final String CHANGE_CITY_FLAG = "changeCityFlag";
 
@@ -487,6 +489,9 @@ public class SharedPrefUtils {
             _editor.putBoolean(COACHMARK_HOME_SCREEN, flag);
         } else if ("Profile".equals(screenName)) {
             _editor.putBoolean(COACHMARK_PROFILE, flag);
+        } else if ("Mom_vlog".equals(screenName)) {
+            _editor.putBoolean(COACHMARK_MOMVLOG, flag);
+
         }
 
 
@@ -511,6 +516,10 @@ public class SharedPrefUtils {
             return _sharedPref.getBoolean(COACHMARK_HOME_SCREEN, false);
         } else if ("Profile".equals(screenName)) {
             return _sharedPref.getBoolean(COACHMARK_PROFILE, false);
+        } else if ("Mom_vlog".equals(screenName)) {
+            return _sharedPref.getBoolean(COACHMARK_MOMVLOG, false);
+
+
         }
         return true;
     }
@@ -833,5 +842,29 @@ public class SharedPrefUtils {
         //return (_sharedPref.getString("groupId-" + groupId, ""));
     }
 
+    public static void setToastMomVlog(Context pContext, String ScreenName, boolean flag) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        if (ScreenName.equals("Challenge")) {
+            _editor.putBoolean("Challenge", flag);
+        } else if (ScreenName.equals("momVlog")) {
+            _editor.putBoolean("momVlog", flag);
+
+        }
+        _editor.commit();
+    }
+
+    public static boolean getToastMomVlog(Context pContext, String ScreenName) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        if (ScreenName.equals("Challenge")) {
+            return (_sharedPref.getBoolean("Challenge", false));
+        } else if (ScreenName.equals("momVlog")) {
+            return (_sharedPref.getBoolean("momVlog", false));
+
+        }
+
+        return true;
+        //return (_sharedPref.getString("groupId-" + groupId, ""));
+    }
 
 }

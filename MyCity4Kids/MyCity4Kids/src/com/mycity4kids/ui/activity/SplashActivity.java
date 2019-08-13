@@ -185,6 +185,7 @@ public class SplashActivity extends BaseActivity {
                 SharedPrefUtils.setCoachmarksShownFlag(this, "topics", false);
                 SharedPrefUtils.setCoachmarksShownFlag(this, "topics_article", false);
                 SharedPrefUtils.setCoachmarksShownFlag(this, "article_details", false);
+                SharedPrefUtils.setCoachmarksShownFlag(this, "Mom_vlog", false);
                 SharedPrefUtils.setLocalizationFirstLaunch(this, false);
             }
 

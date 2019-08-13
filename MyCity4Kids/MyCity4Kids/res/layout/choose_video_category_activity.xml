@@ -30,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
                 android:elevation="5dp"
+
                 android:minHeight="?attr/actionBarSize"
                 app:theme="@style/ToolbarTheme"
                 app:titleTextAppearance="@style/ToolbarTheme.Title">
@@ -48,7 +49,8 @@
                         android:text="@string/choose_video_category"
                         android:textColor="@color/home.toolbar.titlecolor"
                         android:textSize="20sp"
-                        app:fontName="oswald_regular.ttf" />
+                        app:fontName="oswald_regular.ttf"
+                        app:textAllCaps="true" />
 
                     <com.mycity4kids.widget.CustomFontTextView
                         android:id="@+id/continueTextView"

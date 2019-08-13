@@ -2968,4 +2968,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     protected YouTubePlayer.Provider getYouTubePlayerProvider() {
         return youTubePlayerView;
     }
+
+
+
 }
+
+
