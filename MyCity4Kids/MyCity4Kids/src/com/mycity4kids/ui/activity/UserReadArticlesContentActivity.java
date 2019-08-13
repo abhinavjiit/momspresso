@@ -14,7 +14,6 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.ui.adapter.UserPublishedContentPagerAdapter;
 import com.mycity4kids.ui.adapter.UserReadArticlesPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 

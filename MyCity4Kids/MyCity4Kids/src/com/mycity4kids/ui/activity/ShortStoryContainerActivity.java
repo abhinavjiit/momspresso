@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.activity;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -19,7 +18,6 @@ import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.tts.ReadArticleService;
 import com.mycity4kids.ui.adapter.ShortStoryPagerAdapter;
 
 import java.util.ArrayList;

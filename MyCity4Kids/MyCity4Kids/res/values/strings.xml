@@ -4,6 +4,7 @@
     <string name="unknown_person">Unknown</string>
     <string name="resend_email" translatable="false">Resend Email</string>
 
+    <string name="azure_api_key">239ccdc75d084c5ba992836575821d56</string>
     <string name="facebook_app_id">206155642763202</string>
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
     <string name="ACCOUNT_KIT_CLIENT_TOKEN">089d77e1898bf3ef59048cc2fe58408b</string>
@@ -1295,5 +1296,10 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="join_dialog_heading">Write your first post</string>
     <string name="join_dialog_ask_question">Ask a question or share your thoughts</string>
 
+    <string name="user_funny_video.edit_title">Edit Title</string>
+    <string name="user_funny_video.vlog_title_hint">Your Vlog Title Here</string>
+    <string name="editor_saving">Saving &#8230;</string>
+    <string name="select_thumbnail">Select a thumbnail for your vlog</string>
+    <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
 </resources>
 

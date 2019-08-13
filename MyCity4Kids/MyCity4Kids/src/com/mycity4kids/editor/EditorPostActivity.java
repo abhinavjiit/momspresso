@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -64,6 +66,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -135,6 +138,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private ImageView closeEditorImageView;
     private TextView publishTextView;
     private TextView lastSavedTextView;
+    Runnable periodicUpdate = null;
+    private final MyHandler mHandler = new MyHandler(this);
+    private long lastUpdatedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,17 +160,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
         if (null != draftObject) {
             try {
-                Calendar calendar1 = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-                SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm", Locale.US);
-                calendar1.setTimeInMillis(draftObject.getUpdatedTime() * 1000);
-                Long diff = System.currentTimeMillis() - draftObject.getUpdatedTime() * 1000;
-                if (diff / (1000 * 60 * 60) > 24 && !sdf.format(System.currentTimeMillis()).equals(sdf.format((draftObject.getUpdatedTime() * 1000)))) {
-                    lastSavedTextView.setText(getString(R.string.editor_last_saved_on, DateTimeUtils.getDateFromTimestamp(draftObject.getUpdatedTime())));
-                } else {
-                    lastSavedTextView.setText(getString(R.string.editor_last_saved_at, sdf1.format(calendar1.getTime())));
-                }
-                lastSavedTextView.setVisibility(View.VISIBLE);
+                showDraftSaveStatus(draftObject.getUpdatedTime() * 1000);
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -184,6 +180,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     @Override
     public void onBackPressed() {
+        mHandler.removeCallbacksAndMessages(null);
         Log.e("title", mEditorFragment.getTitle().toString());
         Fragment fragment = getFragmentManager()
                 .findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
@@ -668,6 +665,83 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     }
 
+
+    public void saveDraftsAsync(String title, String body, String draftId1) {
+        if (mEditorFragment.getTitle().toString().isEmpty() && (mEditorFragment.getContent().toString().isEmpty())) {
+            return;
+        }
+        lastUpdatedTime = System.currentTimeMillis();
+        lastSavedTextView.setVisibility(View.VISIBLE);
+        lastSavedTextView.setText(getString(R.string.editor_saving));
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
+        if (StringUtils.isNullOrEmpty(body)) {
+            //dynamoDB can't handle empty spaces
+            body = " ";
+        }
+        if (draftId1.isEmpty()) {
+            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0", null);
+            call.enqueue(new Callback<ArticleDraftResponse>() {
+                @Override
+                public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                    if (response.body() != null && response.isSuccessful()) {
+                        ArticleDraftResponse responseModel = response.body();
+                        if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                            draftId = responseModel.getData().get(0).getResult().getId() + "";
+                            showDraftSaveStatus(lastUpdatedTime);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            });
+        } else {
+            SaveDraftRequest saveDraftRequest = new SaveDraftRequest();
+            saveDraftRequest.setTitle(title);
+            saveDraftRequest.setBody(body);
+            saveDraftRequest.setArticleType("0");
+            saveDraftRequest.setUserAgent1(AppConstants.ANDROID_NEW_EDITOR);
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDrafts(AppConstants.LIVE_URL + "v1/articles/" + draftId1, saveDraftRequest);
+            call.enqueue(new Callback<ArticleDraftResponse>() {
+                @Override
+                public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                    if (response.body() != null && response.isSuccessful()) {
+                        ArticleDraftResponse responseModel = response.body();
+                        if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                            draftId = responseModel.getData().get(0).getResult().getId() + "";
+                            showDraftSaveStatus(lastUpdatedTime);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                }
+            });
+        }
+
+    }
+
+    private void showDraftSaveStatus(long lastUpdatedTime) {
+        Calendar calendar1 = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm", Locale.US);
+        calendar1.setTimeInMillis(lastUpdatedTime);
+        Long diff = System.currentTimeMillis() - lastUpdatedTime;
+        if (diff / (1000 * 60 * 60) > 24 && !sdf.format(System.currentTimeMillis()).equals(sdf.format((lastUpdatedTime)))) {
+            lastSavedTextView.setText(getString(R.string.editor_last_saved_on, DateTimeUtils.getDateFromTimestamp(draftObject.getUpdatedTime())));
+        } else {
+            lastSavedTextView.setText(getString(R.string.editor_last_saved_at, sdf1.format(calendar1.getTime())));
+        }
+        lastSavedTextView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onSettingsClicked() {
         // TODO
@@ -722,13 +796,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             title = title.trim();
             content = draftObject.getBody();
             draftId = draftObject.getId();
-
             if (StringUtils.isNullOrEmpty(moderation_status)) {
                 moderation_status = "0";
             }
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
-
+            initiatePeriodicDraftSave();
         } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
             title = getIntent().getStringExtra("title");
             title = title.trim();
@@ -747,7 +820,19 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             mEditorFragment.setTitlePlaceholder(getIntent().getStringExtra(TITLE_PLACEHOLDER_PARAM));
             mEditorFragment.setContentPlaceholder(getIntent().getStringExtra(CONTENT_PLACEHOLDER_PARAM));
             mEditorFragment.setLocalDraft(isLocalDraft);
+            initiatePeriodicDraftSave();
         }
+    }
+
+    private void initiatePeriodicDraftSave() {
+        periodicUpdate = new Runnable() {
+            @Override
+            public void run() {
+                mHandler.postDelayed(periodicUpdate, 5000);
+                saveDraftsAsync(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
+            }
+        };
+        mHandler.postDelayed(periodicUpdate, 5000);
     }
 
     @Override
@@ -773,8 +858,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     public String titleFormatting(String title) {
         String htmlStrippedTitle = Html.fromHtml(title).toString();
         return htmlStrippedTitle;
-
-
     }
 
     public void sendUploadProfileImageRequest(File file) {
@@ -938,6 +1021,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     @Override
     public void onContinuePublish() {
+        mHandler.removeCallbacksAndMessages(null);
         PublishDraftObject publishObject = new PublishDraftObject();
 
         publishObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
@@ -962,6 +1046,19 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             intent_3.putExtra("draftItem", publishObject);
             intent_3.putExtra("from", "editor");
             startActivity(intent_3);
+        }
+    }
+
+    private static class MyHandler extends Handler {
+        private final WeakReference<EditorPostActivity> mActivity;
+
+        public MyHandler(EditorPostActivity activity) {
+            mActivity = new WeakReference<EditorPostActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+
         }
     }
 }

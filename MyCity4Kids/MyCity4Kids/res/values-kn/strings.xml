@@ -1196,4 +1196,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_button">Upload Video</string>
 
     <string name="join_group">ಗುಂಪು ಸೇರಿ</string>
+    <string name="user_funny_video.edit_title">Edit Title</string>
+    <string name="user_funny_video.vlog_title_hint">Your Vlog Title Here</string>
+    <string name="editor_saving">Saving &#8230;</string>
+    <string name="select_thumbnail">Select a thumbnail for your vlog</string>
+    <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
 </resources>
