@@ -136,6 +136,8 @@ public class MyFeedPollGenericRecyclerAdapter extends RecyclerView.Adapter<Recyc
             }
         } else if (postList.get(position).getType().equals("3")) {
             return POST_TYPE_AUDIO;
+        } else if (postList.get(position).getType().equals("5")) {
+            return POST_TYPE_TEXT;
         }
         return POST_TYPE_TEXT;
     }

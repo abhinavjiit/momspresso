@@ -97,6 +97,8 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
                 } else {
                     return POST_TYPE_TEXT_POLL;
                 }
+            } else if (postDataList.get(position).getType().equals("5")) {
+                return POST_TYPE_TEXT;
             }
         }
         return POST_TYPE_TEXT_POLL;
