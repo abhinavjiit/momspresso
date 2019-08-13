@@ -144,7 +144,9 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                     Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                     stopService(readArticleIntent);
                     Log.d("-----AZURE----", "STOPPING");
-                    m_syn.stopSound();
+                    if (m_syn != null) {
+                        m_syn.stopSound();
+                    }
                     playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                     playTtsTextView.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_ATOP);
                     if (isAudioPlaying) {
@@ -306,7 +308,9 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                         return;
                     }
                 } else {
-                    m_syn.stopSound();
+                    if (m_syn != null) {
+                        m_syn.stopSound();
+                    }
                     playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                     isAudioPlaying = false;
                     long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
@@ -531,7 +535,9 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                 stopService(readArticleIntent);
                 Log.d("-----AZURE----", "STOPPING");
-                m_syn.stopSound();
+                if (m_syn != null) {
+                    m_syn.stopSound();
+                }
                 playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                 if (isAudioPlaying) {
                     ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
@@ -566,7 +572,9 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
 
     public void checkAudioPlaying() {
-        m_syn.stopSound();
+        if (m_syn != null) {
+            m_syn.stopSound();
+        }
         Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
         stopService(readArticleIntent);
         playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
