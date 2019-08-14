@@ -642,7 +642,7 @@ public class BaseApplication extends Application {
 
     public Retrofit getGroupsRetrofit() {
         if (null == groupsRetrofit) {
-            createGroupRetrofitInstance(AppConstants.GROUPS_TEST_STAGING_URL);
+            createGroupRetrofitInstance(AppConstants.GROUPS_TEST_LIVE_URL);
         }
         return groupsRetrofit;
     }
