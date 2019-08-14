@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_dialog_bg">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/editImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_edit_title" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/editTitleLabelTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/editImageView"
+        android:text="@string/user_funny_video.edit_title"
+        android:textColor="@color/user_activities.toolbar.title"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <View
+        android:id="@+id/separatorView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/editTitleLabelTextView"
+        android:layout_marginTop="10dp"
+        android:background="@color/light_underline" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/vlogTitleEditView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/separatorView"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:gravity="top"
+        android:hint="@string/user_funny_video.vlog_title_hint"
+        android:minHeight="120dp"
+        android:textColor="@color/user_activities.toolbar.title"
+        android:textSize="18sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vlogTitleEditView"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/cancelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/verticalSeparatorView"
+            android:background="@drawable/mainprofile_thin_border"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/new_cancel"
+            android:textColor="@color/app_grey"
+            android:textSize="20sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/verticalSeparatorView"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/transparent" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/confirmTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/verticalSeparatorView"
+            android:background="@drawable/unfollow_topic_author_bg"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:text="@string/rewards_confirm"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
+
+</RelativeLayout>

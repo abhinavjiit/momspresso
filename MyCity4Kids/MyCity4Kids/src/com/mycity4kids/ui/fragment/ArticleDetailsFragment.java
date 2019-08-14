@@ -1089,6 +1089,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                     articleLanguageCategoryId = AppConstants.BANGLA_CATEGORYID;
                                     ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
                                     return;
+                                case AppConstants.TAMIL_CATEGORYID:
+                                    articleLanguageCategoryId = AppConstants.TAMIL_CATEGORYID;
+                                    ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
+                                    return;
+                                case AppConstants.TELUGU_CATEGORYID:
+                                    articleLanguageCategoryId = AppConstants.TELUGU_CATEGORYID;
+                                    ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
+                                    return;
                                 default:
                                     return;
                             }

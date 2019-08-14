@@ -22,9 +22,11 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.azuretts.Synthesizer;
+import com.mycity4kids.azuretts.Voice;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
@@ -68,6 +70,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private long audioStartTime = 0;
     private RelativeLayout guideOverlay, root;
     private Toolbar guidetoolbar;
+    private Synthesizer m_syn;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -140,6 +143,10 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                     Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                     stopService(readArticleIntent);
+                    Log.d("-----AZURE----", "STOPPING");
+                    if (m_syn != null) {
+                        m_syn.stopSound();
+                    }
                     playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                     playTtsTextView.setColorFilter(getResources().getColor(R.color.app_red), PorterDuff.Mode.SRC_ATOP);
                     if (isAudioPlaying) {
@@ -179,8 +186,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         Intent readArticleIntent = new Intent(this, ReadArticleService.class);
         startService(readArticleIntent);
-
-
     }
 
     @Override
@@ -278,9 +283,44 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 finish();
                 break;
             case R.id.playTtsTextView:
+                ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+                if (!isAudioPlaying) {
+                    if (AppConstants.TAMIL_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId()) || AppConstants.TELUGU_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
+                        if (m_syn == null) {
+                            m_syn = new Synthesizer(getString(R.string.azure_api_key));
+                        }
+                        m_syn.SetServiceStrategy(Synthesizer.ServiceStrategy.AlwaysService);
+                        Voice voice;
+                        if (AppConstants.TAMIL_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
+                            voice = new Voice("ta-IN", "Microsoft Server Speech Text to Speech Voice (ta-IN, Valluvar)", Voice.Gender.Male, true);
+                        } else {
+                            voice = new Voice("te-IN", "Microsoft Server Speech Text to Speech Voice (te-IN, Chitra)", Voice.Gender.Female, true);
+                        }
+                        m_syn.SetVoice(voice, null);
+                        String playContent = articleDetailsFragment.getArticleContent();
+                        m_syn.SpeakToAudio(playContent);
+                        playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_stop_tts));
+                        Utils.pushPlayArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
+                                articleDetailsFragment.getGTMLanguage());
+                        audioStartTime = System.currentTimeMillis();
+                        isAudioPlaying = true;
+                        showToast(getString(R.string.audio_delay_msg));
+                        return;
+                    }
+                } else {
+                    if (m_syn != null) {
+                        m_syn.stopSound();
+                    }
+                    playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
+                    isAudioPlaying = false;
+                    long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
+                    Utils.pushStopArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
+                            articleDetailsFragment.getGTMLanguage(), "" + duration);
+                    return;
+                }
+
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 && !isAudioPlaying) {
                     Intent readArticleIntent = new Intent(this, ReadArticleService.class);
-                    ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
                     String playContent = articleDetailsFragment.getArticleContent();
                     if (StringUtils.isNullOrEmpty(playContent)) {
                         showToast(getString(R.string.ad_tts_toast_unplayable_article));
@@ -299,8 +339,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                     stopService(readArticleIntent);
                     playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                     isAudioPlaying = false;
-
-                    ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
                     long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
                     Utils.pushStopArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
                             articleDetailsFragment.getGTMLanguage(), "" + duration);
@@ -496,6 +534,10 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                 stopService(readArticleIntent);
+                Log.d("-----AZURE----", "STOPPING");
+                if (m_syn != null) {
+                    m_syn.stopSound();
+                }
                 playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                 if (isAudioPlaying) {
                     ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
@@ -530,6 +572,9 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
 
     public void checkAudioPlaying() {
+        if (m_syn != null) {
+            m_syn.stopSound();
+        }
         Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
         stopService(readArticleIntent);
         playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));

@@ -1,11 +1,8 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.SaveDraftRequest;
-import com.mycity4kids.models.response.AllDraftsResponse;
-import com.mycity4kids.models.response.BaseResponse;
-import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.ArticleDraftResponse;
-import com.mycity4kids.models.response.ShortStoryDetailResult;
+import com.mycity4kids.models.response.BaseResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

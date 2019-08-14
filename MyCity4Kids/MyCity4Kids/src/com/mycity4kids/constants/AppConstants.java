@@ -458,6 +458,13 @@ public class AppConstants {
     public static final String HINDI_CATEGORYID = "category-1515d3c9adb249988a136bdbfc8f0017";
     public static final String BANGLA_CATEGORYID = "category-5ad20fb85f7c4a84b66b8d6993dbad9f";
     public static final String MARATHI_CATEGORYID = "category-bd1d0a1ab9c0436d97f78d90a115ee71";
+    public static final String TAMIL_CATEGORYID = "category-093a16d571584b67a5de83f793581bbe";
+    public static final String TELUGU_CATEGORYID = "category-6063f21fed494fdea6e9f57069d3e9db";
+    public static final String KANNADA_CATEGORYID = "category-725eea1950f449d7ac9b2a76fa2dc061";
+    public static final String MALAYALAM_CATEGORYID = "category-71a035cdfafb455ab231b40df7ed06b9";
+    public static final String GUJRATI_CATEGORYID = "category-10295b47d84743a68f4870134a68017d";
+    public static final String PUNJABI_CATEGORYID = "category-b2a14f747d8647a7ae4049e755e161fd";
+
     public static final String SPONSORED_CATEGORYID = "category-51a2ea215c634753ac6a9aa377deae0b";
     public static final String SHORT_STORY_CATEGORYID = "category-ce8bdcadbe0548a9982eec4e425a0851";
     public static final String DEEPLINK_EDITOR_URL = "mc4k://www.mycity4kids.com/editor";
@@ -576,7 +583,7 @@ public class AppConstants {
     public static final String SEARCH_ITEM_TYPE_VIDEO = "video";
     public static final int MAX_ALLOWED_CHILD_COUNT = 8;
 
-    public static final String DEBUGGING_USER_ID = "4347159ff74b46e4ae43df01a0b405c0";
+    public static final String DEBUGGING_USER_ID = "6f57d7cb01fa46c89bf85e3d2ade7de3";
 
     public static final String FB_AD_PLACEMENT_ARTICLE_LISTING = "206155642763202_1712332575478827";
     public static final String FB_AD_PLACEMENT_USER_ARTICLE = "206155642763202_1712333168812101";

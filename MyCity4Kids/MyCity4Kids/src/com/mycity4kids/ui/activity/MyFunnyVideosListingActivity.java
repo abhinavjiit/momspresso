@@ -53,7 +53,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 13/1/17.
  */
-public class MyFunnyVideosListingActivity extends BaseActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class MyFunnyVideosListingActivity extends BaseActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, MyFunnyVideosListingAdapter.IEditVlog {
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
@@ -64,14 +64,14 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
     MyFunnyVideosListingAdapter articlesListingAdapter;
     ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
 
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    //    private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
-//    private FloatingActionsMenu fabMenu;
+    //    private FloatingActionsMenu fabMenu;
     private ListView listView;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private Toolbar mToolbar;
-//    private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
+    //    private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
 //    private FrameLayout frameLayout;
     private View rootLayout;
     private ImageView searchAllImageView;
@@ -168,7 +168,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
 
 //        swipeRefreshLayout.setOnRefreshListener(this);
 
-        articlesListingAdapter = new MyFunnyVideosListingAdapter(this);
+        articlesListingAdapter = new MyFunnyVideosListingAdapter(this, this);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -519,5 +519,10 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    public void onVlogEdit(int position) {
+
     }
 }

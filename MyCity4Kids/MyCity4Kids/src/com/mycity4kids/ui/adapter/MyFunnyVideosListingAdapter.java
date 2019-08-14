@@ -15,12 +15,7 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
-import com.mycity4kids.ui.activity.ParallelFeedActivity;
-import com.mycity4kids.ui.activity.UserReadArticlesContentActivity;
-import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -31,6 +26,7 @@ import java.util.ArrayList;
 public class MyFunnyVideosListingAdapter extends BaseAdapter {
 
     private final static String VIDEO_PUBLISHED_STATUS = "3";
+    private final IEditVlog iEditVlog;
     private ArrayList<VlogsListingAndDetailResult> mArticleListData;
     private Context mContext;
     private LayoutInflater mInflator;
@@ -38,11 +34,12 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
 
     private final float density;
 
-    public MyFunnyVideosListingAdapter(Context pContext) {
+    public MyFunnyVideosListingAdapter(Context pContext, IEditVlog iEditVlog) {
 
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
+        this.iEditVlog = iEditVlog;
     }
 
     public void setListData(ArrayList<VlogsListingAndDetailResult> mParentingLists) {
@@ -81,6 +78,7 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
                 holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
                 holder.shareImageView = (ImageView) view.findViewById(R.id.shareImageView);
                 holder.dateTextView = (TextView) view.findViewById(R.id.dateTextView);
+                holder.vlogOptionImageView = (ImageView) view.findViewById(R.id.vlogOptionImageView);
 
                 view.setTag(holder);
             } else {
@@ -93,152 +91,35 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
                 holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitleSlug());
             }
 
-            if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getUrl())) {
-                Picasso.with(mContext).load(R.drawable.default_article)
-                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
-            } else {
-                Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURL(articleDataModelsNew.get(position).getUrl()))
-                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+            try {
+                if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getUrl())) {
+                    Picasso.with(mContext).load(R.drawable.default_article)
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+                } else {
+                    Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail())
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
             holder.dateTextView.setText(mContext.getString(R.string.user_funny_video_published_on, DateTimeUtils.getDateFromTimestamp(Long.parseLong(articleDataModelsNew.get(position).getPublished_time()))));
 
             if (VIDEO_PUBLISHED_STATUS.equals(articleDataModelsNew.get(position).getPublication_status())) {
                 holder.shareImageView.setVisibility(View.VISIBLE);
+                holder.vlogOptionImageView.setVisibility(View.VISIBLE);
             } else {
                 holder.shareImageView.setVisibility(View.GONE);
+                holder.vlogOptionImageView.setVisibility(View.GONE);
             }
 
-           /* holder.articleImageView.setOnClickListener(view1 -> {
-                Intent intent = new Intent(mContext, ParallelFeedActivity.class);
-
-
-                switch (articleDataModelsNew.get(position).getPublication_status()) {
-                    case AppConstants.VIDEO_STATUS_DRAFT: {
-
-                        ((UserReadArticlesContentActivity) mContext).showToast("This video is draft");
-                        break;
-                    }
-                    case AppConstants.VIDEO_STATUS_APPROVAL_PENDING: {
-
-                        ((UserReadArticlesContentActivity) mContext).showToast("This video is Pending For Approval. Playing is disabled");
-                        break;
-                    }
-                    case AppConstants.VIDEO_STATUS_APPROVAL_CANCELLED: {
-
-                        ((UserReadArticlesContentActivity) mContext).showToast("This video's approval has been cancelled. Playing is disabled");
-                        break;
-                    }
-                    case AppConstants.VIDEO_STATUS_PUBLISHED: {
-//                            showToast("This video is Published");
-                        intent.putExtra(Constants.VIDEO_ID, articleDataModelsNew.get(position).getId());
-                        intent.putExtra(Constants.STREAM_URL, articleDataModelsNew.get(position).getUrl());
-                        intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getAuthor().getId());
-                        intent.putExtra(Constants.FROM_SCREEN, "My Funny Videos Screen");
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "My Funny Videos");
-                        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                        intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getAuthor().getId() + "~" + articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName());
-                        mContext.startActivity(intent);
-                        break;
-                    }
-                    case AppConstants.VIDEO_STATUS_UNPUBLISHED: {
-
-                        ((UserReadArticlesContentActivity) mContext).showToast("This video has been unpublished");
-                        break;
-                    }
-                }
-
-            });*/
-          /*  holder.txvArticleTitle.setOnClickListener(new View.OnClickListener() {
+            holder.vlogOptionImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext, ParallelFeedActivity.class);
-
-
-                    switch (articleDataModelsNew.get(position).getPublication_status()) {
-                        case AppConstants.VIDEO_STATUS_DRAFT: {
-
-                            ((UserReadArticlesContentActivity) mContext).showToast("This video is draft");
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_APPROVAL_PENDING: {
-
-                            ((UserReadArticlesContentActivity) mContext).showToast("This video is Pending For Approval. Playing is disabled");
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_APPROVAL_CANCELLED: {
-
-                            ((UserReadArticlesContentActivity) mContext).showToast("This video's approval has been cancelled. Playing is disabled");
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_PUBLISHED: {
-//                            showToast("This video is Published");
-                            intent.putExtra(Constants.VIDEO_ID, articleDataModelsNew.get(position).getId());
-                            intent.putExtra(Constants.STREAM_URL, articleDataModelsNew.get(position).getUrl());
-                            intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getAuthor().getId());
-                            intent.putExtra(Constants.FROM_SCREEN, "My Funny Videos Screen");
-                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "My Funny Videos");
-                            intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                            intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getAuthor().getId() + "~" + articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName());
-                            mContext.startActivity(intent);
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_UNPUBLISHED: {
-
-                            ((UserReadArticlesContentActivity) mContext).showToast("This video has been unpublished");
-                            break;
-                        }
-                    }
-
+                    iEditVlog.onVlogEdit(position);
                 }
             });
-
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-
-                    Intent intent = new Intent(mContext, ParallelFeedActivity.class);
-
-
-                    switch (articleDataModelsNew.get(position).getPublication_status()) {
-                        case AppConstants.VIDEO_STATUS_DRAFT: {
-
-                            ((UserReadArticlesContentActivity) mContext).showToast("This video is draft");
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_APPROVAL_PENDING: {
-
-                            ((UserReadArticlesContentActivity) mContext).showToast("This video is Pending For Approval. Playing is disabled");
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_APPROVAL_CANCELLED: {
-
-                            ((UserReadArticlesContentActivity) mContext).showToast("This video's approval has been cancelled. Playing is disabled");
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_PUBLISHED: {
-//                            showToast("This video is Published");
-                            intent.putExtra(Constants.VIDEO_ID, articleDataModelsNew.get(position).getId());
-                            intent.putExtra(Constants.STREAM_URL, articleDataModelsNew.get(position).getUrl());
-                            intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getAuthor().getId());
-                            intent.putExtra(Constants.FROM_SCREEN, "My Funny Videos Screen");
-                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "My Funny Videos");
-                            intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                            intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getAuthor().getId() + "~" + articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName());
-                            mContext.startActivity(intent);
-                            break;
-                        }
-                        case AppConstants.VIDEO_STATUS_UNPUBLISHED: {
-
-                            ((UserReadArticlesContentActivity) mContext).showToast("This video has been unpublished");
-                            break;
-                        }
-                    }
-
-
-                }
-            });*/
 
             holder.shareImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -271,7 +152,12 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
         ImageView articleImageView;
         TextView dateTextView;
         ImageView shareImageView;
+        ImageView vlogOptionImageView;
         RelativeLayout rootView;
+    }
+
+    public interface IEditVlog {
+        void onVlogEdit(int position);
     }
 
 }

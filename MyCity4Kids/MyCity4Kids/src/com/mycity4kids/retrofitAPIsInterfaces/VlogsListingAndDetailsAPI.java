@@ -6,7 +6,9 @@ import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.ArticleReadTimeRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
+import com.mycity4kids.models.request.GroupNotificationToggleRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
+import com.mycity4kids.models.request.UpdateVlogTitleRequest;
 import com.mycity4kids.models.request.UploadVideoRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
@@ -25,6 +27,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -44,6 +47,10 @@ public interface VlogsListingAndDetailsAPI {
 
     @PUT("v2/videos/{videoId}/views/")
     Call<ResponseBody> updateViewCount(@Path("videoId") String videoId);
+
+    @PATCH("/v2/videos/{videoId}")
+    Call<VlogsDetailResponse> updateVideoTitle(@Path("videoId") String videoId,
+                                               @Body UpdateVlogTitleRequest body);
 
     @GET("v2/videos")
     Call<VlogsListingResponse> getPublishedVlogs(@Query("user_id") String userId,

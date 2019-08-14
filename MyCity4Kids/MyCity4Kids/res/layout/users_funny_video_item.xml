@@ -98,9 +98,7 @@
         android:id="@+id/commentCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txvAuthorName"
         android:layout_alignTop="@+id/viewCountTextView"
-
         android:layout_alignBottom="@+id/viewCountTextView"
         android:layout_marginLeft="11dp"
         android:layout_toRightOf="@+id/viewCountTextView"
@@ -131,9 +129,7 @@
         android:id="@+id/recommendCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txvAuthorName"
         android:layout_alignTop="@+id/viewCountTextView"
-
         android:layout_alignBottom="@+id/viewCountTextView"
         android:layout_marginLeft="11dp"
         android:layout_toRightOf="@+id/commentCountTextView"
@@ -159,6 +155,18 @@
         android:background="@drawable/unfollow_topic_author_bg"
         android:padding="6dp"
         android:src="@drawable/ic_share_white" />
+
+    <ImageView
+        android:id="@+id/vlogOptionImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="15dp"
+        android:src="@drawable/ic_more_vert_black_24dp"
+        android:visibility="invisible" />
 
     <View
         android:layout_width="match_parent"

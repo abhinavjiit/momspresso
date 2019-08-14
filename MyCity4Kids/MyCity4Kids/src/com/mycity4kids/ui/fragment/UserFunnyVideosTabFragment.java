@@ -36,7 +36,6 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.activity.UserPublishedContentActivity;
@@ -56,7 +55,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by hemant on 13/1/17.
  */
-public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, MyFunnyVideosListingAdapter.IEditVlog {
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
@@ -108,13 +107,11 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
 
         progressBar.setVisibility(View.VISIBLE);
 
-//        view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
-
         articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
         nextPageNumber = 1;
         hitArticleListingApi();
 
-        articlesListingAdapter = new MyFunnyVideosListingAdapter(getActivity());
+        articlesListingAdapter = new MyFunnyVideosListingAdapter(getActivity(), this);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -239,11 +236,6 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             progressBar.setVisibility(View.INVISIBLE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
-          /*  if (isAdded())
-                if (!isLastPageReached && !isReuqestRunning) {
-                    ((UserPublishedContentActivity) getActivity()).showToast(getString(R.string.went_wrong));
-
-                }*/
         }
     };
 
@@ -456,5 +448,23 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    public void onVlogEdit(int position) {
+        EditVlogTitleDialogFragment editVlogTitleDialogFragment = new EditVlogTitleDialogFragment();
+        FragmentManager fm = getChildFragmentManager();
+        Bundle _args = new Bundle();
+        _args.putInt("position", position);
+        _args.putString("vlogTitle", articleDataModelsNew.get(position).getTitle());
+        _args.putString("videoId", articleDataModelsNew.get(position).getId());
+        editVlogTitleDialogFragment.setArguments(_args);
+        editVlogTitleDialogFragment.setCancelable(true);
+        editVlogTitleDialogFragment.show(fm, "Choose video option");
+    }
+
+    public void updateTitleInList(int position, String title) {
+        articleDataModelsNew.get(position).setTitle(title);
+        articlesListingAdapter.notifyDataSetChanged();
     }
 }
