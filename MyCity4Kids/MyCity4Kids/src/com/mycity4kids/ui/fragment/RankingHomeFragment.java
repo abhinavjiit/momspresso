@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
-import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.RankingPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 

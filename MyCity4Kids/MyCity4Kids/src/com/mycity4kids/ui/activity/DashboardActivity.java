@@ -201,7 +201,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout drawerTopContainer, drawerContainer, rewardsTextView;
     private RelativeLayout drawerSettingsContainer;
     private TextView homeTextView;
-    private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, drawerProfileCoachmark,
+    private RelativeLayout homeCoachmark, exploreCoachmark, createCoachmark, vlogsCoachmark, drawerProfileCoachmark,
             drawerSettingsCoachmark, menuCoachmark, languageLayout, drawerMyMoneyCoachmark, drawerMyMoneyContainer;
     private RecyclerView draftsRecyclerView;
     private ShimmerFrameLayout draftsShimmerLayout;
@@ -326,6 +326,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         homeCoachmark = (RelativeLayout) findViewById(R.id.homeCoachmark);
         exploreCoachmark = (RelativeLayout) findViewById(R.id.exploreCoachmark);
         createCoachmark = (RelativeLayout) findViewById(R.id.createCoachmark);
+        vlogsCoachmark = (RelativeLayout) findViewById(R.id.vlogsCoachmark);
         menuCoachmark = (RelativeLayout) findViewById(R.id.menuCoachmark);
         drawerProfileCoachmark = (RelativeLayout) findViewById(R.id.drawerProfileCoachmark);
         drawerSettingsCoachmark = (RelativeLayout) findViewById(R.id.drawerSettingsCoachmark);
@@ -346,6 +347,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         languageLayout.setOnClickListener(this);
         exploreCoachmark.setOnClickListener(this);
         createCoachmark.setOnClickListener(this);
+        vlogsCoachmark.setOnClickListener(this);
         menuCoachmark.setOnClickListener(this);
         drawerProfileCoachmark.setOnClickListener(this);
         drawerSettingsCoachmark.setOnClickListener(this);
@@ -1876,6 +1878,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.createCoachmark: {
                 createCoachmark.setVisibility(View.GONE);
+                vlogsCoachmark.setVisibility(View.VISIBLE);
+            }
+            break;
+            case R.id.vlogsCoachmark: {
+                vlogsCoachmark.setVisibility(View.GONE);
                 groupCoachmark.setVisibility(View.VISIBLE);
             }
             break;

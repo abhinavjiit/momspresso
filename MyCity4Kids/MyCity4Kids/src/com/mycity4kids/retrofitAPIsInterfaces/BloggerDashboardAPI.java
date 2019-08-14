@@ -9,7 +9,6 @@ import com.mycity4kids.models.response.UserDetailResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -26,7 +25,7 @@ public interface BloggerDashboardAPI {
     Call<ResponseBody> getPublishedArticleList(@Query("userId") String userId,
                                                @Query("page") String page);
 
-    @GET("v1/users/dashboard/{userId}")
+    @GET("v2/users/dashboard/{userId}")
     Call<UserDetailResponse> getBloggerData(@Path("userId") String userId);
 
     @GET

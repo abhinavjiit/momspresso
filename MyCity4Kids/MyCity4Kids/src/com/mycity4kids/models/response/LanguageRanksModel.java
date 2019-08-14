@@ -5,6 +5,7 @@ package com.mycity4kids.models.response;
  */
 public class LanguageRanksModel implements Comparable<LanguageRanksModel> {
 
+    private String langValue;
     private String langKey;
     private int rank;
 
@@ -22,6 +23,14 @@ public class LanguageRanksModel implements Comparable<LanguageRanksModel> {
 
     public void setRank(int rank) {
         this.rank = rank;
+    }
+
+    public String getLangValue() {
+        return langValue;
+    }
+
+    public void setLangValue(String langValue) {
+        this.langValue = langValue;
     }
 
     @Override

@@ -685,6 +685,7 @@
     <string name="guide.share_like_bookmark_tour">इस पोस्ट को शेयर, बुकमार्क या पसंद करे</string>
     <string name="guide.listen_tour">इस ब्लॉग को सुनने के लिए यहां क्लिक करें</string>
     <string name="guide.groups_tour">सपोर्ट ग्रुप्स में शामिल हों। सवाल पूछें (यहां तक ​​कि पहचान गुप्त रख कर भी ) \nऔर सपोर्ट ग्रुप से जवाब पाएं ।</string>
+    <string name="guide.vlogs_tour">अपने पसंदीदा मॉम वी-लॉग देखें।\n साप्ताहिक वीडियो चैलेंजस में भाग लें।</string>
 
     <string name="author_type.blogger">ब्लॉगर्स</string>
     <string name="author_type.editor">एडिटर्स</string>
@@ -1159,7 +1160,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="blog_post_group">Write something\nAsk a question or share your thought</string>
 
     <string name="mom_vlog_banner_title">मॉम व्हिलॉग चॅलेंज अलर्ट</string>
-    <string name="mom_vlog_banner_subtitle">जिंका रु. १०,०००/_ ची बक्षिसं</string>
+    <string name="mom_vlog_banner_subtitle">और जीतें 10000 रुपए तक के पुरस्कार</string>
     <string name="mom_vlog_banner_button">वीडियो अपलोड करें</string>
 
     //Join group dialog screen

@@ -688,6 +688,7 @@
     <string name="guide.share_like_bookmark_tour">ಹಂಚಿಕೊಳ್ಳಿ, ಬುಕ್ಮಾರ್ಕ್ ಮತ್ತು ಈ ಪೋಸ್ಟ್ ಲವ್ ಮಾಡಿ</string>
     <string name="guide.listen_tour">ಈ ಬ್ಲಾಗ್ ಅನ್ನು ಕೇಳಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ</string>
     <string name="guide.groups_tour">ಬೆಂಬಲ ಗುಂಪುಗಳು ಸೇರಿ. ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ (ಅನಾಮಧೇಯವಾಗಿ ಸಹ) ಮತ್ತು ಸಮುದಾಯದಿಂದ ಉತ್ತರಗಳನ್ನು ಪಡೆಯಿರಿ.</string>
+    <string name="guide.vlogs_tour">ನಿಮಗೆ ಇಷ್ಟವಾಗುವ ಮಾಮ್ ವ್ಲೋಗ್ಸ ಗಳನ್ನು ವೀಕ್ಷಿಸಿ.\n ಪ್ರತಿ ವಾರದ ವಿಡಿಯೋ ಚಾಲೆಂಜ್ ನಲ್ಲಿ ಭಾಗವಹಿಸಿ. </string>
 
     <string name="author_type.blogger">ಬ್ಲಾಗರ್</string>
     <string name="author_type.editor">ಸಂಪಾದಕ</string>

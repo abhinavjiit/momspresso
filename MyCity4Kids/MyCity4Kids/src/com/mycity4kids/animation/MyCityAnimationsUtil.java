@@ -7,16 +7,13 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.ui.activity.RankingActivity;
-import com.mycity4kids.utils.AppUtils;
 
 import java.util.ArrayList;
 
@@ -39,18 +36,10 @@ public class MyCityAnimationsUtil {
         view.setVisibility(View.INVISIBLE);    //Visible or invisible by default - this will apply when the animation ends
         if (mContext instanceof RankingActivity) {
             ((TextView) ((RelativeLayout) view).getChildAt(1)).setText("" + arr.get(index).getRank());
-            if (AppConstants.LANG_KEY_ENGLISH.equals(arr.get(index).getLangKey())) {
-                ((TextView) ((RelativeLayout) view).getChildAt(3)).setText(mContext.getString(R.string.ranking_in) + " ENGLISH");
-            } else {
-                ((TextView) ((RelativeLayout) view).getChildAt(3)).setText(mContext.getString(R.string.ranking_in) + " " + AppUtils.getLangModelForLanguage(mContext, arr.get(index).getLangKey()).getDisplay_name());
-            }
+            ((TextView) ((RelativeLayout) view).getChildAt(3)).setText(mContext.getString(R.string.ranking_in) + " " + arr.get(index).getLangValue().toUpperCase());
         } else {
             ((TextView) ((LinearLayout) view).getChildAt(0)).setText("" + arr.get(index).getRank());
-            if (AppConstants.LANG_KEY_ENGLISH.equals(arr.get(index).getLangKey())) {
-                ((TextView) ((LinearLayout) view).getChildAt(1)).setText(mContext.getString(R.string.blogger_profile_rank_in) + " ENGLISH");
-            } else {
-                ((TextView) ((LinearLayout) view).getChildAt(1)).setText(mContext.getString(R.string.blogger_profile_rank_in) + " " + AppUtils.getLangModelForLanguage(mContext, arr.get(index).getLangKey()).getDisplay_name());
-            }
+            ((TextView) ((LinearLayout) view).getChildAt(1)).setText(mContext.getString(R.string.blogger_profile_rank_in) + " " + arr.get(index).getLangValue().toUpperCase());
         }
 
 
