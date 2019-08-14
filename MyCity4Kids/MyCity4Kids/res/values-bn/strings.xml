@@ -1158,10 +1158,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_subtitle">পুরস্কার মূল্য- ১০,০০০ টাকা</string>
     <string name="mom_vlog_banner_button">ভিডিও আপলোড করুন</string>
 
+    //Join group dialog screen
+    <string name="join_dialog_heading">আপনার প্রথম পোস্টটি লিখুন</string>
+    <string name="join_dialog_ask_question">এখানে প্রশ্ন করুন বা আপনার ভাবনা ভাগ করে নিন</string>
+
     <string name="join_group">গ্রুপে যোগদান করুন</string>
-    <string name="user_funny_video.edit_title">Edit Title</string>
-    <string name="user_funny_video.vlog_title_hint">Your Vlog Title Here</string>
-    <string name="editor_saving">Saving &#8230;</string>
-    <string name="select_thumbnail">Select a thumbnail for your vlog</string>
+    <string name="user_funny_video.edit_title">টাইটেল এডিট করুন</string>
+    <string name="user_funny_video.vlog_title_hint">আপনার ভিলগে\'র টাইটেল লিখুন</string>
+    <string name="editor_saving">সংরক্ষিত হচ্ছে &#8230;</string>
+    <string name="select_thumbnail">আপনার ভিলগ\'টির জন্য একটি  thumbnail চিহ্নিত করুন</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
 </resources>

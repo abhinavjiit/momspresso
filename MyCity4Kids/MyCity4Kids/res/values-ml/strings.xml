@@ -1201,10 +1201,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_subtitle">10,000 രൂപ വിലമതിക്കുന്ന സമ്മാനങ്ങൾ</string>
     <string name="mom_vlog_banner_button">വീഡിയോ അപ്‌ലോഡുചെയ്യുക</string>
 
+    //Join group dialog screen
+    <string name="join_dialog_heading">നിങ്ങളുടെ ആദ്യ കുറിപ്പ് എഴുതുക</string>
+    <string name="join_dialog_ask_question"> ഒരു ചോദ്യം ചോദിക്കുക അല്ലെങ്കിൽ നിങ്ങളുടെ ചിന്തകൾ പങ്ക് വയ്ക്കുക</string>
+
     <string name="join_group">ഗ്രൂപ്പിൽ ചേരൂ</string>
-    <string name="user_funny_video.edit_title">Edit Title</string>
-    <string name="user_funny_video.vlog_title_hint">Your Vlog Title Here</string>
-    <string name="editor_saving">Saving &#8230;</string>
-    <string name="select_thumbnail">Select a thumbnail for your vlog</string>
+    <string name="user_funny_video.edit_title">ശീർഷകം തിരുത്തുക</string>
+    <string name="user_funny_video.vlog_title_hint">നിങ്ങളുടെ വ്ലോഗ് ശീർഷകം ഇവിടെ</string>
+    <string name="editor_saving">സേവ് ചെയ്യുന്നു &#8230;</string>
+    <string name="select_thumbnail">നിങ്ങളുടെ വ്ലോഗിനായി ഒരു ലഘുചിത്രം തിരഞ്ഞെടുക്കുക</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
 </resources>

@@ -1155,10 +1155,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_subtitle">आणि जिंका रु. १०,०००/_ ची बक्षीसे!</string>
     <string name="mom_vlog_banner_button">अपलोड तुमचा व्हिडिओ</string>
 
+    //Join group dialog screen
+    <string name="join_dialog_heading">तुमची पहिली पोस्ट लिहा.</string>
+    <string name="join_dialog_ask_question">प्रश्न विचारा किंवा तुमचे विचार शेअर करा.</string>
+
     <string name="join_group">Join Group</string>
-    <string name="user_funny_video.edit_title">Edit Title</string>
-    <string name="user_funny_video.vlog_title_hint">Your Vlog Title Here</string>
-    <string name="editor_saving">Saving &#8230;</string>
-    <string name="select_thumbnail">Select a thumbnail for your vlog</string>
+    <string name="user_funny_video.edit_title">टायटल संपादित  करा</string>
+    <string name="user_funny_video.vlog_title_hint">तुमच्या व्हिलॉग चे टायटल येथे आहे.</string>
+    <string name="editor_saving">सेव्हिंग &#8230;</string>
+    <string name="select_thumbnail">व्हिलॉग साठी छोटी प्रतिमा निवडा.</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
 </resources>

@@ -1162,10 +1162,14 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_subtitle">जिंका रु. १०,०००/_ ची बक्षिसं</string>
     <string name="mom_vlog_banner_button">वीडियो अपलोड करें</string>
 
+    //Join group dialog screen
+    <string name="join_dialog_heading">अपनी पहली पोस्ट लिखें</string>
+    <string name="join_dialog_ask_question">प्रश्न पूछें या अपने विचार शेयर करें</string>
+
     <string name="join_group">ग्रुप में शामिल हों</string>
-    <string name="user_funny_video.edit_title">Edit Title</string>
-    <string name="user_funny_video.vlog_title_hint">Your Vlog Title Here</string>
-    <string name="editor_saving">Saving &#8230;</string>
-    <string name="select_thumbnail">Select a thumbnail for your vlog</string>
+    <string name="user_funny_video.edit_title">टाइटल एडिट करें</string>
+    <string name="user_funny_video.vlog_title_hint">अपने  व्लॉग का टाइटल यहाँ लिखें</string>
+    <string name="editor_saving">आपकी पोस्ट सेव हो रही है&#8230;</string>
+    <string name="select_thumbnail">अपने व्लॉग के लिए एक थंबनेल का चुनाव करें</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
 </resources>

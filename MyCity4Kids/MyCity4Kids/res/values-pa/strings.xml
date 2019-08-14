@@ -1235,11 +1235,15 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="mom_vlog_banner_subtitle">Prizes worth Rs 10,000</string>
     <string name="mom_vlog_banner_button">Upload Video</string>
 
+    //Join group dialog screen
+    <string name="join_dialog_heading">ਆਪਣੀ ਪਹਿਲੀ ਪੋਸਟ ਲਿਖੋ</string>
+    <string name="join_dialog_ask_question">ਕੋਈ ਪ੍ਰਸ਼ਨ ਪੁੱਛੋ ਜਾਂ ਆਪਣੇ ਵਿਚਾਰ ਸਾਂਝੇ ਕਰੋ</string>
+
     <string name="join_group">ਗਰੁਪ ਨਾਲ ਜੁੜੋ</string>
-    <string name="user_funny_video.edit_title">Edit Title</string>
-    <string name="user_funny_video.vlog_title_hint">Your Vlog Title Here</string>
-    <string name="editor_saving">Saving &#8230;</string>
-    <string name="select_thumbnail">Select a thumbnail for your vlog</string>
+    <string name="user_funny_video.edit_title">ਟਾਈਟਲ ਚ ਬਦਲਾਵ ਕਰੋ</string>
+    <string name="user_funny_video.vlog_title_hint">ਤੁਹਾਡਾ ਵਲੋਗ ਟਾਈਟਲ ਇੱਥੇ</string>
+    <string name="editor_saving">ਸੇਵ ਹੋ ਰਿਹਾ ਹੈ &#8230;</string>
+    <string name="select_thumbnail">ਆਪਣੇ ਵਲੋਗ ਲਈ ਇੱਕ ਥੰਬਨੇਲ ਦੀ ਚੋਣ ਕਰੋ</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
 </resources>
 
