@@ -148,7 +148,7 @@ class RewardsContainerActivity : BaseActivity(),
             changePreferredLanguageDialogFragment.show(fm, "Choose video option")
         }
         findViewById<TextView>(R.id.toolbarTitle).setOnClickListener {
-            finish()
+            onBackPressed()
         }
     }
 
@@ -244,5 +244,7 @@ class RewardsContainerActivity : BaseActivity(),
         })
     }
 
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
 }

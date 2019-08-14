@@ -7,6 +7,7 @@
     <color name="app_blue">#507cbe</color>
     <color name="app_pink">#FF4081</color>
     <color name="app_red">#D54058</color>
+
     <color name="app_red_50_opacity">#80D54058</color>
     <color name="fab_button_bottom_sheet">#FAF6F7</color>
 
@@ -361,6 +362,7 @@
     <color name="add_video_details.title_hint">#515556</color>
     <color name="add_video_details.title_text">#545454</color>
     <color name="add_video_details.mute_label">#545454</color>
+    <color name="add_video_details.mute_label_50_percent_opacity">#80545454</color>
     <color name="add_video_details.mute_label_switch">#80545454</color>
     <color name="add_video_details.add_music">#507cbe</color>
     <color name="add_video_details.playing_audio_text">#545454</color>

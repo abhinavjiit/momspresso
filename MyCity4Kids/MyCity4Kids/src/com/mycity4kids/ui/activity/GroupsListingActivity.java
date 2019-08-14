@@ -59,24 +59,23 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
     private int limit = 20;
     private int totalGroupCount;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private Toolbar toolbar;
+    Toolbar toolbar;
     private RecyclerView recyclerGridView;
     private TextView noGroupsTextView;
     private ProgressBar progressBar;
     private GroupResult selectedGroup;
     private RelativeLayout addPostContainer;
-    private LinkedTreeMap<String, String> selectedQuestionnaire;
-    private TextView toolbarTitle;
-    private MixpanelAPI mixpanel;
+    LinkedTreeMap<String, String> selectedQuestionnaire;
+    TextView toolbarTitle;
+    MixpanelAPI mixpanel;
     ArrayList<GroupResult> joinList = null;
-    ArrayList<GroupResult> remainList = new ArrayList<>();
     private String comingFrom = "";
-    private ImageView audioImageView, closeImageView, suggestedTopicImageView, writeArticleImageView;
+    ImageView audioImageView, closeImageView, suggestedTopicImageView, writeArticleImageView;
     private RelativeLayout root;
     private View hideBottomDrawer;
-    private LinearLayout bottom_sheet;
+    LinearLayout bottom_sheet;
     private BottomSheetBehavior bottomSheetBehavior;
-    private RelativeLayout announcementContainerR, pollContainerR, postContainerR;
+    RelativeLayout announcementContainerR, pollContainerR, postContainerR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

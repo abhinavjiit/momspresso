@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -76,7 +77,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private boolean blogSetup = false;
 
     private EditText videoTitleEditText;
-    private Switch muteSwitch;
+    private SwitchCompat muteSwitch;
     private Toolbar mToolbar;
     private TextView saveUploadTextView;
 
@@ -104,7 +105,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
         Utils.pushOpenScreenEvent(this, "CreateVideoScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         videoTitleEditText = (EditText) findViewById(R.id.videoTitleEditText);
-        muteSwitch = (Switch) findViewById(R.id.muteVideoSwitch);
+        muteSwitch = (SwitchCompat) findViewById(R.id.muteVideoSwitch);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         player = (EasyVideoPlayer) findViewById(R.id.player);
         saveUploadTextView = (TextView) findViewById(R.id.saveUploadTextView);
@@ -137,12 +138,11 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
         ColorStateList thumbStates = new ColorStateList(
                 new int[][]{
-                        new int[]{-android.R.attr.state_enabled},
-                        //  new int[]{android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked},
                         new int[]{}
                 },
                 new int[]{
-                        //  Color.BLUE,
+
                         getColor(R.color.app_red),
                         getColor(R.color.add_video_details_mute_label)
                 }
@@ -151,15 +151,17 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         if (Build.VERSION.SDK_INT >= 24) {
             ColorStateList trackStates = new ColorStateList(
                     new int[][]{
-                            new int[]{-android.R.attr.state_enabled},
+                            new int[]{android.R.attr.state_checked},
                             new int[]{}
                     },
                     new int[]{
-                            getColor(R.color.app_red),
-                            getColor(R.color.add_video_details_mute_label)
+
+                            getColor(R.color.app_red_50_opacity),
+                            getColor(R.color.add_video_details_mute_label_50_percent_opacity)
                     }
             );
             muteSwitch.setTrackTintList(trackStates);
+
         }
 
         player.setCallback(this);
