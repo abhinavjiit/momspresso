@@ -1783,7 +1783,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         if (var.size() > 0) {
                             for (Map.Entry<String, String> entry : var.entrySet()) {
                                 if (topic.getId().equalsIgnoreCase(entry.getKey())) {
-                                    if ( topic.getExtraData() != null && topic.getExtraData().get(0).getCategoryTag() != null) {
+                                    if (topic.getExtraData() != null && topic.getExtraData().get(0).getCategoryTag() != null) {
                                         if (topic.getExtraData().get(0).getCategoryTag().getCategoryImage() != null && !topic.getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
                                             sponsoredViewContainer.setVisibility(View.VISIBLE);
                                             Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()).into(sponsoredImage);
@@ -2976,7 +2976,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     protected YouTubePlayer.Provider getYouTubePlayerProvider() {
         return youTubePlayerView;
     }
-
 
 
 }
