@@ -136,11 +136,13 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                 saveTextView.setVisibility(View.VISIBLE);
             }
 
+        } else {
+            if (!SharedPrefUtils.getToastMomVlog(this, "Challenge")) {
+                ToastUtils.showToast(NewVideoChallengeActivity.this, "Tap to create");
+                /*SharedPrefUtils.setToastMomVlog(this, "Challenge", true);*/
+            }
         }
-        if (!SharedPrefUtils.getToastMomVlog(this, "Challenge")) {
-            ToastUtils.showToast(NewVideoChallengeActivity.this, "Tap to create");
-            SharedPrefUtils.setToastMomVlog(this, "Challenge", true);
-        }
+
         mappedCategory = intent.getStringArrayListExtra("mappedCategory");
         if (mappedCategory != null && mappedCategory.size() != 0) {
             mappedId = mappedCategory.get(pos);
@@ -226,6 +228,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         });
         thumbNail.setOnClickListener(this);
         saveTextView.setOnClickListener(view -> {
+            SharedPrefUtils.setToastMomVlog(this, "Challenge", true);
 
             ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
             FragmentManager fm = getSupportFragmentManager();

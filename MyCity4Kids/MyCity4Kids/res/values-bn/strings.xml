@@ -1152,7 +1152,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="working">Working</string>
 
     <string name="voise_post_group">আপনার নিজস্ব স্বর ব্যবহার করুন\nআপনার নিজস্ব স্বরে প্রশ্ন করুন বা আপনার ভাবনা রেকর্ড করে জানান</string>
-    <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
+    <string name="poll_post_group">পোল করুন\nআপনার পছন্দের বিষয়গুলি সম্পর্কে আপনার কম্যুনিটির মতামত নিন
+</string>
     <string name="blog_post_group">এখানে লিখুন\nআপনার ভাবনা ভাগ করে নিন বা কোনো প্রশ্ন থাকলে করুন </string>
 
     <string name="mom_vlog_banner_title">এসে গেলো নতুন মম-ভিলগ চ্যালেঞ্জ</string>
