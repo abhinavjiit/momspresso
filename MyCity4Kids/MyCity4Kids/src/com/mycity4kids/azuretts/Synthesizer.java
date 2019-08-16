@@ -54,6 +54,7 @@ public class Synthesizer {
     private Voice m_serviceVoice;
     private ServiceStrategy m_eServiceStrategy;
     private AudioTrack audioTrack;
+    private boolean shouldStopAudio;
 
     private void playSound(final byte[] sound, final Runnable callback) {
         if (sound == null || sound.length == 0) {
@@ -64,17 +65,18 @@ public class Synthesizer {
             @Override
             public void run() {
                 final int SAMPLE_RATE = 16000;
-
-                audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, SAMPLE_RATE, AudioFormat.CHANNEL_CONFIGURATION_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT, AudioTrack.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT), AudioTrack.MODE_STREAM);
-                if (audioTrack.getState() == AudioTrack.STATE_INITIALIZED) {
-                    audioTrack.play();
-                    audioTrack.write(sound, 0, sound.length);
-                    audioTrack.stop();
-                    audioTrack.release();
-                }
-                if (callback != null) {
-                    callback.run();
+                if (!shouldStopAudio) {
+                    audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, SAMPLE_RATE, AudioFormat.CHANNEL_CONFIGURATION_MONO,
+                            AudioFormat.ENCODING_PCM_16BIT, AudioTrack.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT), AudioTrack.MODE_STREAM);
+                    if (audioTrack.getState() == AudioTrack.STATE_INITIALIZED) {
+                        audioTrack.play();
+                        audioTrack.write(sound, 0, sound.length);
+                        audioTrack.stop();
+                        audioTrack.release();
+                    }
+                    if (callback != null) {
+                        callback.run();
+                    }
                 }
             }
         });
@@ -84,6 +86,7 @@ public class Synthesizer {
     // if use STREAM mode, will wait for the end of the last write buffer data will stop.
     // if you stop immediately, call the pause() method and then call the flush() method to discard the data that has not yet been played
     public void stopSound() {
+        shouldStopAudio = true;
         try {
             if (audioTrack != null && audioTrack.getState() == AudioTrack.STATE_INITIALIZED) {
                 audioTrack.pause();
@@ -128,6 +131,7 @@ public class Synthesizer {
     }
 
     public void SpeakToAudio(String text) {
+        shouldStopAudio = false;
         Speak(text);
     }
 
@@ -190,7 +194,10 @@ public class Synthesizer {
 
         @Override
         protected void onPostExecute(byte[] result) {
-            playSound(result, null);
+            if (!shouldStopAudio) {
+                playSound(result, null);
+            }
+
         }
     }
 }

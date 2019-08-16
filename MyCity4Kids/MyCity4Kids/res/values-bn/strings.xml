@@ -1169,4 +1169,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_saving">সংরক্ষিত হচ্ছে &#8230;</string>
     <string name="select_thumbnail">আপনার ভিলগ\'টির জন্য একটি  thumbnail চিহ্নিত করুন</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
+    <string name="write_something">এখানে লিখুন</string>
 </resources>

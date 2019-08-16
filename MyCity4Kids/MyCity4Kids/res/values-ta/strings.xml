@@ -1168,4 +1168,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_saving">சேமிக்கிறது &#8230;</string>
     <string name="select_thumbnail">உங்கள் வ்ளாகிற்கு தம்ப்நெயிலைத் தேர்வு செய்</string>
     <string name="audio_delay_msg">உங்கள் ஆடியோ லோட் செய்யப்படும் போது காத்திரு.</string>
+    <string name="write_something">ஏதாவது எழுது</string>
 </resources>

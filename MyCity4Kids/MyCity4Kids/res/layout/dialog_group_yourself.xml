@@ -61,7 +61,7 @@
             android:gravity="top"
             android:layout_marginTop="@dimen/space_20"
             android:background="@null"
-            android:hint="Write Something"
+            android:hint="@string/write_something"
             android:textColor="@color/color_A0A0A0"
             android:textColorHint="@color/color_A0A0A0"
             android:textSize="12sp"
