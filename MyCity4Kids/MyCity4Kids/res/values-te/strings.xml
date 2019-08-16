@@ -1171,4 +1171,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_saving">సేవ్ చేయబడుతుంది &#8230;</string>
     <string name="select_thumbnail">మీ వీలాగ్ కి థంబ్ నైల్ సెలెక్ట్ చేయండి</string>
     <string name="audio_delay_msg">ఆడియో అప్లోడ్ అవుతుంది. కాసేపు ఆగండి.</string>
+    <string name="write_something">ఏదైనా వ్రాయండి</string>
 </resources>

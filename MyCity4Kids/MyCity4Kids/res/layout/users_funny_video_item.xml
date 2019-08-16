@@ -16,6 +16,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
         android:adjustViewBounds="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:scaleType="fitXY"
         android:src="@drawable/default_article" />
 
@@ -29,6 +31,8 @@
         android:layout_marginStart="43dp"
         android:layout_marginLeft="43dp"
         android:layout_marginTop="10dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:src="@drawable/ic_videos" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -42,6 +46,8 @@
         android:layout_toEndOf="@+id/articleImageView"
         android:layout_toRightOf="@+id/articleImageView"
         android:ellipsize="end"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:maxLines="1"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
@@ -58,6 +64,8 @@
         android:layout_alignStart="@+id/articleTitleTextView"
         android:layout_alignLeft="@+id/articleTitleTextView"
         android:ellipsize="end"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:maxLines="1"
         android:text="@string/title"
         android:textColor="@color/article_listing.author_name"
@@ -73,6 +81,8 @@
         android:layout_alignLeft="@+id/articleImageView"
         android:drawableLeft="@drawable/ic_views"
         android:drawablePadding="4dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:gravity="center"
         android:paddingTop="@dimen/space_4"
         android:text="0"
@@ -92,7 +102,9 @@
         android:layout_marginBottom="3dp"
         android:layout_toEndOf="@+id/viewCountTextView"
         android:layout_toRightOf="@+id/viewCountTextView"
-        android:background="@color/common_underline" />
+        android:background="@color/common_underline"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/commentCountTextView"
@@ -104,6 +116,8 @@
         android:layout_toRightOf="@+id/viewCountTextView"
         android:drawableLeft="@drawable/ic_comments"
         android:drawablePadding="4dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:gravity="center"
         android:paddingTop="@dimen/space_4"
         android:text="0"
@@ -123,7 +137,9 @@
         android:layout_marginBottom="3dp"
         android:layout_toEndOf="@+id/commentCountTextView"
         android:layout_toRightOf="@+id/commentCountTextView"
-        android:background="@color/common_underline" />
+        android:background="@color/common_underline"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/recommendCountTextView"
@@ -135,6 +151,8 @@
         android:layout_toRightOf="@+id/commentCountTextView"
         android:drawableLeft="@drawable/ic_likes"
         android:drawablePadding="4dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:gravity="center"
         android:paddingTop="@dimen/space_4"
         android:text="0"
@@ -153,6 +171,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="18dp"
         android:background="@drawable/unfollow_topic_author_bg"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:padding="6dp"
         android:src="@drawable/ic_share_white" />
 
@@ -162,8 +182,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:padding="15dp"
         android:src="@drawable/ic_more_vert_black_24dp"
         android:visibility="invisible" />
@@ -175,7 +195,9 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="30dp"
         android:layout_marginRight="15dp"
-        android:background="@color/light_grey1" />
+        android:background="@color/light_grey1"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
 
 </RelativeLayout>
