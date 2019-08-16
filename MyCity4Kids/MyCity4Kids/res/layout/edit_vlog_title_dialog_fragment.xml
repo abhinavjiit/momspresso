@@ -91,6 +91,7 @@
             android:paddingRight="20dp"
             android:paddingBottom="10dp"
             android:text="@string/rewards_confirm"
+            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:fontName="oswald_regular.ttf" />

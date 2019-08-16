@@ -469,7 +469,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.UserPublishedContentActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme" />
         <activity
             android:name=".ui.activity.UserDraftsContentActivity"
             android:screenOrientation="portrait" />

@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.Manifest;
 import android.accounts.NetworkErrorException;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -13,12 +14,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -451,20 +457,42 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
     }
 
     @Override
-    public void onVlogEdit(int position) {
-        EditVlogTitleDialogFragment editVlogTitleDialogFragment = new EditVlogTitleDialogFragment();
-        FragmentManager fm = getChildFragmentManager();
-        Bundle _args = new Bundle();
-        _args.putInt("position", position);
-        _args.putString("vlogTitle", articleDataModelsNew.get(position).getTitle());
-        _args.putString("videoId", articleDataModelsNew.get(position).getId());
-        editVlogTitleDialogFragment.setArguments(_args);
-        editVlogTitleDialogFragment.setCancelable(true);
-        editVlogTitleDialogFragment.show(fm, "Choose video option");
+    public void onVlogEdit(int position, ImageView imageView) {
+        chooseImageOptionPopUp(imageView, position);
     }
 
     public void updateTitleInList(int position, String title) {
         articleDataModelsNew.get(position).setTitle(title);
         articlesListingAdapter.notifyDataSetChanged();
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void chooseImageOptionPopUp(View view, int position) {
+        final PopupMenu popup = new PopupMenu(getActivity(), view);
+        popup.getMenuInflater().inflate(R.menu.edit_vlog_details_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                int i = item.getItemId();
+                if (i == R.id.edit_vlog) {
+                    EditVlogTitleDialogFragment editVlogTitleDialogFragment = new EditVlogTitleDialogFragment();
+                    FragmentManager fm = getChildFragmentManager();
+                    Bundle _args = new Bundle();
+                    _args.putInt("position", position);
+                    _args.putString("vlogTitle", articleDataModelsNew.get(position).getTitle());
+                    _args.putString("videoId", articleDataModelsNew.get(position).getId());
+                    editVlogTitleDialogFragment.setArguments(_args);
+                    editVlogTitleDialogFragment.setCancelable(true);
+                    editVlogTitleDialogFragment.show(fm, "Choose video option");
+                    return true;
+                } else {
+                    return true;
+                }
+            }
+
+        });
+
+        MenuPopupHelper menuHelper = new MenuPopupHelper(getContext(), (MenuBuilder) popup.getMenu(), view);
+        menuHelper.setForceShowIcon(true);
+        menuHelper.show();
     }
 }

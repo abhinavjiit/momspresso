@@ -117,7 +117,7 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
             holder.vlogOptionImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    iEditVlog.onVlogEdit(position);
+                    iEditVlog.onVlogEdit(position, holder.vlogOptionImageView);
                 }
             });
 
@@ -157,7 +157,7 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
     }
 
     public interface IEditVlog {
-        void onVlogEdit(int position);
+        void onVlogEdit(int position, ImageView imageView);
     }
 
 }

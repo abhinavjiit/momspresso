@@ -124,7 +124,7 @@
                 android:paddingTop="@dimen/space_13"
                 android:paddingRight="@dimen/space_35"
                 android:paddingBottom="@dimen/space_13"
-                android:text="@string/groups.post_label"
+                android:text="@string/join_dialog_post"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 app:fontName="oswald_regular.ttf" />

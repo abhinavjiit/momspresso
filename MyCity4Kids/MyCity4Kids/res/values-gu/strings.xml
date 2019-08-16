@@ -1294,4 +1294,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="select_thumbnail">તમારા વી લોગ માટે થમ્બ નેલ(નાની ઈમેજ) પસંદ કરો</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
     <string name="write_something">કંઇક લખો</string>
+    <string name="join_dialog_post">પ્રકાશિત કરો</string>
 </resources>

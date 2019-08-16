@@ -1178,4 +1178,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="select_thumbnail">अपने व्लॉग के लिए एक थंबनेल का चुनाव करें</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
     <string name="write_something">कुछ लिखें</string>
+    <string name="join_dialog_post">प्रकाशित</string>
 </resources>

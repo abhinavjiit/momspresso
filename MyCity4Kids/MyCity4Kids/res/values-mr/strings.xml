@@ -466,7 +466,7 @@
     <string name="ranking.in">या मध्ये </string>
     <string name="ranking.toast_start_end_date">सुरु दिनांक अंत दिनांक पेक्षा कमी असायला हवी </string>
 
-    <string name="editor.publish">प्रकाशित करा </string>
+    <string name="editor.publish">प्रकाशित करा</string>
 
     <string name="add_article_topics.toolbar.title">विषय निवडा </string>
     <string name="add_article_topics.clear_all">सर्व पुसून टाका </string>
@@ -1167,4 +1167,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="select_thumbnail">व्हिलॉग साठी छोटी प्रतिमा निवडा.</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
     <string name="write_something">काहीतरी लिहा.</string>
+    <string name="join_dialog_post">प्रकाशित करा</string>
 </resources>
