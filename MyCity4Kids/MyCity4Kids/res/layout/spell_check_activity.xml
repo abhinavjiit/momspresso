@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/mTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:textSize="20sp" />
+
+    <View
+        android:id="@+id/centerView"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/mTextView"
+        app:layout_constraintEnd_toEndOf="@+id/mTextView"
+        app:layout_constraintHeight_percent="50"
+        app:layout_constraintStart_toStartOf="@+id/mTextView"
+        app:layout_constraintTop_toTopOf="@+id/mTextView"
+        app:layout_constraintWidth_percent="50" />
+</android.support.constraint.ConstraintLayout>

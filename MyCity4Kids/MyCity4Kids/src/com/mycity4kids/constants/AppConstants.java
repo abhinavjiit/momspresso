@@ -59,6 +59,7 @@ public class AppConstants {
 
     public static final String GROUPS_TEST_STAGING_URL = "http://35.200.233.99:3030/";
     public static final String GROUPS_TEST_LIVE_URL = "https://groups.momspresso.com/";
+    public static final String AZURE_LIVE_URL = "https://api.cognitive.microsoft.com/";
 
     public static final String MISSING_PLACE_URL = STAGING_CLIENT_SERVER_URL + "apilistings/";
 

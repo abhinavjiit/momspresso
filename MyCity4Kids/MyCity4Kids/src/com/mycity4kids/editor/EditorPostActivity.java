@@ -52,6 +52,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.AddArticleTopicsActivityNew;
+import com.mycity4kids.ui.activity.SpellCheckActivity;
 import com.mycity4kids.ui.fragment.SpellCheckDialogFragment;
 import com.mycity4kids.utils.GenericFileProvider;
 import com.mycity4kids.utils.PermissionUtil;
@@ -940,6 +941,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 } else {
                     if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
                         launchSpellCheckDialog();
+//                        mHandler.removeCallbacksAndMessages(null);
+//                        Intent spellIntent = new Intent(EditorPostActivity.this, SpellCheckActivity.class);
+//                        spellIntent.putExtra("titleContent", mEditorFragment.getTitle().toString().trim());
+//                        spellIntent.putExtra("bodyContent", mEditorFragment.getContent().toString());
+//                        startActivity(spellIntent);
                     } else {
                         saveDraftBeforePublishRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
                     }
@@ -978,7 +984,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         @Override
         public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.server_went_wrong));
                 return;
             }
@@ -986,7 +992,16 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 ArticleDraftResponse responseModel = response.body();
                 if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                     draftId = responseModel.getData().get(0).getResult().getId() + "";
-                    launchSpellCheckDialog();
+//                    launchSpellCheckDialog();
+                    mHandler.removeCallbacksAndMessages(null);
+                    if (mEditorFragment.getContent().toString().contains("<img src")) {
+                        launchSpellCheckDialog();
+                    } else {
+                        Intent spellIntent = new Intent(EditorPostActivity.this, SpellCheckActivity.class);
+                        spellIntent.putExtra("titleContent", mEditorFragment.getTitle().toString().trim());
+                        spellIntent.putExtra("bodyContent", mEditorFragment.getContent().toString());
+                        startActivity(spellIntent);
+                    }
                 } else {
                     if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
                         showToast(getString(R.string.toast_response_error));

@@ -84,7 +84,7 @@ public class BaseApplication extends Application {
     private RequestQueue mRequestQueue;
     String data = "";
     private static BaseApplication mInstance;
-    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, testRetrofit;
+    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit, campaignRewards, azureRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;
@@ -612,6 +612,54 @@ public class BaseApplication extends Application {
         return groupsRetrofit;
     }
 
+    public Retrofit createAzureRetrofitInstance(String base_url) {
+
+        Interceptor mainInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                Request.Builder requestBuilder = original.newBuilder();
+
+                requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
+                requestBuilder.addHeader("Content-Type", "application/x-www-form-urlencoded");
+                requestBuilder.addHeader("Ocp-Apim-Subscription-Key", "987918a65c924d0fb5da048e1fbf5dd9");
+                Request request = requestBuilder.build();
+
+                return chain.proceed(request);
+            }
+        };
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+// set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        if (BuildConfig.DEBUG) {
+            client = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .addInterceptor(logging)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        } else {
+            client = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        }
+
+        azureRetrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .addConverterFactory(buildGsonConverter())
+                .client(client)
+                .build();
+        return azureRetrofit;
+    }
+
     private static GsonConverterFactory buildGsonConverter() {
         GsonBuilder gsonBuilder = new GsonBuilder();
 
@@ -638,6 +686,13 @@ public class BaseApplication extends Application {
             createRetrofitInstance("http://35.200.142.199/");
         }
         return retrofit;
+    }
+
+    public Retrofit getAzureRetrofit() {
+        if (null == azureRetrofit) {
+            createAzureRetrofitInstance(AppConstants.AZURE_LIVE_URL);
+        }
+        return azureRetrofit;
     }
 
     public Retrofit getGroupsRetrofit() {

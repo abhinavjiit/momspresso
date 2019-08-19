@@ -535,6 +535,10 @@
             android:name=".ui.activity.ParallelFeedActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.rankingTheme" />
+        <activity
+            android:name=".ui.activity.SpellCheckActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"
