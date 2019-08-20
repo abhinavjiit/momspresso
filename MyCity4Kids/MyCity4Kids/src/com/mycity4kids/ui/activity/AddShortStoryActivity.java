@@ -143,7 +143,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String currentActiveChallengeId = "";
     private View overlayLayout;
     private String ssTopicsText;
-    private TextView topicHeading;
     private TextView wordCounterTextView;
     private RelativeLayout root;
 
@@ -173,7 +172,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         overlayLayout = (View) findViewById(R.id.overlayView_choose_story_challenge);
         RadioGroup chooseoptionradioButton = (RadioGroup) findViewById(R.id.reportReasonRadioGroup);
         RadioGroup.LayoutParams rprms;
-        topicHeading = (TextView) findViewById(R.id.topicHeading);
         wordCounterTextView = (TextView) findViewById(R.id.wordCounterTextView);
         publishTextView.setOnClickListener(this);
         overlayLayout.setOnClickListener(this);

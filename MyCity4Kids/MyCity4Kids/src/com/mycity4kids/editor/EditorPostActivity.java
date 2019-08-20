@@ -994,14 +994,14 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     draftId = responseModel.getData().get(0).getResult().getId() + "";
 //                    launchSpellCheckDialog();
                     mHandler.removeCallbacksAndMessages(null);
-                    if (mEditorFragment.getContent().toString().contains("<img src")) {
-                        launchSpellCheckDialog();
-                    } else {
+//                    if (mEditorFragment.getContent().toString().contains("<img src")) {
+//                        launchSpellCheckDialog();
+//                    } else {
                         Intent spellIntent = new Intent(EditorPostActivity.this, SpellCheckActivity.class);
                         spellIntent.putExtra("titleContent", mEditorFragment.getTitle().toString().trim());
                         spellIntent.putExtra("bodyContent", mEditorFragment.getContent().toString());
                         startActivity(spellIntent);
-                    }
+//                    }
                 } else {
                     if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
                         showToast(getString(R.string.toast_response_error));
