@@ -80,6 +80,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private ShimmerFrameLayout funnyvideosshimmer;
     private String videoCategory;
     private MixpanelAPI mixpanel;
+    private SwipeRefreshLayout pullToRefresh;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -102,6 +103,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
         funnyvideosshimmer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_funny_videos_article);
         frameLayout.getBackground().setAlpha(0);
+        pullToRefresh = view.findViewById(R.id.pullToRefresh);
 
         if (getArguments() != null) {
             videoCategory = getArguments().getString("video_category_id");
@@ -155,6 +157,20 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
+
+
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                funnyvideosshimmer.setVisibility(View.VISIBLE);
+                funnyvideosshimmer.startShimmerAnimation();
+                articleDataModelsNew.clear();
+                nextPageNumber = 1;
+                hitRecommendedVideoAdApi();
+                hitArticleListingApi();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

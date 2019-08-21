@@ -66,13 +66,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/pullToRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:clipToPadding="false"
-            android:paddingBottom="80dp" />
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:clipToPadding="false"
+                android:paddingBottom="80dp" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <TextView
             android:id="@+id/noBlogsTextView"

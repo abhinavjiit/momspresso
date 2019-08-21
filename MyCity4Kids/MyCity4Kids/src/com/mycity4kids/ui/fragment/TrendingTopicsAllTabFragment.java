@@ -35,10 +35,8 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.ChooseVideoCategoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
-import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
@@ -79,6 +77,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
     ShimmerFrameLayout mshimmerFrameLayout;
     //    private SwipeRefreshLayout swipe_refresh_layout;
     private MixpanelAPI mixpanel;
+    private SwipeRefreshLayout pullToRefresh;
 
     @Nullable
     @Override
@@ -91,7 +90,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mshimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer1);
-
+        pullToRefresh = view.findViewById(R.id.pullToRefresh);
         String gpHeading = getArguments().getString("gpHeading");
         String gpSubHeading = getArguments().getString("gpSubHeading");
         String gpImageUrl = getArguments().getString("gpImageUrl");
@@ -137,7 +136,16 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
         recyclerView.setAdapter(recyclerAdapter);
 
         hitFilteredTopicsArticleListingApi(0);
-
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                articleDataModelsNew.clear();
+                mshimmerFrameLayout.setVisibility(View.VISIBLE);
+                mshimmerFrameLayout.startShimmerAnimation();
+                hitFilteredTopicsArticleListingApi(0);
+                pullToRefresh.setRefreshing(false);
+            }
+        });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private static final int HIDE_THRESHOLD = 20;
             private int scrolledDistance = 0;

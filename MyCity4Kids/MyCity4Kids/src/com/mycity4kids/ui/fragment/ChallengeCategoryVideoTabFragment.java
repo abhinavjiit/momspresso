@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,6 +51,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
     private ArrayList<Topics> liveChallenges, previousWeekChallenges;
     private ChallengeVideoRecycleAdapter recyclerAdapter;
     private String jsonMyObject;
+    private SwipeRefreshLayout pullToRefresh;
 
     @Nullable
     @Override
@@ -62,6 +64,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
         }
 
         getChallenges();
+        pullToRefresh = view.findViewById(R.id.pullToRefresh);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_challenge);
         llm = new LinearLayoutManager(getActivity());
         recyclerAdapter = new ChallengeVideoRecycleAdapter(this, getActivity(), challengeId, Display_Name, activeImageUrl, activeStreamUrl, rules);
@@ -72,6 +75,13 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
 
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getChallenges();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
         return view;
 
 

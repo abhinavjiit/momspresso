@@ -38,11 +38,17 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/noBlogsTextView"
@@ -107,6 +113,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbarUnderline"
         android:visibility="gone" />
+
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
@@ -158,9 +165,9 @@
         android:id="@+id/fabSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="right|bottom"
         android:visibility="gone"
         app:fab_colorNormal="@color/fab.white"

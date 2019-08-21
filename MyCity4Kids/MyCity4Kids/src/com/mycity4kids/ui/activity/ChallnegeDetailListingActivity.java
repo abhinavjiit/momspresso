@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -130,6 +131,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
     private TextView startWriting;
     private String challengeComingFrom;
     private RelativeLayout root;
+    private SwipeRefreshLayout pullToRefresh;
 
 
     @Override
@@ -156,6 +158,7 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
         titleTextView = (TextView) findViewById(R.id.titleTextView);
         bodyTextView = (TextView) findViewById(R.id.bodyTextView);
         authorTextView = (TextView) findViewById(R.id.authorTextView);
+        pullToRefresh = findViewById(R.id.pullToRefresh);
 
         frameLayout.getBackground().setAlpha(0);
         fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
@@ -256,6 +259,16 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
         recyclerView.setAdapter(challengeListingRecycleAdapter);
         challengeListingRecycleAdapter.setListData(mDatalist);
         challengeListingRecycleAdapter.notifyDataSetChanged();
+
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mDatalist.clear();
+                hitFilteredTopicsArticleListingApi(sortType);
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

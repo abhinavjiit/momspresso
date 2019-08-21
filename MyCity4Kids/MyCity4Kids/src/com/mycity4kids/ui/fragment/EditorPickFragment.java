@@ -3,8 +3,6 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,7 +38,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
-import com.mycity4kids.ui.adapter.MainArticleHomeRecyclerViewAdapter;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.widget.FeedNativeAd;
 
@@ -74,6 +71,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     private LinearLayout addTopicsLayout;
     private FrameLayout headerArticleCardLayout;
     ShimmerFrameLayout ashimmerFrameLayout;
+    private SwipeRefreshLayout pullToRefresh;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,6 +84,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         addTopicsLayout = (LinearLayout) rootView.findViewById(R.id.addTopicsLayout);
         headerArticleCardLayout = (FrameLayout) rootView.findViewById(R.id.headerArticleView);
+        pullToRefresh = rootView.findViewById(R.id.pullToRefresh);
 
         addTopicsLayout.setOnClickListener(this);
 
@@ -106,6 +105,18 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 //        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
         recyclerView.setAdapter(recyclerAdapter);
 
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                articleDataModelsNew.clear();
+                ashimmerFrameLayout.setVisibility(View.VISIBLE);
+                ashimmerFrameLayout.startShimmerAnimation();
+                sortType = getArguments().getString(Constants.SORT_TYPE);
+                nextPageNumber = 1;
+                hitArticleListingApi(nextPageNumber, sortType, false);
+                pullToRefresh.setRefreshing(false);
+            }
+        });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

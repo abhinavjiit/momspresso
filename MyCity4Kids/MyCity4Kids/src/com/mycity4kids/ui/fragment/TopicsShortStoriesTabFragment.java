@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -116,6 +117,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private String likeStatus;
     private int currentShortStoryPosition;
     private String jsonMyObject;
+    private SwipeRefreshLayout pullToRefresh;
 
     @Nullable
     @Override
@@ -135,6 +137,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         bodyTextView = (TextView) view.findViewById(R.id.bodyTextView);
         authorTextView = (TextView) view.findViewById(R.id.authorTextView);
+        pullToRefresh = view.findViewById(R.id.pullToRefresh);
 
         frameLayout.getBackground().setAlpha(0);
         fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
@@ -203,6 +206,15 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             selectedTopic = currentSubTopic;
         }
         hitFilteredTopicsArticleListingApi(sortType);
+
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mDatalist.clear();
+                hitFilteredTopicsArticleListingApi(sortType);
+                pullToRefresh.setRefreshing(false);
+            }
+        });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -389,7 +401,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
                 reportContentDialogFragment.setArguments(_args);
                 reportContentDialogFragment.setCancelable(true);
-               // reportContentDialogFragment.setTargetFragment(this, 0);
+                // reportContentDialogFragment.setTargetFragment(this, 0);
                 reportContentDialogFragment.show(fm, "Report Content");
             }
             break;
@@ -802,7 +814,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
 
     public void showSortedByDialog() {
-        if(getActivity()!=null){
+        if (getActivity() != null) {
             final Dialog dialog = new Dialog(getActivity());
             dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.dialog_sort_by);

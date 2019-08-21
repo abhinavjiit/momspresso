@@ -25,14 +25,20 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <ListView
-        android:id="@+id/vlogsListView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginTop="2dp"
-        android:divider="@color/transparent"
-        android:drawSelectorOnTop="true" />
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/vlogsListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginTop="2dp"
+            android:divider="@color/transparent"
+            android:drawSelectorOnTop="true" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/noBlogsTextView"
@@ -101,12 +107,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="right|bottom"
+            android:visibility="gone"
             fab:fab_addButtonColorNormal="@color/transparent"
             fab:fab_addButtonColorPressed="@color/transparent"
             fab:fab_addButtonPlusIconColor="@color/transparent"
             fab:fab_addButtonStrokeVisible="false"
             fab:fab_labelStyle="@style/menu_labels_style"
-            android:visibility="gone"
             fab:fab_labelsPosition="left">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
@@ -137,12 +143,12 @@
         android:id="@+id/fabSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="right|bottom"
-        fab:fab_colorNormal="@color/fab.white"
         android:visibility="gone"
+        fab:fab_colorNormal="@color/fab.white"
         fab:fab_colorPressed="@color/fab.white"
         fab:fab_icon="@drawable/ic_flip" />
 
