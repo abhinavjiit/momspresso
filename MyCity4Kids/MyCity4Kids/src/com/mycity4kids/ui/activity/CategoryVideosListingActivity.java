@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -150,7 +151,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         }
 
         if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED && !SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
-            momVlogCoachMark.setVisibility(View.VISIBLE);
+            momVlogCoachMark.setVisibility(View.GONE);
 
         } else {
             momVlogCoachMark.setVisibility(View.GONE);
@@ -177,6 +178,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPrefUtils.setToastMomVlog(CategoryVideosListingActivity.this, "momVlog", true);
 
                 Intent cityIntent = new Intent(CategoryVideosListingActivity.this, ChooseVideoCategoryActivity.class);
                 cityIntent.putExtra("comingFrom", "createDashboardIcon");
@@ -185,7 +187,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 startActivity(cityIntent);
                 Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
                 momVlogCoachMark.setVisibility(View.GONE);
-                SharedPrefUtils.setCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog", true);
 
 
             }
@@ -241,8 +242,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             });
         }
         if (!SharedPrefUtils.getToastMomVlog(this, "momVlog")) {
-            ToastUtils.showToast(this, "Tap to create");
-            SharedPrefUtils.setToastMomVlog(this, "momVlog", true);
+            Toast.makeText(this, "Tap to create", Toast.LENGTH_LONG).show();
+
         }
 
     }

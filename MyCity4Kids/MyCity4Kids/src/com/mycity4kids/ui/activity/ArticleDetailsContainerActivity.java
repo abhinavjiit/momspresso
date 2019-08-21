@@ -38,6 +38,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.tts.ReadArticleService;
 import com.mycity4kids.ui.adapter.ArticleDetailsPagerAdapter;
 import com.mycity4kids.ui.fragment.ArticleDetailsFragment;
+import com.mycity4kids.widget.CustomViewPager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,7 +55,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private ArticleDetailsAPI articleDetailsAPI;
     private TopicsCategoryAPI topicsAPI;
     private String parentId;
-    private ViewPager mViewPager;
+    private CustomViewPager mViewPager;
     private ArticleDetailsPagerAdapter mViewPagerAdapter;
     private Toolbar mToolbar;
     private ImageView backNavigationImageView;
@@ -116,7 +117,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             Utils.pushViewArticleEvent(this, screen, userDynamoId + "", articleId, listingType, index + "", author);
         }
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = (CustomViewPager) findViewById(R.id.pager);
 
         if (articleList == null || articleList.isEmpty()) {
             articleId = bundle.getString(Constants.ARTICLE_ID);
@@ -138,7 +139,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen, parentId);
             mViewPager.setAdapter(mViewPagerAdapter);
             mViewPager.setCurrentItem(pos);
-            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            mViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                     Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
@@ -529,7 +530,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, "dw", parentId);
         mViewPager.setAdapter(mViewPagerAdapter);
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);

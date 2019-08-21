@@ -1152,7 +1152,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="working">Working</string>
 
     <string name="voise_post_group">আপনার নিজস্ব স্বর ব্যবহার করুন\nআপনার নিজস্ব স্বরে প্রশ্ন করুন বা আপনার ভাবনা রেকর্ড করে জানান</string>
-    <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
+    <string name="poll_post_group">পোল করুন\nআপনার পছন্দের বিষয়গুলি সম্পর্কে আপনার কম্যুনিটির মতামত নিন
+</string>
     <string name="blog_post_group">এখানে লিখুন\nআপনার ভাবনা ভাগ করে নিন বা কোনো প্রশ্ন থাকলে করুন </string>
 
     <string name="mom_vlog_banner_title">এসে গেলো নতুন মম-ভিলগ চ্যালেঞ্জ</string>
@@ -1169,4 +1170,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_saving">সংরক্ষিত হচ্ছে &#8230;</string>
     <string name="select_thumbnail">আপনার ভিলগ\'টির জন্য একটি  thumbnail চিহ্নিত করুন</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
+    <string name="write_something">এখানে লিখুন</string>
+    <string name="join_dialog_post">পাবলিশ</string>
 </resources>

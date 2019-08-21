@@ -22,7 +22,7 @@
     <string name="locality_txt">किस जगह पर?</string>
     <string name="error_network">यह उपकरण नेटवर्क क्षेत्र से बाहर है</string>
     <string name="please_wait">कृपया इंतज़ार करें...</string>
-    <string name="groups_groups_myfeed">গग्रुप्स</string>
+    <string name="groups_groups_myfeed">ग्रुप्स</string>
 
     <string name="no_result_txt">कोई परिणाम नहीं मिला</string>
     <string name="went_wrong">कुछ गलत हो गया है </string>
@@ -1155,9 +1155,13 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="not_working">Not Working</string>
     <string name="working">Working</string>
 
-    <string name="voise_post_group">Use your voice\nRecord your thoughts or ask a question in your voice</string>
-    <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
-    <string name="blog_post_group">Write something\nAsk a question or share your thought</string>
+    <string name="voise_post_group">अपनी आवाज का इस्तेमाल करें\nअपने विचारों को रिकॉर्ड करें या अपनी आवाज़ में एक प्रश्न पूछें।
+
+</string>
+    <string name="poll_post_group">राय लें\nइस पर समुदाय की राय लें कि आपके लिए क्या मायने रखता है।
+    </string>
+    <string name="blog_post_group">कुछ लिखिए\nप्रश्न पूछें या अपने विचार साझा करें।
+</string>
 
     <string name="mom_vlog_banner_title">मॉम व्हिलॉग चॅलेंज अलर्ट</string>
     <string name="mom_vlog_banner_subtitle">और जीतें 10000 रुपए तक के पुरस्कार</string>
@@ -1173,4 +1177,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_saving">आपकी पोस्ट सेव हो रही है&#8230;</string>
     <string name="select_thumbnail">अपने व्लॉग के लिए एक थंबनेल का चुनाव करें</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
+    <string name="write_something">कुछ लिखें</string>
+    <string name="join_dialog_post">प्रकाशित</string>
 </resources>

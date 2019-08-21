@@ -61,7 +61,7 @@
             android:gravity="top"
             android:layout_marginTop="@dimen/space_20"
             android:background="@null"
-            android:hint="Write Something"
+            android:hint="@string/write_something"
             android:textColor="@color/color_A0A0A0"
             android:textColorHint="@color/color_A0A0A0"
             android:textSize="12sp"
@@ -124,7 +124,7 @@
                 android:paddingTop="@dimen/space_13"
                 android:paddingRight="@dimen/space_35"
                 android:paddingBottom="@dimen/space_13"
-                android:text="@string/groups.post_label"
+                android:text="@string/join_dialog_post"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 app:fontName="oswald_regular.ttf" />

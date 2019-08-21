@@ -976,8 +976,6 @@
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
 
-
-
     <string name="drawer_referra_mymoney">Refer MyMoney</string>
     <string name="referral_screen_text">Invite a friend to join MyMoney by sharing your referral code. Both of you will earn Rs. 25 once she has successfully completed a MyMoney campaign.</string>
     <string name="share_referral_screen">Share your referral code and start earning</string>
@@ -1006,13 +1004,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="campaign_details_applied">APPLIED</string>
 
 
-
     <string name="congratulation_text">CONGRATULATIONS!</string>
     <string name="thanks_for_submitting">Thanks for submitting proof and payment details</string>
     <string name="be_in_touch_text">We/ll review and be in touch in next 7 working days till then you can take part in other interesting campaigns</string>
     <string name="share_joy">SHARE THE JOY</string>
     <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
-
 
 
     //campaigndetails
@@ -1118,7 +1114,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="total_payout">Total Payout</string>
 
 
-
     //addProof
     <string name="add_proof">ADD PROOF</string>
     <string name="please_add_image_proof">Please add image proofs</string>
@@ -1130,7 +1125,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="tracker_Activity_submit_corrected_proof">Please submit corrected proofs again.</string>
     <string name="tracker_Activity_expected_date">Expected Date</string>
     <string name="tracker_activity_proof_submitted_rejected">PROOFS SUBMITTED REJECTED</string>
-
 
 
     //rewardsCampaignString
@@ -1151,7 +1145,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="working">Working</string>
 
     <string name="voise_post_group">உங்கள் குரலை பயன்படுத்தலாம்\nஎண்ணங்களையோ (அ) கேள்வியையோ உங்கள் குரலில் பதிவு செய்யலாம்</string>
-    <string name="poll_post_group">Create a poll\nGet community’s opinion on what matters to you</string>
+    <string name="poll_post_group">வாக்கெடுப்பை  உருவாக்கலாம்\nஉங்களின் தேவைக்கு குழுவின் கருத்தை கேட்கலாம்</string>
     <string name="blog_post_group">எதாவது எழுதலாம்\nகேள்வி கேட்கலாம் (அ) உங்கள் எண்ணத்தை பகிரலாம்</string>
 
     <string name="mom_vlog_banner_title">மாம் வ்லோக்ஸ் சவால்</string>
@@ -1168,4 +1162,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_saving">சேமிக்கிறது &#8230;</string>
     <string name="select_thumbnail">உங்கள் வ்ளாகிற்கு தம்ப்நெயிலைத் தேர்வு செய்</string>
     <string name="audio_delay_msg">உங்கள் ஆடியோ லோட் செய்யப்படும் போது காத்திரு.</string>
+    <string name="write_something">ஏதாவது எழுது</string>
+    <string name="join_dialog_post">வெளியிட</string>
 </resources>

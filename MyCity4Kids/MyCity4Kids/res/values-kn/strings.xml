@@ -1206,4 +1206,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_saving">ಸೇವ್‌ ಮಾಡಲಾಗುತ್ತಿದೆ &#8230;</string>
     <string name="select_thumbnail">ನಿಮ್ಮ ವ್ಲೋಗ್‌ ಗೆ ಬೇಕಾದ ಸೂಚ್ಯ ಇಮೇಜ್‌ ಆರಿಸಿ</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
+    <string name="write_something">ಏನಾದರೂ ಬರೆಯಿರಿ</string>
+    <string name="join_dialog_post">ಪ್ರಕಟಿಸು</string>
 </resources>

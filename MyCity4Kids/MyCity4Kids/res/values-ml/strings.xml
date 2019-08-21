@@ -1212,4 +1212,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_saving">സേവ് ചെയ്യുന്നു &#8230;</string>
     <string name="select_thumbnail">നിങ്ങളുടെ വ്ലോഗിനായി ഒരു ലഘുചിത്രം തിരഞ്ഞെടുക്കുക</string>
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
+    <string name="write_something">എന്തെങ്കിലും എഴുതുക</string>
+    <string name="join_dialog_post">പ്രസിദ്ധീകരിക്കുക</string>
 </resources>

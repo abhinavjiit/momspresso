@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="158"
-    android:versionName="12.0.5">
+    android:versionCode="160"
+    android:versionName="12.0.7">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -469,7 +469,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.UserPublishedContentActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme" />
         <activity
             android:name=".ui.activity.UserDraftsContentActivity"
             android:screenOrientation="portrait" />

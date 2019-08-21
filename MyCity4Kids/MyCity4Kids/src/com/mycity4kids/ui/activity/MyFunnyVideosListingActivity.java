@@ -522,7 +522,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
     }
 
     @Override
-    public void onVlogEdit(int position) {
+    public void onVlogEdit(int position, ImageView imageView) {
 
     }
 }

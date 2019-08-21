@@ -975,7 +975,6 @@
 Thank you! We will be reviewing your story. You can expect to hear from us within the next 48 working hours. Meanwhile, you can still share your story with your friends!</string>
 
 
-
     //campaigndetails
     <string name="campaign_proofs_approved">PROOFS APPROVED</string>
     <string name="campaign_detail_toolbar_text">CAMPAIGN DETAILS</string>
@@ -1100,17 +1099,11 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="participate_now">Participate now</string>
 
 
-
-
     <string name="congratulation_text">CONGRATULATIONS!</string>
     <string name="thanks_for_submitting">Thanks for submitting proof and payment details</string>
     <string name="be_in_touch_text">We/ll review and be in touch in next 7 working days till then you can take part in other interesting campaigns</string>
     <string name="share_joy">SHARE THE JOY</string>
     <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
-
-
-
-
 
 
     //addProof
@@ -1126,8 +1119,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="brows_participate_earn_text">Browse. Participate. Earn</string>
     <string name="participate_text">REGISTER</string>
     <string name="total_payout">Total Payout</string>
-
-
 
 
     //trackerActivity
@@ -1171,4 +1162,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="editor_saving">సేవ్ చేయబడుతుంది &#8230;</string>
     <string name="select_thumbnail">మీ వీలాగ్ కి థంబ్ నైల్ సెలెక్ట్ చేయండి</string>
     <string name="audio_delay_msg">ఆడియో అప్లోడ్ అవుతుంది. కాసేపు ఆగండి.</string>
+    <string name="write_something">ఏదైనా వ్రాయండి</string>
+    <string name="join_dialog_post">ప్రచురణ</string>
 </resources>
