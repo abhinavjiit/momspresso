@@ -19,11 +19,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
@@ -32,6 +32,7 @@ import android.text.Spanned;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -43,7 +44,6 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -54,7 +54,7 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
-import com.mycity4kids.ui.activity.ChallnegeDetailListingActivity;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.widget.Hashids;
 
 import org.json.JSONArray;
@@ -74,7 +74,6 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,7 +94,7 @@ import okhttp3.ResponseBody;
 public class AppUtils {
 
     private static String SALT = "iasdas1oi23ubnaoligueiug12311028313liuege";
-    private static float singleContentHeight = 1100f;
+    private static float singleContentHeight = 800f;
 
     public static int randInt(int min, int max) {
 
@@ -657,93 +656,151 @@ public class AppUtils {
     }
 
     public static Bitmap drawMultilineTextToBitmap(String title, String body, String authorName) {
+        Random rand = new Random();
+        switch (rand.nextInt(6)) {
+            case 0:
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_1, title, body, authorName);
+            case 1:
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_2, title, body, authorName);
+            case 2:
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_3, title, body, authorName);
+            case 3:
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_4, title, body, authorName);
+            case 4:
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_5, title, body, authorName);
+            case 5:
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_6, title, body, authorName);
+            default:
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_6, title, body, authorName);
+
+        }
+    }
+
+    public static Bitmap drawMultilineTextToBitmap(int bgColor, String title, String body, String authorName) {
 
         // prepare canvas
         Resources resources = BaseApplication.getAppContext().getResources();
         float scale = resources.getDisplayMetrics().density;
-        Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.ss_share_web);
+        Bitmap bitmap = Bitmap.createBitmap(800, 800, Bitmap.Config.ARGB_8888);
+//        Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.ss_share_web);
         Bitmap logoBitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_notify);
+        Bitmap watermark = BitmapFactory.decodeResource(resources, R.drawable.share_bg);
         android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
         // set default bitmap config if none
         if (bitmapConfig == null) {
             bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
         }
-        // resource bitmaps are imutable,
+        // resource bitmaps are immutable,
         // so we need to convert it to mutable one
         bitmap = bitmap.copy(bitmapConfig, true);
 
         Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(ContextCompat.getColor(BaseApplication.getAppContext(), bgColor));
+
+        int titleSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                14, resources.getDisplayMetrics());
+
+        int bodyAndAuthorSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                12, resources.getDisplayMetrics());
 
         Typeface georgiaTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia.ttf");
+        Typeface geoBoldTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia_bold.ttf");
+
         TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        titlePaint.setTypeface(georgiaTypeface);
+        titlePaint.setTypeface(geoBoldTypeface);
         titlePaint.setColor(Color.rgb(61, 61, 61));
-        titlePaint.setTextSize((int) (10 * scale));
+        titlePaint.setTextSize(titleSize);
 
         TextPaint bodyPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         bodyPaint.setTypeface(georgiaTypeface);
         bodyPaint.setColor(Color.rgb(61, 61, 61));
-        bodyPaint.setTextSize((int) (9 * scale));
+        bodyPaint.setTextSize(bodyAndAuthorSize);
 
-        Typeface geoBoldTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia_bold.ttf");
         TextPaint authorPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         authorPaint.setTypeface(geoBoldTypeface);
         authorPaint.setColor(Color.rgb(61, 61, 61));
-        authorPaint.setTextSize((int) (9 * scale));
-        // set text width to canvas width minus 16dp padding
-        int textWidth = canvas.getWidth() - (int) (16 * scale);
+        authorPaint.setTextSize(bodyAndAuthorSize);
+        // set text width to canvas width minus 40dp padding
+        int textWidth = canvas.getWidth() - (int) (36 * scale);
 
         String author = "By - " + authorName;
 
-        // init StaticLayout for text
-        StaticLayout bodyLayout = new StaticLayout(
-                body, bodyPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-
-        StaticLayout titleLayout = new StaticLayout(
-                title, titlePaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-
-        StaticLayout authorLayout = new StaticLayout(
-                author, authorPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+        StaticLayout bodyLayout, titleLayout, authorLayout;
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            StaticLayout.Builder bodyStaticBuilder = StaticLayout.Builder.obtain(body, 0, body.length(), bodyPaint, textWidth)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setIncludePad(false);
+            StaticLayout.Builder titleStaticBuilder = StaticLayout.Builder.obtain(title, 0, title.length(), titlePaint, textWidth)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setIncludePad(false);
+            StaticLayout.Builder authorStaticBuilder = StaticLayout.Builder.obtain(author, 0, author.length(), authorPaint, textWidth)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setIncludePad(false);
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                bodyStaticBuilder.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+                titleStaticBuilder.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+                authorStaticBuilder.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+            }
+            bodyLayout = bodyStaticBuilder.build();
+            titleLayout = titleStaticBuilder.build();
+            authorLayout = authorStaticBuilder.build();
+        } else {
+            bodyLayout = new StaticLayout(
+                    body, bodyPaint, textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+            titleLayout = new StaticLayout(
+                    title, titlePaint, textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+            authorLayout = new StaticLayout(
+                    author, authorPaint, textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+        }
 
         // get height of multiline text
         int bodyHeight = bodyLayout.getHeight();
         int titleHeight = titleLayout.getHeight();
 
-        float currentContentHeight = bodyHeight + (30 * scale) + titleHeight;
-
+        float currentContentHeight = bodyHeight + titleHeight + authorLayout.getHeight()
+                + (50 * scale) //50*scale for spacing between title, body, author and logo
+                + 30; //For Padding at Top
+        Log.d("----WEDDINGCARD----", "currentContentHeight=" + currentContentHeight);
         if (currentContentHeight > singleContentHeight) {
-            int totalBitmapReq = (int) (currentContentHeight / singleContentHeight) + 1;
-            bitmap = combineImages(bitmap, totalBitmapReq);
+            Log.d("----WEDDINGCARD----", "totalBitmapReq=" + currentContentHeight);
+            bitmap = extendBitmap(bitmap, currentContentHeight - singleContentHeight, bgColor);
             canvas = new Canvas(bitmap);
+//            int totalBitmapReq = (int) (currentContentHeight / singleContentHeight) + 1;
+//            bitmap = combineImages(bitmap, totalBitmapReq);
+//            canvas = new Canvas(bitmap);
         }
 
-        // get position of text's top left corner
-        float x = (bitmap.getWidth() - textWidth) / 2;
-        float y = (bitmap.getHeight() - bodyHeight) / 2;
+        float xPosWatermark = (bitmap.getWidth() - watermark.getWidth()) / 2.0f;
+        float yPosWatermark = (bitmap.getHeight() - watermark.getHeight()) / 2.0f;
+        canvas.drawBitmap(watermark, xPosWatermark, yPosWatermark, null);
 
         // get position of text's top left corner
-        float ySeparator = y - 10 * scale;
-        float yAuthor = bitmap.getHeight() - y;
+        float xBodyInitial = (bitmap.getWidth() - textWidth) / 2.0f;
+        float yBodyInitial = (bitmap.getHeight() - bodyHeight) / 2.0f;
+
+        float ySeparator = yBodyInitial - 10 * scale;
+        float yAuthor = bitmap.getHeight() - yBodyInitial;
 
         Paint p = new Paint();
         p.setColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.short_story_light_black_color));
         p.setStrokeWidth(2);
         // draw text to the Canvas center
         canvas.save();
-        canvas.translate(x, y);
+        canvas.translate(xBodyInitial, yBodyInitial);
         bodyLayout.draw(canvas);
         canvas.restore();
         canvas.save();
-        canvas.drawLine(x, ySeparator, 40 * scale, ySeparator, p);
-        canvas.translate(x, ySeparator - titleHeight - 10 * scale);
+        canvas.drawLine(bitmap.getWidth() / 2.0f - 20, ySeparator, bitmap.getWidth() / 2.0f + 20, ySeparator, p);
+        canvas.translate(xBodyInitial, ySeparator - titleHeight - 10 * scale); //subtract 10*scale for spacing between title and body
         titleLayout.draw(canvas);
         canvas.restore();
         canvas.save();
-        canvas.translate(x, yAuthor + 10 * scale);
+        canvas.translate(xBodyInitial, yAuthor + 10 * scale);//Add 10*scale for spacing between title and body
         authorLayout.draw(canvas);
         canvas.restore();
         canvas.save();
         canvas.drawBitmap(logoBitmap, bitmap.getWidth() - 30 * scale, bitmap.getHeight() - 30 * scale, null);
+
         AppUtils.createDirIfNotExists("MyCity4Kids/videos");
         try {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
@@ -754,11 +811,20 @@ public class AppUtils {
         return bitmap;
     }
 
+    private static Bitmap extendBitmap(Bitmap bitmap, float v, int bgColor) {
+        int height = (int) v;
+        int width = bitmap.getWidth();
+        Log.d("----WEDDINGCARD----", "extendBitmap=" + v);
+        Bitmap cs = Bitmap.createBitmap(width, height + bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas comboImage = new Canvas(cs);
+        comboImage.drawBitmap(bitmap, 0, bitmap.getHeight(), null);
+        comboImage.drawColor(ContextCompat.getColor(BaseApplication.getAppContext(), bgColor));
+        return cs;
+    }
+
     public static Bitmap combineImages(Bitmap c, int s) { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
-        Bitmap cs = null;
-
-        int width, height = 0;
-
+        Bitmap cs;
+        int width, height;
         height = s * c.getHeight();
         width = c.getWidth();
 
@@ -767,6 +833,7 @@ public class AppUtils {
         Canvas comboImage = new Canvas(cs);
 
         for (int i = 0; i < s; i++) {
+            Log.d("----WEDDINGCARD----", "combineImages=" + s);
             comboImage.drawBitmap(c, 0f, i * c.getHeight(), null);
         }
 //        comboImage.drawBitmap(c, 0f, 0f, null);

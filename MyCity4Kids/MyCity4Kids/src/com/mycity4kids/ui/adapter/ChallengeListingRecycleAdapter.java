@@ -83,8 +83,6 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
     }
 
     private void viewListingResult(ChallengeListingViewHolder holder, int position) {
-
-
         switch (((position) % 6)) {
             case 0:
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
@@ -105,7 +103,6 @@ public class ChallengeListingRecycleAdapter extends RecyclerView.Adapter<Challen
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
                 break;
         }
-
 
         holder.storyTitleTextView.setText(articleDataModelsNew.get(position).getTitle().trim());
         holder.storyBodyTextView.setText(articleDataModelsNew.get(position).getBody().trim());

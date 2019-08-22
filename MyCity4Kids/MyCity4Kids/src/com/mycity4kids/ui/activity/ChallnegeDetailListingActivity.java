@@ -572,39 +572,68 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
             break;
             case R.id.whatsappShareImageView: {
                 try {
-
-                    AppUtils.drawMultilineTextToBitmap(mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                    switch (position % 6) {
+                        case 0:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_1, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                        case 1:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_2, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                        case 2:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_3, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                        case 3:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_4, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                        case 4:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_5, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                        case 5:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_6, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                    }
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                     return;
                 }
-                // if (isAdded()) {
                 AppUtils.shareStoryWithWhatsApp(this, mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
                         "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
-                //}
             }
             break;
             case R.id.instagramShareImageView: {
                 try {
-                    AppUtils.drawMultilineTextToBitmap(mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                    switch (position % 6) {
+                        case 0:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_1, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                        case 1:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_2, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                        case 2:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_3, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                        case 3:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_4, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                        case 4:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_5, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                        case 5:
+                            AppUtils.drawMultilineTextToBitmap(R.color.short_story_card_bg_6, mDatalist.get(position).getTitle().trim(), mDatalist.get(position).getBody().trim(), mDatalist.get(position).getUserName());
+                            break;
+                    }
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
-
-                //if (isAdded()) {
                 AppUtils.shareStoryWithInstagram(this, "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(),
                         mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
-                // }
             }
             break;
             case R.id.genericShareImageView: {
-
-                // if (isAdded()) {
                 AppUtils.shareStoryGeneric(this, mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
                         "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
-                //}
             }
             break;
             case R.id.authorNameTextView:

@@ -25,7 +25,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -38,7 +37,6 @@ import com.mycity4kids.ui.adapter.VideoTopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
 import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
-import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
@@ -295,8 +293,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
                 if (fragment != null) {
                     if (fragment instanceof ChallengeCategoryVideoTabFragment) {
-
-
                         fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.GONE);
                     } else {

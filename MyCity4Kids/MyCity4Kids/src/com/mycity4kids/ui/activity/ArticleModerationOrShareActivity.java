@@ -181,8 +181,6 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                             Toast.makeText(this, getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 }
                 break;
             case R.id.instagramImageView:
