@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,14 +9,23 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Layout;
+import android.text.Selection;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.CharacterStyle;
 import android.text.style.ClickableSpan;
+import android.text.style.UpdateAppearance;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -52,6 +62,7 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
     private Toolbar toolbar;
     private TextView publishTextView;
     private String draftId;
+    private float touchCoordinateX, touchCoordinateY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,9 +189,10 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
             //Create a background color span on the keyword
             spannableString.setSpan(new BackgroundColorSpan(Color.RED), indexOfKeyword, indexOfKeyword + input.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            spannableString.setSpan(new ClickableSpan() {
+            spannableString.setSpan(new TouchableSpan() {
                 @Override
-                public void onClick(@NonNull View widget) {
+                public boolean onTouch(View widget, MotionEvent m) {
+
                     Log.d("Spannable Click", "Spannable Click");
                     TextView tv = (TextView) widget;
                     Spanned s = (Spanned) tv.getText();
@@ -188,7 +200,14 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
                     int end = s.getSpanEnd(this);
                     Log.d("Spannable Click", "onClick [" + s.subSequence(start, end) + "]");
 
-                    showPopUpMenu(suggestionsMap, textView, centerView, input);
+//                    showPopUpMenu(suggestionsMap, textView, centerView, input);
+                    show(SpellCheckActivity.this, m.getX(), m.getY(), suggestionsMap, input);
+                    return false;
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+
                 }
             }, indexOfKeyword, indexOfKeyword + input.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             //Get the next index of the keyword
@@ -198,9 +217,8 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
 
 //Set the final text on TextView
         textView.setText(spannableString);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-
-
+        textView.setMovementMethod(new LinkTouchMovementMethod());
+//        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @SuppressLint("RestrictedApi")
@@ -230,6 +248,33 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
 
         });
         popup.show();
+    }
+
+    public void show(Activity activity, float x, float y, Map<String, ArrayList<String>> suggestionsMap, String token) {
+        Log.d("---POPUPMENU---", "Show me the money X=" + x + " Y=" + y);
+        final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
+
+        final View view = new View(activity);
+        view.setLayoutParams(new ViewGroup.LayoutParams(1, 1));
+        view.setBackgroundColor(Color.TRANSPARENT);
+
+        root.addView(view);
+
+        view.setX(x);
+        view.setY(y+100);
+
+        PopupMenu popupMenu = new PopupMenu(activity, view, Gravity.CENTER);
+        for (int i = 0; i < suggestionsMap.get(token).size(); i++) {
+            popupMenu.getMenu().add(suggestionsMap.get(token).get(i));
+        }
+        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+                root.removeView(view);
+            }
+        });
+
+        popupMenu.show();
     }
 
     @Override
@@ -276,5 +321,67 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
     public String titleFormatting(String title) {
         String htmlStrippedTitle = Html.fromHtml(title).toString();
         return htmlStrippedTitle;
+    }
+
+    public abstract class TouchableSpan extends CharacterStyle implements UpdateAppearance {
+
+        /**
+         * Performs the touch action associated with this span.
+         *
+         * @return
+         */
+        public abstract boolean onTouch(View widget, MotionEvent m);
+
+        /**
+         * Could make the text underlined or change link color.
+         */
+        @Override
+        public abstract void updateDrawState(TextPaint ds);
+
+    }
+
+    public class LinkTouchMovementMethod extends LinkMovementMethod {
+
+        @Override
+        public boolean onTouchEvent(TextView widget, Spannable buffer,
+                                    MotionEvent event) {
+            int action = event.getAction();
+
+            if (action == MotionEvent.ACTION_UP ||
+                    action == MotionEvent.ACTION_DOWN) {
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+
+                x -= widget.getTotalPaddingLeft();
+                y -= widget.getTotalPaddingTop();
+
+                x += widget.getScrollX();
+                y += widget.getScrollY();
+
+                Layout layout = widget.getLayout();
+                int line = layout.getLineForVertical(y);
+                int off = layout.getOffsetForHorizontal(line, x);
+
+                TouchableSpan[] link = buffer.getSpans(off, off, TouchableSpan.class);
+
+                if (link.length != 0) {
+                    if (action == MotionEvent.ACTION_UP) {
+                        link[0].onTouch(widget, event); //////// CHANGED HERE
+                    } else if (action == MotionEvent.ACTION_DOWN) {
+                        link[0].onTouch(widget, event); //////// ADDED THIS
+                        Selection.setSelection(buffer,
+                                buffer.getSpanStart(link[0]),
+                                buffer.getSpanEnd(link[0]));
+                    }
+
+                    return true;
+                } else {
+                    Selection.removeSelection(buffer);
+                }
+            }
+
+            return super.onTouchEvent(widget, buffer, event);
+        }
+
     }
 }
