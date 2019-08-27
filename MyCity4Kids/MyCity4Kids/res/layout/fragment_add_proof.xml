@@ -90,8 +90,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/addScreenShotTextView"
+            <RelativeLayout
+                android:id="@+id/headerTextViewContainer1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -101,17 +101,36 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="0dp"
                 android:layout_marginRight="0dp"
-                android:paddingLeft="12dp"
-                android:text="@string/please_add_image_proof"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                app:fontName="oswald_regular.ttf" />
+                android:paddingLeft="12dp">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/addScreenShotTextView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/space_5"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/please_submit"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    app:fontName="oswald_regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/addScreenShotTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/addScreenShotTextView1"
+                    android:text="@string/please_add_image_proof"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:fontName="oswald_regular.ttf" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/relativeMediaProof"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/addScreenShotTextView"
+                android:layout_below="@+id/headerTextViewContainer1"
                 android:layout_marginTop="10dp"
                 android:background="#0DEB3955"
                 android:gravity="center"
@@ -139,14 +158,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relativeMediaProof"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:paddingLeft="12dp">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/addlinkTextView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/space_5"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/please_submit"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    app:fontName="oswald_regular.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/addlinkTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
                     android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@+id/addlinkTextView1"
                     android:text="@string/please_add_link"
                     android:textColor="@color/black"
                     android:textSize="20sp"

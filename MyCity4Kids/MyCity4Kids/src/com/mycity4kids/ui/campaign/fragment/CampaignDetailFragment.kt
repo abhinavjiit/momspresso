@@ -398,7 +398,7 @@ class CampaignDetailFragment : BaseFragment() {
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_submit_proof)) {
             Utils.campaignEvent(activity, "Proof Submission", "Campaign Detail", "Submit Proof", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Submission")
 
-            (activity as CampaignContainerActivity).addAddProofFragment(apiGetResponse!!.id!!, (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!)
+            (activity as CampaignContainerActivity).addAddProofFragment(apiGetResponse!!.id!!, (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!, status)
             if (apiGetResponse != null && apiGetResponse!!.totalPayout != null && apiGetResponse!!.id != null && apiGetResponse!!.nameSlug != null) {
                 (activity as CampaignContainerActivity).setTotalPayOut(apiGetResponse!!.totalPayout!!)
                 (activity as CampaignContainerActivity).setIdCamp(apiGetResponse!!.id!!)
@@ -504,6 +504,13 @@ class CampaignDetailFragment : BaseFragment() {
             appliedTag.visibility = View.VISIBLE
             submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
             labelText.setText(context!!.resources.getString(R.string.label_campaign_not_started) + " " + getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy") + ". Please wait for campaign to start to submit proofs.")
+        } else if (status == 22) {
+            hideShowReferral(status)
+            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_submission_open))
+            applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
+            labelText.visibility = View.GONE
+            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_submit_proof))
+            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
         } else if (status == 3) {
             hideShowReferral(status)
             applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_applied))

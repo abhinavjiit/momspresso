@@ -1266,6 +1266,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     //addProof
     <string name="add_proof">ADD PROOF</string>
     <string name="please_add_image_proof">Please add image proofs</string>
+    <string name="please_submit">Please submit</string>
     <string name="please_add_link">Please add a link</string>
     <string name="proof_instructions">Proof Instructions</string>
     <string name="faq">FAQS</string>
@@ -1273,7 +1274,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     //cangratulaTION Screen
     <string name="congratulation_text">CONGRATULATIONS!</string>
     <string name="thanks_for_submitting">Thanks for submitting proof and payment details</string>
-    <string name="be_in_touch_text">We/ll review and be in touch in next 7 working days till then you can take part in other interesting campaigns</string>
+    <string name="be_in_touch_text">We will review and be in touch in next 7 working days till then you can take part in other interesting campaigns</string>
     <string name="share_joy">SHARE THE JOY</string>
     <string name="continue_browsing_campaign">CONTINUE BROWSING CAMPAIGNS</string>
 
