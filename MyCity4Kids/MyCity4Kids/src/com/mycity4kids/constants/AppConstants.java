@@ -669,6 +669,10 @@ public class AppConstants {
     public static final String VICHAAR_SAGAR_CATEGORY_ID = "category-8dcc26eb81de4042b225f82ec8e88cd3";
     public static final String PUBLIC_VISIBILITY = "1";
     public static final String PUBLIC_INVISIBILITY = "0";
+    public static final String MEDIUM_WHATSAPP = "whatsapp";
+    public static final String MEDIUM_FACEBOOK = "facebook";
+    public static final String MEDIUM_INSTAGRAM = "instagram";
+    public static final String MEDIUM_TWITTER = "twitter";
 
 
     enum SocialPlatformName {

@@ -600,7 +600,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 break;
                             case R.id.action_momVlog:
                                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
-                                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Bottom_nav_videos", "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+                                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Bottom_nav_videos",
+                                        "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this),
+                                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                        String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
                                 Intent cityIntent = new Intent(DashboardActivity.this, CategoryVideosListingActivity.class);
                                 cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                                 startActivity(cityIntent);

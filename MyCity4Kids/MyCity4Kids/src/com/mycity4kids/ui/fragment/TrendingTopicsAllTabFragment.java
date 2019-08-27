@@ -455,6 +455,12 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
     private void launchVideoDetailsActivity(int position, int videoIndex) {
         MixPanelUtils.pushMomVlogClickEvent(mixpanel, videoIndex, "TrendingAll");
         if (articleDataModelsNew.get(position).getCarouselVideoList() != null && !articleDataModelsNew.get(position).getCarouselVideoList().isEmpty()) {
+            if (isAdded()) {
+                Utils.momVlogEvent(getActivity(), "Home Screen", "Vlog_card_home_feed",
+                        "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+            }
             VlogsListingAndDetailResult result = articleDataModelsNew.get(position).getCarouselVideoList().get(videoIndex);
             Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
             intent.putExtra(Constants.VIDEO_ID, result.getId());

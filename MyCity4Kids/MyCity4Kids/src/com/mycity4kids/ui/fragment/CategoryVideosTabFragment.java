@@ -28,7 +28,6 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -43,7 +42,6 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.activity.CategoryVideosListingActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VlogsListingAdapter;
 import com.mycity4kids.utils.MixPanelUtils;
@@ -90,7 +88,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.funny_videos_tab_fragment, container, false);
+        View view = inflater.inflate(R.layout.funny_videos_tab_fragment, container, false);
         rootLayout = view.findViewById(R.id.rootLayout);
         listView = (ListView) view.findViewById(R.id.vlogsListView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
