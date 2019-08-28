@@ -329,7 +329,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                         addlinkTextView.setText(responseData.data.get(0).result.get(0).text_name)
                         addlinkTextView1.visibility = View.VISIBLE
                         textAddUrlProof.visibility = View.GONE
-`                        var view = recyclerUrlProof.layoutManager.findViewByPosition(0)
+                        var view = recyclerUrlProof.layoutManager.findViewByPosition(0)
                         var textview = view!!.findViewById<EditText>(R.id.textUrl)
                         textview.setHint("Enter description")
                     } else {
