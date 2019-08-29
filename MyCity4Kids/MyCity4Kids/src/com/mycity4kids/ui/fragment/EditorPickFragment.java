@@ -3,10 +3,6 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,6 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
@@ -72,6 +72,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     private LinearLayout addTopicsLayout;
     private FrameLayout headerArticleCardLayout;
     ShimmerFrameLayout ashimmerFrameLayout;
+    private SwipeRefreshLayout pullToRefresh;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         addTopicsLayout = (LinearLayout) rootView.findViewById(R.id.addTopicsLayout);
         headerArticleCardLayout = (FrameLayout) rootView.findViewById(R.id.headerArticleView);
+        pullToRefresh = rootView.findViewById(R.id.pullToRefresh);
 
         addTopicsLayout.setOnClickListener(this);
 
@@ -98,12 +100,24 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, sortType, false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
 //        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
         recyclerView.setAdapter(recyclerAdapter);
 
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                articleDataModelsNew.clear();
+                ashimmerFrameLayout.setVisibility(View.VISIBLE);
+                ashimmerFrameLayout.startShimmerAnimation();
+                sortType = getArguments().getString(Constants.SORT_TYPE);
+                nextPageNumber = 1;
+                hitArticleListingApi(nextPageNumber, sortType, false);
+                pullToRefresh.setRefreshing(false);
+            }
+        });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatDelegate;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -78,6 +80,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     private ShimmerFrameLayout funnyvideosshimmer;
     private String videoCategory;
     private MixpanelAPI mixpanel;
+    private SwipeRefreshLayout pullToRefresh;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -87,7 +90,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.funny_videos_tab_fragment, container, false);
+        View view = inflater.inflate(R.layout.funny_videos_tab_fragment, container, false);
         rootLayout = view.findViewById(R.id.rootLayout);
         listView = (ListView) view.findViewById(R.id.vlogsListView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
@@ -100,6 +103,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
         funnyvideosshimmer = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_funny_videos_article);
         frameLayout.getBackground().setAlpha(0);
+        pullToRefresh = view.findViewById(R.id.pullToRefresh);
 
         if (getArguments() != null) {
             videoCategory = getArguments().getString("video_category_id");
@@ -154,6 +158,20 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
 
+
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                funnyvideosshimmer.setVisibility(View.VISIBLE);
+                funnyvideosshimmer.startShimmerAnimation();
+                articleDataModelsNew.clear();
+                nextPageNumber = 1;
+                hitRecommendedVideoAdApi();
+                hitArticleListingApi();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -181,7 +199,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
 
                     MixPanelUtils.pushMomVlogClickEvent(mixpanel, i, "" + videoCategory);
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
-                    Utils.momVlogEvent(getActivity(), "Video Listing", "Video_play_icon", parentingListData.getId(), "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", "", "");
+                    Utils.momVlogEvent(getActivity(), "Video Listing", "Video_play_icon", parentingListData.getId(), "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", "", "");
                     intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
                     intent.putExtra(Constants.STREAM_URL, parentingListData.getUrl());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
@@ -237,7 +255,8 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
         }
 
         @Override
-        public void onFailure(Call<Topics> call, Throwable t) {}
+        public void onFailure(Call<Topics> call, Throwable t) {
+        }
     };
 
     private Callback<VlogsListingResponse> recentArticleResponseCallback = new Callback<VlogsListingResponse>() {

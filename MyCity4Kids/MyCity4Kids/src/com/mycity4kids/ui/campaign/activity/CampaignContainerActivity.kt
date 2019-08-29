@@ -13,6 +13,8 @@ import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.Constants
+import com.mycity4kids.models.campaignmodels.CampaignDetailResult
 import com.mycity4kids.models.response.BaseResponseGeneric
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.PaymentModeListModal
@@ -110,11 +112,41 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
             addCampaginDetailFragment(deeplinkCampaignId)
 
         } else if (comingFrom.equals("campaign_submit_proof")) {
-            addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>)
+            showProgressDialog(resources.getString(R.string.please_wait))
+            fetchCampaignDetail()
         } else {
             addCampaginDetailFragment(deeplinkCampaignId)
         }
 
+    }
+
+
+    private fun fetchCampaignDetail() {
+        BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getCampaignDetail(deeplinkCampaignId, 2.0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CampaignDetailResult>> {
+
+
+            override fun onComplete() {
+                removeProgressDialog()
+            }
+
+            override fun onSubscribe(d: Disposable) {
+
+            }
+
+            override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
+
+                if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
+                    addAddProofFragment(deeplinkCampaignId, arrayList as ArrayList<Int>, response.data!!.result.campaignStatus!!)
+                } else {
+
+                }
+            }
+
+            override fun onError(e: Throwable) {
+                removeProgressDialog()
+                Log.e("exception in error", e.message.toString())
+            }
+        })
     }
 
     override fun onResume() {
@@ -140,8 +172,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
     }
 
 
-    fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>) {
-        var campaignAddProofFragment = CampaignAddProofFragment.newInstance(id, deliverableTypeList)
+    fun addAddProofFragment(id: Int, deliverableTypeList: ArrayList<Int>, status: Int) {
+        var campaignAddProofFragment = CampaignAddProofFragment.newInstance(id, deliverableTypeList, status)
         supportFragmentManager.beginTransaction().replace(R.id.container, campaignAddProofFragment,
                 CampaignAddProofFragment::class.java.simpleName).addToBackStack("campaignAddProofFragment")
                 .commit()

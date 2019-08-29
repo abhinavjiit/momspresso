@@ -1,7 +1,5 @@
 package com.mycity4kids.utils;
 
-import android.util.Log;
-
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -25,8 +23,6 @@ public class MixPanelUtils {
             e.printStackTrace();
         }
     }
-
-
 
     public static void pushMomVlogViewEvent(MixpanelAPI mixpanel, String screen) {
         try {
@@ -92,4 +88,5 @@ public class MixPanelUtils {
             e.printStackTrace();
         }
     }
+
 }

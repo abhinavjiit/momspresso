@@ -71,12 +71,14 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
 
     private FeedNativeAd feedNativeAd;
     private String contentType;
+    private String userDynamoId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_published_article_tab_fragment, container, false);
 
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
@@ -279,7 +281,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
                 intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-                if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+                if (authorId.equals(userDynamoId)) {
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PrivatePublishedArticles");
                     intent.putExtra(Constants.FROM_SCREEN, "PrivateUserArticlesScreen");
                 } else {
@@ -314,10 +316,10 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 if (isPrivateProfile) {
-                    Utils.pushShareArticleEvent(getActivity(), "PrivateUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
+                    Utils.pushShareArticleEvent(getActivity(), "PrivateUserArticlesScreen", userDynamoId + "", articleDataModelsNew.get(position).getId(),
                             authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
                 } else {
-                    Utils.pushShareArticleEvent(getActivity(), "PublicUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
+                    Utils.pushShareArticleEvent(getActivity(), "PublicUserArticlesScreen", userDynamoId + "", articleDataModelsNew.get(position).getId(),
                             authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
                 }
                 break;
@@ -421,7 +423,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
                 intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-                if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+                if (authorId.equals(userDynamoId)) {
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PrivatePublishedArticles");
                     intent.putExtra(Constants.FROM_SCREEN, "PrivateUserArticlesScreen");
                 } else {
@@ -456,10 +458,10 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 if (isPrivateProfile) {
-                    Utils.pushShareArticleEvent(getActivity(), "PrivateUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
+                    Utils.pushShareArticleEvent(getActivity(), "PrivateUserArticlesScreen", userDynamoId + "", articleDataModelsNew.get(position).getId(),
                             authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
                 } else {
-                    Utils.pushShareArticleEvent(getActivity(), "PublicUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
+                    Utils.pushShareArticleEvent(getActivity(), "PublicUserArticlesScreen", userDynamoId + "", articleDataModelsNew.get(position).getId(),
                             authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
                 }
                 break;

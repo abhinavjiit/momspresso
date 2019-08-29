@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.campaign.fragment
 
+import android.accounts.NetworkErrorException
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -14,6 +15,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.crashlytics.android.Crashlytics
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import com.kelltontech.network.Response
@@ -35,6 +37,8 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -150,6 +154,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private var campaignImageProofList: ArrayList<CampaignProofResponse> = arrayListOf()
     private var campaignUrlProofList: ArrayList<CampaignProofResponse> = arrayListOf()
     private var campaignId: Int = 60
+    private var status: Int = 0
     private lateinit var textSubmit: TextView
     private lateinit var textInstruction: TextView
     private lateinit var deliverableTypeList: ArrayList<Int>
@@ -161,14 +166,21 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var back: TextView
     private lateinit var textAddUrlProof: TextView
     private lateinit var linearInstruction: LinearLayout
+    private lateinit var addScreenShotTextView: TextView
+    private lateinit var addScreenShotTextView1: TextView
+    private lateinit var addlinkTextView: TextView
+    private lateinit var addlinkTextView1: TextView
+    private lateinit var headerTextViewContainer: RelativeLayout
+    private lateinit var headerTextViewContainer1: RelativeLayout
 
     companion object {
         @JvmStatic
-        fun newInstance(id: Int, deliverableTypeList: ArrayList<Int>) =
+        fun newInstance(id: Int, deliverableTypeList: ArrayList<Int>, status: Int) =
                 CampaignAddProofFragment().apply {
                     arguments = Bundle().apply {
                         this.putInt("id", id)
                         this.putIntegerArrayList("deliverableTypeList", deliverableTypeList)
+                        this.putInt("status", status)
                     }
                 }
     }
@@ -176,6 +188,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_add_proof, container, false)
+        showProgressDialog(resources.getString(R.string.please_wait))
 
         recyclerFaqs = view.findViewById<RecyclerView>(R.id.recyclerFaqs)
         recyclerFaqs.layoutManager = LinearLayoutManager(context)
@@ -193,8 +206,19 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             } else {
                 emptyList<Int>() as ArrayList<Int>
             }
-        }
 
+            status = if (arguments!!.containsKey("status")) {
+                arguments!!.getInt("status")
+            } else {
+                0
+            }
+        }
+        addScreenShotTextView = view.findViewById(R.id.addScreenShotTextView)
+        addlinkTextView = view.findViewById(R.id.addlinkTextView)
+        addScreenShotTextView1 = view.findViewById(R.id.addScreenShotTextView1)
+        addlinkTextView1 = view.findViewById(R.id.addlinkTextView1)
+        headerTextViewContainer = view.findViewById(R.id.headerTextViewContainer)
+        headerTextViewContainer1 = view.findViewById(R.id.headerTextViewContainer1)
         linearInstruction = view.findViewById(R.id.linearInstruction)
         textAddUrlProof = view.findViewById(R.id.textAddUrlProof)
         textAddUrlProof.setOnClickListener {
@@ -270,9 +294,64 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
         /*fetch submission data from server*/
         fetSubmissionDetail()
-
+        if (status == 22) {
+            val retro = BaseApplication.getInstance().retrofit
+            val campaignAPI = retro.create(CampaignAPI::class.java)
+            val call = campaignAPI.getPreProof(campaignId)
+            call.enqueue(preProof)
+        } else {
+            removeProgressDialog()
+        }
         return view
     }
+
+
+    val preProof = object : Callback<PreProofResponse> {
+        override fun onResponse(call: Call<PreProofResponse>, response: retrofit2.Response<PreProofResponse>) {
+            removeProgressDialog()
+            if (response == null || null == response.body()) {
+                val nee = NetworkErrorException(response.raw().toString())
+                Crashlytics.logException(nee)
+                return
+            }
+            try {
+                val responseData = response.body()
+                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                    if (responseData.data.get(0).result.get(0).isIs_image_required == 1) {
+                        addScreenShotTextView.setText(responseData.data.get(0).result.get(0).image_name)
+                        addScreenShotTextView1.visibility = View.VISIBLE
+                    } else {
+                        headerTextViewContainer1.visibility = View.GONE
+                        relativeMediaProof.visibility = View.GONE
+                    }
+
+                    if (responseData.data.get(0).result.get(0).isIs_text_required == 1) {
+                        addlinkTextView.setText(responseData.data.get(0).result.get(0).text_name)
+                        addlinkTextView1.visibility = View.VISIBLE
+                        textAddUrlProof.visibility = View.GONE
+                        var view = recyclerUrlProof.layoutManager?.findViewByPosition(0)
+                        var textview = view!!.findViewById<EditText>(R.id.textUrl)
+                        textview.setHint("Enter description")
+                    } else {
+                        headerTextViewContainer.visibility = View.GONE
+                        recyclerUrlProof.visibility = View.GONE
+                    }
+                } else {
+                    Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Crashlytics.logException(e)
+                Log.d("MC4kException", Log.getStackTraceString(e))
+            }
+        }
+
+        override fun onFailure(call: Call<PreProofResponse>, t: Throwable) {
+            removeProgressDialog()
+            Crashlytics.logException(t)
+            Log.d("MC4kException", Log.getStackTraceString(t))
+        }
+    }
+
 
     private fun validateUrlProofs(): Boolean {
         var isAllEmpty: Boolean = true

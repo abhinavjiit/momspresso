@@ -18,8 +18,8 @@ package com.facebook.widget;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.Fragment;
+import androidx.core.app.Fragment;
+
 import com.facebook.Session;
 import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
@@ -34,7 +34,7 @@ import java.util.List;
  * Single Sign On (SSO). This class is package private, and is not intended
  * to be consumed by external applications.</p>
  * 
- * <p>The method {@link android.support.v4.app.Fragment#onActivityResult} is
+ * <p>The method {@link androidx.core.app.Fragment#onActivityResult} is
  * used to manage the session information, so if you override it in a subclass, 
  * be sure to call {@code super.onActivityResult}.</p>
  * 

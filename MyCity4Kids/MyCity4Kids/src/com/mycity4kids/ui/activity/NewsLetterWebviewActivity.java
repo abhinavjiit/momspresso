@@ -38,6 +38,8 @@ public class NewsLetterWebviewActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         webview = (WebView) findViewById(R.id.webview);
 
+        webview.getSettings().setJavaScriptEnabled(true);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

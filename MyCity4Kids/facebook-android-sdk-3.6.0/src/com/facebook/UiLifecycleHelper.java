@@ -22,8 +22,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.core.app.Fragment;
+import androidx.core.content.LocalBroadcastManager;
 import android.util.Log;
 import com.facebook.internal.NativeProtocol;
 import com.facebook.widget.FacebookDialog;
@@ -60,7 +60,7 @@ public class UiLifecycleHelper {
      * Creates a new UiLifecycleHelper.
      *
      * @param activity the Activity associated with the helper. If calling from a Fragment,
-     *                 use {@link android.support.v4.app.Fragment#getActivity()}
+     *                 use {@link androidx.core.app.Fragment#getActivity()}
      * @param callback the callback for Session status changes, can be null
      */
     public UiLifecycleHelper(Activity activity, Session.StatusCallback callback) {

@@ -3,13 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +13,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
@@ -293,15 +294,11 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
                 if (fragment != null) {
                     if (fragment instanceof ChallengeCategoryVideoTabFragment) {
-
-
                         fabAdd.setVisibility(View.GONE);
                         imageSortBy.setVisibility(View.GONE);
                     } else {
                         fabAdd.setVisibility(View.VISIBLE);
                         imageSortBy.setVisibility(View.VISIBLE);
-
-
                     }
                 }
             }

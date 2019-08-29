@@ -27,6 +27,10 @@ interface CampaignAPI {
                           @Query("v") v: Double)
             : Observable<BaseResponseGeneric<CampaignDetailResult>>
 
+    @GET("/rewards/v1/preproofs/{campaign-id}")
+    fun getPreProof(@Path("campaign-id") campaignId: Int)
+            : Call<PreProofResponse>
+
     @GET("/v1/utilities/faqs/rewards/")
     fun getFaqsList()
             : Observable<BaseResponseGeneric<FaqResponse>>

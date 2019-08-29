@@ -53,10 +53,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:paddingBottom="15dp"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp"
             android:paddingTop="15dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="15dp"
             android:text=""
             android:textColor="@color/short_story.light_black_color"
             android:textSize="18sp"
@@ -77,8 +77,8 @@
             android:layout_below="@+id/separator"
             android:lineSpacingExtra="4dp"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp"
             android:paddingTop="15dp"
+            android:paddingRight="14dp"
             android:text=" "
             android:textColor="@color/short_story.light_black_color"
             android:textSize="16sp"
@@ -103,13 +103,19 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_listing"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/pullToRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:clipToPadding="false"
-            android:paddingBottom="80dp" />
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_listing"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:clipToPadding="false"
+                android:paddingBottom="80dp" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <TextView
             android:id="@+id/noBlogsTextView"
@@ -123,10 +129,10 @@
             android:id="@+id/writeArticleCell"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="2dp"
             android:background="@drawable/topics_border_bg"
             android:visibility="gone">
 
@@ -153,9 +159,9 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@+id/firstImageView"
-                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:src="@drawable/ic_launcher"
                 app:civ_border="true"
                 app:civ_border_color="@color/white_color"
@@ -275,9 +281,9 @@
             android:id="@+id/fabSort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="right|bottom"
             android:tint="@color/app_red"
             android:visibility="gone"
@@ -307,8 +313,8 @@
                 android:layout_height="36dp"
                 android:layout_alignBottom="@+id/guideflContainerLL"
                 android:layout_alignParentRight="true"
-                android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:src="@drawable/ic_more"
@@ -319,12 +325,12 @@
                 android:id="@+id/horizontalLine"
                 android:layout_width="30dp"
                 android:layout_height="2dp"
-                android:layout_alignBottom="@+id/guideflContainerLL"
                 android:layout_alignLeft="@+id/guideExpandImageView"
                 android:layout_alignRight="@+id/guideExpandImageView"
-                android:layout_marginBottom="12dp"
+                android:layout_alignBottom="@+id/guideflContainerLL"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginBottom="12dp"
                 android:background="@color/white" />
 
             <View
@@ -340,14 +346,14 @@
                 android:id="@+id/tabGuideTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_below="@+id/verticalLine_1"
+                android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:background="@color/white"
-                android:paddingBottom="7dp"
                 android:paddingLeft="9dp"
-                android:paddingRight="9dp"
                 android:paddingTop="7dp"
+                android:paddingRight="9dp"
+                android:paddingBottom="7dp"
                 android:text="@string/guide.sub_topics_list_tour"
                 android:textColor="@color/black"
                 app:fontName="oswald.ttf" />
@@ -367,6 +373,7 @@
             android:layout_height="match_parent"
             android:visibility="visible" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/choose_layout"
         android:layout_width="match_parent"

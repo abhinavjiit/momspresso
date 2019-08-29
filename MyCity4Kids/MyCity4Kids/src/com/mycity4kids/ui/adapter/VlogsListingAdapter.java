@@ -187,15 +187,10 @@ public class VlogsListingAdapter extends BaseAdapter {
                     if (videoChallengeTopics == null) {
                         findActiveVideoChallenge();
                     } else {
-                        //MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
-//                        Intent cityIntent = new Intent(mContext, ChooseVideoCategoryActivity.class);
-//                        cityIntent.putExtra("comingFrom", "createDashboardIcon");
-//                        cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
-//                        mContext.startActivity(cityIntent);
-                        Intent intent = new Intent(mContext, NewVideoChallengeActivity.class);
-                        Utils.momVlogEvent(mContext, "Video Listing", "Challenge container", "", "android",
+                        Utils.momVlogEvent(mContext, "Video Listing", "Live_challenge_banner", "", "android",
                                 SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
-                                String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", videoAd.getId());
+                                String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", videoAd.getId());
+                        Intent intent = new Intent(mContext, NewVideoChallengeActivity.class);
                         if (videoAd.getExtraData() != null && videoAd.getExtraData().size() != 0) {
                             Topics.ExtraData extraData = videoAd.getExtraData().get(0);
                             intent.putExtra("Display_Name", new ArrayList<>(Arrays.asList(videoAd.getDisplay_name())));

@@ -15,9 +15,6 @@ public class VlogsListingAndDetailResult {
     private String approval_time;
     private String published_status;
     private String publication_status;
-
-
-
     private String commentUri;
     private Author author;
     private String sharing_url;

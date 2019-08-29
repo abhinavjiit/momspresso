@@ -3,10 +3,12 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +79,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
     ShimmerFrameLayout mshimmerFrameLayout;
     //    private SwipeRefreshLayout swipe_refresh_layout;
     private MixpanelAPI mixpanel;
+    private SwipeRefreshLayout pullToRefresh;
 
     @Nullable
     @Override
@@ -89,7 +92,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mshimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer1);
-
+        pullToRefresh = view.findViewById(R.id.pullToRefresh);
         String gpHeading = getArguments().getString("gpHeading");
         String gpSubHeading = getArguments().getString("gpSubHeading");
         String gpImageUrl = getArguments().getString("gpImageUrl");
@@ -128,14 +131,25 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
 //        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, isHeaderVisible, "TrendingAll", true);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
 //        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
         recyclerView.setAdapter(recyclerAdapter);
 
         hitFilteredTopicsArticleListingApi(0);
-
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                nextPageNumber = 1;
+                articleDataModelsNew.clear();
+                recyclerAdapter.notifyDataSetChanged();
+                mshimmerFrameLayout.setVisibility(View.VISIBLE);
+                mshimmerFrameLayout.startShimmerAnimation();
+                hitFilteredTopicsArticleListingApi(0);
+                pullToRefresh.setRefreshing(false);
+            }
+        });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private static final int HIDE_THRESHOLD = 20;
             private int scrolledDistance = 0;
@@ -445,6 +459,12 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
     private void launchVideoDetailsActivity(int position, int videoIndex) {
         MixPanelUtils.pushMomVlogClickEvent(mixpanel, videoIndex, "TrendingAll");
         if (articleDataModelsNew.get(position).getCarouselVideoList() != null && !articleDataModelsNew.get(position).getCarouselVideoList().isEmpty()) {
+            if (isAdded()) {
+                Utils.momVlogEvent(getActivity(), "Home Screen", "Vlog_card_home_feed",
+                        "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+            }
             VlogsListingAndDetailResult result = articleDataModelsNew.get(position).getCarouselVideoList().get(videoIndex);
             Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
             intent.putExtra(Constants.VIDEO_ID, result.getId());
