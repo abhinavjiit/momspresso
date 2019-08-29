@@ -2,10 +2,14 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Html;
 import android.text.Layout;
 import android.text.Selection;
@@ -65,6 +69,7 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
     private BottomSheetBehavior<LinearLayout> sheetBehavior;
     private Map<String, Integer> contentOffsetMap = new HashMap<>();
     private ProgressBar progressBar;
+    private PublishDraftObject draftObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +91,9 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
 
         publishTextView.setOnClickListener(this);
 
-        draftId = getIntent().getStringExtra("draftId");
         originalTitleContent = getIntent().getStringExtra("titleContent");
         originalBodyContent = getIntent().getStringExtra("bodyContent");
+        draftId = getIntent().getStringExtra("draftId");
 
         String titleContent = AppUtils.stripHtml(originalTitleContent);
         String bodyContent = AppUtils.stripHtml(originalBodyContent);

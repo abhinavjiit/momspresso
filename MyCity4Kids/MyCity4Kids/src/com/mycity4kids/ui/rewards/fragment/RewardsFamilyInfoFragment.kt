@@ -3,15 +3,15 @@ package com.mycity4kids.ui.rewards.fragment
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.widget.AppCompatCheckBox
-import androidx.appcompat.widget.AppCompatRadioButton
-import androidx.appcompat.widget.AppCompatSpinner
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.appcompat.widget.AppCompatRadioButton
+import androidx.appcompat.widget.AppCompatSpinner
+import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
@@ -32,7 +32,6 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_rewards_personal_info.*
 import org.apmem.tools.layouts.FlowLayout
 
 /**

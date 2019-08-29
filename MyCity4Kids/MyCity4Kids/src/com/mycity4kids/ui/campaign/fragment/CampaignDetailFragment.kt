@@ -9,10 +9,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ShareCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -22,6 +18,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ShareCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
@@ -48,20 +48,18 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.campaign_detail_activity.*
 import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
-import kotlin.math.roundToInt
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 
 class CampaignDetailFragment : BaseFragment() {
 
     private var campaignList = mutableListOf<CampaignDataListResult>()
-    private lateinit var linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager
+    private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: CampaignDetailAdapter
     private var apiGetResponse: CampaignDetailResult? = null
     private var apiGetParticipationResponse: BaseResponseModel? = null
@@ -95,7 +93,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var getHelp: TextView
     private lateinit var referCodeHeader: TextView
     private lateinit var readThisBox: LinearLayout
-    private lateinit var detail_recyclerview: androidx.recyclerview.widget.RecyclerView
+    private lateinit var detail_recyclerview: RecyclerView
     private lateinit var txtTrackerStatus: TextView
     private var forYouStatus: Int = 0
     private var userId: String? = null

@@ -1,20 +1,22 @@
 package com.mycity4kids.ui.campaign.fragment
 
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
-import com.mycity4kids.ui.campaign.PaymentModeListModal
 import com.mycity4kids.ui.campaign.PaymentModesModal
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.paymets_modes_adapter.view.*
 
 
 class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, private val context: Fragment)
-    : androidx.recyclerview.widget.RecyclerView.Adapter<PaymentModesAdapter.ViewHolder>() {
+    : RecyclerView.Adapter<PaymentModesAdapter.ViewHolder>() {
 
     private var paymentMode: List<PaymentModesModal> = paymentModeList
     private var clickListener = context as ClickListener
@@ -70,7 +72,7 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
 
     override fun getItemCount(): Int = paymentMode.size
 
-    inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView), View.OnClickListener {
+    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView), View.OnClickListener {
         override fun onClick(p0: View?) {
         }
 

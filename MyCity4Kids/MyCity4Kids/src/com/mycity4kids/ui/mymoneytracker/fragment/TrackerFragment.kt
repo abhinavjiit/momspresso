@@ -1,61 +1,44 @@
 package com.mycity4kids.ui.mymoneytracker.fragment
 
-import android.accounts.NetworkErrorException
 import android.content.Context
-import android.content.Intent
-import androidx.fragment.app.Fragment
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.crashlytics.android.Crashlytics
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.constants.AppConstants
 import com.mycity4kids.constants.Constants
-import com.mycity4kids.models.campaignmodels.AllCampaignDataResponse
 import com.mycity4kids.models.campaignmodels.CampaignDataListResult
 import com.mycity4kids.models.response.BaseResponseGeneric
-import com.mycity4kids.models.rewardsmodels.CityConfigResultResponse
 import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
-import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs
-import com.mycity4kids.ui.activity.EditProfileNewActivity
-import com.mycity4kids.ui.adapter.RewardCampaignAdapter
 import com.mycity4kids.ui.mymoneytracker.adapter.TrackerListAdapter
 import com.mycity4kids.ui.mymoneytracker.model.TrackerDataModel
-import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
-import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
-import com.mycity4kids.utils.EndlessScrollListener
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.cropimage.*
-import retrofit2.Call
-import retrofit2.Callback
-import java.util.ArrayList
+import java.util.*
 
 /**
  * A placeholder fragment containing a simple view.
  */
 class TrackerFragment : BaseFragment() {
 
-    private lateinit var linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager
+    private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: TrackerListAdapter
     private lateinit var apiGetResponse: CampaignDataListResult
     private lateinit var backIcon: ImageView
     private lateinit var containerView: View
-    private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
+    private lateinit var recyclerView: RecyclerView
     private var trackerDataModel = arrayListOf<TrackerDataModel>()
     private var endIndex: Int = 0
     private lateinit var profileIcon: ImageView
@@ -115,7 +98,7 @@ class TrackerFragment : BaseFragment() {
         }
 
         recyclerView = containerView.findViewById(R.id.trackerListIndex)
-        linearLayoutManager = LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.layoutManager = linearLayoutManager
         adapter = TrackerListAdapter(activity as Context, trackerDataModel)
         registerRewards = containerView.findViewById(R.id.register_rewards)

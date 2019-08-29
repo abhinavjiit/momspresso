@@ -240,7 +240,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         BaseApplication.startSocket();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().build();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(720).build();
         mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
         mFirebaseRemoteConfig.fetchAndActivate()

@@ -1,21 +1,19 @@
 package com.mycity4kids.ui.rewards.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import kotlinx.android.synthetic.main.picker_dialog_cell.view.*
-
-import kotlinx.android.synthetic.main.picker_dialog_fragment.view.*
 
 class PickerDialogAdapter(private val selectedValue: ArrayList<String>?,
                           private val popupData: List<String>,
                           private val mListener: onItemClickListener)
-    : androidx.recyclerview.widget.RecyclerView.Adapter<PickerDialogAdapter.ViewHolder>() {
+    : RecyclerView.Adapter<PickerDialogAdapter.ViewHolder>() {
 
     private var mOnClickListener: onItemClickListener
     private var popupAllData = emptyList<String>()
@@ -54,7 +52,7 @@ class PickerDialogAdapter(private val selectedValue: ArrayList<String>?,
 
     override fun getItemCount(): Int = popupAllData.size
 
-    inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val isSelect: CheckBox = mView.checkIsSelect
         val textValue: TextView = mView.textValue
 

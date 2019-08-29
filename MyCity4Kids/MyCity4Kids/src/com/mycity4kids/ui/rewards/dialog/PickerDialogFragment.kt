@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mycity4kids.R
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.ui.rewards.adapter.PickerDialogAdapter
@@ -117,8 +118,8 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
     }
 
     private fun initializeXMLComponents() {
-        var list = containerView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.list)
-        if (list is androidx.recyclerview.widget.RecyclerView) {
+        var list = containerView.findViewById<RecyclerView>(R.id.list)
+        if (list is RecyclerView) {
             with(list) {
                 layoutManager = when {
                     columnCount <= 1 -> LinearLayoutManager(context)

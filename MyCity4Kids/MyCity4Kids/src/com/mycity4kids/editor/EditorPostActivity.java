@@ -15,15 +15,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.widget.Toolbar;
-
 import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -33,7 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -999,10 +996,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 ArticleDraftResponse responseModel = response.body();
                 if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                     draftId = responseModel.getData().get(0).getResult().getId() + "";
-//                    launchSpellCheckDialog();
                     mHandler.removeCallbacksAndMessages(null);
                     if (spellCheckFlag) {
                         Intent spellIntent = new Intent(EditorPostActivity.this, SpellCheckActivity.class);
+                        spellIntent.putExtra("draftId", draftId);
                         spellIntent.putExtra("titleContent", mEditorFragment.getTitle().toString().trim());
                         spellIntent.putExtra("bodyContent", mEditorFragment.getContent().toString());
                         startActivity(spellIntent);

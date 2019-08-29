@@ -4,16 +4,16 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.ActionBar
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
@@ -37,14 +37,14 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     private var mContext: Context? = null
     private var selectedPaymantIdPosition: Int = 0
     private lateinit var saveContinueTextView: TextView
-    private lateinit var submitOnClickListener: CampaignPaymentModesFragment.SubmitListener
+    private lateinit var submitOnClickListener: SubmitListener
     private lateinit var toolbar: Toolbar
     private var columnCount = 1
     private lateinit var actionbar: ActionBar
     private var availableList = mutableListOf<PaymentModesModal>()
     private var allPaymantModes = mutableListOf<PaymentModesModal>()
     private lateinit var paymentModesAdapter: PaymentModesAdapter
-    private lateinit var recyclerPaymentModesOption: androidx.recyclerview.widget.RecyclerView
+    private lateinit var recyclerPaymentModesOption: RecyclerView
     private var dataDefaultPaymentMode: DefaultData? = null
     private lateinit var allPaymentData: PaymentModeListModal
     private lateinit var textLater: TextView
@@ -201,7 +201,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         }
 
         // Set the adapter
-        recyclerPaymentModesOption = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerPaymentModesOption)
+        recyclerPaymentModesOption = view.findViewById<RecyclerView>(R.id.recyclerPaymentModesOption)
         saveContinueTextView = view.findViewById(R.id.saveContinueTextView)
         recyclerPaymentModesOption.layoutManager = LinearLayoutManager(context)
 

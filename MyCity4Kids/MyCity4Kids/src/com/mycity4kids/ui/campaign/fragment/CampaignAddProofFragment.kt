@@ -1,26 +1,19 @@
 package com.mycity4kids.ui.campaign.fragment
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import android.text.SpannableString
-import android.text.Spanned
 import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import com.kelltontech.network.Response
@@ -38,12 +31,10 @@ import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.campaign.adapter.FaqRecyclerAdapter
 import com.mycity4kids.ui.campaign.adapter.MediaProofRecyclerAdapter
 import com.mycity4kids.ui.campaign.adapter.UrlProofRecyclerAdapter
-import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_add_proof.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -153,9 +144,9 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var faqRecyclerAdapter: FaqRecyclerAdapter
     private lateinit var mediaProofRecyclerAdapter: MediaProofRecyclerAdapter
     private lateinit var urlProofRecyclerAdapter: UrlProofRecyclerAdapter
-    private lateinit var recyclerFaqs: androidx.recyclerview.widget.RecyclerView
-    private lateinit var recyclerUrlProof: androidx.recyclerview.widget.RecyclerView
-    private lateinit var recyclerMediaProof: androidx.recyclerview.widget.RecyclerView
+    private lateinit var recyclerFaqs: RecyclerView
+    private lateinit var recyclerUrlProof: RecyclerView
+    private lateinit var recyclerMediaProof: RecyclerView
     private var campaignImageProofList: ArrayList<CampaignProofResponse> = arrayListOf()
     private var campaignUrlProofList: ArrayList<CampaignProofResponse> = arrayListOf()
     private var campaignId: Int = 60
@@ -186,7 +177,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_add_proof, container, false)
 
-        recyclerFaqs = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerFaqs)
+        recyclerFaqs = view.findViewById<RecyclerView>(R.id.recyclerFaqs)
         recyclerFaqs.layoutManager = LinearLayoutManager(context)
 
         if (arguments != null && arguments!!.containsKey("id") && arguments!!.containsKey("deliverableTypeList")) {
@@ -247,7 +238,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         faqRecyclerAdapter = FaqRecyclerAdapter(faqs, activity as Context)
         recyclerFaqs.adapter = faqRecyclerAdapter
 
-        recyclerMediaProof = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerMediaProof)
+        recyclerMediaProof = view.findViewById<RecyclerView>(R.id.recyclerMediaProof)
         recyclerMediaProof.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         mediaProofRecyclerAdapter = MediaProofRecyclerAdapter(campaignImageProofList, this)
         recyclerMediaProof.adapter = mediaProofRecyclerAdapter

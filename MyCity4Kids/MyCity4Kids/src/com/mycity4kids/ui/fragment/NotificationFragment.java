@@ -90,7 +90,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     private void getNotificationFromAPI() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         NotificationsAPI notificationsAPI = retrofit.create(NotificationsAPI.class);
-        Call<NotificationCenterListResponse> call = notificationsAPI.getNotificationCenterList(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), 10, paginationValue);
+        Call<NotificationCenterListResponse> call = notificationsAPI.getNotificationCenterList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 10, paginationValue);
         progressBar.setVisibility(View.VISIBLE);
         call.enqueue(notificationCenterResponseCallback);
 
