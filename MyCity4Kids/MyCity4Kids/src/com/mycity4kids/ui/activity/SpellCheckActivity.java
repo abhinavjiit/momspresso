@@ -1,13 +1,11 @@
 package com.mycity4kids.ui.activity;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Selection;
@@ -18,14 +16,15 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.CharacterStyle;
-import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.UpdateAppearance;
 import android.util.Log;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -37,6 +36,8 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.retrofitAPIsInterfaces.SpellCheckAPI;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.IndexWrapper;
+import com.mycity4kids.utils.WholeWordIndexFinder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +45,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -55,14 +57,14 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
 
     private TextView contentTextView, titleTextView;
     private Map<String, ArrayList<String>> contentSuggestionsMap = new HashMap<>();
-    private Map<String, ArrayList<String>> titleSuggestionsMap = new HashMap<>();
-    private View centerView;
     String originalBodyContent, originalTitleContent;
-    private String newHtmlTitle, newHtmlBody;
     private Toolbar toolbar;
     private TextView publishTextView;
     private String draftId;
-    private float touchCoordinateX, touchCoordinateY;
+    private LinearLayout bottomSheet;
+    private BottomSheetBehavior<LinearLayout> sheetBehavior;
+    private Map<String, Integer> contentOffsetMap = new HashMap<>();
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +74,11 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         titleTextView = (TextView) findViewById(R.id.titleTextView);
         contentTextView = (TextView) findViewById(R.id.contentTextView);
-        centerView = (View) findViewById(R.id.centerView);
+        bottomSheet = (LinearLayout) findViewById(R.id.bottomSheet);
         publishTextView = (TextView) toolbar.findViewById(R.id.publishTextView);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        sheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -88,24 +93,21 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
         String titleContent = AppUtils.stripHtml(originalTitleContent);
         String bodyContent = AppUtils.stripHtml(originalBodyContent);
 
-        Log.d("HTML stripped", bodyContent);
-
         titleTextView.setText(titleContent);
         contentTextView.setText(bodyContent);
 
         Retrofit retrofit = BaseApplication.getInstance().getAzureRetrofit();
 
+        progressBar.setVisibility(View.VISIBLE);
         SpellCheckAPI spellCheckAPI = retrofit.create(SpellCheckAPI.class);
         Call<ResponseBody> call = spellCheckAPI.getSpellCheck("proof", "en-US", bodyContent);
         call.enqueue(contentSpellCheckReponseCallback);
-
-        Call<ResponseBody> call1 = spellCheckAPI.getSpellCheck("proof", "en-US", titleContent);
-        call1.enqueue(titleSpellCheckReponseCallback);
     }
 
     private Callback<ResponseBody> contentSpellCheckReponseCallback = new Callback<ResponseBody>() {
         @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+        public void onResponse(@NonNull Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            progressBar.setVisibility(View.GONE);
             if (response.body() == null) {
                 return;
             }
@@ -114,13 +116,17 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
                     String resData = new String(response.body().bytes());
                     JSONObject jObject = new JSONObject(resData);
                     JSONArray flaggedArray = jObject.getJSONArray("flaggedTokens");
+                    if (flaggedArray.length() > 0) {
+                        showToast(getString(R.string.spell_check_error));
+                    }
                     for (int i = 0; i < flaggedArray.length(); i++) {
                         ArrayList<String> suggestionList = new ArrayList<>();
                         for (int j = 0; j < flaggedArray.getJSONObject(i).getJSONArray("suggestions").length(); j++) {
                             suggestionList.add(flaggedArray.getJSONObject(i).getJSONArray("suggestions").getJSONObject(j).getString("suggestion"));
                         }
                         contentSuggestionsMap.put(flaggedArray.getJSONObject(i).getString("token"), suggestionList);
-                        highlightString(contentSuggestionsMap, contentTextView, flaggedArray.getJSONObject(i).getString("token"));
+                        contentOffsetMap.put(flaggedArray.getJSONObject(i).getString("token"), flaggedArray.getJSONObject(i).getInt("offset"));
+                        highlightString(contentOffsetMap, contentSuggestionsMap, contentTextView, flaggedArray.getJSONObject(i).getString("token"), flaggedArray.getJSONObject(i).getInt("offset"));
                     }
                 }
             } catch (JSONException jsonexception) {
@@ -133,148 +139,92 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
         }
 
         @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+        public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+            progressBar.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("JSONException", Log.getStackTraceString(t));
         }
     };
 
-    private Callback<ResponseBody> titleSpellCheckReponseCallback = new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            if (response.body() == null) {
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    String resData = new String(response.body().bytes());
-                    JSONObject jObject = new JSONObject(resData);
-                    JSONArray flaggedArray = jObject.getJSONArray("flaggedTokens");
-                    for (int i = 0; i < flaggedArray.length(); i++) {
-                        ArrayList<String> suggestionList = new ArrayList<>();
-                        for (int j = 0; j < flaggedArray.getJSONObject(i).getJSONArray("suggestions").length(); j++) {
-                            suggestionList.add(flaggedArray.getJSONObject(i).getJSONArray("suggestions").getJSONObject(j).getString("suggestion"));
-                        }
-                        titleSuggestionsMap.put(flaggedArray.getJSONObject(i).getString("token"), suggestionList);
-                        highlightString(titleSuggestionsMap, titleTextView, flaggedArray.getJSONObject(i).getString("token"));
-                    }
-                }
-            } catch (JSONException jsonexception) {
-                Crashlytics.logException(jsonexception);
-                Log.d("JSONException", Log.getStackTraceString(jsonexception));
-            } catch (Exception ex) {
-                Crashlytics.logException(ex);
-                Log.d("MC4kException", Log.getStackTraceString(ex));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-        }
-    };
-
-    private void highlightString(Map<String, ArrayList<String>> suggestionsMap, TextView textView, String input) {
+    private void highlightString(Map<String, Integer> contentOffsetMap, Map<String, ArrayList<String>> suggestionsMap, TextView textView, String input, int offset) {
         SpannableString spannableString = new SpannableString(textView.getText());
-//Get the previous spans and remove them
-//        BackgroundColorSpan[] backgroundSpans = spannableString.getSpans(0, spannableString.length(), BackgroundColorSpan.class);
-//
-//        for (BackgroundColorSpan span : backgroundSpans) {
-//            spannableString.removeSpan(span);
-//        }
-//
-//Search for all occurrences of the keyword in the string
-        int indexOfKeyword = spannableString.toString().indexOf(input);
-
-        while (indexOfKeyword > 0) {
-            //Create a background color span on the keyword
-            spannableString.setSpan(new BackgroundColorSpan(Color.RED), indexOfKeyword, indexOfKeyword + input.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            spannableString.setSpan(new TouchableSpan() {
-                @Override
-                public boolean onTouch(View widget, MotionEvent m) {
-
-                    Log.d("Spannable Click", "Spannable Click");
-                    TextView tv = (TextView) widget;
-                    Spanned s = (Spanned) tv.getText();
-                    int start = s.getSpanStart(this);
-                    int end = s.getSpanEnd(this);
-                    Log.d("Spannable Click", "onClick [" + s.subSequence(start, end) + "]");
-
-//                    showPopUpMenu(suggestionsMap, textView, centerView, input);
-                    show(SpellCheckActivity.this, m.getX(), m.getY(), suggestionsMap, input);
-                    return false;
-                }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-
-                }
-            }, indexOfKeyword, indexOfKeyword + input.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            //Get the next index of the keyword
-            indexOfKeyword = spannableString.toString().indexOf(input, indexOfKeyword + input.length());
-
+        WholeWordIndexFinder finder = new WholeWordIndexFinder(spannableString.toString());
+        List<IndexWrapper> indexes = finder.findIndexesForKeyword(input);
+        int occuranceIndex = 0;
+        for (int i = 0; i < indexes.size(); i++) {
+            if (offset == indexes.get(i).getStart()) {
+                occuranceIndex = i;
+            }
         }
 
-//Set the final text on TextView
+        spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.app_red)), offset, offset + input.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new BackgroundColorSpan(ContextCompat.getColor(this, R.color.spell_check_error_highlight)),
+                offset, offset + input.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        int finalOccuranceIndex = occuranceIndex;
+        spannableString.setSpan(new TouchableSpan() {
+            @Override
+            public boolean onTouch(View widget, MotionEvent m) {
+
+                switch (m.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        showBottomSheet(contentOffsetMap, textView, suggestionsMap, input, offset, finalOccuranceIndex);//bottomSheet
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+                }
+                return false;
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+
+            }
+        }, offset, offset + input.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
         textView.setText(spannableString);
         textView.setMovementMethod(new LinkTouchMovementMethod());
-//        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    @SuppressLint("RestrictedApi")
-    public void showPopUpMenu(Map<String, ArrayList<String>> suggestionsMap, TextView textView, View view, String token) {
-        final PopupMenu popup = new PopupMenu(this, view);
+    private void showBottomSheet(Map<String, Integer> contentOffsetMap, TextView textView, Map<String, ArrayList<String>> suggestionsMap, String token, int offset, int occuranceIndex) {
+        bottomSheet.removeAllViews();
         for (int i = 0; i < suggestionsMap.get(token).size(); i++) {
-            popup.getMenu().add(suggestionsMap.get(token).get(i));
-        }
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                String updatedText = textView.getText().toString().replaceAll("\\b" + token + "\\b", item.getTitle().toString());
-                if (textView.getId() == R.id.titleTextView) {
-                    newHtmlTitle = originalTitleContent.replaceAll("\\b" + token + "\\b", item.getTitle().toString());
+            TextView tv = (TextView) LayoutInflater.from(this).inflate(R.layout.spell_check_suggestion_item, null);
+            tv.setText(suggestionsMap.get(token).get(i));
+            tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            ((LinearLayout) bottomSheet).addView(tv);
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String updatedText = textView.getText().toString().replaceAll("\\b" + token + "\\b", tv.getText().toString());
+                    WholeWordIndexFinder finder = new WholeWordIndexFinder(originalBodyContent);
+                    List<IndexWrapper> indexes = finder.findIndexesForKeyword(token);
+                    System.out.println("Indexes found " + indexes.size() + " keyword found at index : " + indexes.get(0).getStart());
+                    String prefix = originalBodyContent.substring(0, indexes.get(occuranceIndex).getStart());
+                    String suffix = originalBodyContent.substring(indexes.get(occuranceIndex).getStart()).replace(token, tv.getText().toString());
+
+                    Log.d("---HTML SUFFIX---", "" + suffix);
+                    originalBodyContent = prefix + suffix;
+                    Log.d("---HTML Body---", "" + originalBodyContent);
+                    for (Map.Entry<String, Integer> offsetEntry : contentOffsetMap.entrySet()) {
+                        if (offset < offsetEntry.getValue()) {
+                            offsetEntry.setValue(offsetEntry.getValue() + (tv.getText().toString().length() - token.length()));
+                        }
+                    }
                     suggestionsMap.remove(token);
-                    titleTextView.setText(updatedText);
-                } else {
-                    newHtmlBody = originalBodyContent.replaceAll("\\b" + token + "\\b", item.getTitle().toString());
-                    suggestionsMap.remove(token);
+                    contentOffsetMap.remove(token);
                     contentTextView.setText(updatedText);
+
+                    for (Map.Entry<String, ArrayList<String>> entry : suggestionsMap.entrySet()) {
+                        highlightString(contentOffsetMap, suggestionsMap, textView, entry.getKey(), contentOffsetMap.get(entry.getKey()));
+                    }
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
+            });
 
-                for (Map.Entry<String, ArrayList<String>> entry : suggestionsMap.entrySet()) {
-                    highlightString(suggestionsMap, textView, entry.getKey());
-                }
-                return true;
-            }
-
-        });
-        popup.show();
-    }
-
-    public void show(Activity activity, float x, float y, Map<String, ArrayList<String>> suggestionsMap, String token) {
-        Log.d("---POPUPMENU---", "Show me the money X=" + x + " Y=" + y);
-        final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
-
-        final View view = new View(activity);
-        view.setLayoutParams(new ViewGroup.LayoutParams(1, 1));
-        view.setBackgroundColor(Color.TRANSPARENT);
-
-        root.addView(view);
-
-        view.setX(x);
-        view.setY(y+100);
-
-        PopupMenu popupMenu = new PopupMenu(activity, view, Gravity.CENTER);
-        for (int i = 0; i < suggestionsMap.get(token).size(); i++) {
-            popupMenu.getMenu().add(suggestionsMap.get(token).get(i));
         }
-        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-            @Override
-            public void onDismiss(PopupMenu menu) {
-                root.removeView(view);
-            }
-        });
-
-        popupMenu.show();
+        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     @Override
@@ -297,8 +247,8 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.publishTextView:
                 PublishDraftObject publishObject = new PublishDraftObject();
-                publishObject.setBody(contentFormatting(newHtmlBody));
-                publishObject.setTitle(titleFormatting(newHtmlTitle));
+                publishObject.setBody(contentFormatting(originalBodyContent));
+                publishObject.setTitle(titleFormatting(originalTitleContent));
                 Intent intent_3 = new Intent(SpellCheckActivity.this, AddArticleTopicsActivityNew.class);
                 if (!StringUtils.isNullOrEmpty(draftId)) {
                     publishObject.setId(draftId);
@@ -319,29 +269,19 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
     }
 
     public String titleFormatting(String title) {
-        String htmlStrippedTitle = Html.fromHtml(title).toString();
-        return htmlStrippedTitle;
+        return Html.fromHtml(title).toString();
     }
 
     public abstract class TouchableSpan extends CharacterStyle implements UpdateAppearance {
 
-        /**
-         * Performs the touch action associated with this span.
-         *
-         * @return
-         */
         public abstract boolean onTouch(View widget, MotionEvent m);
 
-        /**
-         * Could make the text underlined or change link color.
-         */
         @Override
         public abstract void updateDrawState(TextPaint ds);
 
     }
 
     public class LinkTouchMovementMethod extends LinkMovementMethod {
-
         @Override
         public boolean onTouchEvent(TextView widget, Spannable buffer,
                                     MotionEvent event) {
@@ -382,6 +322,5 @@ public class SpellCheckActivity extends BaseActivity implements View.OnClickList
 
             return super.onTouchEvent(widget, buffer, event);
         }
-
     }
 }

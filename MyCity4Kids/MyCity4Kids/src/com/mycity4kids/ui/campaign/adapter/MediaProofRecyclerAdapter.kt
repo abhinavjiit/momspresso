@@ -1,9 +1,10 @@
 package com.mycity4kids.ui.campaign.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.mycity4kids.R
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.models.campaignmodels.CampaignProofResponse
@@ -12,8 +13,8 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.campaign_image_proof_sreenshots.view.*
 
 class MediaProofRecyclerAdapter(
-        private val mediaLists: List<CampaignProofResponse>, private val context: android.support.v4.app.Fragment)
-    : RecyclerView.Adapter<MediaProofRecyclerAdapter.ViewHolder>() {
+        private val mediaLists: List<CampaignProofResponse>, private val context: Fragment)
+    : androidx.recyclerview.widget.RecyclerView.Adapter<MediaProofRecyclerAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
     private var campaignProofResponse: List<CampaignProofResponse> = mediaLists
@@ -92,7 +93,7 @@ class MediaProofRecyclerAdapter(
 
     override fun getItemCount(): Int = campaignProofResponse.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
         val relativeParent = mView.relativeParent
         val imageScreenshot = mView.imageScreenshot
         val imageAcceptDeleteProof = mView.imageAcceptDeleteProof

@@ -6,10 +6,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.widget.Toolbar;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -1033,12 +1036,12 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
     }*/
     private class GetFilterAdapter extends FragmentStatePagerAdapter {
         public GetFilterAdapter(
-                android.support.v4.app.FragmentManager fragmentManager) {
+                FragmentManager fragmentManager) {
             super(fragmentManager);
         }
 
         @Override
-        public android.support.v4.app.Fragment getItem(int i) {
+        public Fragment getItem(int i) {
             Log.d("check", "checking getItem i " + i);
             Bundle args = new Bundle();
             if (!advancedListFromDb.isEmpty() && advancedListFromDb != null) {

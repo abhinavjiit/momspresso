@@ -3,7 +3,7 @@ package com.mycity4kids.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
 
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;

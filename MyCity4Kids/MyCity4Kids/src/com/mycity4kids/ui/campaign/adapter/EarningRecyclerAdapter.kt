@@ -1,7 +1,7 @@
 package com.mycity4kids.ui.campaign.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.recycler_myearning.view.*
 
 class EarningRecyclerAdapter(
         private val payoutList: List<AllCampaignTotalPayoutResponse.TotalPayoutResult>, private val context: Context)
-    : RecyclerView.Adapter<EarningRecyclerAdapter.ViewHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<EarningRecyclerAdapter.ViewHolder>() {
     private val mOnClickListener: View.OnClickListener
     private var payoutsList: List<AllCampaignTotalPayoutResponse.TotalPayoutResult>? = null
 
@@ -75,7 +75,7 @@ class EarningRecyclerAdapter(
 
     override fun getItemCount(): Int = payoutsList!!.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
         var brandImageView: ImageView = mView.brandImageView
         var settleAmount: TextView = mView.settle_amount
         var totalAmount: TextView = mView.total_amount

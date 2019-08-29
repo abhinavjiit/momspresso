@@ -3,9 +3,9 @@ package com.mycity4kids.ui.fragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.AppCompatRadioButton;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,6 @@ import android.widget.RadioGroup;
 import com.mycity4kids.R;
 
 import java.util.Objects;
-import java.util.zip.Inflater;
 
 public class OptionSelectionFragment extends DialogFragment implements View.OnClickListener {
     private LinearLayout linearLayout;

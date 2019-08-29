@@ -1,18 +1,17 @@
 package com.mycity4kids.ui.adapter
 
 import android.accounts.NetworkErrorException
+import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.ShareCompat
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ShareCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
@@ -24,10 +23,6 @@ import com.mycity4kids.preference.SharedPrefUtils
 import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.squareup.picasso.Picasso
-import io.branch.indexing.BranchUniversalObject
-import io.branch.referral.Branch
-import io.branch.referral.util.ContentMetadata
-import io.branch.referral.util.LinkProperties
 import kotlinx.android.synthetic.main.campaign_list_recycler_adapter.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,11 +30,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResult>, val context: FragmentActivity?) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
+class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResult>, val context: Activity?) : RecyclerView.Adapter<RewardCampaignAdapter.RewardHolder>() {
 
     private var campaignNewList: List<CampaignDataListResult>? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RewardCampaignAdapter.RewardHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RewardHolder {
         return RewardHolder(LayoutInflater.from(context).inflate(R.layout.campaign_list_recycler_adapter, parent, false))
     }
 
@@ -49,7 +44,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
 
     override fun getItemCount(): Int = campaignList.size
 
-    override fun onBindViewHolder(holder: RewardCampaignAdapter.RewardHolder, position: Int) {
+    override fun onBindViewHolder(holder: RewardHolder, position: Int) {
         val itemPhoto = campaignList[position]
         holder.bindPhoto(itemPhoto)
     }

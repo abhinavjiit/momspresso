@@ -3,7 +3,7 @@ package com.mycity4kids.ui.campaign.fragment
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.ShareCompat
+import androidx.core.app.ShareCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder

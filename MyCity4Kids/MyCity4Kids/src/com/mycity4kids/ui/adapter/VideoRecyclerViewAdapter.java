@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -39,7 +39,6 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.BaseViewHolder;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
-import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

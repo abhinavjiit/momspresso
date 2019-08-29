@@ -8,8 +8,8 @@ import android.content.Intent.ACTION_SEND
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
-import android.support.constraint.ConstraintLayout
+import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.Log
 import android.widget.RelativeLayout
 import android.widget.TextView

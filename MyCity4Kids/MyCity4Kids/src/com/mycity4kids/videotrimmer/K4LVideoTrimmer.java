@@ -30,8 +30,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -47,7 +47,6 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.videotrimmer.interfaces.OnK4LVideoListener;
 import com.mycity4kids.videotrimmer.interfaces.OnProgressVideoListener;
 import com.mycity4kids.videotrimmer.interfaces.OnRangeSeekBarListener;

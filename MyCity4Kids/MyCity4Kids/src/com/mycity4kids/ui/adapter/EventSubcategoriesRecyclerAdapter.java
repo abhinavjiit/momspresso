@@ -1,15 +1,13 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
 

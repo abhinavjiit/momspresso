@@ -1164,4 +1164,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="audio_delay_msg">உங்கள் ஆடியோ லோட் செய்யப்படும் போது காத்திரு.</string>
     <string name="write_something">ஏதாவது எழுது</string>
     <string name="join_dialog_post">வெளியிட</string>
+    <string name="spell_check_error">We found a few errors in the article</string>
 </resources>

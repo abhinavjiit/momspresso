@@ -3,7 +3,7 @@ package com.mycity4kids.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.util.AttributeSet;
 
 import com.mycity4kids.R;
@@ -11,7 +11,7 @@ import com.mycity4kids.R;
 /**
  * Created by hemant on 17/3/16.
  */
-public class CustomFontTextView extends android.support.v7.widget.AppCompatTextView {
+public class CustomFontTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);

@@ -4,10 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.ActionBar
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.ActionBar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +44,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
     private var availableList = mutableListOf<PaymentModesModal>()
     private var allPaymantModes = mutableListOf<PaymentModesModal>()
     private lateinit var paymentModesAdapter: PaymentModesAdapter
-    private lateinit var recyclerPaymentModesOption: RecyclerView
+    private lateinit var recyclerPaymentModesOption: androidx.recyclerview.widget.RecyclerView
     private var dataDefaultPaymentMode: DefaultData? = null
     private lateinit var allPaymentData: PaymentModeListModal
     private lateinit var textLater: TextView
@@ -201,7 +201,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
         }
 
         // Set the adapter
-        recyclerPaymentModesOption = view.findViewById<RecyclerView>(R.id.recyclerPaymentModesOption)
+        recyclerPaymentModesOption = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerPaymentModesOption)
         saveContinueTextView = view.findViewById(R.id.saveContinueTextView)
         recyclerPaymentModesOption.layoutManager = LinearLayoutManager(context)
 

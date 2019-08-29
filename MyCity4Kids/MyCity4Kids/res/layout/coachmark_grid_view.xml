@@ -60,7 +60,7 @@
                 android:background="@drawable/round_border_momsvlog"
                 android:visibility="invisible">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/videoImageView"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
@@ -93,7 +93,7 @@
                 android:background="@drawable/round_border_videos"
                 android:visibility="invisible">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/momsTVImageView"
                     android:layout_width="26dp"
                     android:layout_height="26dp"

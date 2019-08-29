@@ -1,7 +1,7 @@
 package com.mycity4kids.ui.campaign.fragment
 
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.paymets_modes_adapter.view.*
 
 
 class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, private val context: Fragment)
-    : RecyclerView.Adapter<PaymentModesAdapter.ViewHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<PaymentModesAdapter.ViewHolder>() {
 
     private var paymentMode: List<PaymentModesModal> = paymentModeList
     private var clickListener = context as ClickListener
@@ -70,7 +70,7 @@ class PaymentModesAdapter(private val paymentModeList: List<PaymentModesModal>, 
 
     override fun getItemCount(): Int = paymentMode.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView), View.OnClickListener {
+    inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView), View.OnClickListener {
         override fun onClick(p0: View?) {
         }
 

@@ -1,20 +1,21 @@
 package com.mycity4kids.ui.campaign.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.mycity4kids.R
 import com.mycity4kids.models.campaignmodels.CampaignProofResponse
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.campaign_image_proof_sreenshots.view.*
 import kotlinx.android.synthetic.main.campaign_url_proof_cell.view.*
 
-class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse>, private val context: android.support.v4.app.Fragment)
-    : RecyclerView.Adapter<UrlProofRecyclerAdapter.ViewHolder>() {
+class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse>, private val context: Fragment)
+    : androidx.recyclerview.widget.RecyclerView.Adapter<UrlProofRecyclerAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
     private var campaignProofResponse: List<CampaignProofResponse> = mediaLists
@@ -150,7 +151,7 @@ class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse
 
     override fun getItemCount(): Int = campaignProofResponse.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
         val textUrl = mView.textUrl
         val imageDelete = mView.imageDelete
         val imageApprovedRejected = mView.imageApprovedRejected

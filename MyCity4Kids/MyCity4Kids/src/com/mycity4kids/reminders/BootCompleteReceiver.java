@@ -2,7 +2,7 @@ package com.mycity4kids.reminders;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.WakefulBroadcastReceiver;
+import androidx.legacy.content.WakefulBroadcastReceiver;
 
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
@@ -13,7 +13,6 @@ import com.mycity4kids.dbtable.TaskTableWhoToRemind;
 import com.mycity4kids.newmodels.AppointmentMappingModel;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.TaskDataModel;
-import com.mycity4kids.newmodels.TaskMappingModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 
 import java.util.ArrayList;

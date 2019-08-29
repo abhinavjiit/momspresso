@@ -19,9 +19,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
@@ -49,22 +49,15 @@ import com.github.irshulx.models.Op;
 import com.github.irshulx.models.RenderType;
 import com.github.irshulx.models.TextSettings;
 
-import junit.framework.Assert;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.microedition.khronos.egl.EGLDisplay;
 
 /**
  * Created by mkallingal on 4/30/2016.

@@ -8,9 +8,9 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -53,8 +53,8 @@ const val SELECT_IMAGE = 1005
 class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickListener, MediaProofRecyclerAdapter.ClickListener {
     override fun onUrlComponentDelete(cellIndex: Int) {
         for (i in 0..campaignUrlProofList.size - 1) {
-            var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
-            var textview = view.findViewById<EditText>(R.id.textUrl)
+            var view = recyclerUrlProof.layoutManager?.findViewByPosition(i);
+            var textview = view?.findViewById<EditText>(R.id.textUrl)
             if (textview != null && !textview.text.isNullOrEmpty()) {
                 this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = textview.text.toString()
             } else {
@@ -91,19 +91,19 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     fun onProofSubmitClick() {
         for (i in 0..campaignUrlProofList.size - 1) {
             if (campaignUrlProofList != null && campaignUrlProofList.size > i) {
-                var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
-                var textview = view.findViewById<EditText>(R.id.textUrl)
-                var proofPostModel = ProofPostModel(url = textview.text.toString(), campaign_id = campaignId, url_type = 1)
+                var view = recyclerUrlProof.layoutManager?.findViewByPosition(i);
+                var textview = view?.findViewById<EditText>(R.id.textUrl)
+                var proofPostModel = ProofPostModel(url = textview?.text.toString(), campaign_id = campaignId, url_type = 1)
                 if (i == campaignUrlProofList.size - 1) {
                     updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = true)
                 } else {
                     updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = false)
                 }
             } else {
-                var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
-                var textview = view.findViewById<EditText>(R.id.textUrl)
-                if (!textview.text.isNullOrEmpty()) {
-                    var proofPostModel = ProofPostModel(url = textview.text.toString(), campaign_id = campaignId, url_type = 1)
+                var view = recyclerUrlProof.layoutManager?.findViewByPosition(i);
+                var textview = view?.findViewById<EditText>(R.id.textUrl)
+                if (!textview?.text.isNullOrEmpty()) {
+                    var proofPostModel = ProofPostModel(url = textview?.text.toString(), campaign_id = campaignId, url_type = 1)
                     if (i == campaignUrlProofList.size - 1) {
                         postProofToServer(proofPostModel, true, urlType = 1)
                     } else {
@@ -153,9 +153,9 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private lateinit var faqRecyclerAdapter: FaqRecyclerAdapter
     private lateinit var mediaProofRecyclerAdapter: MediaProofRecyclerAdapter
     private lateinit var urlProofRecyclerAdapter: UrlProofRecyclerAdapter
-    private lateinit var recyclerFaqs: RecyclerView
-    private lateinit var recyclerUrlProof: RecyclerView
-    private lateinit var recyclerMediaProof: RecyclerView
+    private lateinit var recyclerFaqs: androidx.recyclerview.widget.RecyclerView
+    private lateinit var recyclerUrlProof: androidx.recyclerview.widget.RecyclerView
+    private lateinit var recyclerMediaProof: androidx.recyclerview.widget.RecyclerView
     private var campaignImageProofList: ArrayList<CampaignProofResponse> = arrayListOf()
     private var campaignUrlProofList: ArrayList<CampaignProofResponse> = arrayListOf()
     private var campaignId: Int = 60
@@ -186,7 +186,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_add_proof, container, false)
 
-        recyclerFaqs = view.findViewById<RecyclerView>(R.id.recyclerFaqs)
+        recyclerFaqs = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerFaqs)
         recyclerFaqs.layoutManager = LinearLayoutManager(context)
 
         if (arguments != null && arguments!!.containsKey("id") && arguments!!.containsKey("deliverableTypeList")) {
@@ -209,8 +209,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         textAddUrlProof.setOnClickListener {
             var isEmpty = false
             for (i in 0..campaignUrlProofList.size - 1) {
-                var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
-                var textview = view.findViewById<EditText>(R.id.textUrl)
+                var view = recyclerUrlProof.layoutManager?.findViewByPosition(i);
+                var textview = view?.findViewById<EditText>(R.id.textUrl)
                 if (textview != null && !textview.text.isNullOrEmpty()) {
                     this@CampaignAddProofFragment.campaignUrlProofList.get(i).url = textview.text.toString()
                 } else {
@@ -247,13 +247,13 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
         faqRecyclerAdapter = FaqRecyclerAdapter(faqs, activity as Context)
         recyclerFaqs.adapter = faqRecyclerAdapter
 
-        recyclerMediaProof = view.findViewById<RecyclerView>(R.id.recyclerMediaProof)
-        recyclerMediaProof.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recyclerMediaProof = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerMediaProof)
+        recyclerMediaProof.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         mediaProofRecyclerAdapter = MediaProofRecyclerAdapter(campaignImageProofList, this)
         recyclerMediaProof.adapter = mediaProofRecyclerAdapter
 
         recyclerUrlProof = view.findViewById(R.id.recyclerUrlProof)
-        recyclerUrlProof.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        recyclerUrlProof.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         urlProofRecyclerAdapter = UrlProofRecyclerAdapter(campaignUrlProofList, this)
         recyclerUrlProof.adapter = urlProofRecyclerAdapter
 
@@ -286,8 +286,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
     private fun validateUrlProofs(): Boolean {
         var isAllEmpty: Boolean = true
         for (i in 0..campaignUrlProofList.size - 1) {
-            var view = recyclerUrlProof.layoutManager.findViewByPosition(i);
-            var textview: EditText = view.findViewById<EditText>(R.id.textUrl)
+            val view = recyclerUrlProof.layoutManager?.findViewByPosition(i);
+            var textview: EditText? = view?.findViewById<EditText>(R.id.textUrl)
             if (textview != null && !textview.text.isNullOrEmpty()) {
                 isAllEmpty = false
                 break

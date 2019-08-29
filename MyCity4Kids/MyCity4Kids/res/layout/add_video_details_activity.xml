@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
                 fab:fontName="oswald_regular.ttf" />
 
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <com.mycity4kids.widget.CustomFontEditText
         android:id="@+id/videoTitleEditText"
@@ -57,7 +57,7 @@
         android:layout_height="250dp"
         android:layout_below="@+id/videoTitleEditText" />
 
-    <android.support.v7.widget.SwitchCompat
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/muteVideoSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

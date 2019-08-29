@@ -14,10 +14,11 @@ import android.graphics.drawable.ColorDrawable
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v7.widget.AppCompatRadioButton
-import android.support.v7.widget.AppCompatSpinner
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.appcompat.widget.AppCompatRadioButton
+import androidx.appcompat.widget.AppCompatSpinner
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -59,7 +60,6 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_rewards_personal_info.*
 import org.apmem.tools.layouts.FlowLayout
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -130,6 +130,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private lateinit var editAddNumber: TextView
     private lateinit var editEmail: EditText
     private lateinit var referralMainLayout: RelativeLayout
+    private lateinit var editReferralCode: EditText
+    private lateinit var textReferCodeError: TextView
+    private lateinit var spinnernumberOfKids: AppCompatSpinner
+    private lateinit var checkAreYouExpecting: AppCompatCheckBox
     private lateinit var editLocation: EditText
     private lateinit var textVerify: TextView
     private lateinit var textApplyReferral: TextView
@@ -197,7 +201,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_personal_info, container, false)
+
+        textReferCodeError = containerView.findViewById(R.id.textReferCodeError)
+        editReferralCode = containerView.findViewById(R.id.editReferralCode)
         referralMainLayout = containerView.findViewById(R.id.referralMainLayout)
+        spinnernumberOfKids = containerView.findViewById(R.id.spinnernumberOfKids)
+        checkAreYouExpecting = containerView.findViewById(R.id.checkAreYouExpecting)
+
         if (arguments != null) {
             isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {
                 arguments!!.getBoolean("isComingFromRewards")

@@ -3,38 +3,32 @@ package com.mycity4kids.ui.rewards.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.facebook.CallbackManager
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
+import com.mycity4kids.application.BaseApplication
+import com.mycity4kids.constants.Constants
 import com.mycity4kids.facebook.FacebookUtils
 import com.mycity4kids.interfaces.IFacebookEvent
+import com.mycity4kids.models.campaignmodels.ProofPostModel
+import com.mycity4kids.models.response.BaseResponseGeneric
+import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
 import com.mycity4kids.ui.campaign.fragment.PanCardDetailsSubmissionFragment
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsFamilyInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
-import android.R.id.message
-import android.util.Log
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.Toast
-import com.kelltontech.utils.ToastUtils
-import com.mycity4kids.MessageEvent
-import com.mycity4kids.application.BaseApplication
-import com.mycity4kids.constants.Constants
-import com.mycity4kids.models.campaignmodels.ProofPostModel
-import com.mycity4kids.models.response.BaseResponseGeneric
-import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.ThreadMode
-import org.greenrobot.eventbus.Subscribe
 
 
 class RewardsContainerActivity : BaseActivity(),
@@ -155,7 +149,8 @@ class RewardsContainerActivity : BaseActivity(),
     private fun addProfileFragment() {
         if (pageLimit!! >= 1) {
             rewardsPersonalInfoFragment = RewardsPersonalInfoFragment.newInstance(isComingFromRewards = true, isComingfromCampaign = isComingfromCampaign, referralCode = referralCode)
-            supportFragmentManager.beginTransaction().replace(R.id.container, rewardsPersonalInfoFragment,
+            val rewardFrag = rewardsPersonalInfoFragment as Fragment
+            supportFragmentManager.beginTransaction().replace(R.id.container, rewardFrag,
                     RewardsPersonalInfoFragment::class.java.simpleName)
                     .commit()
         } else {
@@ -166,7 +161,8 @@ class RewardsContainerActivity : BaseActivity(),
     private fun addSocialFragment() {
         if (pageLimit!! >= 3) {
             rewardsSocialInfoFragment = RewardsSocialInfoFragment.newInstance(isComingFromRewards = true)
-            supportFragmentManager.beginTransaction().replace(R.id.container, rewardsSocialInfoFragment,
+            val rewardFrag = rewardsSocialInfoFragment as Fragment
+            supportFragmentManager.beginTransaction().replace(R.id.container, rewardFrag,
                     RewardsSocialInfoFragment::class.java.simpleName)
                     .commit()
         } else if (isComingfromCampaign) {
@@ -181,7 +177,8 @@ class RewardsContainerActivity : BaseActivity(),
         if (pageLimit!! >= 4) {
 
             paymentModesFragment = CampaignPaymentModesFragment.newInstance(isComingFromRewards = true)
-            supportFragmentManager.beginTransaction().replace(R.id.container, paymentModesFragment,
+            val paymentFrag = paymentModesFragment as Fragment
+            supportFragmentManager.beginTransaction().replace(R.id.container, paymentFrag,
                     CampaignPaymentModesFragment::class.java.simpleName)
                     .commit()
         } else {
@@ -192,7 +189,8 @@ class RewardsContainerActivity : BaseActivity(),
     private fun addPancardDetailFragment() {
         if (pageLimit!! >= 5) {
             panCardDetailsSubmissionFragment = PanCardDetailsSubmissionFragment.newInstance(isComingFromRewards = true)
-            supportFragmentManager.beginTransaction().replace(R.id.container, panCardDetailsSubmissionFragment,
+            val pancardFrag = panCardDetailsSubmissionFragment as Fragment
+            supportFragmentManager.beginTransaction().replace(R.id.container, pancardFrag,
                     PanCardDetailsSubmissionFragment::class.java.simpleName)
                     .commit()
         } else {

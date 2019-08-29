@@ -1,14 +1,5 @@
 package com.mycity4kids.widget;
 
-import android.graphics.Rect;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewTreeObserver;
-
-import java.util.ArrayList;
-
 public class ViewTracker {
 
 //    // Time from which a particular view has been started viewing.

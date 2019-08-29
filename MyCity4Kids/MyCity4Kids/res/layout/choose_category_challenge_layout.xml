@@ -28,7 +28,7 @@
         android:layout_below="@+id/whyLeaveTextView"
         android:layout_marginLeft="24dp">
 
-        <android.support.v7.widget.AppCompatRadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/reason1RadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             android:textColor="@color/short_story.light_black_color"
             app:buttonTint="@color/app_red" />
 
-        <android.support.v7.widget.AppCompatRadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/reason2RadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             android:textColor="@color/short_story.light_black_color"
             app:buttonTint="@color/app_red" />
 
-        <android.support.v7.widget.AppCompatRadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/reason3RadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             android:textColor="@color/short_story.light_black_color"
             app:buttonTint="@color/app_red" />
 
-        <android.support.v7.widget.AppCompatRadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/reason4RadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
             android:textColor="@color/short_story.light_black_color"
             app:buttonTint="@color/app_red" />
 
-        <android.support.v7.widget.AppCompatRadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/reason5RadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

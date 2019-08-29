@@ -1295,4 +1295,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
     <string name="write_something">કંઇક લખો</string>
     <string name="join_dialog_post">પ્રકાશિત કરો</string>
+    <string name="spell_check_error">We found a few errors in the article</string>
 </resources>

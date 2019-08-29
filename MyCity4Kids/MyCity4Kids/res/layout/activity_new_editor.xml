@@ -44,7 +44,7 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <fragment
         android:id="@+id/postEditor"

@@ -8,16 +8,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.net.Uri;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
+
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.Dash;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -30,12 +32,12 @@ import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
-import com.mycity4kids.ui.activity.MomsVlogDetailActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.PublicProfileActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
@@ -55,6 +57,23 @@ public class MyFcmListenerService extends FirebaseMessagingService {
     Bitmap bitmap;
 
     @Override
+    public void onNewToken(@NonNull String fcmToken) {
+        super.onNewToken(fcmToken);
+        SharedPrefUtils.setDeviceToken(this, fcmToken);
+        Log.e("token in preferences", SharedPrefUtils.getDeviceToken(this));
+        Intent intent = new Intent(this, PushTokenService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                startForegroundService(intent);
+            } catch (IllegalArgumentException e) {
+                startService(intent);
+            }
+        } else {
+            startService(intent);
+        }
+    }
+
+    @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         String from = remoteMessage.getFrom();
@@ -63,8 +82,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         Log.e("data", data.toString());
 //       Log.e("Notification Body", remoteMessage.getNotification().getBody());
         sendNotification(remoteMessage);
-        //showNotification();
-        //setDummyNotification();
     }
 
     /*this will prepare the notification for every type*/
@@ -88,7 +105,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                     .build();
-            channel.setSound(soundUri,audioAttributes);
+            channel.setSound(soundUri, audioAttributes);
             mNotificationManager.createNotificationChannel(channel);
         }
         PendingIntent launchIntent = getLaunchIntent(1, getBaseContext());
@@ -112,7 +129,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
                         .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap))
                         .setContentIntent(pendingIntent);
-                        //.setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.coin));
+                //.setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.coin));
             }
         } else {
             if (sound.isEmpty()) {
@@ -131,10 +148,9 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         .setAutoCancel(true) // clear notification after click
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
                         .setContentIntent(pendingIntent);
-                        //.setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.coin));
+                //.setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.coin));
             }
         }
-
 
 
         Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
@@ -654,8 +670,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         || type.equalsIgnoreCase("group_admin_group_edit") || type.equalsIgnoreCase("group_admin")
                         || type.equalsIgnoreCase("group_new_response") || type.equalsIgnoreCase("group_new_reply")
                         || type.equalsIgnoreCase("group_admin_membership") || type.equalsIgnoreCase("group_admin_reported")) {
-
-
 
 
                 } else {

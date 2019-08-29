@@ -3,9 +3,8 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +30,6 @@ import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
 import com.mycity4kids.newmodels.SelectTopic;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.adapter.SubscribeTopicsPagerAdapter;
 import com.mycity4kids.ui.adapter.SubscribeTopicsTabAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -43,7 +41,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 import okhttp3.ResponseBody;

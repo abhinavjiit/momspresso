@@ -13,9 +13,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.core.app.ActivityCompat;
+
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -147,7 +153,12 @@ public class SplashActivity extends BaseActivity {
         //generateFacebookHashcode();
         extras = getIntent().getExtras();
         setUpGTM();
-        MobileAds.initialize(this, getString(R.string.admob_id));
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                Log.d("Admob", "Initialized");
+            }
+        });
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         if (getIntent().getBooleanExtra("fromNotification", false)) {

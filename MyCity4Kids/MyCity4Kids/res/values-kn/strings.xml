@@ -1208,4 +1208,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="audio_delay_msg">Playing your audio might take afew seconds</string>
     <string name="write_something">ಏನಾದರೂ ಬರೆಯಿರಿ</string>
     <string name="join_dialog_post">ಪ್ರಕಟಿಸು</string>
+    <string name="spell_check_error">We found a few errors in the article</string>
 </resources>

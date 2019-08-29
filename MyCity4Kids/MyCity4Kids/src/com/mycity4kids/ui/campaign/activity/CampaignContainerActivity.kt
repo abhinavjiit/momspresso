@@ -4,11 +4,11 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.Window
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseActivity
 import com.mycity4kids.R
@@ -18,8 +18,8 @@ import com.mycity4kids.retrofitAPIsInterfaces.CampaignAPI
 import com.mycity4kids.ui.campaign.PaymentModeListModal
 import com.mycity4kids.ui.campaign.fragment.CampaignAddProofFragment
 import com.mycity4kids.ui.campaign.fragment.CampaignCongratulationFragment
-import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
 import com.mycity4kids.ui.campaign.fragment.CampaignDetailFragment
+import com.mycity4kids.ui.campaign.fragment.CampaignPaymentModesFragment
 import com.mycity4kids.ui.fragment.CampaignListFragment
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -124,7 +124,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     private fun campaignListFragment() {
         campaignListFragment = CampaignListFragment.newInstance()
-        supportFragmentManager.beginTransaction().add(R.id.container, campaignListFragment,
+        val campaignFrag = campaignListFragment as Fragment
+        supportFragmentManager.beginTransaction().add(R.id.container, campaignFrag,
                 CampaignListFragment::class.java.simpleName).addToBackStack("campaignListFragment")
                 .commit()
     }
@@ -132,7 +133,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     fun addCampaginDetailFragment(id: Int) {
         campaignDetailFragment = CampaignDetailFragment.newInstance(id, fromNotification)
-        supportFragmentManager.beginTransaction().replace(R.id.container, campaignDetailFragment,
+        val campaignFrag = campaignDetailFragment as Fragment
+        supportFragmentManager.beginTransaction().replace(R.id.container, campaignFrag,
                 CampaignDetailFragment::class.java.simpleName).addToBackStack("campaignDetailFragment")
                 .commit()
     }
@@ -154,7 +156,7 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
 
     override fun onBackPressed() {
         val fragmentManager = supportFragmentManager
-        val currentFragment: Fragment
+        val currentFragment: Fragment?
         currentFragment = supportFragmentManager.findFragmentById(R.id.container)
         if (fragmentManager.backStackEntryCount == 1) {
             finish()
@@ -167,7 +169,8 @@ class CampaignContainerActivity : BaseActivity(), CampaignAddProofFragment.Submi
                     }
 
                     campaignListFragment = CampaignListFragment.newInstance()
-                    supportFragmentManager.beginTransaction().add(R.id.container, campaignListFragment,
+                    val campaignFrag = campaignListFragment as Fragment
+                    supportFragmentManager.beginTransaction().add(R.id.container, campaignFrag,
                             CampaignListFragment::class.java.simpleName).addToBackStack("campaignListFragment")
                             .commit()
                 } else {

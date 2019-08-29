@@ -3,8 +3,8 @@ package com.mycity4kids.ui.activity
 import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -29,7 +29,7 @@ import java.util.*
 
 class MyTotalEarningActivity : BaseActivity() {
 
-    private lateinit var recyclerEarnings: RecyclerView
+    private lateinit var recyclerEarnings: androidx.recyclerview.widget.RecyclerView
     private lateinit var earningRecyclerAdapter: EarningRecyclerAdapter
     private var totalPayout: Int = 0
     private lateinit var textTotalPayout: TextView
@@ -51,7 +51,7 @@ class MyTotalEarningActivity : BaseActivity() {
         totalPayout = intent.getIntExtra("totalPayout", 0)
 
         textTotalPayout = findViewById(R.id.total_amount)
-        recyclerEarnings = findViewById<RecyclerView>(R.id.recyclerEarnings)
+        recyclerEarnings = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerEarnings)
         profileImageView = findViewById(R.id.profileImageView)
         startCampaign = findViewById(R.id.start_campaign_cta)
         startCampaignText = findViewById(R.id.start_campaign_text)

@@ -10,14 +10,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import com.google.android.material.tabs.TabLayout;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -83,7 +85,6 @@ import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.ui.fragment.ShareBlogInDiscussionDialogFragment;
 import com.mycity4kids.ui.fragment.TaskFragment;
-import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -94,7 +95,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimerTask;
 
@@ -2202,7 +2202,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onPostExecute(Bitmap image) {
-        android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("Add Comment");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("Add Comment");
         if (prev == null) {
 
         } else {

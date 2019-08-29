@@ -50,7 +50,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD0t9fusBGBU-bTdNO9teedX6by9J-LscI" /> <!-- API key For Google Map Local -->
+            android:value="AIzaSyATjKBk6YHXTxF0nuN6zCumLfq9JY4aBKU" /> <!-- API key For Google Map Local -->
         <!-- <meta-data -->
         <!-- android:name="com.google.android.maps.v2.API_KEY" -->
         <!-- android:value="AIzaSyDW1kR3eOOksMp4gBrOnyGVB-q9bFJ21x4" /> -->
@@ -603,17 +603,15 @@
         </provider>
 
         <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_id" />
+        <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0955a2855f4c5641b7994b98f58aef7eadbf4cd5" />
 
         <service android:name=".fcm.MyFcmListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service android:name=".fcm.MyInstanceIDListenerService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service

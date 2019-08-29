@@ -3,9 +3,8 @@ package com.mycity4kids.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatEditText;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
 import com.mycity4kids.R;
 

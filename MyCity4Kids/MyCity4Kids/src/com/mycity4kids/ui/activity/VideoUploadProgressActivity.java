@@ -1,17 +1,15 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.KeyguardManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;

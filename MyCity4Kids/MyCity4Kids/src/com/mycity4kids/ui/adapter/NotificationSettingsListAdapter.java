@@ -1,13 +1,12 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.SwitchCompat;
+import androidx.appcompat.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.mycity4kids.R;
 import com.mycity4kids.models.NotificationSettingsModel;

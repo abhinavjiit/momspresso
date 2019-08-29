@@ -17,14 +17,14 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/id_appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#fff"
             android:fitsSystemWindows="true">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,10 +66,10 @@
                         app:fontName="oswald_regular.ttf" />
 
                 </RelativeLayout>
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
 
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
 
         <!--    <android.support.v7.widget.RecyclerView
@@ -94,7 +94,7 @@
             android:visibility="gone"
             app:fontName="oswald.ttf" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/horizontalRecyclerViewForVideoChallenge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
             android:orientation="horizontal"
             android:visibility="gone">
 
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
         <!-- <GridView
              android:id="@+id/gridview"
              android:layout_width="match_parent"

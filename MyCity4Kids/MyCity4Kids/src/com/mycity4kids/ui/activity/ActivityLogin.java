@@ -3,20 +3,15 @@ package com.mycity4kids.ui.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.util.Base64;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AlertDialog;
+
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
@@ -24,9 +19,7 @@ import com.facebook.CallbackManager;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
-import com.facebook.accountkit.ui.AdvancedUIManager;
 import com.facebook.accountkit.ui.LoginType;
-import com.facebook.accountkit.ui.SkinManager;
 import com.facebook.accountkit.ui.ThemeUIManager;
 import com.facebook.accountkit.ui.UIManager;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -75,8 +68,6 @@ import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

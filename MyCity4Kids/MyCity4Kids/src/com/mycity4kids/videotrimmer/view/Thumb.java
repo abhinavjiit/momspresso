@@ -26,7 +26,7 @@ package com.mycity4kids.videotrimmer.view;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.mycity4kids.R;
 

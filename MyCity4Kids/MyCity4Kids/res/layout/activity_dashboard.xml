@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
 
-    <android.support.v4.widget.DrawerLayout
+    <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -63,7 +63,7 @@
                     app:fontName="oswald_regular.ttf" />
             </RelativeLayout>
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -170,7 +170,7 @@
 
                     </LinearLayout>
                 </RelativeLayout>
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
             <View
                 android:id="@+id/toolbarUnderline"
@@ -269,7 +269,7 @@
 
                     </com.facebook.shimmer.ShimmerFrameLayout>
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/draftsRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -482,7 +482,7 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <android.support.v7.widget.AppCompatImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:visibility="visible"
@@ -595,7 +595,7 @@
                     android:background="@drawable/coachmark_round_layout"
                     android:gravity="center">
 
-                    <android.support.v7.widget.AppCompatImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/exploreGuideTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -646,7 +646,7 @@
                         android:orientation="vertical"
                         android:visibility="visible">
 
-                        <android.support.v7.widget.AppCompatImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:tint="@color/white"
@@ -800,7 +800,7 @@
                 android:elevation="8dp"
                 android:visibility="invisible">
 
-                <android.support.v7.widget.Toolbar
+                <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbarMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -828,7 +828,7 @@
 
                     </RelativeLayout>
 
-                </android.support.v7.widget.Toolbar>
+                </androidx.appcompat.widget.Toolbar>
 
                 <View
                     android:id="@+id/menuHorizontalLine"
@@ -1133,7 +1133,7 @@
                 android:elevation="8dp"
                 android:visibility="gone">
 
-                <android.support.v7.widget.Toolbar
+                <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1213,7 +1213,7 @@
                         </LinearLayout>
                     </RelativeLayout>
 
-                </android.support.v7.widget.Toolbar>
+                </androidx.appcompat.widget.Toolbar>
 
                 <View
                     android:layout_width="60dp"
@@ -1408,7 +1408,7 @@
                 android:elevation="8dp"
                 android:visibility="gone">
 
-                <android.support.v7.widget.Toolbar
+                <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1449,7 +1449,7 @@
 
                     </RelativeLayout>
 
-                </android.support.v7.widget.Toolbar>
+                </androidx.appcompat.widget.Toolbar>
 
                 <View
                     android:layout_width="100dp"
@@ -1485,7 +1485,7 @@
                     app:fontName="oswald.ttf" />
             </RelativeLayout>
 
-            <android.support.design.widget.CoordinatorLayout
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:id="@+id/cordinate"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -1501,10 +1501,10 @@
                     android:orientation="vertical"
                     android:visibility="gone" />
 
-            </android.support.design.widget.CoordinatorLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
         </RelativeLayout>
 
-        <android.support.design.widget.NavigationView
+        <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigation_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -1512,9 +1512,9 @@
 
             <include layout="@layout/drawer_layout" />
 
-        </android.support.design.widget.NavigationView>
+        </com.google.android.material.navigation.NavigationView>
 
-    </android.support.v4.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
     <RelativeLayout
         android:id="@+id/drawerProfileCoachmark"

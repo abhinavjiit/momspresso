@@ -15,11 +15,15 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.widget.Toolbar;
+
 import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -30,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -87,6 +92,10 @@ import retrofit2.Retrofit;
  */
 public class EditorPostActivity extends BaseActivity implements EditorFragmentAbstract.EditorFragmentListener, View.OnClickListener, SpellCheckDialogFragment.ISpellcheckResult {
 
+    private FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
+    private static final String SPELL_CHECK_FLAG = "show_spell_check_flag";
+
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
@@ -142,6 +151,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     Runnable periodicUpdate = null;
     private final MyHandler mHandler = new MyHandler(this);
     private long lastUpdatedTime;
+    private boolean spellCheckFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +177,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
+        spellCheckFlag = mFirebaseRemoteConfig.getBoolean(SPELL_CHECK_FLAG);
+
         mLayout = findViewById(R.id.rootLayout);
         mFailedUploads = new HashMap<>();
     }
@@ -941,11 +953,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 } else {
                     if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
                         launchSpellCheckDialog();
-//                        mHandler.removeCallbacksAndMessages(null);
-//                        Intent spellIntent = new Intent(EditorPostActivity.this, SpellCheckActivity.class);
-//                        spellIntent.putExtra("titleContent", mEditorFragment.getTitle().toString().trim());
-//                        spellIntent.putExtra("bodyContent", mEditorFragment.getContent().toString());
-//                        startActivity(spellIntent);
                     } else {
                         saveDraftBeforePublishRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
                     }
@@ -994,14 +1001,14 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     draftId = responseModel.getData().get(0).getResult().getId() + "";
 //                    launchSpellCheckDialog();
                     mHandler.removeCallbacksAndMessages(null);
-//                    if (mEditorFragment.getContent().toString().contains("<img src")) {
-//                        launchSpellCheckDialog();
-//                    } else {
+                    if (spellCheckFlag) {
                         Intent spellIntent = new Intent(EditorPostActivity.this, SpellCheckActivity.class);
                         spellIntent.putExtra("titleContent", mEditorFragment.getTitle().toString().trim());
                         spellIntent.putExtra("bodyContent", mEditorFragment.getContent().toString());
                         startActivity(spellIntent);
-//                    }
+                    } else {
+                        launchSpellCheckDialog();
+                    }
                 } else {
                     if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
                         showToast(getString(R.string.toast_response_error));

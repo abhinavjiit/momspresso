@@ -1,9 +1,9 @@
 package com.mycity4kids.ui.videochallengenewui.Adapter;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.ui.videochallengenewui.Fragment.VideoChallengeDiscription;

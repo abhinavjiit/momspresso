@@ -3,10 +3,9 @@ package com.mycity4kids.ui.activity;
 import java.util.ArrayList;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.kelltontech.network.Response;

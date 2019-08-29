@@ -3,7 +3,7 @@ package com.mycity4kids.ui.fragment;
 import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;

@@ -2,9 +2,9 @@ package com.mycity4kids.ui.mymoneytracker.adapter
 
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ import com.mycity4kids.ui.mymoneytracker.model.TrackerDataModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TrackerListAdapter(var context: Context, var trackerDataModel: ArrayList<TrackerDataModel>) : RecyclerView.Adapter<ViewHolder>() {
+class TrackerListAdapter(var context: Context, var trackerDataModel: ArrayList<TrackerDataModel>) : androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder>() {
     private var trackerData = ArrayList<TrackerDataModel>()
     private var errorStatus: Boolean = false
 
@@ -166,7 +166,7 @@ fun setColorsAndImage(statusCode: String, imageStatus: ImageView, context: Conte
 }
 
 
-class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+class ViewHolder(private val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
     var textDate = view.findViewById<TextView>(R.id.textDate)
     var textDateError = view.findViewById<TextView>(R.id.textDateError)
     var textStatusName = view.findViewById<TextView>(R.id.textStatusName)

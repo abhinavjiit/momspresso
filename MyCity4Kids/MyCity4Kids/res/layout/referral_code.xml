@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -42,7 +42,7 @@
                 </RelativeLayout>
 
 
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
             <View
                 android:id="@+id/view"
@@ -136,7 +136,7 @@
                             android:textSize="@dimen/space_25"
                             app:fontName="oswald.ttf" />
 
-                        <android.support.v7.widget.AppCompatImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/imageShare"
                             android:layout_width="30dp"
                             android:layout_height="30dp"

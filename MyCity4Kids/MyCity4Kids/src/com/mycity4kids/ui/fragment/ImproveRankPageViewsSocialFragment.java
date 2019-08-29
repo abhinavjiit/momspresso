@@ -1,10 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +13,6 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.adapter.RankingPagerAdapter;
-import com.mycity4kids.utils.AppUtils;
 
 /**
  * Created by hemant on 28/7/17.

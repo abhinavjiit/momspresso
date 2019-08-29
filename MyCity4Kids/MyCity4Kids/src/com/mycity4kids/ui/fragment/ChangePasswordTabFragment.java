@@ -1,7 +1,7 @@
 package com.mycity4kids.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +19,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.request.ChangePasswordRequest;
 import com.mycity4kids.models.response.ChangePasswordResponse;
-import com.mycity4kids.models.response.ForgotPasswordResponse;
-import com.mycity4kids.models.response.UserDetailResponse;
-import com.mycity4kids.models.user.UserInfo;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 
 import retrofit2.Call;

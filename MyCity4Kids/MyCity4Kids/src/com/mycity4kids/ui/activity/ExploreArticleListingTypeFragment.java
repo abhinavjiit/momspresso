@@ -2,10 +2,8 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
+import com.google.android.material.tabs.TabLayout;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.daimajia.easing.linear.Linear;
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,14 +35,10 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.adapter.TopicsRecyclerGridAdapter;
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
-import com.mycity4kids.ui.fragment.CampaignListFragment;
-import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.HeaderGridView;
-
-import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

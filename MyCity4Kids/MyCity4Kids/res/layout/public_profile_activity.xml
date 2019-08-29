@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 <!--android:visibility="visible" />-->
 
             </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
         <com.github.florent37.diagonallayout.DiagonalLayout
             android:id="@+id/topContainer"

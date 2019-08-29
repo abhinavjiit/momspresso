@@ -3,8 +3,8 @@ package com.mycity4kids.ui.adapter
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 
-class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetailDeliverable>>?, val context: FragmentActivity?) : RecyclerView.Adapter<CampaignDetailAdapter.RewardHolder>() {
+class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetailDeliverable>>?, val context: FragmentActivity?) : androidx.recyclerview.widget.RecyclerView.Adapter<CampaignDetailAdapter.RewardHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CampaignDetailAdapter.RewardHolder {
         return RewardHolder(LayoutInflater.from(context).inflate(R.layout.deliverable_list_recycler_adapter, parent, false))
@@ -33,7 +33,7 @@ class CampaignDetailAdapter(private var deliverableList: List<List<CampaignDetai
         holder.bindPhoto(deliverableList!!.get(0))
     }
 
-    inner class RewardHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class RewardHolder(private val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), View.OnClickListener {
         private var deliverableList: List<CampaignDetailDeliverable>? = null
         private val urlPattern = Pattern.compile(
                 "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"

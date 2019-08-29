@@ -40,7 +40,7 @@ class PanCardDetailsSubmissionFragment : BaseFragment(), View.OnClickListener {
     private var isComingFromRewards: Boolean = false
     private lateinit var textLater: TextView
     private lateinit var submitOnClickListener: SubmitListener
-    private lateinit var toolbar: android.support.v7.widget.Toolbar
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var back: TextView
     override fun updateUi(response: Response?) {
 

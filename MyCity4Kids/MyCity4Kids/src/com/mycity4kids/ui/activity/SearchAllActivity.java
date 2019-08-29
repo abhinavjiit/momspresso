@@ -4,12 +4,11 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
+import com.google.android.material.tabs.TabLayout;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -36,8 +35,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.adapter.SearchAllPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
-
-import java.util.TimerTask;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

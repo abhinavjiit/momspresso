@@ -1164,4 +1164,5 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="audio_delay_msg">ఆడియో అప్లోడ్ అవుతుంది. కాసేపు ఆగండి.</string>
     <string name="write_something">ఏదైనా వ్రాయండి</string>
     <string name="join_dialog_post">ప్రచురణ</string>
+    <string name="spell_check_error">We found a few errors in the article</string>
 </resources>

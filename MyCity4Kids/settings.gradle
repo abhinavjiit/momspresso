@@ -1,2 +1,2 @@
-include ':MyCity4Kids', ':laser-native-editor'
+include ':MyCity4Kids'
 include ':WordPressEditor'

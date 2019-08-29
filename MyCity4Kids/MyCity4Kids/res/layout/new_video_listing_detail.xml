@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainprofile_parent_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/id_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             android:visibility="visible"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/id_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -52,7 +52,7 @@
 
                 </RelativeLayout>
 
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
             <RelativeLayout
                 android:id="@+id/main_media_frame"
@@ -147,7 +147,7 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <android.support.design.widget.TabLayout
+        <com.google.android.material.tabs.TabLayout
             android:id="@+id/id_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -157,9 +157,9 @@
             app:tabSelectedTextColor="@color/app_red"
             app:tabTextColor="@color/grey" />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/id_viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -170,7 +170,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom">
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/saveTextView"
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -189,7 +189,7 @@
     </RelativeLayout>
 
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/momVlogCoachMark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -197,7 +197,7 @@
         android:visibility="gone">
 
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/id_appbarCoachMark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -214,7 +214,7 @@
                 android:visibility="gone"
                 app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-                <android.support.v7.widget.Toolbar
+                <androidx.appcompat.widget.Toolbar
                     android:id="@+id/id_toolbarCoachMark"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -244,7 +244,7 @@
 
                     </RelativeLayout>
 
-                </android.support.v7.widget.Toolbar>
+                </androidx.appcompat.widget.Toolbar>
 
                 <RelativeLayout
                     android:id="@+id/main_media_frameCoachMark"
@@ -339,7 +339,7 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <android.support.design.widget.TabLayout
+            <com.google.android.material.tabs.TabLayout
                 android:id="@+id/id_tabsCoachMark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -350,9 +350,9 @@
                 app:tabSelectedTextColor="@color/app_red"
                 app:tabTextColor="@color/grey" />
 
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/id_viewpagerCoachMark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -364,7 +364,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom">
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/saveTextViewCoachMark"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -383,7 +383,7 @@
         </RelativeLayout>
 
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

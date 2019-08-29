@@ -2,7 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +14,8 @@ import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.ForYouArticleRemoveRequest;
 import com.mycity4kids.models.response.ForYourArticleRemoveResponse;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.utils.AppUtils;
 

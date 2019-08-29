@@ -3,18 +3,16 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.share.Share;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -22,7 +20,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.GroupNotificationToggleRequest;
-import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.request.UpdateUsersGpLevelNotificationSettingRequest;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupResult;
@@ -32,11 +29,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

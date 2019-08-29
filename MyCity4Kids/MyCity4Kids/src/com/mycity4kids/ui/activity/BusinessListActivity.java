@@ -2,9 +2,12 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -698,12 +701,12 @@ public class BusinessListActivity extends BaseActivity implements OnClickListene
     }*/
     private class GetFilterAdapter extends FragmentStatePagerAdapter {
         public GetFilterAdapter(
-                android.support.v4.app.FragmentManager fragmentManager) {
+                FragmentManager fragmentManager) {
             super(fragmentManager);
         }
 
         @Override
-        public android.support.v4.app.Fragment getItem(int i) {
+        public Fragment getItem(int i) {
             Bundle args = new Bundle();
             if (!advancedListFromDb.isEmpty() && advancedListFromDb != null) {
                 if (advancedListFromDb.get(i).getKey().equalsIgnoreCase("locality") && advancedListFromDb.get(i).getValue().equalsIgnoreCase("Locality")) {

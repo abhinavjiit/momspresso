@@ -387,7 +387,7 @@
                 android:visibility="gone"
                 android:background="@color/white">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
@@ -472,7 +472,7 @@
                             android:textSize="14sp"
                             app:fontName="oswald_regular.ttf" />
                     </RelativeLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
             </RelativeLayout>
 
             <View

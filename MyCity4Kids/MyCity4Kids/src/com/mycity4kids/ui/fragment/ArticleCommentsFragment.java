@@ -1,13 +1,12 @@
 package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
-import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
@@ -39,17 +37,12 @@ import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.ArticleCommentsRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-
-import static android.content.Context.ACTIVITY_SERVICE;
 
 /**
  * Created by user on 08-06-2015.

@@ -11,7 +11,7 @@
     android:visibility="visible"
     android:background="@drawable/shape_shadow_rectangle"
     app:behavior_peekHeight="100dp"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout
         android:id="@+id/linearLayout"

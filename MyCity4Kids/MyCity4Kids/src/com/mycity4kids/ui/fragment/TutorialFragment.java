@@ -1,20 +1,17 @@
 package com.mycity4kids.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.ui.activity.ActivityLogin;
 
 import java.util.ArrayList;
 

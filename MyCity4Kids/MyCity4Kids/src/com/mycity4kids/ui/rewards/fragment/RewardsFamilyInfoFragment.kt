@@ -3,9 +3,10 @@ package com.mycity4kids.ui.rewards.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.AppCompatRadioButton
-import android.support.v7.widget.AppCompatSpinner
+import androidx.fragment.app.Fragment
+import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.appcompat.widget.AppCompatRadioButton
+import androidx.appcompat.widget.AppCompatSpinner
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -146,6 +147,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
     private lateinit var editKidsName: EditText
     private var isComingFromCampaign = false
     private var isComingFromRewards = false
+    private lateinit var checkAreYouExpecting: AppCompatCheckBox
 
     companion object {
         lateinit var textView: TextView
@@ -167,6 +169,7 @@ class RewardsFamilyInfoFragment : BaseFragment(), PickerDialogFragment.OnClickDo
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.fragment_rewards_family_info, container, false)
+        checkAreYouExpecting = containerView.findViewById(R.id.checkAreYouExpecting)
 
         if (arguments != null) {
             isComingFromRewards = if (arguments!!.containsKey("isComingFromRewards")) {

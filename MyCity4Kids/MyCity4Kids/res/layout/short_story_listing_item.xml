@@ -93,7 +93,7 @@
             android:layout_below="@+id/underline"
             android:background="@color/white">
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/facebookShareImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
                 android:paddingTop="12dp"
                 app:srcCompat="@drawable/ic_facebook_svg"/>
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/whatsappShareImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                 android:src="@drawable/ic_whats_app"
                 android:tint="@color/app_red" />
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/instagramShareImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                 android:src="@drawable/ic_insta"
                 android:tint="@color/app_red" />
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/genericShareImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

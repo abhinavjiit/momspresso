@@ -2,17 +2,16 @@ package com.mycity4kids.ui.fragment
 
 import android.accounts.NetworkErrorException
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
@@ -73,7 +72,7 @@ class CampaignListFragment : BaseFragment() {
         backIcon = containerView.findViewById(R.id.back)
         profileIcon = containerView.findViewById(R.id.profile_icon)
         recyclerView = containerView.findViewById(R.id.recyclerView)
-        linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.layoutManager = linearLayoutManager
         adapter = RewardCampaignAdapter(campaignList, activity)
         registerRewards = containerView.findViewById(R.id.register_rewards)

@@ -4,8 +4,8 @@ package com.mycity4kids.ui.rewards.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.AppCompatSpinner
+import androidx.fragment.app.Fragment
+import androidx.appcompat.widget.AppCompatSpinner
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -66,7 +66,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     override fun getFacebookUser(user: String?) {
         try {
-            if (user != null) {
+            if (user != null) {activity
                 facebookAuthToken = user
                 editFacebook.setText(getString(R.string.rewards_social_facebook_connected))
                 setValuesForSocial(Constants.SocialPlatformName.facebook, facebookAuthToken!!)

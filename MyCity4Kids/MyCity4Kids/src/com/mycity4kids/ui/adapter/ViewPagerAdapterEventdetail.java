@@ -3,8 +3,8 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 
 import com.mycity4kids.constants.Constants;

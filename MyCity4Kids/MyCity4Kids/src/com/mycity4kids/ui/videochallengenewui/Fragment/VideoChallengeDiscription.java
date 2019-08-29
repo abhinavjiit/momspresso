@@ -1,9 +1,9 @@
 package com.mycity4kids.ui.videochallengenewui.Fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +19,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 
 public class VideoChallengeDiscription extends Fragment implements View.OnClickListener {
 

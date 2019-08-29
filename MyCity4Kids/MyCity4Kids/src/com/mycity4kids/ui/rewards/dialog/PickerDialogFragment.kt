@@ -2,29 +2,17 @@ package com.mycity4kids.ui.rewards.dialog
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v7.recyclerview.R.attr.layoutManager
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mycity4kids.R
 import com.mycity4kids.constants.Constants
 import com.mycity4kids.ui.rewards.adapter.PickerDialogAdapter
-import com.mycity4kids.ui.rewards.fragment.RewardsFamilyInfoFragment
 import com.mycity4kids.ui.rewards.fragment.RewardsPersonalInfoFragment
-import com.mycity4kids.ui.rewards.fragment.RewardsSocialInfoFragment
-import kotlinx.android.synthetic.main.cropimage.*
-import java.util.*
-import kotlin.collections.ArrayList
-import java.util.Arrays.asList
-import java.util.Arrays.asList
 
 
 /**
@@ -129,8 +117,8 @@ class PickerDialogFragment : DialogFragment(), PickerDialogAdapter.onItemClickLi
     }
 
     private fun initializeXMLComponents() {
-        var list = containerView.findViewById<RecyclerView>(R.id.list)
-        if (list is RecyclerView) {
+        var list = containerView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.list)
+        if (list is androidx.recyclerview.widget.RecyclerView) {
             with(list) {
                 layoutManager = when {
                     columnCount <= 1 -> LinearLayoutManager(context)

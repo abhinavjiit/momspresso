@@ -3,14 +3,13 @@ package com.mycity4kids.ui.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.newmodels.parentingmodel.ArticleModelNew;
-import com.mycity4kids.ui.fragment.SearchAllArticlesAndTopicsTabFragment;
 import com.mycity4kids.ui.fragment.SearchAllArticlesTabFragment;
 import com.mycity4kids.ui.fragment.SearchAllAuthorsTabFragment;
 import com.mycity4kids.ui.fragment.SearchAllTopicsTabFragment;

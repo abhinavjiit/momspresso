@@ -11,15 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.constraint.Constraints;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,6 +21,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.C;
@@ -97,8 +96,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-
-import static android.widget.LinearLayout.VERTICAL;
 
 public class ParallelFeedActivity extends BaseActivity implements View.OnClickListener, ObservableScrollViewCallbacks {
 
@@ -368,7 +365,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     };
 
     private void setRecycler() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ParallelFeedActivity.this, VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ParallelFeedActivity.this, RecyclerView.VERTICAL, false);
         recyclerViewFeed.setLayoutManager(linearLayoutManager);
         Drawable dividerDrawable = ContextCompat.getDrawable(ParallelFeedActivity.this, R.drawable.divider_drawable);
         recyclerViewFeed.setOnScrollListener(new EndlessScrollListener(linearLayoutManager) {

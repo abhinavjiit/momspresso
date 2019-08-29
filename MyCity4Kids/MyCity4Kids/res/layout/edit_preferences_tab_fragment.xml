@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/saveTextView">
@@ -27,7 +27,7 @@
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/notificationSettingRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -57,7 +57,7 @@
                 android:textSize="14sp"
                 app:fontName="oswald_regular.ttf" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/subscriptionSettingRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -251,7 +251,7 @@
                 app:fontName="oswald.ttf" />
 
         </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/saveTextView"

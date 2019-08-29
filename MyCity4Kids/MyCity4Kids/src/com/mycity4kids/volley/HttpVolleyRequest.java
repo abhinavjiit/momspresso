@@ -1,7 +1,7 @@
 package com.mycity4kids.volley;
 
 import android.content.Context;
-import android.support.v4.util.ArrayMap;
+import androidx.collection.ArrayMap;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;

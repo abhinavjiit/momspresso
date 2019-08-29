@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,9 +32,9 @@
                 app:fontName="oswald_regular.ttf" />
 
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/uploadImageLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
             android:text="@string/publish_article.upload_image.change_photo"
             android:textColor="@color/white_color"
             android:visibility="gone" />
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <GridView
         android:id="@+id/gridview"

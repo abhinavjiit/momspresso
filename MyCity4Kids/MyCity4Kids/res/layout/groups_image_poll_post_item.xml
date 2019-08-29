@@ -463,7 +463,7 @@
             android:textSize="12sp"
             app:fontName="oswald.ttf" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/addCommentImageView"
             android:layout_width="30dp"
             android:layout_height="30dp"

@@ -2,15 +2,14 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -23,7 +22,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.models.response.SearchVideoResult;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
-import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.adapter.SearchVideosListingAdapter;

@@ -1,7 +1,7 @@
 package com.mycity4kids.ui.campaign.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_item.view.*
 
 class FaqRecyclerAdapter(
         private val faqsList: List<QuestionAnswerResponse>, private val context: Context)
-    : RecyclerView.Adapter<FaqRecyclerAdapter.ViewHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<FaqRecyclerAdapter.ViewHolder>() {
     private val mOnClickListener: View.OnClickListener
     private var faqList: List<QuestionAnswerResponse>
 
@@ -57,7 +57,7 @@ class FaqRecyclerAdapter(
 
     override fun getItemCount(): Int = faqList.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
         val textQuestion: TextView = mView.textQuestion
         val textAnswer: TextView = mView.textAnswer
         val imageDown: ImageView = mView.imageDown

@@ -350,7 +350,7 @@
                         android:tint="@color/white"
                         app:srcCompat="@drawable/ic_rupee_icon" />
 
-                    <android.support.v7.widget.AppCompatImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/rewardsTextView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -372,7 +372,7 @@
                     android:background="@drawable/round_border_momsvlog"
                     android:visibility="invisible">
 
-                    <android.support.v7.widget.AppCompatImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/videoImageView1"
                         android:layout_width="26dp"
                         android:layout_height="26dp"
@@ -405,7 +405,7 @@
                     android:background="@drawable/round_border_videos"
                     android:visibility="invisible">
 
-                    <android.support.v7.widget.AppCompatImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/momsTVImageView1"
                         android:layout_width="26dp"
                         android:layout_height="26dp"

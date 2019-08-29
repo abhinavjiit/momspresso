@@ -3,7 +3,7 @@ package org.wordpress.android.editor;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.LinearLayout;
 
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;

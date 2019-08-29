@@ -17,7 +17,7 @@ package com.github.irshulx;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.annotation.ColorRes;
+import androidx.annotation.ColorRes;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;

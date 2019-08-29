@@ -1,20 +1,14 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.models.response.DraftListResult;
-
-import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 public class Recycleshimmer extends RecyclerView.Adapter<Recycleshimmer.Shimmer> {
     Context c;

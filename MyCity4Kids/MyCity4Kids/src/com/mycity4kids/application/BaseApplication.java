@@ -9,8 +9,8 @@ import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.StrictMode;
-import android.support.design.widget.Snackbar;
-import android.support.multidex.MultiDex;
+
+import androidx.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -33,7 +33,6 @@ import com.mycity4kids.MessageEvent;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.database.BaseDbHelper;
-import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
@@ -45,8 +44,6 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.LocaleManager;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

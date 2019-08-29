@@ -7,10 +7,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -1064,7 +1066,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
 
     @Override
     public void onPostExecute(Bitmap image) {
-        android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("Add Comment");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("Add Comment");
         if (prev == null) {
 
         } else {

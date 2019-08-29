@@ -7,7 +7,7 @@
     android:background="@color/home_bg"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:dropDownVerticalOffset="40dp" />
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <ListView
         android:id="@+id/blog_listing"

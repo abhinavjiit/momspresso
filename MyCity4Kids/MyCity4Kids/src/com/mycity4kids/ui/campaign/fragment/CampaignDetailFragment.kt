@@ -9,10 +9,10 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v4.app.ShareCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ShareCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -61,7 +61,7 @@ const val REWARDS_FILL_FORM_REQUEST = 1000
 class CampaignDetailFragment : BaseFragment() {
 
     private var campaignList = mutableListOf<CampaignDataListResult>()
-    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager
     private lateinit var adapter: CampaignDetailAdapter
     private var apiGetResponse: CampaignDetailResult? = null
     private var apiGetParticipationResponse: BaseResponseModel? = null
@@ -95,7 +95,7 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var getHelp: TextView
     private lateinit var referCodeHeader: TextView
     private lateinit var readThisBox: LinearLayout
-    private lateinit var detail_recyclerview: RecyclerView
+    private lateinit var detail_recyclerview: androidx.recyclerview.widget.RecyclerView
     private lateinit var txtTrackerStatus: TextView
     private var forYouStatus: Int = 0
     private var userId: String? = null
@@ -136,7 +136,7 @@ class CampaignDetailFragment : BaseFragment() {
 
         initializeXml()
         backIcon = containerView.findViewById(R.id.back)
-        linearLayoutManager = LinearLayoutManager(activity as Context?, LinearLayoutManager.VERTICAL, false)
+        linearLayoutManager = LinearLayoutManager(activity as Context?, RecyclerView.VERTICAL, false)
         backIcon.setOnClickListener {
             Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             activity!!.onBackPressed()
