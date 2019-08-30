@@ -143,7 +143,7 @@ class CampaignListFragment : BaseFragment() {
         }
 
         //endIndex = startIndex + 10
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+        var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
         if (startIndex == 0) {

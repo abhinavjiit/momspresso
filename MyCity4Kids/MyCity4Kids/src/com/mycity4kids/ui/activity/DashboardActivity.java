@@ -1876,18 +1876,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 drawerProfileCoachmark.setVisibility(View.GONE);
                 drawerMyMoneyCoachmark.setVisibility(View.VISIBLE);
                 SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "Drawer", true);
-
             }
             break;
-         /*   case R.id.drawerSettingsCoachmark: {
-                drawerSettingsCoachmark.setVisibility(View.GONE);
-                drawerMyMoneyCoachmark.setVisibility(View.VISIBLE);
-            }
-            break;*/
             case R.id.drawerMyMoneyCoachmark: {
                 drawerMyMoneyCoachmark.setVisibility(View.GONE);
                 SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "Drawer", true);
-
             }
             break;
             case R.id.homeCoachmark: {

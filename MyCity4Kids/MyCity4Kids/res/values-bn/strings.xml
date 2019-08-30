@@ -1174,4 +1174,6 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="write_something">এখানে লিখুন</string>
     <string name="join_dialog_post">পাবলিশ</string>
     <string name="spell_check_error">We found a few errors in the article</string>
+    <string name="application_end_date">Application End Date</string>
+    <string name="submission_end_date">Submission End Date</string>
 </resources>

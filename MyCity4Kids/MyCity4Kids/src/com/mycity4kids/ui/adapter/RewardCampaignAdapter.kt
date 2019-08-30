@@ -67,7 +67,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
             (view.campaign_name).setText(campaignList.name)
             (view.amount).setText("Rs. " + campaignList.totalPayout)
             setTextAndColor(campaignList.campaignStatus)
-            compareDate()
+            compareDate(campaignList.campaignStatus)
         }
 
         //4
@@ -86,51 +86,12 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 if (shareIntent.resolveActivity(context!!.packageManager) != null) {
                     context!!.startActivity(shareIntent)
                 }
-                /*   val buo = BranchUniversalObject()
-                           .setCanonicalIdentifier("content/12345")
-                           .setTitle("My Content Title")
-
-                           .setContentDescription("My Content Description")
-                           .setContentImageUrl("https://tinyjpg.com/images/social/website.jpg")
-                           .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
-                           .setLocalIndexMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
-                           .setContentMetadata(ContentMetadata().addCustomMetadata("key1", "https://lorempixel.com/400/400"))*/
-
-                /*  val lp = LinkProperties()
-                          .setChannel("WhatsApp").setChannel("facebook").setChannel("Instagram")
-                          .setFeature("sharing")
-                          .setCampaign("content 123 launch")
-                          .setStage("new user")
-                          .addControlParameter("desktop_url", "http://example.com/home")
-                          .addControlParameter("custom", "data").addControlParameter("deeplink_path", "content/123")
-                          .addControlParameter("custom_random", (Calendar.getInstance().timeInMillis).toString())*/
-
-                /*      buo.generateShortUrl(context as CampaignContainerActivity, lp) { url, error ->
-                          if (error == null) {
-                              Log.i("BRANCH SDK", "got my Branch link to share: " + url)
-                              val shareIntent = ShareCompat.IntentBuilder
-                                      .from(context)
-                                      .setType("text/plain")
-                                      .setChooserTitle("Share URL")
-                                      .setText(url)
-                                      .intent
-                              shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "check this out")
-
-                              if (shareIntent.resolveActivity(context!!.packageManager) != null) {
-                                  context!!.startActivity(shareIntent)
-                              }
-
-                          }
-                      }*/
-
             } else {
                 Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "Click_listing_card", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
                 if (campaignList!!.campaignStatus == 8)
                     showInviteDialog()
-//                    Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_invite), Toast.LENGTH_SHORT).show()
                 else
                     (context as CampaignContainerActivity).addCampaginDetailFragment(campaignList!!.id)
-
             }
         }
 
@@ -153,7 +114,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
-            }  else if (status == 22) {
+            } else if (status == 22) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_submission_open))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscription_open)
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
@@ -233,9 +194,14 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
             return formatter.format(calendar.time)
         }
 
-        fun compareDate() {
+        fun compareDate(campaignStatus: Int) {
             if ((getCurrentDateTime().toString("yyyy-MM-dd")).compareTo(getDate(campaignList!!.startTime, "yyyy-MM-dd")) > 0) {
-                (view.end_date).setText(context!!.resources.getString(R.string.end_date))
+                when (campaignStatus) {
+                    0, 1, 5, 3, 4, 6, 8 -> (view.end_date).setText(context!!.resources.getString(R.string.application_end_date))
+                    else -> {
+                        (view.end_date).setText(context!!.resources.getString(R.string.submission_end_date))
+                    }
+                }
                 (view.end_date_text).setText(getDate(campaignList!!.endTime, "dd MMM yyyy"))
             } else {
                 (view.end_date).setText(context!!.resources.getString(R.string.start_date))
