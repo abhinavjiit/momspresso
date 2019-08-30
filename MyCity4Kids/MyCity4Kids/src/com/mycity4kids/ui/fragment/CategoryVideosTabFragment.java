@@ -165,6 +165,7 @@ public class CategoryVideosTabFragment extends BaseFragment implements View.OnCl
                 funnyvideosshimmer.setVisibility(View.VISIBLE);
                 funnyvideosshimmer.startShimmerAnimation();
                 articleDataModelsNew.clear();
+                articlesListingAdapter.notifyDataSetChanged();
                 nextPageNumber = 1;
                 hitRecommendedVideoAdApi();
                 hitArticleListingApi();

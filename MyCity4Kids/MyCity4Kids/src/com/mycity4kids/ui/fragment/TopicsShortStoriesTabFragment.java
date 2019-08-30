@@ -226,6 +226,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             @Override
             public void onRefresh() {
                 mDatalist.clear();
+                recyclerAdapter.notifyDataSetChanged();
+                nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(sortType);
                 pullToRefresh.setRefreshing(false);
             }

@@ -73,6 +73,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     private FrameLayout headerArticleCardLayout;
     ShimmerFrameLayout ashimmerFrameLayout;
     private SwipeRefreshLayout pullToRefresh;
+    private boolean fromPullToRefresh;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,10 +111,12 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onRefresh() {
                 articleDataModelsNew.clear();
+                recyclerAdapter.notifyDataSetChanged();
                 ashimmerFrameLayout.setVisibility(View.VISIBLE);
                 ashimmerFrameLayout.startShimmerAnimation();
                 sortType = getArguments().getString(Constants.SORT_TYPE);
                 nextPageNumber = 1;
+                fromPullToRefresh = true;
                 hitArticleListingApi(nextPageNumber, sortType, false);
                 pullToRefresh.setRefreshing(false);
             }
@@ -151,6 +154,10 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             RecommendationAPI recommendationAPI = retrofit.create(RecommendationAPI.class);
+            if (fromPullToRefresh) {
+                fromPullToRefresh = false;
+                chunks = "";
+            }
             Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), 10, chunks, SharedPrefUtils.getLanguageFilters(getActivity()));
             progressBar.setVisibility(View.VISIBLE);
             call.enqueue(recommendedArticlesResponseCallback);
