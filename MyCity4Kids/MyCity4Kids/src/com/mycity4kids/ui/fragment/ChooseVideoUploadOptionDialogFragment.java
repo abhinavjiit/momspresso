@@ -8,12 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.core.content.ContextCompat;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.snackbar.Snackbar;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -32,6 +28,11 @@ import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * Created by user on 08-06-2015.
@@ -72,17 +73,16 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
         cameraTextView.setOnClickListener(this);
         galleryTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
-
-        if ("video_category_activity".equals(activity)) {
-            timeLimitTextView.setVisibility(View.VISIBLE);
-            timeLimitTextView.setText(getString(R.string.time_limit, AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(R.string.minutes_label)));
-            timeLimitTextView.setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
-        } else if (getActivity() instanceof NewVideoChallengeActivity) {
-
-
-            timeLimitTextView.setVisibility(View.VISIBLE);
-            timeLimitTextView.setText(getString(R.string.time_limit, AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(R.string.minutes_label)));
-            timeLimitTextView.setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
+        if (!StringUtils.isNullOrEmpty(duration)) {
+            if ("video_category_activity".equals(activity)) {
+                timeLimitTextView.setVisibility(View.VISIBLE);
+                timeLimitTextView.setText(getString(R.string.time_limit, AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(R.string.minutes_label)));
+                timeLimitTextView.setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
+            } else if (getActivity() instanceof NewVideoChallengeActivity) {
+                timeLimitTextView.setVisibility(View.VISIBLE);
+                timeLimitTextView.setText(getString(R.string.time_limit, AppUtils.calculateFormattedTimeLimit(Integer.parseInt(duration)) + getString(R.string.minutes_label)));
+                timeLimitTextView.setTextColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.app_red));
+            }
         }
 
         return rootView;

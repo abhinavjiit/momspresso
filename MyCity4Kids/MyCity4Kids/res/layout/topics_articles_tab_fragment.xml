@@ -33,8 +33,8 @@
             android:layout_height="36dp"
             android:layout_alignBottom="@+id/flContainerLL"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/topic_selector_bg"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
@@ -64,12 +64,19 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/headerRL">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/headerRL" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <TextView
         android:id="@+id/noBlogsTextView"
@@ -84,10 +91,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/headerRL"
-        android:layout_marginBottom="2dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="2dp"
         android:background="@drawable/topics_border_bg"
         android:visibility="gone">
 
@@ -114,9 +121,9 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/firstImageView"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:src="@drawable/ic_launcher"
             app:civ_border="true"
             app:civ_border_color="@color/white_color"
@@ -200,11 +207,11 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_gravity="right|bottom"
+            android:visibility="gone"
             app:fab_addButtonColorNormal="@color/fab.white"
             app:fab_addButtonColorPressed="@color/fab.white"
             app:fab_addButtonPlusIconColor="@color/white_color"
             app:fab_addButtonStrokeVisible="false"
-            android:visibility="gone"
             app:fab_labelStyle="@style/menu_labels_style"
             app:fab_labelsPosition="left">
 
@@ -237,9 +244,9 @@
         android:id="@+id/fabSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="right|bottom"
         android:visibility="gone"
         app:fab_colorNormal="@color/fab.white"
@@ -268,8 +275,8 @@
             android:layout_height="36dp"
             android:layout_alignBottom="@+id/guideflContainerLL"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:src="@drawable/ic_more"
@@ -280,12 +287,12 @@
             android:id="@+id/horizontalLine"
             android:layout_width="30dp"
             android:layout_height="2dp"
-            android:layout_alignBottom="@+id/guideflContainerLL"
             android:layout_alignLeft="@+id/guideExpandImageView"
             android:layout_alignRight="@+id/guideExpandImageView"
-            android:layout_marginBottom="12dp"
+            android:layout_alignBottom="@+id/guideflContainerLL"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="12dp"
             android:background="@color/white" />
 
         <View
@@ -301,14 +308,14 @@
             android:id="@+id/tabGuideTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/verticalLine_1"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:background="@color/white"
-            android:paddingBottom="7dp"
             android:paddingLeft="9dp"
-            android:paddingRight="9dp"
             android:paddingTop="7dp"
+            android:paddingRight="9dp"
+            android:paddingBottom="7dp"
             android:text="@string/guide.sub_topics_list_tour"
             android:textColor="@color/black"
             app:fontName="oswald.ttf" />

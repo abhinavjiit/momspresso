@@ -6,11 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.legacy.view.ViewCompat;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,11 +18,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.kelltontech.network.Response;
+import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
@@ -40,15 +36,17 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ParallelFeedActivity;
 import com.mycity4kids.ui.adapter.VideoChallengeDetailListingAdapter;
+import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity;
 import com.mycity4kids.utils.MixPanelUtils;
-
 import java.util.ArrayList;
-
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class VideoChallengeListing extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class VideoChallengeListing extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     private RelativeLayout mLodingView;
     private ProgressDialog mProgressDialog;
     private MixpanelAPI mixpanel;
@@ -152,6 +150,7 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
 
 
         articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
+        showProgressDialog("Fetching Data");
         nextPageNumber = 1;
         hitArticleListingApi();
 
@@ -229,7 +228,8 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
     private Callback<VlogsListingResponse> recentArticleResponseCallback = new Callback<VlogsListingResponse>() {
         @Override
         public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
-            progressBar.setVisibility(View.GONE);
+            removeProgressDialog();
+
             mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
             if (response == null || null == response.body()) {
@@ -238,14 +238,20 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
                 return;
             }
             try {
+
                 VlogsListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if (nextPageNumber == 1) {
+                        ((NewVideoChallengeActivity) getActivity()).showDialogBox();
+                    }
+                    //  ((NewVideoChallengeActivity) getActivity()).findViewById(R.id.tabs)
                     processResponse(responseData);
                     funnyvideosshimmer.stopShimmerAnimation();
                     funnyvideosshimmer.setVisibility(View.GONE);
                 } else {
                 }
             } catch (Exception e) {
+                removeProgressDialog();
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -253,26 +259,7 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
 
         @Override
         public void onFailure(Call<VlogsListingResponse> call, Throwable t) {
-            isReuqestRunning = false;
-            isLastPageReached = true;
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
-            }
-            if (articleDataModelsNew == null || articleDataModelsNew.isEmpty()) {
-
-                fabSort.setVisibility(View.GONE);
-                fabMenu.setVisibility(View.GONE);
-                popularSortFAB.setVisibility(View.GONE);
-                recentSortFAB.setVisibility(View.GONE);
-                noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText(getString(R.string.all_videos_funny_videos_no_videos));
-                articleDataModelsNew = new ArrayList<>();
-                articlesListingAdapter.setNewListData(articleDataModelsNew);
-                articlesListingAdapter.notifyDataSetChanged();
-            }
-            progressBar.setVisibility(View.INVISIBLE);
-            funnyvideosshimmer.stopShimmerAnimation();
-            funnyvideosshimmer.setVisibility(View.GONE);
+            removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
@@ -352,14 +339,9 @@ public class VideoChallengeListing extends Fragment implements View.OnClickListe
 
     }
 
-    public void removeProgressDialog() {
-        try {
-            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+    @Override
+    protected void updateUi(Response response) {
 
     }
 }

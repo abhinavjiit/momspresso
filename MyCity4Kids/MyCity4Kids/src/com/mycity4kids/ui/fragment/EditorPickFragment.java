@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -75,6 +76,16 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     private SwipeRefreshLayout pullToRefresh;
     private boolean fromPullToRefresh;
 
+    Context mContext;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.new_article_layout, container, false);
@@ -91,17 +102,20 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
         addTopicsLayout.setOnClickListener(this);
 
 
-        rootView.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
-
-        sortType = getArguments().getString(Constants.SORT_TYPE);
+        rootView.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate_indefinitely));
+        if (getArguments() != null) {
+            sortType = getArguments().getString(Constants.SORT_TYPE);
+        }
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
 
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, sortType, false);
-        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(RecyclerView.VERTICAL);
+
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(mContext, feedNativeAd, this, false, sortType, false);
+        final LinearLayoutManager llm = new LinearLayoutManager(mContext);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
 //        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
@@ -146,9 +160,9 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
 
     private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+        if (!ConnectivityUtils.isNetworkEnabled(mContext)) {
             removeProgressDialog();
-            ToastUtils.showToast(getActivity(), getString(R.string.error_network));
+            ToastUtils.showToast(mContext, getString(R.string.error_network));
             return;
         }
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
@@ -158,7 +172,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
                 fromPullToRefresh = false;
                 chunks = "";
             }
-            Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), 10, chunks, SharedPrefUtils.getLanguageFilters(getActivity()));
+            Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 10, chunks, SharedPrefUtils.getLanguageFilters(mContext));
             progressBar.setVisibility(View.VISIBLE);
             call.enqueue(recommendedArticlesResponseCallback);
         } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
@@ -167,7 +181,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
             int from = (nextPageNumber - 1) * limit + 1;
             Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + limit - 1,
-                    SharedPrefUtils.getLanguageFilters(getActivity()));
+                    SharedPrefUtils.getLanguageFilters(mContext));
             filterCall.enqueue(articleListingResponseCallback);
         } else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -175,14 +189,14 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
             int from = (nextPageNumber - 1) * limit + 1;
             Call<ArticleListingResponse> filterCall = topicsAPI.getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), from, from + limit - 1,
-                    SharedPrefUtils.getLanguageFilters(getActivity()));
+                    SharedPrefUtils.getLanguageFilters(mContext));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
             int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
+            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(mContext));
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
@@ -196,7 +210,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                ToastUtils.showToast(getActivity(), getString(R.string.server_went_wrong));
+                ToastUtils.showToast(mContext, getString(R.string.server_went_wrong));
                 return;
             }
             try {
@@ -204,12 +218,12 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processForYouResponse(responseData);
                 } else {
-                    ToastUtils.showToast(getActivity(), responseData.getReason());
+                    ToastUtils.showToast(mContext, responseData.getReason());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
+                ToastUtils.showToast(mContext, getString(R.string.went_wrong));
             }
         }
 
@@ -220,7 +234,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
             isReuqestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-            ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
+            ToastUtils.showToast(mContext, getString(R.string.went_wrong));
         }
     };
 
@@ -354,9 +368,9 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onRefresh() {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+        if (!ConnectivityUtils.isNetworkEnabled(mContext)) {
             removeProgressDialog();
-            ToastUtils.showToast(getActivity(), getString(R.string.error_network));
+            ToastUtils.showToast(mContext, getString(R.string.error_network));
             return;
         }
         isLastPageReached = false;
@@ -417,7 +431,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
-        Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+        Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
         if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYoucreen");
             intent.putExtra(Constants.FROM_SCREEN, "ForYouScreen");
@@ -447,7 +461,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addTopicsLayout:
-                Intent intent1 = new Intent(getActivity(), ExploreArticleListingTypeActivity.class);
+                Intent intent1 = new Intent(mContext, ExploreArticleListingTypeActivity.class);
                 intent1.putExtra("fragType", "search");
                 intent1.putExtra("source", "foryou");
                 startActivity(intent1);

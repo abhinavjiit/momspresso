@@ -387,37 +387,37 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 
     private fun prepareDataForPosting(): Boolean {
 //        if (!editInstagram.text.isNullOrEmpty()) {
-            if (isvalid(editInstagram.text.toString(), 1)) {
-                setValuesForSocial(Constants.SocialPlatformName.instagram, editInstagram.text.toString().trim())
-            } else {
-                ToastUtils.showToast(context, "space is not allowed")
-                return false
-            }
+        if (isvalid(editInstagram.text.toString(), 1)) {
+            setValuesForSocial(Constants.SocialPlatformName.instagram, editInstagram.text.toString().trim())
+        } else {
+            ToastUtils.showToast(context, "space is not allowed")
+            return false
+        }
 //        }
 //        if (!editTwitter.text.isNullOrEmpty()) {
-            if (isvalid(editTwitter.text.toString().trim(), 2)) {
-                setValuesForSocial(Constants.SocialPlatformName.twitter, editTwitter.text.toString().trim())
-            } else {
-                ToastUtils.showToast(context, "not valid Twitter handle")
-                return false
-            }
+        if (isvalid(editTwitter.text.toString().trim(), 2)) {
+            setValuesForSocial(Constants.SocialPlatformName.twitter, editTwitter.text.toString().trim())
+        } else {
+            ToastUtils.showToast(context, "not valid Twitter handle")
+            return false
+        }
 //        }
 //        if (!editWebsite.text.isNullOrEmpty()) {
-            if (isvalid(editWebsite.text.toString(), 3)) {
-                setValuesForSocial(Constants.SocialPlatformName.website, editWebsite.text.toString().trim())
-            } else {
-                ToastUtils.showToast(context, "space is not allowed")
-                return false
-            }
+        if (isvalid(editWebsite.text.toString(), 3)) {
+            setValuesForSocial(Constants.SocialPlatformName.website, editWebsite.text.toString().trim())
+        } else {
+            ToastUtils.showToast(context, "space is not allowed")
+            return false
+        }
 //        }
 //        if (!editYoutube.text.isNullOrEmpty()) {
-            if (isvalid(editYoutube.text.toString().trim(), 4)) {
-                setValuesForSocial(Constants.SocialPlatformName.youtube, editYoutube.text.toString().trim())
-            } else {
-                ToastUtils.showToast(context, "space is not allowed")
-                return false
+        if (isvalid(editYoutube.text.toString().trim(), 4)) {
+            setValuesForSocial(Constants.SocialPlatformName.youtube, editYoutube.text.toString().trim())
+        } else {
+            ToastUtils.showToast(context, "space is not allowed")
+            return false
 
-            }
+        }
 //        }
 
         return true
@@ -477,7 +477,8 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
-                override fun onComplete() {editTwitter
+                override fun onComplete() {
+                    editTwitter
                     removeProgressDialog()
                 }
 

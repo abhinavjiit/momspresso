@@ -8,11 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
@@ -24,7 +19,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
-import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.ChallengeVideoRecycleAdapter;
@@ -32,25 +26,27 @@ import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 public class ChallengeCategoryVideoTabFragment extends BaseFragment implements View.OnClickListener, ChallengeVideoRecycleAdapter.RecyclerViewClickListener {
-    private RecyclerView recyclerView;
-    private LinearLayoutManager llm;
-    private String userDynamoId;
-    private Topics currentSubTopic;
-    private ArrayList<ArticleListingResult> mDatalist;
-    private Topics selectedTopic;
+    RecyclerView recyclerView;
+    LinearLayoutManager llm;
+    String userDynamoId;
+    Topics currentSubTopic;
+    Topics selectedTopic;
     private ArrayList<String> challengeId = new ArrayList<String>();
     private ArrayList<String> Display_Name = new ArrayList<String>();
     private ArrayList<String> activeImageUrl = new ArrayList<String>();
     private ArrayList<String> activeStreamUrl = new ArrayList<String>();
     private ArrayList<String> rules = new ArrayList<>();
-    private ArrayList<Topics> liveChallenges, previousWeekChallenges;
+    private ArrayList<Topics> allChallenge = new ArrayList<>();
     private ChallengeVideoRecycleAdapter recyclerAdapter;
-    private String jsonMyObject;
     private SwipeRefreshLayout pullToRefresh;
 
     @Nullable
@@ -78,6 +74,8 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                allChallenge.clear();
+                recyclerAdapter.notifyDataSetChanged();
                 getChallenges();
                 pullToRefresh.setRefreshing(false);
             }
@@ -112,26 +110,9 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
                 try {
                     TopicsResponse responseData = response.body();
                     if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                        /*for (int i = 0; i < responseData.getData().size(); i++) {
-                            if (responseData.getData().get(i).getPublicVisibility().equals("1")) {
-                                if (responseData.getData().get(i).getExtraData().get(0).getChallenge().getActive().equals("1") && responseData.getData().get(i).getExtraData().get(0).getChallenge().getIs_live().equals("1")) {
-                                    liveChallenges.addAll(responseData.getData());
-                                }
-                                else
-                                {
-                                    if(responseData.getData().get(i).getExtraData().get(0).getChallenge().getActive().equals("1"))
-                                    {
-
-                                    }
-                                }
-                            }
-                        }*/
-
-//                        recyclerView.setAdapter(recyclerAdapter);
-                        recyclerAdapter.setListData(responseData.getData());
+                        allChallenge = responseData.getData();
+                        recyclerAdapter.setListData(allChallenge);
                         recyclerAdapter.notifyDataSetChanged();
-
-
                     }
                 } catch (Exception e) {
                     Crashlytics.logException(e);
@@ -162,12 +143,9 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
         switch (view.getId()) {
             case R.id.mainView:
             case R.id.getStartedTextView:
-         /*       Bundle bundle = new Bundle();
-                bundle.putParcelable("topic", articledatamodal);*/
 
                 Intent intent = new Intent(getActivity(), NewVideoChallengeActivity.class);
                 Utils.momVlogEvent(getActivity(), "Video Listing", "Challenge container", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", challengeId.toString());
-
                 intent.putExtra("Display_Name", Display_Name);
                 intent.putExtra("screenName", "MomVlogs");
                 intent.putExtra("challenge", challengeId);
@@ -180,7 +158,6 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
                 intent.putExtra("parentId", articledatamodal.getParentId());
                 intent.putExtra("StringUrl", activeImageUrl);
                 intent.putExtra("Topic", new Gson().toJson(articledatamodal));
-
                 startActivity(intent);
         }
 

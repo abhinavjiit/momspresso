@@ -1214,7 +1214,7 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="refer_code">REFERRAL CODE</string>
     <string name="apply_code_error">Code already used. Please enter a different one</string>
     <string name="dialog_congratulations">Congratulations!</string>
-    <string name="dialog_you_can_earn">You can earn</string>
+    <string name="dialog_you_can_earn">You can earn upto</string>
     <string name="invite_only_header">This campaign is by invite only.</string>
     <string name="invite_only_interested">I\'M INTERESTED</string>
     <string name="dialog_invite_only_subtext">Click below to apply for future ‘invite only’ campaigns.</string>

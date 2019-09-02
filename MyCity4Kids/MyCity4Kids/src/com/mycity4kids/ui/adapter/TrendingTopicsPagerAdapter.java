@@ -71,25 +71,25 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 Bundle editorBundle = new Bundle();
                 EditorPickFragment editorPickFragment = new EditorPickFragment();
-                editorBundle.putString(Constants.SORT_TYPE,Constants.KEY_TODAYS_BEST);
+                editorBundle.putString(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
                 editorPickFragment.setArguments(editorBundle);
                 return editorPickFragment;
             case 2:
                 Bundle editorBundle1 = new Bundle();
                 EditorPickFragment editorPickFragment1 = new EditorPickFragment();
-                editorBundle1.putString(Constants.SORT_TYPE,Constants.KEY_EDITOR_PICKS);
+                editorBundle1.putString(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
                 editorPickFragment1.setArguments(editorBundle1);
                 return editorPickFragment1;
             case 3:
                 Bundle editorBundle2 = new Bundle();
                 EditorPickFragment editorPickFragment2 = new EditorPickFragment();
-                editorBundle2.putString(Constants.SORT_TYPE,Constants.KEY_FOR_YOU);
+                editorBundle2.putString(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
                 editorPickFragment2.setArguments(editorBundle2);
                 return editorPickFragment2;
             case 4:
                 Bundle editorBundle3 = new Bundle();
                 EditorPickFragment editorPickFragment3 = new EditorPickFragment();
-                editorBundle3.putString(Constants.SORT_TYPE,Constants.KEY_RECENT);
+                editorBundle3.putString(Constants.SORT_TYPE, Constants.KEY_RECENT);
                 editorPickFragment3.setArguments(editorBundle3);
                 return editorPickFragment3;
         }

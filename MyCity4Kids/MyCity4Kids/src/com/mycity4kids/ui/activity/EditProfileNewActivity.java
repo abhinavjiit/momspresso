@@ -5,6 +5,7 @@ import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -220,9 +222,16 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 //                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.contact_details)));
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.contact_details)));
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.rewards_tab_detail)));
-
                     AppUtils.changeTabsFont(EditProfileNewActivity.this, tabLayout);
-
+                    View root = tabLayout.getChildAt(0);
+                    if (root instanceof LinearLayout) {
+                        ((LinearLayout) root).setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+                        GradientDrawable drawable = new GradientDrawable();
+                        drawable.setColor(getResources().getColor(R.color.app_red));
+                        drawable.setSize(5, 1);
+                        ((LinearLayout) root).setDividerPadding(20);
+                        ((LinearLayout) root).setDividerDrawable(drawable);
+                    }
                     viewPagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), userDetails, mDatalist, isRewardsAdded, EditProfileNewActivity.this);
                     viewPager.setAdapter(viewPagerAdapter);
                     if (isComingFromReward) {

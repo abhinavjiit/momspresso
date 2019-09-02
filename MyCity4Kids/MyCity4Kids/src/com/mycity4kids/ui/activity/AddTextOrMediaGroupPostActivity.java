@@ -262,7 +262,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         } else {
             anonymousCheckbox.setChecked(false);
         }
-        TOOLTIP_SHOW_TIMES = SharedPrefUtils.getTooltipCount(this);
 
 
             new SimpleTooltip.Builder(this)
@@ -277,8 +276,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                     .transparentOverlay(true)
                     .build()
                     .show();
-            TOOLTIP_SHOW_TIMES++;
-            SharedPrefUtils.toolTipChecking(this, TOOLTIP_SHOW_TIMES);
 
     }
 

@@ -2,10 +2,14 @@
 <defaultsMap>
     <entry>
         <key>latest_app_version</key>
-        <value>false</value>
+        <value>0.0.0</value>
     </entry>
     <entry>
         <key>show_spell_check_flag</key>
         <value>false</value>
+    </entry>
+    <entry>
+        <key>app_update_frequency</key>
+        <value>0</value>
     </entry>
 </defaultsMap>

@@ -610,7 +610,7 @@ public class AppUtils {
         int tabsCount = vg.getChildCount();
         for (int j = 0; j < tabsCount; j++) {
             ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
-            int tabChildsCount = vgTab.getChildCount();//"    "ਚੈਲੇੰਜਸ",
+            int tabChildsCount = vgTab.getChildCount();
             for (int i = 0; i < tabChildsCount; i++) {
                 View tabViewChild = vgTab.getChildAt(i);
                 if (tabViewChild instanceof TextView) {

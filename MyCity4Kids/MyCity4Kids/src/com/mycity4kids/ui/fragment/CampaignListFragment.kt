@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
 import com.mycity4kids.R
@@ -42,6 +44,8 @@ class CampaignListFragment : BaseFragment() {
     private lateinit var containerView: View
     private lateinit var recyclerView: RecyclerView
     private var endIndex: Int = 0
+    private lateinit var ashimmerFrameLayout: ShimmerFrameLayout
+    private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var profileIcon: ImageView
     private lateinit var isRewardAdded: String
     private lateinit var registerRewards: ConstraintLayout
@@ -70,6 +74,7 @@ class CampaignListFragment : BaseFragment() {
         // Inflate the layout for this fragment
         containerView = inflater.inflate(R.layout.reward_campaign, container, false)
         backIcon = containerView.findViewById(R.id.back)
+        ashimmerFrameLayout = containerView.findViewById(R.id.shimmer1)
         profileIcon = containerView.findViewById(R.id.profile_icon)
         recyclerView = containerView.findViewById(R.id.recyclerView)
         linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
@@ -107,6 +112,12 @@ class CampaignListFragment : BaseFragment() {
         registerRewards.setOnClickListener {
             checkRewardForm()
         }
+        /*  swipeRefresh.setOnRefreshListener {
+
+              fetchCampaignList(0)
+              swipeRefresh.isRefreshing = false
+
+          }*/
 
         return containerView
     }
@@ -138,12 +149,12 @@ class CampaignListFragment : BaseFragment() {
     }
 
     private fun fetchCampaignList(startIndex: Int, shouldShowProgressbar: Boolean = false) {
-        if (!shouldShowProgressbar) {
-            showProgressDialog(resources.getString(R.string.please_wait))
-        }
+
 
         //endIndex = startIndex + 10
-        var userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+
+        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
+
         val retro = BaseApplication.getInstance().retrofit
         val campaignAPI = retro.create(CampaignAPI::class.java)
         if (startIndex == 0) {
@@ -159,7 +170,7 @@ class CampaignListFragment : BaseFragment() {
 
     private val getCampaignList = object : Callback<AllCampaignDataResponse> {
         override fun onResponse(call: Call<AllCampaignDataResponse>, response: retrofit2.Response<AllCampaignDataResponse>) {
-            removeProgressDialog()
+            //   removeProgressDialog()
             if (response == null || null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
                 Crashlytics.logException(nee)
@@ -168,6 +179,9 @@ class CampaignListFragment : BaseFragment() {
             try {
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
+                    ashimmerFrameLayout.stopShimmerAnimation()
+                    ashimmerFrameLayout.visibility = View.GONE
+
                     if (responseData.data!!.result!!.size > 0) {
                         campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
                         adapter.notifyDataSetChanged()
@@ -181,10 +195,21 @@ class CampaignListFragment : BaseFragment() {
         }
 
         override fun onFailure(call: Call<AllCampaignDataResponse>, t: Throwable) {
-            removeProgressDialog()
+            //  removeProgressDialog()
             Crashlytics.logException(t)
             Log.d("MC4kException", Log.getStackTraceString(t))
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        ashimmerFrameLayout.startShimmerAnimation()
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        ashimmerFrameLayout.stopShimmerAnimation()
     }
 
 

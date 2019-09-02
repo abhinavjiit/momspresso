@@ -9,12 +9,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -29,10 +23,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.material.snackbar.Snackbar;
 import com.kelltontech.network.Response;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -66,16 +60,17 @@ import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.LocaleManager;
 import com.squareup.picasso.Picasso;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Timer;
 import java.util.TimerTask;
-
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import io.socket.client.Socket;
 
 /*import com.mycity4kids.utils.AnalyticsHelper;*/
@@ -109,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         String userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         try {
-            if(BaseApplication.getMSocket() != null && !TextUtils.isEmpty(userId)) {
+            if (BaseApplication.getMSocket() != null && !TextUtils.isEmpty(userId)) {
                 JSONObject obj = new JSONObject();
                 obj.put("pagename", this.getClass().getName());
                 obj.put("user_id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
@@ -118,7 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

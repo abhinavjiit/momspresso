@@ -813,7 +813,6 @@ public class SharedPrefUtils {
     public static int getTooltipCount(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return (_sharedPref.getInt("count", 0));
-        //return (_sharedPref.getString("groupId-" + groupId, ""));
     }
 
     public static void toastAnonymous(Context pContext, int count) {
@@ -826,7 +825,6 @@ public class SharedPrefUtils {
     public static int getToastAnonymous(Context pContext) {
         SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return (_sharedPref1.getInt("count", 0));
-        //return (_sharedPref.getString("groupId-" + groupId, ""));
     }
 
     public static void myMoneyCoachMark(Context pContext, int count) {
@@ -839,32 +837,19 @@ public class SharedPrefUtils {
     public static int getMyMoney(Context pContext) {
         SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return (_sharedPref1.getInt("count", 0));
-        //return (_sharedPref.getString("groupId-" + groupId, ""));
     }
 
-    public static void setToastMomVlog(Context pContext, String ScreenName, boolean flag) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        if (ScreenName.equals("Challenge")) {
-            _editor.putBoolean("Challenge", flag);
-        } else if (ScreenName.equals("momVlog")) {
-            _editor.putBoolean("momVlog", flag);
-
-        }
-        _editor.commit();
+    public static void setFrequencyForShowingAppUpdate(Context pContext, int versionCode) {
+        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref1.edit();
+        _editor.putInt("count", versionCode);
+        _editor.apply();
     }
 
-    public static boolean getToastMomVlog(Context pContext, String ScreenName) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        if (ScreenName.equals("Challenge")) {
-            return (_sharedPref.getBoolean("Challenge", false));
-        } else if (ScreenName.equals("momVlog")) {
-            return (_sharedPref.getBoolean("momVlog", false));
-
-        }
-
-        return true;
-        //return (_sharedPref.getString("groupId-" + groupId, ""));
+    public static int getFrequencyForShowingUpdateApp(Context pContext) {
+        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return (_sharedPref1.getInt("count", 0));
     }
+
 
 }

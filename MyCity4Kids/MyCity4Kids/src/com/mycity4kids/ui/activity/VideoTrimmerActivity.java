@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.gtmutils.Utils;
@@ -73,7 +74,7 @@ public class VideoTrimmerActivity extends BaseActivity implements OnTrimVideoLis
         mVideoTrimmer = ((K4LVideoTrimmer) findViewById(R.id.timeLine));
         ((BaseApplication) getApplication()).setView(mVideoTrimmer);
 
-        if (mVideoTrimmer != null) {
+        if (mVideoTrimmer != null && !StringUtils.isNullOrEmpty(duration)) {
             mVideoTrimmer.setMaxDuration(Integer.parseInt(duration));
             mVideoTrimmer.setOnTrimVideoListener(this);
 //            mVideoTrimmer.setOnK4LVideoListener(this);

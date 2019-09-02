@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
@@ -95,6 +96,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
     private ArrayList<String> activeStreamUrl = new ArrayList<String>();
     private ArrayList<String> info = new ArrayList<String>();
     private String challengeRulesInDialogBox;
+    private ShimmerFrameLayout draftsShimmerLayout;
 
 
     @Override
@@ -109,6 +111,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
         horizontalRecyclerViewForVideoChallenge = (RecyclerView) findViewById(R.id.horizontalRecyclerViewForVideoChallenge);
         challengesTextView = (TextView) findViewById(R.id.challengesTextView);
         categoriesTextView = (TextView) findViewById(R.id.categoriesTextView);
+        draftsShimmerLayout = findViewById(R.id.draftsShimmerLayout);
         /*horizontalRecyclerViewForVideoChallenge.setExpanded(true);*/
         gridview.setExpanded(true);
         setSupportActionBar(toolbar);
@@ -125,16 +128,17 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             challengeName = intent.getStringExtra("selectedName");
 
         } else if (comingFrom.equals("createDashboardIcon")) {
-
+            draftsShimmerLayout.setVisibility(View.VISIBLE);
             //        Bundle extras = getIntent().getExtras();
-         //   if (intent != null) {
-               // jasonMyObject = intent.getStringExtra("currentChallengesTopic");
+            //   if (intent != null) {
+            // jasonMyObject = intent.getStringExtra("currentChallengesTopic");
 
-         //   }
+            //   }
 
-         //   videoChallengeTopics = new Gson().fromJson(jasonMyObject, Topics.class);
+            //   videoChallengeTopics = new Gson().fromJson(jasonMyObject, Topics.class);
             categoriesTextView.setVisibility(View.VISIBLE);
             challengesTextView.setVisibility(View.VISIBLE);
+
             horizontalRecyclerViewForVideoChallenge.setVisibility(View.VISIBLE);
             linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             horizontalRecyclerViewForVideoChallenge.setLayoutManager(linearLayoutManager);
@@ -497,9 +501,10 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
             }
             if (response.isSuccessful()) {
                 try {
+                    draftsShimmerLayout.stopShimmerAnimation();
+                    draftsShimmerLayout.setVisibility(View.GONE);
                     TopicsResponse responseData = response.body();
                     if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-
                         videoChallengeTopicsAdapter.setData(responseData.getData());
                         videoChallengeTopicsAdapter.notifyDataSetChanged();
 
@@ -519,4 +524,17 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
 
         }
     };
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        draftsShimmerLayout.startShimmerAnimation();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        draftsShimmerLayout.stopShimmerAnimation();
+    }
 }

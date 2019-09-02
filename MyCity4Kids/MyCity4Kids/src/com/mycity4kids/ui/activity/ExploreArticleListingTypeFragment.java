@@ -378,7 +378,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         if (resultCode == RESULT_OK) {
             if (requestCode == 1234) {
                 try {
-                    ((DashboardActivity) getActivity()).showChossLayoutForShortStory();
+                    ((DashboardActivity) getActivity()).showChooseLayoutForShortStory();
                 } catch (Exception e) {
                     ToastUtils.showToast(getActivity(), "error occurred");
                     Log.d("ERROR", e.getMessage());

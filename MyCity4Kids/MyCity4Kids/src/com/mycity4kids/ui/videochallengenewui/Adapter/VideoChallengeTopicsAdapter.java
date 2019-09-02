@@ -63,7 +63,7 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
             case 0:
                 for (int i = challengeTopics.getChild().size() - 1; i >= 0; i--) {*/
         if ("1".equals(challengeTopics.get(position).getPublicVisibility())) {
-            if (challengeTopics.get(position).getExtraData() != null) {
+            if (challengeTopics.get(position).getExtraData() != null && challengeTopics.get(position).getExtraData().size() != 0) {
                 if ("1".equals(challengeTopics.get(position).getExtraData().get(0).getChallenge().getActive())) {
                     holder.challengeNameText.setText(challengeTopics.get(position).getDisplay_name());
                     if (challengeTopics.get(position).getExtraData().get(0).getChallenge().getIs_live().equals("1")) {
@@ -122,6 +122,7 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
 
     public void setData(ArrayList<Topics> challengeTopics) {
         this.challengeTopics = challengeTopics;
+
         for (int i = 0; i < challengeTopics.size(); i++) {
             if (AppConstants.PUBLIC_VISIBILITY.equals(challengeTopics.get(i).getPublicVisibility())) {
                 count++;
@@ -149,14 +150,14 @@ public class VideoChallengeTopicsAdapter extends RecyclerView.Adapter<VideoChall
 
         @Override
         public void onClick(View view) {
-            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, challengeTopics.get(getAdapterPosition()), activeImageUrl, activeStreamUrl, info, mappedCategory,max_Duration.get(getAdapterPosition()));
+            recyclerViewClickListener.onClick(view, getAdapterPosition(), challengeId, Display_Name, challengeTopics.get(getAdapterPosition()), activeImageUrl, activeStreamUrl, info, mappedCategory, max_Duration.get(getAdapterPosition()));
 
         }
     }
 
 
     public interface RecyclerViewClickListener {
-        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory,int max_Duration);
+        void onClick(View view, int position, ArrayList<String> challengeId, ArrayList<String> Display_Name, Topics articledatamodelsnew, ArrayList<String> imageUrl, ArrayList<String> activeStreamUrl, ArrayList<String> info, ArrayList<String> mappedCategory, int max_Duration);
 
     }
 }

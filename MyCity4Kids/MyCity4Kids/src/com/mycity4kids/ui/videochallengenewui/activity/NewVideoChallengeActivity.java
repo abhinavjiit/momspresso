@@ -3,6 +3,7 @@ package com.mycity4kids.ui.videochallengenewui.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -39,6 +40,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.VideoTrimmerActivity;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.videochallengenewui.Adapter.VideoChallengePagerAdapter;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
@@ -83,7 +85,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     private ImageView thumbNail;
     private int duration;
     private String comingFrom = "";
-
     private CoordinatorLayout momVlogCoachMark;
 
     @Override
@@ -134,11 +135,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                 saveTextView.setVisibility(View.VISIBLE);
             }
 
-        } else {
-            if (!SharedPrefUtils.getToastMomVlog(this, "Challenge")) {
-                ToastUtils.showToast(NewVideoChallengeActivity.this, "Tap to create");
-                /*SharedPrefUtils.setToastMomVlog(this, "Challenge", true);*/
-            }
         }
 
         mappedCategory = intent.getStringArrayListExtra("mappedCategory");
@@ -179,29 +175,25 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         }
         tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_video)));
         tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.all_videos_toolbar_title)));
+        AppUtils.changeTabsFont(NewVideoChallengeActivity.this, tabs);
+        View root = tabs.getChildAt(0);
+        if (root instanceof LinearLayout) {
+            ((LinearLayout) root).setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setColor(getResources().getColor(R.color.app_red));
+            drawable.setSize(5, 1);
+            ((LinearLayout) root).setDividerPadding(20);
+            ((LinearLayout) root).setDividerDrawable(drawable);
+        }
 
 
         videoChallengePagerAdapter = new VideoChallengePagerAdapter(getSupportFragmentManager(), selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl, challengeRules);
         viewPager.setAdapter(videoChallengePagerAdapter);
-        if (screen.equals("creation")) {
-            viewPager.setCurrentItem(0);
-            saveTextView.setVisibility(View.VISIBLE);
-        } else {
-            viewPager.setCurrentItem(1);
-            saveTextView.setVisibility(View.VISIBLE);
-        }
-
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 2 || tab.getPosition() == 1) {
-                    saveTextView.setVisibility(View.VISIBLE);
-                } else {
-                    saveTextView.setVisibility(View.VISIBLE);
-                }
-                tabs.setSelectedTabIndicatorColor(getResources().getColor(R.color.app_red));
-                tabs.setTabTextColors(getResources().getColor(R.color.grey), getResources().getColor(R.color.app_red));
+
 
                 viewPager.setCurrentItem(tab.getPosition());
             }
@@ -213,20 +205,15 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 2 || tab.getPosition() == 1) {
-                    saveTextView.setVisibility(View.VISIBLE);
-                } else {
-                    saveTextView.setVisibility(View.VISIBLE);
-                }
+
                 viewPager.setCurrentItem(tab.getPosition());
-                tabs.setSelectedTabIndicatorColor(getResources().getColor(R.color.app_red));
-                tabs.setTabTextColors(getResources().getColor(R.color.grey), getResources().getColor(R.color.app_red));
+
 
             }
         });
         thumbNail.setOnClickListener(this);
         saveTextView.setOnClickListener(view -> {
-            SharedPrefUtils.setToastMomVlog(this, "Challenge", true);
+            //   SharedPrefUtils.setToastMomVlog(this, "Challenge", true);
 
             ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
             FragmentManager fm = getSupportFragmentManager();
@@ -242,22 +229,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
 
         });
 
-        if (comingFrom.equals("chooseVideoCategory")) {
-
-
-            ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
-            FragmentManager fm = getSupportFragmentManager();
-            Bundle _args = new Bundle();
-            _args.putString("activity", "newVideoChallengeActivity");
-            if (max_Duration != 0) {
-                _args.putString("duration", String.valueOf(max_Duration));
-            }
-
-            chooseVideoUploadOptionDialogFragment.setArguments(_args);
-            chooseVideoUploadOptionDialogFragment.setCancelable(true);
-            chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
-
-        }
 
     }
 
@@ -428,9 +399,35 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         // if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
         intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
         startActivity(intent);
-       /* } else {
-            showToast(getString(R.string.choose_mp4_file));
-        }*/
+
+    }
+
+    public void showDialogBox() {
+
+        if (screen.equals("creation")) {
+            if (comingFrom.equals("chooseVideoCategory")) {
+                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putString("activity", "newVideoChallengeActivity");
+                if (max_Duration != 0) {
+                    _args.putString("duration", String.valueOf(max_Duration));
+                }
+
+                chooseVideoUploadOptionDialogFragment.setArguments(_args);
+                chooseVideoUploadOptionDialogFragment.setCancelable(true);
+                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
+
+            }
+            viewPager.setCurrentItem(0);
+            saveTextView.setVisibility(View.VISIBLE);
+        } else {
+
+            viewPager.setCurrentItem(1);
+            saveTextView.setVisibility(View.VISIBLE);
+        }
     }
 
 }
+
+

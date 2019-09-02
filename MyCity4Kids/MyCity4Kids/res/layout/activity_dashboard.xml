@@ -2065,7 +2065,7 @@
                 android:id="@+id/horizontalMyMoneyLine"
                 android:layout_width="100dp"
                 android:layout_height="2dp"
-                android:layout_above="@+id/myMoneyCampaignTextView"
+                android:layout_above="@+id/rewardsTextView"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="50dp"
                 android:background="@color/white" />
@@ -2074,7 +2074,7 @@
                 android:id="@+id/divider3"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/myMoneyCampaignTextView"
+                android:layout_below="@+id/rewardsTextView"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="25dp"

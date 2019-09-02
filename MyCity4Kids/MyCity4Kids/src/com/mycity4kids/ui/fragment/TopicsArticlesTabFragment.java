@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,6 +59,9 @@ import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -84,7 +85,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
-
+    SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private FlowLayout flowLayout;
@@ -112,6 +113,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         View view = inflater.inflate(R.layout.topics_articles_tab_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
@@ -159,6 +161,15 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             public void onMenuCollapsed() {
                 frameLayout.getBackground().setAlpha(0);
                 frameLayout.setOnTouchListener(null);
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mDatalist.clear();
+                nextPageNumber = 1;
+                hitFilteredTopicsArticleListingApi(sortType);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -517,7 +528,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         }
     }
 
-    private void hitArticleListingSortByRecent(){
+    private void hitArticleListingSortByRecent() {
         shimmerFrameLayout.startShimmerAnimation();
         shimmerFrameLayout.setVisibility(View.VISIBLE);
         fabMenu.collapse();
@@ -528,7 +539,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         getGroupIdForCurrentCategory();
     }
 
-    private void hitArticleListingSortByPopular(){
+    private void hitArticleListingSortByPopular() {
         shimmerFrameLayout.startShimmerAnimation();
         shimmerFrameLayout.setVisibility(View.VISIBLE);
         fabMenu.collapse();

@@ -55,7 +55,17 @@ public class ForceUpdateModel {
 
         public class ForceUpdateData {
             private int isAppUpdateRequired;
+
+            public String getOnlineVersionCode() {
+                return onlineVersionCode;
+            }
+
+            public void setOnlineVersionCode(String onlineVersionCode) {
+                this.onlineVersionCode = onlineVersionCode;
+            }
+
             private String message;
+            private String onlineVersionCode;
 
             public int getIsAppUpdateRequired() {
                 return isAppUpdateRequired;

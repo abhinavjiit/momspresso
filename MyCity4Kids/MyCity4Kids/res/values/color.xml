@@ -498,7 +498,7 @@
     <color name="campaign_approved_rejected">#6FA138</color>
     <color name="campaign_feed_register">#23C9AC</color>
     <color name="campaign_feed_register_textview">#23CAAD</color>
-    <color name="campaign_apply_bg">#9013FE</color>
+    <color name="campaign_apply_bg">#0EC0A1</color>
     <color name="campaign_applied_bg">#4A90E2</color>
     <color name="campaign_completed_bg">#E3334E</color>
     <color name="campaign_submission_full_bg">#F5A623</color>

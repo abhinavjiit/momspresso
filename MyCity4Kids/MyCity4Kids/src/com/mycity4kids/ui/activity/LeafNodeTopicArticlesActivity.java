@@ -1,17 +1,16 @@
 package com.mycity4kids.ui.activity;
 
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -23,11 +22,16 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.LeafTopicsPagerAdapter;
+import com.mycity4kids.ui.fragment.LeafTopicArticlesTabFragment;
 import com.mycity4kids.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 public class LeafNodeTopicArticlesActivity extends BaseActivity {
 
@@ -37,7 +41,7 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
     private FrameLayout topLayerGuideLayout;
 
     private LeafTopicsPagerAdapter pagerAdapter;
-
+    private ImageView imageSortBy;
     private HashMap<Topics, List<Topics>> allTopicsMap;
     private ArrayList<Topics> allTopicsList;
     //    private ArrayList<Topics> subTopicsList;
@@ -55,7 +59,7 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
-
+        imageSortBy = findViewById(R.id.imageSortBy);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
@@ -123,7 +127,19 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
         if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article")) {
 //            showGuideView();
         }
+        imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
+
+        imageSortBy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = pagerAdapter.getCurrentFragment();//.get(viewPager.getCurrentItem());
+                if (fragment != null && fragment instanceof LeafTopicArticlesTabFragment) {
+                    ((LeafTopicArticlesTabFragment) fragment).showSortedByDialog();
+                }
+            }
+        });
     }
+
 
     private void createTopicsData(TopicsResponse responseData) {
         try {

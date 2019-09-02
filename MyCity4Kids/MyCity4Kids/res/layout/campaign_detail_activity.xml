@@ -161,9 +161,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_7"
-                android:layout_marginLeft="@dimen/space_7"
                 android:layout_marginTop="@dimen/space_7"
-                android:text="Nestle India"
                 android:textColor="@color/campaign_515151"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -179,7 +177,6 @@
                 android:layout_marginLeft="@dimen/space_7"
                 android:layout_marginTop="@dimen/space_4"
                 android:ellipsize="end"
-                android:text="Facebook campaign"
                 android:textColor="@color/campaign_expired"
                 android:textSize="11sp"
                 app:fontName="open_sans.ttf"
@@ -206,7 +203,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/space_25"
                 android:layout_marginRight="@dimen/space_25"
-                android:text="Rs.1000"
                 android:textColor="@color/campaign_list_buttons"
                 android:textSize="17sp"
                 app:fontName="oswald_regular.ttf"
@@ -293,7 +289,6 @@
                 android:paddingTop="5dp"
                 android:paddingRight="@dimen/space_20"
                 android:paddingBottom="5dp"
-                android:text="Rs. 5000"
                 android:textColor="@color/campaign_list_buttons"
                 android:textSize="15sp"
                 app:fontName="oswald_regular.ttf"
@@ -393,7 +388,6 @@
                 android:layout_marginRight="@dimen/space_15"
                 android:autoLink="web"
                 android:lineSpacingExtra="1.6dp"
-                android:text="Lorem ipsum, or lipsum as it is sometimes known, Is dummy text used in laying out print, graphic or Web designs. The passage is attributed to anis Dummy text used in laying out Graphic or Web designs. The passage is attributed to an Dummy tex"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textColorLink="#0000ee"
                 android:textSize="15sp"
@@ -453,7 +447,6 @@
                 android:layout_marginEnd="@dimen/space_15"
                 android:layout_marginRight="@dimen/space_15"
                 android:autoLink="web"
-                android:text="Lorem ipsum, or lipsum as it is sometimes known, Is dummy text used in laying out print, graphic or Web designs. The passage is attributed to anis Dummy text used in laying out Graphic or Web designs. The passage is attributed to an Dummy tex"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textColorLink="#0000ee"
                 android:textSize="15sp"
@@ -535,11 +528,11 @@
                 android:layout_marginTop="@dimen/space_5"
                 android:background="@drawable/campaign_detail_refer_code_text_bg"
                 android:hint="@string/referral_code_option"
+                android:inputType="textCapCharacters"
                 android:lineSpacingExtra="2.2dp"
                 android:paddingLeft="@dimen/space_30"
                 android:paddingTop="@dimen/space_10"
                 android:paddingBottom="@dimen/space_10"
-                android:inputType="textCapCharacters"
                 android:textColor="@color/campaign_4A4A4A"
                 android:textSize="15sp"
                 app:fontName="oswald_regular.ttf"
@@ -650,4 +643,29 @@
             app:fontName="oswald_regular.ttf" />
 
     </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/white"
+        app:duration="1000">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/mainshimmer_layout" />
+
+            <include layout="@layout/mainshimmer_layout" />
+
+            <include layout="@layout/mainshimmer_layout" />
+
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

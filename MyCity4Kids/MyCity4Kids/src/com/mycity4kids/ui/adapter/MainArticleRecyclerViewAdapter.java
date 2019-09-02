@@ -39,6 +39,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.GroupMembershipStatus;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
 import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
@@ -350,17 +351,18 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
 
         if ("1".equals(data.getIsMomspresso())) {
-            bookmarkArticleIV.setVisibility(View.INVISIBLE);
-            watchLaterIV.setVisibility(View.VISIBLE);
+            bookmarkArticleIV.setVisibility(View.VISIBLE);
+            watchLaterIV.setVisibility(View.GONE);
 
-            if (data.getListingWatchLaterStatus() == 0) {
-                watchLaterIV.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+
+            if ("0".equals(data.getIs_bookmark())) {
+                bookmarkArticleIV.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
-                watchLaterIV.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                bookmarkArticleIV.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
             }
         } else {
             bookmarkArticleIV.setVisibility(View.VISIBLE);
-            watchLaterIV.setVisibility(View.INVISIBLE);
+            watchLaterIV.setVisibility(View.GONE);
 
             if ("0".equals(data.getIs_bookmark())) {
                 bookmarkArticleIV.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
@@ -1040,7 +1042,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 }
                                 if (mContext instanceof DashboardActivity) {
                                     ((DashboardActivity) mContext).showBookmarkConfirmationTooltip();
+                                } else if (mContext instanceof FilteredTopicsArticleListingActivity) {
+                                    ((FilteredTopicsArticleListingActivity) mContext).showBookmarkConfirmationTooltip();
                                 }
+
                             } else if ("unbookmarkArticle".equals(type)) {
                                 articleDataModelsNew.get(i).setIs_bookmark("0");
                                 articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());

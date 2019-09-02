@@ -374,7 +374,7 @@ public class EditGpDescTabFragment extends BaseFragment implements View.OnClickL
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
-        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
+        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,topic
                 imageType,
                 requestBodyFile);
         call.enqueue(new Callback<ImageUploadResponse>() {

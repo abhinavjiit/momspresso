@@ -12,14 +12,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +40,8 @@ import com.facebook.ads.NativeAdListener;
 import com.facebook.ads.NativeBannerAd;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -131,6 +125,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -439,7 +438,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             mYouTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
             if (getUserVisibleHint()) {
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+              //  FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                FragmentTransaction transaction=getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commit();
                 mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
             }
@@ -617,6 +617,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commitAllowingStateLoss();
             mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
         }
+    }
+
+    @Override
+    protected void updateUi(Response response) {
+
     }
 
     @Override
@@ -1781,7 +1786,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         if (var.size() > 0) {
                             for (Map.Entry<String, String> entry : var.entrySet()) {
                                 if (topic.getId().equalsIgnoreCase(entry.getKey())) {
-                                    if ( topic.getExtraData() != null && topic.getExtraData().get(0).getCategoryTag() != null) {
+                                    if (topic.getExtraData() != null && topic.getExtraData().size() != 0 && topic.getExtraData().get(0).getCategoryTag() != null) {
                                         if (topic.getExtraData().get(0).getCategoryTag().getCategoryImage() != null && !topic.getExtraData().get(0).getCategoryTag().getCategoryImage().isEmpty()) {
                                             sponsoredViewContainer.setVisibility(View.VISIBLE);
                                             Picasso.with(getActivity()).load(topic.getExtraData().get(0).getCategoryTag().getCategoryImage()).into(sponsoredImage);
@@ -2390,7 +2395,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     };
 
-    private void createSponsporedTagsList(ArrayList<String> sponsoredList) throws FileNotFoundException {
+    private void createSponsporedTagsList(ArrayList<String> sponsoredList) throws
+            FileNotFoundException {
         FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
         String fileContent = AppUtils.convertStreamToString(fileInputStream);
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
@@ -2407,7 +2413,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     }
 
-    private void createArticleTags(ArrayList<String> previouslyFollowedTopics, ArrayList<Map<String, String>> tagsList, ArrayList<String> sponsoredList) {
+    private void createArticleTags
+            (ArrayList<String> previouslyFollowedTopics, ArrayList<Map<String, String>> tagsList, ArrayList<String> sponsoredList) {
         int relatedImageWidth = (int) BaseApplication.getAppContext().getResources().getDimension(R.dimen.related_article_article_image_width);
         viewAllTagsTextView.setVisibility(View.GONE);
         width = width - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).leftMargin - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).rightMargin;
@@ -2935,10 +2942,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     }
 
-    @Override
-    protected void updateUi(Response response) {
-
-    }
 
     ISwipeRelated iSwipeRelated;
 
@@ -2976,8 +2979,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
 
-
-
 }
+
 
 

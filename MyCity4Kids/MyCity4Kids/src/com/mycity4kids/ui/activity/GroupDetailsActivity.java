@@ -332,18 +332,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        toastShownTimes = SharedPrefUtils.getToastAnonymous(this);
-        if (toastShownTimes < 3) {
 
-            Toast toast = Toast.makeText(this, getResources().getString(R.string.group_detail_activity_toast_text), Toast.LENGTH_LONG);
-            LinearLayout toastLayout = (LinearLayout) toast.getView();
-            TextView toastTV = (TextView) toastLayout.getChildAt(0);
-            toastTV.setTextSize(16);
-            toast.show();
-            toastShownTimes++;
-            SharedPrefUtils.toastAnonymous(this, toastShownTimes);
+        Toast toast = Toast.makeText(this, getResources().getString(R.string.group_detail_activity_toast_text), Toast.LENGTH_LONG);
+        LinearLayout toastLayout = (LinearLayout) toast.getView();
+        TextView toastTV = (TextView) toastLayout.getChildAt(0);
+        toastTV.setTextSize(16);
+        toast.show();
 
-        }
 
         setUpTabLayout(sections);
 
@@ -376,7 +371,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                             if (recyclerView.getAdapter() instanceof GroupsGenericPostRecyclerAdapter) {
                                 getGroupPosts();
                             } else {
-                                if (groupMappedCategories != null)
+                                if (groupMappedCategories != null && groupMappedCategories.size() != 0)
                                     hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
                             }
                         }

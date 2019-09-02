@@ -135,8 +135,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                 },
                 new int[]{
 
-                        getColor(R.color.app_red),
-                        getColor(R.color.add_video_details_mute_label)
+                        getResources().getColor(R.color.app_red),
+                        getResources().getColor(R.color.add_video_details_mute_label)
                 }
         );
         muteSwitch.setThumbTintList(thumbStates);

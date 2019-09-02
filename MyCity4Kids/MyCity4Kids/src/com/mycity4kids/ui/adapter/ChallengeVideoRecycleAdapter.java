@@ -80,7 +80,7 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
 
         // for (int i = 0; i < articleDataModelsNew.size(); i++) {
         if ("1".equals(articleDataModelsNew.get(position).getPublicVisibility())) {
-            if (articleDataModelsNew.get(position).getExtraData() != null) {
+            if (articleDataModelsNew.get(position).getExtraData() != null && articleDataModelsNew.get(position).getExtraData().size() != 0) {
                 if ("1".equals(articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getActive())) {
                     holder.rootView.setVisibility(View.VISIBLE);
                     if (articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getIs_live() != null) {
@@ -181,8 +181,10 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
         for (int i = 0; i < articleDataModelsNew.size(); i++) {
             if (AppConstants.PUBLIC_VISIBILITY.equals(articleDataModelsNew.get(i).getPublicVisibility())) {
                 // if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
-
-                count++;
+                if (articleDataModelsNew.get(i).getExtraData() != null && articleDataModelsNew.get(i).getExtraData().size() != 0)
+                {
+                    count++;
+                }
 
                 //}
             } else {

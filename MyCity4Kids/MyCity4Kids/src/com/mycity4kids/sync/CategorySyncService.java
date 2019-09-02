@@ -163,7 +163,7 @@ public class CategorySyncService extends IntentService {
     }
 
     private boolean writeResponseBodyToDisk(ResponseBody body, String filename) {
-        if(body!=null){
+        if (body != null) {
             try {
                 InputStream inputStream = null;
                 OutputStream outputStream = null;

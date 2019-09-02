@@ -5,11 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -71,6 +67,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -96,8 +97,11 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private RelativeLayout mLodingView;
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
-    //    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private int nextPageNumber;
+    private Animation slideDownAnim;
+    private RelativeLayout bookmarkInfoView;
+
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
     private boolean isLastPageReached = false;
@@ -161,7 +165,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         sortTextView = (TextView) findViewById(R.id.sortTextView);
         filterTextView = (TextView) findViewById(R.id.filterTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        bookmarkInfoView = (RelativeLayout) findViewById(R.id.bookmarkInfoView);
 
         titleTextView = (TextView) findViewById(R.id.titleTextView);
         followUnfollowTextView = (TextView) findViewById(R.id.followUnfollowTextView);
@@ -196,7 +201,28 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 }
             }
         });
+        slideDownAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_slide_down_from_top);
+        slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
 
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        bookmarkInfoView.setVisibility(View.GONE);
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
         selectedTopics = getIntent().getStringExtra("selectedTopics");
@@ -276,7 +302,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             }
             titleTextView.setText(displayName);
         }
-//        swipeRefreshLayout.setOnRefreshListener(FilteredTopicsArticleListingActivity.this);
+
+
+        swipeRefreshLayout.setOnRefreshListener(FilteredTopicsArticleListingActivity.this);
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
@@ -383,7 +411,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 showToast(getString(R.string.server_went_wrong));
                 return;
             }
-//            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
             try {
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
@@ -871,14 +899,17 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     @Override
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-//            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
         }
-
+        articleDataModelsNew.clear();
+        recyclerAdapter.notifyDataSetChanged();
         isLastPageReached = false;
         nextPageNumber = 1;
+        progressBar.setVisibility(View.VISIBLE);
+        limit = 15;
         hitFilteredTopicsArticleListingApi(sortType);
 
     }
@@ -1042,5 +1073,10 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 startActivity(intent);
                 break;
         }
+    }
+
+    public void showBookmarkConfirmationTooltip() {
+        bookmarkInfoView.setVisibility(View.VISIBLE);
+        bookmarkInfoView.startAnimation(slideDownAnim);
     }
 }

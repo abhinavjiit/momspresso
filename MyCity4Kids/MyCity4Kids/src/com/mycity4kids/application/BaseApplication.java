@@ -384,6 +384,7 @@ public class BaseApplication extends Application {
         Branch.enableLogging();
         // Branch object initialization
         Branch.getAutoInstance(this);
+       // Branch.setPlayStoreReferrerCheckTimeout(0);
 
         PackageInfo pInfo = null;
         try {

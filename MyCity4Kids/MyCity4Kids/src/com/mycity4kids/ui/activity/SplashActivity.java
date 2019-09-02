@@ -119,13 +119,22 @@ public class SplashActivity extends BaseActivity {
         String data = intent.getDataString();
         if (Intent.ACTION_VIEW.equals(action) && data != null) {
             _deepLinkURL = data;
-            Log.i("deepLinkUrl", _deepLinkURL);
-            if (_deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK)) {
-                BaseApplication.getInstance().setBranchLink("true");
 
-
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                jsonObject.put("_deeplinkurl", _deepLinkURL);
+                jsonObject.put("manufacturer", Build.MANUFACTURER);
+                jsonObject.put("model", Build.MODEL);
+                mixpanel.track("DeepLink", jsonObject);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
+            Log.i("deepLinkUrl", _deepLinkURL);
+            if (_deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK) || _deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK_URL)) {
+                BaseApplication.getInstance().setBranchLink("true");
+            }
         }
     }
 
@@ -655,7 +664,7 @@ public class SplashActivity extends BaseActivity {
 
     private void gotoDashboard() {
 
-        if (!StringUtils.isNullOrEmpty(_deepLinkURL) && _deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK)) {
+        if (!StringUtils.isNullOrEmpty(_deepLinkURL) && (_deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK) || _deepLinkURL.contains(AppConstants.BRANCH_DEEPLINK_URL))) {
             handler1 = new Handler();
             handler1.postDelayed(new Runnable() {
                 @Override
@@ -664,7 +673,7 @@ public class SplashActivity extends BaseActivity {
                         @Override
                         public void run() {
                             Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
-                            intent.putExtra(AppConstants.BRANCH_DEEPLINK, _deepLinkURL);
+                            intent.putExtra("branchLink", _deepLinkURL);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             startActivity(intent);
                             finish();
@@ -761,7 +770,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-            System.out.println("TOuch outside the dialog ******************** ");
+            System.out.println("Touch outside the dialog ******************** ");
         }
         return false;
     }
@@ -847,10 +856,12 @@ public class SplashActivity extends BaseActivity {
             }
             try {
                 ForceUpdateModel responseData = response.body();
-                if (responseData.getResponseCode() == 200) {
+                if (responseData != null && responseData.getResponseCode() == 200) {
+
                     if (responseData.getResult().getData().getIsAppUpdateRequired() == 1) {
                         SharedPrefUtils.setAppUgrade(SplashActivity.this, true);
                         String message = responseData.getResult().getData().getMessage();
+
                         SharedPrefUtils.setAppUgradeMessage(SplashActivity.this, message);
                         showUpgradeAppAlertDialog("Momspresso", SharedPrefUtils.getAppUgradeMessage(SplashActivity.this), new OnButtonClicked() {
                             @Override

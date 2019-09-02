@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:background="@color/white">
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/updateAppImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/app_update" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/updateAppTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/updateAppImageView"
+        android:gravity="center_horizontal"
+        android:text="UPDATe the App"
+        android:textColor="@color/input_text_color"
+        android:textSize="@dimen/space_20"
+        app:fontName="oswald_regular.ttf"
+        app:textAllCaps="true" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/updateForBetterExperienceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/updateAppTextView"
+        android:layout_marginLeft="@dimen/space_20"
+        android:layout_marginTop="@dimen/space_20"
+        android:layout_marginRight="@dimen/space_20"
+        android:gravity="center_horizontal"
+        android:text="For a better experience please update the app"
+        android:textColor="@color/app_red"
+        app:fontName="OpenSans-Regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/updateNowTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/updateForBetterExperienceTextView"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="@dimen/space_20"
+        android:layout_marginBottom="@dimen/space_20"
+        android:background="@drawable/rounded_corner"
+        android:backgroundTint="@color/app_red"
+        android:paddingLeft="@dimen/space_20"
+        android:paddingTop="@dimen/space_10"
+        android:paddingRight="@dimen/space_20"
+        android:paddingBottom="@dimen/space_10"
+        android:text="UPDATE NOW"
+        android:textColor="@color/white"
+        android:textSize="@dimen/space_18"
+        app:fontName="oswald_regular.ttf" />
+
+
+</RelativeLayout>

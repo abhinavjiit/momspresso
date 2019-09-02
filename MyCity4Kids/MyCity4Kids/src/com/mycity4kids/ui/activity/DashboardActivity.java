@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -27,19 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -135,6 +123,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -225,8 +225,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout chooseLayout;
     private RelativeLayout chooseLayoutVideo;
     private View overLayChooseVideo;
-    private String branchVideoChallengeId;
+    private String branchVideoChallengeId, currentVersion, onlineVersionCode;
     private FrameLayout root;
+    private Boolean rateNowDialog = false;
+    private String UPDATE_APP_POPUP_KEY = "latest_app_version";
+    private int frequecy;
+    private String UPDATE_APP_FREQUENCY_KEY = "app_update_frequency";
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -255,7 +259,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 });
         root = findViewById(R.id.dash_root);
-
         ((BaseApplication) getApplication()).setDashboardActivity(this);
         ((BaseApplication) getApplication()).setActivity(this);
 
@@ -278,6 +281,61 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         mMixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
+        try {
+            currentVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        onlineVersionCode = mFirebaseRemoteConfig.getString(UPDATE_APP_POPUP_KEY);
+        try {
+            frequecy = Integer.parseInt(mFirebaseRemoteConfig.getString(UPDATE_APP_FREQUENCY_KEY));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+
+        if (!StringUtils.isNullOrEmpty(onlineVersionCode) && !StringUtils.isNullOrEmpty(currentVersion)) {
+            String[] v1 = currentVersion.split("\\.");
+            String[] v2 = onlineVersionCode.split("\\.");
+            if (v1.length != v2.length)
+                return;
+            for (int pos = 0; pos < v1.length; pos++) {
+                if (Integer.parseInt(v1[pos]) > Integer.parseInt(v2[pos])) {
+                    rateNowDialog = true;
+                } else if (Integer.parseInt(v1[pos]) < Integer.parseInt(v2[pos])) {
+                    if (SharedPrefUtils.getFrequencyForShowingUpdateApp(this) != frequecy) {
+                        Dialog dialog = new Dialog(this);
+                        dialog.setContentView(R.layout.update_app_pop_up_layout);
+                        dialog.setCancelable(true);
+                        TextView updateNow = dialog.findViewById(R.id.updateNowTextView);
+                        updateNow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String appPackage = DashboardActivity.this.getPackageName();
+                                try {
+                                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
+                                    startActivity(rateIntent);
+                                } catch (Exception e) {
+                                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
+                                    startActivity(rateIntent);
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+
+                        dialog.show();
+                        SharedPrefUtils.setFrequencyForShowingAppUpdate(this, frequecy);
+
+                    } else {
+                        rateNowDialog = true;
+
+                    }
+                } else {
+                    rateNowDialog = true;
+                }
+            }
+        }
+
         onNewIntent(getIntent());
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -295,7 +353,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         langTextView = (TextView) findViewById(R.id.langTextView);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        toolbar0 = (Toolbar) findViewById(R.id.toolbar0);
         toolbar1 = (Toolbar) findViewById(R.id.toolbar1);
         toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
         chooseLayout = (RelativeLayout) findViewById(R.id.choose_layout);
@@ -312,7 +369,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         selectOptToolbarTitle = (TextView) findViewById(R.id.selectOptToolbarTitle);
         langTextView = (TextView) findViewById(R.id.langTextView);
         selectedLangTextView = (TextView) findViewById(R.id.selectedLangtext);
-//        readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
         langImageRightArrow = (ImageView) findViewById(R.id.langImageRightArrow);
         selectedlangGuideTextView = (TextView) findViewById(R.id.selectedlangGuideTextView);
         groupCoachmark = (RelativeLayout) findViewById(R.id.groupCoachmark);
@@ -717,14 +773,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         rateModel.setAppRateComplete(isCompleteRateProcess);
         rateModel.setAppRateVersion(currentRateVersion);
         SharedPrefUtils.setAppRateVersion(this, rateModel);
-        if (!SharedPrefUtils.getRateVersion(this).isAppRateComplete() && currentRateVersion >= 10) {
+        if (!SharedPrefUtils.getRateVersion(this).isAppRateComplete() && currentRateVersion >= 10 && rateNowDialog) {
             RateAppDialogFragment rateAppDialogFragment = new RateAppDialogFragment();
             reteVersionModel.setAppRateVersion(-20);
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
-        findActiveChallenge();
-        //     findActiveVideoChallenge();
 
+        findActiveChallenge();
         getUsersData();
     }
 
@@ -992,7 +1047,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 try {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
-                    jsonObject.put("type", "campaign_submit_proof");
+                    jsonObject.put("type", "mymoney_bankdetails");
                     mMixpanel.track("PushNotification", jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1236,52 +1291,45 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
             }
-        } else if (intent.hasExtra(AppConstants.BRANCH_DEEPLINK)) {
-            if (intent.getStringExtra(AppConstants.BRANCH_DEEPLINK).contains(AppConstants.BRANCH_DEEPLINK)) {
-                String branchdata = BaseApplication.getInstance().getBranchData();
+        } else if (intent.hasExtra(AppConstants.BRANCH_DEEPLINK) || intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
+            String branchdata = BaseApplication.getInstance().getBranchData();
+            JsonParser parser = new JsonParser();
+            JsonElement mJson = parser.parse(branchdata);
+            Gson gson = new Gson();
+            BranchModel branchModel = gson.fromJson(mJson, BranchModel.class);
 
-                JsonParser parser = new JsonParser();
-                JsonElement mJson = parser.parse(branchdata);
-                Gson gson = new Gson();
-                BranchModel branchModel = gson.fromJson(mJson, BranchModel.class);
+            Log.i("Data", branchdata + ":");
+            if (!StringUtils.isNullOrEmpty(branchdata)) {
+                if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
 
-                Log.i("Data", branchdata + ":");
-                if (branchdata != null) {
-                    if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
+                    Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+                    startActivity(intent1);
 
-                        Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
-                        startActivity(intent1);
-
-                    } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
-                        String campaignID = branchModel.getId();
-                        Intent campaignIntent = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
-                        campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
-                        startActivity(campaignIntent);
+                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
+                    String campaignID = branchModel.getId();
+                    Intent campaignIntent = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
+                    campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                    startActivity(campaignIntent);
 
 
-                    } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
-                        String challengeId = branchModel.getId();
+                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
+                    String challengeId = branchModel.getId();
 
-                        getChallenges(challengeId);
-
-
-                    } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
-
-                        Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
-                        intent1.putExtra("pageNumber", 1);
-                        startActivity(intent1);
+                    getChallenges(challengeId);
 
 
-                    } else {
+                } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
 
-                    }
+                    Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
+                    intent1.putExtra("pageNumber", 1);
+                    startActivity(intent1);
+
+
+                } else {
+
                 }
             }
 
-
-            // String nevigateTo = BaseApplication.getInstance().getBranchData();
-           /* Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
-            startActivity(intent1);*/
         } else {
             String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
             try {
@@ -1418,16 +1466,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     if (tempDeepLinkURL.contains("?")) {
                         final String campaignID = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.indexOf("?"));
-
-                        Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
-                        campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
-                        startActivity(campaignIntent);
+                        if (!StringUtils.isNullOrEmpty(campaignID)) {
+                            Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                            campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                            startActivity(campaignIntent);
+                        }
                     } else {
                         final String campaignID = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1);
-
-                        Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
-                        campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
-                        startActivity(campaignIntent);
+                        if (!StringUtils.isNullOrEmpty(campaignID)) {
+                            Intent campaignIntent = new Intent(this, CampaignContainerActivity.class);
+                            campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
+                            startActivity(campaignIntent);
+                        }
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_GROUPS)) {
                     String[] separated = tempDeepLinkURL.split("/");
@@ -1520,7 +1570,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
                         for (int k = 0; k < num_of_challeneges; k++) {
                             if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
-                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
                                     //if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
                                     deepLinkchallengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
                                     deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
@@ -1553,7 +1603,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
                         for (int k = 0; k < num_of_challeneges; k++) {
                             if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
-                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
                                     //if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
                                     deepLinkchallengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
                                     deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
@@ -1598,7 +1648,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
                                 for (int k = 0; k < num_of_challeneges; k++) {
                                     if (deepLinkChallengeId.equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId())) {
-                                        if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                        if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
                                             deepLinkchallengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
                                             deepLinkDisplayName.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
                                             deepLinkImageUrl.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getImageUrl());
@@ -2139,7 +2189,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
                         for (int k = num_of_challeneges - 1; k >= 0; k--) {
                             if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
                                     if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
                                         challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
                                         Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
@@ -2176,7 +2226,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                     num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
                                     for (int k = num_of_challeneges - 1; k >= 0; k--) {
                                         if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                            if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                            if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
                                                 if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
                                                     challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
                                                     Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
@@ -2230,7 +2280,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                         num_of_challeneges = shortStoriesTopicList.get(0).getChild().get(j).getChild().size();
                                         for (int k = num_of_challeneges - 1; k >= 0; k--) {
                                             if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null) {
+                                                if (shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData() != null && shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().size() != 0) {
                                                     if ("1".equals(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getExtraData().get(0).getChallenge().getActive())) {
                                                         challengeId.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getId());
                                                         Display_Name.add(shortStoriesTopicList.get(0).getChild().get(j).getChild().get(k).getDisplay_name());
@@ -3071,7 +3121,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     };
 
-    public void showChossLayoutForShortStory() {
+    public void showChooseLayoutForShortStory() {
         chooseLayout.setVisibility(View.VISIBLE);
         chooseStoryChallengeLayout.setVisibility(View.VISIBLE);
         overLayViewChooseStory.setVisibility(View.VISIBLE);
@@ -3079,5 +3129,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         rootChooseLayout.setVisibility(View.VISIBLE);
     }
 
-
 }
+
+
+

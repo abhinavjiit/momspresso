@@ -94,6 +94,26 @@
             android:visibility="gone"
             app:fontName="oswald.ttf" />
 
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/draftsShimmerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:duration="800">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <include layout="@layout/drafts_shimmer_layout" />
+
+                <include layout="@layout/drafts_shimmer_layout" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/horizontalRecyclerViewForVideoChallenge"
             android:layout_width="match_parent"

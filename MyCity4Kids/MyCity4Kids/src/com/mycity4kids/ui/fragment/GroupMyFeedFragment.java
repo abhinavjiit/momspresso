@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
@@ -105,6 +106,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
     private Animation slideAnim, fadeAnim;
     private UserPostSettingResult currentPostPrefsForUser;
     private ProgressBar progressBar;
+    private ShimmerFrameLayout shimmer1;
 
     @Nullable
     @Override
@@ -139,6 +141,7 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
         reportPostTextView = (TextView) fragmentView.findViewById(R.id.reportPostTextView);
         progressBar = (ProgressBar) fragmentView.findViewById(R.id.progressBar);
         emptyListTextView = (TextView) fragmentView.findViewById(R.id.emptyListText);
+        shimmer1 = (ShimmerFrameLayout) fragmentView.findViewById(R.id.shimmer1);
 
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
@@ -215,6 +218,8 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
             }
             try {
                 if (response.isSuccessful()) {
+                    shimmer1.startShimmerAnimation();
+                    shimmer1.setVisibility(View.GONE);
                     emptyListTextView.setVisibility(View.GONE);
                     GroupPostResponse groupPostResponse = response.body();
                     processPostListingResponse(groupPostResponse);
@@ -1280,7 +1285,18 @@ public class GroupMyFeedFragment extends BaseFragment implements MyFeedPollGener
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
         }
+
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        shimmer1.startShimmerAnimation();
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        shimmer1.stopShimmerAnimation();
+    }
 }

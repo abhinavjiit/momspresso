@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.internal.LinkedTreeMap;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
@@ -86,7 +87,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
     private int totalPostCount;
     private String action = "";
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private GroupResult selectedGroup;
+    GroupResult selectedGroup;
     private String memberType, userDynamoId;
     private GroupPostResult selectedPost;
     private LinearLayout postSettingsContainer;
@@ -96,6 +97,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
     private Animation slideAnim, fadeAnim;
     private UserPostSettingResult currentPostPrefsForUser;
     private ProgressBar progressBar;
+    private ShimmerFrameLayout shimmer1;
 
     @Nullable
     @Override
@@ -130,6 +132,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
         reportPostTextView = (TextView) fragmentView.findViewById(R.id.reportPostTextView);
         progressBar = (ProgressBar) fragmentView.findViewById(R.id.progressBar);
         emptyListTextView = (TextView) fragmentView.findViewById(R.id.emptyListText);
+        shimmer1 = (ShimmerFrameLayout) fragmentView.findViewById(R.id.shimmer1);
         isRequestRunning = false;
         isLastPageReached = false;
         recyclerView.setAdapter(myFeedPollGenericRecyclerAdapter);
@@ -197,6 +200,8 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
             }
             try {
                 if (response.isSuccessful()) {
+                    shimmer1.stopShimmerAnimation();
+                    shimmer1.setVisibility(View.GONE);
                     emptyListTextView.setVisibility(View.GONE);
                     GroupPostResponse groupPostResponse = response.body();
                     processPostListingResponse(groupPostResponse);
@@ -1229,5 +1234,17 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 postSettingsContainer.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        shimmer1.startShimmerAnimation();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        shimmer1.stopShimmerAnimation();
     }
 }

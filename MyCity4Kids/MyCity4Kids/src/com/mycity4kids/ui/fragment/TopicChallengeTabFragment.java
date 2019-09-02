@@ -2,9 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,27 +12,28 @@ import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ChallnegeDetailListingActivity;
 import com.mycity4kids.ui.adapter.ChallengeRecyclerAdapter;
 
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class TopicChallengeTabFragment extends BaseFragment implements View.OnClickListener, ChallengeRecyclerAdapter.RecyclerViewClickListener {
-    private RecyclerView recyclerView;
-    private LinearLayoutManager llm;
-    private String userDynamoId;
-    private Topics currentSubTopic;
-    private ArrayList<ArticleListingResult> mDatalist;
+    RecyclerView recyclerView;
+    LinearLayoutManager llm;
+    String userDynamoId;
+    Topics currentSubTopic;
     private Topics selectedTopic;
     private ArrayList<String> challengeId = new ArrayList<String>();
     private ArrayList<String> Display_Name = new ArrayList<String>();
     private ArrayList<String> activeImageUrl = new ArrayList<String>();
     private ChallengeRecyclerAdapter recyclerAdapter;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private boolean isReuqestRunning = false;
-    private boolean isLastPageReached = false;
+    private SwipeRefreshLayout pullToRefresh;
+
 
     @Nullable
     @Override
@@ -44,15 +43,22 @@ public class TopicChallengeTabFragment extends BaseFragment implements View.OnCl
             currentSubTopic = getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;
         }
-
+        pullToRefresh = view.findViewById(R.id.pullToRefresh);
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_challenge);
         llm = new LinearLayoutManager(getActivity());
         recyclerAdapter = new ChallengeRecyclerAdapter(this, getActivity(), challengeId, Display_Name, activeImageUrl);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setListData(selectedTopic);
         recyclerView.setAdapter(recyclerAdapter);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pullToRefresh.setRefreshing(false);
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        });
 
 
         return view;
@@ -82,10 +88,6 @@ public class TopicChallengeTabFragment extends BaseFragment implements View.OnCl
                 intent.putExtra("parentId", articledatamodal.getParentId());
                 intent.putExtra("StringUrl", activeImageUrl);
                 startActivity(intent);
-
-
         }
-
-
     }
 }

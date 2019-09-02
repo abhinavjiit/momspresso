@@ -54,9 +54,9 @@
         <!-- <meta-data -->
         <!-- android:name="com.google.android.maps.v2.API_KEY" -->
         <!-- android:value="AIzaSyDW1kR3eOOksMp4gBrOnyGVB-q9bFJ21x4" /> -->
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCLaeioxT3JtDNGj4aczM_Clno7T_WTfWU" /> <!-- // this is old one keyyyyy -->
+        <!--  <meta-data
+              android:name="com.google.android.maps.v2.API_KEY"
+              android:value="AIzaSyCLaeioxT3JtDNGj4aczM_Clno7T_WTfWU" />--> <!-- // this is old one keyyyyy -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -97,6 +97,7 @@
             android:name=".ui.activity.SplashActivity"
             android:icon="@drawable/myicon"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/transparent_status">
             <intent-filter>

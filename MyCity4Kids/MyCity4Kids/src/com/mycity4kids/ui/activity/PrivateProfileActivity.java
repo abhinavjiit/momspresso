@@ -678,6 +678,8 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             // clear cachee
             BaseApplication.setBlogResponse(null);
             BaseApplication.setBusinessREsponse(null);
+            BaseApplication.getInstance().setBranchData(null);
+            BaseApplication.getInstance().setBranchLink(null);
 
             // clear all sessions
 

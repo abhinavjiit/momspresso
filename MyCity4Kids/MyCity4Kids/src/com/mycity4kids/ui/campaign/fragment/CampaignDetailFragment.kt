@@ -9,6 +9,14 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+
+/*import android.support.constraint.ConstraintLayout
+import android.support.v4.app.ShareCompat
+import android.support.v4.widget.NestedScrollView
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar*/
+
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -20,11 +28,14 @@ import android.view.Window
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ShareCompat
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.crashlytics.android.Crashlytics
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.kelltontech.network.Response
 import com.kelltontech.ui.BaseFragment
+import com.kelltontech.utils.ToastUtils
 import com.mycity4kids.R
 import com.mycity4kids.application.BaseApplication
 import com.mycity4kids.constants.Constants
@@ -57,7 +68,7 @@ import java.util.regex.Pattern
 const val REWARDS_FILL_FORM_REQUEST = 1000
 
 class CampaignDetailFragment : BaseFragment() {
-
+    private lateinit var scrollView2: NestedScrollView
     private var campaignList = mutableListOf<CampaignDataListResult>()
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: CampaignDetailAdapter
@@ -66,6 +77,8 @@ class CampaignDetailFragment : BaseFragment() {
     private lateinit var containerView: View
     private var id: Int? = 0
     private var status: Int = 0
+    private lateinit var shimmer1: ShimmerFrameLayout
+    private lateinit var toolbar: Toolbar
     private lateinit var bannerImg: ImageView
     private lateinit var brandImg: ImageView
     private lateinit var brandName: TextView
@@ -128,7 +141,6 @@ class CampaignDetailFragment : BaseFragment() {
         if (isRewardAdded.equals("1", true)) {
             fetchForYou()
         } else {
-            showProgressDialog(resources.getString(R.string.please_wait))
             fetchCampaignDetail()
         }
 
@@ -232,6 +244,10 @@ class CampaignDetailFragment : BaseFragment() {
         getHelp = containerView.findViewById(R.id.get_help)
         detail_recyclerview = containerView.findViewById(R.id.detail_recyclerview)
         txtTrackerStatus = containerView.findViewById(R.id.txtTrackerStatus);
+        toolbar = containerView.findViewById(R.id.toolbar)
+        scrollView2 = containerView.findViewById(R.id.scrollView2)
+        shimmer1 = containerView.findViewById(R.id.shimmer1)
+
     }
 
     private fun fetchCampaignDetail() {
@@ -239,7 +255,6 @@ class CampaignDetailFragment : BaseFragment() {
 
 
             override fun onComplete() {
-                removeProgressDialog()
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -249,17 +264,22 @@ class CampaignDetailFragment : BaseFragment() {
             override fun onNext(response: BaseResponseGeneric<CampaignDetailResult>) {
 
                 if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response.data!!.result != null) {
-
                     parentConstraint.visibility = View.VISIBLE
                     apiGetResponse = response.data!!.result
                     setResponseData()
+                    shimmer1.visibility = View.GONE
+                    shimmer1.stopShimmerAnimation()
+                    toolbar.visibility = View.VISIBLE
+                    scrollView2.visibility = View.VISIBLE
+                    labelText.visibility = View.VISIBLE
+                    bottomLayout.visibility = View.VISIBLE
                 } else {
 
                 }
             }
 
             override fun onError(e: Throwable) {
-                removeProgressDialog()
+                ToastUtils.showToast(activity, "something went wrong")
                 Log.e("exception in error", e.message.toString())
             }
         })
@@ -684,7 +704,7 @@ class CampaignDetailFragment : BaseFragment() {
 
 
     private fun fetchForYou() {
-        showProgressDialog(resources.getString(R.string.please_wait))
+        // showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getForYouStatus(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BasicResponse> {
             override fun onNext(response: BasicResponse) {
                 if (response.code == 200 && response.data != null && response.status == "success") {
@@ -692,14 +712,13 @@ class CampaignDetailFragment : BaseFragment() {
                         forYouStatus = response.data.result.recm_status
                     }
                 }
-                showProgressDialog(resources.getString(R.string.please_wait))
                 fetchCampaignDetail()
 
 
             }
 
             override fun onComplete() {
-                removeProgressDialog()
+                //  removeProgressDialog()
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -707,13 +726,22 @@ class CampaignDetailFragment : BaseFragment() {
 
 
             override fun onError(e: Throwable) {
-                removeProgressDialog()
+                // removeProgressDialog()
             }
 
 
         })
     }
 
+    override fun onStart() {
+        super.onStart()
+        shimmer1.startShimmerAnimation()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        shimmer1.stopShimmerAnimation()
+    }
 
 }
 

@@ -222,7 +222,7 @@ public class LoadingActivity extends BaseActivity {
 
                 Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
                 if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
-                    intent.putExtra(AppConstants.BRANCH_DEEPLINK, AppConstants.BRANCH_DEEPLINK);
+                    intent.putExtra("branchLink", AppConstants.BRANCH_DEEPLINK);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -232,7 +232,7 @@ public class LoadingActivity extends BaseActivity {
                 Log.d("MC4kException", Log.getStackTraceString(e));
                 Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
                 if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
-                    intent.putExtra(AppConstants.BRANCH_DEEPLINK, AppConstants.BRANCH_DEEPLINK);
+                    intent.putExtra("branchLink", AppConstants.BRANCH_DEEPLINK);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -247,7 +247,7 @@ public class LoadingActivity extends BaseActivity {
             Log.d("MC4kException", Log.getStackTraceString(t));
             Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
             if (!StringUtils.isNullOrEmpty(type) && type.equals("true")) {
-                intent.putExtra(AppConstants.BRANCH_DEEPLINK, AppConstants.BRANCH_DEEPLINK);
+                intent.putExtra("branchLink", AppConstants.BRANCH_DEEPLINK);
             }
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

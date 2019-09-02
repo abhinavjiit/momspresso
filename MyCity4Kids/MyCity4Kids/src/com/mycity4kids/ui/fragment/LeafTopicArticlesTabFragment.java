@@ -1,15 +1,17 @@
 package com.mycity4kids.ui.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +41,9 @@ import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -62,7 +67,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
-
+    SwipeRefreshLayout swipeRefresh;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private FrameLayout frameLayout;
@@ -80,7 +85,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.topics_articles_tab_fragment, container, false);
-
+        swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
@@ -108,6 +113,19 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
                 } else {
                     fabMenu.expand();
                 }
+            }
+        });
+
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                mDatalist.clear();
+                recyclerAdapter.notifyDataSetChanged();
+                nextPageNumber = 1;
+                hitFilteredTopicsArticleListingApi(sortType);
+                swipeRefresh.setRefreshing(false);
+
             }
         });
 
@@ -356,5 +374,49 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
                 }
                 break;
         }
+    }
+
+    public void showSortedByDialog() {
+        if (getActivity() != null) {
+            final Dialog dialog = new Dialog(getActivity());
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_sort_by);
+            dialog.setCancelable(true);
+            dialog.findViewById(R.id.linearSortByPopular).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDatalist.clear();
+                    recyclerAdapter.notifyDataSetChanged();
+                    sortType = 1;
+                    nextPageNumber = 1;
+                    hitFilteredTopicsArticleListingApi(sortType);
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.findViewById(R.id.linearSortByRecent).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    mDatalist.clear();
+                    recyclerAdapter.notifyDataSetChanged();
+                    sortType = 0;
+                    nextPageNumber = 1;
+                    hitFilteredTopicsArticleListingApi(sortType);
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.findViewById(R.id.textUpdate).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+        }
+
     }
 }

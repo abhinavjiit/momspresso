@@ -273,7 +273,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
         if (!apiGetResponse.email.isNullOrBlank()) editEmail.setText(apiGetResponse.email)
         if (!apiGetResponse.location.isNullOrBlank()) editLocation.setText(apiGetResponse.location)
+        if (apiGetResponse.latitude != null)   lat = apiGetResponse.latitude!!
 
+        if (apiGetResponse.longitude != null)   lng = apiGetResponse.longitude!!
 
         if (apiGetResponse.familyType != null) {
             if (apiGetResponse.familyType == 1) {
@@ -803,10 +805,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     if (!place.name.toString().isNullOrEmpty()) {
                         cityName = place.name.toString()
                         editLocation.setText(cityName)
+                        lat = place.latLng.latitude
+                        lng = place.latLng.longitude
                         address = cityName
-                        if (address != null) {
-                            fetchLangLat(address!!)
-                        }
+
                     }
                 }
                 VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
@@ -1290,7 +1292,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
     }
 
-    fun fetchLangLat(address: String) {
+/*    fun fetchLangLat(address: String) {
         val coder = Geocoder(activity as RewardsContainerActivity)
         var addresses: List<Address>
         (activity as RewardsContainerActivity).runOnUiThread {
@@ -1305,7 +1307,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 Log.i("lat", lng.toString())
             }
         }
-    }
+    }*/
 
 }
 

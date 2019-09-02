@@ -27,9 +27,6 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
-/*
-import android.support.v4.view.KeyEventCompat;
-*/
 
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
@@ -1006,9 +1003,11 @@ public class CustomViewPager extends ViewGroup {
                  */
 
                 /*
+<<<<<<< Updated upstream
                  * Locally do absolute value. mLastMotionY is set to the y value
                  * of the down event.
                  */
+
                 final int activePointerId = mActivePointerId;
                 if (activePointerId == INVALID_POINTER) {
                     // If we don't have a valid id, the touch down wasn't on content.
@@ -1083,9 +1082,11 @@ public class CustomViewPager extends ViewGroup {
         }
 
         /*
+<<<<<<< Updated upstream
          * The only time we want to intercept motion events is if we are in the
          * drag mode.
          */
+
         return mIsBeingDragged;
     }
 
@@ -1139,6 +1140,8 @@ public class CustomViewPager extends ViewGroup {
                     final float yDiff = Math.abs(y - mLastMotionY);
                     if (DEBUG)
                         Log.v(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
+
+
                     if (xDiff > mTouchSlop && xDiff > yDiff) {
                         if (DEBUG) Log.v(TAG, "Starting drag!");
                         mIsBeingDragged = true;
@@ -1515,13 +1518,15 @@ public class CustomViewPager extends ViewGroup {
                 case KeyEvent.KEYCODE_DPAD_RIGHT:
                     handled = arrowScroll(FOCUS_RIGHT);
                     break;
-                case KeyEvent.KEYCODE_TAB:
-                   /* if (KeyEventCompat.hasNoModifiers(event)) {
+
+               /* case KeyEvent.KEYCODE_TAB:
+                    if (KeyEventCompat.hasNoModifiers(event)) {
                         handled = arrowScroll(FOCUS_FORWARD);
                     } else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_SHIFT_ON)) {
                         handled = arrowScroll(FOCUS_BACKWARD);
-                    }*/
-                    break;
+                    }
+                    break;*/
+
             }
         }
         return handled;

@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -150,7 +149,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         }
 
         if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED && !SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
-            momVlogCoachMark.setVisibility(View.GONE);
+            momVlogCoachMark.setVisibility(View.VISIBLE);
 
         } else {
             momVlogCoachMark.setVisibility(View.GONE);
@@ -177,7 +176,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPrefUtils.setToastMomVlog(CategoryVideosListingActivity.this, "momVlog", true);
+          //      SharedPrefUtils.setToastMomVlog(CategoryVideosListingActivity.this, "momVlog", true);
 
                 Intent cityIntent = new Intent(CategoryVideosListingActivity.this, ChooseVideoCategoryActivity.class);
                 cityIntent.putExtra("comingFrom", "createDashboardIcon");
@@ -240,10 +239,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 }
             });
         }
-        if (!SharedPrefUtils.getToastMomVlog(this, "momVlog")) {
-            Toast.makeText(this, "Tap to create", Toast.LENGTH_LONG).show();
 
-        }
 
     }
 
