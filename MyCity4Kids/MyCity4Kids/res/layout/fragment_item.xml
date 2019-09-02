@@ -15,7 +15,6 @@
             android:layout_height="@dimen/space_30"
             android:layout_alignParentLeft="true"
             android:layout_marginRight="10dp"
-
             android:src="@drawable/ic_arrow_drop_down_black_18dp"
             android:tint="@color/greytxt_color" />
 
@@ -24,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
+            android:layout_marginTop="@dimen/space_5"
             android:layout_marginEnd="2dp"
             android:layout_marginRight="2dp"
             android:layout_toStartOf="@+id/imageDown"
@@ -33,7 +33,6 @@
             android:ellipsize="end"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:layout_marginTop="@dimen/space_5"
             app:fontName="oswald_regular.ttf" />
 
         <ImageView
@@ -70,6 +69,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/light_underline"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_underline" />
 </RelativeLayout>

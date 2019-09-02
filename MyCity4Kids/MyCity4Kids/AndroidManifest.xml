@@ -481,10 +481,6 @@
             android:name=".ui.activity.NotificationActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.activity.PrivateProfileActivity" />
-        <activity
-            android:name=".ui.activity.NewEditorPostActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
         <activity android:name="com.facebook.accountkit.ui.AccountKitActivity" />
         <activity
             android:name=".ui.activity.UsersBookmarkListActivity"

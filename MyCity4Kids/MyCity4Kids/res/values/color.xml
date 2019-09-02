@@ -468,7 +468,7 @@
     <!-- VIDEO TRIMMER -->
     <color name="background_video_color">#2f3031</color>
     <color name="background_progress_color">#6C6D6D</color>
-    <color name="progress_color">@color/colorPrimary</color>
+    <color name="progress_color">#005099</color>
     <color name="line_color">#FF15FF00</color>
     <color name="shadow_color">#FF000000</color>
     <color name="line_button">#565758</color>

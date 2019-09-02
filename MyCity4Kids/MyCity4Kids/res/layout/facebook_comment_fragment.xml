@@ -23,7 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
-            android:indeterminateTint="@color/colorPrimary"
+            android:indeterminateTint="#005099"
             android:indeterminateTintMode="src_atop" />
 
     </FrameLayout>
