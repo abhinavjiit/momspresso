@@ -204,6 +204,7 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
         mAuth = FirebaseAuth.getInstance();
 
+        AppUtils.createDirIfNotExists("MyCity4Kids/videos");
         mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
         mFileName += "/audiorecordtest.m4a";
         getWindow().setSoftInputMode(
