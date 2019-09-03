@@ -3,7 +3,6 @@ package com.mycity4kids.preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.transition.Scene;
 
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.VersionApiModel;
@@ -125,6 +124,7 @@ public class SharedPrefUtils {
     private static final String LAST_LOGIN_TIMESTAMP = "lastLoginTimestamp";
     private static final String USER_SKIPPED_FOLLOW_TOPIC_FLAG = "userSkippedFollowTopicFlag";
     private static final String HAS_TOPIC_SELECTION_CHANGED = "topicSelectionChangeFlag";
+    private static final String FIREBASE_REMOTE_CONFIG_UPDATE_FLAG = "firebaseRemoteConfigUpdateFlag";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -852,4 +852,15 @@ public class SharedPrefUtils {
     }
 
 
+    public static void setFirebaseRemoteConfigUpdateFlag(Context pContext, boolean b) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(FIREBASE_REMOTE_CONFIG_UPDATE_FLAG, b);
+        _editor.apply();
+    }
+
+    public static boolean getFirebaseRemoteConfigUpdateFlag(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getBoolean(FIREBASE_REMOTE_CONFIG_UPDATE_FLAG, false);
+    }
 }

@@ -7,9 +7,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +14,12 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
@@ -51,6 +53,10 @@ import retrofit2.Retrofit;
  */
 public class ArticleDetailsContainerActivity extends BaseActivity implements View.OnClickListener, ArticleDetailsFragment.ISwipeRelated {
 
+    public static final String NEW_ARTICLE_DETAIL_FLAG = "new_article_detail_flag";
+
+    private FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
     private ArticleDetailsAPI articleDetailsAPI;
     private TopicsCategoryAPI topicsAPI;
     private String parentId;
@@ -76,6 +82,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
+    private boolean newArticleDetailFlag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +96,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         preferredLang = SharedPrefUtils.getLanguageFilters(this);
         Utils.pushOpenScreenEvent(this, "DetailArticleScreen", userDynamoId + "");
 
+        newArticleDetailFlag = mFirebaseRemoteConfig.getBoolean(NEW_ARTICLE_DETAIL_FLAG);
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
         playTtsTextView = (ImageView) findViewById(R.id.playTtsTextView);
@@ -135,7 +144,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         } else {
             final int pos = Integer.parseInt(bundle.getString(Constants.ARTICLE_INDEX));
 
-            mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen, parentId);
+            mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen, parentId, newArticleDetailFlag);
             mViewPager.setAdapter(mViewPagerAdapter);
             mViewPager.setCurrentItem(pos);
             mViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
@@ -319,7 +328,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                     return;
                 }
 
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 && !isAudioPlaying) {
+                if (!isAudioPlaying) {
                     Intent readArticleIntent = new Intent(this, ReadArticleService.class);
                     String playContent = articleDetailsFragment.getArticleContent();
                     if (StringUtils.isNullOrEmpty(playContent)) {
@@ -526,7 +535,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     };
 
     private void initializeViewPager() {
-        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, "dw", parentId);
+        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, "dw", parentId, newArticleDetailFlag);
         mViewPager.setAdapter(mViewPagerAdapter);
 
         mViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
