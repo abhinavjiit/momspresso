@@ -6,6 +6,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
+
     <com.mycity4kids.observablescrollview.ObservableScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
@@ -23,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/article_title"
@@ -384,8 +385,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/native_ad_container"
-                android:visibility="gone"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="gone">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -800,6 +801,8 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+
 
 
 </RelativeLayout>

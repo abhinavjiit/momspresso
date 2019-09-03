@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,6 +41,7 @@ import com.facebook.ads.NativeAdListener;
 import com.facebook.ads.NativeBannerAd;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -256,14 +258,19 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        showProgressDialog("wait");
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mInflater = inflater;
         fragmentView = inflater.inflate(R.layout.article_details_fragment, container, false);
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         Utils.pushOpenScreenEvent(getActivity(), "articleDetailFragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
-
         userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         deepLinkURL = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);
         try {
@@ -280,7 +287,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //            videoWebView = (WebView) fragmentView.findViewById(R.id.videoWebView);
             viewAllTagsTextView = (TextView) fragmentView.findViewById(R.id.viewAllTagsTextView);
             bottomToolbarLL = (LinearLayout) fragmentView.findViewById(R.id.bottomToolbarLL);
-
             facebookShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.facebookShareTextView);
             whatsappShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.whatsappShareTextView);
             emailShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.emailShareTextView);
@@ -438,8 +444,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             mYouTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
             if (getUserVisibleHint()) {
-              //  FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                FragmentTransaction transaction=getChildFragmentManager().beginTransaction();
+                //  FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.youtube_fragment, mYouTubePlayerSupportFragment).commit();
                 mYouTubePlayerSupportFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
             }
@@ -1831,6 +1837,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
             try {
+                removeProgressDialog();
+
+                ((ArticleDetailsContainerActivity) getActivity()).removeProgressBar();
+
                 responseData = response.body();
                 getResponseUpdateUi(responseData);
 
@@ -1854,6 +1864,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //                    getMoreComments();
                 }
             } catch (Exception e) {
+
                 removeProgressDialog();
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -2977,6 +2988,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     protected YouTubePlayer.Provider getYouTubePlayerProvider() {
         return youTubePlayerView;
     }
+
 
 
 }

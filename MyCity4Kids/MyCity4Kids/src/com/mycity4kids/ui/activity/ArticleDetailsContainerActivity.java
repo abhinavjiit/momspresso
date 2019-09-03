@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
@@ -45,6 +48,9 @@ import java.util.HashSet;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
+
+import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING;
+import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE;
 
 /**
  * Created by hemant on 6/6/17.
@@ -87,7 +93,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         preferredLang = SharedPrefUtils.getLanguageFilters(this);
         Utils.pushOpenScreenEvent(this, "DetailArticleScreen", userDynamoId + "");
-
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
         playTtsTextView = (ImageView) findViewById(R.id.playTtsTextView);
@@ -138,9 +143,13 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen, parentId);
             mViewPager.setAdapter(mViewPagerAdapter);
             mViewPager.setCurrentItem(pos);
+
             mViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    if (position < mViewPagerAdapter.getCount() - 1 && position > 0) {
+                        showProgressDialog(getResources().getString(R.string.please_wait));
+                    }
                     Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                     stopService(readArticleIntent);
                     Log.d("-----AZURE----", "STOPPING");
@@ -161,6 +170,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
                 @Override
                 public void onPageSelected(int position) {
+
                     if (currPos == position) {
                         Utils.pushArticleSwipeEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleId, "" + (currPos + 1), "" + position);
                     } else {
@@ -532,6 +542,9 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         mViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position < articleList.size() - 1 || position > 0) {
+                    showProgressDialog("wait");
+                }
                 Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                 stopService(readArticleIntent);
                 Log.d("-----AZURE----", "STOPPING");
@@ -587,4 +600,11 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         super.onPause();
         checkAudioPlaying();
     }
+
+
+    public void removeProgressBar() {
+
+        removeProgressDialog();
+    }
 }
+
