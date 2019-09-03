@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar*/
 
+import androidx.appcompat.widget.Toolbar
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
