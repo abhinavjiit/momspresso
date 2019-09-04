@@ -128,9 +128,6 @@
                     android:host="momspresso.com"
                     android:scheme="http" />
                 <data
-                    android:host="603236c3.ngrok.io"
-                    android:scheme="http" />
-                <data
                     android:host="momspresso.com"
                     android:scheme="https" />
                 <data

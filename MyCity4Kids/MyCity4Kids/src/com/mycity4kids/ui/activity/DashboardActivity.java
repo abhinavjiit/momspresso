@@ -1291,7 +1291,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
             }
-        } else if (intent.hasExtra(AppConstants.BRANCH_DEEPLINK) || intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
+        } else if (intent.hasExtra("branchLink") || intent.hasExtra(AppConstants.BRANCH_DEEPLINK_URL)) {
             String branchdata = BaseApplication.getInstance().getBranchData();
             JsonParser parser = new JsonParser();
             JsonElement mJson = parser.parse(branchdata);

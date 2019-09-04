@@ -2988,7 +2988,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
 
-
 }
 
 
