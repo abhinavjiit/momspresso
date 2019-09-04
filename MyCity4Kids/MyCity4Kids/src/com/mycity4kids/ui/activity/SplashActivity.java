@@ -121,6 +121,7 @@ public class SplashActivity extends BaseActivity {
             _deepLinkURL = data;
 
             try {
+                mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 jsonObject.put("_deeplinkurl", _deepLinkURL);

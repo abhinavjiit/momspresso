@@ -89,10 +89,14 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 var view = recyclerUrlProof.layoutManager?.findViewByPosition(i);
                 var textview = view?.findViewById<EditText>(R.id.textUrl)
                 var proofPostModel = ProofPostModel(url = textview?.text.toString(), campaign_id = campaignId, url_type = 1)
-                if (i == campaignUrlProofList.size - 1) {
-                    updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = true)
-                } else {
-                    updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = false)
+                if (!textview?.text.isNullOrEmpty()) {
+                    if (i == campaignUrlProofList.size - 1) {
+                        updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = true)
+                    } else {
+                        updateProofToServer(proofPostModel = proofPostModel, proofId = campaignUrlProofList.get(i).id!!, proceedToPayment = false)
+                    }
+                } else{
+                    submitListener.proofSubmitDone()
                 }
             } else {
                 var view = recyclerUrlProof.layoutManager?.findViewByPosition(i);
@@ -368,7 +372,11 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
 
     private fun validateMediaProofs(): Boolean {
-        return campaignImageProofList.isNullOrEmpty()
+        var isAllEmpty: Boolean = true
+        if (!campaignImageProofList.get(0).url.isNullOrEmpty()){
+            isAllEmpty = false
+        }
+        return isAllEmpty
     }
 
     /*fetch data from server*/
@@ -436,7 +444,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                         this@CampaignAddProofFragment.campaignImageProofList.addAll(campaignImageProofList)
                         this@CampaignAddProofFragment.campaignUrlProofList.addAll(campaignUrlProofList)
 
-                        if (this@CampaignAddProofFragment.campaignImageProofList.size < 6) {
+                        if (this@CampaignAddProofFragment.campaignImageProofList.size < 30) {
                             var campaignProofResponse = CampaignProofResponse()
                             campaignProofResponse.isTemplate = true
                             this@CampaignAddProofFragment.campaignImageProofList.add(campaignProofResponse)
@@ -550,7 +558,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                             campaignProofResponse.isTemplate = false
                             this@CampaignAddProofFragment.campaignImageProofList.add(0, campaignProofResponse)
 
-                            if (this@CampaignAddProofFragment.campaignImageProofList.size >= 7) {
+                            if (this@CampaignAddProofFragment.campaignImageProofList.size >= 31) {
                                 this@CampaignAddProofFragment.campaignImageProofList.removeAt(campaignImageProofList.size - 1)
                             }
                             notifyMediaAdapter()

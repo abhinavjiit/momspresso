@@ -12,4 +12,8 @@
         <key>app_update_frequency</key>
         <value>0</value>
     </entry>
+    <entry>
+        <key>new_article_detail_flag</key>
+        <value>false</value>
+    </entry>
 </defaultsMap>

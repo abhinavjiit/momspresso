@@ -123,7 +123,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private int totalPostCount;
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
     private TaskFragment mTaskFragment;
-    private int skip = 0;
+    private int skip = 0;x
     private ArrayList<GroupPostCommentResult> completeResponseList;
     private int postId;
     private int limit = 10;

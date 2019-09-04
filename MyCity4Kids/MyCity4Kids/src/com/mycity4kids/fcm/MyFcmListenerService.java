@@ -60,7 +60,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
     public void onNewToken(@NonNull String fcmToken) {
         super.onNewToken(fcmToken);
         SharedPrefUtils.setDeviceToken(this, fcmToken);
-        Log.e("token in preferences", SharedPrefUtils.getDeviceToken(this));
         Intent intent = new Intent(this, PushTokenService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
@@ -76,11 +75,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        String from = remoteMessage.getFrom();
-        Map data = remoteMessage.getData();
-        Log.e("from", from);
-        Log.e("data", data.toString());
-//       Log.e("Notification Body", remoteMessage.getNotification().getBody());
         sendNotification(remoteMessage);
     }
 
@@ -167,7 +161,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
     }
 
     private void sendNotification(RemoteMessage remoteMessage) {
-        Map<String, String> dataValues = remoteMessage.getData();
         String msg = remoteMessage.getData().get("message");
         if (msg == null) {
             msg = remoteMessage.getData().toString();
@@ -185,6 +178,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         try {
             if (pushNotificationModel != null) {
                 String type = pushNotificationModel.getType();
+                Log.d("NOTI_TYPE", "type ===== " + type);
                 if (type.equalsIgnoreCase("upcoming_event_list")) {
                     Log.i(TAG, " INSIDE EVENTS LIST: " + msg);
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
@@ -672,6 +666,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         || type.equalsIgnoreCase("group_admin_membership") || type.equalsIgnoreCase("group_admin_reported")) {
 
 
+                } else if (type.equals("remote_config_silent_update")) {
+                    SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(this, true);
                 } else {
                     Log.i(TAG, " Default : " + msg);
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");

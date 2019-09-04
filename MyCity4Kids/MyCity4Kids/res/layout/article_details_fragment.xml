@@ -6,7 +6,6 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-
     <com.mycity4kids.observablescrollview.ObservableScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
@@ -239,11 +238,27 @@
                 android:layout_marginBottom="10dp"
                 android:background="@color/light_grey1" />
 
+            <LinearLayout
+                android:id="@+id/progressBarContainer"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_below="@+id/webViewSeparator"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <ProgressBar
+                    android:id="@+id/webViewProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="100dp" />
+            </LinearLayout>
+
             <WebView
                 android:id="@+id/articleWebView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/webViewSeparator"
+                android:layout_below="@+id/progressBarContainer"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:autoLink="web"
@@ -801,8 +816,6 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-
 
 
 </RelativeLayout>

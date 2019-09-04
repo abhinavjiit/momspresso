@@ -144,7 +144,6 @@
             android:elevation="4dp"
             android:tint="@color/white"
             android:visibility="gone"
-
             app:backgroundTint="@color/app_red"
             app:srcCompat="@drawable/ic_video_new" />
 

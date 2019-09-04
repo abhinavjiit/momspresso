@@ -247,17 +247,28 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(720).build();
         mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-        mFirebaseRemoteConfig.fetchAndActivate()
-                .addOnCompleteListener(this, new OnCompleteListener<Boolean>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Boolean> task) {
-                        if (task.isSuccessful()) {
-                            boolean updated = task.getResult();
-                            Log.d("FirebaseRemoteConfig", "Config params updated: " + updated);
-                        } else {
+        if (SharedPrefUtils.getFirebaseRemoteConfigUpdateFlag(this)) {
+            showProgressDialog(getString(R.string.please_wait));
+            mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    removeProgressDialog();
+                    SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(DashboardActivity.this, false);
+                }
+            });
+        } else {
+            mFirebaseRemoteConfig.fetchAndActivate()
+                    .addOnCompleteListener(this, new OnCompleteListener<Boolean>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Boolean> task) {
+                            if (task.isSuccessful()) {
+                                boolean updated = task.getResult();
+                                Log.d("FirebaseRemoteConfig", "Config params updated: " + updated);
+                            } else {
+                            }
                         }
-                    }
-                });
+                    });
+        }
         root = findViewById(R.id.dash_root);
         ((BaseApplication) getApplication()).setDashboardActivity(this);
         ((BaseApplication) getApplication()).setActivity(this);
@@ -290,7 +301,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         try {
             frequecy = Integer.parseInt(mFirebaseRemoteConfig.getString(UPDATE_APP_FREQUENCY_KEY));
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
 
@@ -961,7 +973,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         super.onNewIntent(intent);
         Bundle notificationExtras = intent.getParcelableExtra("notificationExtras");
         if (notificationExtras != null) {
-            if (notificationExtras.getString("type").equalsIgnoreCase("article_details")) {
+            if (notificationExtras.getString("type").equals("remote_config_silent_update")) {
+                showProgressDialog(getString(R.string.please_wait));
+                mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        removeProgressDialog();
+                        SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(DashboardActivity.this, false);
+                    }
+                });
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("article_details")) {
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
                 String blogSlug = notificationExtras.getString("blogSlug");
