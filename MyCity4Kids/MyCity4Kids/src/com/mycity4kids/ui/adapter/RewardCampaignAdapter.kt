@@ -150,6 +150,12 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+            } else if (status == 17) {
+                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_list_proof_reject))
+                (view.submission_status).setBackgroundResource(R.drawable.campaign_rejected)
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 7) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_details_completed))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_completed)
@@ -163,6 +169,12 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                 (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
                 (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
             } else if (status == 9) {
+                (view.submission_status).setText(context!!.resources.getString(R.string.campaign_list_proof_moderation))
+                (view.submission_status).setBackgroundResource(R.drawable.campaign_subscription_open)
+                (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
+                (view.end_date_text).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+                (view.amount).setBackgroundResource(R.drawable.campaign_detail_red_bg)
+            } else if (status == 16) {
                 (view.submission_status).setText(context!!.resources.getString(R.string.campaign_list_proof_moderation))
                 (view.submission_status).setBackgroundResource(R.drawable.campaign_subscription_open)
                 (view.view4).setBackgroundColor(context.resources.getColor(R.color.campaign_list_buttons))
