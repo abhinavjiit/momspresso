@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+
 import androidx.core.graphics.drawable.DrawableCompat;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -174,7 +176,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 view = mInflator.inflate(R.layout.add_momvlog_list_item, null);
                 addVlogViewHolder.goldLogo = (TextView) view.findViewById(R.id.goldLogo);
                 addVlogViewHolder.winnerLayout = (RelativeLayout) view.findViewById(R.id.winnerLayout);
-
+                addVlogViewHolder.momVlogLayout = (RelativeLayout) view.findViewById(R.id.momVlogLayout);
                 addVlogViewHolder.title = (TextView) view.findViewById(R.id.title);
                 addVlogViewHolder.sub_title = (TextView) view.findViewById(R.id.sub_title);
                 addVlogViewHolder.videoLogBanner = (TextView) view.findViewById(R.id.videoLogBanner);
@@ -192,6 +194,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 DrawableCompat.setTint(drawable, mContext.getResources().getColor(R.color.gold_color_video_listing));
                 DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
                 addVlogViewHolder.goldLogo.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                addVlogViewHolder.momVlogLayout.setVisibility(View.GONE);
                 addVlogViewHolder.title.setVisibility(View.GONE);
                 addVlogViewHolder.sub_title.setVisibility(View.GONE);
                 addVlogViewHolder.videoLogBanner.setVisibility(View.GONE);
@@ -436,7 +439,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     }
 
     class AddVlogViewHolderChallenge {
-        RelativeLayout winnerLayout;
+        RelativeLayout winnerLayout, momVlogLayout;
         TextView goldLogo;
         ImageView addMomVlogImageView;
         TextView txvArticleTitle;
