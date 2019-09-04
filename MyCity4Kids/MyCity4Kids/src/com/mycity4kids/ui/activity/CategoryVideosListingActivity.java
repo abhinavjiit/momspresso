@@ -2,7 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,11 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -36,7 +30,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.VideoTopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
 import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
-import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
@@ -46,6 +39,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,17 +92,17 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
         momVlogCoachMark = (RelativeLayout) findViewById(R.id.momVlogCoachMark);
+        bottom_sheet.setVisibility(View.GONE);
         momVlogCoachMark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 momVlogCoachMark.setVisibility(View.GONE);
+                fabAdd.setVisibility(View.VISIBLE);
                 SharedPrefUtils.setCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog", true);
-
-
             }
         });
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(CategoryVideosListingActivity.this);
-        if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
+        /*if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -146,12 +143,14 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         } else {
             bottom_sheet.setVisibility(View.GONE);
             fabAdd.setVisibility(View.VISIBLE);
-        }
+        }*/
 
-        if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED && !SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
+        if (!SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
             momVlogCoachMark.setVisibility(View.VISIBLE);
 
+
         } else {
+            fabAdd.setVisibility(View.VISIBLE);
             momVlogCoachMark.setVisibility(View.GONE);
 
         }
@@ -161,7 +160,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         topLayerGuideLayout = (FrameLayout) findViewById(R.id.topLayerGuideLayout);
         viewPager = (ViewPager) findViewById(R.id.pager);
         toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
-
         imageSortBy = (ImageView) findViewById(R.id.imageSortBy);
 
         imageSortBy.setOnClickListener(new View.OnClickListener() {
@@ -176,15 +174,12 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-          //      SharedPrefUtils.setToastMomVlog(CategoryVideosListingActivity.this, "momVlog", true);
 
                 Intent cityIntent = new Intent(CategoryVideosListingActivity.this, ChooseVideoCategoryActivity.class);
                 cityIntent.putExtra("comingFrom", "createDashboardIcon");
-                //   cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
 
                 startActivity(cityIntent);
                 Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
-                momVlogCoachMark.setVisibility(View.GONE);
 
 
             }
