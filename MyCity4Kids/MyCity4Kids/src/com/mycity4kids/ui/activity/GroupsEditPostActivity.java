@@ -230,7 +230,12 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
 
                 UpdatePostContentRequest updatePostRequest = new UpdatePostContentRequest();
                 updatePostRequest.setContent(postContentEditText.getText().toString());
-                updatePostRequest.setType("0");
+                if("1".equals(postData.getType())){
+                    updatePostRequest.setType("0");
+                }else{
+                    updatePostRequest.setType(postData.getType());
+                }
+
                 LinkedHashMap<String, String> mediaMap = new LinkedHashMap<>();
                 int i = 1;
                 if (!imageUrlHashMap.isEmpty()) {

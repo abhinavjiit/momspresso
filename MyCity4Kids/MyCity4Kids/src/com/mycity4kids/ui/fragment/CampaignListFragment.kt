@@ -171,7 +171,7 @@ class CampaignListFragment : BaseFragment() {
     private val getCampaignList = object : Callback<AllCampaignDataResponse> {
         override fun onResponse(call: Call<AllCampaignDataResponse>, response: retrofit2.Response<AllCampaignDataResponse>) {
             //   removeProgressDialog()
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
                 Crashlytics.logException(nee)
                 return

@@ -851,13 +851,13 @@ public class SplashActivity extends BaseActivity {
     Callback<ForceUpdateModel> checkForceUpdateResponseCallback = new Callback<ForceUpdateModel>() {
         @Override
         public void onResponse(Call<ForceUpdateModel> call, retrofit2.Response<ForceUpdateModel> response) {
-            if (response == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {
                 ForceUpdateModel responseData = response.body();
-                if (responseData != null && responseData.getResponseCode() == 200) {
+                if (responseData.getResponseCode() == 200) {
 
                     if (responseData.getResult().getData().getIsAppUpdateRequired() == 1) {
                         SharedPrefUtils.setAppUgrade(SplashActivity.this, true);
@@ -869,7 +869,6 @@ public class SplashActivity extends BaseActivity {
                             public void onButtonCLick(int buttonId) {
                             }
                         });
-                        return;
                     } else {
                         SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
                         isFirstLaunch = 0;
