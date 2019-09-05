@@ -322,7 +322,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 val responseData = response.body()
                 if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
                     if (responseData.data.get(0).result.get(0).isIs_image_required == 1) {
-                        addScreenShotTextView.setText(responseData.data.get(0).result.get(0).image_name)
+                        addScreenShotTextView.text = responseData.data.get(0).result.get(0).image_name
                         addScreenShotTextView1.visibility = View.VISIBLE
                     } else {
                         headerTextViewContainer1.visibility = View.GONE

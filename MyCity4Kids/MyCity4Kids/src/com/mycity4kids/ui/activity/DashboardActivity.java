@@ -1295,7 +1295,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
                     String challengeId = branchModel.getId();
 
-                    getChallenges(challengeId);
+                    getChallenges(challengeId.trim());
 
 
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
@@ -3021,7 +3021,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         branchRules = new ArrayList<>();
         branchMappedCategory = new ArrayList<>();
         branchImageUrl = new ArrayList<>();
-        //     showProgressDialog(getApplicationContext().getResources().getString(R.string.please_wait));
+        showProgressDialog(getApplicationContext().getResources().getString(R.string.please_wait));
 
         if (!ConnectivityUtils.isNetworkEnabled(DashboardActivity.this)) {
             removeProgressDialog();
@@ -3043,7 +3043,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
             if (response.isSuccessful()) {
-                //  removeProgressDialog();
+                removeProgressDialog();
                 try {
                     TopicsResponse responseData = response.body();
                     if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {

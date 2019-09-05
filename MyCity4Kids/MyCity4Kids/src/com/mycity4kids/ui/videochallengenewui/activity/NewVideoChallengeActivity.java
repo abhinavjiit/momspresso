@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -215,23 +216,29 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         thumbNail.setOnClickListener(this);
         saveTextView.setOnClickListener(view -> {
             //   SharedPrefUtils.setToastMomVlog(this, "Challenge", true);
-
-            ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
-            FragmentManager fm = getSupportFragmentManager();
-            Bundle _args = new Bundle();
-            _args.putString("activity", "newVideoChallengeActivity");
             if (max_Duration != 0) {
+                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putString("activity", "newVideoChallengeActivity");
+
                 _args.putString("duration", String.valueOf(max_Duration));
+
+
+                chooseVideoUploadOptionDialogFragment.setArguments(_args);
+                chooseVideoUploadOptionDialogFragment.setCancelable(true);
+                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
+
+            } else {
+                ToastUtils.showToast(this, "duration should be greater than 0.0");
+                Crashlytics.log("max_duration is :" + String.valueOf(max_Duration));
+                Log.i("ERROR", String.valueOf(max_Duration));
             }
-
-            chooseVideoUploadOptionDialogFragment.setArguments(_args);
-            chooseVideoUploadOptionDialogFragment.setCancelable(true);
-            chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
-
         });
 
 
     }
+
 
     @Override
     protected void updateUi(Response response) {
