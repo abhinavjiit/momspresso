@@ -1733,7 +1733,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             try {
                 removeProgressDialog();
 
-                ((ArticleDetailsContainerActivity) getActivity()).removeProgressBar();
 
                 responseData = response.body();
                 getResponseUpdateUi(responseData);

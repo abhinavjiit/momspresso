@@ -165,7 +165,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
 //        var userId = "6f57d7cb01fa46c89bf85e3d2ade7de3"
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().campaignRetrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -476,7 +476,7 @@ class RewardsSocialInfoFragment : BaseFragment(), IFacebookUser, GoogleApiClient
         if (!userId.isNullOrEmpty()) {
             Log.e("body to api ", Gson().toJson(apiGetResponse))
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().campaignRetrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, 3).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
                 override fun onComplete() {
                     editTwitter
                     removeProgressDialog()

@@ -253,6 +253,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     removeProgressDialog();
+                    mFirebaseRemoteConfig.activate();
                     SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(DashboardActivity.this, false);
                 }
             });
@@ -304,50 +305,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
-
-
-        if (!StringUtils.isNullOrEmpty(onlineVersionCode) && !StringUtils.isNullOrEmpty(currentVersion)) {
-            String[] v1 = currentVersion.split("\\.");
-            String[] v2 = onlineVersionCode.split("\\.");
-            if (v1.length != v2.length)
-                return;
-            for (int pos = 0; pos < v1.length; pos++) {
-                if (Integer.parseInt(v1[pos]) > Integer.parseInt(v2[pos])) {
-                    rateNowDialog = true;
-                } else if (Integer.parseInt(v1[pos]) < Integer.parseInt(v2[pos])) {
-                    if (SharedPrefUtils.getFrequencyForShowingUpdateApp(this) != frequecy) {
-                        Dialog dialog = new Dialog(this);
-                        dialog.setContentView(R.layout.update_app_pop_up_layout);
-                        dialog.setCancelable(true);
-                        TextView updateNow = dialog.findViewById(R.id.updateNowTextView);
-                        updateNow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String appPackage = DashboardActivity.this.getPackageName();
-                                try {
-                                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
-                                    startActivity(rateIntent);
-                                } catch (Exception e) {
-                                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
-                                    startActivity(rateIntent);
-                                }
-                                dialog.dismiss();
-                            }
-                        });
-
-                        dialog.show();
-                        SharedPrefUtils.setFrequencyForShowingAppUpdate(this, frequecy);
-
-                    } else {
-                        rateNowDialog = true;
-
-                    }
-                } else {
-                    rateNowDialog = true;
-                }
-            }
-        }
-
+        appUpdatePopUp();
         onNewIntent(getIntent());
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -979,6 +937,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         removeProgressDialog();
+                        mFirebaseRemoteConfig.activate();
                         SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(DashboardActivity.this, false);
                     }
                 });
@@ -3150,6 +3109,49 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         rootChooseLayout.setVisibility(View.VISIBLE);
     }
 
+    public void appUpdatePopUp() {
+        if (!StringUtils.isNullOrEmpty(onlineVersionCode) && !StringUtils.isNullOrEmpty(currentVersion)) {
+            String[] v1 = currentVersion.split("\\.");
+            String[] v2 = onlineVersionCode.split("\\.");
+            if (v1.length != v2.length)
+                return;
+            for (int pos = 0; pos < v1.length; pos++) {
+                if (Integer.parseInt(v1[pos]) > Integer.parseInt(v2[pos])) {
+                    rateNowDialog = true;
+                } else if (Integer.parseInt(v1[pos]) < Integer.parseInt(v2[pos])) {
+                    if (SharedPrefUtils.getFrequencyForShowingUpdateApp(this) != frequecy) {
+                        Dialog dialog = new Dialog(this);
+                        dialog.setContentView(R.layout.update_app_pop_up_layout);
+                        dialog.setCancelable(true);
+                        TextView updateNow = dialog.findViewById(R.id.updateNowTextView);
+                        updateNow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String appPackage = DashboardActivity.this.getPackageName();
+                                try {
+                                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
+                                    startActivity(rateIntent);
+                                } catch (Exception e) {
+                                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
+                                    startActivity(rateIntent);
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+
+                        dialog.show();
+                        SharedPrefUtils.setFrequencyForShowingAppUpdate(this, frequecy);
+
+                    } else {
+                        rateNowDialog = true;
+
+                    }
+                } else {
+                    rateNowDialog = true;
+                }
+            }
+        }
+    }
 }
 
 

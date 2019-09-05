@@ -851,7 +851,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             showProgressDialog(resources.getString(R.string.please_wait))
 
             Log.e("sending json", Gson().toJson(apiGetResponse))
-            BaseApplication.getInstance().campaignRetrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, pageValue = 4).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, pageValue = 4).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
@@ -929,7 +929,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 //        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().campaignRetrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
                 override fun onComplete() {
 
                 }
@@ -961,7 +961,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     }
 
     private fun fetchCityData() {
-        BaseApplication.getInstance().campaignRetrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
+        BaseApplication.getInstance().retrofit.create(ConfigAPIs::class.java).getCityConfigRx().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<CityConfigResultResponse>> {
             override fun onComplete() {
                 removeProgressDialog()
             }
@@ -1258,7 +1258,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
     private fun validateReferralCode() {
         if (!editReferralCode.text.trim().isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().campaignRetrofit.create(RewardsAPI::class.java).validateReferralCode(editReferralCode.text.toString()!!).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ReferralCodeResult>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).validateReferralCode(editReferralCode.text.toString()!!).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ReferralCodeResult>> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }

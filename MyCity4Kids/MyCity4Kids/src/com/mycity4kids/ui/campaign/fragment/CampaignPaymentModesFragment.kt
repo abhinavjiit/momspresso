@@ -79,7 +79,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
             if (isComingFromRewards) {
                 val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
                 if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
-                    var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards,Id=-1)
+                    var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards, Id = -1)
                     paymentModeDtailsSubmissionFragment.setTargetFragment(this@CampaignPaymentModesFragment, 2019)
                     (activity)!!.supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                             CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
@@ -92,7 +92,7 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
             } else {
                 val paymentModeId: Int = allPaymantModes[selectedPaymantIdPosition].type_id
                 if (allPaymantModes[selectedPaymantIdPosition].accountNumber.isNullOrEmpty()) {
-                    var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards,Id=-1)
+                    var paymentModeDtailsSubmissionFragment = PaymentModeDtailsSubmissionFragment.newInstance(paymentModeId, comingFrom = "firstTime", isComingFromRewards = isComingFromRewards, Id = -1)
                     paymentModeDtailsSubmissionFragment.setTargetFragment(this@CampaignPaymentModesFragment, 2019)
                     (activity)!!.supportFragmentManager.beginTransaction().add(R.id.container, paymentModeDtailsSubmissionFragment,
                             CampaignPaymentModesFragment::class.java.simpleName).addToBackStack("PaymentModeDtailsSubmissionFragment")
@@ -240,7 +240,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                         allPaymantModes[0].accountNumber = allPaymentData.default!!.account_number
                         allPaymantModes[0].id = response.data!!.result!!.default!!.id
                         defaultId = response.data!!.result!!.default!!.id
-
                         availableList.addAll(response.data!!.result.available as List<PaymentModesModal>)
                         for (i in 0..availableList!!.size - 1) {
                             var paymentMOdesModal: PaymentModesModal? = null
@@ -249,7 +248,6 @@ class CampaignPaymentModesFragment : BaseFragment(), PaymentModesAdapter.ClickLi
                             } else {
                                 paymentMOdesModal = PaymentModesModal(icon = availableList[i].icon, type_id = availableList!!.get(i).type_id, isDefault = false, accountNumber = null, id = -1)
                             }
-
                             allPaymantModes.add(paymentMOdesModal)
                         }
                     } else {

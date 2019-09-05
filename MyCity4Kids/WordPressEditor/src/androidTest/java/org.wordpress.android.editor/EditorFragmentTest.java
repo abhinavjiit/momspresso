@@ -47,7 +47,7 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         View view = mFragment.getView();
 
         if (view == null) {
-            throw(new IllegalStateException("Fragment view is empty"));
+            throw (new IllegalStateException("Fragment view is empty"));
         }
 
         // The formatting buttons should be disabled while the title field is selected
@@ -103,27 +103,22 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         waitForOnDomLoaded();
 
         final View view = mFragment.getView();
-
         if (view == null) {
             throw (new IllegalStateException("Fragment view is empty"));
         }
 
         final ToggleButton htmlButton = (ToggleButton) view.findViewById(R.id.format_bar_button_html);
-
         String content = mFragment.getContent().toString();
 
         final SourceViewEditText titleText = (SourceViewEditText) view.findViewById(R.id.sourceview_title);
         final SourceViewEditText contentText = (SourceViewEditText) view.findViewById(R.id.sourceview_content);
 
         // -- Check that title and content text is properly loaded into the EditTexts when switching to HTML mode
-
         final CountDownLatch uiThreadLatch1 = new CountDownLatch(1);
-
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 htmlButton.performClick(); // Turn on HTML mode
-
                 uiThreadLatch1.countDown();
             }
         });
@@ -138,7 +133,6 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         // -- Check that the title and content text is updated in the WebView when switching back from HTML mode
 
         final CountDownLatch uiThreadLatch2 = new CountDownLatch(1);
-
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -148,27 +142,23 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
                 // Check that getTitle() and getContent() return latest version even in HTML mode
                 assertEquals("new title", mFragment.getTitle());
                 assertEquals("new <b>content</b>", mFragment.getContent());
-
                 htmlButton.performClick(); // Turn off HTML mode
-
                 uiThreadLatch2.countDown();
             }
         });
 
         uiThreadLatch2.await();
-
         waitFor(300); // Wait for JS to update the title/content
-
         assertEquals("new title", mFragment.getTitle());
         assertEquals("new <b>content</b>", mFragment.getContent());
     }
 
     private void waitForOnDomLoaded() {
         long start = System.currentTimeMillis();
-        while(!mFragment.mDomLoaded) {
+        while (!mFragment.mDomLoaded) {
             waitFor(10);
             if (System.currentTimeMillis() - start > 5000) {
-                throw(new RuntimeException("Callback wait timed out"));
+                throw (new RuntimeException("Callback wait timed out"));
             }
         }
     }

@@ -80,6 +80,7 @@ class UrlProofRecyclerAdapter(private val mediaLists: List<CampaignProofResponse
                     holder.imageApprovedRejected.visibility = View.VISIBLE
                     holder.textUrl.isEnabled = false
                     holder.imageDelete.visibility = View.GONE
+                    holder.imageDeleteComponent.visibility = View.GONE
                 }
 
                 holder.imageDelete.setOnClickListener {

@@ -159,9 +159,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             mViewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    if (position < mViewPagerAdapter.getCount() - 1 && position > 0) {
-                        showProgressDialog(getResources().getString(R.string.please_wait));
-                    }
+
                     Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                     stopService(readArticleIntent);
                     Log.d("-----AZURE----", "STOPPING");
@@ -613,8 +611,5 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     }
 
 
-    public void removeProgressBar() {
 
-        removeProgressDialog();
-    }
 }
