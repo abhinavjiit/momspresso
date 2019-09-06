@@ -90,6 +90,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TimerTask;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -338,7 +339,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         toastTV.setTextSize(16);
         toast.show();
 
-
+        bottomSheetStateChange();
         setUpTabLayout(sections);
 
         final LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -2156,6 +2157,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
+
+
+        // hideBottomDrawer.setVisibility(View.GONE);
      /*   TabLayout.Tab tab1 = groupPostTabLayout.getTabAt(groupPostTabLayout.getSelectedTabPosition());
         tab1.select();*/
 
@@ -2206,6 +2210,27 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             removeProgressDialog();
             ((AddGpPostCommentReplyDialogFragment) prev).sendUploadProfileImageRequest(file2);
         }
+
+    }
+
+
+    private void bottomSheetStateChange() {
+
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    hideBottomDrawer.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+
+            }
+        });
 
     }
 

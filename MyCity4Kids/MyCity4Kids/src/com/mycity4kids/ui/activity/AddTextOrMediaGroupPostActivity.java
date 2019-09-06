@@ -20,11 +20,15 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatDelegate;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -265,18 +269,18 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         }
 
 
-            new SimpleTooltip.Builder(this)
-                    .anchorView(audioRecordView)
-                    .backgroundColor(getResources().getColor(R.color.app_red))
-                    .text(getResources().getString(R.string.add_text_or_media_group_post_activity_tooltip_text))
-                    .textColor(getResources().getColor(R.color.white))
-                    .arrowColor(getResources().getColor(R.color.app_red))
-                    .gravity(Gravity.TOP)
-                    .arrowWidth(40)
-                    .animated(true)
-                    .transparentOverlay(true)
-                    .build()
-                    .show();
+        new SimpleTooltip.Builder(this)
+                .anchorView(audioRecordView)
+                .backgroundColor(getResources().getColor(R.color.app_red))
+                .text(getResources().getString(R.string.add_text_or_media_group_post_activity_tooltip_text))
+                .textColor(getResources().getColor(R.color.white))
+                .arrowColor(getResources().getColor(R.color.app_red))
+                .gravity(Gravity.TOP)
+                .arrowWidth(40)
+                .animated(true)
+                .transparentOverlay(true)
+                .build()
+                .show();
 
     }
 

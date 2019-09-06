@@ -3,10 +3,14 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -109,7 +113,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
         pollContainerR.setOnClickListener(this);
         announcementContainerR.setOnClickListener(this);
         hideBottomDrawer.setOnClickListener(this);
-
+        bottomSheetStateChange();
         final boolean isMember = getIntent().getBooleanExtra("isMember", false);
         if (!isMember) {
             joinList = getIntent().getParcelableArrayListExtra("joinedList");
@@ -498,5 +502,26 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 finish();
             }
         }
+    }
+
+
+    private void bottomSheetStateChange() {
+
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    hideBottomDrawer.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+
+            }
+        });
+
     }
 }
