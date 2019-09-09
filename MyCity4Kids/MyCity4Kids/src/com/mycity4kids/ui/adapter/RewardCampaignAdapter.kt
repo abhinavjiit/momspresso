@@ -209,7 +209,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         fun compareDate(campaignStatus: Int) {
             if ((getCurrentDateTime().toString("yyyy-MM-dd")).compareTo(getDate(campaignList!!.startTime, "yyyy-MM-dd")) > 0) {
                 when (campaignStatus) {
-                    0, 1, 5, 3, 4, 6, 8 -> (view.end_date).setText(context!!.resources.getString(R.string.application_end_date))
+                    0, 1, 5, 4, 6, 8 -> (view.end_date).setText(context!!.resources.getString(R.string.application_end_date))
                     else -> {
                         (view.end_date).setText(context!!.resources.getString(R.string.submission_end_date))
                     }

@@ -27,7 +27,7 @@ import java.util.Locale;
  * Created by hemant on 19/7/17.
  */
 public class UserPublishedArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
+    IEditVlog iEditVlog;
     private static int ARTICLE = 0;
     private static int AD = 1;
     private Context mContext;
@@ -39,13 +39,14 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<RecyclerVi
     private boolean isAdChoiceAdded = false;
 //    private List<NativeAd> adList = new ArrayList<>(10);
 
-    public UserPublishedArticleAdapter(Context pContext, RecyclerViewClickListener listener, boolean isPrivateProfile, FeedNativeAd feedNativeAd) {
+    public UserPublishedArticleAdapter(Context pContext, RecyclerViewClickListener listener, IEditVlog iEditVlog, boolean isPrivateProfile, FeedNativeAd feedNativeAd) {
 
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.mListener = listener;
         this.isPrivateProfile = isPrivateProfile;
         this.feedNativeAd = feedNativeAd;
+        this.iEditVlog = iEditVlog;
 //        for (int i = 0; i < 10; i++) {
 //            adList.add(null);
 //        }
@@ -151,7 +152,14 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<RecyclerVi
             ((UserPublishedArticleViewHolder) holder).separatorView2.setVisibility(View.VISIBLE);
         }
         if (isPrivateProfile) {
-            ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.VISIBLE);
+            ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
+            ((UserPublishedArticleViewHolder) holder).menuEditAndDisableComments.setVisibility(View.VISIBLE);
+            ((UserPublishedArticleViewHolder) holder).menuEditAndDisableComments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    iEditVlog.onBlogEdit(position, ((UserPublishedArticleViewHolder) holder).menuEditAndDisableComments);
+                }
+            });
         } else {
             ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
         }
@@ -202,7 +210,7 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<RecyclerVi
             holder.separatorView2.setVisibility(View.VISIBLE);
         }
         if (isPrivateProfile) {
-            holder.editPublishedTextView.setVisibility(View.VISIBLE);
+            holder.editPublishedTextView.setVisibility(View.GONE);
         } else {
             holder.editPublishedTextView.setVisibility(View.GONE);
         }
@@ -288,7 +296,7 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public class UserPublishedArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView articleImageView;
+        ImageView articleImageView, menuEditAndDisableComments;
         TextView txvArticleTitle;
         TextView txvPublishDate;
         TextView viewCountTextView;
@@ -309,6 +317,8 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<RecyclerVi
             articleImageView = (ImageView) itemView.findViewById(R.id.articleImageView);
             shareArticleImageView = (ImageView) itemView.findViewById(R.id.shareArticleImageView);
             editPublishedTextView = (TextView) itemView.findViewById(R.id.editPublishedTextView);
+            menuEditAndDisableComments = (ImageView) itemView.findViewById(R.id.menuEditAndDisableComments);
+            menuEditAndDisableComments.setOnClickListener(this);
             separatorView1 = itemView.findViewById(R.id.separatorView1);
             separatorView2 = itemView.findViewById(R.id.separatorView2);
             shareArticleImageView.setOnClickListener(this);
@@ -324,6 +334,10 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public interface RecyclerViewClickListener {
         void onClick(View view, int position);
+    }
+
+    public interface IEditVlog {
+        void onBlogEdit(int position, ImageView imageView);
     }
 
 }

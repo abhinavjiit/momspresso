@@ -115,7 +115,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "POLLS", "ASK AN EXPERT"};
     private int categoryIndex = 0;
     private int nextPageNumber = 1;
-
+    String type;
     private int totalPostCount;
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
     private TaskFragment mTaskFragment;
@@ -1674,6 +1674,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             case R.id.postSettingImageView:
                 selectedPost = postList.get(position);
+                type = selectedPost.getType();
                 getCurrentUserPostSettingsStatus(selectedPost);
                 if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
                         || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
@@ -1927,6 +1928,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     postSettingsContainer.startAnimation(slideAnim);
                     overlayView.startAnimation(fadeAnim);
                     postSettingsContainerMain.setVisibility(View.VISIBLE);
+                    if (type.equals("3")) {
+                        editPostTextView.setVisibility(View.GONE);
+                    }
                     postSettingsContainer.setVisibility(View.VISIBLE);
                     overlayView.setVisibility(View.VISIBLE);
                 } else {
@@ -1953,6 +1957,9 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         pinPostTextView.setVisibility(View.GONE);
         blockUserTextView.setVisibility(View.GONE);
         deletePostTextView.setVisibility(View.GONE);
+        if (selectedPost.getType().equals("3")) {
+            editPostTextView.setVisibility(View.GONE);
+        }
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         Call<GroupPostResponse> call = groupsAPI.getSinglePost(selectedPost.getId());

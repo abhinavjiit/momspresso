@@ -5,5 +5,11 @@
         android:actionMenuTextColor="@color/black_color"
         android:icon="@drawable/ic_edit_title"
         android:title="@string/user_funny_video.edit_title" />
+    <item
+        android:id="@+id/disable_comment"
+        android:actionMenuTextColor="@color/black_color"
+        android:icon="@drawable/ic_edit_title"
+        android:title="@string/user_funny_video.disable_comment"
+        android:visible="false" />
 
 </menu>

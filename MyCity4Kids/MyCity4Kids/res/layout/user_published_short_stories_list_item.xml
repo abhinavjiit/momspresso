@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_toStartOf="@id/menuEditAndDisableComments"
         android:ellipsize="end"
         android:gravity="top"
         android:maxLines="1"
@@ -113,12 +114,11 @@
 
 
     <ImageView
+        android:id="@+id/menuEditAndDisableComments"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:padding="16dp"
         android:src="@drawable/ic_more_vert_black_24dp"
         android:visibility="gone" />
 

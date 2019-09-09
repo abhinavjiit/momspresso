@@ -8,12 +8,14 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -121,7 +123,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Animation slideAnim, fadeAnim;
 
     private RecyclerView recyclerView;
-    private LinkedTreeMap<String,String> mediaUrls;
+    private LinkedTreeMap<String, String> mediaUrls;
     private HashMap<String, String> pollOptions;
     private GroupPostResult postData, editedPost;
     private Toolbar toolbar;
@@ -578,6 +580,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 } else {
                     commentToggleTextView.setText(getString(R.string.groups_disable_comment));
                 }
+
                 postSettingsContainer.startAnimation(slideAnim);
                 overlayView.startAnimation(fadeAnim);
                 postSettingsContainerMain.setVisibility(View.VISIBLE);
@@ -990,8 +993,12 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private void setPostCurrentPreferences(UserPostSettingResponse userPostSettingResponse) {
 
         if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
-            editPostTextView.setVisibility(View.VISIBLE);
-            deletePostTextView.setVisibility(View.VISIBLE);
+            if (postData.getType().equals("3")) {
+                editPostTextView.setVisibility(View.GONE);
+            } else {
+                editPostTextView.setVisibility(View.VISIBLE);
+                deletePostTextView.setVisibility(View.VISIBLE);
+            }
         } else {
             editPostTextView.setVisibility(View.GONE);
             deletePostTextView.setVisibility(View.GONE);

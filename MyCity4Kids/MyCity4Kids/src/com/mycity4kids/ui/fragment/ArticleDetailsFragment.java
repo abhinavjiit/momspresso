@@ -32,6 +32,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
@@ -127,11 +133,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentTransaction;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -270,19 +271,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         deepLinkURL = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);
         try {
             mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-            fragmentView.findViewById(R.id.user_name).setOnClickListener(this);
 
             floatingActionButton = (ImageView) fragmentView.findViewById(R.id.user_image);
-            floatingActionButton.setOnClickListener(this);
-//            commentFloatingActionButton = (FloatingActionButton) fragmentView.findViewById(R.id.commentFloatingActionButton);
-//            commentFloatingActionButton.setOnClickListener(this);
-
             mWebView = (WebView) fragmentView.findViewById(R.id.articleWebView);
             youtubeContainer = (FrameLayout) fragmentView.findViewById(R.id.youtube_fragment);
-//            videoWebView = (WebView) fragmentView.findViewById(R.id.videoWebView);
             viewAllTagsTextView = (TextView) fragmentView.findViewById(R.id.viewAllTagsTextView);
             bottomToolbarLL = (LinearLayout) fragmentView.findViewById(R.id.bottomToolbarLL);
-
             facebookShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.facebookShareTextView);
             whatsappShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.whatsappShareTextView);
             emailShareTextView = (CustomFontTextView) fragmentView.findViewById(R.id.emailShareTextView);
@@ -348,7 +342,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mWebView.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                    return super.shouldOverrideUrlLoading(view, request);
+                    Intent i = new Intent(Intent.ACTION_VIEW, request.getUrl());
+                    startActivity(i);
+                    return true;
                 }
 
                 @Override
@@ -366,7 +362,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 @Override
                 public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
                     super.onReceivedHttpError(view, request, errorResponse);
-                    Log.d("onReceivedHttpError", "----- " + errorResponse.getReasonPhrase() + " -----");
+                    Log.d("onReceivedHttpError", "--    --- " + errorResponse.getReasonPhrase() + " -----");
                 }
             });
 
@@ -396,8 +392,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), resized));
 
             try {
-
-
                 FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
@@ -406,11 +400,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     if (AppConstants.SPONSORED_CATEGORYID.equals(res.getData().get(i).getId())) {
                         shortStoriesTopicList.add(res.getData().get(i));
                         shortStoriesTopicList1 = shortStoriesTopicList;
-
                     }
                 }
-
-
             } catch (FileNotFoundException e) {
                 Crashlytics.logException(e);
                 Log.d("FileNotFoundException", Log.getStackTraceString(e));

@@ -5,6 +5,8 @@ import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,6 +19,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -470,6 +476,14 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
     public void chooseImageOptionPopUp(View view, int position) {
         final PopupMenu popup = new PopupMenu(getActivity(), view);
         popup.getMenuInflater().inflate(R.menu.edit_vlog_details_menu, popup.getMenu());
+        Typeface myTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/" + "oswald_regular.ttf");
+
+        for (int i = 0; i < popup.getMenu().size(); i++) {
+            MenuItem menuItem = popup.getMenu().getItem(i);
+            SpannableString spannableString = new SpannableString(menuItem.getTitle());
+            spannableString.setSpan(new CustomTypeFace("", myTypeface), 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            menuItem.setTitle(spannableString);
+        }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 int i = item.getItemId();
@@ -494,5 +508,45 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
         MenuPopupHelper menuHelper = new MenuPopupHelper(getContext(), (MenuBuilder) popup.getMenu(), view);
         menuHelper.setForceShowIcon(true);
         menuHelper.show();
+    }
+
+
+    public class CustomTypeFace extends TypefaceSpan {
+        private final Typeface typeface;
+
+        public CustomTypeFace(String family, Typeface type) {
+            super(family);
+            typeface = type;
+        }
+
+        @Override
+        public void updateDrawState(TextPaint textPaint) {
+            applyCustomTypeFace(textPaint, typeface);
+        }
+
+        @Override
+        public void updateMeasureState(TextPaint textPaint) {
+            applyCustomTypeFace(textPaint, typeface);
+        }
+
+        private void applyCustomTypeFace(Paint paint, Typeface typeface) {
+            int oldStyle;
+            Typeface old = paint.getTypeface();
+            if (old == null) {
+                oldStyle = 0;
+            } else {
+                oldStyle = old.getStyle();
+            }
+
+            int fake = oldStyle & ~typeface.getStyle();
+            if ((fake & Typeface.BOLD) != 0) {
+                paint.setFakeBoldText(true);
+            }
+
+            if ((fake & Typeface.ITALIC) != 0) {
+                paint.setTextSkewX(-0.25f);
+            }
+            paint.setTypeface(typeface);
+        }
     }
 }

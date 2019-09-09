@@ -233,7 +233,7 @@ class PaymentModeDtailsSubmissionFragment : BaseFragment(), View.OnClickListener
                     addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addUpiEditTextView.text.toString().trim())
                 }
                 3 -> {
-                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = accountNumberEditTextView?.text.toString().trim(), account_ifsc_code = ifscEditTextView?.text.toString().trim(), account_name = addAccountHolderNameEditTextView?.text.toString().trim())
+                    addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = accountNumberEditTextView?.text.toString().trim(), account_ifsc_code = ifscEditTextView?.text.toString().trim().toUpperCase(), account_name = addAccountHolderNameEditTextView?.text.toString().trim())
                 }
                 else -> {
                     addAcoountDetailModal = AddAccountDetailModal(account_type_id = paymantModeId.toString().trim(), account_number = addMobileNumberEditText.text.toString().trim())

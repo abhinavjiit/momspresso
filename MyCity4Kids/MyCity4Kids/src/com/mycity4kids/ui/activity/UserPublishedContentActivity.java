@@ -1,10 +1,14 @@
 package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
+import android.text.TextPaint;
+import android.text.style.TypefaceSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;

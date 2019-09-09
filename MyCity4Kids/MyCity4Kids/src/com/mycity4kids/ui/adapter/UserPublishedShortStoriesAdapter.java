@@ -30,6 +30,7 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
 
     private static int ARTICLE = 0;
     private static int AD = 1;
+    IEditShortStory iEditShortStory;
     private Context mContext;
     private LayoutInflater mInflator;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -39,13 +40,14 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
     private boolean isAdChoiceAdded = false;
 //    private List<NativeAd> adList = new ArrayList<>(10);
 
-    public UserPublishedShortStoriesAdapter(Context pContext, SSRecyclerViewClickListener listener, boolean isPrivateProfile, FeedNativeAd feedNativeAd) {
+    public UserPublishedShortStoriesAdapter(Context pContext, SSRecyclerViewClickListener listener, IEditShortStory iEditShortStory, boolean isPrivateProfile, FeedNativeAd feedNativeAd) {
 
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.mListener = listener;
         this.isPrivateProfile = isPrivateProfile;
         this.feedNativeAd = feedNativeAd;
+        this.iEditShortStory = iEditShortStory;
 //        for (int i = 0; i < 10; i++) {
 //            adList.add(null);
 //        }
@@ -142,6 +144,13 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
         }
         if (isPrivateProfile) {
             ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.VISIBLE);
+            ((UserPublishedArticleViewHolder) holder).menuEditAndDisableComments.setVisibility(View.GONE);
+            ((UserPublishedArticleViewHolder) holder).menuEditAndDisableComments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    iEditShortStory.onStoryEdit(position, ((UserPublishedArticleViewHolder) holder).menuEditAndDisableComments);
+                }
+            });
         } else {
             ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.GONE);
         }
@@ -277,7 +286,7 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
         TextView txvPublishDate;
         TextView commentCountTextView;
         TextView recommendCountTextView;
-        ImageView shareArticleImageView;
+        ImageView shareArticleImageView, menuEditAndDisableComments;
         TextView editPublishedTextView;
         View separatorView2;
 
@@ -289,7 +298,9 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
             recommendCountTextView = (TextView) itemView.findViewById(R.id.recommendCountTextView);
             shareArticleImageView = (ImageView) itemView.findViewById(R.id.shareArticleImageView);
             editPublishedTextView = (TextView) itemView.findViewById(R.id.editPublishedTextView);
+            menuEditAndDisableComments = (ImageView) itemView.findViewById(R.id.menuEditAndDisableComments);
             separatorView2 = itemView.findViewById(R.id.separatorView2);
+            menuEditAndDisableComments.setOnClickListener(this);
             shareArticleImageView.setOnClickListener(this);
             editPublishedTextView.setOnClickListener(this);
             itemView.setOnClickListener(this);
@@ -303,6 +314,10 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
 
     public interface SSRecyclerViewClickListener {
         void onShortStoryClick(View view, int position);
+    }
+
+    public interface IEditShortStory {
+        void onStoryEdit(int position, ImageView imageView);
     }
 
 }

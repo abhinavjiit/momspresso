@@ -10,9 +10,9 @@
         android:layout_width="70dp"
         android:layout_height="45dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
         android:src="@drawable/default_article" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -22,6 +22,7 @@
         android:layout_alignTop="@+id/articleImageView"
         android:layout_gravity="top"
         android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@id/menuEditAndDisableComments"
         android:layout_toRightOf="@+id/articleImageView"
         android:ellipsize="end"
         android:gravity="top"
@@ -51,8 +52,8 @@
         android:id="@+id/viewCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/articleImageView"
         android:layout_below="@id/articleImageView"
+        android:layout_alignLeft="@+id/articleImageView"
         android:drawableLeft="@drawable/ic_views"
         android:drawablePadding="4dp"
         android:gravity="center"
@@ -66,12 +67,12 @@
         android:id="@+id/separatorView1"
         android:layout_width="1dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/viewCountTextView"
         android:layout_alignTop="@+id/viewCountTextView"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="5dp"
+        android:layout_alignBottom="@+id/viewCountTextView"
         android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:layout_toEndOf="@+id/viewCountTextView"
         android:layout_toRightOf="@+id/viewCountTextView"
         android:background="@color/common_underline" />
@@ -80,8 +81,8 @@
         android:id="@+id/commentCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/viewCountTextView"
         android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_alignBottom="@+id/viewCountTextView"
         android:layout_marginLeft="11dp"
         android:layout_toRightOf="@+id/viewCountTextView"
         android:drawableLeft="@drawable/ic_comments"
@@ -96,12 +97,12 @@
         android:id="@+id/separatorView2"
         android:layout_width="1dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/viewCountTextView"
         android:layout_alignTop="@+id/viewCountTextView"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="5dp"
+        android:layout_alignBottom="@+id/viewCountTextView"
         android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:layout_toEndOf="@+id/commentCountTextView"
         android:layout_toRightOf="@+id/commentCountTextView"
         android:background="@color/common_underline" />
@@ -110,8 +111,8 @@
         android:id="@+id/recommendCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/viewCountTextView"
         android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_alignBottom="@+id/viewCountTextView"
         android:layout_marginLeft="11dp"
         android:layout_toRightOf="@+id/commentCountTextView"
         android:drawableLeft="@drawable/ic_likes"
@@ -124,12 +125,11 @@
 
 
     <ImageView
+        android:id="@+id/menuEditAndDisableComments"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:padding="10dp"
+        android:padding="16dp"
         android:src="@drawable/ic_more_vert_black_24dp"
         android:visibility="gone" />
 
@@ -155,9 +155,9 @@
         android:layout_toLeftOf="@+id/shareArticleImageView"
         android:padding="4dp"
         android:text="@string/user_article.published.edit"
-        android:visibility="gone"
         android:textColor="@color/user_articles.published.edit"
         android:textSize="11sp"
+        android:visibility="visible"
         app:fontName="oswald.ttf" />
 
     <View

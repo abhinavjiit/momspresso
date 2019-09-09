@@ -1,13 +1,20 @@
 package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +24,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
@@ -44,6 +52,11 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -51,7 +64,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant.parmar on 21-04-2016.
  */
-public class UserPublishedArticleTabFragment extends BaseFragment implements View.OnClickListener, UserPublishedArticleAdapter.RecyclerViewClickListener, /*FeedNativeAd.AdLoadingListener,*/
+public class UserPublishedArticleTabFragment extends BaseFragment implements View.OnClickListener, UserPublishedArticleAdapter.RecyclerViewClickListener, UserPublishedArticleAdapter.IEditVlog, UserPublishedShortStoriesAdapter.IEditShortStory,/*FeedNativeAd.AdLoadingListener,*/
         UserPublishedShortStoriesAdapter.SSRecyclerViewClickListener {
 
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -99,11 +112,11 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
 
         nextPageNumber = 0;
         if ("shortStory".equals(contentType)) {
-            shortStoriesAdapter = new UserPublishedShortStoriesAdapter(getActivity(), this, isPrivateProfile, feedNativeAd);
+            shortStoriesAdapter = new UserPublishedShortStoriesAdapter(getActivity(), this, this, isPrivateProfile, feedNativeAd);
             recyclerView.setAdapter(shortStoriesAdapter);
             getUserPublishedShortStories();
         } else {
-            adapter = new UserPublishedArticleAdapter(getActivity(), this, isPrivateProfile, feedNativeAd);
+            adapter = new UserPublishedArticleAdapter(getActivity(), this, this, isPrivateProfile, feedNativeAd);
             recyclerView.setAdapter(adapter);
             getUserPublishedArticles();
         }
@@ -500,4 +513,96 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    private void chooseImageOptionPopUp(View view, int position) {
+        final PopupMenu popup = new PopupMenu(getActivity(), view);
+        popup.getMenuInflater().inflate(R.menu.edit_vlog_details_menu, popup.getMenu());
+        Typeface myTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/" + "oswald_regular.ttf");
+
+        for (int i = 0; i < popup.getMenu().size(); i++) {
+            MenuItem menuItem = popup.getMenu().getItem(i);
+            SpannableString spannableString = new SpannableString(menuItem.getTitle());
+            spannableString.setSpan(new CustomTypeFace("", myTypeface), 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            menuItem.setTitle(spannableString);
+        }
+
+
+        popup.getMenu().findItem(R.id.disable_comment).setVisible(true);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                int i = item.getItemId();
+                if (i == R.id.edit_vlog) {
+                    if ("shortStory".equals(contentType)) {
+                        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                        ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
+                        Call<ShortStoryDetailResult> call = shortStoryAPI.getShortStoryDetails(articleDataModelsNew.get(position).getId(), "articleId");
+                        call.enqueue(ssDetailResponseCallbackRedis);
+                    } else {
+                        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                        ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+                        Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromRedis(articleDataModelsNew.get(position).getId(), "articleId");
+                        call.enqueue(articleDetailResponseCallback);
+                    }
+                    return true;
+                } else {
+                    return true;
+                }
+            }
+
+        });
+
+        MenuPopupHelper menuHelper = new MenuPopupHelper(getContext(), (MenuBuilder) popup.getMenu(), view);
+        menuHelper.setForceShowIcon(true);
+        menuHelper.show();
+    }
+
+    @Override
+    public void onBlogEdit(int position, ImageView imageView) {
+        chooseImageOptionPopUp(imageView, position);
+
+    }
+
+    @Override
+    public void onStoryEdit(int position, ImageView imageView) {
+        chooseImageOptionPopUp(imageView, position);
+    }
+
+    private class CustomTypeFace extends TypefaceSpan {
+        private final Typeface typeface;
+
+        public CustomTypeFace(String family, Typeface type) {
+            super(family);
+            typeface = type;
+        }
+
+        @Override
+        public void updateDrawState(TextPaint textPaint) {
+            applyCustomTypeFace(textPaint, typeface);
+        }
+
+        @Override
+        public void updateMeasureState(TextPaint textPaint) {
+            applyCustomTypeFace(textPaint, typeface);
+        }
+
+        private void applyCustomTypeFace(Paint paint, Typeface typeface) {
+            int oldStyle;
+            Typeface old = paint.getTypeface();
+            if (old == null) {
+                oldStyle = 0;
+            } else {
+                oldStyle = old.getStyle();
+            }
+
+            int fake = oldStyle & ~typeface.getStyle();
+            if ((fake & Typeface.BOLD) != 0) {
+                paint.setFakeBoldText(true);
+            }
+
+            if ((fake & Typeface.ITALIC) != 0) {
+                paint.setTextSkewX(-0.25f);
+            }
+            paint.setTypeface(typeface);
+        }
+    }
 }
