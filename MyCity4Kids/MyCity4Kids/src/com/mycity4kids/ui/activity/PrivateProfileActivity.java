@@ -7,9 +7,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AlertDialog;
+
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -299,7 +301,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                             rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in) + " ENGLISH");
                         } else {
                             rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
-                                    + " " + AppUtils.getLangModelForLanguage(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+                                    + " " + responseData.getData().get(0).getResult().getRanks().get(0).getLangValue().toUpperCase());
                         }
                     } else {
                         for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {

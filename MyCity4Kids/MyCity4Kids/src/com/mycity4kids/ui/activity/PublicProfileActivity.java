@@ -3,7 +3,9 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentManager;
+
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -161,7 +163,7 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
                             rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in) + " ENGLISH");
                         } else {
                             rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
-                                    + " " + AppUtils.getLangModelForLanguage(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+                                    + " " + responseData.getData().get(0).getResult().getRanks().get(0).getLangValue().toUpperCase());
                         }
                     } else {
                         for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {

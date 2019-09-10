@@ -2,9 +2,11 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -213,7 +215,7 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
                         if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
                             languageTextView.setText(getString(R.string.ranking_in) + " ENGLISH");
                         } else {
-                            languageTextView.setText(getString(R.string.ranking_in) + " " + AppUtils.getLangModelForLanguage(getActivity(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+                            languageTextView.setText(getString(R.string.ranking_in) + " " + responseData.getData().get(0).getResult().getRanks().get(0).getLangValue().toUpperCase());
                         }
                     }
                 } else {
