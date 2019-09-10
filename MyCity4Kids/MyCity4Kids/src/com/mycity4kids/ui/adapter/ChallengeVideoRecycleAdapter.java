@@ -1,8 +1,10 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,15 +64,6 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
 
     @Override
     public void onBindViewHolder(ChallengeViewHolder holder, int position) {
-      /*  if (count == 0) {
-            holder.rootView.setVisibility(View.GONE);
-            holder.noChallengeAddedText.setVisibility(View.GONE);
-            // holder.previousAndThisWeekTextView.setVisibility(View.GONE);
-        } else {*/
-        // switch (position) {
-        //   case 0:
-        //  holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE
-        //  );
         holder.noChallengeAddedText.setVisibility(View.GONE);
         holder.useThePictureTextView.setVisibility(View.GONE);
         holder.useThePictureTextView.setText(R.string.use_picture_word_to_upload_one);
@@ -78,7 +71,6 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
         holder.yourStoryTextView.setVisibility(View.GONE);
         holder.yourStoryTextView.setText(R.string.choose_challenge_label);
 
-        // for (int i = 0; i < articleDataModelsNew.size(); i++) {
         if ("1".equals(articleDataModelsNew.get(position).getPublicVisibility())) {
             if (articleDataModelsNew.get(position).getExtraData() != null && articleDataModelsNew.get(position).getExtraData().size() != 0) {
                 if ("1".equals(articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getActive())) {
@@ -93,12 +85,9 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                             } else {
                                 holder.previousAndThisWeekTextView.setVisibility(View.GONE);
                                 holder.liveTextViewVideoChallenge.setVisibility(View.VISIBLE);
-
                             }
-
                         } else {
                             if (position != 0) {
-
                                 if (articleDataModelsNew.get(position - 1).getExtraData().get(0).getChallenge().getIs_live().equals("1")) {
                                     holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                                     holder.previousAndThisWeekTextView.setText(R.string.previous_week_challenge);
@@ -111,52 +100,35 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                             } else if (position == 0) {
                                 holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                                 holder.liveTextViewVideoChallenge.setVisibility(View.GONE);
-
                                 holder.previousAndThisWeekTextView.setText(R.string.previous_week_challenge);
-
                             } else {
                                 holder.previousAndThisWeekTextView.setVisibility(View.GONE);
                                 holder.liveTextViewVideoChallenge.setVisibility(View.GONE);
-
                             }
-
-
                         }
                     } else {
                         holder.liveTextViewVideoChallenge.setVisibility(View.GONE);
                         holder.previousAndThisWeekTextView.setVisibility(View.GONE);
-
-
                     }
                     challengeId.add(articleDataModelsNew.get(position).getId());
                     if (articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getMapped_category() != null && !articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getMapped_category().trim().isEmpty()) {
                         mappedCategory.add(articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getMapped_category());
                     } else {
                         mappedCategory.add("category-6dfcf8006c794d4e852343776302f588");
-
-
                     }
-
                     max_Duration.add(articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getMax_duration());
-                    // holder.storyTitleTextView.setText("Take This Week's 100 Word Story Challenge");
                     Display_Name.add(articleDataModelsNew.get(position).getDisplay_name());
                     holder.storyTitleTextView.setVisibility(View.GONE);
                     holder.titleTextUnderLine.setVisibility(View.GONE);
                     if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getDisplay_name())) {
                         holder.challengeNameTextMomVlog.setText(articleDataModelsNew.get(position).getDisplay_name());
                     }
-                    //if (3 == (articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getType())) {
                     holder.imageBody.setVisibility(View.VISIBLE);
-//                                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules())) {
-//                                        rules.add(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getRules());
-//                                    }
                     if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getRules())) {
                         rules.add(articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getRules());
                     }
                     try {
                         Glide.with(mcontext).load(articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getImageUrl()).into(holder.imageBody);
-                                       /* Picasso.with(mcontext).load(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getImageUrl()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
-                                                .fit().into(holder.imageBody);*/
                         activeImageUrl.add(articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getImageUrl());
                         activeStreamUrl.add(articleDataModelsNew.get(position).getExtraData().get(0).getChallenge().getVideoUrl());
                     } catch (Exception e) {
@@ -164,7 +136,6 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
                     }
 
                 }
-
 
             }
         }
@@ -180,13 +151,9 @@ public class ChallengeVideoRecycleAdapter extends RecyclerView.Adapter<Challenge
         articleDataModelsNew = mParentingLists;
         for (int i = 0; i < articleDataModelsNew.size(); i++) {
             if (AppConstants.PUBLIC_VISIBILITY.equals(articleDataModelsNew.get(i).getPublicVisibility())) {
-                // if ("1".equals(articleDataModelsNew.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
-                if (articleDataModelsNew.get(i).getExtraData() != null && articleDataModelsNew.get(i).getExtraData().size() != 0)
-                {
+                if (articleDataModelsNew.get(i).getExtraData() != null && articleDataModelsNew.get(i).getExtraData().size() != 0) {
                     count++;
                 }
-
-                //}
             } else {
                 articleDataModelsNew.remove(i);
             }

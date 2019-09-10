@@ -82,6 +82,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -299,7 +302,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                             rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in) + " ENGLISH");
                         } else {
                             rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
-                                    + " " + AppUtils.getLangModelForLanguage(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+                                    + " " + responseData.getData().get(0).getResult().getRanks().get(0).getLangValue().toUpperCase());
                         }
                     } else {
                         for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {

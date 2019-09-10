@@ -9,8 +9,6 @@ import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.StrictMode;
-
-import androidx.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -53,6 +51,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import androidx.multidex.MultiDex;
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import io.socket.client.IO;

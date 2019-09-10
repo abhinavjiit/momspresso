@@ -54,26 +54,16 @@ import retrofit2.Retrofit;
 public class CategoryVideosListingActivity extends BaseActivity implements View.OnClickListener {
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private FrameLayout topLayerGuideLayout;
+    FrameLayout topLayerGuideLayout;
     private VideoTopicsPagerAdapter pagerAdapter;
-    private HashMap<Topics, List<Topics>> allTopicsMap;
+    HashMap<Topics, List<Topics>> allTopicsMap;
     private ArrayList<Topics> allTopicsList;
     private String parentTopicId;
     private ArrayList<Topics> subTopicsList;
-    private Toolbar toolbar;
-    private TextView toolbarTitleTextView;
+    Toolbar toolbar;
+    TextView toolbarTitleTextView;
     public ImageView imageSortBy;
-    private LinearLayout layoutBottomSheet, bottom_sheet;
-    private BottomSheetBehavior sheetBehavior;
-    private TextView textHeaderUpdate, textUpdate;
     private FloatingActionButton fabAdd;
-    private Topics videoChallengeTopics;
-    private ArrayList<String> videoChallengeId;
-    private ArrayList<String> videoImageUrl, videoStreamUrl;
-    private ArrayList<Topics> videoTopicList;
-    ArrayList<String> Display_Name, videoDisplay_Name;
-    private int num_of_categorys;
-    private TopicsResponse res;
     private CoordinatorLayout root;
     private RelativeLayout momVlogCoachMark;
 
@@ -85,11 +75,11 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         root = findViewById(R.id.root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
-        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-        textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
-        textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
-        bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
+        LinearLayout layoutBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+        TextView textHeaderUpdate = layoutBottomSheet.findViewById(R.id.textHeaderUpdate);
+        TextView textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
+        LinearLayout bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
         momVlogCoachMark = (RelativeLayout) findViewById(R.id.momVlogCoachMark);
         bottom_sheet.setVisibility(View.GONE);
@@ -102,49 +92,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             }
         });
         String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(CategoryVideosListingActivity.this);
-        /*if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
-            bottom_sheet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    } else {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    }
-                }
-            });
-
-
-            textUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.campaignEvent(CategoryVideosListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
-
-                    startActivity(new Intent(CategoryVideosListingActivity.this, RewardsContainerActivity.class));
-                }
-            });
-
-            textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.campaignEvent(CategoryVideosListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
-
-                    startActivity(new Intent(CategoryVideosListingActivity.this, RewardsContainerActivity.class));
-                }
-            });
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    bottom_sheet.setVisibility(View.GONE);
-                    fabAdd.setVisibility(View.VISIBLE);
-                }
-            }, 10000);
-        } else {
-            bottom_sheet.setVisibility(View.GONE);
-            fabAdd.setVisibility(View.VISIBLE);
-        }*/
-
         if (!SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
             momVlogCoachMark.setVisibility(View.VISIBLE);
 

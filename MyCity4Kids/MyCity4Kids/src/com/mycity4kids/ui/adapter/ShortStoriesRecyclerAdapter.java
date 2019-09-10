@@ -1,8 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +9,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
 
 import java.util.ArrayList;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by hemant on 30/5/18.
@@ -73,7 +75,9 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         }
 
         holder.storyTitleTextView.setText(articleDataModelsNew.get(position).getTitle().trim());
-        holder.storyBodyTextView.setText(articleDataModelsNew.get(position).getBody().trim());
+        if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getBody())) {
+            holder.storyBodyTextView.setText(articleDataModelsNew.get(position).getBody().trim());
+        }
         holder.authorNameTextView.setText(articleDataModelsNew.get(position).getUserName());
 
         if (null == articleDataModelsNew.get(position).getCommentsCount()) {

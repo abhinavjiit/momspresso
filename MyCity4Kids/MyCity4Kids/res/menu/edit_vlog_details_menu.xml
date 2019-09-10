@@ -8,7 +8,8 @@
     <item
         android:id="@+id/disable_comment"
         android:actionMenuTextColor="@color/black_color"
-        android:icon="@drawable/ic_edit_title"
+        android:icon="@drawable/ic_disable_comments_icon"
+        android:iconTint="@color/app_red"
         android:title="@string/user_funny_video.disable_comment"
         android:visible="false" />
 

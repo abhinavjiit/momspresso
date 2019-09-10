@@ -16,10 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -45,6 +41,9 @@ import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -53,7 +52,6 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
-
     private String sortType;
     private int nextPageNumber;
     private boolean isLastPageReached = false;
@@ -64,7 +62,6 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     private int limit = 15;
     private String chunks = "";
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
-
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     //    private ImageView menuImageView;
@@ -75,21 +72,18 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     ShimmerFrameLayout ashimmerFrameLayout;
     private SwipeRefreshLayout pullToRefresh;
     private boolean fromPullToRefresh;
-
     Context mContext;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.new_article_layout, container, false);
-
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         ashimmerFrameLayout = (ShimmerFrameLayout) rootView.findViewById(R.id.shimmer1);
         mLodingView = (RelativeLayout) rootView.findViewById(R.id.relativeLoadingView);
@@ -98,10 +92,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
         addTopicsLayout = (LinearLayout) rootView.findViewById(R.id.addTopicsLayout);
         headerArticleCardLayout = (FrameLayout) rootView.findViewById(R.id.headerArticleView);
         pullToRefresh = rootView.findViewById(R.id.pullToRefresh);
-
         addTopicsLayout.setOnClickListener(this);
-
-
         rootView.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate_indefinitely));
         if (getArguments() != null) {
             sortType = getArguments().getString(Constants.SORT_TYPE);
@@ -118,7 +109,6 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
-//        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
         recyclerView.setAdapter(recyclerAdapter);
 
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

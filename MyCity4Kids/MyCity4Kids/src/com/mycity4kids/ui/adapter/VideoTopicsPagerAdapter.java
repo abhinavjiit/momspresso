@@ -46,11 +46,9 @@ public class VideoTopicsPagerAdapter extends FragmentPagerAdapter {
         Bundle bundle = new Bundle();
         if (subTopicsList != null && subTopicsList.get(position).getId() != null && subTopicsList.get(position).getId().equals("category-ee7ea82543bd4bc0a8dad288561f2beb")) {
             bundle.putString("video_challenge_category_id", subTopicsList.get(position).getId());
-           // bundle.putString("currentSubTopic", new Gson().toJson(subTopicsList.get(position)));
             bundle.putParcelable("currentSubTopic", subTopicsList.get(position));
             ChallengeCategoryVideoTabFragment tab2 = new ChallengeCategoryVideoTabFragment();
             tab2.setArguments(bundle);
-            //currentFragment= tab2;
             return tab2;
         } else {
             bundle.putString("video_category_id", subTopicsList.get(position).getId());
@@ -58,7 +56,6 @@ public class VideoTopicsPagerAdapter extends FragmentPagerAdapter {
             CategoryVideosTabFragment tab1 = new CategoryVideosTabFragment();
             tab1.setArguments(bundle);
             currentFragment = tab1;
-            //currentFragment.add(position,tab1);
             Log.e("position is ", position + " ");
             return tab1;
         }

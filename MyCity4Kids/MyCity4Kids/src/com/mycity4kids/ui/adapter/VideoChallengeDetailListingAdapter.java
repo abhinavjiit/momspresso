@@ -56,51 +56,33 @@ import retrofit2.Retrofit;
 public class VideoChallengeDetailListingAdapter extends BaseAdapter {
 
     private Context mContext;
-    /*
-        private Topics topic;
-    */
     private LayoutInflater mInflator;
     ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
-    private String selectedId;
-    /* private String selected_Name;
-     private String selectedActiveUrl;
-     private String selectedStreamUrl;*/
-    private final float density;
-    private ArrayList<VlogsListingAndDetailResult> mArticleListData;
     public SimpleExoPlayer player;
-    public MediaSource mVideoSource;
-    public String STATE_RESUME_WINDOW = "resumeWindow";
-    public String STATE_RESUME_POSITION = "resumePosition";
-    public String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
-    public Uri daUri;
     public String userAgent;
-    public DefaultHttpDataSourceFactory httpDataSourceFactory;
-    public DefaultDataSourceFactory dataSourceFactory;
     public boolean isPaused = false;
     private Topics topics;
     Topics videoChallengeTopics;
-    private ArrayList<Topics> shortStoriesTopicList;
     private ArrayList<Topics> videoTopicList;
     private ArrayList<String> challengeId, videoChallengeId;
     private ArrayList<String> ImageUrl, videoImageUrl, videoStreamUrl;
-    ArrayList<String> Display_Name, videoDisplay_Name;
+    private ArrayList<String> Display_Name, videoDisplay_Name;
     private TopicsResponse res;
     private int num_of_categorys;
 
 
     public VideoChallengeDetailListingAdapter(Context pContext, String selectedId, Topics topics) {
-        density = pContext.getResources().getDisplayMetrics().density;
+        float density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.topics = topics;
-        this.selectedId = selectedId;
-
+        String selectedId1 = selectedId;
         findActiveVideoChallenge();
     }
 
 
     public void setListData(ArrayList<VlogsListingAndDetailResult> mParentingLists) {
-        mArticleListData = mParentingLists;
+        ArrayList<VlogsListingAndDetailResult> mArticleListData = mParentingLists;
     }
 
     public void setNewListData(ArrayList<VlogsListingAndDetailResult> mParentingLists_new) {
@@ -111,9 +93,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         if (position != 0 && position % 5 == 0) {
             return 0;
-        }/* else if (position == 0) {
-            return 2;
-        }*/ else {
+        } else {
             return 1;
         }
     }
@@ -150,9 +130,7 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                 videoChallengeHeaderView.mExoPlayerView = (SimpleExoPlayerView) view.findViewById(R.id.exoplayerChallengeDetailListing);
                 videoChallengeHeaderView.challengeNameText = (TextView) view.findViewById(R.id.ChallengeNameText);
                 videoChallengeHeaderView.rootChallengeHeaderContainer = (RelativeLayout) view.findViewById(R.id.rootChallengeHeaderContainer);
-                //   videoChallengeHeaderView.challengeHeaderImageView = (ImageView) view.findViewById(R.id.ChallengeNameImage);
                 videoChallengeHeaderView.submitButtonVideoChallenge = (TextView) view.findViewById(R.id.submit_story_text);
-
                 view.setTag(videoChallengeHeaderView);
             } else {
                 videoChallengeHeaderView = (VideoChallengeHeaderView) view.getTag();
@@ -252,11 +230,8 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
                     } else {
                         Intent cityIntent = new Intent(mContext, ChooseVideoCategoryActivity.class);
                         cityIntent.putExtra("comingFrom", "notFromChallenge");
-                        // cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
                         mContext.startActivity(cityIntent);
                     }
-//                    Intent intent = new Intent(mContext, ChooseVideoCategoryActivity.class);
-//                    mContext.startActivity(intent);
                 }
             });
             return view;
@@ -456,15 +431,11 @@ public class VideoChallengeDetailListingAdapter extends BaseAdapter {
     }
 
     class VideoChallengeHeaderView {
-        ImageView challengeHeaderImageView;
         RelativeLayout rootChallengeHeaderContainer;
         TextView submitButtonVideoChallenge;
         TextView challengeNameText;
         SimpleExoPlayerView mExoPlayerView;
-        boolean mExoPlayerFullscreen = false;
-        FrameLayout mFullScreenButton;
-        ImageView mFullScreenIcon;
-        Dialog mFullScreenDialog;
+
     }
 }
 
