@@ -2,7 +2,9 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
@@ -50,7 +52,7 @@ public class GroupsViewFragment extends BaseFragment {
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_myfeed)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_sections_polls)));
 
-        AppUtils.changeTabsFont(getActivity(), tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

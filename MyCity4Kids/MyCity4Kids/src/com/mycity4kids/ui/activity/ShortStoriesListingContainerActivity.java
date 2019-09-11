@@ -43,6 +43,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -239,7 +240,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         }
         //  tabLayout.addTab(tabLayout.newTab().setText("Challenges"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-        AppUtils.changeTabsFont(this, tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new TopicsShortStoriesPagerAdapter

@@ -3,9 +3,12 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -119,7 +122,7 @@ public class EditGroupActivity extends BaseActivity implements View.OnClickListe
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.groups_join_form)));
         adapter = new EditGroupPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), groupDetailResponse.getData().getResult());
 
-        AppUtils.changeTabsFont(this, tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

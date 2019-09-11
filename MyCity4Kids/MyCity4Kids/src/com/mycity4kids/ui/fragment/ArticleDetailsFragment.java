@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -342,8 +343,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mWebView.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                    Intent i = new Intent(Intent.ACTION_VIEW, request.getUrl());
-                    startActivity(i);
+                    try {
+                        Intent i = new Intent(Intent.ACTION_VIEW, request.getUrl());
+                        startActivity(i);
+                    } catch (ActivityNotFoundException anfe) {
+                        Crashlytics.logException(anfe);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(anfe));
+                    }
                     return true;
                 }
 

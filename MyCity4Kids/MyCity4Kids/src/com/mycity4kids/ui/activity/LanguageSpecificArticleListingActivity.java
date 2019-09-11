@@ -1,9 +1,6 @@
 package com.mycity4kids.ui.activity;
 
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,7 +8,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
@@ -90,7 +91,7 @@ public class LanguageSpecificArticleListingActivity extends BaseActivity {
                 languageConfigModelArrayList.add(entry.getValue());
             }
 
-            AppUtils.changeTabsFont(this, languagesTabLayout);
+            AppUtils.changeTabsFont(languagesTabLayout);
 //            wrapTabIndicatorToTitle(tabLayout, 25, 25);
             final LanguageSpecificArticlePagerAdapter adapter = new LanguageSpecificArticlePagerAdapter
                     (getSupportFragmentManager(), languagesTabLayout.getTabCount(), languageConfigModelArrayList);

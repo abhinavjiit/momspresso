@@ -11,7 +11,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 repositories {
-
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://dl.bintray.com/drummer-aidan/maven' }
     jcenter()
@@ -23,7 +22,7 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
 
     compile('com.crashlytics.sdk.android:crashlytics:2.5.1@aar') {
-        transitive = true;
+        transitive = true
     }
     compile project(':WordPressEditor')
     compile files('libs/comscore.jar')
@@ -118,21 +117,15 @@ android {
             assets.srcDirs = ['assets']
         }
 
-        // Move the tests to tests/java, tests/res, etc...
         androidTest.setRoot('tests')
 
-        // Move the build types to build-types/<type>
-        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-        // This moves them out of them default location under src/<type>/... which would
-        // conflict with src/ being used by the main source set.
-        // Adding new build types or product flavors should be accompanied
-        // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
     defaultConfig {
         multiDexEnabled true
         minSdkVersion 21
+        targetSdkVersion 28
         applicationId "com.mycity4kids"
         dexOptions {
             javaMaxHeapSize "4g"
@@ -162,7 +155,6 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-
         }
         debug {
             buildConfigField 'String', 'GROUPS_LIVE_URL', '"http://35.200.142.199/"'

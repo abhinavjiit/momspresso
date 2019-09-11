@@ -28,6 +28,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -90,13 +98,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TimerTask;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -1386,7 +1387,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         groupPostTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
 
-        AppUtils.changeTabsFont(this, groupPostTabLayout);
+        AppUtils.changeTabsFont(groupPostTabLayout);
 
         groupPostTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

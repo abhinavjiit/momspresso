@@ -4,11 +4,15 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.viewpager.widget.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +85,7 @@ public class ViewAllCommentsDialogFragment extends DialogFragment implements Vie
         tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.app_name)));
 //        tabLayout.addTab(tabLayout.newTab().setText(BaseApplication.getAppContext().getString(R.string.ad_bottom_bar_facebook)));
 
-        AppUtils.changeTabsFont(getActivity(), tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
 //        wrapTabIndicatorToTitle(tabLayout, 25, 25);
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         final AllCommentsPagerAdapter adapter = new AllCommentsPagerAdapter

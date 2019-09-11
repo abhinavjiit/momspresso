@@ -102,7 +102,7 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
         }
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-        AppUtils.changeTabsFont(this, tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
 
         pagerAdapter = new LeafTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), leafTopicParent.getChild());
         viewPager.setAdapter(pagerAdapter);

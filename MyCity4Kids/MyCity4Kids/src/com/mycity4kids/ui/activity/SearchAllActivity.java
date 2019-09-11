@@ -4,7 +4,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
@@ -122,7 +124,7 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
 
         //getUserHistoryAndTrendingSearchResult();
 
-        AppUtils.changeTabsFont(this, mSlidingTabLayout);
+        AppUtils.changeTabsFont(mSlidingTabLayout);
         searchImageView.setOnClickListener(this);
     }
 

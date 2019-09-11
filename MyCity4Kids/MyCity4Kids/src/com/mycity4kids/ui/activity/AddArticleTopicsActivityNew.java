@@ -2,9 +2,12 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -308,7 +311,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         for (int i = 0; i < topicList.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(topicList.get(i).getDisplay_name()));
         }
-        AppUtils.changeTabsFont(this, tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         adapter = new AddArticleTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), topicList);
         viewPager.setAdapter(adapter);

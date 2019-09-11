@@ -79,10 +79,21 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
                 holder.shareImageView = (ImageView) view.findViewById(R.id.shareImageView);
                 holder.dateTextView = (TextView) view.findViewById(R.id.dateTextView);
                 holder.vlogOptionImageView = (ImageView) view.findViewById(R.id.vlogOptionImageView);
-
+                holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
+                holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
+                holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
+            }
+
+            try {
+                holder.viewCountTextView.setText("" + articleDataModelsNew.get(position).getView_count());
+                holder.commentCountTextView.setText("" + articleDataModelsNew.get(position).getComment_count());
+                holder.recommendCountTextView.setText("" + articleDataModelsNew.get(position).getLike_count());
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
             if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getTitle())) {
@@ -154,6 +165,7 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
         ImageView shareImageView;
         ImageView vlogOptionImageView;
         RelativeLayout rootView;
+        TextView viewCountTextView, commentCountTextView, recommendCountTextView;
     }
 
     public interface IEditVlog {
