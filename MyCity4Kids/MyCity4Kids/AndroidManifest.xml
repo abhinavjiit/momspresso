@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" /> <!-- Required if we need to invalidate access tokens -->
-    <!-- <uses-permission android:name="android.permission.USE_CREDENTIALS" /> -->
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" /> <!-- External storage for caching. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- My Location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -51,12 +50,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyATjKBk6YHXTxF0nuN6zCumLfq9JY4aBKU" /> <!-- API key For Google Map Local -->
-        <!-- <meta-data -->
-        <!-- android:name="com.google.android.maps.v2.API_KEY" -->
-        <!-- android:value="AIzaSyDW1kR3eOOksMp4gBrOnyGVB-q9bFJ21x4" /> -->
-        <!--  <meta-data
-              android:name="com.google.android.maps.v2.API_KEY"
-              android:value="AIzaSyCLaeioxT3JtDNGj4aczM_Clno7T_WTfWU" />--> <!-- // this is old one keyyyyy -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -369,12 +362,7 @@
             android:name=".ui.rewards.activity.RewardsContainerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <!-- <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
-                 <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>-->
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.RankingActivity"
             android:screenOrientation="portrait"

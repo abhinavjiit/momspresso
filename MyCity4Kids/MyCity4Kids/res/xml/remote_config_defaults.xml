@@ -16,4 +16,8 @@
         <key>new_article_detail_flag</key>
         <value>false</value>
     </entry>
+    <entry>
+        <key>home_page_feed_order</key>
+        <value>trending,todaysBest,editorPicks,foryou,recent</value>
+    </entry>
 </defaultsMap>

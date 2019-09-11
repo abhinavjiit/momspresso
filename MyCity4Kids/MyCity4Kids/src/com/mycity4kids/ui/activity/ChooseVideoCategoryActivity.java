@@ -443,7 +443,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                 intent.putExtra("comingFrom", "chooseVideoCategory");
                 intent.putExtra("Topic", new Gson().toJson(articledatamodelsnew));
                 startActivity(intent);
-                Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Listing_challenge_container", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Challenge_Detail", "", challengeId.toString());
+                Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Listing_challenge_container", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
 
                 break;
 
@@ -464,7 +464,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                             imageView.setOnClickListener(view2 -> dialog.dismiss());
 
                             dialog.show();
-                            Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Challenge_info", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Challenge_Detail", "", challengeId.toString());
+                            Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Challenge_info", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
 
                         }
                     }

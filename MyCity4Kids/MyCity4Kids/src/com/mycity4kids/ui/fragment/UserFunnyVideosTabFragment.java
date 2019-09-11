@@ -10,15 +10,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.appcompat.widget.PopupMenu;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -37,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.snackbar.Snackbar;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
@@ -58,6 +50,14 @@ import com.mycity4kids.videotrimmer.utils.FileUtils;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -119,7 +119,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
 
         progressBar.setVisibility(View.VISIBLE);
 
-        articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
+        articleDataModelsNew = new ArrayList<>();
         nextPageNumber = 1;
         hitArticleListingApi();
 
@@ -215,7 +215,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
                 if (isAdded())

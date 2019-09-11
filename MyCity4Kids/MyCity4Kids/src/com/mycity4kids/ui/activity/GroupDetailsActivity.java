@@ -1387,7 +1387,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         groupPostTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
 
-        AppUtils.changeTabsFont(this, groupPostTabLayout);
+        AppUtils.changeTabsFont(groupPostTabLayout);
 
         groupPostTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

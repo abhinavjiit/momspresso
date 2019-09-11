@@ -43,6 +43,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -217,7 +218,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         }
 
 
-        AppUtils.changeTabsFont(this, tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
 
         pagerAdapter = new VideoTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
         viewPager.setAdapter(pagerAdapter);

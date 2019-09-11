@@ -3,9 +3,12 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.ViewPager;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -200,7 +203,7 @@ public class TopicsListingFragment extends BaseFragment {
         }
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-        AppUtils.changeTabsFont(getActivity(), tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
 
         viewPager = (ViewPager) view.findViewById(R.id.pager);
         pagerAdapter = new TopicsPagerAdapter

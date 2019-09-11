@@ -2,19 +2,26 @@ package com.mycity4kids.sync;
 
 import android.app.IntentService;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.forgot.CommonResponse;
-import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 
@@ -24,13 +31,6 @@ import com.mycity4kids.utils.AppUtils;
 public class PushTokenService extends IntentService implements UpdateListener {
 
     private final static String TAG = PushTokenService.class.getSimpleName();
-    private boolean taskCallFromAppointment = true;
-    private boolean isAppointment = true;
-    private int id;
-    private PushNotificationModel pushNotificationModel;
-    public static final int APPOINTMENT_NOTIFICATION_ID = 11231;
-    public static final int TASK_NOTIFICATION_ID = 11230;
-    private Uri bitmapUri;
 
     public PushTokenService() {
         super(TAG);
@@ -39,9 +39,28 @@ public class PushTokenService extends IntentService implements UpdateListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(1, new Notification());
+        String channelId = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channelId = createNotificationChannel("my_service", "My Background Service");
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
+        Notification notification = builder.setOngoing(true)
+                .setSmallIcon(R.drawable.icon_notify)
+                .setPriority(NotificationManagerCompat.IMPORTANCE_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE).build();
+        startForeground(1, notification);
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private String createNotificationChannel(String channelId, String channelName) {
+        NotificationChannel channel = new NotificationChannel(channelId,
+                channelName, NotificationManager.IMPORTANCE_NONE);
+        channel.setLightColor(Color.BLUE);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.createNotificationChannel(channel);
+        return channelId;
+    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -50,11 +69,9 @@ public class PushTokenService extends IntentService implements UpdateListener {
                 // hit api
                 if (!SharedPrefUtils.getUserDetailModel(this).getId().equals("0")) {
                     hitApiRequest(AppConstants.PUSH_TOKEN_REQUEST);
-
                 }
             }
         }
-
     }
 
     private void hitApiRequest(int requestType) {
@@ -85,7 +102,6 @@ public class PushTokenService extends IntentService implements UpdateListener {
         StringBuilder builder = new StringBuilder();
         switch (requestType) {
             case AppConstants.PUSH_TOKEN_REQUEST:
-
                 builder.append(AppConstants.UPDATE_PUSH_TOKEN_URL);
                 builder.append("userId=").append(SharedPrefUtils.getUserDetailModel(this).getId());
                 builder.append("&dynamoId=").append(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -94,10 +110,7 @@ public class PushTokenService extends IntentService implements UpdateListener {
                 builder.append("&cityId=").append(SharedPrefUtils.getCurrentCityModel(this).getId());
                 builder.append("&pushToken=").append(SharedPrefUtils.getDeviceToken(this));
                 builder.append("&fcmToken=").append(SharedPrefUtils.getDeviceToken(this));
-
-//                Log.i("Push Token to Server ", builder.toString());
                 return builder.toString().replace(" ", "%20");
-
         }
         return builder.toString();
     }

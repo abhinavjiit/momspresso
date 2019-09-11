@@ -1,5 +1,12 @@
 package com.mycity4kids.ui.campaign.fragment
 
+/*import android.support.constraint.ConstraintLayout
+import android.support.v4.app.ShareCompat
+import android.support.v4.widget.NestedScrollView
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar*/
+
 import android.accounts.NetworkErrorException
 import android.app.Activity
 import android.app.Dialog
@@ -9,15 +16,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-
-/*import android.support.constraint.ConstraintLayout
-import android.support.v4.app.ShareCompat
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar*/
-
-import androidx.appcompat.widget.Toolbar
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -27,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ShareCompat
 import androidx.core.widget.NestedScrollView
@@ -55,6 +54,7 @@ import com.mycity4kids.ui.campaign.BasicResponse
 import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity
 import com.mycity4kids.ui.mymoneytracker.activity.TrackerActivity
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity
+import com.mycity4kids.utils.AppUtils
 import com.squareup.picasso.Picasso
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -429,7 +429,7 @@ class CampaignDetailFragment : BaseFragment() {
     val participateCampaign = object : Callback<ParticipateCampaignResponse> {
         override fun onResponse(call: Call<ParticipateCampaignResponse>, response: retrofit2.Response<ParticipateCampaignResponse>) {
             removeProgressDialog()
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
                 Crashlytics.logException(nee)
                 return
@@ -460,7 +460,7 @@ class CampaignDetailFragment : BaseFragment() {
     val referCampaign = object : Callback<ParticipateCampaignResponse> {
         override fun onResponse(call: Call<ParticipateCampaignResponse>, response: retrofit2.Response<ParticipateCampaignResponse>) {
             removeProgressDialog()
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 val nee = NetworkErrorException(response.raw().toString())
                 Crashlytics.logException(nee)
                 return
@@ -497,109 +497,135 @@ class CampaignDetailFragment : BaseFragment() {
         appliedTag.visibility = View.GONE
         if (status == 0) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_expired))
             applicationStatus.setBackgroundResource(R.drawable.campaign_expired)
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_expired))
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward))
+            context?.let {
+                applicationStatus.text = it.resources.getString(R.string.campaign_details_expired)
+                labelText.text = it.resources.getString(R.string.label_campaign_expired)
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
+            }
         } else if (status == 1) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
             applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
-            labelText.setText(Html.fromHtml(context!!.resources.getString(R.string.label_campaign_apply)))
+            context?.let {
+                applicationStatus.text = it.resources.getString(R.string.campaign_details_apply_now)
+                labelText.text = AppUtils.fromHtml(it.resources.getString(R.string.label_campaign_apply))
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_apply_now)
+            }
             labelText.setMovementMethod(LinkMovementMethod.getInstance());
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_apply_now))
         } else if (status == 2) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_submission_open))
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
+            context?.let {
+                applicationStatus.text = it.resources.getString(R.string.campaign_details_submission_open)
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
+                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
+            }
             labelText.visibility = View.GONE
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_submit_proof))
-            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
         } else if (status == 21) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_submission_open))
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
-            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_not_started), Toast.LENGTH_SHORT).show()
+            context?.let {
+                applicationStatus.text = it.resources.getString(R.string.campaign_details_submission_open)
+                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_not_started), Toast.LENGTH_SHORT).show()
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_share)
+                labelText.text = it.resources.getString(R.string.label_campaign_not_started) + " " + getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy") + ". Please wait for campaign to start to submit proofs."
+            }
             appliedTag.visibility = View.VISIBLE
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_not_started) + " " + getDate(apiGetResponse!!.startTime!!, "dd MMM yyyy") + ". Please wait for campaign to start to submit proofs.")
         } else if (status == 22 || status == 16 || status == 17) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_submission_open))
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
+            context?.let {
+                applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_submission_open))
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
+                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
+            }
             labelText.visibility = View.GONE
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_submit_proof))
-            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_started), Toast.LENGTH_SHORT).show()
         } else if (status == 3) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_applied))
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscribed)
-            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_applied))
+            context?.let {
+                applicationStatus.text = it.resources.getString(R.string.campaign_details_applied)
+                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_applied), Toast.LENGTH_SHORT).show()
+                labelText.text = it.resources.getString(R.string.label_campaign_applied)
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_share)
+            }
             appliedTag.visibility = View.VISIBLE
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
-
         } else if (status == 4) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_application_full))
             applicationStatus.setBackgroundResource(R.drawable.campaign_submission_full)
-            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_full), Toast.LENGTH_SHORT).show()
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_full))
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward))
+            context?.let {
+                applicationStatus.text = it.resources.getString(R.string.campaign_details_application_full)
+                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_full), Toast.LENGTH_SHORT).show()
+                labelText.text = it.resources.getString(R.string.label_campaign_full)
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
+            }
         } else if (status == 5) {
             hideShowReferral(status)
             if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
-                applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
                 applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
-                labelText.setText(Html.fromHtml(context!!.resources.getString(R.string.label_campaign_apply)))
+                context?.let {
+                    applicationStatus.text = it.resources.getString(R.string.campaign_details_apply_now)
+                    labelText.text = AppUtils.fromHtml(it.resources.getString(R.string.label_campaign_apply))
+                    submitBtn.text = it.resources.getString(R.string.detail_bottom_apply_now)
+                }
                 labelText.setMovementMethod(LinkMovementMethod.getInstance());
-                submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_apply_now))
             } else {
                 if (isRewardAdded.equals("1", true)) {
                     if (forYouStatus == 0) {
-                        applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
                         applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
-                        Toast.makeText(context, context!!.resources.getString(R.string.checking_elegiblity), Toast.LENGTH_SHORT).show()
-                        labelText.setText(context!!.resources.getString(R.string.label_campaign_checking_eligiblity))
-                        submitBtn.setText(context!!.resources.getString(R.string.please_wait))
+                        context?.let {
+                            applicationStatus.text = it.resources.getString(R.string.campaign_details_apply_now)
+                            Toast.makeText(it, it.resources.getString(R.string.checking_elegiblity), Toast.LENGTH_SHORT).show()
+                            labelText.text = it.resources.getString(R.string.label_campaign_checking_eligiblity)
+                            submitBtn.text = it.resources.getString(R.string.please_wait)
+                        }
                     } else {
-                        applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_apply_now))
                         applicationStatus.setBackgroundResource(R.drawable.subscribe_now)
-                        Toast.makeText(context, context!!.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()
-                        labelText.setText(context!!.resources.getString(R.string.label_campaign_not_eligible))
-                        submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share))
+                        context?.let {
+                            applicationStatus.text = it.resources.getString(R.string.campaign_details_apply_now)
+                            Toast.makeText(it, it.resources.getString(R.string.toast_not_elegible), Toast.LENGTH_SHORT).show()
+                            labelText.text = it.resources.getString(R.string.label_campaign_not_eligible)
+                            submitBtn.text = it.resources.getString(R.string.detail_bottom_share)
+                        }
                     }
                 }
             }
         } else if (status == 6) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_rejected))
             applicationStatus.setBackgroundResource(R.drawable.campaign_rejected)
-            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_reject), Toast.LENGTH_SHORT).show()
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_reject))
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_view_other))
+            context?.let {
+                applicationStatus.text = it.resources.getString(R.string.campaign_details_rejected)
+                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_reject), Toast.LENGTH_SHORT).show()
+                labelText.text = it.resources.getString(R.string.label_campaign_reject)
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_view_other)
+            }
         } else if (status == 7) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_details_completed))
             applicationStatus.setBackgroundResource(R.drawable.campaign_completed)
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_completed))
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward))
+            context?.let {
+                applicationStatus.text = it.resources.getString(R.string.campaign_details_completed)
+                labelText.text = it.resources.getString(R.string.label_campaign_completed)
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_share_momspresso_reward)
+            }
         } else if (status == 9) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_list_proof_moderation))
             applicationStatus.setBackgroundResource(R.drawable.campaign_subscription_open)
-            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_proof_moderation), Toast.LENGTH_SHORT).show()
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_proof_moderation))
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_submit_proof))
+            context?.let {
+                applicationStatus.text = it.resources.getString(R.string.campaign_list_proof_moderation)
+                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_proof_moderation), Toast.LENGTH_SHORT).show()
+                labelText.text = it.resources.getString(R.string.label_campaign_proof_moderation)
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
+            }
         } else if (status == 10) {
             hideShowReferral(status)
-            applicationStatus.setText(context!!.resources.getString(R.string.campaign_list_proof_reject))
             applicationStatus.setBackgroundResource(R.drawable.campaign_proof_rejected_bg)
-            Toast.makeText(context, context!!.resources.getString(R.string.toast_campaign_proof_reject), Toast.LENGTH_SHORT).show()
-            labelText.setText(context!!.resources.getString(R.string.label_campaign_proof_reject))
-            submitBtn.setText(context!!.resources.getString(R.string.detail_bottom_submit_proof))
+            context?.let {
+                applicationStatus.text = it.resources.getString(R.string.campaign_list_proof_reject)
+                Toast.makeText(it, it.resources.getString(R.string.toast_campaign_proof_reject), Toast.LENGTH_SHORT).show()
+                labelText.text = it.resources.getString(R.string.label_campaign_proof_reject)
+                submitBtn.text = it.resources.getString(R.string.detail_bottom_submit_proof)
+            }
         }
-
         /*making visible invisible tracker button*/
         if (status == 0 || status == 4 || status == 5 || status == 6 || status == 1) {
             if (status == 5) {
@@ -673,7 +699,6 @@ class CampaignDetailFragment : BaseFragment() {
                 startActivityForResult(intent, REWARDS_FILL_FORM_REQUEST)
                 dialog.dismiss()
             }
-
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
         }

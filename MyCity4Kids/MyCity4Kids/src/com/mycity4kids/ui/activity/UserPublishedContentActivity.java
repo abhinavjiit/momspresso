@@ -1,20 +1,14 @@
 package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
-import android.text.TextPaint;
-import android.text.style.TypefaceSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.material.tabs.TabLayout;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
@@ -22,6 +16,9 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.adapter.UserPublishedContentPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * Created by hemant on 19/7/17.
@@ -65,7 +62,7 @@ public class UserPublishedContentActivity extends BaseActivity implements View.O
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.search_article_topic_tab_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.lang_setting_stories_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.myprofile_section_videos_label)));
-        AppUtils.changeTabsFont(this, tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
 //        toolbarTitleTextView.setText(getString(R.string.myprofile_section_short_story_label));
         UserPublishedContentPagerAdapter adapter = new UserPublishedContentPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
         viewPager.setAdapter(adapter);

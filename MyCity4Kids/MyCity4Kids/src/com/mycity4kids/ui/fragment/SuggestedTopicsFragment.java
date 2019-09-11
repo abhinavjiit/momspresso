@@ -1,9 +1,13 @@
 package com.mycity4kids.ui.fragment;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.ViewPager;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +80,8 @@ public class SuggestedTopicsFragment extends BaseFragment {
         @Override
         public void onResponse(Call<SuggestedTopicsResponse> call, retrofit2.Response<SuggestedTopicsResponse> response) {
             if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
 
@@ -186,7 +191,7 @@ public class SuggestedTopicsFragment extends BaseFragment {
                 }
             }
 
-            AppUtils.changeTabsFont(getActivity(), languagesTabLayout);
+            AppUtils.changeTabsFont(languagesTabLayout);
             final SuggestedTopicsPagerAdapter adapter = new SuggestedTopicsPagerAdapter(getChildFragmentManager(), languagesTabLayout.getTabCount(), languageConfigModelArrayList, languageNameList);
             languagesViewPager.setAdapter(adapter);
             languagesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(languagesTabLayout));

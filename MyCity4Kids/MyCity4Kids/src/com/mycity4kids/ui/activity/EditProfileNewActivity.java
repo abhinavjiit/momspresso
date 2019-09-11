@@ -11,12 +11,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -222,7 +226,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
 //                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.contact_details)));
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.contact_details)));
                     tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.rewards_tab_detail)));
-                    AppUtils.changeTabsFont(EditProfileNewActivity.this, tabLayout);
+                    AppUtils.changeTabsFont(tabLayout);
                     View root = tabLayout.getChildAt(0);
                     if (root instanceof LinearLayout) {
                         ((LinearLayout) root).setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);

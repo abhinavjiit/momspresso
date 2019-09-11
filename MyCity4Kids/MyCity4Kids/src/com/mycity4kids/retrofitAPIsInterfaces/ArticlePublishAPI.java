@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.response.ArticleDraftResponse;
@@ -14,7 +15,6 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 /**
  * Created by anshul on 4/20/16.
@@ -44,4 +44,7 @@ public interface ArticlePublishAPI {
     @PUT("v1/articles/{articleId}")
     Call<ArticleDraftResponse> updateArticle(@Path("articleId") String articleId,
                                              @Body ArticleDraftRequest body);
+
+    @POST("v2/categories/")
+    Call<Topics> getArticleChallenges(@Query("id") String categoryId);
 }

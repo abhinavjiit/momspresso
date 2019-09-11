@@ -2,9 +2,12 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -60,7 +63,7 @@ public class UserDraftsContentActivity extends BaseActivity implements View.OnCl
 
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.search_article_topic_tab_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.lang_setting_stories_label)));
-        AppUtils.changeTabsFont(this, tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
 //        toolbarTitleTextView.setText(getString(R.string.myprofile_section_short_story_label));
         UserDraftsContentPagerAdapter adapter = new UserDraftsContentPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
         viewPager.setAdapter(adapter);

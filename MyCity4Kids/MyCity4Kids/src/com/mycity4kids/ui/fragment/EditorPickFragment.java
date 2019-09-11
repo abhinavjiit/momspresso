@@ -105,7 +105,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
         recyclerAdapter = new MainArticleRecyclerViewAdapter(mContext, feedNativeAd, this, false, sortType, false);
         final LinearLayoutManager llm = new LinearLayoutManager(mContext);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
 
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
@@ -194,10 +194,13 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     private Callback<ArticleListingResponse> recommendedArticlesResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            if (!isAdded()) {
+                return;
+            }
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
                 ToastUtils.showToast(mContext, getString(R.string.server_went_wrong));
@@ -213,6 +216,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
+		if (isAdded())
                 ToastUtils.showToast(mContext, getString(R.string.went_wrong));
             }
         }
@@ -224,7 +228,8 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
             isReuqestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-            ToastUtils.showToast(mContext, getString(R.string.went_wrong));
+            if (isAdded())
+                ToastUtils.showToast(mContext, getString(R.string.went_wrong));
         }
     };
 

@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
@@ -38,6 +39,8 @@ import retrofit2.Retrofit;
  */
 public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickListener, GroupIdCategoryMap.GroupCategoryInterface {
 
+    private static final String HOME_PAGE_FEED_ORDER = "home_page_feed_order";
+
     private View view;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -50,6 +53,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private int articleCount = 10;
     private String gpHeading, gpSubHeading, gpImageUrl;
     private int groupId;
+    private String[] feedOrderArray;
 
     @Nullable
     @Override
@@ -89,7 +93,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private Callback<TrendingListingResponse> trendingResponseCallback = new Callback<TrendingListingResponse>() {
         @Override
         public void onResponse(Call<TrendingListingResponse> call, retrofit2.Response<TrendingListingResponse> response) {
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 if (isAdded())
                     ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 return;
@@ -113,7 +117,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 
         @Override
         public void onFailure(Call<TrendingListingResponse> call, Throwable t) {
-//            forYourSection.setProgressBarVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
             if (null != getActivity()) {
@@ -123,40 +126,30 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     };
 
     private void processTrendingResponse(TrendingListingResponse responseData) {
-        trendingArraylist.addAll(responseData.getData().get(0).getResult());
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-        String allCategoryLabel = "";
-        if (isAdded()) {
-            allCategoryLabel = getString(R.string.home_screen_trending_title);
-        } else {
-            allCategoryLabel = getString(R.string.home_screen_trending_title);
+        FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        feedOrderArray = mFirebaseRemoteConfig.getString(HOME_PAGE_FEED_ORDER).split(",");
+        for (String s : feedOrderArray) {
+            switch (s) {
+                case Constants.KEY_TRENDING:
+                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.home_screen_trending_title)));
+                    break;
+                case Constants.KEY_TODAYS_BEST:
+                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_todays_best)));
+                    break;
+                case Constants.KEY_EDITOR_PICKS:
+                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_editor_picks)));
+                    break;
+                case Constants.KEY_FOR_YOU:
+                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_for_you)));
+                    break;
+                case Constants.KEY_RECENT:
+                    tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_recent)));
+                    break;
+            }
         }
-        tabLayout.addTab(tabLayout.newTab().setText(allCategoryLabel));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_todays_best)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_editor_picks)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_for_you)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.article_listing_toolbar_title_recent)));
-        /*for (int i = 0; i < trendingArraylist.size(); i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(trendingArraylist.get(i).getDisplay_name()));
-        }*/
-//        tabLayout.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                // don't forget to add Tab first before measuring..
-//                DisplayMetrics displayMetrics = new DisplayMetrics();
-//                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//                int widthS = displayMetrics.widthPixels;
-//                tabLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-//                int widthT = tabLayout.getMeasuredWidth();
-//
-//                if (widthS > widthT) {
-//                    tabLayout.setTabMode(TabLayout.MODE_FIXED);
-//                    tabLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-//                            LinearLayout.LayoutParams.WRAP_CONTENT));
-//                }
-//            }
-//        });
-        AppUtils.changeTabsFont(getActivity(), tabLayout);
+
+        AppUtils.changeTabsFont(tabLayout);
         viewPager = (ViewPager) view.findViewById(R.id.pager);
         adapter = new TrendingTopicsPagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount());
@@ -176,19 +169,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                /*FragmentManager fm = getChildFragmentManager();
-                Fragment f = (Fragment) adapter.instantiateItem(viewPager, viewPager.getCurrentItem());
-                if (f != null) {
-                    if (tab.getPosition() == 0) {
-                        TrendingTopicsAllTabFragment fragment = (TrendingTopicsAllTabFragment) f;
-                        if (null != fragment.getRecyclerView())
-                            fragment.getRecyclerView().smoothScrollToPosition(0);
-                    } *//*else {
-                        TrendingTopicsTabFragment fragment = (TrendingTopicsTabFragment) f;
-                        if (null != fragment.getRecyclerView())
-                            fragment.getRecyclerView().smoothScrollToPosition(0);
-                    }*//*
-                }*/
                 viewPager.setCurrentItem(tab.getPosition());
             }
         });

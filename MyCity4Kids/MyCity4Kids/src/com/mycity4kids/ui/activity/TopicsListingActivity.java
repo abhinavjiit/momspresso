@@ -3,12 +3,17 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
@@ -228,7 +233,7 @@ public class TopicsListingActivity extends BaseActivity {
                 }
             }
         });
-        AppUtils.changeTabsFont(this, tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
 
         pagerAdapter = new TopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), subTopicsList);
         viewPager.setAdapter(pagerAdapter);

@@ -2,9 +2,12 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -49,7 +52,7 @@ public class AppSettingsActivity extends BaseActivity implements View.OnClickLis
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_edit_prefs)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_lang_prefs)));
 //        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.app_settings_tabbar_change_password)));
-        AppUtils.changeTabsFont(this, tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
         AppSettingsPagerAdapter adapter = new AppSettingsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), "");
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

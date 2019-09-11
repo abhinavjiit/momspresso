@@ -603,9 +603,9 @@ public class AppUtils {
         activity.startActivity(shareIntent);
     }
 
-    public static void changeTabsFont(Context mContext, TabLayout tabLayout) {
+    public static void changeTabsFont(TabLayout tabLayout) {
         //Typeface font = Typeface.createFromAsset(getAssets(), "fonts/androidnation.ttf");
-        Typeface myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "oswald_regular.ttf");
+        Typeface myTypeface = Typeface.createFromAsset(tabLayout.getContext().getAssets(), "fonts/" + "oswald_regular.ttf");
         ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
         int tabsCount = vg.getChildCount();
         for (int j = 0; j < tabsCount; j++) {
@@ -616,11 +616,9 @@ public class AppUtils {
                 if (tabViewChild instanceof TextView) {
                     ((TextView) tabViewChild).setTypeface(myTypeface, Typeface.NORMAL);
                     if (((TextView) tabViewChild).getText().toString().equals("Challenges") || ((TextView) tabViewChild).getText().toString().equals("challenges") || ((TextView) tabViewChild).getText().toString().equals("चैलेंज") || ((TextView) tabViewChild).getText().toString().equals("চ্যালেঞ্জ") || ((TextView) tabViewChild).getText().toString().equals("ചാലഞ്ച്") || ((TextView) tabViewChild).getText().toString().equals("चॅलेंज") || ((TextView) tabViewChild).getText().toString().equals("சவால்கள்") || ((TextView) tabViewChild).getText().toString().equals("ఛాలెంజ్") || ((TextView) tabViewChild).getText().toString().equals("ಸವಾಲು") || ((TextView) tabViewChild).getText().toString().equals("પડકારો") || ((TextView) tabViewChild).getText().toString().equals("ਚੈਲੇੰਜਸ")) {
-                        ((TextView) tabViewChild).setTextColor(mContext.getResources().getColor(R.color.app_red));
-                        ((TextView) tabViewChild).setCompoundDrawablesWithIntrinsicBounds(mContext.getResources().getDrawable(R.drawable.ic_winner_tablayout_icon), null, null, null);
+                        ((TextView) tabViewChild).setTextColor(tabLayout.getContext().getResources().getColor(R.color.app_red));
+                        ((TextView) tabViewChild).setCompoundDrawablesWithIntrinsicBounds(tabLayout.getContext().getResources().getDrawable(R.drawable.ic_winner_tablayout_icon), null, null, null);
                         ((TextView) tabViewChild).setCompoundDrawablePadding(15);
-
-
                     }
                 }
             }

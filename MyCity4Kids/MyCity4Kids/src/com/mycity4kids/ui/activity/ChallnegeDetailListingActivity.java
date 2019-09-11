@@ -493,10 +493,6 @@ public class ChallnegeDetailListingActivity extends BaseActivity implements View
                 //No more next results for search from pagination
                 isLastPageReached = true;
             } else {
-                // No results for search
-//                noBlogsTextView.setVisibility(View.VISIBLE);
-//                noBlogsTextView.setText(getString(R.string.no_articles_found));
-                // writeArticleCell.setVisibility(View.VISIBLE);
                 mDatalist = dataList;
                 challengeListingRecycleAdapter.setListData(mDatalist);
                 challengeListingRecycleAdapter.notifyDataSetChanged();

@@ -1,9 +1,12 @@
 package com.mycity4kids.ui.activity;
 
 import android.os.Bundle;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
@@ -48,7 +51,7 @@ public class UserActivitiesActivity extends BaseActivity {
         if (authorId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
 //            isPrivateProfile = true;
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_recommended)));
-           // tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_bookmark)));
+            // tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_bookmark)));
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_watch_later)));
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_comment)));
             adapter = new UserActivitiesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, true);
@@ -58,7 +61,7 @@ public class UserActivitiesActivity extends BaseActivity {
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_comment)));
             adapter = new UserActivitiesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, false);
         }
-        AppUtils.changeTabsFont(this, tabLayout);
+        AppUtils.changeTabsFont(tabLayout);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

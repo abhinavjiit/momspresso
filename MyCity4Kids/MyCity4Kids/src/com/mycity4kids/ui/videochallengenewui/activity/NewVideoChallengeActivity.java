@@ -16,6 +16,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.material.appbar.AppBarLayout;
@@ -41,13 +48,6 @@ import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
 
 public class NewVideoChallengeActivity extends BaseActivity implements View.OnClickListener {
     VideoChallengePagerAdapter videoChallengePagerAdapter;
@@ -177,7 +177,7 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         }
         tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.about_video)));
         tabs.addTab(tabs.newTab().setText(getResources().getString(R.string.all_videos_toolbar_title)));
-        AppUtils.changeTabsFont(NewVideoChallengeActivity.this, tabs);
+        AppUtils.changeTabsFont(tabs);
         View root = tabs.getChildAt(0);
         if (root instanceof LinearLayout) {
             ((LinearLayout) root).setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
