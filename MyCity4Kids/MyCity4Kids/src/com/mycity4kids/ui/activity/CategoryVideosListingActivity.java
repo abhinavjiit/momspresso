@@ -102,49 +102,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 SharedPrefUtils.setCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog", true);
             }
         });
-        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(CategoryVideosListingActivity.this);
-        /*if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
-            bottom_sheet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    } else {
-                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    }
-                }
-            });
-
-
-            textUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.campaignEvent(CategoryVideosListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
-
-                    startActivity(new Intent(CategoryVideosListingActivity.this, RewardsContainerActivity.class));
-                }
-            });
-
-            textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.campaignEvent(CategoryVideosListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
-
-                    startActivity(new Intent(CategoryVideosListingActivity.this, RewardsContainerActivity.class));
-                }
-            });
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    bottom_sheet.setVisibility(View.GONE);
-                    fabAdd.setVisibility(View.VISIBLE);
-                }
-            }, 10000);
-        } else {
-            bottom_sheet.setVisibility(View.GONE);
-            fabAdd.setVisibility(View.VISIBLE);
-        }*/
 
         if (!SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
             momVlogCoachMark.setVisibility(View.VISIBLE);
@@ -246,7 +203,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     }
 
     private void initializeUI() {
-//        if (subTopicsList.size() == 0) {
         Topics mainTopic = new Topics();
         mainTopic.setId(null);
         String allCategoryLabel = "";
@@ -254,17 +210,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         mainTopic.setDisplay_name(allCategoryLabel);
         mainTopic.setTitle(allCategoryLabel);
 
-//        Topics childTopic = new Topics();
-//        childTopic.setId("");
-//        childTopic.setDisplay_name(allCategoryLabel);
-//        childTopic.setTitle(allCategoryLabel);
-
-//        ArrayList<Topics> aa = new ArrayList<Topics>();
-//        aa.add(childTopic);
-
-//        mainTopic.setChild(aa);
         subTopicsList.add(0, mainTopic);
-//        }
         for (int i = 0; i < subTopicsList.size(); i++) {
             Log.d("VIDEO TOPIC", subTopicsList.get(i).getDisplay_name() + "  --  " + subTopicsList.get(i).getId());
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));

@@ -246,7 +246,6 @@
                 android:padding="4dp"
                 app:srcCompat="@drawable/ic_audio_record" />
 
-
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -256,8 +255,6 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:src="@drawable/ic_add_image" />
-
-
         </RelativeLayout>
     </RelativeLayout>
 

@@ -287,14 +287,9 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void hitRelatedArticleAPI(int startIndex) {
-
         if (detailData.getCategory_id() != null && !detailData.getCategory_id().isEmpty()) {
             taggedCategories = detailData.getCategory_id().get(0);
         }
-
-//        int from = (nextPageNumber - 1) * limit;
-//        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 4, 0, 3, taggedCategories);
-//        callRecentVideoArticles.enqueue(recentArticleResponseCallback);
         Log.d("startIndex", "" + startIndex + "," + (startIndex + 10));
         endIndex = startIndex + 10;
         Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getVlogsList(startIndex, endIndex, 0, 3, taggedCategories);
@@ -310,15 +305,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
     private Callback<VlogsListingResponse> bloggersArticleResponseCallback = new Callback<VlogsListingResponse>() {
         @Override
         public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
-
-            /*if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
-            }
-            if (response == null || response.body() == null) {
-                showToast(getString(R.string.server_went_wrong));
-                return;
-            }*/
-
             try {
                 VlogsListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
@@ -331,7 +317,6 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
                             dataList.remove(i);
                             break;
                         }
-
                     }
 
                     if (!fromLoadMore) {

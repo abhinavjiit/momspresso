@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,7 +116,7 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
         openAddReplyDialog.setOnClickListener(this);
 
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         repliesRecyclerView.setLayoutManager(llm);
 
         repliesList = new ArrayList<>();
@@ -409,8 +411,8 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
     private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
         @Override
         public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     if (response.code() == 400) {
                         try {
                             int patchActionId = 0;
