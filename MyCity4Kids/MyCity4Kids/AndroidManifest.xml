@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
     android:versionCode="162"
-    android:versionName="12.0.9">
+    android:versionName="12.1.0">
 
     <uses-sdk tools:overrideLibrary="io.branch.referral, com.crashlytics.android, im.ene.toro.exoplayer, im.ene.toro,com.facebook.shimmer,org.wordpress.android.editor" />
     <!-- So that we can get the account name -->
@@ -38,6 +38,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
             android:name=".ui.rewards.activity.RewardsShareReferralCodeActivity"
@@ -341,9 +342,6 @@
             android:name=".ui.activity.VideoUploadProgressActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.MyFunnyVideosListingActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.IdTokenLoginActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -521,6 +519,13 @@
             android:name=".ui.activity.SpellCheckActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
+        <activity
+            android:name=".ui.campaign.activity.CampaignContainerActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.ArticleChallengesActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.branch.sdk.BranchKey"
@@ -615,11 +620,6 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".ui.campaign.activity.CampaignContainerActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

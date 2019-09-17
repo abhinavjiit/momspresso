@@ -135,6 +135,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -1769,18 +1770,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         final Fragment topFragmentt = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         Menu menu = bottomNavigationView.getMenu();
-        if (topFragmentt != null && topFragmentt instanceof ExploreArticleListingTypeFragment) {
+        if (topFragmentt instanceof ExploreArticleListingTypeFragment) {
             menu.findItem(R.id.action_profile).setChecked(true);
 
-        } else if (topFragmentt != null && topFragmentt instanceof FragmentMC4KHomeNew) {
+        } else if (topFragmentt instanceof FragmentMC4KHomeNew) {
             menu.findItem(R.id.action_home).setChecked(true);
 
-        } else if (topFragmentt != null && topFragmentt instanceof GroupsViewFragment) {
+        } else if (topFragmentt instanceof GroupsViewFragment) {
             menu.findItem(R.id.action_location).setChecked(true);
-
         }
-
-
     }
 
     @Override
@@ -2022,15 +2020,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.toolbarTitle:
                 break;
             case R.id.searchAllImageView:
-                if (topFragment instanceof GroupsViewFragment) {
-                    Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
-                    startActivity(searchIntent);
-                } else {
-                    Intent searchIntent = new Intent(this, SearchAllActivity.class);
-                    searchIntent.putExtra(Constants.FILTER_NAME, "");
-                    searchIntent.putExtra(Constants.TAB_POSITION, 0);
-                    startActivity(searchIntent);
-                }
+//                if (topFragment instanceof GroupsViewFragment) {
+//                    Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
+//                    startActivity(searchIntent);
+//                } else {
+//                    Intent searchIntent = new Intent(this, SearchAllActivity.class);
+//                    searchIntent.putExtra(Constants.FILTER_NAME, "");
+//                    searchIntent.putExtra(Constants.TAB_POSITION, 0);
+//                    startActivity(searchIntent);
+//                }
+                Intent searchIntent = new Intent(this, ArticleChallengesActivity.class);
+                startActivity(searchIntent);
                 break;
             case R.id.notification:
                 hideCreateContentView();
@@ -2747,28 +2747,26 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         selectOptToolbarTitle.setVisibility(View.GONE);
         toolbarTitleTextView.setVisibility(View.VISIBLE);
         downArrowImageView.setVisibility(View.INVISIBLE);
-        if (null != topFragment && topFragment instanceof BecomeBloggerFragment) {
+        if (topFragment instanceof BecomeBloggerFragment) {
             toolbarUnderline.setVisibility(View.VISIBLE);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_become_blogger));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
-        } else if (null != topFragment && topFragment instanceof UploadVideoInfoFragment) {
+        } else if (topFragment instanceof UploadVideoInfoFragment) {
             toolbarUnderline.setVisibility(View.VISIBLE);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_first_video_upload));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
         } else {
             toolbarUnderline.setVisibility(View.VISIBLE);
-            if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
+            if (topFragment instanceof ExploreArticleListingTypeFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_select_an_option_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.myprofile_toolbar_title));
                 menu.findItem(R.id.action_profile).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
-                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics")) {
-                }
-            } else if (null != topFragment && topFragment instanceof NotificationFragment) {
+            } else if (topFragment instanceof NotificationFragment) {
                 Utils.pushOpenScreenEvent(this, "NotificationsScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
@@ -2776,18 +2774,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 notificationImg.setVisibility(View.GONE);
                 menu.findItem(R.id.action_momVlog).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (null != topFragment && topFragment instanceof SuggestedTopicsFragment) {
+            } else if (topFragment instanceof SuggestedTopicsFragment) {
                 Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_suggested_topic_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_write).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
+            } else if (topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "HomeScreen")) {
                     homeCoachmark.setVisibility(View.VISIBLE);
                 }
-//                homeCoachmark.setVisibility(View.VISIBLE);
                 if (SharedPrefUtils.isTopicSelectionChanged(this)) {
                     ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
                 }
@@ -2796,14 +2793,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (null != topFragment && topFragment instanceof AddArticleVideoFragment) {
+            } else if (topFragment instanceof AddArticleVideoFragment) {
                 Utils.pushOpenScreenEvent(this, "CreateContentScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 menu.findItem(R.id.action_write).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-//                menuImageView.setVisibility(View.VISIBLE);
-//                setSupportActionBar(mToolbar);
                 toolbarUnderline.setVisibility(View.GONE);
-            } else if (null != topFragment && topFragment instanceof TopicsListingFragment) {
+            } else if (topFragment instanceof TopicsListingFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article")) {
                     ((TopicsListingFragment) topFragment).showGuideView();
@@ -2813,26 +2808,26 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (null != topFragment && topFragment instanceof ExploreFragment) {
+            } else if (topFragment instanceof ExploreFragment) {
                 Utils.pushOpenScreenEvent(this, "ExploreScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_explore_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (null != topFragment && topFragment instanceof TopicsShortStoriesContainerFragment) {
+            } else if (topFragment instanceof TopicsShortStoriesContainerFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicsShortStoriesContainerFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(getString(R.string.article_listing_type_short_story_label));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (null != topFragment && topFragment instanceof GroupsViewFragment) {
+            } else if (topFragment instanceof GroupsViewFragment) {
                 Utils.pushOpenScreenEvent(this, "GroupsViewFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.groups_support_groups));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.groups_light_black_color));
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            } else if (null != topFragment && topFragment instanceof FragmentBusinesslistEvents) {
+            } else if (topFragment instanceof FragmentBusinesslistEvents) {
                 Utils.pushOpenScreenEvent(this, "EventsListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_upcoming_events_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
@@ -2840,7 +2835,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 searchAllImageView.setVisibility(View.GONE);
                 notificationImg.setVisibility(View.GONE);
-            } else if (null != topFragment && topFragment instanceof FragmentHomeCategory) {
+            } else if (topFragment instanceof FragmentHomeCategory) {
                 Utils.pushOpenScreenEvent(this, "ResourceListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_kids_res_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));

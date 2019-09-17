@@ -58,7 +58,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface,
+        View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 1;
     private int limit = 10;
@@ -87,26 +88,20 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
 
         View view = inflater.inflate(R.layout.new_article_layout, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
-        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        mshimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmer1);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        noBlogsTextView = view.findViewById(R.id.noBlogsTextView);
+        mLodingView = view.findViewById(R.id.relativeLoadingView);
+        progressBar = view.findViewById(R.id.progressBar);
+        mshimmerFrameLayout = view.findViewById(R.id.shimmer1);
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
-        String gpHeading = getArguments().getString("gpHeading");
-        String gpSubHeading = getArguments().getString("gpSubHeading");
-        String gpImageUrl = getArguments().getString("gpImageUrl");
-        int groupId = getArguments().getInt("groupId");
-        // progressBar.setVisibility(View.VISIBLE);
         Utils.pushOpenScreenEvent(getActivity(), "TrendingAllTabFragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         progressBar.setVisibility(View.VISIBLE);
-        articleDataModelsNew = new ArrayList<ArticleListingResult>();
+        articleDataModelsNew = new ArrayList<>();
 
         long timeDiff = System.currentTimeMillis() - SharedPrefUtils.getLastLoginTimestamp(BaseApplication.getAppContext()) - AppConstants.HOURS_24_TIMESTAMP;
-        Log.d("Login Time Diff", "" + timeDiff);
         if (SharedPrefUtils.getFollowTopicApproachChangeFlag(BaseApplication.getAppContext())) {
             if (SharedPrefUtils.getFollowedTopicsCount(getActivity()) < 1 && timeDiff < 0 &&
                     !SharedPrefUtils.isTopicSelectionChanged(BaseApplication.getAppContext()) &&
@@ -122,19 +117,11 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
                 isHeaderVisible = false;
             }
         }
-//        if (SharedPrefUtils.getFollowedTopicsCount(getActivity()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
-//            isHeaderVisible = true;
-//        } else {
-//            isHeaderVisible = false;
-//        }
-//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-//        feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, isHeaderVisible, "TrendingAll", true);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
-//        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
         recyclerView.setAdapter(recyclerAdapter);
 
         hitFilteredTopicsArticleListingApi(0);
@@ -197,8 +184,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
                     scrolledDistance += dy;
                 }
             }
-
-
         });
 
         getGroupIdForCurrentCategory();
@@ -215,65 +200,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
     public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
         recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
         recyclerAdapter.notifyDataSetChanged();
-    }
-
-    private void getCarouselVideos() {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 5, 0, 3, null);
-        callRecentVideoArticles.enqueue(carouselVideosResponseCallback);
-    }
-
-    private Callback<VlogsListingResponse> carouselVideosResponseCallback = new Callback<VlogsListingResponse>() {
-        @Override
-        public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-//                showToast("Something went wrong from server");
-                return;
-            }
-            try {
-                VlogsListingResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    processCarouselResponse(responseData);
-                } else {
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<VlogsListingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-        }
-    };
-
-    private void processCarouselResponse(VlogsListingResponse responseData) {
-        ArrayList<VlogsListingAndDetailResult> dataList = responseData.getData().get(0).getResult();
-        if (dataList == null || dataList.size() == 0) {
-            isLastPageReached = true;
-            if (null != carouselVideoList && !carouselVideoList.isEmpty()) {
-                //No more next results for search from pagination
-            } else {
-                // No results for search
-                carouselVideoList = dataList;
-                recyclerAdapter.setCarouselVideos(carouselVideoList);
-                recyclerAdapter.notifyDataSetChanged();
-            }
-        } else {
-            if (nextPageNumber == 1) {
-                carouselVideoList = dataList;
-            } else {
-                carouselVideoList.addAll(dataList);
-            }
-            recyclerAdapter.setCarouselVideos(carouselVideoList);
-            nextPageNumber = nextPageNumber + 1;
-            recyclerAdapter.notifyDataSetChanged();
-        }
     }
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
@@ -298,7 +224,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
             try {
@@ -328,9 +254,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
     };
 
     private void processArticleListingResponse(ArticleListingResponse responseData) {
-
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-
         if (dataList.size() == 0) {
             isLastPageReached = false;
             if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
@@ -363,9 +287,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-
-        }
     }
 
     @Override
@@ -378,16 +299,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(0);
     }
-
-//    @Override
-//    public void onFinishToLoadAds() {
-//
-//    }
-//
-//    @Override
-//    public void onErrorToLoadAd() {
-//
-//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {
@@ -413,12 +324,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
                 intent1.putExtra("fragType", "search");
                 startActivity(intent1);
                 break;
-//            case R.id.groupHeaderView:
-//                GroupsFragment groupsFragment = new GroupsFragment();
-//                Bundle bundle = new Bundle();
-//                groupsFragment.setArguments(bundle);
-//                ((DashboardActivity) getActivity()).addFragment(groupsFragment, bundle, true);
-//                break;
             case R.id.headerArticleView:
             case R.id.fbAdArticleView:
             case R.id.storyHeaderView:

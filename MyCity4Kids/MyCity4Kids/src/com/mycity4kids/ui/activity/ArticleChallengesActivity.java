@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -26,8 +27,12 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ChallengeListingRecycleAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -92,14 +97,15 @@ public class ArticleChallengesActivity extends BaseActivity implements Challenge
     private void getActiveChallenge(String categoryId) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         ArticlePublishAPI articlePublishAPI = retrofit.create(ArticlePublishAPI.class);
-        Call<Topics> call = articlePublishAPI.getArticleChallenges(categoryId);
+        Call<ResponseBody> call = articlePublishAPI.getArticleChallenges(categoryId);
         call.enqueue(articleChallengeResponseCallback);
 
     }
 
-    private Callback<Topics> articleChallengeResponseCallback = new Callback<Topics>() {
+    private Callback<ResponseBody> articleChallengeResponseCallback = new Callback<ResponseBody>() {
         @Override
-        public void onResponse(Call<Topics> call, retrofit2.Response<Topics> response) {
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            progressBar.setVisibility(View.GONE);
             if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
@@ -107,11 +113,13 @@ public class ArticleChallengesActivity extends BaseActivity implements Challenge
             }
             if (response.isSuccessful()) {
                 try {
-                    Topics topic = response.body();
-//                    ArrayList<Topics> articleChallengesList = new ArrayList<>();
-//                    articleChallengesList.addAll(topic.getChild());
-                    for (int i = topic.getChild().size() - 1; i >= 0; i--) {
-                        if ("1".equals(topic.getChild().get(i).getPublicVisibility())
+                    String strResponse = new String(response.body().bytes());
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    JSONArray arr = jsonObject.getJSONArray("child");
+
+                    for (int i = 0; i < arr.length(); i++) {
+                        Topics topic = new Gson().fromJson(arr.getString(i), Topics.class);
+                        if ("1".equals(topic.getPublicVisibility())
                                 && topic.getChild().get(i).getExtraData() != null && !topic.getChild().get(i).getExtraData().isEmpty()
                                 && "1".equals(topic.getChild().get(i).getExtraData().get(0).getChallenge().getActive())) {
                             currentActiveChallenge = topic.getChild().get(i);
@@ -122,11 +130,12 @@ public class ArticleChallengesActivity extends BaseActivity implements Challenge
                             challengeArticleRecyclerView.setAdapter(articleChallengesRecyclerAdapter);
                             articleChallengesRecyclerAdapter.setListData(mDatalist);
                             articleChallengesRecyclerAdapter.notifyDataSetChanged();
-                            getArticleForChallenge();
+//                            getArticleForChallenge();
                             break;
                         }
                     }
                 } catch (Exception e) {
+                    progressBar.setVisibility(View.GONE);
                     Crashlytics.logException(e);
                     Log.d("FileNotFoundException", Log.getStackTraceString(e));
                 }
@@ -134,7 +143,9 @@ public class ArticleChallengesActivity extends BaseActivity implements Challenge
         }
 
         @Override
-        public void onFailure(Call<Topics> call, Throwable t) {
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            progressBar.setVisibility(View.GONE);
+            Log.d("REQUEST", "REQUEST BODY -- " + call.request());
             Crashlytics.logException(t);
             Log.d("FileNotFoundException", Log.getStackTraceString(t));
         }

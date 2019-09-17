@@ -29,19 +29,30 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
+import com.mycity4kids.ui.activity.ParallelFeedActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
+import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.GroupIdCategoryMap;
+import com.mycity4kids.utils.MixPanelUtils;
 import com.mycity4kids.widget.FeedNativeAd;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -49,7 +60,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class EditorPickFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class EditorPickFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface, View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -64,10 +76,12 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     private int limit = 15;
     private String chunks = "";
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private boolean isHeaderVisible = false;
+    private boolean mIsVisibleToUser;
+    private String[] feedOrderArray;
 
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
-    //    private ImageView menuImageView;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
     private LinearLayout addTopicsLayout;
@@ -77,48 +91,64 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     private boolean fromPullToRefresh;
 
     Context mContext;
+    private int tabPosition;
+    private MixpanelAPI mixpanel;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.new_article_layout, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        ashimmerFrameLayout = (ShimmerFrameLayout) rootView.findViewById(R.id.shimmer1);
-        mLodingView = (RelativeLayout) rootView.findViewById(R.id.relativeLoadingView);
-        noBlogsTextView = (TextView) rootView.findViewById(R.id.noBlogsTextView);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        addTopicsLayout = (LinearLayout) rootView.findViewById(R.id.addTopicsLayout);
-        headerArticleCardLayout = (FrameLayout) rootView.findViewById(R.id.headerArticleView);
+        recyclerView = rootView.findViewById(R.id.recyclerView);
+        ashimmerFrameLayout = rootView.findViewById(R.id.shimmer1);
+        mLodingView = rootView.findViewById(R.id.relativeLoadingView);
+        noBlogsTextView = rootView.findViewById(R.id.noBlogsTextView);
+        progressBar = rootView.findViewById(R.id.progressBar);
+        addTopicsLayout = rootView.findViewById(R.id.addTopicsLayout);
+        headerArticleCardLayout = rootView.findViewById(R.id.headerArticleView);
         pullToRefresh = rootView.findViewById(R.id.pullToRefresh);
 
-        addTopicsLayout.setOnClickListener(this);
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
+        addTopicsLayout.setOnClickListener(this);
 
         rootView.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate_indefinitely));
         if (getArguments() != null) {
             sortType = getArguments().getString(Constants.SORT_TYPE);
+            tabPosition = getArguments().getInt(Constants.TAB_POSITION);
+            feedOrderArray = getArguments().getStringArray("feedOrderArray");
         }
 
-        articleDataModelsNew = new ArrayList<ArticleListingResult>();
+        articleDataModelsNew = new ArrayList<>();
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, sortType, false);
+        hitArticleListingApi(nextPageNumber, sortType);
 
+        if (tabPosition == 0) {
+            long timeDiff = System.currentTimeMillis() - SharedPrefUtils.getLastLoginTimestamp(BaseApplication.getAppContext()) - AppConstants.HOURS_24_TIMESTAMP;
+            if (SharedPrefUtils.getFollowTopicApproachChangeFlag(BaseApplication.getAppContext())) {
+                if (SharedPrefUtils.getFollowedTopicsCount(BaseApplication.getAppContext()) < 1 && timeDiff < 0 &&
+                        !SharedPrefUtils.isTopicSelectionChanged(BaseApplication.getAppContext()) &&
+                        !SharedPrefUtils.getUserSkippedFollowTopicFlag(BaseApplication.getAppContext())) {
+                    isHeaderVisible = true;
+                } else {
+                    isHeaderVisible = false;
+                }
+            } else {
+                isHeaderVisible = SharedPrefUtils.getFollowedTopicsCount(BaseApplication.getAppContext()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT;
+            }
+        }
 
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(mContext, feedNativeAd, this, false, sortType, false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(mContext, feedNativeAd, this, isHeaderVisible, sortType, tabPosition == 0);
         final LinearLayoutManager llm = new LinearLayoutManager(mContext);
         llm.setOrientation(RecyclerView.VERTICAL);
 
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
-//        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
         recyclerView.setAdapter(recyclerAdapter);
 
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -131,7 +161,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
                 sortType = getArguments().getString(Constants.SORT_TYPE);
                 nextPageNumber = 1;
                 fromPullToRefresh = true;
-                hitArticleListingApi(nextPageNumber, sortType, false);
+                hitArticleListingApi(nextPageNumber, sortType);
                 pullToRefresh.setRefreshing(false);
             }
         });
@@ -149,17 +179,87 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
                             mLodingView.setVisibility(View.VISIBLE);
-                            hitArticleListingApi(nextPageNumber, sortType, false);
+                            hitArticleListingApi(nextPageNumber, sortType);
                         }
                     }
                 }
             }
         });
+
+        if (tabPosition == 0) {
+            getGroupIdForCurrentCategory();
+        }
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mIsVisibleToUser) {
+            onVisible();
+        }
+    }
 
-    private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mIsVisibleToUser) {
+            onInVisible();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        mIsVisibleToUser = isVisibleToUser;
+        if (isResumed()) { // fragment have created
+            if (mIsVisibleToUser) {
+                onVisible();
+            } else {
+                onInVisible();
+            }
+        }
+    }
+
+    private void onVisible() {
+        Log.d("EditorPickFrag", "onVisible ---- " + sortType);
+        try {
+            if (!StringUtils.isNullOrEmpty(sortType)) {
+                if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
+                    Utils.pushOpenScreenEvent(getActivity(), "ForYouScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                    Utils.pushOpenScreenEvent(getActivity(), "EditorsPickScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                    Utils.pushOpenScreenEvent(getActivity(), "RecentScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
+                    Utils.pushOpenScreenEvent(getActivity(), "TodaysBestScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
+                    Utils.pushOpenScreenEvent(getActivity(), "AllTrending", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
+                }
+            }
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+
+    }
+
+    private void onInVisible() {
+        Log.d("EditorPickFrag", "onInvisible");
+    }
+
+    private void getGroupIdForCurrentCategory() {
+        GroupIdCategoryMap groupIdCategoryMap = new GroupIdCategoryMap("", this, "listing");
+        groupIdCategoryMap.getGroupIdForCurrentCategory();
+    }
+
+    @Override
+    public void onGroupMappingResult(int groupId, String gpHeading, String gpSubHeading, String gpImageUrl) {
+        recyclerAdapter.setGroupInfo(groupId, gpHeading, gpSubHeading, gpImageUrl);
+        recyclerAdapter.notifyDataSetChanged();
+    }
+
+    private void hitArticleListingApi(int pPageCount, String sortKey) {
         if (!ConnectivityUtils.isNetworkEnabled(mContext)) {
             removeProgressDialog();
             ToastUtils.showToast(mContext, getString(R.string.error_network));
@@ -178,7 +278,6 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
         } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-
             int from = (nextPageNumber - 1) * limit + 1;
             Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + limit - 1,
                     SharedPrefUtils.getLanguageFilters(mContext));
@@ -186,17 +285,21 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
         } else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-
             int from = (nextPageNumber - 1) * limit + 1;
             Call<ArticleListingResponse> filterCall = topicsAPI.getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), from, from + limit - 1,
                     SharedPrefUtils.getLanguageFilters(mContext));
             filterCall.enqueue(articleListingResponseCallback);
+        } else if (Constants.KEY_TRENDING.equals(sortKey)) {
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+            int from = (nextPageNumber - 1) * limit + 1;
+            Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            filterCall.enqueue(articleListingResponseCallback);
         } else {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-
             int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(mContext));
+            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
@@ -226,8 +329,8 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-		if (isAdded())
-                ToastUtils.showToast(mContext, getString(R.string.went_wrong));
+                if (isAdded())
+                    ToastUtils.showToast(mContext, getString(R.string.went_wrong));
             }
         }
 
@@ -268,7 +371,6 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
                 noBlogsTextView.setVisibility(View.GONE);
                 if ("".equals(chunks)) {
                     articleDataModelsNew.clear();
-//                    articleDataModelsNew.addAll(dataList);
                     for (int j = 0; j < dataList.size(); j++) {
                         if (!StringUtils.isNullOrEmpty(dataList.get(j).getId())) {
                             articleDataModelsNew.add(dataList.get(j));
@@ -308,7 +410,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
             try {
@@ -351,7 +453,6 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
                 noBlogsTextView.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 noBlogsTextView.setText(getString(R.string.no_articles_found));
-//                writeArticleCell.setVisibility(View.VISIBLE);
                 articleDataModelsNew = dataList;
                 recyclerAdapter.setNewListData(articleDataModelsNew);
                 recyclerAdapter.notifyDataSetChanged();
@@ -384,7 +485,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
         from = 1;
         to = 15;
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, sortType, false);
+        hitArticleListingApi(nextPageNumber, sortType);
     }
 
     private void removeVolleyCache(String sortType) {
@@ -424,42 +525,83 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-//    @Override
-//    public void onFinishToLoadAds() {
-//
-//    }
-//
-//    @Override
-//    public void onErrorToLoadAd() {
-//
-//    }
-
     @Override
     public void onRecyclerItemClick(View view, int position) {
-        Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
-        if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYoucreen");
-            intent.putExtra(Constants.FROM_SCREEN, "ForYouScreen");
-        } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
-            intent.putExtra(Constants.FROM_SCREEN, "EditorsPickScreen");
-        } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
-            intent.putExtra(Constants.FROM_SCREEN, "RecentScreen");
-        } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
-            intent.putExtra(Constants.FROM_SCREEN, "TodaysBestScreen");
+        switch (view.getId()) {
+            case R.id.videoContainerFL1:
+                launchVideoDetailsActivity(position, 0);
+                break;
+            case R.id.closeImageView:
+                mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                    mixpanel.track("FollowTopicCardClose", jsonObject);
+                    Log.d("FollowUnfollowTopics", jsonObject.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                SharedPrefUtils.setUserSkippedFollowTopicFlag(BaseApplication.getAppContext(), true);
+                hideFollowTopicHeader();
+                break;
+            case R.id.headerView:
+                Intent intent1 = new Intent(getActivity(), ExploreArticleListingTypeActivity.class);
+                intent1.putExtra("fragType", "search");
+                startActivity(intent1);
+                break;
+            case R.id.headerArticleView:
+            case R.id.fbAdArticleView:
+            case R.id.storyHeaderView:
+            default:
+                if ("1".equals(articleDataModelsNew.get(position).getContentType())) {
+                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                    if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
+                    } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
+                    } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
+                    } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
+                    } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                    }
+                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
+                    intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsNew, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, articleDataModelsNew, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
+                    if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
+                    } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
+                    } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
+                    } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
+                    } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                    }
+                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
+                    intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsNew, AppConstants.CONTENT_TYPE_ARTICLE);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, articleDataModelsNew, AppConstants.CONTENT_TYPE_ARTICLE));
+                    startActivity(intent);
+                }
+                break;
         }
-
-
-        intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-        intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
-        intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
-        intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
-        intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-        intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
-        startActivity(intent);
     }
 
     @Override
@@ -488,5 +630,33 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
     public void onPause() {
         super.onPause();
         ashimmerFrameLayout.stopShimmerAnimation();
+    }
+
+    private void launchVideoDetailsActivity(int position, int videoIndex) {
+        MixPanelUtils.pushMomVlogClickEvent(mixpanel, videoIndex, "TrendingAll");
+        if (articleDataModelsNew.get(position).getCarouselVideoList() != null && !articleDataModelsNew.get(position).getCarouselVideoList().isEmpty()) {
+            if (isAdded()) {
+                Utils.momVlogEvent(getActivity(), "Home Screen", "Vlog_card_home_feed",
+                        "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
+                        SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                        String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+            }
+            VlogsListingAndDetailResult result = articleDataModelsNew.get(position).getCarouselVideoList().get(videoIndex);
+            Intent intent = new Intent(getActivity(), ParallelFeedActivity.class);
+            intent.putExtra(Constants.VIDEO_ID, result.getId());
+            intent.putExtra(Constants.STREAM_URL, result.getUrl());
+            intent.putExtra(Constants.AUTHOR_ID, result.getAuthor().getId());
+            intent.putExtra(Constants.FROM_SCREEN, "Home Screen");
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
+            intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+            intent.putExtra(Constants.AUTHOR, result.getAuthor().getId() + "~" + result.getAuthor().getFirstName() + " " + result.getAuthor().getLastName());
+            startActivity(intent);
+        }
+    }
+
+    public void hideFollowTopicHeader() {
+        isHeaderVisible = false;
+        recyclerAdapter.hideFollowTopicHeader();
+        recyclerAdapter.notifyDataSetChanged();
     }
 }

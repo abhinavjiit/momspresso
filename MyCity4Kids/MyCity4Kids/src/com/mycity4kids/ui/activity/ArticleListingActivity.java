@@ -430,7 +430,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     public void onRecyclerItemClick(View view, int position) {
         Intent intent = new Intent(ArticleListingActivity.this, ArticleDetailsContainerActivity.class);
         if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYoucreen");
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYouScreen");
             intent.putExtra(Constants.FROM_SCREEN, "ForYouScreen");
         } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");

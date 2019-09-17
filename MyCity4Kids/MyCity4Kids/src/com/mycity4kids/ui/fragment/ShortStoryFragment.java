@@ -366,7 +366,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         @Override
         public void onResponse(Call<ShortStoryDetailResponse> call, retrofit2.Response<ShortStoryDetailResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
             try {
