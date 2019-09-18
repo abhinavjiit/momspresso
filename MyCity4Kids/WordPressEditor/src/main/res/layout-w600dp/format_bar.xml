@@ -117,19 +117,19 @@
                 android:tag="@string/format_bar_tag_blockquote" />
         </LinearLayout>
 
-        <LinearLayout
-            style="@style/FormatBarTabletGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent">
+        <!--<LinearLayout-->
+            <!--style="@style/FormatBarTabletGroup"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="fill_parent">-->
 
-            <org.wordpress.android.editor.RippleToggleButton
-                android:id="@+id/format_bar_button_audio"
-                style="@style/FormatBarButtonTablet"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/ic_audio_01"
-                android:contentDescription="@string/format_bar_description_media" />
-        </LinearLayout>
+            <!--<org.wordpress.android.editor.RippleToggleButton-->
+                <!--android:id="@+id/format_bar_button_audio"-->
+                <!--style="@style/FormatBarButtonTablet"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--android:background="@drawable/ic_audio_01"-->
+                <!--android:contentDescription="@string/format_bar_description_media" />-->
+        <!--</LinearLayout>-->
         <!--<LinearLayout
             style="@style/FormatBarTabletGroup"
             android:layout_width="wrap_content"

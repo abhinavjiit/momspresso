@@ -3,7 +3,6 @@ package com.mycity4kids.editor;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,7 +15,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.speech.RecognizerIntent;
 import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -25,6 +23,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
@@ -75,10 +78,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -570,18 +569,18 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     }
                 }
                 break;
-            case REQ_CODE_SPEECH_INPUT: {
-                if (resultCode == RESULT_OK && null != data) {
-                    String text;
-                    ArrayList<String> result = data
-                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    text = result.get(0);
-                    speechToText = speechToText + " " + text;
-                    mEditorFragment.setContent(speechToText);
-                    mEditorFragment.setSpeechToText(speechToText);
-                }
-                break;
-            }
+//            case REQ_CODE_SPEECH_INPUT: {
+//                if (resultCode == RESULT_OK && null != data) {
+//                    String text;
+//                    ArrayList<String> result = data
+//                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+//                    text = result.get(0);
+//                    speechToText = speechToText + " " + text;
+//                    mEditorFragment.setContent(speechToText);
+//                    mEditorFragment.setSpeechToText(speechToText);
+//                }
+//                break;
+//            }
         }
     }
 
@@ -777,26 +776,26 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         // TODO
     }
 
-    @Override
-    public void onAudioClicked() {
-        promptSpeechInput();
-    }
+//    @Override
+//    public void onAudioClicked() {
+//        promptSpeechInput();
+//    }
 
 
     /**
      * Showing google speech input dialog
      */
-    private void promptSpeechInput() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, SharedPrefUtils.getAppLocale(EditorPostActivity.this));
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speech_prompt));
-        try {
-            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-        } catch (ActivityNotFoundException a) {
-            Toast.makeText(getApplicationContext(), getString(R.string.speech_not_supported), Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void promptSpeechInput() {
+//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, SharedPrefUtils.getAppLocale(EditorPostActivity.this));
+//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speech_prompt));
+//        try {
+//            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+//        } catch (ActivityNotFoundException a) {
+//            Toast.makeText(getApplicationContext(), getString(R.string.speech_not_supported), Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     /* */
 

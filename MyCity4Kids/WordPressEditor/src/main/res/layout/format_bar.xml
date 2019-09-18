@@ -98,14 +98,14 @@
                     android:contentDescription="@string/format_bar_description_link"
                     android:tag="@string/format_bar_tag_link" />
 
-                <org.wordpress.android.editor.RippleToggleButton
-                    android:id="@+id/format_bar_button_audio"
-                    style="@style/FormatBarButton"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:background="@drawable/ic_audio_01"
-                    android:contentDescription="@string/format_bar_description_link"
-                    android:tag="@string/format_bar_tag_link" />
+                <!--<org.wordpress.android.editor.RippleToggleButton-->
+                <!--android:id="@+id/format_bar_button_audio"-->
+                <!--style="@style/FormatBarButton"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--android:background="@drawable/ic_audio_01"-->
+                <!--android:contentDescription="@string/format_bar_description_link"-->
+                <!--android:tag="@string/format_bar_tag_link" />-->
             </LinearLayout>
         </HorizontalScrollView>
 

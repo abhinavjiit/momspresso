@@ -362,8 +362,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         ToggleButton linkButton = (ToggleButton) view.findViewById(R.id.format_bar_button_link);
         mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_LINK, linkButton);
 
-        ToggleButton speechButton = (ToggleButton) view.findViewById(R.id.format_bar_button_audio);
-        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_SPEECH, speechButton);
+//        ToggleButton speechButton = (ToggleButton) view.findViewById(R.id.format_bar_button_audio);
+//        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_SPEECH, speechButton);
 
        /* ToggleButton htmlButton = (ToggleButton) view.findViewById(R.id.format_bar_button_html);
         htmlButton.setOnClickListener(this);*/
@@ -466,18 +466,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     getActivity().openContextMenu(mTagToggleButtonMap.get(TAG_FORMAT_BAR_BUTTON_MEDIA));
                 }
             }
-        } else if (id == R.id.format_bar_button_audio) {
-            mEditorFragmentListener.onTrackableEvent(TrackableEvent.SPEECH_TO_TEXT);
-            ((ToggleButton) v).setChecked(false);
-
-            if (mSourceView.getVisibility() == View.VISIBLE) {
-                ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
-            } else {
-                mEditorFragmentListener.onAudioClicked();
-                if (isAdded()) {
-                    getActivity().openContextMenu(mTagToggleButtonMap.get(TAG_FORMAT_BAR_BUTTON_SPEECH));
-                }
-            }
+//        } else if (id == R.id.format_bar_button_audio) {
+//            mEditorFragmentListener.onTrackableEvent(TrackableEvent.SPEECH_TO_TEXT);
+//            ((ToggleButton) v).setChecked(false);
+//
+//            if (mSourceView.getVisibility() == View.VISIBLE) {
+//                ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
+//            } else {
+//                mEditorFragmentListener.onAudioClicked();
+//                if (isAdded()) {
+//                    getActivity().openContextMenu(mTagToggleButtonMap.get(TAG_FORMAT_BAR_BUTTON_SPEECH));
+//                }
+//            }
         } else if (id == R.id.format_bar_button_link) {
             if (!((ToggleButton) v).isChecked()) {
                 // The link button was checked when it was pressed; remove the current link
@@ -847,16 +847,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
     }
 
-    @Override
-    public void setSpeechToText(final String speechToText) {
-        mWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setHTML('" +
-                        Utils.escapeHtml(mContentHtml) + "');");
-            }
-        });
-    }
+//    @Override
+//    public void setSpeechToText(final String speechToText) {
+//        mWebView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setHTML('" +
+//                        Utils.escapeHtml(mContentHtml) + "');");
+//            }
+//        });
+//    }
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
