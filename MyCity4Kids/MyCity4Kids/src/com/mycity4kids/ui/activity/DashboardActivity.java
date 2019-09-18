@@ -2020,17 +2020,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.toolbarTitle:
                 break;
             case R.id.searchAllImageView:
-//                if (topFragment instanceof GroupsViewFragment) {
-//                    Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
-//                    startActivity(searchIntent);
-//                } else {
-//                    Intent searchIntent = new Intent(this, SearchAllActivity.class);
-//                    searchIntent.putExtra(Constants.FILTER_NAME, "");
-//                    searchIntent.putExtra(Constants.TAB_POSITION, 0);
-//                    startActivity(searchIntent);
-//                }
-                Intent searchIntent = new Intent(this, ArticleChallengesActivity.class);
-                startActivity(searchIntent);
+                if (topFragment instanceof GroupsViewFragment) {
+                    Intent searchIntent = new Intent(this, GroupsSearchActivity.class);
+                    startActivity(searchIntent);
+                } else {
+                    Intent searchIntent = new Intent(this, SearchAllActivity.class);
+                    searchIntent.putExtra(Constants.FILTER_NAME, "");
+                    searchIntent.putExtra(Constants.TAB_POSITION, 0);
+                    startActivity(searchIntent);
+                }
+//                Intent searchIntent = new Intent(this, ArticleChallengesActivity.class);
+//                startActivity(searchIntent);
                 break;
             case R.id.notification:
                 hideCreateContentView();

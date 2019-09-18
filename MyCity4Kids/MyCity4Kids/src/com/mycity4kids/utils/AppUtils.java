@@ -721,7 +721,7 @@ public class AppUtils {
         // set text width to canvas width minus 40dp padding
         int textWidth = canvas.getWidth() - (int) (36 * scale);
 
-        String author = "By - " + authorName;
+        String author = " - " + authorName;
 
         StaticLayout bodyLayout, titleLayout, authorLayout;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
