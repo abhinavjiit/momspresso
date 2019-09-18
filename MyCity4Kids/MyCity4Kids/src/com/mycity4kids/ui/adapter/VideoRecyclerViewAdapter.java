@@ -444,7 +444,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
                 ViewTreeObserver obs = tv.getViewTreeObserver();
                 obs.removeGlobalOnLayoutListener(this);
-                if (maxLine == 0) {
+                /*if (maxLine == 0) {
                     int lineEndIndex = tv.getLayout().getLineEnd(0);
                     String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
                     tv.setText(text);
@@ -461,6 +461,36 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                             addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
                                     viewMore, userBio), TextView.BufferType.SPANNABLE);
                 } else {
+                }*/
+
+                if (maxLine == 0) {
+                    int lineEndIndex = tv.getLayout().getLineEnd(0);
+                    String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
+                    tv.setText(text);
+                    tv.setMovementMethod(LinkMovementMethod.getInstance());
+                    tv.setText(
+                            addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                    viewMore, userBio), TextView.BufferType.SPANNABLE);
+                } else if (maxLine > 0 && tv.getLineCount() > maxLine) {
+                    int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
+                    if ((lineEndIndex - expandText.length() + 1) > 10) {
+                        String text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
+                        tv.setText(text);
+                        tv.setMovementMethod(LinkMovementMethod.getInstance());
+                        tv.setText(
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                        viewMore, userBio), TextView.BufferType.SPANNABLE);
+                    } else {
+                        // int lineEndIndex1 = tv.getLayout().getLineEnd(maxLine-1);
+                        String text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
+                        tv.setText(text);
+                        tv.setMovementMethod(LinkMovementMethod.getInstance());
+                        tv.setText(
+                                addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, maxLine, expandText,
+                                        viewMore, userBio), TextView.BufferType.SPANNABLE);
+                    }
+                } else {
+
                 }
             }
         });

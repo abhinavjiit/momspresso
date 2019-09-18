@@ -23,6 +23,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
 
+    public abstract void setSpeechToText(String speechToText);
+
     public abstract void appendGallery(MediaGallery mediaGallery);
 
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
@@ -151,6 +153,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
         void onAddMediaClicked();
 
+        void onAudioClicked();
+
         void onMediaRetryClicked(String mediaId);
 
         void onMediaUploadCancelClicked(String mediaId, boolean delete);
@@ -180,6 +184,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         BLOCKQUOTE_BUTTON_TAPPED,
         STRIKETHROUGH_BUTTON_TAPPED,
         UNDERLINE_BUTTON_TAPPED,
-        MORE_BUTTON_TAPPED
+        MORE_BUTTON_TAPPED,
+        SPEECH_TO_TEXT
     }
 }

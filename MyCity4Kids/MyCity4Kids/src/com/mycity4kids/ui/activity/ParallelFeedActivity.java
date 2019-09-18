@@ -964,7 +964,7 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 //        recyclerViewFeed.player.setVolume(0F);
         isFromPause = true;
 
-        if ((ViewGroup) recyclerViewFeed.getSimpleExo().getParent() != null && (recyclerViewFeed.getSimpleExo().getPlayer()) != null) {
+        if ((recyclerViewFeed.getSimpleExo().getPlayer()) != null) {
 
             mResumeWindow = recyclerViewFeed.getSimpleExo().getPlayer().getCurrentWindowIndex();
             mResumePosition = Math.max(0, recyclerViewFeed.getSimpleExo().getPlayer().getContentPosition());

@@ -1163,22 +1163,24 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             Log.d("VideoCarouselViewHolder", "Response = " + result);
             try {
                 VlogsListingResponse responseData = gson.fromJson(result, VlogsListingResponse.class);
-                if (responseData != null) {
-                    Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData.getData().get(0).getResult().size());
-                    articleDataModelsNew.get(pos).setCarouselVideoList(responseData.getData().get(0).getResult());
-                    Log.d("VideoCarouselViewHolder", "ASYNC");
-                    populateCarouselVideos(viewHolder, responseData.getData().get(0).getResult());
-                    articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
-                    articleDataModelsNew.get(pos).setResponseReceived(true);
-                } else {
-                    VlogsListingResponse responseData1 = gson.fromJson(result, VlogsListingResponse.class);
+                if (articleDataModelsNew.size() > 0) {
                     if (responseData != null) {
-                        Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData1.getData().get(0).getResult().size());
-                        articleDataModelsNew.get(pos).setCarouselVideoList(responseData1.getData().get(0).getResult());
+                        Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData.getData().get(0).getResult().size());
+                        articleDataModelsNew.get(pos).setCarouselVideoList(responseData.getData().get(0).getResult());
                         Log.d("VideoCarouselViewHolder", "ASYNC");
-                        populateCarouselVideos(viewHolder, responseData1.getData().get(0).getResult());
+                        populateCarouselVideos(viewHolder, responseData.getData().get(0).getResult());
                         articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
                         articleDataModelsNew.get(pos).setResponseReceived(true);
+                    } else {
+                        VlogsListingResponse responseData1 = gson.fromJson(result, VlogsListingResponse.class);
+                        if (responseData != null) {
+                            Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData1.getData().get(0).getResult().size());
+                            articleDataModelsNew.get(pos).setCarouselVideoList(responseData1.getData().get(0).getResult());
+                            Log.d("VideoCarouselViewHolder", "ASYNC");
+                            populateCarouselVideos(viewHolder, responseData1.getData().get(0).getResult());
+                            articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
+                            articleDataModelsNew.get(pos).setResponseReceived(true);
+                        }
                     }
                 }
             } catch (JsonSyntaxException jse) {
