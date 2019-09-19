@@ -1505,6 +1505,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     commentListData.setParentId(responseData.getData().getResult().getParentId());
                     commentListData.setUserId(responseData.getData().getResult().getUserId());
                     commentListData.setIsAnnon(responseData.getData().getResult().isAnnon());
+                    commentListData.setGroupId(responseData.getData().getResult().getGroupId());
                     commentListData.setMediaUrls(responseData.getData().getResult().getMediaUrls());
 
                     UserDetailResult userDetailResult = new UserDetailResult();

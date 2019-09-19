@@ -98,6 +98,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -325,7 +326,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         }
 
 
-
         if (commentOrReplyData == null) {
             commentReplyEditText.setText(SharedPrefUtils.getSavedReplyData(BaseApplication.getAppContext(), groupId,
                     postId, 0));
@@ -458,20 +458,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         return rootView;
     }
 
-//    private void requestAudioPermissions() {
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-//                    != PackageManager.PERMISSION_GRANTED
-//                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-//                    != PackageManager.PERMISSION_GRANTED
-//                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                    != PackageManager.PERMISSION_GRANTED) {
-//                requestPermissionsForAudio();
-//            }
-//        }
-//    }
-
-
     private void setListener() {
 
     }
@@ -498,8 +484,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
     @Override
     public void onRecordingCompleted() {
-//Stop Recording..
-//                String time = getHumanTimeText(recordTime);
         Log.d("RecordView", "onFinish");
         isLocked = false;
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
@@ -578,7 +562,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 }
             }
         };
-//        Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return dialog;
     }
@@ -598,7 +581,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         switch (view.getId()) {
             case R.id.postCommentReplyTextView:
                 Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
-
                 Map<String, String> mediaMap = new HashMap<>();
                 int i = 1;
                 if (!imageUrlHashMap.isEmpty()) {
@@ -624,31 +606,26 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         }
                     } else {
                         if (commentOrReplyData == null) {
-                            if (getActivity() instanceof GroupPostDetailActivity)
+                            if (getActivity() instanceof GroupPostDetailActivity) {
                                 ((GroupPostDetailActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap);
-
-
+                            }
                             if (getActivity() instanceof GroupDetailsActivity) {
                                 ((GroupDetailsActivity) getActivity()).addComment(commentReplyEditText.getText().toString(), mediaMap, groupId, postId);
-
-
                             }
-
                         } else {
-                            if (getActivity() instanceof GroupPostDetailActivity)
+                            if (getActivity() instanceof GroupPostDetailActivity) {
                                 ((GroupPostDetailActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), mediaMap);
-                            else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity)
+                            } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
                                 ((ViewGroupPostCommentsRepliesActivity) getActivity()).addReply(commentOrReplyData.getId(), commentReplyEditText.getText().toString(), mediaMap);
+                            }
                         }
                     }
                     dismiss();
-
                     commentReplyEditText.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.closeImageView:
                 Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
-
                 if ("EDIT_COMMENT".equals(actionType)) {
                 } else if ("EDIT_REPLY".equals(actionType)) {
                 } else {
@@ -666,7 +643,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 break;
             case R.id.cancelTextView:
                 Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
-
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
             case R.id.chooseMediaTypeContainer:
@@ -689,7 +665,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     openMediaChooserDialog();
                 }
                 break;
-
             case R.id.bottomSheetCross:
                 mLinearBottomSheet.startAnimation(slideDownAnim);
                 slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -717,25 +692,21 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
                     @Override
                     public void onAnimationRepeat(Animation animation) {
-
                     }
                 });
                 break;
             case R.id.record_button_red:
-
                 audioRecordView.setVisibility(View.VISIBLE);
                 mImgRecordButton.setVisibility(View.GONE);
                 mImgRecordCross.setVisibility(View.GONE);
                 break;
             case R.id.imageCameraTextView:
                 Utils.groupsEvent(getActivity(), "choose image pop up ", "capture image from camera", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "camera", "", String.valueOf(postId));
-
                 loadImageFromCamera();
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
             case R.id.imageGalleryTextView:
                 Utils.groupsEvent(getActivity(), "choose image pop up ", "choose from gallery", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "phone gallery", "", String.valueOf(postId));
-
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent, ADD_IMAGE_GALLERY_ACTIVITY_REQUEST_CODE);
@@ -750,7 +721,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 } else {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
-
                 break;
             case R.id.playAudioImageView:
                 playComment();
@@ -894,7 +864,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     }
 
     private boolean isValid(Map<String, String> image) {
-
         if (StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString()) && image.isEmpty()) {
             if (isAdded()) {
                 if (isLocked) {
@@ -1128,7 +1097,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         } else if (getActivity() instanceof GroupDetailsActivity) {
                             ((GroupDetailsActivity) getActivity()).processImage(imageUri);
                         } else if (getActivity() instanceof ViewGroupPostCommentsRepliesActivity) {
-//                            ((ViewGroupPostCommentsRepliesActivity) getActivity()).processImage(imageUri);
                         } else {
                             android.app.FragmentManager fm = getActivity().getFragmentManager();
                             mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
@@ -1153,7 +1121,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         ExifInterface ei = new ExifInterface(absoluteImagePath);
                         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                                 ExifInterface.ORIENTATION_UNDEFINED);
-
                         switch (orientation) {
                             case ExifInterface.ORIENTATION_ROTATE_90:
                                 imageBitmap = rotateImage(imageBitmap, 90);

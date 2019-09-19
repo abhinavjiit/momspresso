@@ -187,8 +187,8 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
         @Override
         public void onResponse(Call<GroupPostCommentResponse> call, Response<GroupPostCommentResponse> response) {
             isReuqestRunning = false;
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -222,18 +222,10 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                 //No more next results for search from pagination
                 isLastPageReached = true;
             } else {
-                // No results
-//                noPostsTextView.setVisibility(View.VISIBLE);
-//                postList = dataList;
-//                groupSummaryPostRecyclerAdapter.setHeaderData(selectedGroup);
-//                groupSummaryPostRecyclerAdapter.setData(postList);
-//                groupSummaryPostRecyclerAdapter.notifyDataSetChanged();
             }
         } else {
-//            noPostsTextView.setVisibility(View.GONE);
             formatCommentData(dataList);
             repliesList.addAll(dataList);
-//            groupsGenericPostRecyclerAdapter.setHeaderData(selectedGroup);
             groupPostCommentRepliesRecyclerAdapter.setData(repliesList);
             skip = skip + limit;
             if (skip >= totalPostCount) {
@@ -337,7 +329,6 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             case R.id.replyRootView: {
                 GpPostCommentOptionsDialogFragment commentOptionsDialogFragment = new GpPostCommentOptionsDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
-                //commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "REPLY");
@@ -351,39 +342,20 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
             }
             break;
             case R.id.upvoteCommentContainer:
-
                 if (repliesList.get(position).getMarkedHelpful() == 0) {
-
-
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, 0);
-
-
                 }
                 if (repliesList.get(position).getMarkedHelpful() == 1) {
-
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, 0);
-
-
                 }
-
-                // markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
                 break;
             case R.id.upvoteReplyContainer:
                 if (repliesList.get(position).getMarkedHelpful() == 0) {
-
-
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
-
-
                 }
                 if (repliesList.get(position).getMarkedHelpful() == 1) {
-
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
-
-
                 }
-
-                //  markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
                 break;
             case R.id.downvoteCommentContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
@@ -393,7 +365,6 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                 break;
         }
     }
-
 
     private void markAsHelpfulOrUnhelpful(String markType, int position) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
@@ -439,9 +410,14 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
                                 sendUpvoteDownvotePatchRequest(patchActionId, patchActionType);
                             }
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Crashlytics.logException(e);
+                            Log.d("MC4kException", Log.getStackTraceString(e));
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Crashlytics.logException(e);
+                            Log.d("MC4kException", Log.getStackTraceString(e));
+                        } catch (Exception e) {
+                            Crashlytics.logException(e);
+                            Log.d("MC4kException", Log.getStackTraceString(e));
                         }
                     }
                 }
@@ -495,8 +471,8 @@ public class ViewGroupPostCommentsRepliesDialogFragment extends DialogFragment i
     private Callback<GroupsActionResponse> patchActionResponseCallback = new Callback<GroupsActionResponse>() {
         @Override
         public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }

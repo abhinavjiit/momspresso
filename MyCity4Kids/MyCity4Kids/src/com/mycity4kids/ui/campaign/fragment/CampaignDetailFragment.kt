@@ -30,10 +30,7 @@ import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -75,9 +72,6 @@ import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
-import com.mycity4kids.ui.activity.ParallelFeedActivity
-import com.mycity4kids.utils.GenericFileProvider
-import java.io.IOException
 
 const val REWARDS_FILL_FORM_REQUEST = 1000
 
@@ -348,7 +342,7 @@ class CampaignDetailFragment : BaseFragment() {
         }
 
         unapplyCampaign.setOnClickListener {
-//            unapplyCampaignOption(unapplyCampaign)
+            //            unapplyCampaignOption(unapplyCampaign)
             val popupwindow_obj = popupDisplay()
 //            popupwindow_obj.showAtLocation(unapplyCampaign,Gravity.NO_GRAVITY,-50,-10)
             popupwindow_obj.showAsDropDown(unapplyCampaign, -140, -140)
