@@ -63,7 +63,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             } else {
                 campaignUrlProofList.removeAt(cellIndex)
                 if (campaignUrlProofList.size < 3) {
-                    textAddUrlProof.visibility = View.VISIBLE
+                    if (status != 22 || status != 16 || status != 17)
+                        textAddUrlProof.visibility = View.VISIBLE
                 }
                 notifyUrlAdapter()
             }
@@ -339,6 +340,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                     } else {
                         headerTextViewContainer.visibility = View.GONE
                         recyclerUrlProof.visibility = View.GONE
+                        textAddUrlProof.visibility = View.GONE
                     }
                 } else {
                     Toast.makeText(context, responseData.reason, Toast.LENGTH_SHORT).show()
@@ -458,7 +460,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                             campaignProofResponse.id = 0
                             this@CampaignAddProofFragment.campaignUrlProofList.add(campaignProofResponse)
                             notifyUrlAdapter()
-                            textAddUrlProof.visibility = View.VISIBLE
+                            if (status != 22 || status != 16 || status != 17)
+                                textAddUrlProof.visibility = View.VISIBLE
                         } else {
                             if (this@CampaignAddProofFragment.campaignUrlProofList.size >= 3) {
                                 textAddUrlProof.visibility = View.GONE
@@ -650,7 +653,8 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                             campaignUrlProofList.clear()
                             campaignUrlProofList.addAll(campaignProofListLocal)
                             if (campaignUrlProofList.size < 3) {
-                                textAddUrlProof.visibility = View.VISIBLE
+                                if (status != 22 || status != 16 || status != 17)
+                                    textAddUrlProof.visibility = View.VISIBLE
                             }
                             notifyUrlAdapter()
                         }

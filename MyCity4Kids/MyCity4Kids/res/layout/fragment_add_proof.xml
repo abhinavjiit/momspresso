@@ -198,20 +198,7 @@
                 android:layout_alignParentRight="true"
                 android:background="#0DEB3955" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/textAddUrlProof"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_below="@+id/recyclerUrlProof"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/shape_rectangle_red"
-                android:gravity="center_vertical|center_horizontal"
-                android:text="+"
-                android:textColor="@color/app_red"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:fontName="oswald_regular.ttf" />
+
 
             <LinearLayout
                 android:id="@+id/linearInstruction"
@@ -275,6 +262,28 @@
                 app:layout_constraintVertical_bias="0.0" />
 
 
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/textAddUrlProof"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/recyclerUrlProof"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="179dp"
+                android:layout_marginLeft="179dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="181dp"
+                android:layout_marginRight="181dp"
+                android:background="@drawable/shape_rectangle_red"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="+"
+                android:textColor="@color/app_red"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
