@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.preference.SharedPrefUtils;
 
 /**
@@ -40,7 +41,7 @@ public class UploadVideoInfoFragment extends BaseFragment implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.getStartedTextView:
-                SharedPrefUtils.setFirstVideoUploadFlag(getActivity(), true);
+                SharedPrefUtils.setFirstVideoUploadFlag(BaseApplication.getAppContext(), true);
                 ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
                 Bundle _args = new Bundle();

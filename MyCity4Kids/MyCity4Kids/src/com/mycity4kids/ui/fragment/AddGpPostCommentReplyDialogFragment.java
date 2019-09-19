@@ -19,12 +19,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.core.content.ContextCompat;
+
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -322,25 +326,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             anonymousCheckbox.setChecked(false);
         }
 
-        TOOLTIP_SHOW_TIMES = SharedPrefUtils.getTooltipCount(getContext());
 
-        if (TOOLTIP_SHOW_TIMES < 3) {
-            new SimpleTooltip.Builder(getContext())
-                    .anchorView(audioRecordView)
-                    .backgroundColor(getResources().getColor(R.color.app_red))
-                    .text("TRY AUDIO POST")
-                    .textColor(getResources().getColor(R.color.white))
-                    .arrowColor(getResources().getColor(R.color.app_red))
-                    .gravity(Gravity.TOP)
-                    .arrowWidth(40)
-                    .animated(true)
-                    .transparentOverlay(true)
-                    .build()
-                    .show();
-            TOOLTIP_SHOW_TIMES++;
-            SharedPrefUtils.toolTipChecking(getContext(), TOOLTIP_SHOW_TIMES);
-
-        }
 
         if (commentOrReplyData == null) {
             commentReplyEditText.setText(SharedPrefUtils.getSavedReplyData(BaseApplication.getAppContext(), groupId,
@@ -433,7 +419,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dateContainermedia.getLayoutParams();
                             params.addRule(RelativeLayout.BELOW, R.id.timerLayout);
                             dateContainermedia.setLayoutParams(params);
-//                            Picasso.with(getActivity()).load(mediaList.get(0)).error(R.drawable.default_article).into(media);
                         } else {
                             commentDateTextView.setVisibility(View.VISIBLE);
                             media.setVisibility(View.GONE);
@@ -495,7 +480,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
     @Override
     public void onRecordingStarted() {
-        Utils.groupsEvent(getActivity(), "Add a comment", "Audio", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+        Utils.groupsEvent(getActivity(), "Add a comment", "Audio", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
 
         if (mMediaPlayerComment != null && isCommentPlay) {
             mMediaPlayerComment.release();
@@ -505,8 +490,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             audioSeekBar.setProgress(0);
             audioTimeElapsedComment.setVisibility(View.GONE);
         }
-        TOOLTIP_SHOW_TIMES = 3;
-        SharedPrefUtils.toolTipChecking(getContext(), TOOLTIP_SHOW_TIMES);
         startRecording();
     }
 
@@ -616,7 +599,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.postCommentReplyTextView:
-                Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
+                Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
 
                 Map<String, String> mediaMap = new HashMap<>();
                 int i = 1;
@@ -666,7 +649,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 }
                 break;
             case R.id.closeImageView:
-                Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
+                Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
 
                 if ("EDIT_COMMENT".equals(actionType)) {
                 } else if ("EDIT_REPLY".equals(actionType)) {
@@ -684,7 +667,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 dismiss();
                 break;
             case R.id.cancelTextView:
-                Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
+                Utils.groupsEvent(getActivity(), "Add a comment", "save", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "post page", "", "");
 
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
@@ -747,13 +730,13 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 mImgRecordCross.setVisibility(View.GONE);
                 break;
             case R.id.imageCameraTextView:
-                Utils.groupsEvent(getActivity(), "choose image pop up ", "capture image from camera", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "camera", "", String.valueOf(postId));
+                Utils.groupsEvent(getActivity(), "choose image pop up ", "capture image from camera", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "camera", "", String.valueOf(postId));
 
                 loadImageFromCamera();
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
             case R.id.imageGalleryTextView:
-                Utils.groupsEvent(getActivity(), "choose image pop up ", "choose from gallery", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "phone gallery", "", String.valueOf(postId));
+                Utils.groupsEvent(getActivity(), "choose image pop up ", "choose from gallery", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "phone gallery", "", String.valueOf(postId));
 
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
@@ -763,13 +746,12 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             case R.id.anonymousImageView:
             case R.id.anonymousTextView:
             case R.id.anonymousCheckbox:
-                Utils.groupsEvent(getActivity(), "Add a comment", "Anonymous", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+                Utils.groupsEvent(getActivity(), "Add a comment", "Anonymous", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
                 if (anonymousCheckbox.isChecked()) {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
                 } else {
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
-                SharedPrefUtils.toolTipChecking(getContext(), 3);
 
                 break;
             case R.id.playAudioImageView:
@@ -1412,7 +1394,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     android.app.FragmentManager fm = getActivity().getFragmentManager();
                     mTaskFragment = null;
                     mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
-                    if(mTaskFragment != null)
+                    if (mTaskFragment != null)
                         fm.beginTransaction().remove(mTaskFragment).commit();
                 }
             });

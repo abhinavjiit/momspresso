@@ -102,7 +102,7 @@ class TrackerFragment : BaseFragment() {
         recyclerView.layoutManager = linearLayoutManager
         adapter = TrackerListAdapter(activity as Context, trackerDataModel)
         registerRewards = containerView.findViewById(R.id.register_rewards)
-        isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
+        isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
         recyclerView.adapter = adapter
         getTrackerData(campaignId)
         return containerView

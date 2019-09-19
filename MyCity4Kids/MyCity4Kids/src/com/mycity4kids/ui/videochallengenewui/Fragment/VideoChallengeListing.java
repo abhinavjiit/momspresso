@@ -207,7 +207,7 @@ public class VideoChallengeListing extends BaseFragment implements View.OnClickL
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
                     startActivity(intent);
-                    Utils.momVlogEvent(getActivity(), "Challenge detail", "Video", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", parentingListData.getId(), "");
+                    Utils.momVlogEvent(getActivity(), "Challenge detail", "Video", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", parentingListData.getId(), "");
 
                 }
             }

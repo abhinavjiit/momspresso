@@ -9,6 +9,7 @@ import com.kelltontech.network.HttpClientConnection;
 import com.kelltontech.network.Response;
 import com.kelltontech.network.ServiceRequest;
 import com.kelltontech.ui.IScreen;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.newmodels.AppointmentResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -75,21 +76,21 @@ public class GetAppointmentController extends BaseController {
     private String getAppendUrl(int requestType) {
         StringBuilder builder = new StringBuilder();
         Calendar c = Calendar.getInstance();
-        long timestamp = SharedPrefUtils.getAppointmentTimeSatmp(context);
+        long timestamp = SharedPrefUtils.getAppointmentTimeSatmp(BaseApplication.getAppContext());
         if (timestamp > 0) {
 
-            builder.append("sessionId:").append(SharedPrefUtils.getUserDetailModel(context).getSessionId()).append("/user_id:").append(SharedPrefUtils.getUserDetailModel(context).getId()).append("/family_id:")
-                    .append(SharedPrefUtils.getUserDetailModel(context).getFamily_id()).append("/timestamp:")
+            builder.append("sessionId:").append(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getSessionId()).append("/user_id:").append(SharedPrefUtils.getUserDetailModel(context).getId()).append("/family_id:")
+                    .append(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFamily_id()).append("/timestamp:")
                     .append(timestamp);
 
-            SharedPrefUtils.setAppointmentTimeSatmp(context, c.getTimeInMillis());
+            SharedPrefUtils.setAppointmentTimeSatmp(BaseApplication.getAppContext(), c.getTimeInMillis());
         } else {
-            builder.append("user_id:").append(SharedPrefUtils.getUserDetailModel(context).getId()).append("/family_id:")
-                    .append(SharedPrefUtils.getUserDetailModel(context).getFamily_id()).append("/sessionId:")
-                    .append(SharedPrefUtils.getUserDetailModel(context).getSessionId());
+            builder.append("user_id:").append(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId()).append("/family_id:")
+                    .append(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFamily_id()).append("/sessionId:")
+                    .append(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getSessionId());
 
 
-            SharedPrefUtils.setAppointmentTimeSatmp(context, c.getTimeInMillis());
+            SharedPrefUtils.setAppointmentTimeSatmp(BaseApplication.getAppContext(), c.getTimeInMillis());
         }
 
 

@@ -450,7 +450,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
             resultIntent.putExtra("fromNotification", true);
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
+            resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
             resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, id + "");
             resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
             resultIntent.putExtra(Constants.DISTANCE, "0");
@@ -492,7 +492,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
             }
         } else if (type.equalsIgnoreCase("profile")) {
 //            String u_id = notificationExtras.getString("userId");
-            if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(userId)) {
+            if (!SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(userId)) {
                 Intent intent1 = new Intent(this, PublicProfileActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, userId);
@@ -1049,8 +1049,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen,
     public void followAPICall(String id) {
 
         ArticleBlogFollowRequest _followRequest = new ArticleBlogFollowRequest();
-        _followRequest.setSessionId("" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getSessionId());
-        _followRequest.setUserId("" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId());
+        _followRequest.setSessionId("" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getSessionId());
+        _followRequest.setUserId("" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId());
         _followRequest.setAuthorId("" + id);
         ArticleBlogFollowController _followController = new ArticleBlogFollowController(this, this);
         showProgressDialog(getString(R.string.please_wait));

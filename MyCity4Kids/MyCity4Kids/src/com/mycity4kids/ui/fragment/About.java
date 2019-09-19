@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.widget.AppCompatSpinner;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -163,7 +165,7 @@ public class About extends Fragment implements AdapterView.OnItemSelectedListene
                 phoneEditText.setText("" + userDetail.getPhone().getMobile());
             }
         }
-        MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(getActivity());
+        MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(BaseApplication.getAppContext());
         for (int i = 0; i < cityList.size(); i++) {
             int cId = Integer.parseInt(cityList.get(i).getId().replace("city-", ""));
             if (currentCity.getId() == cId) {

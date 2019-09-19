@@ -14,6 +14,7 @@ import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleDetailWebserviceResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
+import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.CommentListResponse;
@@ -24,6 +25,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -34,6 +36,10 @@ import retrofit2.http.Url;
  * Created by hemant on 3/5/16.
  */
 public interface ArticleDetailsAPI {
+
+    @PATCH("/v1/articles/{articleId}")
+    Call<BaseResponse> publishedArticleCommentDisableOrEnable(@Path("articleId") String articleId,
+                                                              @Body ArticleDetailRequest body);
 
     @GET("/v1/articles/article/{articleId}")
     Call<ArticleDetailResult> getArticleDetailsFromRedis(@Path("articleId") String articleId,

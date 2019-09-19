@@ -198,8 +198,8 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
 
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
 
-        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(getActivity()))) {
-            Picasso.with(getActivity()).load(SharedPrefUtils.getProfileImgUrl(getActivity())).placeholder(R.drawable.family_xxhdpi)
+        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
+            Picasso.with(getActivity()).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
         }
 
@@ -331,9 +331,9 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 }
                 if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
                     //token already expired or yet to connect using facebook
-                    SharedPrefUtils.setFacebookConnectedFlag(getActivity(), "1");
+                    SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(), "1");
                 } else {
-                    SharedPrefUtils.setFacebookConnectedFlag(getActivity(),
+                    SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(),
                             responseData.getData().get(0).getResult().getSocialTokens().getFb().getIsExpired());
                 }
             } else {
@@ -376,22 +376,22 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
 
             gPlusSignOut();
 
-            String pushToken = SharedPrefUtils.getDeviceToken(getActivity());
-            boolean homeCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "home");
-            boolean topicsCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "topics");
-            boolean topicsArticleCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "topics_article");
-            boolean articleCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "article_details");
-            boolean groupsCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "groups");
-            String appLocale = SharedPrefUtils.getAppLocale(getActivity());
+            String pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext());
+            boolean homeCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "home");
+            boolean topicsCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics");
+            boolean topicsArticleCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article");
+            boolean articleCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details");
+            boolean groupsCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "groups");
+            String appLocale = SharedPrefUtils.getAppLocale(BaseApplication.getAppContext());
 
-            SharedPrefUtils.clearPrefrence(getActivity());
-            SharedPrefUtils.setDeviceToken(getActivity(), pushToken);
-            SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "home", homeCoach);
-            SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics", topicsCoach);
-            SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", topicsArticleCoach);
-            SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "article_details", articleCoach);
-            SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "groups", groupsCoach);
-            SharedPrefUtils.setAppLocale(getActivity(), appLocale);
+            SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext());
+            SharedPrefUtils.setDeviceToken(BaseApplication.getAppContext(), pushToken);
+            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", homeCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics", topicsCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", topicsArticleCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details", articleCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "groups", groupsCoach);
+            SharedPrefUtils.setAppLocale(BaseApplication.getAppContext(), appLocale);
             /**
              * delete table from local also;
              */
@@ -439,7 +439,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             }
 
             // set logout flag
-            SharedPrefUtils.setLogoutFlag(getActivity(), true);
+            SharedPrefUtils.setLogoutFlag(BaseApplication.getAppContext(), true);
             Intent intent = new Intent(getActivity(), ActivityLogin.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -762,11 +762,11 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
                                  setProfileImage(responseModel.getData().getResult().getUrl());
-                                 Picasso.with(getActivity()).invalidate(SharedPrefUtils.getProfileImgUrl(getActivity()));
+                                 Picasso.with(getActivity()).invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
                                  Picasso.with(getActivity()).load(responseModel.getData().getResult().getUrl())
                                          .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
-                                 SharedPrefUtils.setProfileImgUrl(getActivity(), responseModel.getData().getResult().getUrl());
+                                 SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getUrl());
 
 //                                 showToast("Image successfully uploaded!");
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");

@@ -130,7 +130,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         anonymousTextView.setOnClickListener(this);
         anonymousCheckbox.setOnClickListener(this);
 
-        pollQuestionEditText.setText(SharedPrefUtils.getSavedPostData(this, selectedGroup.getId()));
+        pollQuestionEditText.setText(SharedPrefUtils.getSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId()));
 
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.groups_column_spacing);
         recyclerGridView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
@@ -158,7 +158,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         imagePollAdapter.setNewListData(urlList);
         recyclerGridView.setAdapter(imagePollAdapter);
 
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             anonymousCheckbox.setChecked(true);
         } else {
             anonymousCheckbox.setChecked(false);
@@ -411,7 +411,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
             addGroupPostRequest.setPollType("0");
             addGroupPostRequest.setGroupId(selectedGroup.getId());
             addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-            if (SharedPrefUtils.isUserAnonymous(this)) {
+            if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
                 addGroupPostRequest.setAnnon(1);
             }
             Map<String, String> pollOptionsMap = new HashMap<>();
@@ -428,7 +428,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
             addGroupPostRequest.setPollType("1");
             addGroupPostRequest.setGroupId(selectedGroup.getId());
             addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-            if (SharedPrefUtils.isUserAnonymous(this)) {
+            if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
                 addGroupPostRequest.setAnnon(1);
             }
             Map<String, String> pollOptionsMap = new HashMap<>();
@@ -549,7 +549,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
     public void onBackPressed() {
         super.onBackPressed();
         if (null != pollQuestionEditText.getText() && !StringUtils.isNullOrEmpty(pollQuestionEditText.getText().toString())) {
-            SharedPrefUtils.setSavedPostData(AddPollGroupPostActivity.this, selectedGroup.getId(), pollQuestionEditText.getText().toString());
+            SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(), pollQuestionEditText.getText().toString());
         }
     }
 }

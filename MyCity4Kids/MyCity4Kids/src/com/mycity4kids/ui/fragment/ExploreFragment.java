@@ -202,7 +202,7 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                 FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
                 Bundle bundle = new Bundle();
                 bundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getActivity()));
+                bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
                 bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
                 fragment.setArguments(bundle);
                 ((ExploreEventsResourcesActivity) getActivity()).addFragment(fragment, bundle, true);
@@ -292,7 +292,7 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
 
     public void saveCityData() {
 
-        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(getActivity());
+        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
         final ConfigurationController _controller = new ConfigurationController(getActivity(), this);
         if (null == mDatalist || mDatalist.isEmpty()) {
             ToastUtils.showToast(getActivity(), getString(R.string.change_city_fetch_available_cities));
@@ -321,8 +321,8 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                 model.setName(currentCityName);
                 model.setNewCityId(newSelectedCityId);
 
-                SharedPrefUtils.setCurrentCityModel(getActivity(), model);
-                SharedPrefUtils.setChangeCityFlag(getActivity(), true);
+                SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
+                SharedPrefUtils.setChangeCityFlag(BaseApplication.getAppContext(), true);
 
                 if (cityId > 0) {
                     versionApiModel.setCityId(cityId);

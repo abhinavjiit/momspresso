@@ -124,7 +124,7 @@ public class LeafNodeTopicArticlesActivity extends BaseActivity {
             }
         });
         viewPager.setCurrentItem(tabPosition);
-        if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article")) {
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")) {
 //            showGuideView();
         }
         imageSortBy = (ImageView) findViewById(R.id.imageSortBy);

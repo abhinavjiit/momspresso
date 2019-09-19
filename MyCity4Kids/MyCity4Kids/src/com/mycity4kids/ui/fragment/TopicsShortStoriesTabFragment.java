@@ -367,7 +367,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 frag.hideTabLayer();
                 if (isAdded()) {
 //                    ((ShortStoriesListingContainerActivity) getActivity()).hideToolbarAndNavigationLayer();
-                    SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", true);
+                    SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", true);
                 }
                 break;
             case R.id.recentSortFAB:

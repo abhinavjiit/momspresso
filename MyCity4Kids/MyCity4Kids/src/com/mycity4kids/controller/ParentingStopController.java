@@ -11,6 +11,7 @@ import com.kelltontech.network.ServiceRequest;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.DataUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
@@ -202,7 +203,7 @@ public class ParentingStopController extends BaseController {
     }
 
     private String getAppendUrl(int requestType, Object requestData) {
-        String pincode = SharedPrefUtils.getpinCode(getActivity());
+        String pincode = SharedPrefUtils.getpinCode(BaseApplication.getAppContext());
         ParentingRequest parentingModel = (ParentingRequest) requestData;
         StringBuilder builder = new StringBuilder();
         String device_id = DataUtils.getDeviceId(getActivity());

@@ -229,8 +229,8 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         cancelTextView.setOnClickListener(this);
         closeEditorImageView.setOnClickListener(this);
 
-        if (SharedPrefUtils.getSavedPostData(this, selectedGroup.getId()) != null) {
-            postContentEditText.setText(SharedPrefUtils.getSavedPostData(this, selectedGroup.getId()));
+        if (SharedPrefUtils.getSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId()) != null) {
+            postContentEditText.setText(SharedPrefUtils.getSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId()));
         }
 
         postContentEditText.addTextChangedListener(new TextWatcher() {
@@ -262,7 +262,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             }
         });
 
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             anonymousCheckbox.setChecked(true);
         } else {
             anonymousCheckbox.setChecked(false);
@@ -352,7 +352,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
 
-                SharedPrefUtils.toolTipChecking(this, 3);
 
 
                 break;
@@ -383,7 +382,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         //   String str=postContentEditText.getText().toString();
         addGroupPostRequest.setType("0");
         addGroupPostRequest.setGroupId(selectedGroup.getId());
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             addGroupPostRequest.setAnnon(1);
         }
         addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -420,7 +419,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             }
             try {
                 if (response.isSuccessful()) {
-                    SharedPrefUtils.clearSavedPostData(AddTextOrMediaGroupPostActivity.this, selectedGroup.getId());
+                    SharedPrefUtils.clearSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId());
                     AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
                     postContentEditText.setText("");
@@ -829,7 +828,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     public void onBackPressed() {
         super.onBackPressed();
         if (null != postContentEditText.getText() && !StringUtils.isNullOrEmpty(postContentEditText.getText().toString())) {
-            SharedPrefUtils.setSavedPostData(AddTextOrMediaGroupPostActivity.this, selectedGroup.getId(), postContentEditText.getText().toString());
+            SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(), postContentEditText.getText().toString());
         }
     }
 
@@ -888,8 +887,6 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             audioSeekBar.setProgress(0);
             audioTimeElapsedComment.setVisibility(View.GONE);
         }
-        TOOLTIP_SHOW_TIMES = 3;
-        SharedPrefUtils.toolTipChecking(this, TOOLTIP_SHOW_TIMES);
 
         startRecording();
     }

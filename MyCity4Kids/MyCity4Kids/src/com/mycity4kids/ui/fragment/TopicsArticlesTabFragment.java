@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,6 +61,7 @@ import java.util.ArrayList;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -167,6 +167,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             @Override
             public void onRefresh() {
                 mDatalist.clear();
+                recyclerAdapter.notifyDataSetChanged();
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(sortType);
                 swipeRefreshLayout.setRefreshing(false);
@@ -390,17 +391,19 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     }
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
-        if (!ConnectivityUtils.isNetworkEnabled(BaseApplication.getAppContext())) {
-            ToastUtils.showToast(BaseApplication.getAppContext(), getString(R.string.error_network));
-            return;
+        if (isAdded()) {
+            if (!ConnectivityUtils.isNetworkEnabled(BaseApplication.getAppContext())) {
+                ToastUtils.showToast(BaseApplication.getAppContext(), getString(R.string.error_network));
+                return;
+            }
+
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+
+            int from = (nextPageNumber - 1) * limit + 1;
+            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            filterCall.enqueue(articleListingResponseCallback);
         }
-
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-
-        int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
-        filterCall.enqueue(articleListingResponseCallback);
     }
 
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
@@ -503,7 +506,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             case R.id.guideOverlay:
                 guideOverlay.setVisibility(View.GONE);
                 ((TopicsListingActivity) getActivity()).hideGuideTopLayer();
-                SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", true);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", true);
                 break;
             case R.id.recentSortFAB:
                 shimmerFrameLayout.startShimmerAnimation();

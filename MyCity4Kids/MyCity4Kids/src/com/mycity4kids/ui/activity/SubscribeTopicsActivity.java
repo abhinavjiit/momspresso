@@ -455,8 +455,8 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    SharedPrefUtils.setTopicSelectionChanged(SubscribeTopicsActivity.this, true);
-                    SharedPrefUtils.setFollowedTopicsCount(SubscribeTopicsActivity.this, responseData.getData().size());
+                    SharedPrefUtils.setTopicSelectionChanged(BaseApplication.getAppContext(), true);
+                    SharedPrefUtils.setFollowedTopicsCount(BaseApplication.getAppContext(), responseData.getData().size());
                     showToast(getString(R.string.subscribe_topics_toast_topic_updated));
                     Intent intent = getIntent();
                     intent.putStringArrayListExtra("updatedTopicList", updateTopicList);

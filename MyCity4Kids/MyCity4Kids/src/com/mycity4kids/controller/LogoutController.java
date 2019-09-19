@@ -89,8 +89,8 @@ public class LogoutController extends BaseController {
     public void deleteUserDetails(Context context) {
 
         try {
-            SharedPrefUtils.setProfileImgUrl(context, "");
-            SharedPrefUtils.setAppointmentTimeSatmp(context, 0);
+            SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), "");
+            SharedPrefUtils.setAppointmentTimeSatmp(BaseApplication.getAppContext(), 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,7 +103,7 @@ public class LogoutController extends BaseController {
         UrlEncodedFormEntity encodedEntity = null;
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            nameValuePairs.add(new BasicNameValuePair("userId", "" + SharedPrefUtils.getUserDetailModel(mActivity).getId()));
+            nameValuePairs.add(new BasicNameValuePair("userId", "" + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId()));
             encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
             System.out.println("logout  data " + nameValuePairs.toString());
         } catch (Exception e) {

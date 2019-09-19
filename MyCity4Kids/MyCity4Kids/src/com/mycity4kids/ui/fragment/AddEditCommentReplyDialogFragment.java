@@ -193,8 +193,8 @@ public class AddEditCommentReplyDialogFragment extends DialogFragment implements
                 cd.setReplies(new ArrayList<CommentsData>());
 
                 ProfilePic profilePic = new ProfilePic();
-                profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(getActivity()));
-                profilePic.setClientAppMin(SharedPrefUtils.getProfileImgUrl(getActivity()));
+                profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
+                profilePic.setClientAppMin(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
                 cd.setProfile_image(profilePic);
                 cd.setCreate("" + System.currentTimeMillis() / 1000);
                 try {

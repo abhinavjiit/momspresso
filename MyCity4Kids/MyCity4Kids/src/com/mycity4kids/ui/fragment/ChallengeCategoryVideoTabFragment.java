@@ -67,7 +67,6 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(recyclerAdapter);
-        // recyclerAdapter.setListData(selectedTopic);
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
 
 
@@ -143,9 +142,8 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
         switch (view.getId()) {
             case R.id.mainView:
             case R.id.getStartedTextView:
-
                 Intent intent = new Intent(getActivity(), NewVideoChallengeActivity.class);
-                Utils.momVlogEvent(getActivity(), "Video Listing", "Challenge container", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", challengeId.toString());
+                Utils.momVlogEvent(getActivity(), "Video Listing", "Challenge container", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", challengeId.toString());
                 intent.putExtra("Display_Name", Display_Name);
                 intent.putExtra("screenName", "MomVlogs");
                 intent.putExtra("challenge", challengeId);

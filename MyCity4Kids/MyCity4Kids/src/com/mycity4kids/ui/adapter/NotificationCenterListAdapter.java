@@ -127,7 +127,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
             holder.rootView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.notification_center_read_bg));
         }
 
-        String nType = SharedPrefUtils.getNotificationType(mContext, notificationList.get(position).getNotifType());
+        String nType = SharedPrefUtils.getNotificationType(BaseApplication.getAppContext(), notificationList.get(position).getNotifType());
         if ((StringUtils.isNullOrEmpty(nType) && "0".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_WEBVIEW.equals(nType)) {
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -221,7 +221,7 @@ public class NotificationCenterListAdapter extends BaseAdapter implements GroupM
                     FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
                     Bundle bundle = new Bundle();
                     bundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                    bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(mContext));
+                    bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity( BaseApplication.getAppContext()));
                     bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
                     fragment.setArguments(bundle);
                     ((DashboardActivity) mContext).addFragment(fragment, bundle, true);

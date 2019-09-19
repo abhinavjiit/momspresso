@@ -365,9 +365,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
         model.setSessionId(userDetailResult.getSessionId());
         model.setLoginMode(loginMode);
-        SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
-        SharedPrefUtils.setProfileImgUrl(ActivityLogin.this, userDetailResult.getProfilePicUrl().getClientApp());
-        SharedPrefUtils.setLastLoginTimestamp(ActivityLogin.this, System.currentTimeMillis());
+        SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
+        SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), userDetailResult.getProfilePicUrl().getClientApp());
+        SharedPrefUtils.setLastLoginTimestamp(BaseApplication.getAppContext(), System.currentTimeMillis());
 
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         try {
@@ -381,18 +381,18 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         if (null == userDetailResult.getSocialTokens()) {
             //token already expired or not yet connected with facebook
-            SharedPrefUtils.setFacebookConnectedFlag(ActivityLogin.this, "1");
+            SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(), "1");
         } else {
-            SharedPrefUtils.setFacebookConnectedFlag(ActivityLogin.this,
+            SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(),
                     userDetailResult.getSocialTokens().getFb().getIsExpired());
         }
 
         String version = AppUtils.getAppVersion(this);
         if (version.equals(AppConstants.PHOENIX_RELEASE_VERSION)) {
-            SharedPrefUtils.setPhoenixFirstLaunch(ActivityLogin.this, false);
+            SharedPrefUtils.setPhoenixFirstLaunch(BaseApplication.getAppContext(), false);
         }
         if (version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION)) {
-            SharedPrefUtils.setFBConnectFirstLaunch(ActivityLogin.this, false);
+            SharedPrefUtils.setFBConnectFirstLaunch(BaseApplication.getAppContext(), false);
         }
 
         if ("fb".equals(loginMode)) {
@@ -533,9 +533,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     }
                     model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
                     model.setLoginMode(loginMode);
-                    SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
-                    SharedPrefUtils.setProfileImgUrl(ActivityLogin.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
-                    SharedPrefUtils.setLastLoginTimestamp(ActivityLogin.this, System.currentTimeMillis());
+                    SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
+                    SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                    SharedPrefUtils.setLastLoginTimestamp(BaseApplication.getAppContext(), System.currentTimeMillis());
 
                     MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
                     try {
@@ -549,19 +549,19 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
                     if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
                         //token already expired or not yet connected with facebook
-                        SharedPrefUtils.setFacebookConnectedFlag(ActivityLogin.this, "1");
+                        SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(), "1");
                     } else {
-                        SharedPrefUtils.setFacebookConnectedFlag(ActivityLogin.this,
+                        SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(),
                                 responseData.getData().get(0).getResult().getSocialTokens().getFb().getIsExpired());
                     }
 
                     PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                     String version = pInfo.versionName;
                     if (version.equals(AppConstants.PHOENIX_RELEASE_VERSION)) {
-                        SharedPrefUtils.setPhoenixFirstLaunch(ActivityLogin.this, false);
+                        SharedPrefUtils.setPhoenixFirstLaunch(BaseApplication.getAppContext(), false);
                     }
                     if (version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION)) {
-                        SharedPrefUtils.setFBConnectFirstLaunch(ActivityLogin.this, false);
+                        SharedPrefUtils.setFBConnectFirstLaunch(BaseApplication.getAppContext(), false);
                     }
 
                     if ("fb".equals(loginMode)) {

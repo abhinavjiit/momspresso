@@ -207,7 +207,7 @@ public class MomspressoVideosTabFragment extends BaseFragment implements View.On
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.MOMSPRESSO_CATEGORYID, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.MOMSPRESSO_CATEGORYID, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         filterCall.enqueue(articleListingResponseCallback);
     }
 

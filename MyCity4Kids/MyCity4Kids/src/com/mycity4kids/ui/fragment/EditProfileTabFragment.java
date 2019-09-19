@@ -452,7 +452,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
     };
 
     private void updateEventsResourcesConfigForCity() {
-        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(getActivity());
+        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
         final ConfigurationController _controller = new ConfigurationController(getActivity(), this);
 
         MetroCity model = new MetroCity();
@@ -461,8 +461,8 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         model.setName(currentCityName);
         model.setNewCityId(newSelectedCityId);
 
-        SharedPrefUtils.setCurrentCityModel(getActivity(), model);
-        SharedPrefUtils.setChangeCityFlag(getActivity(), true);
+        SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
+        SharedPrefUtils.setChangeCityFlag(BaseApplication.getAppContext(), true);
 
         if (selectedCityId > 0) {
             versionApiModel.setCityId(selectedCityId);
@@ -836,10 +836,10 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                 if (isAdded()) {
                     Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_update_success), Toast.LENGTH_SHORT).show();
                 }
-                UserInfo model = SharedPrefUtils.getUserDetailModel(getActivity());
+                UserInfo model = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext());
                 model.setFirst_name(firstNameEditText.getText().toString());
                 model.setLast_name(lastNameEditText.getText().toString());
-                SharedPrefUtils.setUserDetailModel(getActivity(), model);
+                SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
             } else {
 //                showToast(responseData.getReason());
             }

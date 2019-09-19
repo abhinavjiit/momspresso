@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.version.RateVersion;
@@ -36,7 +37,7 @@ public class RateAppDialogFragment extends android.app.DialogFragment implements
 
     @Override
     public void onClick(View view) {
-        RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(getActivity());
+        RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(BaseApplication.getAppContext());
         int currentRateVersion = reteVersionModel.getAppRateVersion();
         currentRateVersion++;
         boolean isCompleteRateProcess = reteVersionModel.isAppRateComplete();
@@ -47,17 +48,17 @@ public class RateAppDialogFragment extends android.app.DialogFragment implements
             case R.id.not_now:
                 rateModel.setAppRateComplete(false);
                 rateModel.setAppRateVersion(-7);
-                SharedPrefUtils.setAppRateVersion(getActivity(), rateModel);
+                SharedPrefUtils.setAppRateVersion(BaseApplication.getAppContext(), rateModel);
                 getDialog().dismiss();
-                Utils.pushEvent(getActivity(), GTMEventType.NOT_RATE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", "");
+                Utils.pushEvent(getActivity(), GTMEventType.NOT_RATE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "", "");
 
                 break;
             case R.id.rate_now:
                 rateModel.setAppRateComplete(true);
                 rateModel.setAppRateVersion(0);
                 getDialog().dismiss();
-                SharedPrefUtils.setAppRateVersion(getActivity(), rateModel);
-                Utils.pushEvent(getActivity(), GTMEventType.RATE_APP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", "");
+                SharedPrefUtils.setAppRateVersion(BaseApplication.getAppContext(), rateModel);
+                Utils.pushEvent(getActivity(), GTMEventType.RATE_APP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "", "");
 
                 /**
                  * a try/catch block here because an Exception will be thrown if the Play Store is not installed on the target device.

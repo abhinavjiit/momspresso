@@ -89,11 +89,11 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             public void onClick(View view) {
                 momVlogCoachMark.setVisibility(View.GONE);
                 fabAdd.setVisibility(View.VISIBLE);
-                SharedPrefUtils.setCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog", true);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Mom_vlog", true);
             }
         });
-        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(CategoryVideosListingActivity.this);
-        if (!SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
+        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "Mom_vlog")) {
             momVlogCoachMark.setVisibility(View.VISIBLE);
 
 
@@ -127,7 +127,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 cityIntent.putExtra("comingFrom", "createDashboardIcon");
 
                 startActivity(cityIntent);
-                Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+                Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
 
 
             }
@@ -228,7 +228,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "Vlogs_Tab", "", "android", SharedPrefUtils.getAppLocale(CategoryVideosListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_vlogs_tab", subTopicsList.get(tab.getPosition()).getId(), "");
+                Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "Vlogs_Tab", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_vlogs_tab", subTopicsList.get(tab.getPosition()).getId(), "");
 
                 Fragment fragment = pagerAdapter.getItem(tab.getPosition());
                 if (fragment != null) {

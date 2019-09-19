@@ -543,10 +543,6 @@ public class SharedPrefUtils {
         _editor.commit();
     }
 
-    public static boolean isChangeCity(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getBoolean(CHANGE_CITY_FLAG, false);
-    }
 
     public static void setConfigPopularCategoryVersion(Context pContext, int id) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
@@ -802,30 +798,6 @@ public class SharedPrefUtils {
         _editor.commit();
     }
 
-
-    public static void toolTipChecking(Context pContext, int count) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-        _editor.putInt("count", count);
-        _editor.commit();
-    }
-
-    public static int getTooltipCount(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return (_sharedPref.getInt("count", 0));
-    }
-
-    public static void toastAnonymous(Context pContext, int count) {
-        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref1.edit();
-        _editor.putInt("count", count);
-        _editor.apply();
-    }
-
-    public static int getToastAnonymous(Context pContext) {
-        SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return (_sharedPref1.getInt("count", 0));
-    }
 
     public static void myMoneyCoachMark(Context pContext, int count) {
         SharedPreferences _sharedPref1 = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);

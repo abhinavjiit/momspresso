@@ -136,7 +136,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         momsTVContainer.setOnClickListener(this);
         rewardsContainer.setOnClickListener(this);
 
-        if (SharedPrefUtils.getMyMoney(getActivity()) == 0) {
+        if (SharedPrefUtils.getMyMoney(BaseApplication.getAppContext()) == 0) {
             coachmarkMyMoney.setVisibility(View.GONE);
             coachmarkMymoneyLinearLayout.setVisibility(View.GONE);
             quickLinkContainer.setVisibility(View.VISIBLE);
@@ -276,14 +276,14 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 coachmarkMyMoney.setVisibility(View.GONE);
                 coachmarkMymoneyLinearLayout.setVisibility(View.GONE);
                 quickLinkContainer.setVisibility(View.VISIBLE);
-                SharedPrefUtils.myMoneyCoachMark(getActivity(), 1);
+                SharedPrefUtils.myMoneyCoachMark(BaseApplication.getAppContext(), 1);
 
 
             case R.id.guideOverlay:
                 guideOverLay.setVisibility(View.GONE);
                 if (isAdded()) {
                     ((DashboardActivity) getActivity()).hideToolbarAndNavigationLayer();
-                    SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics", true);
+                    SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics", true);
                 }
                 break;
             case R.id.todaysBestTextView: {

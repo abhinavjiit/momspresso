@@ -7,6 +7,16 @@ public class ArticleDetailRequest {
     private String articleId;
     private String contentType;
     private String authorId;
+    private String disableComment;
+
+
+    public String getDisableComment() {
+        return disableComment;
+    }
+
+    public void setDisableComment(String disableComment) {
+        this.disableComment = disableComment;
+    }
 
     public String getArticleId() {
         return articleId;

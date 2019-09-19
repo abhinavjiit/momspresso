@@ -329,7 +329,7 @@ public class GroupCategoriesSelectionActivity extends BaseActivity implements Vi
             try {
                 FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    SharedPrefUtils.setFollowedTopicsCount(GroupCategoriesSelectionActivity.this, responseData.getData().size());
+                    SharedPrefUtils.setFollowedTopicsCount(BaseApplication.getAppContext(), responseData.getData().size());
                     showToast(getString(R.string.subscribe_topics_toast_topic_updated));
                     Intent intent = getIntent();
                     intent.putStringArrayListExtra("updatedTopicList", updateTopicList);

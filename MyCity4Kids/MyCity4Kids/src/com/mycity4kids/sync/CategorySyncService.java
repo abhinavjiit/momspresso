@@ -82,16 +82,16 @@ public class CategorySyncService extends IntentService {
                                  } else {
                                      if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
                                          for (Map.Entry<String, String> entry : responseModel.getData().getResult().getNotificationSettings().entrySet()) {
-                                             SharedPrefUtils.setNotificationConfig(CategorySyncService.this, entry.getKey(), entry.getValue());
+                                             SharedPrefUtils.setNotificationConfig(BaseApplication.getAppContext(), entry.getKey(), entry.getValue());
                                          }
 
                                          for (int i = 0; i < responseModel.getData().getResult().getNotificationType().size(); i++) {
-                                             SharedPrefUtils.setNotificationType(CategorySyncService.this, "" + i, responseModel.getData().getResult().getNotificationType().get(i));
+                                             SharedPrefUtils.setNotificationType(BaseApplication.getAppContext(), "" + i, responseModel.getData().getResult().getNotificationType().get(i));
                                          }
 
                                          boolean status = AppUtils.writeJsonStringToFile(CategorySyncService.this, new Gson().toJson(responseModel.getData().getResult().getLanguages()), AppConstants.LANGUAGES_JSON_FILE);
 
-                                         version = SharedPrefUtils.getConfigCategoryVersion(CategorySyncService.this);
+                                         version = SharedPrefUtils.getConfigCategoryVersion(BaseApplication.getAppContext());
                                          if (version == 0 || version != responseModel.getData().getResult().getCategory().getVersion()) {
                                              location = responseModel.getData().getResult().getCategory().getLocation();
                                              TopicsCategoryAPI categoryAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -105,7 +105,7 @@ public class CategorySyncService extends IntentService {
                                                  @Override
                                                  public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                                                      boolean writtenToDisk = writeResponseBodyToDisk(response.body(), AppConstants.CATEGORIES_JSON_FILE);
-                                                     SharedPrefUtils.setConfigCategoryVersion(CategorySyncService.this, responseModel.getData().getResult().getCategory().getVersion());
+                                                     SharedPrefUtils.setConfigCategoryVersion(BaseApplication.getAppContext(), responseModel.getData().getResult().getCategory().getVersion());
                                                      Log.d("TAGA", "file download was a success? " + writtenToDisk);
                                                  }
 
@@ -117,7 +117,7 @@ public class CategorySyncService extends IntentService {
                                              });
                                          }
 
-                                         popularVersion = SharedPrefUtils.getConfigPopularCategoryVersion(CategorySyncService.this);
+                                         popularVersion = SharedPrefUtils.getConfigPopularCategoryVersion(BaseApplication.getAppContext());
                                          if (popularVersion == 0 || popularVersion != responseModel.getData().getResult().getCategory().getPopularVersion()) {
                                              popularLocation = responseModel.getData().getResult().getCategory().getPopularLocation();
                                              TopicsCategoryAPI categoryAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -131,7 +131,7 @@ public class CategorySyncService extends IntentService {
                                                  @Override
                                                  public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                                                      boolean writtenToDisk = writeResponseBodyToDisk(response.body(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
-                                                     SharedPrefUtils.setConfigPopularCategoryVersion(CategorySyncService.this,
+                                                     SharedPrefUtils.setConfigPopularCategoryVersion(BaseApplication.getAppContext(),
                                                              responseModel.getData().getResult().getCategory().getPopularVersion());
                                                      Log.d("TAGA", "file download was a success? " + writtenToDisk);
                                                  }

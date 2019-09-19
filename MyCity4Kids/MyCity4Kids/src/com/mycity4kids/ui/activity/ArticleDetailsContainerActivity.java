@@ -101,8 +101,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         ((BaseApplication) getApplication()).setActivity(this);
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
-        preferredLang = SharedPrefUtils.getLanguageFilters(this);
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
+        preferredLang = SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext());
         Utils.pushOpenScreenEvent(this, "DetailArticleScreen", userDynamoId + "");
 
         newArticleDetailFlag = mFirebaseRemoteConfig.getBoolean(NEW_ARTICLE_DETAIL_FLAG);
@@ -366,7 +366,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             case R.id.guidetoolbar:
             case R.id.guideOverlay:
                 guideOverlay.setVisibility(View.GONE);
-                SharedPrefUtils.setCoachmarksShownFlag(this, "article_details", true);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details", true);
                 break;
         }
     }
@@ -377,7 +377,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     }
 
     public void showPlayArticleAudioButton() {
-        if (!SharedPrefUtils.isCoachmarksShownFlag(this, "article_details")) {
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details")) {
             guideOverlay.setVisibility(View.VISIBLE);
         }
 
@@ -399,7 +399,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
         topicsAPI = retro.create(TopicsCategoryAPI.class);
 
-        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId, 0, 5, SharedPrefUtils.getLanguageFilters(this));
+        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId, 0, 5, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
     }
 

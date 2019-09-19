@@ -75,7 +75,7 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
 
-        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(getActivity());
+        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
                 @Override

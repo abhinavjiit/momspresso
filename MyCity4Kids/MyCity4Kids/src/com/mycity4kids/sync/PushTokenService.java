@@ -20,6 +20,7 @@ import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -65,7 +66,7 @@ public class PushTokenService extends IntentService implements UpdateListener {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
-            if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(this))) {
+            if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()))) {
                 // hit api
                 if (!SharedPrefUtils.getUserDetailModel(this).getId().equals("0")) {
                     hitApiRequest(AppConstants.PUSH_TOKEN_REQUEST);
@@ -103,13 +104,13 @@ public class PushTokenService extends IntentService implements UpdateListener {
         switch (requestType) {
             case AppConstants.PUSH_TOKEN_REQUEST:
                 builder.append(AppConstants.UPDATE_PUSH_TOKEN_URL);
-                builder.append("userId=").append(SharedPrefUtils.getUserDetailModel(this).getId());
-                builder.append("&dynamoId=").append(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-                builder.append("&app_version=").append(AppUtils.getAppVersion(this));
+                builder.append("userId=").append(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId());
+                builder.append("&dynamoId=").append(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+                builder.append("&app_version=").append(AppUtils.getAppVersion(BaseApplication.getAppContext()));
                 builder.append("&deviceType=").append("android");
-                builder.append("&cityId=").append(SharedPrefUtils.getCurrentCityModel(this).getId());
-                builder.append("&pushToken=").append(SharedPrefUtils.getDeviceToken(this));
-                builder.append("&fcmToken=").append(SharedPrefUtils.getDeviceToken(this));
+                builder.append("&cityId=").append(SharedPrefUtils.getCurrentCityModel(BaseApplication.getAppContext()).getId());
+                builder.append("&pushToken=").append(SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
+                builder.append("&fcmToken=").append(SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
                 return builder.toString().replace(" ", "%20");
         }
         return builder.toString();

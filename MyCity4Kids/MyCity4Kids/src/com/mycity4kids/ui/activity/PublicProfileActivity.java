@@ -230,9 +230,9 @@ public class PublicProfileActivity extends BaseActivity implements View.OnClickL
                     }
                     if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
                         //token already expired or yet to connect using facebook
-                        SharedPrefUtils.setFacebookConnectedFlag(PublicProfileActivity.this, "1");
+                        SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(), "1");
                     } else {
-                        SharedPrefUtils.setFacebookConnectedFlag(PublicProfileActivity.this,
+                        SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(),
                                 responseData.getData().get(0).getResult().getSocialTokens().getFb().getIsExpired());
                     }
                 } else {

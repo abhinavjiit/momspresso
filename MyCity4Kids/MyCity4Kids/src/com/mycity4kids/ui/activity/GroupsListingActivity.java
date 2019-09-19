@@ -416,7 +416,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 intent.putExtra("groupId", selectedGroup.getId());
                 intent.putExtra(AppConstants.GROUP_MEMBER_TYPE, userType);
                 startActivity(intent);
-                Utils.groupsEvent(GroupsListingActivity.this, "Groups you are member of_listing", "group card", "android", SharedPrefUtils.getAppLocale(GroupsListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Groups_Discussion", "", "");
+                Utils.groupsEvent(GroupsListingActivity.this, "Groups you are member of_listing", "group card", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Groups_Discussion", "", "");
             }
         } else if (AppConstants.GROUP_MEMBERSHIP_STATUS_PENDING_MODERATION.equals(body.getData().getResult().get(0).getStatus())) {
             Intent intent = new Intent(this, GroupsSummaryActivity.class);
@@ -460,7 +460,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 break;
             case R.id.announcementContainerR:
             case R.id.audioImageView:
-                SharedPrefUtils.setSavedPostData(this, selectedGroup.getId(), "");
+                SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(), "");
                 Intent intent = new Intent(GroupsListingActivity.this, AddAudioGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
                 startActivityForResult(intent, 1111);
@@ -475,7 +475,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 break;
             case R.id.postContainerR:
             case R.id.suggestedTopicImageView:
-                SharedPrefUtils.setSavedPostData(this, selectedGroup.getId(), "");
+                SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(), "");
                 Intent intent2 = new Intent(GroupsListingActivity.this, AddTextOrMediaGroupPostActivity.class);
                 intent2.putExtra("groupItem", selectedGroup);
                 startActivityForResult(intent2, 1111);
@@ -483,7 +483,7 @@ public class GroupsListingActivity extends BaseActivity implements GroupsRecycle
                 break;
             case R.id.pollContainerR:
             case R.id.writeArticleImageView:
-                SharedPrefUtils.setSavedPostData(this, selectedGroup.getId(), "");
+                SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(), "");
                 Intent intent1 = new Intent(GroupsListingActivity.this, AddPollGroupPostActivity.class);
                 intent1.putExtra("groupItem", selectedGroup);
                 startActivityForResult(intent1, 1111);

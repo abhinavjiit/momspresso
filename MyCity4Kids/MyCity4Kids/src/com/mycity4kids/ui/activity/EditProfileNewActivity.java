@@ -148,7 +148,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         saveTextView.setOnClickListener(this);
         editImageView.setOnClickListener(this);
         try {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
+            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView);
         } catch (Exception e) {
             profileImageView.setImageResource(R.drawable.family_xxhdpi);
@@ -337,7 +337,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                 } else {
                     model.setLast_name(nameArr[1]);
                 }
-                SharedPrefUtils.setUserDetailModel(EditProfileNewActivity.this, model);
+                SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
                 if (viewPagerAdapter.getAbout().getSelectedCityId() != 0) {
                     updateEventsResourcesConfigForCity();
                 }
@@ -354,7 +354,7 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
     };
 
     private void updateEventsResourcesConfigForCity() {
-        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(this);
+        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
         final ConfigurationController _controller = new ConfigurationController(this, this);
 
         MetroCity model = new MetroCity();
@@ -363,8 +363,8 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
         model.setName(viewPagerAdapter.getAbout().getCurrentCityName());
         model.setNewCityId(viewPagerAdapter.getAbout().getCurrentCityName());
 
-        SharedPrefUtils.setCurrentCityModel(this, model);
-        SharedPrefUtils.setChangeCityFlag(this, true);
+        SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
+        SharedPrefUtils.setChangeCityFlag(BaseApplication.getAppContext(), true);
 
         if (viewPagerAdapter.getAbout().getSelectedCityId() > 0) {
             versionApiModel.setCityId(viewPagerAdapter.getAbout().getSelectedCityId());
@@ -652,11 +652,11 @@ public class EditProfileNewActivity extends BaseActivity implements View.OnClick
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
                                  setProfileImage(responseModel.getData().getResult().getUrl());
-                                 Picasso.with(EditProfileNewActivity.this).invalidate(SharedPrefUtils.getProfileImgUrl(EditProfileNewActivity.this));
+                                 Picasso.with(EditProfileNewActivity.this).invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
                                  Picasso.with(EditProfileNewActivity.this).load(responseModel.getData().getResult().getUrl())
                                          .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).into(profileImageView);
-                                 SharedPrefUtils.setProfileImgUrl(EditProfileNewActivity.this, responseModel.getData().getResult().getUrl());
+                                 SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getUrl());
 
 //                                 showToast("Image successfully uploaded!");
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");

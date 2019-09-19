@@ -222,7 +222,7 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         cancelTextView.setOnClickListener(this);
         closeEditorImageView.setOnClickListener(this);
 
-        postContentEditText.setText(SharedPrefUtils.getSavedPostData(this, selectedGroup.getId()));
+        postContentEditText.setText(SharedPrefUtils.getSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId()));
 
         postContentEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -253,23 +253,12 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
             }
         });
 
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             anonymousCheckbox.setChecked(true);
         } else {
             anonymousCheckbox.setChecked(false);
         }
-        new SimpleTooltip.Builder(this)
-                .anchorView(audioRecordView)
-                .backgroundColor(getResources().getColor(R.color.app_red))
-                .text(getResources().getString(R.string.add_text_or_media_group_post_activity_tooltip_text))
-                .textColor(getResources().getColor(R.color.white))
-                .arrowColor(getResources().getColor(R.color.app_red))
-                .gravity(Gravity.TOP)
-                .arrowWidth(40)
-                .animated(true)
-                .transparentOverlay(true)
-                .build()
-                .show();
+
     }
 
     @Override
@@ -287,12 +276,12 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.closeEditorImageView:
-                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
+                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
 
                 onBackPressed();
                 break;
             case R.id.cancelTextView:
-                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(AddAudioGroupPostActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
+                Utils.groupsEvent(AddAudioGroupPostActivity.this, "Create Audio", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", "");
 
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
@@ -346,7 +335,6 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
 
-                SharedPrefUtils.toolTipChecking(this, 3);
 
 
                 break;
@@ -379,10 +367,10 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
         //   String str=postContentEditText.getText().toString();
         addGroupPostRequest.setType("0");
         addGroupPostRequest.setGroupId(selectedGroup.getId());
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             addGroupPostRequest.setAnnon(1);
         }
-        addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
         LinkedHashMap<String, String> mediaMap = new LinkedHashMap<>();
         int i = 1;
@@ -416,7 +404,7 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
             }
             try {
                 if (response.isSuccessful()) {
-                    SharedPrefUtils.clearSavedPostData(AddAudioGroupPostActivity.this, selectedGroup.getId());
+                    SharedPrefUtils.clearSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId());
                     AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
                     postContentEditText.setText("");
@@ -769,7 +757,7 @@ public class AddAudioGroupPostActivity extends BaseActivity implements View.OnCl
     public void onBackPressed() {
         super.onBackPressed();
         if (null != postContentEditText.getText() && !StringUtils.isNullOrEmpty(postContentEditText.getText().toString())) {
-            SharedPrefUtils.setSavedPostData(AddAudioGroupPostActivity.this, selectedGroup.getId(), postContentEditText.getText().toString());
+            SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(), postContentEditText.getText().toString());
         }
     }
 

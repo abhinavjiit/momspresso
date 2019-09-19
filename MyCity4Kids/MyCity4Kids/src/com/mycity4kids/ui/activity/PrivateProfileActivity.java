@@ -7,9 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -72,7 +69,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.fragment.UserBioDialogFragment;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.RoundedHorizontalProgressBar;
 import com.squareup.picasso.Picasso;
@@ -183,7 +179,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             }
         });
 
-        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(PrivateProfileActivity.this);
+        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             linearRewardsHeader.setVisibility(View.VISIBLE);
             relative_profile_progress.setVisibility(View.INVISIBLE);
@@ -245,12 +241,12 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
         readArticlesTextView.setOnClickListener(this);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
-        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
+        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
+            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
         }
 
-        if (!SharedPrefUtils.isCoachmarksShownFlag(this, "Profile")) {
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "Profile")) {
             menuCoachmark.setVisibility(View.VISIBLE);
         }
 
@@ -383,9 +379,9 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                     }
                     if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
                         //token already expired or yet to connect using facebook
-                        SharedPrefUtils.setFacebookConnectedFlag(PrivateProfileActivity.this, "1");
+                        SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(), "1");
                     } else {
-                        SharedPrefUtils.setFacebookConnectedFlag(PrivateProfileActivity.this,
+                        SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(),
                                 responseData.getData().get(0).getResult().getSocialTokens().getFb().getIsExpired());
                     }
 
@@ -469,7 +465,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
                 publishedSectionTextView1.setVisibility(View.GONE);
                 publishCoachmark2.setVisibility(View.GONE);
                 publishCoachmark1.setVisibility(View.GONE);
-                SharedPrefUtils.setCoachmarksShownFlag(PrivateProfileActivity.this, "Profile", true);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Profile", true);
                 break;
             case R.id.editProfileImageView:
                 Intent intent = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
@@ -484,7 +480,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             case R.id.updateProfileTextView: {
                 Intent intent2 = new Intent(PrivateProfileActivity.this, EditProfileNewActivity.class);
                 intent2.putExtra("isComingfromCampaign", true);
-                intent2.putExtra("isRewardAdded", SharedPrefUtils.getIsRewardsAdded(this));
+                intent2.putExtra("isRewardAdded", SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext()));
                 startActivity(intent2);
                 break;
             }
@@ -629,22 +625,22 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             FacebookUtils.logout(this);
             gPlusSignOut();
 
-            String pushToken = SharedPrefUtils.getDeviceToken(this);
-            boolean homeCoach = SharedPrefUtils.isCoachmarksShownFlag(this, "home");
-            boolean topicsCoach = SharedPrefUtils.isCoachmarksShownFlag(this, "topics");
-            boolean topicsArticleCoach = SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article");
-            boolean articleCoach = SharedPrefUtils.isCoachmarksShownFlag(this, "article_details");
-            boolean groupsCoach = SharedPrefUtils.isCoachmarksShownFlag(this, "groups");
-            String appLocale = SharedPrefUtils.getAppLocale(this);
+            String pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext());
+            boolean homeCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "home");
+            boolean topicsCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics");
+            boolean topicsArticleCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article");
+            boolean articleCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details");
+            boolean groupsCoach = SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "groups");
+            String appLocale = SharedPrefUtils.getAppLocale(BaseApplication.getAppContext());
 
-            SharedPrefUtils.clearPrefrence(this);
-            SharedPrefUtils.setDeviceToken(this, pushToken);
-            SharedPrefUtils.setCoachmarksShownFlag(this, "home", homeCoach);
-            SharedPrefUtils.setCoachmarksShownFlag(this, "topics", topicsCoach);
-            SharedPrefUtils.setCoachmarksShownFlag(this, "topics_article", topicsArticleCoach);
-            SharedPrefUtils.setCoachmarksShownFlag(this, "article_details", articleCoach);
-            SharedPrefUtils.setCoachmarksShownFlag(this, "groups", groupsCoach);
-            SharedPrefUtils.setAppLocale(this, appLocale);
+            SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext());
+            SharedPrefUtils.setDeviceToken(BaseApplication.getAppContext(), pushToken);
+            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", homeCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics", topicsCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", topicsArticleCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details", articleCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "groups", groupsCoach);
+            SharedPrefUtils.setAppLocale(BaseApplication.getAppContext(), appLocale);
             /**
              * delete table from local also;
              */
@@ -694,7 +690,7 @@ public class PrivateProfileActivity extends BaseActivity implements GoogleApiCli
             }
 
             // set logout flag
-            SharedPrefUtils.setLogoutFlag(this, true);
+            SharedPrefUtils.setLogoutFlag(BaseApplication.getAppContext(), true);
             Intent intent = new Intent(this, ActivityLogin.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

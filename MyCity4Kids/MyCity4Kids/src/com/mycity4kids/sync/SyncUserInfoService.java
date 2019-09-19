@@ -84,7 +84,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
             try {
                 UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    SharedPrefUtils.setProfileImgUrl(SyncUserInfoService.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                    SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     UserInfo userInfo = SharedPrefUtils.getUserDetailModel(SyncUserInfoService.this);
                     userInfo.setIsLangSelection(responseData.getData().get(0).getResult().getIsLangSelection());
                     userInfo.setFirst_name(responseData.getData().get(0).getResult().getFirstName());
@@ -93,7 +93,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
                     userInfo.setSessionId(responseData.getData().get(0).getResult().getSessionId());
                     userInfo.setSubscriptionEmail(responseData.getData().get(0).getResult().getSubscriptionEmail());
 
-                    SharedPrefUtils.setUserDetailModel(SyncUserInfoService.this, userInfo);
+                    SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), userInfo);
 
                     FileInputStream fileInputStream = openFileInput(AppConstants.LANGUAGES_JSON_FILE);
                     String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -128,7 +128,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
                         }
                     }
 
-                    SharedPrefUtils.setLanguageFilters(SyncUserInfoService.this, filter);
+                    SharedPrefUtils.setLanguageFilters(BaseApplication.getAppContext(), filter);
                 } else {
 //                    showToast(responseData.getReason());
                 }

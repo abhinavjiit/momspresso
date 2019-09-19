@@ -11,6 +11,7 @@ import com.kelltontech.network.ServiceRequest;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.DataUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.businesslist.BusinessListRequest;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
@@ -215,7 +216,7 @@ public class BusinessListController extends BaseController {
         if (!StringUtils.isNullOrEmpty(businessModel.getLongitude())) {
             builder.append("&longitude=").append(businessModel.getLongitude());
         }
-        builder.append("&pincode=").append(SharedPrefUtils.getpinCode(getActivity()));
+        builder.append("&pincode=").append(SharedPrefUtils.getpinCode(BaseApplication.getAppContext()));
 
         return builder.toString().replace(" ", "%20");
 
@@ -262,7 +263,7 @@ public class BusinessListController extends BaseController {
             builder.append("&imei_no=").append(device_id);
         }
 
-        builder.append("&pincode=").append(SharedPrefUtils.getpinCode(getActivity()));
+        builder.append("&pincode=").append(SharedPrefUtils.getpinCode(BaseApplication.getAppContext()));
 
         return builder.toString().replace(" ", "%20");
 
@@ -312,7 +313,7 @@ public class BusinessListController extends BaseController {
             builder.append("&imei_no=").append(device_id);
         }
 
-        builder.append("&pincode=").append(SharedPrefUtils.getpinCode(getActivity()));
+        builder.append("&pincode=").append(SharedPrefUtils.getpinCode(BaseApplication.getAppContext()));
 
         return builder.toString().replace(" ", "%20");
 
@@ -356,7 +357,7 @@ public class BusinessListController extends BaseController {
         if (!StringUtils.isNullOrEmpty(businessModel.getLongitude())) {
             builder.append("&type=event");
         }
-        builder.append("&pincode=").append(SharedPrefUtils.getpinCode(getActivity()));
+        builder.append("&pincode=").append(SharedPrefUtils.getpinCode(BaseApplication.getAppContext()));
 
         return builder.toString().replace(" ", "%20");
 

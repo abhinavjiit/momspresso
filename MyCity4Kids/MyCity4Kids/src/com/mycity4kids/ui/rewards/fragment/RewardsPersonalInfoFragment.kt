@@ -11,19 +11,17 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.location.Address
-import android.location.Geocoder
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.appcompat.widget.AppCompatCheckBox
-import androidx.appcompat.widget.AppCompatRadioButton
-import androidx.appcompat.widget.AppCompatSpinner
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.appcompat.widget.AppCompatRadioButton
+import androidx.appcompat.widget.AppCompatSpinner
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import com.facebook.accountkit.AccountKitLoginResult
 import com.facebook.accountkit.ui.AccountKitActivity
 import com.facebook.accountkit.ui.AccountKitConfiguration
@@ -273,9 +271,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
         if (!apiGetResponse.email.isNullOrBlank()) editEmail.setText(apiGetResponse.email)
         if (!apiGetResponse.location.isNullOrBlank()) editLocation.setText(apiGetResponse.location)
-        if (apiGetResponse.latitude != null)   lat = apiGetResponse.latitude!!
+        if (apiGetResponse.latitude != null) lat = apiGetResponse.latitude!!
 
-        if (apiGetResponse.longitude != null)   lng = apiGetResponse.longitude!!
+        if (apiGetResponse.longitude != null) lng = apiGetResponse.longitude!!
 
         if (apiGetResponse.familyType != null) {
             if (apiGetResponse.familyType == 1) {
@@ -292,11 +290,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             apiGetResponse.preferred_languages!!.forEach {
                 var interestName = Constants.TypeOfLanguages.findById(it)
                 preSelectedLanguage.add(it)
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
-                val catTextView = subsubLL.getChildAt(0) as TextView
-                catTextView.setText(interestName)
-                catTextView.isSelected = true
-                floatingLanguage.addView(subsubLL)
+                context?.let {
+                    val subsubLL = LayoutInflater.from(context).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
+                    val catTextView = subsubLL.getChildAt(0) as TextView
+                    catTextView.setText(interestName)
+                    catTextView.isSelected = true
+                    floatingLanguage.addView(subsubLL)
+                }
             }
         } else {
             editLanguage.visibility = View.VISIBLE
@@ -313,11 +313,13 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             apiGetResponse.interest!!.forEach {
                 var interestName = Constants.TypeOfInterest.findById(it.toInt())
                 preSelectedInterest.add(it.toString())
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
-                val catTextView = subsubLL.getChildAt(0) as TextView
-                catTextView.setText(interestName)
-                catTextView.isSelected = true
-                floatingInterest.addView(subsubLL)
+                context?.let {
+                    val subsubLL = LayoutInflater.from(context).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
+                    val catTextView = subsubLL.getChildAt(0) as TextView
+                    catTextView.setText(interestName)
+                    catTextView.isSelected = true
+                    floatingInterest.addView(subsubLL)
+                }
             }
         } else {
             editInterest.visibility = View.VISIBLE
@@ -865,7 +867,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     if (response != null && response.code == 200) {
                         if (Constants.SUCCESS == response.status) {
                             if (isComingFromCampaign) {
-                                SharedPrefUtils.setIsRewardsAdded(activity, "1")
+                                SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), "1")
                             }
                             saveAndContinueListener.profileOnSaveAndContinue()
                         } else if (Constants.FAILURE == response.status) {
@@ -1215,12 +1217,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 if (name != null) {
                     preSelectedInterest.add(name)
                 }
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
-                val catTextView = subsubLL.getChildAt(0) as TextView
-                catTextView.setText(it)
-                catTextView.isSelected = true
-                //subsubLL.tag = it
-                floatingInterest.addView(subsubLL)
+                context?.let { mContext ->
+                    val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
+                    val catTextView = subsubLL.getChildAt(0) as TextView
+                    catTextView.setText(it)
+                    catTextView.isSelected = true
+                    //subsubLL.tag = it
+                    floatingInterest.addView(subsubLL)
+                }
             }
         } else if (popupType == Constants.PopListRequestType.LANGUAGE.name) {
             floatingLanguage.removeAllViews()
@@ -1243,12 +1247,14 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 if (name != null) {
                     preSelectedLanguage.add(name)
                 }
-                val subsubLL = LayoutInflater.from(activity).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
-                val catTextView = subsubLL.getChildAt(0) as TextView
-                catTextView.setText(it)
-                catTextView.isSelected = true
-                //subsubLL.tag = it
-                floatingLanguage.addView(subsubLL)
+                context?.let { mContext ->
+                    val subsubLL = LayoutInflater.from(context).inflate(R.layout.shape_rewards_border_rectangular, null) as LinearLayout
+                    val catTextView = subsubLL.getChildAt(0) as TextView
+                    catTextView.setText(it)
+                    catTextView.isSelected = true
+                    //subsubLL.tag = it
+                    floatingLanguage.addView(subsubLL)
+                }
             }
         }
     }

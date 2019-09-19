@@ -290,7 +290,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
             } else {
                 Toast.makeText(activity, "Please submit a proof", Toast.LENGTH_SHORT).show()
             }
-            Utils.campaignEvent(activity, "Payment Option", "Proof Submission", "Share_payment_details", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_payment_option_detail")
+            Utils.campaignEvent(activity, "Payment Option", "Proof Submission", "Share_payment_details", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_payment_option_detail")
         }
 
         /*fetch faq data from server*/
@@ -401,7 +401,9 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
 
                     /*this will fetch proof instruction from server*/
-                    fetchProofInstruction()
+                    if (isAdded) {
+                        fetchProofInstruction()
+                    }
                 } else {
                 }
             }
@@ -493,6 +495,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
 
     /*this will fetch proof instruction from server*/
     private fun fetchProofInstruction() {
+
         showProgressDialog(resources.getString(R.string.please_wait))
         BaseApplication.getInstance().retrofit.create(CampaignAPI::class.java).getProofInstruction(campaignId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<ProofInstructionResult>> {
             override fun onComplete() {
@@ -526,6 +529,7 @@ class CampaignAddProofFragment : BaseFragment(), UrlProofRecyclerAdapter.ClickLi
                 Log.e("exception in error", e.message.toString())
             }
         })
+
     }
 
     private fun getOffset(instruction: String, textView: TextView) {

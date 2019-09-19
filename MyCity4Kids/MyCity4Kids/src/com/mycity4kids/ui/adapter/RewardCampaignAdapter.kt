@@ -74,7 +74,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
         override fun onClick(v: View) {
             if (v == (view.share)) {
                 var userId = SharedPrefUtils.getUserDetailModel(context)?.dynamoId
-                Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "share", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+                Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "share", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
 
                 val shareIntent = ShareCompat.IntentBuilder
                         .from(context)
@@ -87,7 +87,7 @@ class RewardCampaignAdapter(private var campaignList: List<CampaignDataListResul
                     context!!.startActivity(shareIntent)
                 }
             } else {
-                Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "Click_listing_card", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+                Utils.campaignEvent(context, "Campaign Detail", "Campaign Listing", "Click_listing_card", campaignList!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
                 if (campaignList!!.campaignStatus == 8)
                     showInviteDialog()
                 else

@@ -198,6 +198,21 @@
                 android:layout_alignParentRight="true"
                 android:background="#0DEB3955" />
 
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/textAddUrlProof"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/recyclerUrlProof"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/shape_rectangle_red"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="+"
+                android:textColor="@color/app_red"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:fontName="oswald_regular.ttf" />
+
             <LinearLayout
                 android:id="@+id/linearInstruction"
                 android:layout_width="match_parent"
@@ -259,20 +274,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textFaq"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/textAddUrlProof"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_below="@+id/recyclerUrlProof"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/shape_rectangle_red"
-                android:gravity="center_vertical|center_horizontal"
-                android:text="+"
-                android:textColor="@color/app_red"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:fontName="oswald_regular.ttf" />
+
         </RelativeLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

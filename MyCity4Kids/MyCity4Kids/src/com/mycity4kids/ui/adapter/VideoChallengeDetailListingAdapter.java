@@ -1,20 +1,14 @@
 package com.mycity4kids.ui.adapter;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-
-import androidx.core.graphics.drawable.DrawableCompat;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,10 +16,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.utils.StringUtils;
@@ -48,6 +39,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import androidx.core.graphics.drawable.DrawableCompat;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;

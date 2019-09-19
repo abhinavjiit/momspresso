@@ -8,12 +8,13 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 
-import androidx.fragment.app.Fragment;
-
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.kelltontech.network.Response;
+import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * @author deepanker.chaudhary
@@ -43,7 +44,7 @@ public abstract class BaseFragment extends Fragment implements IScreen {
      */
     public void showProgressDialog(String bodyText) {
         if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog = new ProgressDialog(getActivity(), R.style.MyAlertDialogStyle);
             mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             mProgressDialog.setCancelable(false);
             mProgressDialog.setCanceledOnTouchOutside(false);

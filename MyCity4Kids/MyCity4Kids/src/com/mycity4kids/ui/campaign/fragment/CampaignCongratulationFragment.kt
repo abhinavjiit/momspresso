@@ -60,11 +60,11 @@ class CampaignCongratulationFragment : BaseFragment() {
         continueBrowsingCampaignsTextView = view.findViewById(R.id.continueBrowsingCampaignsTextView)
         cancel = view.findViewById(R.id.cancel)
         continueBrowsingCampaignsTextView.setOnClickListener {
-            Utils.campaignEvent(activity, "Campaign Listing", "Thank you screen", "Close", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            Utils.campaignEvent(activity, "Campaign Listing", "Thank you screen", "Close", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             submitListener.congratulateScreenDone()
         }
         cancel.setOnClickListener {
-            Utils.campaignEvent(activity, "Campaign Listing", "Thank you screen", "Close", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            Utils.campaignEvent(activity, "Campaign Listing", "Thank you screen", "Close", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             submitListener.congratulateScreenDone()
 //.setText("http://www.momspresso.com/mymoney/" + apiGetResponse!!.nameSlug + "/" + id + "?referrer=" + userId)
         }

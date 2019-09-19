@@ -89,7 +89,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
         fabAddShortStory = findViewById(R.id.fabAddShortStory);
 
 
-        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(ShortStoriesListingContainerActivity.this);
+        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -105,7 +105,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.campaignEvent(ShortStoriesListingContainerActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(ShortStoriesListingContainerActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+                    Utils.campaignEvent(ShortStoriesListingContainerActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
                     startActivity(new Intent(ShortStoriesListingContainerActivity.this, RewardsContainerActivity.class));
                 }
             });
@@ -113,7 +113,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.campaignEvent(ShortStoriesListingContainerActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(ShortStoriesListingContainerActivity.this
+                    Utils.campaignEvent(ShortStoriesListingContainerActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()
                     ), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
                     startActivity(new Intent(ShortStoriesListingContainerActivity.this, RewardsContainerActivity.class));
                 }
@@ -348,7 +348,7 @@ public class ShortStoriesListingContainerActivity extends BaseActivity implement
             if (parentTopicId.equals(shortStoriesTopicList.get(i).getId())) {
                 subTopicsList.addAll(shortStoriesTopicList.get(i).getChild());
 //                ((DashboardActivity) getActivity()).setDynamicToolbarTitle(shortStoriesTopicList.get(i).getDisplay_name());
-                Utils.pushViewTopicArticlesEvent(this, "TopicShortStoryListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "",
+                Utils.pushViewTopicArticlesEvent(this, "TopicShortStoryListingScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "",
                         shortStoriesTopicList.get(i).getId() + "~" + shortStoriesTopicList.get(i).getDisplay_name());
                 return;
             }

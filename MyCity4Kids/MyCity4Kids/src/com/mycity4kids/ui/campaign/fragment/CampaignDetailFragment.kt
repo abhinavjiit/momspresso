@@ -138,7 +138,7 @@ class CampaignDetailFragment : BaseFragment() {
         containerView = inflater.inflate(R.layout.campaign_detail_activity, container, false)
         id = arguments!!.getInt("id")
         userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-        isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
+        isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
         if (isRewardAdded.equals("1", true)) {
             fetchForYou()
         } else {
@@ -149,7 +149,7 @@ class CampaignDetailFragment : BaseFragment() {
         backIcon = containerView.findViewById(R.id.back)
         linearLayoutManager = LinearLayoutManager(activity as Context?, RecyclerView.VERTICAL, false)
         backIcon.setOnClickListener {
-            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Back", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Back", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
             activity!!.onBackPressed()
         }
         shareText.setOnClickListener {
@@ -370,7 +370,7 @@ class CampaignDetailFragment : BaseFragment() {
 
     private fun setClickAction() {
         if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_apply_now)) {
-            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "applyNow", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "applyNow", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
 
             if (isRewardAdded.isEmpty() || isRewardAdded.equals("0")) {
                 showRewardDialog()
@@ -384,7 +384,7 @@ class CampaignDetailFragment : BaseFragment() {
                 call.enqueue(participateCampaign)
             }
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_share)) {
-            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Share", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Share", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
 
             val shareIntent = ShareCompat.IntentBuilder
                     .from(activity)
@@ -397,7 +397,7 @@ class CampaignDetailFragment : BaseFragment() {
                 context!!.startActivity(shareIntent)
             }
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_share_momspresso_reward)) {
-            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Share_Rewards_Sticky_Bottom", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Momspresso_Rewards_Share")
+            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "Share_Rewards_Sticky_Bottom", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Momspresso_Rewards_Share")
 
             val shareIntent = ShareCompat.IntentBuilder
                     .from(activity)
@@ -412,10 +412,10 @@ class CampaignDetailFragment : BaseFragment() {
 
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_view_other)) {
             (context as CampaignContainerActivity).onBackPressed()
-            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "View other campaigns", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
+            Utils.campaignEvent(activity, "Campaign Listing", "Campaign Detail", "View other campaigns", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Listing")
 
         } else if (submitBtn.text == context!!.resources.getString(R.string.detail_bottom_submit_proof)) {
-            Utils.campaignEvent(activity, "Proof Submission", "Campaign Detail", "Submit Proof", "", "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Submission")
+            Utils.campaignEvent(activity, "Proof Submission", "Campaign Detail", "Submit Proof", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "Show_Campaign_Submission")
 
             (activity as CampaignContainerActivity).addAddProofFragment(apiGetResponse!!.id!!, (apiGetResponse!!.deliverableTypes as ArrayList<Int>?)!!, status)
             if (apiGetResponse != null && apiGetResponse!!.totalPayout != null && apiGetResponse!!.id != null && apiGetResponse!!.nameSlug != null) {
@@ -661,7 +661,7 @@ class CampaignDetailFragment : BaseFragment() {
     }
 
     fun showDialog() {
-        Utils.campaignEvent(activity, "Campaign Detail", "Campaign Detail", "Show_Earnings", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(activity), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Show_Earnings")
+        Utils.campaignEvent(activity, "Campaign Detail", "Campaign Detail", "Show_Earnings", apiGetResponse!!.name, "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).dynamoId, System.currentTimeMillis().toString(), "CTA_Show_Earnings")
 
         if (activity != null) {
             val dialog = Dialog(activity)
@@ -719,7 +719,7 @@ class CampaignDetailFragment : BaseFragment() {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REWARDS_FILL_FORM_REQUEST -> {
-                    isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
+                    isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
                     if (isRewardAdded.equals("1", true)) {
                         fetchForYou()
                     }

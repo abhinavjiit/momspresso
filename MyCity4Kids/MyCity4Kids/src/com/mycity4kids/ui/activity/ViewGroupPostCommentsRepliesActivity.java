@@ -750,7 +750,7 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
         addGpPostCommentOrReplyRequest.setGroupId(postData.getGroupId());
         addGpPostCommentOrReplyRequest.setPostId(postData.getId());
         addGpPostCommentOrReplyRequest.setParentId(parentId);
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             addGpPostCommentOrReplyRequest.setIsAnnon(1);
         }
         addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -788,18 +788,18 @@ public class ViewGroupPostCommentsRepliesActivity extends BaseActivity implement
                     if (responseData.getData().getResult().isAnnon() == 1) {
                     } else {
                         commentListData.setUserId(responseData.getData().getResult().getUserId());
-                        UserInfo sharedPrefUser = SharedPrefUtils.getUserDetailModel(ViewGroupPostCommentsRepliesActivity.this);
+                        UserInfo sharedPrefUser = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext());
                         userDetailResult.setDynamoId(sharedPrefUser.getDynamoId());
                         userDetailResult.setUserType(sharedPrefUser.getUserType());
                         userDetailResult.setFirstName(sharedPrefUser.getFirst_name());
                         userDetailResult.setLastName(sharedPrefUser.getLast_name());
                         ProfilePic profilePic = new ProfilePic();
-                        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(ViewGroupPostCommentsRepliesActivity.this));
+                        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
                         userDetailResult.setProfilePicUrl(profilePic);
                     }
 
                     commentListData.setUserInfo(userDetailResult);
-                    SharedPrefUtils.clearSavedReplyData(ViewGroupPostCommentsRepliesActivity.this, groupId, postId, responseData.getData().getResult().getParentId());
+                    SharedPrefUtils.clearSavedReplyData(BaseApplication.getAppContext(), groupId, postId, responseData.getData().getResult().getParentId());
                     repliesList.add(commentListData);
                     groupPostCommentRepliesRecyclerAdapter.notifyDataSetChanged();
                 } else {

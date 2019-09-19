@@ -671,10 +671,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void hitRelatedArticleAPI() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
-        Call<ArticleListingResponse> vernacularTrendingCall = topicsCategoryAPI.getTrendingArticles(1, 4, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<ArticleListingResponse> vernacularTrendingCall = topicsCategoryAPI.getTrendingArticles(1, 4, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         vernacularTrendingCall.enqueue(vernacularTrendingResponseCallback);
 
-        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId, 0, 3, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId, 0, 3, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
     }
 

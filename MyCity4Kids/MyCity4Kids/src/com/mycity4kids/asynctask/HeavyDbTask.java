@@ -77,7 +77,7 @@ public class HeavyDbTask extends AsyncTask<Void, Void, String>{
 				/**
 				 * current version api model will get from this 
 				 */
-				VersionApiModel _versionModel=SharedPrefUtils.getSharedPrefVersion(mContext);
+				VersionApiModel _versionModel=SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
 
 
 
@@ -108,7 +108,7 @@ public class HeavyDbTask extends AsyncTask<Void, Void, String>{
 							for(CategoryData  resultList : categoryData)
 							{
 								if (resultList.getName().equalsIgnoreCase("Events")){
-									SharedPrefUtils.setEventIdForCity(mContext, resultList.getMainCategory().getId());
+									SharedPrefUtils.setEventIdForCity(BaseApplication.getAppContext(), resultList.getMainCategory().getId());
 								}
 								saveAllCategoryDataInDb(saveTableUtils,resultList,groupName);
 
@@ -195,7 +195,7 @@ public class HeavyDbTask extends AsyncTask<Void, Void, String>{
 		_versionModel.setCategoryVersion(categoryVersion);
 		_versionModel.setCityVersion(cityVersion);
 		_versionModel.setLocalityVersion(localityVersion);
-		SharedPrefUtils.setSharedPrefVesion(mContext, _versionModel);
+		SharedPrefUtils.setSharedPrefVesion(BaseApplication.getAppContext(), _versionModel);
 
 	}
 

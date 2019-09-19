@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
@@ -59,7 +60,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String fcmToken) {
         super.onNewToken(fcmToken);
-        SharedPrefUtils.setDeviceToken(this, fcmToken);
+        SharedPrefUtils.setDeviceToken(BaseApplication.getAppContext(), fcmToken);
         Intent intent = new Intent(this, PushTokenService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
@@ -187,7 +188,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         resultIntent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -212,7 +213,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 } else if (type.equalsIgnoreCase("article_details")) {
                     Intent intent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         intent = new Intent(getApplicationContext(), SplashActivity.class);
                         intent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -244,7 +245,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent intent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         intent = new Intent(getApplicationContext(), SplashActivity.class);
                         intent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -277,7 +278,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         resultIntent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -285,7 +286,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
-                        resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
+                        resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
                         resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, pushNotificationModel.getId() + "");
                         resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
                         resultIntent.putExtra(Constants.DISTANCE, "0");
@@ -306,7 +307,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         resultIntent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -332,7 +333,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         resultIntent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -360,7 +361,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         resultIntent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -385,7 +386,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         Log.e("upupgrade true", "it's true");
@@ -410,7 +411,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         Log.e("upupgrade true", "it's true");
@@ -449,7 +450,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         Log.e("upupgrade true", "it's true");
@@ -492,7 +493,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         Log.e("upupgrade true", "it's true");
@@ -535,7 +536,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         Log.e("upupgrade true", "it's true");
@@ -577,7 +578,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         Log.e("upupgrade true", "it's true");
@@ -624,7 +625,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
-                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         Log.e("upupgrade true", "it's true");
@@ -667,7 +668,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
 
 
                 } else if (type.equals("remote_config_silent_update")) {
-                    SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(this, true);
+                    SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), true);
                 } else {
                     Log.i(TAG, " Default : " + msg);
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");

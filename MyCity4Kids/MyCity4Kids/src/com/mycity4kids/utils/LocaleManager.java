@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.preference.SharedPrefUtils;
 
 import java.util.Locale;
@@ -25,7 +26,7 @@ public class LocaleManager {
     }
 
     private static void persistLanguage(Context c, String language) {
-        SharedPrefUtils.setAppLocale(c, language);
+        SharedPrefUtils.setAppLocale(BaseApplication.getAppContext(), language);
         // use commit() instead of apply(), because sometimes we kill the application process immediately
         // which will prevent apply() to finish
     }

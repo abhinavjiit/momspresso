@@ -187,7 +187,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
             }
         });
 
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             anonymousCheckbox.setChecked(true);
         } else {
             anonymousCheckbox.setChecked(false);
@@ -301,7 +301,6 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
                     SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 }
 
-                SharedPrefUtils.toolTipChecking(this, 3);
 
 
                 break;
@@ -647,7 +646,7 @@ public class GroupsEditPostActivity extends BaseActivity implements View.OnClick
     public void onBackPressed() {
         super.onBackPressed();
         if (null != postContentEditText.getText() && !StringUtils.isNullOrEmpty(postContentEditText.getText().toString()) && selectedGroup != null) {
-            SharedPrefUtils.setSavedPostData(GroupsEditPostActivity.this, selectedGroup.getId(), postContentEditText.getText().toString());
+            SharedPrefUtils.setSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId(), postContentEditText.getText().toString());
         }
     }
 

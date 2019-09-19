@@ -247,14 +247,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(720).build();
         mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-        if (SharedPrefUtils.getFirebaseRemoteConfigUpdateFlag(this)) {
+        if (SharedPrefUtils.getFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext())) {
             showProgressDialog(getString(R.string.please_wait));
             mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(this, new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     removeProgressDialog();
                     mFirebaseRemoteConfig.activate();
-                    SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(DashboardActivity.this, false);
+                    SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), false);
                 }
             });
         } else {
@@ -505,7 +505,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                if (!SharedPrefUtils.isCoachmarksShownFlag(DashboardActivity.this, "Drawer")) {
+                if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer")) {
                     drawerContainer.getLayoutParams().width = drawerView.getWidth();
                     drawerMyMoneyContainer.getLayoutParams().width = drawerView.getWidth();
                     drawerSettingsContainer.getLayoutParams().width = drawerView.getWidth();
@@ -513,43 +513,43 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     drawerMyMoneyContainer.requestLayout();
                     drawerSettingsContainer.requestLayout();
                     drawerProfileCoachmark.setVisibility(View.VISIBLE);
-                    if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_english));
                         selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-                    } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_hindi));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
-                    } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_marathi));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
-                    } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_bengali));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
-                    } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_tamil));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
-                    } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_telegu));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
-                    } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         selectedLangTextView.setText(getString(R.string.language_label_kannada));
                         langTextView.setText(getString(R.string.language_label_kannada));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
-                    } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_malayalam));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                    } else if (AppConstants.LOCAL_GUJARATI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    } else if (AppConstants.LOCAL_GUJARATI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_gujarati));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
-                    } else if (AppConstants.LOCAL_PUNJABI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                    } else if (AppConstants.LOCAL_PUNJABI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                         langTextView.setText(getString(R.string.language_label_punjabi));
 
                         selectedlangGuideTextView.setText(getString(R.string.language_label_punjabi));
@@ -567,43 +567,43 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onDrawerStateChanged(int newState) {
-                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_english));
                     selectedlangGuideTextView.setText(getString(R.string.language_label_english));
-                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_hindi));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
-                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_marathi));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
-                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_bengali));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
-                } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_tamil));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
-                } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_telegu));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
-                } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                } else if (AppConstants.LOCALE_KANNADA.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     selectedLangTextView.setText(getString(R.string.language_label_kannada));
                     langTextView.setText(getString(R.string.language_label_kannada));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_kannada));
-                } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                } else if (AppConstants.LOCALE_MALAYALAM.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_malayalam));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_malayalam));
-                } else if (AppConstants.LOCAL_GUJARATI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                } else if (AppConstants.LOCAL_GUJARATI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_gujarati));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_gujarati));
-                } else if (AppConstants.LOCAL_PUNJABI.equals(SharedPrefUtils.getAppLocale(DashboardActivity.this))) {
+                } else if (AppConstants.LOCAL_PUNJABI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     langTextView.setText(getString(R.string.language_label_punjabi));
 
                     selectedlangGuideTextView.setText(getString(R.string.language_label_punjabi));
@@ -614,8 +614,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         });
-        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
+        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
+            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView);
         }
         usernameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
@@ -648,7 +648,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             case R.id.action_momVlog:
                                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
                                 Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Bottom_nav_videos",
-                                        "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this),
+                                        "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()),
                                         SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                                         String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
                                 Intent cityIntent = new Intent(DashboardActivity.this, CategoryVideosListingActivity.class);
@@ -684,7 +684,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 if (topFragment instanceof GroupsFragment) {
                                     return true;
                                 }
-                                Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Group_bottom_nav", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
+                                Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Group_bottom_nav", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
                                 GroupsViewFragment groupsFragment = new GroupsViewFragment();
                                 Bundle eBundle = new Bundle();
                                 groupsFragment.setArguments(eBundle);
@@ -702,7 +702,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
             Bundle mBundle = new Bundle();
             mBundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-            mBundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(DashboardActivity.this));
+            mBundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
             mBundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
             fragment.setArguments(mBundle);
             replaceFragment(fragment, mBundle, true);
@@ -735,15 +735,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         }
 
-        RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(this);
+        RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(BaseApplication.getAppContext());
         int currentRateVersion = reteVersionModel.getAppRateVersion();
         currentRateVersion++;
         boolean isCompleteRateProcess = reteVersionModel.isAppRateComplete();
         RateVersion rateModel = new RateVersion();
         rateModel.setAppRateComplete(isCompleteRateProcess);
         rateModel.setAppRateVersion(currentRateVersion);
-        SharedPrefUtils.setAppRateVersion(this, rateModel);
-        if (!SharedPrefUtils.getRateVersion(this).isAppRateComplete() && currentRateVersion >= 10 && rateNowDialog) {
+        SharedPrefUtils.setAppRateVersion(BaseApplication.getAppContext(), rateModel);
+        if (!SharedPrefUtils.getRateVersion(BaseApplication.getAppContext()).isAppRateComplete() && currentRateVersion >= 10 && rateNowDialog) {
             RateAppDialogFragment rateAppDialogFragment = new RateAppDialogFragment();
             reteVersionModel.setAppRateVersion(-20);
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
@@ -786,7 +786,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (responseData.getData() != null && responseData.getData().get(0) != null && responseData.getData().get(0).getResult() != null) {
-                        SharedPrefUtils.setIsRewardsAdded(DashboardActivity.this, responseData.getData().get(0).getResult().getRewardsAdded());
+                        SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getRewardsAdded());
                     }
                 }
             } catch (Exception e) {
@@ -938,7 +938,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     public void onComplete(@NonNull Task<Void> task) {
                         removeProgressDialog();
                         mFirebaseRemoteConfig.activate();
-                        SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(DashboardActivity.this, false);
+                        SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), false);
                     }
                 });
             } else if (notificationExtras.getString("type").equalsIgnoreCase("article_details")) {
@@ -1160,7 +1160,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
                 resultIntent.putExtra("fromNotification", true);
                 resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
+                resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
                 resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, eventId + "");
                 resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
                 resultIntent.putExtra(Constants.DISTANCE, "0");
@@ -1294,9 +1294,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
                     String challengeId = branchModel.getId();
-
                     getChallenges(challengeId.trim());
-
 
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
 
@@ -1528,7 +1526,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
                 Bundle mBundle = new Bundle();
                 mBundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                mBundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(DashboardActivity.this));
+                mBundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(BaseApplication.getAppContext()));
                 mBundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
                 fragment.setArguments(mBundle);
                 replaceFragment(fragment, mBundle, true);
@@ -1752,7 +1750,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         ((BaseApplication) getApplication()).setView(root);
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
-        if (topFragment instanceof FragmentMC4KHomeNew && SharedPrefUtils.isTopicSelectionChanged(this)) {
+        if (topFragment instanceof FragmentMC4KHomeNew && SharedPrefUtils.isTopicSelectionChanged(BaseApplication.getAppContext())) {
             ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
         }
         refreshMenu();
@@ -1905,12 +1903,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.drawerProfileCoachmark: {
                 drawerProfileCoachmark.setVisibility(View.GONE);
                 drawerMyMoneyCoachmark.setVisibility(View.VISIBLE);
-                SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "Drawer", true);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer", true);
             }
             break;
             case R.id.drawerMyMoneyCoachmark: {
                 drawerMyMoneyCoachmark.setVisibility(View.GONE);
-                SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "Drawer", true);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Drawer", true);
             }
             break;
             case R.id.homeCoachmark: {
@@ -1940,7 +1938,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.menuCoachmark: {
                 menuCoachmark.setVisibility(View.GONE);
-                SharedPrefUtils.setCoachmarksShownFlag(DashboardActivity.this, "HomeScreen", true);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen", true);
             }
             break;
             case R.id.viewBookmarkedArticleTextView: {
@@ -1962,7 +1960,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.articleContainer:
                 hideCreateContentView();
-                if ("0".equals(SharedPrefUtils.getUserDetailModel(this).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(this)) {
+                if ("0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(BaseApplication.getAppContext())) {
                     BecomeBloggerFragment becomeBloggerFragment = new BecomeBloggerFragment();
                     Bundle searchBundle = new Bundle();
                     becomeBloggerFragment.setArguments(searchBundle);
@@ -1982,7 +1980,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.videoContainer: {
                 hideCreateContentView();
                 mDrawerLayout.closeDrawers();
-                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
 
                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
                 Intent cityIntent = new Intent(this, ChooseVideoCategoryActivity.class);
@@ -1998,7 +1996,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.topContainer:
             case R.id.profileImageView:
                 mDrawerLayout.closeDrawers();
-                Utils.campaignEvent(this, "profile", "sidebar", "Update", "", "android", SharedPrefUtils.getAppLocale(this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Update_Rewards");
+                Utils.campaignEvent(this, "profile", "sidebar", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "CTA_Update_Rewards");
                 Intent pIntent = new Intent(this, PrivateProfileActivity.class);
                 startActivity(pIntent);
                 break;
@@ -2044,12 +2042,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.secondCoachmark:
                 secondCoachmark.setVisibility(View.GONE);
-                SharedPrefUtils.setCoachmarksShownFlag(this, "home", true);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", true);
                 break;
             case R.id.videosTextView: {
                 mDrawerLayout.closeDrawers();
                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
-                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Sidebar_vlogs", "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
+                Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Sidebar_vlogs", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Listing", "", "");
                 Intent cityIntent = new Intent(this, CategoryVideosListingActivity.class);
                 cityIntent.putExtra("parentTopicId", AppConstants.HOME_VIDEOS_CATEGORYID);
                 startActivity(cityIntent);
@@ -2072,7 +2070,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             break;
             case R.id.groupsTextView: {
                 mDrawerLayout.closeDrawers();
-                Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Sidebar_groups", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
+                Utils.groupsEvent(DashboardActivity.this, "Home Screen", "Sidebar_groups", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Group_listing", "", "");
                 GroupsViewFragment groupsFragment = new GroupsViewFragment();
                 Bundle eBundle = new Bundle();
                 groupsFragment.setArguments(eBundle);
@@ -2080,7 +2078,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;
             case R.id.rewardsTextView: {
-                Utils.campaignEvent(this, "Campaign Listing", "Sidebar", "Rewards", "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Campaign_Listing");
+                Utils.campaignEvent(this, "Campaign Listing", "Sidebar", "Rewards", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Campaign_Listing");
                 mDrawerLayout.closeDrawers();
                 Intent cityIntent = new Intent(this, CampaignContainerActivity.class);
                 startActivity(cityIntent);
@@ -2144,7 +2142,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
         if (v.getId() == R.id.upload_video) {
             MixPanelUtils.pushAddMomVlogClickEvent(mMixpanel, "BottomSheet");
-            Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "", "android", SharedPrefUtils.getAppLocale(DashboardActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
+            Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
 
             Intent intent = new Intent(this, ChooseVideoCategoryActivity.class);
             startActivity(intent);
@@ -2766,7 +2764,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 menu.findItem(R.id.action_profile).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
-                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics")) {
+                if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics")) {
                 }
             } else if (null != topFragment && topFragment instanceof NotificationFragment) {
                 Utils.pushOpenScreenEvent(this, "NotificationsScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
@@ -2784,11 +2782,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
             } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "HomeScreen")) {
+                if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "HomeScreen")) {
                     homeCoachmark.setVisibility(View.VISIBLE);
                 }
 //                homeCoachmark.setVisibility(View.VISIBLE);
-                if (SharedPrefUtils.isTopicSelectionChanged(this)) {
+                if (SharedPrefUtils.isTopicSelectionChanged(BaseApplication.getAppContext())) {
                     ((FragmentMC4KHomeNew) topFragment).hideFollowTopicHeader();
                 }
                 langTextView.setVisibility(View.VISIBLE);
@@ -2805,7 +2803,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarUnderline.setVisibility(View.GONE);
             } else if (null != topFragment && topFragment instanceof TopicsListingFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-                if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article")) {
+                if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")) {
                     ((TopicsListingFragment) topFragment).showGuideView();
                 }
                 toolbarTitleTextView.setOnClickListener(this);
@@ -3062,8 +3060,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
 
                                 Intent intent = new Intent(DashboardActivity.this, NewVideoChallengeActivity.class);
-                                //  Utils.momVlogEvent(Dash, "Video Listing", "Challenge container", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", challengeId.toString());
-
                                 intent.putExtra("Display_Name", branchDisplay_Name);
                                 intent.putExtra("screenName", "MomVlogs");
                                 intent.putExtra("challenge", branchChallengeId);
@@ -3076,10 +3072,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 intent.putExtra("parentId", branchArticledatamodal.getParentId());
                                 intent.putExtra("StringUrl", branchImageUrl);
                                 intent.putExtra("Topic", new Gson().toJson(branchArticledatamodal));
-
                                 startActivity(intent);
-
-
                             }
                         }
 
@@ -3119,7 +3112,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 if (Integer.parseInt(v1[pos]) > Integer.parseInt(v2[pos])) {
                     rateNowDialog = true;
                 } else if (Integer.parseInt(v1[pos]) < Integer.parseInt(v2[pos])) {
-                    if (SharedPrefUtils.getFrequencyForShowingUpdateApp(this) != frequecy) {
+                    if (SharedPrefUtils.getFrequencyForShowingUpdateApp(BaseApplication.getAppContext()) != frequecy) {
                         Dialog dialog = new Dialog(this);
                         dialog.setContentView(R.layout.update_app_pop_up_layout);
                         dialog.setCancelable(true);
@@ -3140,7 +3133,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         });
 
                         dialog.show();
-                        SharedPrefUtils.setFrequencyForShowingAppUpdate(this, frequecy);
+                        SharedPrefUtils.setFrequencyForShowingAppUpdate(BaseApplication.getAppContext(), frequecy);
 
                     } else {
                         rateNowDialog = true;

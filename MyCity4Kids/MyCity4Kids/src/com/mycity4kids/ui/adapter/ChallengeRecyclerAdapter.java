@@ -1,10 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +14,9 @@ import com.mycity4kids.R;
 import com.mycity4kids.models.Topics;
 
 import java.util.ArrayList;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecyclerAdapter.ChallengeViewHolder> {

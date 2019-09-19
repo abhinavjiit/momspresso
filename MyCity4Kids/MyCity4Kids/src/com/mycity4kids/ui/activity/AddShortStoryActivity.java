@@ -635,7 +635,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             for (int i = 0; i < jsonArray.length(); i++) {
                 if (count == 0) {
                     HashMap<String, String> map = new HashMap<>();
-                    publishedChallengeId = jsonArray.getJSONObject(i).keys().next();
+                    publishedChallengeId = jsonArray.getJSONObject(i).keys().next().toString();
                     publishedChallengeName = jsonArray.getJSONObject(i).getString(publishedChallengeId);
                     map.put(publishedChallengeId, publishedChallengeName);
                     if (!"ignore".equals(publishedChallengeId)) {
@@ -644,7 +644,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     }
                 } else {
                     HashMap<String, String> map = new HashMap<>();
-                    publishedChallengeId = jsonArray.getJSONObject(i).keys().next();
+                    publishedChallengeId = jsonArray.getJSONObject(i).keys().next().toString();
                     publishedChallengeName = jsonArray.getJSONObject(i).getString(publishedChallengeId);
                     map.put(publishedChallengeId, publishedChallengeName);
                     if (!"ignore".equals(publishedChallengeId)) {
@@ -669,14 +669,11 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             jsonArray = new JSONArray(tagsJson);
             for (int i = 0; i < jsonArray.length(); i++) {
                 HashMap<String, String> map = new HashMap<>();
-                publishedChallengeId = jsonArray.getJSONObject(i).keys().next();
+                publishedChallengeId = jsonArray.getJSONObject(i).keys().next().toString();
                 publishedChallengeName = jsonArray.getJSONObject(i).getString(publishedChallengeId);
                 map.put(publishedChallengeId, publishedChallengeName);
                 checkTagIsActive();
                 getImageUrlShow(publishedChallengeId, publishedChallengeName);
-            /*    if (!"ignore".equals(keyy)) {
-                    tagsList.add(map);
-                }*/
                 break;
             }
 
@@ -732,17 +729,17 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         shortStoryDraftOrPublishRequest.setBody(storyBodyEditText.getText().toString());
                         shortStoryDraftOrPublishRequest.setUserAgent("android");
                         shortStoryDraftOrPublishRequest.setType("0");
-                        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(this))) {
+                        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                             shortStoryDraftOrPublishRequest.setLang("0");
-                        } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(this))) {
+                        } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                             shortStoryDraftOrPublishRequest.setLang("1");
-                        } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(this))) {
+                        } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                             shortStoryDraftOrPublishRequest.setLang("2");
-                        } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
+                        } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                             shortStoryDraftOrPublishRequest.setLang("3");
-                        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(this))) {
+                        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                             shortStoryDraftOrPublishRequest.setLang("4");
-                        } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
+                        } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                             shortStoryDraftOrPublishRequest.setLang("5");
                         } else {
                             shortStoryDraftOrPublishRequest.setLang("0");
@@ -824,17 +821,17 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         shortStoryDraftOrPublishRequest.setBody(body);
         shortStoryDraftOrPublishRequest.setUserAgent("android");
         shortStoryDraftOrPublishRequest.setType("0");
-        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(this))) {
+        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
             shortStoryDraftOrPublishRequest.setLang("0");
-        } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(this))) {
+        } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
             shortStoryDraftOrPublishRequest.setLang("1");
-        } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(this))) {
+        } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
             shortStoryDraftOrPublishRequest.setLang("2");
-        } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
+        } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
             shortStoryDraftOrPublishRequest.setLang("3");
-        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(this))) {
+        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
             shortStoryDraftOrPublishRequest.setLang("4");
-        } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
+        } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
             shortStoryDraftOrPublishRequest.setLang("5");
         } else {
             shortStoryDraftOrPublishRequest.setLang("0");
@@ -897,7 +894,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         call.enqueue(getUserDetailsResponseCallback);
 
 

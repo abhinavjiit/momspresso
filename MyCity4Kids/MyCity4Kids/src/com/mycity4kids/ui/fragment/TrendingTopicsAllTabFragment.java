@@ -108,7 +108,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
         long timeDiff = System.currentTimeMillis() - SharedPrefUtils.getLastLoginTimestamp(BaseApplication.getAppContext()) - AppConstants.HOURS_24_TIMESTAMP;
         Log.d("Login Time Diff", "" + timeDiff);
         if (SharedPrefUtils.getFollowTopicApproachChangeFlag(BaseApplication.getAppContext())) {
-            if (SharedPrefUtils.getFollowedTopicsCount(getActivity()) < 1 && timeDiff < 0 &&
+            if (SharedPrefUtils.getFollowedTopicsCount(BaseApplication.getAppContext()) < 1 && timeDiff < 0 &&
                     !SharedPrefUtils.isTopicSelectionChanged(BaseApplication.getAppContext()) &&
                     !SharedPrefUtils.getUserSkippedFollowTopicFlag(BaseApplication.getAppContext())) {
                 isHeaderVisible = true;
@@ -116,7 +116,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
                 isHeaderVisible = false;
             }
         } else {
-            if (SharedPrefUtils.getFollowedTopicsCount(getActivity()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
+            if (SharedPrefUtils.getFollowedTopicsCount(BaseApplication.getAppContext()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
                 isHeaderVisible = true;
             } else {
                 isHeaderVisible = false;

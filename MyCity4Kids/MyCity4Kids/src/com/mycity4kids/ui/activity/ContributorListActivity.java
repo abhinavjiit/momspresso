@@ -250,13 +250,13 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(ContributorListActivity.this))) {
+                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     spinner_nav.setSelection(0);
-                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(ContributorListActivity.this))) {
+                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     spinner_nav.setSelection(1);
-                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(ContributorListActivity.this))) {
+                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     spinner_nav.setSelection(2);
-                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(ContributorListActivity.this))) {
+                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()))) {
                     spinner_nav.setSelection(3);
                 } else {
                     spinner_nav.setSelection(0);

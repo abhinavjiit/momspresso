@@ -4,9 +4,11 @@ import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,20 +107,20 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         saveTextView.setOnClickListener(this);
         showMoreFollowedTopicsTextView.setOnClickListener(this);
 
-        if ("1".equals(SharedPrefUtils.getFacebookConnectedFlag(getActivity()))) {
+        if ("1".equals(SharedPrefUtils.getFacebookConnectedFlag(BaseApplication.getAppContext()))) {
             facebookConnectTextView.setText(getString(R.string.app_settings_edit_prefs_add));
         } else {
             facebookConnectTextView.setText(getString(R.string.app_settings_edit_prefs_connected));
         }
 
         final LinearLayoutManager emailLayoutManager = new LinearLayoutManager(getActivity());
-        emailLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        emailLayoutManager.setOrientation(RecyclerView.VERTICAL);
         subscriptionSettingsListAdapter = new EmailSubscriptionAdapter(getActivity(), subscriptionSettingsList);
         subscriptionSettingRecyclerView.setLayoutManager(emailLayoutManager);
         subscriptionSettingRecyclerView.setAdapter(subscriptionSettingsListAdapter);
 
         final LinearLayoutManager notificationLayoutManager = new LinearLayoutManager(getActivity());
-        notificationLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        notificationLayoutManager.setOrientation(RecyclerView.VERTICAL);
         notificationSettingsListAdapter = new NotificationSubscriptionAdapter(getActivity(), notificationSettingsList);
         notificationSettingRecyclerView.setLayoutManager(notificationLayoutManager);
         notificationSettingRecyclerView.setAdapter(notificationSettingsListAdapter);
@@ -238,7 +240,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                     for (Map.Entry<String, String> entry : responseData.getData().getResult().entrySet()) {
                         NotificationSettingsModel notificationSettingsModel = new NotificationSettingsModel();
                         notificationSettingsModel.setId(entry.getKey());
-                        notificationSettingsModel.setName(SharedPrefUtils.getNotificationConfig(getActivity(), entry.getKey()));
+                        notificationSettingsModel.setName(SharedPrefUtils.getNotificationConfig(BaseApplication.getAppContext(), entry.getKey()));
                         notificationSettingsModel.setStatus(entry.getValue());
                         notificationSettingsList.add(notificationSettingsModel);
                         Log.d("Notification Items = ", entry.getKey() + "/" + entry.getValue());
@@ -442,7 +444,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             try {
                 FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    SharedPrefUtils.setFollowedTopicsCount(getActivity(), responseData.getData().size());
+                    SharedPrefUtils.setFollowedTopicsCount(BaseApplication.getAppContext(), responseData.getData().size());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);

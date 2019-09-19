@@ -2,8 +2,6 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +27,8 @@ import com.mycity4kids.ui.adapter.SearchArticlesListingAdapter;
 
 import java.util.ArrayList;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -202,7 +202,9 @@ public class SearchAllArticlesTabFragment extends BaseFragment implements Search
                     ((SearchAllActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                if (isAdded()) {
+                    ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                }
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }

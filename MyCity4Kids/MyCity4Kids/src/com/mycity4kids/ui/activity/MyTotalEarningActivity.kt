@@ -63,8 +63,8 @@ class MyTotalEarningActivity : BaseActivity() {
         earningRecyclerAdapter = EarningRecyclerAdapter(totalPayoutResponse, this)
         recyclerEarnings.adapter = earningRecyclerAdapter
 
-        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
+        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
+            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).into(profileImageView)
         }
 

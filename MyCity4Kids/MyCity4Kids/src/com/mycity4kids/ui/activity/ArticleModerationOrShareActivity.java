@@ -63,8 +63,8 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         title = getIntent().getStringExtra("title");
         body = getIntent().getStringExtra("body");
 
-        authorId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
-        authorName = SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name();
+        authorId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
+        authorName = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getLast_name();
 
         LinearLayout moderationContainer = (LinearLayout) findViewById(R.id.moderationContainer);
         LinearLayout publishContainer = (LinearLayout) findViewById(R.id.publishContainer);
@@ -132,9 +132,9 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             case R.id.facebookImageView:
                 if (ShareDialog.canShow(ShareLinkContent.class)) {
                     if ("addStory".equals(source)) {
-                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Facebook");
+                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Facebook");
                     } else {
-                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Facebook");
+                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Facebook");
                     }
 
                     ShareLinkContent content = new ShareLinkContent.Builder()
@@ -198,9 +198,9 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                     Toast.makeText(this, getString(R.string.moderation_or_share_twitter_fail), Toast.LENGTH_SHORT).show();
                 } else {
                     if ("addStory".equals(source)) {
-                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Twitter");
+                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Twitter");
                     } else {
-                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Twitter");
+                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "", shareUrl, authorId + "~" + authorName, "Twitter");
                     }
 
                     // Create intent using ACTION_VIEW and a normal Twitter url:
@@ -221,14 +221,14 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
             case R.id.laterTextView: {
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-                Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+                Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 call.enqueue(getUserDetailsResponseCallback);
             }
             break;
             case R.id.okayTextView: {
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-                Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+                Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
                 call.enqueue(getUserDetailsResponseCallback);
             }
             break;

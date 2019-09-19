@@ -50,7 +50,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
                 about.setArguments(bundle);
                 return about;
             case 1:
-                Utils.campaignEvent(context, "Rewards 1st screen", "Edit Profile", "Rewards", "", "android", SharedPrefUtils.getAppLocale(context), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+                Utils.campaignEvent(context, "Rewards 1st screen", "Edit Profile", "Rewards", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
                 if (rewardsFragment == null) {
                     rewardsFragment = new RewardsTabFragment();
                 }

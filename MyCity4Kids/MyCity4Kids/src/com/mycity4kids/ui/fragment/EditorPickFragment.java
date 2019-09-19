@@ -162,7 +162,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
                 fromPullToRefresh = false;
                 chunks = "";
             }
-            Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 10, chunks, SharedPrefUtils.getLanguageFilters(mContext));
+            Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 10, chunks, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             progressBar.setVisibility(View.VISIBLE);
             call.enqueue(recommendedArticlesResponseCallback);
         } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
@@ -171,7 +171,7 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
             int from = (nextPageNumber - 1) * limit + 1;
             Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + limit - 1,
-                    SharedPrefUtils.getLanguageFilters(mContext));
+                    SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         } else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -179,14 +179,14 @@ public class EditorPickFragment extends BaseFragment implements View.OnClickList
 
             int from = (nextPageNumber - 1) * limit + 1;
             Call<ArticleListingResponse> filterCall = topicsAPI.getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), from, from + limit - 1,
-                    SharedPrefUtils.getLanguageFilters(mContext));
+                    SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
             int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(mContext));
+            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         }
     }

@@ -291,7 +291,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(this).getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
+        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(this).getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         filterCall.enqueue(articleListingResponseCallback);
 
     }

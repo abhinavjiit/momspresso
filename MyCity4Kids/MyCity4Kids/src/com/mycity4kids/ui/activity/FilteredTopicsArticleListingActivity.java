@@ -385,16 +385,16 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         if (StringUtils.isNullOrEmpty(filteredTopics)) {
             Call<ArticleListingResponse> filterCall;
             if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
-                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
+                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             } else if (isLanguageListing) {
                 filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
             } else {
-                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
+                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             }
 //            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
-            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(filteredTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
+            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(filteredTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         }
     }

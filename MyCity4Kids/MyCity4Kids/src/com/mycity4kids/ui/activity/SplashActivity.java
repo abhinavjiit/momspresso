@@ -196,23 +196,23 @@ public class SplashActivity extends BaseActivity {
             String version = pInfo.versionName;
             Log.e("version number ", version);
 
-            if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.GROUPS_COACHMARK_VERSION) && SharedPrefUtils.isGroupTourFirstLaunch(this)) {
-                SharedPrefUtils.setCoachmarksShownFlag(this, "groups", false);
-                SharedPrefUtils.setGroupTourFirstLaunch(this, false);
+            if (!"0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId()) && version.equals(AppConstants.GROUPS_COACHMARK_VERSION) && SharedPrefUtils.isGroupTourFirstLaunch(BaseApplication.getAppContext())) {
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "groups", false);
+                SharedPrefUtils.setGroupTourFirstLaunch(BaseApplication.getAppContext(), false);
             }
 
-            if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.LOCALIZATION_RELEASE_VERSION) && SharedPrefUtils.isLocalizationFirstLaunch(this)) {
-                SharedPrefUtils.setCoachmarksShownFlag(this, "home", false);
-                SharedPrefUtils.setCoachmarksShownFlag(this, "topics", false);
-                SharedPrefUtils.setCoachmarksShownFlag(this, "topics_article", false);
-                SharedPrefUtils.setCoachmarksShownFlag(this, "article_details", false);
-                SharedPrefUtils.setCoachmarksShownFlag(this, "Mom_vlog", false);
-                SharedPrefUtils.setLocalizationFirstLaunch(this, false);
+            if (!"0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId()) && version.equals(AppConstants.LOCALIZATION_RELEASE_VERSION) && SharedPrefUtils.isLocalizationFirstLaunch(BaseApplication.getAppContext())) {
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "home", false);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics", false);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", false);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details", false);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Mom_vlog", false);
+                SharedPrefUtils.setLocalizationFirstLaunch(BaseApplication.getAppContext(), false);
             }
 
-            if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION) && SharedPrefUtils.isFBConnectFirstLaunch(this)) {
-                SharedPrefUtils.clearPrefrence(this);
-                SharedPrefUtils.setFBConnectFirstLaunch(this, false);
+            if (!"0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getId()) && version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION) && SharedPrefUtils.isFBConnectFirstLaunch(BaseApplication.getAppContext())) {
+                SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext());
+                SharedPrefUtils.setFBConnectFirstLaunch(BaseApplication.getAppContext(), false);
             }
 
             ImageView _spin = (ImageView) findViewById(R.id.spin);
@@ -251,7 +251,7 @@ public class SplashActivity extends BaseActivity {
 
         String version = AppUtils.getAppVersion(this);
 
-        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(SplashActivity.this);
+        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         /**
          * for first time we will check that gps is enabled or not:
@@ -291,8 +291,8 @@ public class SplashActivity extends BaseActivity {
                     double _latitude = getCurrentLocation.getLatitude();
                     double _longitude = getCurrentLocation.getLongitude();
 
-                    SharedPrefUtils.setUserLocationLatitude(this, _latitude);
-                    SharedPrefUtils.setUserLocationLongitude(this, _longitude);
+                    SharedPrefUtils.setUserLocationLatitude(BaseApplication.getAppContext(), _latitude);
+                    SharedPrefUtils.setUserLocationLongitude(BaseApplication.getAppContext(), _longitude);
                     new NearMyCity(this, _latitude, _longitude, new NearMyCity.FetchCity() {
 
                         @Override
@@ -312,7 +312,7 @@ public class SplashActivity extends BaseActivity {
                             /**
                              * this city model will be save only one time on splash:
                              */
-                            SharedPrefUtils.setCurrentCityModel(SplashActivity.this, model);
+                            SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
 
                             if (cityId > 0) {
                                 versionApiModel.setCityId(cityId);
@@ -356,8 +356,8 @@ public class SplashActivity extends BaseActivity {
                         Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
                         call.enqueue(checkForceUpdateResponseCallback);
                     } else {
-                        if (SharedPrefUtils.getAppUpgrade(SplashActivity.this)) {
-                            String message = SharedPrefUtils.getAppUgradeMessage(SplashActivity.this);
+                        if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                            String message = SharedPrefUtils.getAppUgradeMessage(BaseApplication.getAppContext());
                             showUpgradeAppAlertDialog("Momspresso", message, new OnButtonClicked() {
                                 @Override
                                 public void onButtonCLick(int buttonId) {
@@ -384,8 +384,8 @@ public class SplashActivity extends BaseActivity {
                     Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
                     call.enqueue(checkForceUpdateResponseCallback);
                 } else {
-                    if (SharedPrefUtils.getAppUpgrade(SplashActivity.this)) {
-                        String message = SharedPrefUtils.getAppUgradeMessage(SplashActivity.this);
+                    if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                        String message = SharedPrefUtils.getAppUgradeMessage(BaseApplication.getAppContext());
                         showUpgradeAppAlertDialog("Momspresso", message, new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
@@ -408,8 +408,8 @@ public class SplashActivity extends BaseActivity {
                 Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
                 call.enqueue(checkForceUpdateResponseCallback);
             } else {
-                if (SharedPrefUtils.getAppUpgrade(SplashActivity.this)) {
-                    String message = SharedPrefUtils.getAppUgradeMessage(SplashActivity.this);
+                if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
+                    String message = SharedPrefUtils.getAppUgradeMessage(BaseApplication.getAppContext());
                     showUpgradeAppAlertDialog("Momspresso", message, new OnButtonClicked() {
                         @Override
                         public void onButtonCLick(int buttonId) {
@@ -532,7 +532,7 @@ public class SplashActivity extends BaseActivity {
                 });
                 return;
             } else {
-                if (SharedPrefUtils.getLogoutFlag(this)) {
+                if (SharedPrefUtils.getLogoutFlag(BaseApplication.getAppContext())) {
                     Intent intent = new Intent(SplashActivity.this, ActivityLogin.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -556,7 +556,7 @@ public class SplashActivity extends BaseActivity {
                 }
             }
         }
-        Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(this));
+        Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext()));
     }
 
     /**
@@ -639,7 +639,7 @@ public class SplashActivity extends BaseActivity {
                 FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<String> mDatalist = (ArrayList<String>) responseData.getData();
-                    SharedPrefUtils.setFollowedTopicsCount(SplashActivity.this, mDatalist.size());
+                    SharedPrefUtils.setFollowedTopicsCount(BaseApplication.getAppContext(), mDatalist.size());
                     gotoDashboard();
                 } else {
                     gotoDashboard();
@@ -860,17 +860,17 @@ public class SplashActivity extends BaseActivity {
                 if (responseData.getResponseCode() == 200) {
 
                     if (responseData.getResult().getData().getIsAppUpdateRequired() == 1) {
-                        SharedPrefUtils.setAppUgrade(SplashActivity.this, true);
+                        SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), true);
                         String message = responseData.getResult().getData().getMessage();
 
-                        SharedPrefUtils.setAppUgradeMessage(SplashActivity.this, message);
-                        showUpgradeAppAlertDialog("Momspresso", SharedPrefUtils.getAppUgradeMessage(SplashActivity.this), new OnButtonClicked() {
+                        SharedPrefUtils.setAppUgradeMessage(BaseApplication.getAppContext(), message);
+                        showUpgradeAppAlertDialog("Momspresso", SharedPrefUtils.getAppUgradeMessage(BaseApplication.getAppContext()), new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
                             }
                         });
                     } else {
-                        SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
+                        SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);
                         isFirstLaunch = 0;
                         navigateToNextScreen(true);
                     }
@@ -884,7 +884,7 @@ public class SplashActivity extends BaseActivity {
                 }
                 //TODO to be removed used only because force update API not available on Phoenix.
                 else {
-                    SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
+                    SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);
                     isFirstLaunch = 0;
                     navigateToNextScreen(true);
                 }
@@ -893,7 +893,7 @@ public class SplashActivity extends BaseActivity {
                 Crashlytics.logException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 //Uncomment to run on phoenix
-                SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
+                SharedPrefUtils.setAppUgrade(BaseApplication.getAppContext(), false);
                 isFirstLaunch = 0;
                 navigateToNextScreen(true);
 

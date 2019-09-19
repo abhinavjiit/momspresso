@@ -176,7 +176,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
         ((BaseApplication) getApplication()).setView(root);
         ((BaseApplication) getApplication()).setActivity(this);
 
-        userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
+        userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         Utils.pushOpenScreenEvent(this, "DetailVideoScreen", userDynamoId + "");
 
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);
@@ -259,7 +259,7 @@ public class MomsVlogDetailActivity extends BaseActivity implements View.OnClick
             videoId = bundle.getString(Constants.VIDEO_ID);//"videos-67496bfa-b77d-466f-9d18-94e0f98f17c6"
             authorId = bundle.getString(Constants.AUTHOR_ID, "");
             if (bundle.getBoolean("fromNotification")) {
-                Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "video_details");
+                Utils.pushEventNotificationClick(BaseApplication.getAppContext(), GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), "Notification Popup", "video_details");
             } else {
                 String listingType = bundle.getString(Constants.ARTICLE_OPENED_FROM);
                 String index = bundle.getString(Constants.ARTICLE_INDEX);

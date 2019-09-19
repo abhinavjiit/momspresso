@@ -429,7 +429,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                         Intent pIntent = new Intent(getActivity(), PrivateProfileActivity.class);
                         startActivity(pIntent);
                     } else {
-                        Utils.groupsEvent(getActivity(), "Groups_Discussion", "profile image", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "User Profile", "", "");
+                        Utils.groupsEvent(getActivity(), "Groups_Discussion", "profile image", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "User Profile", "", "");
 
                         Intent intentnn = new Intent(getActivity(), PublicProfileActivity.class);
                         intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
@@ -441,7 +441,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 break;
 
             case R.id.shareTextView:
-                Utils.groupsEvent(getActivity(), "Groups_Discussion_# comment", "Share", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "sharing options", "", postList.get(position).getId() + "");
+                Utils.groupsEvent(getActivity(), "Groups_Discussion_# comment", "Share", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "sharing options", "", postList.get(position).getId() + "");
 
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
@@ -452,7 +452,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 break;
             case R.id.upvoteCommentContainer:
             case R.id.upvoteContainer:
-                Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
+                Utils.groupsEvent(getActivity(), "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
                 if (postList.get(position).getMarkedHelpful() == 0) {
 
 
@@ -466,7 +466,7 @@ public class GroupsPollFragment extends BaseFragment implements MyFeedPollGeneri
                 }
                 break;
             case R.id.downvoteContainer:
-                Utils.groupsEvent(getActivity(), "Groups_Discussion", "not helpful", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
+                Utils.groupsEvent(getActivity(), "Groups_Discussion", "not helpful", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postList.get(position).getGroupId()));
 
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;

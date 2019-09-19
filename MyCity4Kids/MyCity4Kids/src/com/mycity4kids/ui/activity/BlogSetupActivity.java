@@ -177,8 +177,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         profilePicImageView.setOnClickListener(this);
         changeProfilePicImageView.setOnClickListener(this);
 
-        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
+        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()))) {
+            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext())).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profilePicImageView);
         }
 
@@ -686,7 +686,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
     public void saveCityData() {
 
-        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(this);
+        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
         final ConfigurationController _controller = new ConfigurationController(this, this);
         if (null == mDatalist || mDatalist.isEmpty()) {
             ToastUtils.showToast(this, getString(R.string.change_city_fetch_available_cities));
@@ -718,8 +718,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
 
                 model.setNewCityId(cityModel.getNewCityId());
 
-                SharedPrefUtils.setCurrentCityModel(BlogSetupActivity.this, model);
-                SharedPrefUtils.setChangeCityFlag(BlogSetupActivity.this, true);
+                SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
+                SharedPrefUtils.setChangeCityFlag(BaseApplication.getAppContext(), true);
 
                 if (cityId > 0) {
                     versionApiModel.setCityId(cityId);
@@ -887,11 +887,11 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
                                  setProfileImage(responseModel.getData().getResult().getUrl());
-                                 Picasso.with(BlogSetupActivity.this).invalidate(SharedPrefUtils.getProfileImgUrl(BlogSetupActivity.this));
+                                 Picasso.with(BlogSetupActivity.this).invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
                                  Picasso.with(BlogSetupActivity.this).load(responseModel.getData().getResult().getUrl())
                                          .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profilePicImageView);
-                                 SharedPrefUtils.setProfileImgUrl(BlogSetupActivity.this, responseModel.getData().getResult().getUrl());
+                                 SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getUrl());
 
                                  showToast(getString(R.string.image_upload_success));
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");

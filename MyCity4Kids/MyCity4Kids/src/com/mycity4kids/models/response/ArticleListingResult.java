@@ -43,6 +43,7 @@ public class ArticleListingResult implements Parcelable {
     private String is_bookmark = "0";
     private boolean isCarouselRequestRunning = false;
     private boolean responseReceived = false;
+    private String disableComment = "";
     private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
 
     public ArticleListingResult() {
@@ -73,6 +74,7 @@ public class ArticleListingResult implements Parcelable {
         body = in.readString();
         url = in.readString();
         is_bookmark = in.readString();
+        disableComment = in.readString();
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -114,6 +116,7 @@ public class ArticleListingResult implements Parcelable {
     public String getExcerpt() {
         return excerpt;
     }
+
 
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
@@ -344,6 +347,14 @@ public class ArticleListingResult implements Parcelable {
         this.responseReceived = responseReceived;
     }
 
+    public String getDisableComment() {
+        return disableComment;
+    }
+
+    public void setDisableComment(String disableComment) {
+        this.disableComment = disableComment;
+    }
+
     public ArrayList<VlogsListingAndDetailResult> getCarouselVideoList() {
         return carouselVideoList;
     }
@@ -382,5 +393,6 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(body);
         dest.writeString(url);
         dest.writeString(is_bookmark);
+        dest.writeString(disableComment);
     }
 }

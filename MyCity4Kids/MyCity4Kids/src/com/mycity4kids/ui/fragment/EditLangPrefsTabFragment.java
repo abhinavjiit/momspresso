@@ -188,7 +188,7 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
 //                        Toast.makeText(getActivity(), "Language content settings updated successfully", Toast.LENGTH_SHORT).show();
                         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(getActivity());
                         userInfo.setIsLangSelection("1");
-                        SharedPrefUtils.setUserDetailModel(getActivity(), userInfo);
+                        SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), userInfo);
 
                         Map<String, String> subscribedContentLanguages = responseData.getData();
                         String filter = "";
@@ -225,7 +225,7 @@ public class EditLangPrefsTabFragment extends BaseFragment implements View.OnCli
                                 }
                             }
                         }
-                        SharedPrefUtils.setLanguageFilters(getActivity(), filter);
+                        SharedPrefUtils.setLanguageFilters(BaseApplication.getAppContext(), filter);
                         BaseApplication.setHasLanguagePreferrenceChanged(true);
 //                        FragmentManager fm = getActivity().getSupportFragmentManager();
 //                        fm.popBackStack();

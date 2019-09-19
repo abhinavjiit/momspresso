@@ -379,7 +379,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
                 startActivity(searchIntent);
                 break;
             case R.id.getStartedTextView:
-                SharedPrefUtils.setFirstVideoUploadFlag(this, true);
+                SharedPrefUtils.setFirstVideoUploadFlag(BaseApplication.getAppContext(), true);
                 ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();

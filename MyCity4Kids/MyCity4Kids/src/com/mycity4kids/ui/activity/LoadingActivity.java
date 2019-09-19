@@ -60,9 +60,9 @@ public class LoadingActivity extends BaseActivity {
             return;
         }
         try {
-            cityIdFromLocation = Integer.parseInt(SharedPrefUtils.getUserDetailModel(LoadingActivity.this).getCityId());
+            cityIdFromLocation = Integer.parseInt(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getCityId());
 //        SharedPrefUtils.getCurrentCityModel(LoadingActivity.this).getId();
-            if (SharedPrefUtils.getCurrentCityModel(LoadingActivity.this).getId() == AppConstants.OTHERS_CITY_ID) {
+            if (SharedPrefUtils.getCurrentCityModel(BaseApplication.getAppContext()).getId() == AppConstants.OTHERS_CITY_ID) {
                 fetchingLocation();
             } else {
                 navigateToDashboard();
@@ -102,7 +102,7 @@ public class LoadingActivity extends BaseActivity {
                             model.setName(cii.getCityName());
                             model.setNewCityId(cii.getId());
 
-                            SharedPrefUtils.setCurrentCityModel(LoadingActivity.this, model);
+                            SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), model);
                             sendConfigurationRequest();
                         }
                     }
@@ -155,7 +155,7 @@ public class LoadingActivity extends BaseActivity {
     }
 
     private void sendConfigurationRequest() {
-        VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(this);
+        VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
         versionApiModel.setCategoryVersion(0.0f);
         versionApiModel.setCityVersion(0.0f);
         versionApiModel.setLocalityVersion(0.0f);
@@ -189,7 +189,7 @@ public class LoadingActivity extends BaseActivity {
     public void navigateToDashboard() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
-        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         call.enqueue(getFollowedTopicsResponseCallback);
     }
 
@@ -212,9 +212,9 @@ public class LoadingActivity extends BaseActivity {
                         PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                         int version = pInfo.versionCode;
                         if (version > 100 && (topicList == null || topicList.size() < 1)) {
-                            SharedPrefUtils.setFollowTopicApproachChangeFlag(LoadingActivity.this, true);
+                            SharedPrefUtils.setFollowTopicApproachChangeFlag(BaseApplication.getAppContext(), true);
                         }
-                        SharedPrefUtils.setFollowedTopicsCount(LoadingActivity.this, topicList.size());
+                        SharedPrefUtils.setFollowedTopicsCount(BaseApplication.getAppContext(), topicList.size());
                     }
                 } else {
                     showToast(responseData.getReason());

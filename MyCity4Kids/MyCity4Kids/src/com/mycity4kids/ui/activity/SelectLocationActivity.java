@@ -113,11 +113,11 @@ public class SelectLocationActivity extends BaseActivity implements FetchCity {
                 try {
 
 
-                    VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(SelectLocationActivity.this);
+                    VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
                     if (!(position == 0 || position == 2)) {
                         MetroCity cityModel = cityList.get(position);
                         if (isFromSplashScreen) {
-                            SharedPrefUtils.setCurrentCityModel(SelectLocationActivity.this, cityModel);
+                            SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), cityModel);
                             /**
                              * hit for Locality API;
                              */
@@ -156,7 +156,7 @@ public class SelectLocationActivity extends BaseActivity implements FetchCity {
                                 MetroCity metroCity = new MetroCity();
                                 metroCity.setId(currentCityId);
                                 metroCity.setName(currentCityName);
-                                SharedPrefUtils.setCurrentCityModel(SelectLocationActivity.this, cityModel);
+                                SharedPrefUtils.setCurrentCityModel(BaseApplication.getAppContext(), cityModel);
                                 /**
                                  * hit for Locality API;
                                  */
@@ -198,7 +198,7 @@ public class SelectLocationActivity extends BaseActivity implements FetchCity {
 
                     if (isFromSplashScreen) {
 
-                        VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(SelectLocationActivity.this);
+                        VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(BaseApplication.getAppContext());
                         versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(SelectLocationActivity.this).getId());
                         ConfigurationController _controller = new ConfigurationController(SelectLocationActivity.this, SelectLocationActivity.this);
                         showProgressDialog("Please Wait...");

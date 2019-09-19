@@ -213,7 +213,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                 }
 
                 launchAddVideoOptions();
-                Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Category_Name", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_upload_video", categoryId, "");
+                Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Category_Name", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_upload_video", categoryId, "");
 
 //                Intent intent = new Intent(ChooseVideoCategoryActivity.this, TopicsListingActivity.class);
 //                intent.putExtra("parentTopicId", topic.getId());
@@ -443,7 +443,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                 intent.putExtra("comingFrom", "chooseVideoCategory");
                 intent.putExtra("Topic", new Gson().toJson(articledatamodelsnew));
                 startActivity(intent);
-                Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Listing_challenge_container", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
+                Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Listing_challenge_container", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
 
                 break;
 
@@ -464,7 +464,7 @@ public class ChooseVideoCategoryActivity extends BaseActivity implements View.On
                             imageView.setOnClickListener(view2 -> dialog.dismiss());
 
                             dialog.show();
-                            Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Challenge_info", "", "android", SharedPrefUtils.getAppLocale(ChooseVideoCategoryActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
+                            Utils.momVlogEvent(ChooseVideoCategoryActivity.this, "Creation listing", "Challenge_info", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
 
                         }
                     }

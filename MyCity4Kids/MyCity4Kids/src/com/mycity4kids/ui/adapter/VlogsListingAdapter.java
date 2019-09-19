@@ -190,7 +190,7 @@ public class VlogsListingAdapter extends BaseAdapter {
                         findActiveVideoChallenge();
                     } else {
                         Utils.momVlogEvent(mContext, "Video Listing", "Live_challenge_banner", "", "android",
-                                SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
                                 String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", videoAd.getId());
                         Intent intent = new Intent(mContext, NewVideoChallengeActivity.class);
                         if (videoAd.getExtraData() != null && videoAd.getExtraData().size() != 0) {

@@ -748,7 +748,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
             groupActionsRequest.setGroupId(postData.getGroupId());
             groupActionsRequest.setPostId(postData.getId());
-            groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
             groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
             Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
             call.enqueue(groupActionResponseCallback);
@@ -757,7 +757,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             groupCommentActionsRequest.setGroupId(postData.getGroupId());
             groupCommentActionsRequest.setPostId(postData.getId());
             groupCommentActionsRequest.setResponseId(completeResponseList.get(position).getId());
-            groupCommentActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            groupCommentActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
             groupCommentActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
             Call<GroupsActionResponse> call = groupsAPI.addCommentAction(groupCommentActionsRequest);
             call.enqueue(groupActionResponseCallback);
@@ -992,7 +992,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
     private void setPostCurrentPreferences(UserPostSettingResponse userPostSettingResponse) {
 
-        if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
+        if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())) {
             if (postData.getType().equals("3")) {
                 editPostTextView.setVisibility(View.GONE);
             } else {
@@ -1004,7 +1004,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             deletePostTextView.setVisibility(View.GONE);
         }
 
-        if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())
+        if (postData.getUserId().equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId())
                 || AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
                 || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
             commentToggleTextView.setVisibility(View.VISIBLE);
@@ -1132,11 +1132,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         if ("pinPost".equals(actionType)) {
             request.setIsPinned(1);
             request.setIsActive(1);
-            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         } else if ("unpinPost".equals(actionType)) {
             request.setIsPinned(0);
             request.setIsActive(1);
-            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            request.setPinnedBy(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         } else if ("blockUser".equals(actionType)) {
             getPostingUsersMembershipDetails(postData.getGroupId(), postData.getUserId());
             return;
@@ -1324,7 +1324,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         UpdateUserPostSettingsRequest request = new UpdateUserPostSettingsRequest();
         request.setPostId(postData.getId());
         request.setIsAnno(postData.getIsAnnon());
-        request.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        request.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
 
         if (currentPostPrefsForUser == null) {
             if ("savePost".equals(action)) {
@@ -1461,10 +1461,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();
         addGpPostCommentOrReplyRequest.setGroupId(postData.getGroupId());
         addGpPostCommentOrReplyRequest.setPostId(postData.getId());
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             addGpPostCommentOrReplyRequest.setIsAnnon(1);
         }
-        addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         addGpPostCommentOrReplyRequest.setContent(content);
         addGpPostCommentOrReplyRequest.setMediaUrls(image);
         Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
@@ -1511,16 +1511,16 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     if (groupPostResponse.getData().getResult().isAnnon() == 1) {
                     } else {
                         groupPostCommentResult.setUserId(groupPostResponse.getData().getResult().getUserId());
-                        UserInfo userInfo = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);
+                        UserInfo userInfo = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext());
                         userDetailResult.setDynamoId(userInfo.getDynamoId());
                         userDetailResult.setUserType(userInfo.getUserType());
                         userDetailResult.setFirstName(userInfo.getFirst_name());
                         userDetailResult.setLastName(userInfo.getLast_name());
                         ProfilePic profilePic = new ProfilePic();
-                        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(GroupPostDetailActivity.this));
+                        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
                         userDetailResult.setProfilePicUrl(profilePic);
                     }
-                    SharedPrefUtils.clearSavedReplyData(GroupPostDetailActivity.this, groupId, postId, groupPostResponse.getData().getResult().getParentId());
+                    SharedPrefUtils.clearSavedReplyData(BaseApplication.getAppContext(), groupId, postId, groupPostResponse.getData().getResult().getParentId());
                     groupPostCommentResult.setUserInfo(userDetailResult);
                     completeResponseList.add(groupPostCommentResult);
                     postData.setResponseCount(postData.getResponseCount() + 1);
@@ -1599,10 +1599,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         addGpPostCommentOrReplyRequest.setGroupId(postData.getGroupId());
         addGpPostCommentOrReplyRequest.setPostId(postData.getId());
         addGpPostCommentOrReplyRequest.setParentId(parentId);
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             addGpPostCommentOrReplyRequest.setIsAnnon(1);
         }
-        addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         addGpPostCommentOrReplyRequest.setContent(content);
         addGpPostCommentOrReplyRequest.setMediaUrls(image);
         Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
@@ -1638,18 +1638,18 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     if (responseData.getData().getResult().isAnnon() == 1) {
                     } else {
                         commentListData.setUserId(responseData.getData().getResult().getUserId());
-                        UserInfo sharedPrefUser = SharedPrefUtils.getUserDetailModel(GroupPostDetailActivity.this);
+                        UserInfo sharedPrefUser = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext());
                         userDetailResult.setDynamoId(sharedPrefUser.getDynamoId());
                         userDetailResult.setUserType(sharedPrefUser.getUserType());
                         userDetailResult.setFirstName(sharedPrefUser.getFirst_name());
                         userDetailResult.setLastName(sharedPrefUser.getLast_name());
                         ProfilePic profilePic = new ProfilePic();
-                        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(GroupPostDetailActivity.this));
+                        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
                         userDetailResult.setProfilePicUrl(profilePic);
                     }
 
                     commentListData.setUserInfo(userDetailResult);
-                    SharedPrefUtils.clearSavedReplyData(GroupPostDetailActivity.this, groupId, postId, responseData.getData().getResult().getParentId());
+                    SharedPrefUtils.clearSavedReplyData(BaseApplication.getAppContext(), groupId, postId, responseData.getData().getResult().getParentId());
                     for (int i = 0; i < completeResponseList.size(); i++) {
                         if (completeResponseList.get(i).getId() == responseData.getData().getResult().getParentId()) {
                             completeResponseList.get(i).getChildData().add(commentListData);

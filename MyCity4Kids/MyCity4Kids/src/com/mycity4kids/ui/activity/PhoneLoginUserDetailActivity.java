@@ -185,7 +185,7 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
                 } else {
                     model.setLast_name(nameArr[1]);
                 }
-                SharedPrefUtils.setUserDetailModel(PhoneLoginUserDetailActivity.this, model);
+                SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
                 Intent intent1 = new Intent(PhoneLoginUserDetailActivity.this, LoadingActivity.class);
                 startActivity(intent1);
             } else {
@@ -338,11 +338,11 @@ public class PhoneLoginUserDetailActivity extends BaseActivity implements View.O
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
                                  setProfileImage(responseModel.getData().getResult().getUrl());
-                                 Picasso.with(PhoneLoginUserDetailActivity.this).invalidate(SharedPrefUtils.getProfileImgUrl(PhoneLoginUserDetailActivity.this));
+                                 Picasso.with(PhoneLoginUserDetailActivity.this).invalidate(SharedPrefUtils.getProfileImgUrl(BaseApplication.getAppContext()));
                                  Picasso.with(PhoneLoginUserDetailActivity.this).load(responseModel.getData().getResult().getUrl())
                                          .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).into(profileImageView);
-                                 SharedPrefUtils.setProfileImgUrl(PhoneLoginUserDetailActivity.this, responseModel.getData().getResult().getUrl());
+                                 SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseModel.getData().getResult().getUrl());
 
 //                                 showToast("Image successfully uploaded!");
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");

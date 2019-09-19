@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,6 +43,7 @@ import java.util.ArrayList;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -51,7 +51,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class LeafTopicArticlesTabFragment extends BaseFragment implements View.OnClickListener, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener
+public class LeafTopicArticlesTabFragment extends BaseFragment implements View.OnClickListener,  MainArticleRecyclerViewAdapter.RecyclerViewClickListener
         , GroupIdCategoryMap.GroupCategoryInterface {
 
     private int groupId;
@@ -308,7 +308,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
             case R.id.guideOverlay:
                 guideOverlay.setVisibility(View.GONE);
                 ((TopicsListingActivity) getActivity()).hideGuideTopLayer();
-                SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", true);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article", true);
                 break;
             case R.id.recentSortFAB:
                 fabMenu.collapse();
@@ -397,7 +397,6 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
             dialog.findViewById(R.id.linearSortByRecent).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     mDatalist.clear();
                     recyclerAdapter.notifyDataSetChanged();
                     sortType = 0;

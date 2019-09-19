@@ -172,24 +172,24 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
 
 
                     //                    model.setLoginMode(loginMode);
-                    SharedPrefUtils.setUserDetailModel(IdTokenLoginActivity.this, model);
-                    SharedPrefUtils.setProfileImgUrl(IdTokenLoginActivity.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                    SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), model);
+                    SharedPrefUtils.setProfileImgUrl(BaseApplication.getAppContext(), responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
 
                     if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
                         //token already expired or not yet connected with facebook
-                        SharedPrefUtils.setFacebookConnectedFlag(IdTokenLoginActivity.this, "1");
+                        SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(), "1");
                     } else {
-                        SharedPrefUtils.setFacebookConnectedFlag(IdTokenLoginActivity.this,
+                        SharedPrefUtils.setFacebookConnectedFlag(BaseApplication.getAppContext(),
                                 responseData.getData().get(0).getResult().getSocialTokens().getFb().getIsExpired());
                     }
 
                     PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                     String version = pInfo.versionName;
                     if (version.equals(AppConstants.PHOENIX_RELEASE_VERSION)) {
-                        SharedPrefUtils.setPhoenixFirstLaunch(IdTokenLoginActivity.this, false);
+                        SharedPrefUtils.setPhoenixFirstLaunch(BaseApplication.getAppContext(), false);
                     }
                     if (version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION)) {
-                        SharedPrefUtils.setFBConnectFirstLaunch(IdTokenLoginActivity.this, false);
+                        SharedPrefUtils.setFBConnectFirstLaunch(BaseApplication.getAppContext(), false);
                     }
 
                     //Custom sign up user but email is not yet verfifed.
@@ -262,9 +262,9 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
         LogoutResponse responseData = (LogoutResponse) response.getResponseObject();
         String message = responseData.getResult().getMessage();
         if (responseData.getResponseCode() == 200) {
-            String pushToken = SharedPrefUtils.getDeviceToken(this);
-            SharedPrefUtils.clearPrefrence(this);
-            SharedPrefUtils.setDeviceToken(this, pushToken);
+            String pushToken = SharedPrefUtils.getDeviceToken(BaseApplication.getAppContext());
+            SharedPrefUtils.clearPrefrence(BaseApplication.getAppContext());
+            SharedPrefUtils.setDeviceToken(BaseApplication.getAppContext(), pushToken);
             /**
              * delete table from local also;
              */
@@ -311,7 +311,7 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
             // set logout flag
-            SharedPrefUtils.setLogoutFlag(this, true);
+            SharedPrefUtils.setLogoutFlag(BaseApplication.getAppContext(), true);
             loginWithIdToken(loginUser);
 
 //            Intent intent = new Intent(this, ActivityLogin.class);
@@ -351,7 +351,7 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
 //        }
 
 
-        SharedPrefUtils.setUserDetailModel(this, uInfo);
+        SharedPrefUtils.setUserDetailModel(BaseApplication.getAppContext(), uInfo);
 
         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
         Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(uInfo.getDynamoId());

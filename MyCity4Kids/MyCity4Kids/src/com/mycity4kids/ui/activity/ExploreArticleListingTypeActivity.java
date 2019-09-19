@@ -306,7 +306,7 @@ public class ExploreArticleListingTypeActivity extends BaseActivity implements V
             break;
             case R.id.guideOverlay:
                 guideOverLay.setVisibility(View.GONE);
-                SharedPrefUtils.setCoachmarksShownFlag(this, "topics", true);
+                SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "topics", true);
                 break;
             case R.id.todaysBestTextView: {
                 Utils.pushOpenScreenEvent(ExploreArticleListingTypeActivity.this, "TodaysBestScreen", dynamoUserId + "");

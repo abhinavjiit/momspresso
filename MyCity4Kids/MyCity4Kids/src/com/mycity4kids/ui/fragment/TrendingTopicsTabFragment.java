@@ -165,7 +165,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCa
 
         int from = (nextPageNumber - 1) * limit + 1;
 
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(trendingTopicData.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(trendingTopicData.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
         filterCall.enqueue(articleListingResponseCallback);
     }
 

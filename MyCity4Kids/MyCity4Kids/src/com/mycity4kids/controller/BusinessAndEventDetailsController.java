@@ -11,6 +11,7 @@ import com.kelltontech.network.ServiceRequest;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.DataUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.businesseventdetails.DetailsRequest;
 import com.mycity4kids.models.businesseventdetails.DetailsResponse;
@@ -133,7 +134,7 @@ public class BusinessAndEventDetailsController extends BaseController {
             if (!StringUtils.isNullOrEmpty(String.valueOf(_longitude))) {
                 builder.append("&longitude=").append(String.valueOf(_longitude));
             }
-            builder.append("&pincode=").append(SharedPrefUtils.getpinCode(getActivity()));
+            builder.append("&pincode=").append(SharedPrefUtils.getpinCode(BaseApplication.getAppContext()));
         }
         return builder.toString().replace(" ", "%20");
 

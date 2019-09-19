@@ -81,7 +81,7 @@ class CampaignListFragment : BaseFragment() {
         recyclerView.layoutManager = linearLayoutManager
         adapter = RewardCampaignAdapter(campaignList, activity)
         registerRewards = containerView.findViewById(R.id.register_rewards)
-        isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
+        isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
         recyclerView.adapter = adapter
         campaignList.clear()
 //        if (campaignList.size == 0)
@@ -127,7 +127,7 @@ class CampaignListFragment : BaseFragment() {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REWARDS_FILL_FORM -> {
-                    isRewardAdded = SharedPrefUtils.getIsRewardsAdded(context)
+                    isRewardAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext())
                     if (isRewardAdded.isNotEmpty() || isRewardAdded.equals("1")) {
                         registerRewards.visibility = View.GONE
                     }

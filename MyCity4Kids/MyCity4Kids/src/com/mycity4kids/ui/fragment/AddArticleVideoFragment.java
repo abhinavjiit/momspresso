@@ -65,7 +65,7 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
         addVideoLL.setOnClickListener(this);
         shortStoryLL.setOnClickListener(this);
 
-        if ("0".equals(SharedPrefUtils.getUserDetailModel(getActivity()).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(getActivity())) {
+        if ("0".equals(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(BaseApplication.getAppContext())) {
             writeArticleLL.setVisibility(View.INVISIBLE);
             blogSetUpLL.setVisibility(View.VISIBLE);
         } else {
@@ -168,7 +168,7 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
             }
             break;
             case R.id.addVideoLL: {
-                if (SharedPrefUtils.getFirstVideoUploadFlag(getActivity())) {
+                if (SharedPrefUtils.getFirstVideoUploadFlag(BaseApplication.getAppContext())) {
                     launchAddVideoOptions();
                 } else {
                     UploadVideoInfoFragment uploadVideoInfoFragment = new UploadVideoInfoFragment();

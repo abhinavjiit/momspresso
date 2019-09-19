@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.models.response.TrendingListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -50,7 +51,7 @@ public class BecomeBloggerFragment extends BaseFragment {
         getStartedTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPrefUtils.setBecomeBloggerFlag(getActivity(), true);
+                SharedPrefUtils.setBecomeBloggerFlag(BaseApplication.getAppContext(), true);
                 Intent intent = new Intent(getActivity(), EditorPostActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(EditorPostActivity.TITLE_PARAM, "");

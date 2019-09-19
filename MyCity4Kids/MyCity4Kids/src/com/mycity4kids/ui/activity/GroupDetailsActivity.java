@@ -288,7 +288,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             justJoinedPostTextView = dialog.findViewById(R.id.post_edit);
             anonymousCheckbox = dialog.findViewById(R.id.anonymousCheckbox);
 
-            if (SharedPrefUtils.isUserAnonymous(this)) {
+            if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
                 anonymousCheckbox.setChecked(true);
             } else {
                 anonymousCheckbox.setChecked(false);
@@ -447,7 +447,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         //   String str=postContentEditText.getText().toString();
         addGroupPostRequest.setType("5");
         addGroupPostRequest.setGroupId(selectedGroup.getId());
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             addGroupPostRequest.setAnnon(1);
         }
         addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -469,7 +469,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             try {
                 if (response.isSuccessful()) {
-                    SharedPrefUtils.clearSavedPostData(GroupDetailsActivity.this, selectedGroup.getId());
+                    SharedPrefUtils.clearSavedPostData(BaseApplication.getAppContext(), selectedGroup.getId());
                     AddGroupPostResponse responseModel = response.body();
                     setResult(RESULT_OK);
                     justJoinedPostTextView.setText("");
@@ -749,7 +749,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();
         addGpPostCommentOrReplyRequest.setGroupId(groupId);
         addGpPostCommentOrReplyRequest.setPostId(postId);
-        if (SharedPrefUtils.isUserAnonymous(this)) {
+        if (SharedPrefUtils.isUserAnonymous(BaseApplication.getAppContext())) {
             addGpPostCommentOrReplyRequest.setIsAnnon(1);
         }
         addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
@@ -881,7 +881,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             break;
             case R.id.groupSettingsImageView: {
-                Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Setting", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Settings page", "", "");
+                Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Setting", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Settings page", "", "");
                 Intent intent = new Intent(GroupDetailsActivity.this, GroupSettingsActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
                 intent.putExtra("memberType", memberType);
@@ -904,7 +904,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.postContainerR:
             case R.id.postContainer: {
-                Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "Post", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "cCreate post screen", "", String.valueOf(groupId));
+                Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "Post", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "cCreate post screen", "", String.valueOf(groupId));
                 Intent intent = new Intent(GroupDetailsActivity.this, AddTextOrMediaGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
                 startActivityForResult(intent, 1111);
@@ -913,7 +913,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             break;
             case R.id.announcementContainerR:
             case R.id.postAudioContainer: {
-                Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "Audio", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Audio post screen", "", String.valueOf(groupId));
+                Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "Audio", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Audio post screen", "", String.valueOf(groupId));
                 Intent intent = new Intent(GroupDetailsActivity.this, AddAudioGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
                 startActivityForResult(intent, 1111);
@@ -922,7 +922,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             break;
             case R.id.pollContainerR:
             case R.id.pollContainer: {
-                Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "polls", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Create poll screen", "", String.valueOf(groupId));
+                Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "polls", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Create poll screen", "", String.valueOf(groupId));
                 Intent intent = new Intent(GroupDetailsActivity.this, AddPollGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
                 startActivityForResult(intent, 1111);
@@ -930,7 +930,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             break;
             case R.id.closeImageView:
-                Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+                Utils.groupsEvent(GroupDetailsActivity.this, "Create post page", "Cancel X sign", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
                 if (addPostContainer.getVisibility() == View.VISIBLE) {
                     addPostContainer.setVisibility(View.GONE);
                 }
@@ -945,11 +945,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.commentToggleTextView:
                 if (commentToggleTextView.getText().toString().equals(getString(R.string.groups_disable_comment))) {
-                    Utils.groupsEvent(GroupDetailsActivity.this, "scussion_Post ActionView (...)", "enable comment", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+                    Utils.groupsEvent(GroupDetailsActivity.this, "scussion_Post ActionView (...)", "enable comment", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
 
                     updatePostCommentSettings(1);
                 } else {
-                    Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "disable comment", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+                    Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "disable comment", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
 
                     updatePostCommentSettings(0);
                 }
@@ -958,11 +958,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
                 Log.d("notifToggleTextView", "" + selectedPost.getId());
                 if (notificationToggleTextView.getText().toString().equals("DISABLE NOTIFICATION")) {
-                    Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "enable notification ", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+                    Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "enable notification ", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
 
                     updateUserPostPreferences("enableNotif");
                 } else {
-                    Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "disable notification ", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+                    Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "disable notification ", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
 
                     updateUserPostPreferences("disableNotif");
                 }
@@ -972,19 +972,19 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 openEditPostOption();
                 break;
             case R.id.deletePostTextView:
-                Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "Delete post", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+                Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "Delete post", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
 
                 Log.d("deletePostTextView", "" + selectedPost.getId());
                 updateAdminLevelPostPrefs("markInactive");
                 break;
             case R.id.blockUserTextView:
-                Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "Block this user", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+                Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "Block this user", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
 
                 Log.d("blockUserTextView", "" + selectedPost.getId());
                 updateAdminLevelPostPrefs("blockUser");
                 break;
             case R.id.pinPostTextView:
-                Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "pin this post to the top", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+                Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "pin this post to the top", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
 
                 Log.d("pinPostTextView", "" + selectedPost.getId());
                 if (pinPostTextView.getText().toString().equals(getString(R.string.groups_pin_post))) {
@@ -994,7 +994,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 }
                 break;
             case R.id.reportPostTextView:
-                Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "report this post", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
+                Utils.groupsEvent(GroupDetailsActivity.this, "Group_discussion_Post ActionView (...)", "report this post", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(postId));
 
                 Log.d("reportPostTextView", "" + selectedPost.getId());
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
@@ -1352,7 +1352,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Back arrow", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Groups listing ", "", "");
+        Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Back arrow", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Groups listing ", "", "");
 
         if (addPostContainer.getVisibility() == View.VISIBLE) {
             addPostContainer.setVisibility(View.GONE);
@@ -1393,11 +1393,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (AppConstants.GROUP_SECTION_ABOUT.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "About", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "About Page", "", "");
+                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "About", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "About Page", "", "");
 
                     recyclerView.setAdapter(groupAboutRecyclerAdapter);
                 } else if (AppConstants.GROUP_SECTION_DISCUSSION.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "discussion", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "discussion page", "", "");
+                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "discussion", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "discussion page", "", "");
                     isRequestRunning = false;
                     isLastPageReached = false;
                     recyclerView.setAdapter(groupsGenericPostRecyclerAdapter);
@@ -1406,7 +1406,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     limit = 10;
                     getGroupPosts();
                 } else if (AppConstants.GROUP_SECTION_BLOGS.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Blogs", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Blogs page", "", "");
+                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Blogs", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Blogs page", "", "");
 
                     isRequestRunning = false;
                     isLastPageReached = false;
@@ -1418,7 +1418,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                         hitFilteredTopicsArticleListingApi(groupMappedCategories.get(categoryIndex).getCategoryId());
                     }
                 } else if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "photos", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "photos page", "", "");
+                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "photos", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "photos page", "", "");
 
                     isRequestRunning = false;
                     isLastPageReached = false;
@@ -1429,7 +1429,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     postType = AppConstants.POST_TYPE_POLL_KEY;
                     getFilteredGroupPosts();
                 } else if (AppConstants.GROUP_SECTION_ASK_AN_EXPERT.equalsIgnoreCase(tab.getTag().toString())) {
-                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "polls", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "polls page", "", "");
+                    Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "polls", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "polls page", "", "");
 
                     isRequestRunning = false;
                     isLastPageReached = false;
@@ -1544,7 +1544,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(categoryId, 1, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(categoryId, 1, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
 //        Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
         filterCall.enqueue(articleListingResponseCallback);
     }
@@ -1661,7 +1661,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                         Intent pIntent = new Intent(this, PrivateProfileActivity.class);
                         startActivity(pIntent);
                     } else {
-                        Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "profile image", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "User Profile", "", "");
+                        Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "profile image", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "User Profile", "", "");
 
                         Intent intentnn = new Intent(this, PublicProfileActivity.class);
                         intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postList.get(position).getUserId());
@@ -1700,7 +1700,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             }
             case R.id.upvoteCommentContainer:
             case R.id.upvoteContainer:
-                Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+                Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "Helpful", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
                 if (postList.get(position).getMarkedHelpful() == 0) {
 
 
@@ -1716,7 +1716,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 }
                 break;
             case R.id.downvoteContainer:
-                Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "not helpful", "android", SharedPrefUtils.getAppLocale(GroupDetailsActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
+                Utils.groupsEvent(GroupDetailsActivity.this, "Groups_Discussion", "not helpful", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
             case R.id.shareTextView:
@@ -2219,7 +2219,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         }
 
     }
-
 
     private void bottomSheetStateChange() {
 

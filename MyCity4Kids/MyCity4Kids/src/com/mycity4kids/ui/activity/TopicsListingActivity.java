@@ -87,7 +87,7 @@ public class TopicsListingActivity extends BaseActivity {
         textUpdate = layoutBottomSheet.findViewById(R.id.textUpdate);
         bottom_sheet = layoutBottomSheet.findViewById(R.id.bottom_sheet);
 
-        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(TopicsListingActivity.this);
+        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
         if (!isRewardsAdded.isEmpty() && isRewardsAdded.equalsIgnoreCase("0")) {
             bottom_sheet.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -103,7 +103,7 @@ public class TopicsListingActivity extends BaseActivity {
             textUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.campaignEvent(TopicsListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(TopicsListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+                    Utils.campaignEvent(TopicsListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
 
                     startActivity(new Intent(TopicsListingActivity.this, RewardsContainerActivity.class));
                 }
@@ -112,7 +112,7 @@ public class TopicsListingActivity extends BaseActivity {
             textHeaderUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.campaignEvent(TopicsListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(TopicsListingActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
+                    Utils.campaignEvent(TopicsListingActivity.this, "Rewards 1st screen", "Bottom sheet", "Update", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Rewards_Detail");
 
                     startActivity(new Intent(TopicsListingActivity.this, RewardsContainerActivity.class));
                 }
@@ -255,7 +255,7 @@ public class TopicsListingActivity extends BaseActivity {
             }
         });
 
-        if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article")) {
+        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "topics_article")) {
             showGuideView();
         }
     }
