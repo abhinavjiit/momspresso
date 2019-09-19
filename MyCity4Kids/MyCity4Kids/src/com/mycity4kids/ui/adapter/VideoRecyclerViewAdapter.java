@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -257,16 +259,12 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 public void onClick(View view) {
                     if (responseData.getIs_liked() != null && responseData.getIs_liked().equals("1")) {
                         likeStatus = "0";
-
-                        ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
-                        Utils.momVlogEvent(mContext, "Video Detail", "Like", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
-
-                    } else {
-                        likeStatus = "1";
-
                         ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
                         Utils.momVlogEvent(mContext, "Video Detail", "DisLike", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
-
+                    } else {
+                        likeStatus = "1";
+                        ((ParallelFeedActivity) mContext).recommendUnrecommentArticleAPI(responseData.getId(), likeStatus, position);
+                        Utils.momVlogEvent(mContext, "Video Detail", "Like", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
                     }
                 }
             });
@@ -274,12 +272,11 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mImgBookmark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.momVlogEvent(mContext, "Video Detail", "Bookmark", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
-
                     if (responseData.getIs_bookmark() != null && responseData.getIs_bookmark().equals("1")) {
                         bookmarkStatus = "0";
                     } else {
                         bookmarkStatus = "1";
+                        Utils.momVlogEvent(mContext, "Video Detail", "Bookmark", "", "android", SharedPrefUtils.getAppLocale(mContext), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Vlogs_Engagement_CTA", "", "");
                     }
                     ((ParallelFeedActivity) mContext).addRemoveBookmark(bookmarkStatus, position, responseData.getAuthor().getId(), responseData.getId());
 
