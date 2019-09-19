@@ -145,7 +145,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
             case R.id.getStartedTextView:
 
                 Intent intent = new Intent(getActivity(), NewVideoChallengeActivity.class);
-                Utils.momVlogEvent(getActivity(), "Video Listing", "Challenge container", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", challengeId.toString());
+                Utils.momVlogEvent(getActivity(), "Video Listing", "Challenge container", "", "android", SharedPrefUtils.getAppLocale(getActivity()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_challenge_detail", "", challengeId.toString());
                 intent.putExtra("Display_Name", Display_Name);
                 intent.putExtra("screenName", "MomVlogs");
                 intent.putExtra("challenge", challengeId);

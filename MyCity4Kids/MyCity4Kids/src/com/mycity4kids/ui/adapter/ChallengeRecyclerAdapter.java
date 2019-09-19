@@ -1,8 +1,10 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,16 +83,11 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
 
     @Override
     public void onBindViewHolder(ChallengeViewHolder holder, int position) {
-
         switch (position) {
-
             case 0:
                 holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
                 if ("1".equals(articleDataModels.get(position).getPublicVisibility())) {
-
-
                     if (articleDataModels.get(position).getExtraData() != null && articleDataModels.get(position).getExtraData().size() != 0) {
-
                         if ("1".equals(articleDataModels.get(position).getExtraData().get(0).getChallenge().getActive())) {
                             challengeId.add(articleDataModels.get(position).getId());
                             Display_Name.add(articleDataModels.get(position).getDisplay_name());
@@ -107,19 +104,14 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                                 holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
                             }
                         }
-
-
                     }
                 }
                 break;
-
             default:
                 if ("1".equals(articleDataModels.get(position).getPublicVisibility())) {
                     if (articleDataModels.get(position).getExtraData() != null && articleDataModels.get(position).getExtraData().size() != 0) {
                         if ("1".equals(articleDataModels.get(position).getExtraData().get(0).getChallenge().getActive())) {
-
                             holder.rootView.setVisibility(View.VISIBLE);
-
                             if (position == 1) {
                                 holder.previousAndThisWeekTextView.setVisibility(View.VISIBLE);
                                 holder.previousAndThisWeekTextView.setText(R.string.previous_week_challenge);
@@ -139,19 +131,11 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
                                 } catch (Exception e) {
                                     holder.imageBody.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.default_article));
                                 }
-
                             }
                         }
-
                     }
-
-
                 }
-
-
         }
-
-
     }
 
     @Override
