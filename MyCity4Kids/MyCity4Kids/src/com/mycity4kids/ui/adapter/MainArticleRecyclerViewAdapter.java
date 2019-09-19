@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -100,11 +101,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         this.feedNativeAd = feedNativeAd;
         mListener = listener;
         this.topicHeaderVisibilityFlag = topicHeaderVisibilityFlag;
-//        for (int i = 0; i < 10; i++) {
-//            adList.add(null);
-//        }
-//        heading = mContext.getString(R.string.groups_join_support_gp);
-//        subHeading = mContext.getString(R.string.groups_not_alone);
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
         this.screenName = screenName;
         this.showVideoFlag = showVideoFlag;
@@ -146,15 +142,12 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     public int getItemViewType(int position) {
         if (topicHeaderVisibilityFlag && position == 0) {
             return HEADER;
-//        } else if (position != 0 && position % 6 == 0) {
-//            return GROUPS;
         } else if (position != 0 && position % 3 == 0) {
             if (showVideoFlag) {
                 return VIDEOS;
             } else {
                 return ARTICLE;
             }
-
         } else {
             if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(articleDataModelsNew.get(position).getContentType())) {
                 return STORY;
@@ -213,7 +206,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 ((JoinGroupViewHolder) holder).groupHeadingTextView.setText(heading);
                 ((JoinGroupViewHolder) holder).groupSubHeadingTextView.setText(subHeading);
                 ((JoinGroupViewHolder) holder).joinGroupTextView.setVisibility(View.VISIBLE);
-
             }
 
             try {
@@ -321,7 +313,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             recommendCountTV.setText(data.getLikesCount());
         }
 
-        if (StringUtils.isNullOrEmpty(data.getUserName()) || data.getUserName().toString().trim().equalsIgnoreCase("")) {
+        if (StringUtils.isNullOrEmpty(data.getUserName()) || data.getUserName().trim().equalsIgnoreCase("")) {
             authorNameTV.setText("NA");
         } else {
             authorNameTV.setText(data.getUserName());
@@ -476,58 +468,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     }
 
-    public void setScreenAndTopic(String screenName) {
-        this.screenName = screenName;
-    }
-
     public class AdViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-//        LinearLayout adContainerView;
-//        ImageView nativeAdIcon;
-//        TextView nativeAdTitle;
-//        MediaView nativeAdMedia;
-//        TextView nativeAdSocialContext;
-//        TextView nativeAdBody;
-//        Button nativeAdCallToAction;
-//        LinearLayout adChoicesContainer;
-//
-//        FrameLayout fbAdArticleView;
-//        TextView txvArticleTitle;
-//        TextView txvAuthorName;
-//        ImageView articleImageView;
-//        ImageView videoIndicatorImageView;
-//        LinearLayout forYouInfoLL;
-//        TextView viewCountTextView;
-//        TextView commentCountTextView;
-//        TextView recommendCountTextView;
-//        TextView authorTypeTextView;
-//        ImageView bookmarkArticleImageView;
-//        ImageView watchLaterImageView;
 
         AdViewHolder(View adView) {
             super(adView);
-//            adContainerView = (LinearLayout) adView.findViewById(R.id.adContainerView);
-//            nativeAdIcon = (ImageView) adView.findViewById(R.id.native_ad_icon);
-//            nativeAdTitle = (TextView) adView.findViewById(R.id.native_ad_title);
-//            nativeAdMedia = (MediaView) adView.findViewById(R.id.native_ad_media);
-//            nativeAdSocialContext = (TextView) adView.findViewById(R.id.native_ad_social_context);
-//            nativeAdBody = (TextView) adView.findViewById(R.id.native_ad_body);
-//            nativeAdCallToAction = (Button) adView.findViewById(R.id.native_ad_call_to_action);
-//            adChoicesContainer = (LinearLayout) adView.findViewById(R.id.ad_choices_container);
-//
-//            fbAdArticleView = (FrameLayout) adView.findViewById(R.id.fbAdArticleView);
-//            txvArticleTitle = (TextView) adView.findViewById(R.id.txvArticleTitle);
-//            txvAuthorName = (TextView) adView.findViewById(R.id.txvAuthorName);
-//            articleImageView = (ImageView) adView.findViewById(R.id.articleImageView);
-//            videoIndicatorImageView = (ImageView) adView.findViewById(R.id.videoIndicatorImageView);
-//            forYouInfoLL = (LinearLayout) adView.findViewById(R.id.forYouInfoLL);
-//            viewCountTextView = (TextView) adView.findViewById(R.id.viewCountTextView);
-//            commentCountTextView = (TextView) adView.findViewById(R.id.commentCountTextView);
-//            recommendCountTextView = (TextView) adView.findViewById(R.id.recommendCountTextView);
-//            authorTypeTextView = (TextView) adView.findViewById(R.id.authorTypeTextView);
-//            bookmarkArticleImageView = (ImageView) adView.findViewById(R.id.bookmarkArticleImageView);
-//            watchLaterImageView = (ImageView) adView.findViewById(R.id.watchLaterImageView);
-//            fbAdArticleView.setOnClickListener(this);
         }
 
         @Override
@@ -1219,22 +1163,24 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             Log.d("VideoCarouselViewHolder", "Response = " + result);
             try {
                 VlogsListingResponse responseData = gson.fromJson(result, VlogsListingResponse.class);
-                if (responseData != null) {
-                    Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData.getData().get(0).getResult().size());
-                    articleDataModelsNew.get(pos).setCarouselVideoList(responseData.getData().get(0).getResult());
-                    Log.d("VideoCarouselViewHolder", "ASYNC");
-                    populateCarouselVideos(viewHolder, responseData.getData().get(0).getResult());
-                    articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
-                    articleDataModelsNew.get(pos).setResponseReceived(true);
-                } else {
-                    VlogsListingResponse responseData1 = gson.fromJson(result, VlogsListingResponse.class);
+                if (articleDataModelsNew.size() > 0) {
                     if (responseData != null) {
-                        Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData1.getData().get(0).getResult().size());
-                        articleDataModelsNew.get(pos).setCarouselVideoList(responseData1.getData().get(0).getResult());
+                        Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData.getData().get(0).getResult().size());
+                        articleDataModelsNew.get(pos).setCarouselVideoList(responseData.getData().get(0).getResult());
                         Log.d("VideoCarouselViewHolder", "ASYNC");
-                        populateCarouselVideos(viewHolder, responseData1.getData().get(0).getResult());
+                        populateCarouselVideos(viewHolder, responseData.getData().get(0).getResult());
                         articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
                         articleDataModelsNew.get(pos).setResponseReceived(true);
+                    } else {
+                        VlogsListingResponse responseData1 = gson.fromJson(result, VlogsListingResponse.class);
+                        if (responseData != null) {
+                            Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData1.getData().get(0).getResult().size());
+                            articleDataModelsNew.get(pos).setCarouselVideoList(responseData1.getData().get(0).getResult());
+                            Log.d("VideoCarouselViewHolder", "ASYNC");
+                            populateCarouselVideos(viewHolder, responseData1.getData().get(0).getResult());
+                            articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
+                            articleDataModelsNew.get(pos).setResponseReceived(true);
+                        }
                     }
                 }
             } catch (JsonSyntaxException jse) {

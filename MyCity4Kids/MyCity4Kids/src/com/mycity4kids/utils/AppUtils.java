@@ -721,7 +721,7 @@ public class AppUtils {
         // set text width to canvas width minus 40dp padding
         int textWidth = canvas.getWidth() - (int) (36 * scale);
 
-        String author = "By - " + authorName;
+        String author = " - " + authorName;
 
         StaticLayout bodyLayout, titleLayout, authorLayout;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -758,14 +758,9 @@ public class AppUtils {
         float currentContentHeight = bodyHeight + titleHeight + authorLayout.getHeight()
                 + (50 * scale) //50*scale for spacing between title, body, author and logo
                 + 30; //For Padding at Top
-        Log.d("----WEDDINGCARD----", "currentContentHeight=" + currentContentHeight);
         if (currentContentHeight > singleContentHeight) {
-            Log.d("----WEDDINGCARD----", "totalBitmapReq=" + currentContentHeight);
             bitmap = extendBitmap(bitmap, currentContentHeight - singleContentHeight, bgColor);
             canvas = new Canvas(bitmap);
-//            int totalBitmapReq = (int) (currentContentHeight / singleContentHeight) + 1;
-//            bitmap = combineImages(bitmap, totalBitmapReq);
-//            canvas = new Canvas(bitmap);
         }
 
         float xPosWatermark = (bitmap.getWidth() - watermark.getWidth()) / 2.0f;

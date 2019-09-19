@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +58,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by hemant on 4/12/17.
@@ -190,9 +191,7 @@ public class MainArticleHomeRecyclerViewAdapter extends RecyclerView.Adapter<Rec
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof AdViewHolder) {
 
-        }
-
-        else if (holder instanceof HeaderViewHolder) {
+        } else if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
             addArticleItem(viewHolder.txvArticleTitle, viewHolder.forYouInfoLL, viewHolder.viewCountTextView, viewHolder.commentCountTextView,
                     viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView, viewHolder.videoIndicatorImageView
@@ -1223,29 +1222,33 @@ public class MainArticleHomeRecyclerViewAdapter extends RecyclerView.Adapter<Rec
             Log.d("VideoCarouselViewHolder", "Response = " + result);
             try {
                 VlogsListingResponse responseData = gson.fromJson(result, VlogsListingResponse.class);
-                if (responseData != null) {
-                    Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData.getData().get(0).getResult().size());
-                    articleDataModelsNew.get(pos).setCarouselVideoList(responseData.getData().get(0).getResult());
-                    Log.d("VideoCarouselViewHolder", "ASYNC");
-                    populateCarouselVideos(viewHolder, responseData.getData().get(0).getResult());
-                    articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
-                    articleDataModelsNew.get(pos).setResponseReceived(true);
-                } else {
-                    VlogsListingResponse responseData1 = gson.fromJson(result, VlogsListingResponse.class);
+                if (articleDataModelsNew.size() > 0) {
                     if (responseData != null) {
-                        Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData1.getData().get(0).getResult().size());
-                        articleDataModelsNew.get(pos).setCarouselVideoList(responseData1.getData().get(0).getResult());
+                        Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData.getData().get(0).getResult().size());
+                        articleDataModelsNew.get(pos).setCarouselVideoList(responseData.getData().get(0).getResult());
                         Log.d("VideoCarouselViewHolder", "ASYNC");
-                        populateCarouselVideos(viewHolder, responseData1.getData().get(0).getResult());
+                        populateCarouselVideos(viewHolder, responseData.getData().get(0).getResult());
                         articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
                         articleDataModelsNew.get(pos).setResponseReceived(true);
+                    } else {
+                        VlogsListingResponse responseData1 = gson.fromJson(result, VlogsListingResponse.class);
+                        if (responseData != null) {
+                            Log.d("VideoCarouselViewHolder", "pos=" + pos + "  SIZE=" + responseData1.getData().get(0).getResult().size());
+                            articleDataModelsNew.get(pos).setCarouselVideoList(responseData1.getData().get(0).getResult());
+                            Log.d("VideoCarouselViewHolder", "ASYNC");
+                            populateCarouselVideos(viewHolder, responseData1.getData().get(0).getResult());
+                            articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
+                            articleDataModelsNew.get(pos).setResponseReceived(true);
+                        }
                     }
                 }
             } catch (JsonSyntaxException jse) {
-                articleDataModelsNew.get(pos).setCarouselVideoList(new ArrayList<>());
-                populateCarouselVideos(viewHolder, new ArrayList<>());
-                articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
-                articleDataModelsNew.get(pos).setResponseReceived(true);
+                if (articleDataModelsNew.size()>0) {
+                    articleDataModelsNew.get(pos).setCarouselVideoList(new ArrayList<>());
+                    populateCarouselVideos(viewHolder, new ArrayList<>());
+                    articleDataModelsNew.get(pos).setCarouselRequestRunning(false);
+                    articleDataModelsNew.get(pos).setResponseReceived(true);
+                }
             }
         }
 

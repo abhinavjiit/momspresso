@@ -27,23 +27,20 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
 
     private final static String VIDEO_PUBLISHED_STATUS = "3";
     private final IEditVlog iEditVlog;
-    private ArrayList<VlogsListingAndDetailResult> mArticleListData;
+    private boolean isPrivateProfile;
     private Context mContext;
     private LayoutInflater mInflator;
     ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
 
     private final float density;
 
-    public MyFunnyVideosListingAdapter(Context pContext, IEditVlog iEditVlog) {
+    public MyFunnyVideosListingAdapter(Context pContext, IEditVlog iEditVlog, boolean isPrivateProfile) {
 
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.iEditVlog = iEditVlog;
-    }
-
-    public void setListData(ArrayList<VlogsListingAndDetailResult> mParentingLists) {
-        mArticleListData = mParentingLists;
+        this.isPrivateProfile = isPrivateProfile;
     }
 
     public void setNewListData(ArrayList<VlogsListingAndDetailResult> mParentingLists_new) {
@@ -117,7 +114,7 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
 
             holder.dateTextView.setText(mContext.getString(R.string.user_funny_video_published_on, DateTimeUtils.getDateFromTimestamp(Long.parseLong(articleDataModelsNew.get(position).getPublished_time()))));
 
-            if (VIDEO_PUBLISHED_STATUS.equals(articleDataModelsNew.get(position).getPublication_status())) {
+            if (VIDEO_PUBLISHED_STATUS.equals(articleDataModelsNew.get(position).getPublication_status()) && isPrivateProfile) {
                 holder.shareImageView.setVisibility(View.VISIBLE);
                 holder.vlogOptionImageView.setVisibility(View.VISIBLE);
             } else {

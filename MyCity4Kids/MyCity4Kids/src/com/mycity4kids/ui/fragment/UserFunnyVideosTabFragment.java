@@ -94,6 +94,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
     private String authorId;
     private String fromScreen;
     private View view;
+    private boolean isPrivateProfile;
 
     @Nullable
     @Override
@@ -110,6 +111,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
         getStartedTextView = (TextView) view.findViewById(R.id.getStartedTextView);
 
         authorId = getArguments().getString(Constants.AUTHOR_ID);
+        isPrivateProfile = getArguments().getBoolean("isPrivateProfile");
 
         if (StringUtils.isNullOrEmpty(authorId)) {
             authorId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
@@ -123,7 +125,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
         nextPageNumber = 1;
         hitArticleListingApi();
 
-        articlesListingAdapter = new MyFunnyVideosListingAdapter(getActivity(), this);
+        articlesListingAdapter = new MyFunnyVideosListingAdapter(getActivity(), this, isPrivateProfile);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();

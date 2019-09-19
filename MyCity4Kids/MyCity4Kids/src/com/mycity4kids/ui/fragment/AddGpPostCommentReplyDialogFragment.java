@@ -19,16 +19,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.core.content.ContextCompat;
-
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -61,6 +51,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -102,6 +93,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -115,7 +111,8 @@ import static com.facebook.accountkit.internal.AccountKitController.getApplicati
 /**
  * Created by user on 08-06-2015.
  */
-public class AddGpPostCommentReplyDialogFragment extends DialogFragment implements OnClickListener, TaskFragment.TaskCallbacks, AudioRecordView.RecordingListener, SeekBar.OnSeekBarChangeListener {
+public class AddGpPostCommentReplyDialogFragment extends DialogFragment implements OnClickListener, TaskFragment.TaskCallbacks,
+        AudioRecordView.RecordingListener, SeekBar.OnSeekBarChangeListener {
 
     private static final String TAG_TASK_FRAGMENT = "task_fragment";
     private ProgressDialog mProgressDialog;
@@ -247,6 +244,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
         mAuth = FirebaseAuth.getInstance();
 
+        AppUtils.createDirIfNotExists("MyCity4Kids/videos");
         mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
         mFileName += "/audiorecordtest.m4a";
 
@@ -969,19 +967,10 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     }
 
     private void requestPermissions() {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -993,8 +982,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.CAMERA)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -1030,15 +1017,12 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             }
         }
         String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
-        ActivityCompat.requestPermissions(getActivity(), requiredPermission, REQUEST_INIT_PERMISSION_FOR_AUDIO);
+        requestPermissions(requiredPermission, REQUEST_INIT_PERMISSION_FOR_AUDIO);
     }
 
     private void requestPermissionsForAudio() {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.RECORD_AUDIO)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_audio_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -1052,14 +1036,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -1082,20 +1058,21 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             }
         }
         String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
-        ActivityCompat.requestPermissions(getActivity(), requiredPermission, REQUEST_INIT_PERMISSION);
+        requestPermissions(requiredPermission, REQUEST_INIT_PERMISSION);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_INIT_PERMISSION_FOR_AUDIO) {
-            // We have requested multiple permissions for contacts, so all of them need to be
-            // checked.
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 // All required permissions have been granted, display contacts fragment.
                 Snackbar.make(mLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
+                AppUtils.createDirIfNotExists("MyCity4Kids/videos");
+                mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
+                mFileName += "/audiorecordtest.m4a";
             } else {
                 Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(mLayout, R.string.permissions_not_granted,
@@ -1118,6 +1095,9 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 Snackbar.make(mLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
+                AppUtils.createDirIfNotExists("MyCity4Kids/videos");
+                mFileName = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/";
+                mFileName += "/audiorecordtest.m4a";
             } else {
                 Snackbar.make(mLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
@@ -1160,13 +1140,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                                 fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
                             }
                         }
-//                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
-//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-//                        String path = MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), imageBitmap, "Title", null);
-//                        Uri imageUriTemp = Uri.parse(path);
-//                        File file2 = FileUtils.getFile(getActivity(), imageUriTemp);
-//                        sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         e.printStackTrace();
@@ -1227,7 +1200,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         }
     }
 
-    public void uploadAudio(Uri file) {
+    private void uploadAudio(Uri file) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         mAuth.signInAnonymously()
@@ -1244,10 +1217,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                             Log.w("VideoUpload", "signInAnonymously:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
                         }
-
-                        // ...
                     }
                 });
     }
@@ -1258,7 +1228,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         final StorageReference storageRef = storage.getReference();
 
         suffixName = System.currentTimeMillis();
-//        Uri file = Uri.fromFile(file2);
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("audio/m4a")
                 .build();
@@ -1266,13 +1235,9 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                 + "/audio/" + file2.getLastPathSegment() + "_" + suffixName + ".m4a");
         com.google.firebase.storage.UploadTask uploadTask = riversRef.putFile(file2, metadata);
 
-// Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-//                MixPanelUtils.pushVideoUploadFailureEvent(mixpanel, title);
-//                createRowForFailedAttempt(exception.getMessage());
 
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -1290,8 +1255,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                         addAudioToContainer(contentURI.toString());
                     }
                 });
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
             }
         });
 
@@ -1309,9 +1272,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
         Log.e("requestBodyFile", requestBodyFile.toString());
-        //   RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "2");
-        // prepare call in Retrofit 2.0
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
@@ -1324,14 +1285,12 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                          @Override
                          public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
                              removeProgressDialog();
-                             if (response == null || response.body() == null) {
-                                 //   showToast(getString(R.string.server_went_wrong));
+                             if (response.body() == null) {
                                  Toast.makeText(getActivity(), "server_went_wrong", Toast.LENGTH_SHORT).show();
                                  return;
                              }
                              ImageUploadResponse responseModel = response.body();
                              if (responseModel.getCode() != 200) {
-                                 // showToast(getString(R.string.toast_response_error));
                                  Toast.makeText(getActivity(), "toast_response_error", Toast.LENGTH_SHORT).show();
                                  return;
                              } else {
@@ -1343,9 +1302,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
                                  } else {
                                      Toast.makeText(getActivity(), "please try again later", Toast.LENGTH_SHORT).show();
                                  }
-//                                 Picasso.with(AddTextOrMediaGroupPostActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(postImageView);
-//                                 postImageView.setVisibility(View.VISIBLE);
-                                 //showToast(getString(R.string.image_upload_success));
                              }
                          }
 
@@ -1360,7 +1316,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         );
     }
 
-    public static Bitmap rotateImage(Bitmap source, float angle) {
+    private static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
@@ -1595,7 +1551,6 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             mRecorder = null;
         }
         if (mMediaplayer != null) {
-//            mMediaplayer.stop();
             mMediaplayer.release();
             mMediaplayer = null;
         }
@@ -1641,16 +1596,9 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             if (mMediaPlayerComment != null && isCommentPlay) {
                 totalDuration = mMediaPlayerComment.getDuration();
                 currentDuration = mMediaPlayerComment.getCurrentPosition();
-
                 audioTimeElapsedComment.setText(milliSecondsToTimer(currentDuration) + "/" + milliSecondsToTimer(totalDuration));
-
-                // Updating progress bar
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
-                //Log.d("Progress", ""+progress);
                 audioSeekBar.setProgress(progress);
-
-
-                // Running this thread after 100 milliseconds
                 mHandler.postDelayed(this, 100);
             }
         }
@@ -1658,7 +1606,7 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
 
     /**
      *
-     * */
+     */
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
 
@@ -1686,28 +1634,19 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
             mHandler.removeCallbacks(mUpdateCommentTimeTask);
             int totalDuration = mMediaPlayerComment.getDuration();
             int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
-
-            // forward or backward to certain seconds
             mMediaPlayerComment.seekTo(currentPosition);
         } else {
             mHandler.removeCallbacks(mUpdateTimeTask);
-
             int totalDuration = mMediaplayer.getDuration();
             int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
-
-            // forward or backward to certain seconds
             mMediaplayer.seekTo(currentPosition);
         }
-        // update timer progress again
-//        updateProgressBar();
     }
 
-    public int progressToTimer(int progress, int totalDuration) {
+    private int progressToTimer(int progress, int totalDuration) {
         int currentDuration = 0;
         totalDuration = (int) (totalDuration / 1000);
         currentDuration = (int) ((((double) progress) / 100) * totalDuration);
-
-        // return current duration in milliseconds
         return currentDuration * 1000;
     }
 
@@ -1737,16 +1676,11 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
         return finalTimerString;
     }
 
-    public int getProgressPercentage(long currentDuration, long totalDuration) {
+    private int getProgressPercentage(long currentDuration, long totalDuration) {
         Double percentage = (double) 0;
-
         long currentSeconds = (int) (currentDuration / 1000);
         long totalSeconds = (int) (totalDuration / 1000);
-
-        // calculating percentage
         percentage = (((double) currentSeconds) / totalSeconds) * 100;
-
-        // return percentage
         return percentage.intValue();
     }
 

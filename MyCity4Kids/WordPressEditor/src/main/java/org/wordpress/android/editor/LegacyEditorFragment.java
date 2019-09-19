@@ -1090,6 +1090,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         addMediaFile(mediaFile, imageUrl, imageLoader, mContentEditText.getSelectionStart(), mContentEditText.getSelectionEnd());
     }
 
+//    @Override
+//    public void setSpeechToText(String speechToText) {
+//
+//    }
+
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
         Editable editableText = mContentEditText.getText();

@@ -9,7 +9,6 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.Spanned;
 import android.util.Log;
@@ -49,6 +48,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import androidx.appcompat.app.AlertDialog;
+
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, View.OnTouchListener,
         OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
         EditorMediaUploadListener {
@@ -61,6 +62,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private static final String KEY_CONTENT = "content";
 
     private static final String TAG_FORMAT_BAR_BUTTON_MEDIA = "media";
+    private static final String TAG_FORMAT_BAR_BUTTON_SPEECH = "speech";
     private static final String TAG_FORMAT_BAR_BUTTON_LINK = "link";
 
     private static final float TOOLBAR_ALPHA_ENABLED = 1;
@@ -360,6 +362,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         ToggleButton linkButton = (ToggleButton) view.findViewById(R.id.format_bar_button_link);
         mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_LINK, linkButton);
 
+//        ToggleButton speechButton = (ToggleButton) view.findViewById(R.id.format_bar_button_audio);
+//        mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_SPEECH, speechButton);
+
        /* ToggleButton htmlButton = (ToggleButton) view.findViewById(R.id.format_bar_button_html);
         htmlButton.setOnClickListener(this);*/
 
@@ -461,6 +466,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     getActivity().openContextMenu(mTagToggleButtonMap.get(TAG_FORMAT_BAR_BUTTON_MEDIA));
                 }
             }
+//        } else if (id == R.id.format_bar_button_audio) {
+//            mEditorFragmentListener.onTrackableEvent(TrackableEvent.SPEECH_TO_TEXT);
+//            ((ToggleButton) v).setChecked(false);
+//
+//            if (mSourceView.getVisibility() == View.VISIBLE) {
+//                ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
+//            } else {
+//                mEditorFragmentListener.onAudioClicked();
+//                if (isAdded()) {
+//                    getActivity().openContextMenu(mTagToggleButtonMap.get(TAG_FORMAT_BAR_BUTTON_SPEECH));
+//                }
+//            }
         } else if (id == R.id.format_bar_button_link) {
             if (!((ToggleButton) v).isChecked()) {
                 // The link button was checked when it was pressed; remove the current link
@@ -829,6 +846,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             }
         });
     }
+
+//    @Override
+//    public void setSpeechToText(final String speechToText) {
+//        mWebView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setHTML('" +
+//                        Utils.escapeHtml(mContentHtml) + "');");
+//            }
+//        });
+//    }
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {

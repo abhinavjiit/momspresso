@@ -28,6 +28,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -109,15 +116,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private int skip = 0;
     private int limit = 150;
     int count = 0;
-    private boolean isLoading;
     private ArrayList<GroupPostCommentResult> completeResponseList;
     private String postType;
     private int groupId;
     private int postId;
     private UserPostSettingResult currentPostPrefsForUser;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private boolean isReuqestRunning = false;
-    private boolean isLastPageReached = false;
     private boolean commentDisableFlag;
 
     private Animation slideAnim, fadeAnim;
@@ -206,7 +209,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         completeResponseList.add(new GroupPostCommentResult()); // Empty element for Header position
 
         final LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
         GroupMembershipStatus groupMembershipStatus = new GroupMembershipStatus(this);
@@ -219,30 +222,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 getPostComments();
             }
         });
-//        recyclerView.setOnScrollListener(object : EndlessScrollListener(linearLayoutManager) {
-//            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-//                fetchCampaignList(endIndex + 1)
-//            }
-//        })
-
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                if (dy > 0) //check for scroll down
-//                {
-//                    visibleItemCount = llm.getChildCount();
-//                    totalItemCount = llm.getItemCount();
-//                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
-//
-//                    if (!isReuqestRunning && !isLastPageReached) {
-//                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-//                            isReuqestRunning = true;
-//                            getPostComments();
-//                        }
-//                    }
-//                }
-//            }
-//        });
     }
 
     private void getPostDetails() {
@@ -255,8 +234,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<GroupPostResponse> postDetailsResponseCallback = new Callback<GroupPostResponse>() {
         @Override
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -283,7 +262,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         postType = AppConstants.POST_TYPE_ASK_AN_EXPERT;
                     } else {
                         postType = AppConstants.POST_TYPE_TEXT;
-
                     }
 
                     if (postData.getDisableComments() == 1) {
@@ -302,11 +280,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     } else if (postType.equals("2")) {
                         pollOptions = (HashMap<String, String>) getIntent().getSerializableExtra("pollOptions");
                         postData.setPollOptions(pollOptions);
-                    } /*else if (postType.equals("4")) {
-                        mediaUrls = (HashMap<String, String>) getIntent().getSerializableExtra("mediaUrls");
-                        postData.setMediaUrls(mediaUrls);
-                    }*/
-
+                    }
                     formatPostData();
 
                     groupPostDetailsAndCommentsRecyclerAdapter = new GroupPostDetailsAndCommentsRecyclerAdapter(GroupPostDetailActivity.this, GroupPostDetailActivity.this, postType);
@@ -317,7 +291,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     } else {
                         getSinglePostComments();
                     }
-
                 } else {
 
                 }
@@ -344,12 +317,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             switch (postData.getCounts().get(i).getName()) {
                 case "helpfullCount":
                     Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Helpful", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
-
                     postData.setHelpfullCount(postData.getCounts().get(i).getCount());
                     break;
                 case "notHelpfullCount":
                     Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "not helpful", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
-
                     postData.setNotHelpfullCount(postData.getCounts().get(i).getCount());
                     break;
                 case "responseCount":
@@ -396,9 +367,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<GroupPostCommentResponse> postCommentCallback = new Callback<GroupPostCommentResponse>() {
         @Override
         public void onResponse(Call<GroupPostCommentResponse> call, retrofit2.Response<GroupPostCommentResponse> response) {
-            isReuqestRunning = false;
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -419,7 +389,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
         @Override
         public void onFailure(Call<GroupPostCommentResponse> call, Throwable t) {
-            isReuqestRunning = false;
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
@@ -427,28 +398,16 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         totalPostCount = response.getTotal();
         ArrayList<GroupPostCommentResult> dataList = (ArrayList<GroupPostCommentResult>) response.getData().get(0).getResult();
         if (dataList.size() == 0) {
-            isLastPageReached = false;
             if (null != completeResponseList && !completeResponseList.isEmpty()) {
                 //No more next results for search from pagination
-                isLastPageReached = true;
             } else {
                 // No results
-//                noPostsTextView.setVisibility(View.VISIBLE);
-//                postList = dataList;
-//                groupSummaryPostRecyclerAdapter.setHeaderData(selectedGroup);
-//                groupSummaryPostRecyclerAdapter.setData(postList);
-//                groupSummaryPostRecyclerAdapter.notifyDataSetChanged();
             }
         } else {
-//            noPostsTextView.setVisibility(View.GONE);
             formatCommentData(dataList);
             completeResponseList.addAll(dataList);
-//            groupsGenericPostRecyclerAdapter.setHeaderData(selectedGroup);
             groupPostDetailsAndCommentsRecyclerAdapter.setData(postData, completeResponseList);
             skip = skip + limit;
-            if (skip >= totalPostCount) {
-                isLastPageReached = true;
-            }
             groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
         }
     }
@@ -483,44 +442,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
-/*
-
-            case R.id.commentorUsernameTextView:
-            case R.id.commentorImageView:
-
-
-                if (postData.getIsAnnon() == 0) {
-
-                    if (userDynamoId.equals(postData.getUserId())) {
-                        Intent pIntent = new Intent(this, PrivateProfileActivity.class);
-                        startActivity(pIntent);
-                    } else {
-                        Intent intentnn = new Intent(this, PublicProfileActivity.class);
-                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, postData.getUserId());
-                        intentnn.putExtra(AppConstants.AUTHOR_NAME, postData.getUserInfo().getFirstName() + " " + postData.getUserInfo().getLastName());
-                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
-                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
-                    }
-                }
-            case R.id.userImageView:
-            case R.id.usernameTextView:
-
-                if (completeResponseList.get(position).getIsAnnon() == 0) {
-
-                    if (userDynamoId.equals(completeResponseList.get(position).getUserId())) {
-                        Intent pIntent = new Intent(this, PrivateProfileActivity.class);
-                        startActivity(pIntent);
-                    } else {
-                        Intent intentnn = new Intent(this, PublicProfileActivity.class);
-                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, completeResponseList.get(position).getUserId());
-                        intentnn.putExtra(AppConstants.AUTHOR_NAME, completeResponseList.get(position).getUserInfo().getFirstName() + " " + completeResponseList.get(position - 1).getUserInfo().getLastName());
-                        intentnn.putExtra(Constants.FROM_SCREEN, "Groups");
-                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
-                    }
-                }
-*/
-
-
             case R.id.commentDataTextView:
             case R.id.commentRootView: {
                 GpPostCommentOptionsDialogFragment commentOptionsDialogFragment = new GpPostCommentOptionsDialogFragment();
@@ -542,13 +463,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
                 }
                 Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Reply", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Type_Reply", "", String.valueOf(groupId));
-
                 if (commentDisableFlag) {
                 } else {
                     openAddCommentReplyDialog(completeResponseList.get(position));
                 }
             }
-
             break;
             case R.id.replyCountTextView:
             case R.id.replyCountTextViewmedia:
@@ -556,7 +475,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
                 }
                 Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "View Reply", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Reply screen", "", String.valueOf(groupId));
-
                 viewGroupPostCommentsRepliesDialogFragment = new ViewGroupPostCommentsRepliesDialogFragment();
                 Bundle _args = new Bundle();
                 _args.putParcelable("commentReplies", completeResponseList.get(position));
@@ -569,7 +487,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 viewGroupPostCommentsRepliesDialogFragment.show(fm, "Replies");
                 break;
             case R.id.postSettingImageView:
-
                 getCurrentPostSettingsStatus(postData);
                 if (AppConstants.GROUP_MEMBER_TYPE_ADMIN.equals(memberType)
                         || AppConstants.GROUP_MEMBER_TYPE_MODERATOR.equals(memberType)) {
@@ -580,7 +497,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 } else {
                     commentToggleTextView.setText(getString(R.string.groups_disable_comment));
                 }
-
                 postSettingsContainer.startAnimation(slideAnim);
                 overlayView.startAnimation(fadeAnim);
                 postSettingsContainerMain.setVisibility(View.VISIBLE);
@@ -597,17 +513,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 }
             case R.id.upvoteContainer:
                 if (postData.getMarkedHelpful() == 0) {
-
-
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "post", 0);
-
-
                 }
                 if (postData.getMarkedHelpful() == 1) {
-
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, "post", 0);
-
-
                 }
                 break;
             case R.id.downvoteContainer:
@@ -615,31 +524,19 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.upvoteCommentContainer:
                 if (completeResponseList.get(position).getMarkedHelpful() == 0) {
-
-
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "comment", position);
-
-
                 }
                 if (completeResponseList.get(position).getMarkedHelpful() == 1) {
-
                     markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, "comment", position);
-
-
                 }
-
-
-                // markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, "comment", position);
                 break;
             case R.id.downvoteCommentContainer:
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, "comment", position);
                 break;
             case R.id.shareTextView:
                 Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment", "Share", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "sharing options", "", String.valueOf(groupId));
-
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-
                 String shareUrl = AppConstants.GROUPS_BASE_SHARE_URL + postData.getUrl();
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(shareIntent, "Momspresso"));
@@ -647,13 +544,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             case R.id.whatsappShare:
                 String shareUrlWhatsapp = AppConstants.GROUPS_BASE_SHARE_URL + postData.getUrl();
                 AppUtils.shareCampaignWithWhatsApp(GroupPostDetailActivity.this, shareUrlWhatsapp, "", "", "", "", "");
-
-
+                break;
         }
     }
 
     private void getAdminPostSettingsStatus(GroupPostResult selectedPost) {
-//        progressBar.setVisibility(View.VISIBLE);
         pinPostTextView.setVisibility(View.GONE);
         blockUserTextView.setVisibility(View.GONE);
         deletePostTextView.setVisibility(View.GONE);
@@ -667,7 +562,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private void fetchAudioUrlFromFirebase(String url) {
         final FirebaseStorage storage = FirebaseStorage.getInstance();
         // Create a storage reference from our app
-
         mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         StorageReference storageRef = storage.getReferenceFromUrl(url);
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -703,8 +597,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<GroupPostResponse> postAdminDetailsResponseCallback = new Callback<GroupPostResponse>() {
         @Override
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -841,18 +735,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                                     }
                                 }
                             }
-//                            if (postData.getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
-//                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
-//                                    postData.setHelpfullCount(postData.getHelpfullCount() + 1);
-//                                } else {
-//                                    postData.setNotHelpfullCount(postData.getNotHelpfullCount() + 1);
-//                                }
-//                            }
                         }
                     }
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
-//                    groupPostResult.setVoted(true);
-//                    notifyDataSetChanged();
                 } else {
 
                 }
@@ -883,8 +768,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<GroupsActionResponse> patchActionResponseCallback = new Callback<GroupsActionResponse>() {
         @Override
         public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -927,8 +812,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                         }
                     }
                     groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
-//                    groupPostResult.setVoted(true);
-//                    notifyDataSetChanged();
                 } else {
 
                 }
@@ -940,7 +823,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
         @Override
         public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
@@ -960,8 +844,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         public void onResponse(Call<UserPostSettingResponse> call, retrofit2.Response<UserPostSettingResponse> response) {
             progressBar.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -977,7 +861,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -1099,7 +982,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             break;
             case R.id.reportPostTextView:
                 Utils.groupsEvent(GroupPostDetailActivity.this, "Groups_Discussion_# comment ActionView", "report this post", "android", SharedPrefUtils.getAppLocale(GroupPostDetailActivity.this), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "click", "", String.valueOf(groupId));
-
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
@@ -1161,14 +1043,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             }
             try {
                 if (response.isSuccessful()) {
-                    GroupPostResponse updatePostResponse = response.body();
-
-//                    if (updatePostResponse.getData().get(0).getResult().get(0).getIsPinned() == 1) {
-//                        pinPostTextView.setText(getString(R.string.groups_unpin_post));
-//                    } else {
-//                        pinPostTextView.setText(getString(R.string.groups_pin_post));
-//                    }
-
                     setResult(RESULT_OK);
                     onBackPressed();
                 } else {
@@ -1198,8 +1072,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<GroupsMembershipResponse> getMembershipDetailsReponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
         public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1236,8 +1110,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<GroupsMembershipResponse> updateGroupMembershipResponseCallback = new Callback<GroupsMembershipResponse>() {
         @Override
         public void onResponse(Call<GroupsMembershipResponse> call, retrofit2.Response<GroupsMembershipResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1253,7 +1127,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -1279,8 +1152,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<GroupPostResponse> postUpdateResponseListener = new Callback<GroupPostResponse>() {
         @Override
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1365,8 +1238,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<ResponseBody> createPostSettingForUserResponseCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1407,8 +1280,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<UserPostSettingResponse> updatePostSettingForUserResponseCallback = new Callback<UserPostSettingResponse>() {
         @Override
         public void onResponse(Call<UserPostSettingResponse> call, retrofit2.Response<UserPostSettingResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1474,8 +1347,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<AddGpPostCommentReplyResponse> addCommentResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
         @Override
         public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1558,8 +1431,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<AddGpPostCommentReplyResponse> editCommentResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
         @Override
         public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1612,8 +1485,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private Callback<AddGpPostCommentReplyResponse> addReplyResponseListener = new Callback<AddGpPostCommentReplyResponse>() {
         @Override
         public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1698,8 +1571,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         @Override
         public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1748,14 +1621,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
     };
 
-    private boolean validateCommentText() {
-//        if (StringUtils.isNullOrEmpty(writeCommentEditText.getText().toString())) {
-//            Toast.makeText(this, "Please add a comment", Toast.LENGTH_LONG).show();
-//            return false;
-//        }
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -1789,8 +1654,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         @Override
         public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1832,8 +1697,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         @Override
         public void onResponse(Call<AddGpPostCommentReplyResponse> call, retrofit2.Response<AddGpPostCommentReplyResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
+            if (response.body() == null) {
+                if (response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
                 }
@@ -1900,16 +1765,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         if ("REPLY".equals(responseType)) {
             //position-1 to accommodate the parent comment above.
             _args.putInt("responseId", completeResponseList.get(commentPosition).getChildData().get(position - 1).getId());
-//            _args.putParcelable("parentCommentData", completeResponseList.get(commentPosition).getChildData().get(position - 1));
         } else {
             _args.putInt("responseId", completeResponseList.get(position).getId());
-//            _args.putParcelable("parentCommentData", completeResponseList.get(position));
         }
         _args.putString("type", AppConstants.GROUP_REPORT_TYPE_COMMENT);
         groupPostReportDialogFragment.setArguments(_args);
         groupPostReportDialogFragment.setCancelable(true);
         groupPostReportDialogFragment.show(fm, "Choose report option");
-//        reportPostTextView.setText("UNREPORT");
     }
 
 
@@ -1994,17 +1856,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 postData.setMediaUrls(editedPost.getMediaUrls());
                 postData.setContent(editedPost.getContent());
                 postData.setType(editedPost.getType());
-//                postData.setContent(data.getStringExtra("updatedContent"));
                 groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
             } else if (requestCode == 1000) {
                 Intent intent = getIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 finish();
                 startActivity(intent);
-
             }
-
-
         }
     }
 
@@ -2069,11 +1927,9 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onPause() {
         super.onPause();
-
         if (groupPostDetailsAndCommentsRecyclerAdapter != null) {
             groupPostDetailsAndCommentsRecyclerAdapter.releasePlayer();
         }
-
     }
 
     @Override
@@ -2087,14 +1943,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
 
 
     @Override
     public void replyDataUpdate(ArrayList<GroupPostCommentResult> repliesList, int position) {
-
 
     }
 
@@ -2104,6 +1957,5 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         finish();
         startActivity(intent);
-
     }
 }

@@ -1,6 +1,10 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +83,6 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
 
     @Override
     public void onBindViewHolder(ChallengeViewHolder holder, int position) {
-
         switch (position) {
             case 0:
                 holder.previousAndThisWeekTextView.setText(R.string.this_week_challenge);
@@ -122,8 +125,6 @@ public class ChallengeRecyclerAdapter extends RecyclerView.Adapter<ChallengeRecy
 
 
         }
-
-
     }
 
     @Override

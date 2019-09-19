@@ -102,16 +102,6 @@ public class Utils {
     public static void pushOpenScreenEvent(Context context, String screenName, String user) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "AppScreenOpened", GTMTags.TagScreen, screenName, GTMTags.USER_ID, user));
-
-        MixpanelAPI mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("userId", user);
-            jsonObject.put("screen", screenName);
-            mixpanel.track("AppScreenOpened", jsonObject);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void pushViewArticleEvent(Context context, String screenName, String user, String articleId, String listingType, String index, String author) {

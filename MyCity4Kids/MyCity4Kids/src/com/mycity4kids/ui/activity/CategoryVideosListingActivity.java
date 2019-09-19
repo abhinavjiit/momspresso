@@ -92,8 +92,8 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
                 SharedPrefUtils.setCoachmarksShownFlag(BaseApplication.getAppContext(), "Mom_vlog", true);
             }
         });
-        String isRewardsAdded = SharedPrefUtils.getIsRewardsAdded(BaseApplication.getAppContext());
-        if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "Mom_vlog")) {
+
+        if (!SharedPrefUtils.isCoachmarksShownFlag(CategoryVideosListingActivity.this, "Mom_vlog")) {
             momVlogCoachMark.setVisibility(View.VISIBLE);
 
 
@@ -193,7 +193,6 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
     }
 
     private void initializeUI() {
-//        if (subTopicsList.size() == 0) {
         Topics mainTopic = new Topics();
         mainTopic.setId(null);
         String allCategoryLabel = "";
@@ -201,17 +200,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         mainTopic.setDisplay_name(allCategoryLabel);
         mainTopic.setTitle(allCategoryLabel);
 
-//        Topics childTopic = new Topics();
-//        childTopic.setId("");
-//        childTopic.setDisplay_name(allCategoryLabel);
-//        childTopic.setTitle(allCategoryLabel);
-
-//        ArrayList<Topics> aa = new ArrayList<Topics>();
-//        aa.add(childTopic);
-
-//        mainTopic.setChild(aa);
         subTopicsList.add(0, mainTopic);
-//        }
         for (int i = 0; i < subTopicsList.size(); i++) {
             Log.d("VIDEO TOPIC", subTopicsList.get(i).getDisplay_name() + "  --  " + subTopicsList.get(i).getId());
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));

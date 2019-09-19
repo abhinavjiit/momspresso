@@ -60,10 +60,9 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.aa_mc4k_home_new, container, false);
 
-        userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
+        userId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         trendingArraylist = new ArrayList<>();
-//        getGroupIdForCurrentCategory();
         hitTrendingDataAPI();
         return view;
     }
@@ -82,7 +81,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         hitTrendingDataAPI();
     }
 
-    public void hitTrendingDataAPI() {
+    private void hitTrendingDataAPI() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI trendinAPI = retrofit.create(TopicsCategoryAPI.class);
 
@@ -152,7 +151,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         AppUtils.changeTabsFont(tabLayout);
         viewPager = (ViewPager) view.findViewById(R.id.pager);
         adapter = new TrendingTopicsPagerAdapter
-                (getChildFragmentManager(), tabLayout.getTabCount());
+                (getChildFragmentManager(), tabLayout.getTabCount(), feedOrderArray);
         adapter.setGroupInfo(gpHeading, gpSubHeading, gpImageUrl, groupId);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -202,7 +201,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private Callback<NotificationCenterListResponse> unreadNotificationCountResponseCallback = new Callback<NotificationCenterListResponse>() {
         @Override
         public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
 

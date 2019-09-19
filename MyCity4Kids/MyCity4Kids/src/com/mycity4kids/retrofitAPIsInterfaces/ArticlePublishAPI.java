@@ -6,6 +6,7 @@ import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ArticleTagsImagesResponse;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -45,6 +46,6 @@ public interface ArticlePublishAPI {
     Call<ArticleDraftResponse> updateArticle(@Path("articleId") String articleId,
                                              @Body ArticleDraftRequest body);
 
-    @POST("v2/categories/")
-    Call<Topics> getArticleChallenges(@Query("id") String categoryId);
+    @GET("v2/categories/")
+    Call<ResponseBody> getArticleChallenges(@Query("id") String categoryId);
 }

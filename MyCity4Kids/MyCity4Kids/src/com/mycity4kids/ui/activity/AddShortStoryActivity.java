@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.activity;
 
 import android.Manifest;
-import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -10,16 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.AppCompatRadioButton;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -33,7 +22,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
@@ -53,7 +53,6 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.request.ShortStoryDraftOrPublishRequest;
 import com.mycity4kids.models.response.ArticleDraftResponse;
-import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
@@ -379,9 +378,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             } catch (FileNotFoundException e) {
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
                 Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -408,8 +405,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     }
                 });
             }
-
-
         }
     }
 
@@ -423,22 +418,17 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         } catch (FileNotFoundException e) {
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
             Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                     AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
-
                     try {
                         FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                         ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
                         createTopicsData(res);
-                        // recyclerView.setAdapter(adapter);
-                        //   adapter.setListData(ssTopicsList);
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -452,8 +442,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
             });
         }
-
-
     }
 
 
@@ -464,7 +452,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     selectedTopic = subTopicsList.get(i);
                     break;
                 }
-            }            //     String h = selectedTopic.getChild().get(selectedTopic.getChild().size() - 1).getId();
+            }
             for (int j = selectedTopic.getChild().size() - 1; j >= 0; j--) {
                 if (key.equals(selectedTopic.getChild().get(j).getId())) {
                     if (value.equals(selectedTopic.getChild().get(j).getDisplay_name())) {
@@ -482,10 +470,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                             challengeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_article));
                         }
                         break;
-
                     }
-
-
                     break;
                 }
             }
@@ -494,10 +479,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
 
     private void checkTagIsActive() {
-
         try {
             shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
-
             if (shortStoriesTopicList == null) {
                 FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
@@ -508,7 +491,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     if (AppConstants.SHORT_STORY_CATEGORYID.equals(res.getData().get(i).getId())) {
                         shortStoriesTopicList.add(res.getData().get(i));
                     }
-
                 }
             }
 
@@ -535,9 +517,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     }
                 }
             }
-
-        } catch (
-                FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -581,7 +561,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                                 }
                             }
                         }
-
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
                         Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -595,15 +574,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
             });
         }
-
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-
-
     }
 
     private int countWords(String s) {
@@ -663,7 +639,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     }
 
     private void updateTagListFromJson(String tagsJson) {
-
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(tagsJson);
@@ -676,8 +651,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 getImageUrlShow(publishedChallengeId, publishedChallengeName);
                 break;
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -812,10 +785,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
     private void saveDraftBeforePublishRequest(String title, String body, String draftId1) {
         showProgressDialog(getResources().getString(R.string.please_wait));
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
-
         shortStoryDraftOrPublishRequest = new ShortStoryDraftOrPublishRequest();
         shortStoryDraftOrPublishRequest.setTitle(title);
         shortStoryDraftOrPublishRequest.setBody(body);
@@ -850,15 +821,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private Callback<ArticleDraftResponse> saveDraftBeforePublishResponseListener = new Callback<ArticleDraftResponse>() {
         @Override
         public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
-            if (response == null || response.body() == null) {
-//                showToast(getString(R.string.server_went_wrong));
+            if (response.body() == null) {
                 return;
             }
             try {
                 ArticleDraftResponse responseModel = response.body();
                 if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                     draftId = responseModel.getData().get(0).getResult().getId() + "";
-//                    launchSpellCheckDialog();
                     getBlogPage();
                 } else {
                     removeProgressDialog();
@@ -872,7 +841,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 removeProgressDialog();
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -881,44 +849,30 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-//            showToast(getString(R.string.went_wrong));
         }
     };
 
     private void getBlogPage() {
-     /*   Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
-
-        Call<BlogPageResponse> call = getBlogPageAPI.getUserBlogPage(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        call.enqueue(blogPageSetUpResponseListener);*/
         BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
         Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
         call.enqueue(getUserDetailsResponseCallback);
-
-
     }
 
 
     Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-
-            Log.d("SUCCESS", "" + response);
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
             }
-
-
             UserDetailResponse responseData = response.body();
             if (responseData != null) {
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-
                     if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
-
                         if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
                             Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
@@ -926,18 +880,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                             intent.putExtra("comingFrom", "ShortStoryAndArticle");
                             startActivity(intent);
                         } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
-
                             Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
                             intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
                             intent.putExtra("comingFrom", "ShortStoryAndArticle");
                             startActivity(intent);
                         }
-
-
                     } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getBlogTitleSlug())) {
-
-
                         if (responseData.getData().get(0).getResult().getEmail() == null || responseData.getData().get(0).getResult().getEmail().isEmpty()) {
                             Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
                             intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
@@ -945,12 +894,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                             intent.putExtra("comingFrom", "ShortStoryAndArticle");
                             startActivity(intent);
                         } else if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getEmail())) {
-
-                            /*Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
-                            intent.putExtra("BlogTitle", responseData.getData().get(0).getResult().getBlogTitle());
-                            intent.putExtra("email", responseData.getData().get(0).getResult().getEmail());
-                            startActivity(intent);*/
-
                             if (Build.VERSION.SDK_INT >= 23) {
                                 if (ActivityCompat.checkSelfPermission(AddShortStoryActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                                         != PackageManager.PERMISSION_GRANTED
@@ -967,12 +910,9 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         }
                     }
                 }
-
-
             } else {
                 ToastUtils.showToast(AddShortStoryActivity.this, "something went wrong");
             }
-
         }
 
         @Override
@@ -980,78 +920,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-
         }
     };
-
-
-    private Callback<BlogPageResponse> blogPageSetUpResponseListener = new Callback<BlogPageResponse>() {
-        @Override
-        public void onResponse(Call<BlogPageResponse> call, retrofit2.Response<BlogPageResponse> response) {
-            removeProgressDialog();
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
-                return;
-            }
-            BlogPageResponse responseModel = response.body();
-            if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
-                if (responseModel.getData().getResult().getIsSetup() == 1) {
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        if (ActivityCompat.checkSelfPermission(AddShortStoryActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                                != PackageManager.PERMISSION_GRANTED
-                                || ActivityCompat.checkSelfPermission(AddShortStoryActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                != PackageManager.PERMISSION_GRANTED) {
-                            Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
-                            requestStoragePermissions();
-                        } else {
-                            createAndUploadShareableImage();
-                        }
-                    } else {
-                        createAndUploadShareableImage();
-                    }
-                } else if (responseModel.getData().getResult().getIsSetup() == 0) {
-                    Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
-                    startActivity(intent);
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<BlogPageResponse> call, Throwable t) {
-            removeProgressDialog();
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-//    private void requestStoragePermissions() {
-//        // BEGIN_INCLUDE(contacts_permission_request)
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                Manifest.permission.READ_EXTERNAL_STORAGE)
-//                || ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-//
-//            // Provide an additional rationale to the user if the permission was not granted
-//            // and the user would benefit from additional context for the use of the permission.
-//            // For example, if the request has been denied previously.
-//            Log.i("Permissions",
-//                    "Displaying storage permission rationale to provide additional context.");
-//
-//            // Display a SnackBar with an explanation and a button to trigger the request.
-//            Snackbar.make(mLayout, R.string.permission_storage_rationale,
-//                    Snackbar.LENGTH_INDEFINITE)
-//                    .setAction(R.string.ok, new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            requestUngrantedPermissions();
-//             ma           }
-//                    })
-//                    .show();
-//        }
-//    }test
 
     public void requestStoragePermissions() {
         // BEGIN_INCLUDE(contacts_permission_request)
@@ -1061,14 +931,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(mLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -1128,7 +990,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private Callback<ImageUploadResponse> ssImageUploadCallback = new Callback<ImageUploadResponse>() {
         @Override
         public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 removeProgressDialog();
                 showToast(getString(R.string.went_wrong));
                 return;
@@ -1231,7 +1093,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private Callback<ArticleDraftResponse> saveDraftResponseListener = new Callback<ArticleDraftResponse>() {
         @Override
         public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 showToast(getString(R.string.server_went_wrong));
                 showAlertDialog(getString(R.string.draft_oops), getString(R.string.draft_not_saved), new OnButtonClicked() {
                     @Override
@@ -1338,7 +1200,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     break;
                 }
             }
-
         }
 
         Call<ArticleDraftResponse> call = shortStoryAPI.updateOrPublishShortStory(draftId, shortStoryDraftOrPublishRequest);
@@ -1346,7 +1207,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
                 removeProgressDialog();
-                if (response == null || response.body() == null) {
+                if (response.body() == null) {
                     showToast(getString(R.string.server_went_wrong));
                     return;
                 }
@@ -1365,7 +1226,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     } else {
                         showToast(getString(R.string.toast_response_error));
                     }
-                    return;
                 }
             }
 
@@ -1377,25 +1237,18 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 showToast(getString(R.string.went_wrong));
             }
         });
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_INIT_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-            // We have requested multiple permissions for contacts, so all of them need to be
-            // checked.
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                // All required permissions have been granted, display contacts fragment.
                 Snackbar.make(mLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
                 createAndUploadShareableImage();
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(mLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
@@ -1404,7 +1257,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
-
 
     @Override
     protected void onDestroy() {

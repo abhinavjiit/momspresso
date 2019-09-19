@@ -52,6 +52,7 @@ public class UserPublishedContentPagerAdapter extends FragmentStatePagerAdapter 
                 if (userFunnyVideosTabFragment == null) {
                     userFunnyVideosTabFragment = new UserFunnyVideosTabFragment();
                 }
+                bundle.putBoolean("isPrivateProfile", isPrivateProfile);
                 bundle.putString(Constants.AUTHOR_ID, authorId);
                 userFunnyVideosTabFragment.setArguments(bundle);
                 return userFunnyVideosTabFragment;

@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/format_bar"
     android:layout_width="fill_parent"
     android:layout_height="@dimen/format_bar_height"
+    android:layout_alignParentBottom="true"
     android:layout_gravity="bottom"
     android:background="@color/format_bar_background"
-    android:layout_alignParentBottom="true"
     android:orientation="vertical">
 
     <View
         android:id="@+id/format_bar_horizontal_divider"
+        style="@style/Divider"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/format_bar_horizontal_divider_height"
-        style="@style/Divider"/>
+        android:layout_height="@dimen/format_bar_horizontal_divider_height" />
 
     <LinearLayout
         android:id="@+id/format_bar_buttons"
@@ -31,8 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:contentDescription="@string/format_bar_description_media"
-            android:background="@drawable/format_bar_button_media_selector"/>
+            android:background="@drawable/format_bar_button_media_selector"
+            android:contentDescription="@string/format_bar_description_media" />
 
         <org.wordpress.android.editor.RippleToggleButton
             android:id="@+id/format_bar_button_bold"
@@ -40,9 +39,9 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:contentDescription="@string/format_bar_description_bold"
             android:background="@drawable/format_bar_button_bold_selector"
-            android:tag="@string/format_bar_tag_bold"/>
+            android:contentDescription="@string/format_bar_description_bold"
+            android:tag="@string/format_bar_tag_bold" />
 
         <org.wordpress.android.editor.RippleToggleButton
             android:id="@+id/format_bar_button_italic"
@@ -50,9 +49,9 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:contentDescription="@string/format_bar_description_italic"
             android:background="@drawable/format_bar_button_italic_selector"
-            android:tag="@string/format_bar_tag_italic"/>
+            android:contentDescription="@string/format_bar_description_italic"
+            android:tag="@string/format_bar_tag_italic" />
 
         <org.wordpress.android.editor.RippleToggleButton
             android:id="@+id/format_bar_button_quote"
@@ -60,9 +59,9 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:contentDescription="@string/format_bar_description_quote"
             android:background="@drawable/format_bar_button_quote_selector"
-            android:tag="@string/format_bar_tag_blockquote"/>
+            android:contentDescription="@string/format_bar_description_quote"
+            android:tag="@string/format_bar_tag_blockquote" />
 
         <org.wordpress.android.editor.RippleToggleButton
             android:id="@+id/format_bar_button_ul"
@@ -70,9 +69,9 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:contentDescription="@string/format_bar_description_ul"
             android:background="@drawable/format_bar_button_ul_selector"
-            android:tag="@string/format_bar_tag_unorderedList"/>
+            android:contentDescription="@string/format_bar_description_ul"
+            android:tag="@string/format_bar_tag_unorderedList" />
 
         <org.wordpress.android.editor.RippleToggleButton
             android:id="@+id/format_bar_button_ol"
@@ -80,9 +79,9 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:contentDescription="@string/format_bar_description_ol"
             android:background="@drawable/format_bar_button_ol_selector"
-            android:tag="@string/format_bar_tag_orderedList"/>
+            android:contentDescription="@string/format_bar_description_ol"
+            android:tag="@string/format_bar_tag_orderedList" />
 
         <org.wordpress.android.editor.RippleToggleButton
             android:id="@+id/format_bar_button_link"
@@ -90,23 +89,32 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:contentDescription="@string/format_bar_description_link"
             android:background="@drawable/format_bar_button_link_selector"
-            android:tag="@string/format_bar_tag_link"/>
+            android:contentDescription="@string/format_bar_description_link"
+            android:tag="@string/format_bar_tag_link" />
 
-       <!-- <View
-            android:id="@+id/format_bar_vertical_divider"
-            android:layout_width="@dimen/format_bar_vertical_divider_width"
-            android:layout_height="@dimen/format_bar_vertical_divider_height"
-            android:layout_gravity="center"
-            style="@style/Divider"/>
+        <!--<org.wordpress.android.editor.RippleToggleButton-->
+        <!--android:id="@+id/format_bar_button_audio"-->
+        <!--style="@style/FormatBarButton"-->
+        <!--android:layout_width="25dp"-->
+        <!--android:layout_height="25dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@drawable/ic_audio_01"-->
+        <!--android:contentDescription="@string/format_bar_description_link"-->
+        <!--android:tag="@string/format_bar_tag_link" />-->
+        <!-- <View
+             android:id="@+id/format_bar_vertical_divider"
+             android:layout_width="@dimen/format_bar_vertical_divider_width"
+             android:layout_height="@dimen/format_bar_vertical_divider_height"
+             android:layout_gravity="center"
+             style="@style/Divider"/>
 
-        <org.wordpress.android.editor.RippleToggleButton
-            android:id="@+id/format_bar_button_html"
-            style="@style/FormatBarHtmlButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:contentDescription="@string/format_bar_description_html"
-            android:background="@drawable/format_bar_button_html_selector"/>-->
+         <org.wordpress.android.editor.RippleToggleButton
+             android:id="@+id/format_bar_button_html"
+             style="@style/FormatBarHtmlButton"
+             android:layout_width="wrap_content"
+             android:layout_height="fill_parent"
+             android:contentDescription="@string/format_bar_description_html"
+             android:background="@drawable/format_bar_button_html_selector"/>-->
     </LinearLayout>
 </LinearLayout>

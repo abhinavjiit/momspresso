@@ -1309,6 +1309,8 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="spell_check_error">We found a few errors in the article</string>
     <string name="application_end_date">Application End Date</string>
     <string name="submission_end_date">Submission End Date</string>
+    <string name="speech_prompt">Say something&#8230;</string>
+    <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
     <string name="submit_article">Submit Your Article</string>
 </resources>
 
