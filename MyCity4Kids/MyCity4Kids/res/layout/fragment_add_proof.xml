@@ -279,6 +279,7 @@
                 android:textColor="@color/app_red"
                 android:textSize="24sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
     </ScrollView>
