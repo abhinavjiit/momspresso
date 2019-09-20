@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.ui.fragment.EditorPickFragment;
+import com.mycity4kids.ui.fragment.ArticleListingFragment;
 
 /**
  * Created by hemant on 24/5/17.
@@ -17,7 +17,7 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
 
     private int mNumOfTabs;
     private String[] feedOrderArray;
-    private EditorPickFragment editorPickFragment;
+    private ArticleListingFragment articleListingFragment;
     private String heading, subHeading, gpImageUrl;
     private int groupId;
 
@@ -47,19 +47,19 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
         bundle.putString("gpImageUrl", gpImageUrl);
         bundle.putInt("groupId", groupId);
         if (position == 0) {
-            editorPickFragment = new EditorPickFragment();
+            articleListingFragment = new ArticleListingFragment();
             bundle.putString(Constants.SORT_TYPE, feedOrderArray[position]);
             bundle.putStringArray("feedOrderArray", feedOrderArray);
             bundle.putInt(Constants.TAB_POSITION, position);
-            editorPickFragment.setArguments(bundle);
-            return editorPickFragment;
+            articleListingFragment.setArguments(bundle);
+            return articleListingFragment;
         } else {
-            EditorPickFragment editorPickFragment = new EditorPickFragment();
+            ArticleListingFragment articleListingFragment = new ArticleListingFragment();
             bundle.putString(Constants.SORT_TYPE, feedOrderArray[position]);
             bundle.putStringArray("feedOrderArray", feedOrderArray);
             bundle.putInt(Constants.TAB_POSITION, position);
-            editorPickFragment.setArguments(bundle);
-            return editorPickFragment;
+            articleListingFragment.setArguments(bundle);
+            return articleListingFragment;
         }
     }
 
@@ -69,6 +69,6 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void hideFollowTopicHeader() {
-        editorPickFragment.hideFollowTopicHeader();
+        articleListingFragment.hideFollowTopicHeader();
     }
 }

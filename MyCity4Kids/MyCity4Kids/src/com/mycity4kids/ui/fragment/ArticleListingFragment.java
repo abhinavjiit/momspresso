@@ -16,9 +16,15 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -52,14 +58,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class EditorPickFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface, View.OnClickListener,
+public class ArticleListingFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface, View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
@@ -90,6 +93,7 @@ public class EditorPickFragment extends BaseFragment implements GroupIdCategoryM
     Context mContext;
     private int tabPosition;
     private MixpanelAPI mixpanel;
+    private Tracker tracker;
 
     @Override
     public void onAttach(Context context) {
@@ -186,6 +190,7 @@ public class EditorPickFragment extends BaseFragment implements GroupIdCategoryM
         if (tabPosition == 0) {
             getGroupIdForCurrentCategory();
         }
+        tracker = BaseApplication.getInstance().getTracker(BaseApplication.TrackerName.APP_TRACKER);
         return rootView;
     }
 
@@ -223,16 +228,22 @@ public class EditorPickFragment extends BaseFragment implements GroupIdCategoryM
         try {
             if (!StringUtils.isNullOrEmpty(sortType)) {
                 if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
+                    tracker.setScreenName("ForYouScreen");
                     Utils.pushOpenScreenEvent(getActivity(), "ForYouScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                    tracker.setScreenName("EditorsPickScreen");
                     Utils.pushOpenScreenEvent(getActivity(), "EditorsPickScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                    tracker.setScreenName("RecentScreen");
                     Utils.pushOpenScreenEvent(getActivity(), "RecentScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
+                    tracker.setScreenName("TodaysBestScreen");
                     Utils.pushOpenScreenEvent(getActivity(), "TodaysBestScreen", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
+                    tracker.setScreenName("AllTrendingScreen");
                     Utils.pushOpenScreenEvent(getActivity(), "AllTrending", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId() + "");
                 }
+                tracker.send(new HitBuilders.ScreenViewBuilder().build());
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -526,7 +537,6 @@ public class EditorPickFragment extends BaseFragment implements GroupIdCategoryM
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.videoContainerFL1:
-                launchVideoDetailsActivity(position, 0);
                 break;
             case R.id.closeImageView:
                 mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
