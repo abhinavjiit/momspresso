@@ -527,7 +527,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         }
 
 
-        popup.getMenu().findItem(R.id.disable_comment).setVisible(true);
+        popup.getMenu().findItem(R.id.disable_comment).setVisible(false);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 int i = item.getItemId();
