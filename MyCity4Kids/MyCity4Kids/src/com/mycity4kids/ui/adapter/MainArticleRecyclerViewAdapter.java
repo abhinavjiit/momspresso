@@ -270,27 +270,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 final ArticleListingResult data, final int position, final RecyclerView.ViewHolder holder) {
         articleTitleTV.setText(data.getTitle());
 
-        if (StringUtils.isNullOrEmpty(data.getReason())) {
-            forYouInfoLL.setVisibility(View.GONE);
-        } else {
-            forYouInfoLL.setVisibility(View.VISIBLE);
-            forYouInfoLL.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("For You", "for you article -- " + data.getTitle());
-                    ForYouInfoDialogFragment forYouInfoDialogFragment = new ForYouInfoDialogFragment();
-                    FragmentManager fm = ((ArticleListingActivity) mContext).getSupportFragmentManager();
-                    Bundle _args = new Bundle();
-                    _args.putString("reason", data.getReason());
-                    _args.putString("articleId", data.getId());
-                    _args.putInt("position", position);
-                    forYouInfoDialogFragment.setArguments(_args);
-                    forYouInfoDialogFragment.setCancelable(true);
-                    forYouInfoDialogFragment.setListener((ForYouInfoDialogFragment.IForYourArticleRemove) mContext);
-                    forYouInfoDialogFragment.show(fm, "For You");
-                }
-            });
-        }
+        forYouInfoLL.setVisibility(View.GONE);
 
         if (null == data.getArticleCount() || "0".equals(data.getArticleCount())) {
             viewCountTV.setVisibility(View.GONE);

@@ -69,6 +69,7 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void hideFollowTopicHeader() {
-        articleListingFragment.hideFollowTopicHeader();
+        if (articleListingFragment != null)
+            articleListingFragment.hideFollowTopicHeader();
     }
 }
