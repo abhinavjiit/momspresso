@@ -13,15 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.core.app.ActivityCompat;
-
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,8 +20,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+
 import com.crashlytics.android.Crashlytics;
+import com.facebook.applinks.AppLinkData;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -40,6 +37,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -78,6 +76,7 @@ import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.location.GPSTracker;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -462,8 +461,6 @@ public class SplashActivity extends BaseActivity {
                             } catch (Exception e) {
                                 Log.e("Branch_Tag", e.getMessage());
                             }
-
-
                         } else {
                             Log.i("BRANCH SDK", error.getMessage());
                         }
@@ -472,6 +469,22 @@ public class SplashActivity extends BaseActivity {
             }
         }, 1000);
 
+        AppLinkData.fetchDeferredAppLinkData(this, new AppLinkData.CompletionHandler() {
+            @Override
+            public void onDeferredAppLinkDataFetched(AppLinkData appLinkData) {
+                Log.e("FBDeferredDeepLink", "" + appLinkData);
+                if (appLinkData != null) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("type", "personal_info");
+                        BaseApplication.getInstance().setBranchData(jsonObject.toString());
+                        BaseApplication.getInstance().setBranchLink("true");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         mClient.connect();
         if (!BuildConfig.DEBUG)
             AppIndex.AppIndexApi.start(mClient, getAction());

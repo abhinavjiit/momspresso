@@ -27,6 +27,8 @@ import com.facebook.accountkit.ui.AccountKitActivity
 import com.facebook.accountkit.ui.AccountKitConfiguration
 import com.facebook.accountkit.ui.LoginType
 import com.facebook.accountkit.ui.ThemeUIManager
+import com.facebook.appevents.AppEventsConstants
+import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.gson.Gson
@@ -870,6 +872,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                                 SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), "1")
                             }
                             saveAndContinueListener.profileOnSaveAndContinue()
+                            facebookEventForRegistration()
                         } else if (Constants.FAILURE == response.status) {
                             Toast.makeText(context, response?.reason, Toast.LENGTH_LONG).show()
                         }
@@ -891,6 +894,19 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     Log.e("exception in error", e.message.toString())
                 }
             })
+        }
+    }
+
+    private fun facebookEventForRegistration() {
+        try {
+            activity?.let {
+                val logger = AppEventsLogger.newLogger(it)
+                val bundle = Bundle()
+                bundle.putString(AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD, "FB Ads")
+                logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION, bundle)
+            }
+        } catch (e: Exception) {
+
         }
     }
 
