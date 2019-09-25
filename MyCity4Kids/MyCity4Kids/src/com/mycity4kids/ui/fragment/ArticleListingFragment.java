@@ -16,10 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -58,6 +54,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -67,6 +66,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
+    private ArrayList<ArticleListingResult> articleDataModelsSubList;
     private String sortType;
     private int nextPageNumber;
     private boolean isLastPageReached = false;
@@ -537,6 +537,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
     public void onRecyclerItemClick(View view, int position) {
         switch (view.getId()) {
             case R.id.videoContainerFL1:
+                launchVideoDetailsActivity(position, 0);
                 break;
             case R.id.closeImageView:
                 mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
@@ -560,6 +561,11 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             case R.id.fbAdArticleView:
             case R.id.storyHeaderView:
             default:
+                int page = (position / 15);
+                int posSubList = position % 15;
+                int startIndex = page * 15;
+                int endIndex = startIndex + 15;
+                articleDataModelsSubList = new ArrayList<>(articleDataModelsNew.subList(startIndex, endIndex));
                 if ("1".equals(articleDataModelsNew.get(position).getContentType())) {
                     Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
                     if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
@@ -573,15 +579,15 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
                         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
                     }
-                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
-                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
                     intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-                    intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsNew, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    intent.putExtra(Constants.AUTHOR, articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList).getUserName());
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY);
                     intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, articleDataModelsNew, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_SHORT_STORY));
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
@@ -596,15 +602,15 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                     } else if (Constants.KEY_TRENDING.equalsIgnoreCase(sortType)) {
                         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
                     }
-                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
-                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsSubList.get(posSubList).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsSubList.get(posSubList).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsSubList.get(posSubList).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsSubList.get(posSubList).getTitleSlug());
                     intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-                    intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
-                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsNew, AppConstants.CONTENT_TYPE_ARTICLE);
+                    intent.putExtra(Constants.AUTHOR, articleDataModelsSubList.get(posSubList).getUserId() + "~" + articleDataModelsSubList.get(posSubList).getUserName());
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE);
                     intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, articleDataModelsNew, AppConstants.CONTENT_TYPE_ARTICLE));
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(posSubList, articleDataModelsSubList, AppConstants.CONTENT_TYPE_ARTICLE));
                     startActivity(intent);
                 }
                 break;
