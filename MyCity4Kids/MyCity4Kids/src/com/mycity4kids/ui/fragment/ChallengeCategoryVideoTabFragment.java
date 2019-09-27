@@ -8,6 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
@@ -26,10 +31,6 @@ import com.mycity4kids.ui.videochallengenewui.activity.NewVideoChallengeActivity
 
 import java.util.ArrayList;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -51,14 +52,12 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
 
     @Nullable
     @Override
-
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.challenge_tab_fragment, container, false);
         if (getArguments() != null) {
             currentSubTopic = getArguments().getParcelable("currentSubTopic");
             selectedTopic = currentSubTopic;
         }
-
         getChallenges();
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_challenge);
@@ -68,7 +67,6 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(recyclerAdapter);
         userDynamoId = SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId();
-
 
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -80,17 +78,13 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
             }
         });
         return view;
-
-
     }
-
 
     private void getChallenges() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
             return;
         }
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
         Call<TopicsResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogChallenges();
@@ -100,7 +94,7 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
     private Callback<TopicsResponse> vlogChallengeResponseCallBack = new Callback<TopicsResponse>() {
         @Override
         public void onResponse(Call<TopicsResponse> call, retrofit2.Response<TopicsResponse> response) {
-            if (response == null || null == response.body()) {
+            if (null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
                 return;
@@ -118,8 +112,6 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
                     Log.d("MC4kException", Log.getStackTraceString(e));
                 }
             }
-
-
         }
 
         @Override
@@ -158,7 +150,5 @@ public class ChallengeCategoryVideoTabFragment extends BaseFragment implements V
                 intent.putExtra("Topic", new Gson().toJson(articledatamodal));
                 startActivity(intent);
         }
-
-
     }
 }

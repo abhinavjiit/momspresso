@@ -11,6 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,8 +30,10 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
+import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.VideoTopicsPagerAdapter;
 import com.mycity4kids.ui.fragment.CategoryVideosTabFragment;
 import com.mycity4kids.ui.fragment.ChallengeCategoryVideoTabFragment;
@@ -38,11 +45,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -128,8 +130,7 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
 
                 startActivity(cityIntent);
                 Utils.momVlogEvent(CategoryVideosListingActivity.this, "Video Listing", "FAB_create", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
-
-
+                fireEventForVideoCreationIntent();
             }
         });
 
@@ -184,6 +185,28 @@ public class CategoryVideosListingActivity extends BaseActivity implements View.
         }
 
 
+    }
+
+    private void fireEventForVideoCreationIntent() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        VlogsEventRequest vlogsEventRequest = new VlogsEventRequest();
+        vlogsEventRequest.setCreatedTime(System.currentTimeMillis());
+        vlogsEventRequest.setKey(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        vlogsEventRequest.setTopic("create_video_fab");
+        vlogsEventRequest.setPayload(vlogsEventRequest.getPayload());
+        Call<ResponseBody> call = vlogsListingAndDetailsAPI.addVlogsCreateIntentEvent(vlogsEventRequest);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

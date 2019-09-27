@@ -7,11 +7,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +20,6 @@ import androidx.core.content.ContextCompat;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
@@ -54,9 +48,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING;
-import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE;
-
 /**
  * Created by hemant on 6/6/17.
  */
@@ -65,7 +56,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     public static final String NEW_ARTICLE_DETAIL_FLAG = "new_article_detail_flag";
 
     private FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-
+    private boolean newArticleDetailFlag;
     private ArticleDetailsAPI articleDetailsAPI;
     private TopicsCategoryAPI topicsAPI;
     private String parentId;
@@ -90,8 +81,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
-
-    private boolean newArticleDetailFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,12 +188,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         guideOverlay.setOnClickListener(this);
         guidetoolbar.setOnClickListener(this);
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-            playTtsTextView.setVisibility(View.GONE);
-        }
-
-        Intent readArticleIntent = new Intent(this, ReadArticleService.class);
-        startService(readArticleIntent);
     }
 
     @Override
@@ -289,7 +272,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                         articleDetailsFragment.getGTMLanguage(), "" + duration);
             }
         } catch (Exception e) {
-
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
         super.onDestroy();
@@ -304,7 +288,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             case R.id.playTtsTextView:
                 ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
                 if (!isAudioPlaying) {
-                    if (AppConstants.TAMIL_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId()) || AppConstants.TELUGU_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
+                    if (AppConstants.TAMIL_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())
+                            || AppConstants.TELUGU_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
                         if (m_syn == null) {
                             m_syn = new Synthesizer(getString(R.string.azure_api_key));
                         }
@@ -327,15 +312,18 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                         return;
                     }
                 } else {
-                    if (m_syn != null) {
-                        m_syn.stopSound();
+                    if (AppConstants.TAMIL_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())
+                            || AppConstants.TELUGU_CATEGORYID.equals(articleDetailsFragment.getArticleLanguageCategoryId())) {
+                        if (m_syn != null) {
+                            m_syn.stopSound();
+                        }
+                        playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
+                        isAudioPlaying = false;
+                        long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
+                        Utils.pushStopArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
+                                articleDetailsFragment.getGTMLanguage(), "" + duration);
+                        return;
                     }
-                    playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
-                    isAudioPlaying = false;
-                    long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
-                    Utils.pushStopArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
-                            articleDetailsFragment.getGTMLanguage(), "" + duration);
-                    return;
                 }
 
                 if (!isAudioPlaying) {
@@ -347,7 +335,11 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                     }
                     readArticleIntent.putExtra("content", playContent);
                     readArticleIntent.putExtra("langCategoryId", "" + articleDetailsFragment.getArticleLanguageCategoryId());
-                    startService(readArticleIntent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        startForegroundService(readArticleIntent);
+                    } else {
+                        startService(readArticleIntent);
+                    }
                     playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_stop_tts));
                     Utils.pushPlayArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
                             articleDetailsFragment.getGTMLanguage());
@@ -380,7 +372,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         if (!SharedPrefUtils.isCoachmarksShownFlag(BaseApplication.getAppContext(), "article_details")) {
             guideOverlay.setVisibility(View.VISIBLE);
         }
-
         playTtsTextView.setVisibility(View.VISIBLE);
     }
 
@@ -407,7 +398,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
 
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Category related Article API failure");
                 Crashlytics.logException(nee);
                 Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 6);
@@ -461,7 +452,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
 
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
                 filterCall.enqueue(articleListingResponseCallback);
                 return;
@@ -507,7 +498,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 initializeViewPager();
             }
             try {
@@ -609,7 +600,4 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         super.onPause();
         checkAudioPlaying();
     }
-
-
-
 }

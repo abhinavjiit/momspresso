@@ -58,6 +58,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -71,6 +72,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
+    private final static int VIDEO_PUBLISHED_STATUS = 3;
 
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
@@ -202,13 +204,17 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
 
     private void hitArticleListingApi() {
         int from = (nextPageNumber - 1) * limit;
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getPublishedVlogs(authorId, from, from + limit - 1, sortType);
+        Call<VlogsListingResponse> callRecentVideoArticles;
+        if (isPrivateProfile) {
+            callRecentVideoArticles = vlogsListingAndDetailsAPI.getPublishedVlogs(authorId, from, from + limit - 1, sortType);
+        } else {
+            callRecentVideoArticles = vlogsListingAndDetailsAPI.getPublishedVlogsForPublicProfile(authorId, from, from + limit - 1, sortType, VIDEO_PUBLISHED_STATUS);
+        }
+
         callRecentVideoArticles.enqueue(userVideosListResponseCallback);
         progressBar.setVisibility(View.VISIBLE);
-
     }
 
     private Callback<VlogsListingResponse> userVideosListResponseCallback = new Callback<VlogsListingResponse>() {
@@ -228,8 +234,6 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 VlogsListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponse(responseData);
-//                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());
-//                    notificationCenterListAdapter.notifyDataSetChanged();
                 } else {
                     if (isAdded())
                         ((UserPublishedContentActivity) getActivity()).showToast(responseData.getReason());
@@ -362,19 +366,10 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
     }
 
     public void requestPermissions(final String imageFrom) {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(rootLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -386,8 +381,6 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.CAMERA)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(rootLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -423,10 +416,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            Log.i("Permissions", "Received response for camera permissions request.");
-
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
@@ -434,15 +424,11 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 Intent videoCapture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
-
         } else if (requestCode == REQUEST_GALLERY_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
@@ -453,12 +439,10 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
-
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -469,13 +453,13 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
         chooseImageOptionPopUp(imageView, position);
     }
 
-    public void updateTitleInList(int position, String title) {
+    void updateTitleInList(int position, String title) {
         articleDataModelsNew.get(position).setTitle(title);
         articlesListingAdapter.notifyDataSetChanged();
     }
 
     @SuppressLint("RestrictedApi")
-    public void chooseImageOptionPopUp(View view, int position) {
+    private void chooseImageOptionPopUp(View view, int position) {
         final PopupMenu popup = new PopupMenu(getActivity(), view);
         popup.getMenuInflater().inflate(R.menu.edit_vlog_details_menu, popup.getMenu());
         Typeface myTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/" + "oswald_regular.ttf");
@@ -504,7 +488,6 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
                     return true;
                 }
             }
-
         });
 
         MenuPopupHelper menuHelper = new MenuPopupHelper(getContext(), (MenuBuilder) popup.getMenu(), view);
@@ -516,7 +499,7 @@ public class UserFunnyVideosTabFragment extends BaseFragment implements View.OnC
     public class CustomTypeFace extends TypefaceSpan {
         private final Typeface typeface;
 
-        public CustomTypeFace(String family, Typeface type) {
+        CustomTypeFace(String family, Typeface type) {
             super(family);
             typeface = type;
         }

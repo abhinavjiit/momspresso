@@ -80,6 +80,7 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.BranchModel;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
+import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.models.response.AllDraftsResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
@@ -1979,13 +1980,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 hideCreateContentView();
                 mDrawerLayout.closeDrawers();
                 Utils.momVlogEvent(DashboardActivity.this, "Home Screen", "Create_video", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_video_creation_categories", "", "");
-
                 MixPanelUtils.pushMomVlogsDrawerClickEvent(mMixpanel);
                 Intent cityIntent = new Intent(this, ChooseVideoCategoryActivity.class);
                 cityIntent.putExtra("comingFrom", "createDashboardIcon");
-                // cityIntent.putExtra("currentChallengesTopic", new Gson().toJson(videoChallengeTopics));
                 startActivity(cityIntent);
-
+                fireEventForVideoCreationIntent();
             }
             break;
             case R.id.overlayView:
@@ -2149,13 +2148,32 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     }
 
+    private void fireEventForVideoCreationIntent() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        VlogsEventRequest vlogsEventRequest = new VlogsEventRequest();
+        vlogsEventRequest.setCreatedTime(System.currentTimeMillis());
+        vlogsEventRequest.setKey(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        vlogsEventRequest.setTopic("create_video_fab");
+        vlogsEventRequest.setPayload(vlogsEventRequest.getPayload());
+        Call<ResponseBody> call = vlogsListingAndDetailsAPI.addVlogsCreateIntentEvent(vlogsEventRequest);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     private void findActiveChallenge() {
-
         try {
-            // shortStoriesTopicList = BaseApplication.getShortStoryTopicList();
             if (shortStoriesTopicList != null && shortStoriesTopicList.size() != 0) {
-
                 challengeId = new ArrayList<>();
                 Display_Name = new ArrayList<>();
                 ImageUrl = new ArrayList<>();

@@ -10,6 +10,7 @@ import com.mycity4kids.models.request.GroupNotificationToggleRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.request.UpdateVlogTitleRequest;
 import com.mycity4kids.models.request.UploadVideoRequest;
+import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
@@ -57,6 +58,13 @@ public interface VlogsListingAndDetailsAPI {
                                                  @Query("start") int start,
                                                  @Query("end") int end,
                                                  @Query("sort") int sort);
+
+    @GET("v2/videos")
+    Call<VlogsListingResponse> getPublishedVlogsForPublicProfile(@Query("user_id") String userId,
+                                                                 @Query("start") int start,
+                                                                 @Query("end") int end,
+                                                                 @Query("sort") int sort,
+                                                                 @Query("publication_status") int publicationStatus);
 
     @GET("/user_history/v1/{userId}")
     Call<VlogsListingResponse> getAuthorsSeenVideos(@Path("userId") String userId,
@@ -135,4 +143,6 @@ public interface VlogsListingAndDetailsAPI {
     @GET("v1/recommendations/video_ad")
     Call<Topics> getRecommendedVideoAd();
 
+    @POST("http://eventsapi.momspresso.com/datapipeline/")
+    Call<ResponseBody> addVlogsCreateIntentEvent(@Body VlogsEventRequest vlogsEventRequest);
 }

@@ -456,7 +456,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                mListener.onRecyclerItemClick(v, getAdapterPosition());
+            }
         }
     }
 
@@ -496,7 +498,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                mListener.onRecyclerItemClick(v, getAdapterPosition());
+            }
         }
     }
 
@@ -544,7 +548,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                mListener.onRecyclerItemClick(v, getAdapterPosition());
+            }
         }
     }
 
@@ -596,7 +602,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                mListener.onRecyclerItemClick(v, getAdapterPosition());
+            }
         }
     }
 
@@ -690,7 +698,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                mListener.onRecyclerItemClick(v, getAdapterPosition());
+            }
         }
     }
 
@@ -811,7 +821,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                mListener.onRecyclerItemClick(v, getAdapterPosition());
+            }
         }
     }
 

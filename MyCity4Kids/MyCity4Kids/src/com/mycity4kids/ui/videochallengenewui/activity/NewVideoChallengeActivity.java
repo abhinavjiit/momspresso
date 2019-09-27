@@ -38,7 +38,9 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.request.VlogsEventRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.VideoTrimmerActivity;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.videochallengenewui.Adapter.VideoChallengePagerAdapter;
@@ -48,6 +50,11 @@ import com.mycity4kids.videotrimmer.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class NewVideoChallengeActivity extends BaseActivity implements View.OnClickListener {
     VideoChallengePagerAdapter videoChallengePagerAdapter;
@@ -93,7 +100,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_video_listing_detail);
-        //coordinatorLayout = (CoordinatorLayout) findViewById(R.id.mainprofile_parent_layout);
         saveTextView = (FloatingActionButton) findViewById(R.id.saveTextView);
         appBarLayout = (AppBarLayout) findViewById(R.id.id_appbar);
         rootLayout = (CoordinatorLayout) findViewById(R.id.mainprofile_parent_layout);
@@ -113,7 +119,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbarTitleTextView.setText(getString(R.string.myprofile_section_videos_label));
-
 
         Intent intent = getIntent();
         Bundle extras = getIntent().getExtras();
@@ -136,7 +141,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             if (comingFrom.equals("chooseVideoCategory")) {
                 saveTextView.setVisibility(View.VISIBLE);
             }
-
         }
 
         mappedCategory = intent.getStringArrayListExtra("mappedCategory");
@@ -188,7 +192,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             ((LinearLayout) root).setDividerDrawable(drawable);
         }
 
-
         videoChallengePagerAdapter = new VideoChallengePagerAdapter(getSupportFragmentManager(), selected_Name, selectedActiveUrl, selectedId, topic, selectedStreamUrl, challengeRules);
         viewPager.setAdapter(videoChallengePagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
@@ -215,30 +218,45 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         });
         thumbNail.setOnClickListener(this);
         saveTextView.setOnClickListener(view -> {
-            //   SharedPrefUtils.setToastMomVlog(this, "Challenge", true);
             if (max_Duration != 0) {
                 ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
                 _args.putString("activity", "newVideoChallengeActivity");
-
                 _args.putString("duration", String.valueOf(max_Duration));
-
-
                 chooseVideoUploadOptionDialogFragment.setArguments(_args);
                 chooseVideoUploadOptionDialogFragment.setCancelable(true);
                 chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
-
             } else {
                 ToastUtils.showToast(this, "duration should be greater than 0.0");
                 Crashlytics.log("max_duration is :" + String.valueOf(max_Duration));
                 Log.i("ERROR", String.valueOf(max_Duration));
             }
+            fireEventForVideoCreationIntent();
         });
-
-
     }
 
+    private void fireEventForVideoCreationIntent() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        VlogsEventRequest vlogsEventRequest = new VlogsEventRequest();
+        vlogsEventRequest.setCreatedTime(System.currentTimeMillis());
+        vlogsEventRequest.setKey(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        vlogsEventRequest.setTopic("create_video_fab");
+        vlogsEventRequest.setPayload(vlogsEventRequest.getPayload());
+        Call<ResponseBody> call = vlogsListingAndDetailsAPI.addVlogsCreateIntentEvent(vlogsEventRequest);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
 
     @Override
     protected void updateUi(Response response) {
@@ -256,19 +274,10 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
     }
 
     public void requestPermissions(final String imageFrom) {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying storage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(rootLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -280,8 +289,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
             Snackbar.make(rootLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
@@ -311,16 +318,10 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
         }
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            Log.i("Permissions", "Received response for camera permissions request.");
-
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
@@ -328,15 +329,11 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                 Intent videoCapture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
-
         } else if (requestCode == REQUEST_GALLERY_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
             if (PermissionUtil.verifyPermissions(grantResults)) {
                 Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
@@ -347,12 +344,10 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
-
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -360,13 +355,11 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
 
     @Override
     public void onClick(View view) {
-
         if (view.getId() == R.id.thumbNail) {
             Intent intent = new Intent(this, ExoplayerVideoChallengePlayViewActivity.class);
             intent.putExtra("StreamUrl", selectedStreamUrl);
             startActivity(intent);
             Utils.momVlogEvent(NewVideoChallengeActivity.this, "Challenge detail", "Prompt_video_play", "", "android", SharedPrefUtils.getAppLocale(BaseApplication.getAppContext()), SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), String.valueOf(System.currentTimeMillis()), "Show_Video_Detail", "", "");
-
         }
     }
 
@@ -391,27 +384,17 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
 
     private void startTrimActivity(@NonNull Uri uri) {
         Intent intent = new Intent(this, VideoTrimmerActivity.class);
-        String filepath = FileUtils.getPath(this, uri);
-     /*   intent.putExtra("categoryId", categoryId);
-        intent.putExtra("duration", duration);*/
-        /**/
         if (max_Duration != 0) {
             intent.putExtra("duration", String.valueOf(max_Duration));
         }
-
         intent.putExtra("ChallengeId", selectedId);
         intent.putExtra("categoryId", mappedId);
         intent.putExtra("comingFrom", "Challenge");
-
-
-        // if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
         intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
         startActivity(intent);
-
     }
 
     public void showDialogBox() {
-
         if (screen.equals("creation")) {
             if (comingFrom.equals("chooseVideoCategory")) {
                 ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
@@ -421,7 +404,6 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
                 if (max_Duration != 0) {
                     _args.putString("duration", String.valueOf(max_Duration));
                 }
-
                 chooseVideoUploadOptionDialogFragment.setArguments(_args);
                 chooseVideoUploadOptionDialogFragment.setCancelable(true);
                 chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
@@ -430,12 +412,10 @@ public class NewVideoChallengeActivity extends BaseActivity implements View.OnCl
             viewPager.setCurrentItem(0);
             saveTextView.setVisibility(View.VISIBLE);
         } else {
-
             viewPager.setCurrentItem(1);
             saveTextView.setVisibility(View.VISIBLE);
         }
     }
-
 }
 
 

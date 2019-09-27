@@ -10,16 +10,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.net.Uri;
+import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
-import android.os.Build;
-import android.util.DisplayMetrics;
-import android.util.Log;
-
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -46,9 +44,7 @@ import com.mycity4kids.ui.campaign.activity.CampaignContainerActivity;
 import com.mycity4kids.ui.rewards.activity.RewardsContainerActivity;
 
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
 
 /**
  * Created by anshul on 5/26/16.
@@ -79,7 +75,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         sendNotification(remoteMessage);
     }
 
-    /*this will prepare the notification for every type*/
     void prepareNotification(String title, String message, String imageUrl, PendingIntent pendingIntent, String sound) {
         try {
             URL url = new URL(imageUrl);
@@ -147,7 +142,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             }
         }
 
-
         Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
@@ -174,17 +168,21 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         try {
             pushNotificationModel = new Gson().fromJson(msg, PushNotificationModel.class);
         } catch (JsonSyntaxException jse) {
-            pushNotificationModel = new Gson().fromJson(new Gson().toJson(remoteMessage.getData()), PushNotificationModel.class);
+            try {
+                pushNotificationModel = new Gson().fromJson(new Gson().toJson(remoteMessage.getData()), PushNotificationModel.class);
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                return;
+            }
         }
         try {
             if (pushNotificationModel != null) {
                 String type = pushNotificationModel.getType();
+                Log.d("NOTI_TYPE", "CONTENT ===== " + msg);
                 Log.d("NOTI_TYPE", "type ===== " + type);
                 if (type.equalsIgnoreCase("upcoming_event_list")) {
                     Log.i(TAG, " INSIDE EVENTS LIST: " + msg);
-                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher
-                    );
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
@@ -193,23 +191,19 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     } else {
-                        // Creates an explicit intent for an ResultActivity to receive.
                         resultIntent = new Intent(getApplicationContext(), DashboardActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
                         resultIntent.putExtra(Constants.LOAD_FRAGMENT, Constants.BUSINESS_EVENTLIST_FRAGMENT);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(ParallelFeedActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
-
                 } else if (type.equalsIgnoreCase("article_details")) {
                     Intent intent;
                     PendingIntent contentIntent;
@@ -230,19 +224,15 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.putExtra(Constants.ARTICLE_INDEX, "-1");
                         intent.putExtra(Constants.AUTHOR, pushNotificationModel.getUser_id() + "~");
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(ArticleDetailsContainerActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(intent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     }
-
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                 } else if (type.equalsIgnoreCase("video_details")) {
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "video_details");
-                    int requestID = (int) System.currentTimeMillis();
                     Intent intent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
@@ -259,23 +249,15 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.putExtra(Constants.FROM_SCREEN, "Notification");
                         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
                         intent.putExtra(Constants.ARTICLE_INDEX, "-1");
-
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(ParallelFeedActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(intent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
-
                     prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
-
                 } else if (type.equalsIgnoreCase("event_details")) {
-//                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "event_details");
-                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
@@ -291,20 +273,14 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
                         resultIntent.putExtra(Constants.DISTANCE, "0");
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(BusinessDetailsActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
-
                     prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                 } else if (type.equalsIgnoreCase("webView")) {
-
-                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
@@ -317,20 +293,14 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra(Constants.WEB_VIEW_URL, pushNotificationModel.getUrl());
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(LoadWebViewActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
-
                 } else if (type.equalsIgnoreCase("profile")) {
-
-                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
@@ -344,21 +314,15 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, pushNotificationModel.getUser_id());
                         resultIntent.putExtra(AppConstants.AUTHOR_NAME, "");
                         resultIntent.putExtra(Constants.FROM_SCREEN, "Notification");
-
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(PublicProfileActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
-
                 } else if (type.equalsIgnoreCase("app_settings")) {
-//                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "app_settings");
-                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
@@ -371,61 +335,46 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(AppSettingsActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
-
                 } else if (type.equalsIgnoreCase("momsights_screen")) {
-//                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "app_settings");
-                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("upupgrade true", "it's true");
                     } else {
                         resultIntent = new Intent(getApplicationContext(), RewardsContainerActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(AppSettingsActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("opening rewards contai", "it's true");
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     prepareNotification(title, body, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
-
                 } else if (type.equalsIgnoreCase("campaign_listing")) {
-//                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "app_settings");
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("upupgrade true", "it's true");
                     } else {
                         resultIntent = new Intent(getApplicationContext(), CampaignContainerActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(AppSettingsActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("opening rewards contai", "it's true");
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
@@ -439,13 +388,9 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-
-                    // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
-
                 } else if (type.equalsIgnoreCase("mymoney_pancard")) {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
@@ -453,7 +398,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("upupgrade true", "it's true");
                     } else {
                         resultIntent = new Intent(getApplicationContext(), RewardsContainerActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -462,15 +406,10 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra("pageNumber", 5);
                         resultIntent.putExtra("fromNotification", true);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(AppSettingsActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("opening mymoney_pancard", "it's true" + pushNotificationModel.getCampaign_id());
-
                     }
-
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
@@ -483,11 +422,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-
-                    // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
                 } else if (type.equalsIgnoreCase("category_listing")) {
                     int requestID = (int) System.currentTimeMillis();
@@ -496,7 +432,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("upupgrade true", "it's true");
                     } else {
                         resultIntent = new Intent(getApplicationContext(), RewardsContainerActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -505,15 +440,10 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra("pageNumber", 5);
                         resultIntent.putExtra("fromNotification", true);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(AppSettingsActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("opening mymoney_pancard", "it's true" + pushNotificationModel.getCampaign_id());
-
                     }
-
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
@@ -526,11 +456,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-
-                    // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
                 } else if (type.equalsIgnoreCase("campaign_submit_proof")) {
                     int requestID = (int) System.currentTimeMillis();
@@ -539,22 +466,16 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("upupgrade true", "it's true");
                     } else {
                         resultIntent = new Intent(getApplicationContext(), CampaignContainerActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra("campaign_id", pushNotificationModel.getCampaign_id());
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(AppSettingsActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("opening campaign_detail", "it's true" + pushNotificationModel.getCampaign_id());
-
                     }
-
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
@@ -567,13 +488,9 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-
-                    // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
-
                 } else if (type.equalsIgnoreCase("mymoney_bankdetails")) {
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
@@ -581,26 +498,19 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("upupgrade true", "it's true");
                     } else {
                         resultIntent = new Intent(getApplicationContext(), RewardsContainerActivity.class);
                         resultIntent.putExtra("isComingfromCampaign", true);
                         resultIntent.putExtra("pageLimit", 4);
                         resultIntent.putExtra("pageNumber", 4);
-                        //    resultIntent = new Intent(getApplicationContext(), CampaignContainerActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra("campaign_id", pushNotificationModel.getCampaign_id());
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(AppSettingsActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("mymoney_bankdetails", "it's true" + pushNotificationModel.getCampaign_id());
-
                     }
-
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
@@ -613,34 +523,25 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-
-                    // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
-
                 } else if (type.equalsIgnoreCase("campaign_detail")) {
-//                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "app_settings");
                     int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(BaseApplication.getAppContext())) {
                         resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("upupgrade true", "it's true");
                     } else {
                         resultIntent = new Intent(getApplicationContext(), CampaignContainerActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra("campaign_id", pushNotificationModel.getCampaign_id());
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                        // Adds the back stack
                         stackBuilder.addParentStack(AppSettingsActivity.class);
-                        // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                        Log.e("opening campaign_detail", "it's true" + pushNotificationModel.getCampaign_id());
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
@@ -654,82 +555,30 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-
-                    // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
-
                 } else if (type.equalsIgnoreCase("group_membership") || type.equalsIgnoreCase("group_new_post")
                         || type.equalsIgnoreCase("group_admin_group_edit") || type.equalsIgnoreCase("group_admin")
                         || type.equalsIgnoreCase("group_new_response") || type.equalsIgnoreCase("group_new_reply")
                         || type.equalsIgnoreCase("group_admin_membership") || type.equalsIgnoreCase("group_admin_reported")) {
 
-
                 } else if (type.equals("remote_config_silent_update")) {
                     SharedPrefUtils.setFirebaseRemoteConfigUpdateFlag(BaseApplication.getAppContext(), true);
                 } else {
-                    Log.i(TAG, " Default : " + msg);
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");
-                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher);
-
-                    int requestID = (int) System.currentTimeMillis();
                     String message = pushNotificationModel.getMessage_id();
                     String title = pushNotificationModel.getTitle();
-
-                    NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
                     resultIntent.putExtra("fromNotification", true);
                     contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
                     prepareNotification(title, message, pushNotificationModel.getRich_image_url(), contentIntent, pushNotificationModel.getSound());
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
-    /*
-     *To get a Bitmap image from the URL received
-     * */
-    /*
-     *To get a Bitmap image from the URL received
-     * */
-    public Bitmap getBitmapfromUrl(String imageUrl) {
-        try {
-            URL url = new URL(imageUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return bitmap;
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-
-        }
-    }
-
-    private Bitmap getScaledBitmap(Bitmap bitmap) {
-        DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
-        int height = 180;
-
-
-        float scaleFactor = (float) displaymetrics.heightPixels / (float) displaymetrics.widthPixels;
-        int newWidth = (int) (bitmap.getWidth() / scaleFactor);
-
-        return Bitmap.createScaledBitmap(bitmap, 200, height, true);
-    }
-
 }
