@@ -326,6 +326,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processForYouResponse(responseData);
+                    ashimmerFrameLayout.stopShimmerAnimation();
+                    ashimmerFrameLayout.setVisibility(View.GONE);
                 } else {
                     ToastUtils.showToast(mContext, responseData.getReason());
                 }

@@ -133,13 +133,17 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             if (showVideoFlag) {
                 return VIDEOS;
             } else {
-                return ARTICLE;
+                if (AppConstants.CONTENT_TYPE_ARTICLE.equals(articleDataModelsNew.get(position).getContentType())) {
+                    return ARTICLE;
+                } else {
+                    return STORY;
+                }
             }
         } else {
-            if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(articleDataModelsNew.get(position).getContentType())) {
-                return STORY;
-            } else {
+            if (AppConstants.CONTENT_TYPE_ARTICLE.equals(articleDataModelsNew.get(position).getContentType())) {
                 return ARTICLE;
+            } else {
+                return STORY;
             }
         }
     }

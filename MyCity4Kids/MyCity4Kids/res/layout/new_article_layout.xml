@@ -33,7 +33,6 @@
 
             <include layout="@layout/mainshimmer_layout" />
 
-
         </LinearLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
@@ -125,10 +124,7 @@
             android:id="@+id/fab_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/recyclerView"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right|bottom"
+            android:layout_gravity="end|bottom"
             app:fab_addButtonColorNormal="@color/fab.white"
             app:fab_addButtonColorPressed="@color/fab.white"
             app:fab_addButtonPlusIconColor="@color/white_color"
@@ -166,9 +162,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="right|bottom"
+        android:layout_gravity="end|bottom"
         android:visibility="gone"
         app:fab_colorNormal="@color/fab.white"
         app:fab_colorPressed="@color/fab.white"
