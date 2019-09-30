@@ -2,16 +2,17 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -38,7 +39,6 @@ import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.utils.MixPanelUtils;
-import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
 
@@ -62,7 +62,6 @@ public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCa
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private RecyclerView recyclerView;
-    private FeedNativeAd feedNativeAd;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private MixpanelAPI mixpanel;
 
@@ -85,11 +84,9 @@ public class TrendingTopicsTabFragment extends BaseFragment implements GroupIdCa
 
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
-//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-//        feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, "Trending-" + trendingTopicData.getDisplay_name(), true);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), this, false, "Trending-" + trendingTopicData.getDisplay_name(), true);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(trendingTopicData.getArticleList());
         recyclerView.setAdapter(recyclerAdapter);

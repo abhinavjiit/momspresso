@@ -1,8 +1,6 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,13 +13,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -53,7 +56,6 @@ import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.ui.fragment.FilterTopicsDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-import com.mycity4kids.widget.FeedNativeAd;
 
 import org.json.JSONObject;
 
@@ -67,11 +69,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -88,8 +85,6 @@ import retrofit2.Retrofit;
 
 public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, FilterTopicsDialogFragment.OnTopicsSelectionComplete, /*FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
-    //    private MainArticleListingAdapter articlesListingAdapter;
-//    private ListView listView;
     private MainArticleRecyclerViewAdapter recyclerAdapter;
 
     private Menu menu;
@@ -137,7 +132,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private String fromScreen;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private RecyclerView recyclerView;
-    private FeedNativeAd feedNativeAd;
     private TextView toolbarTitle;
     private RelativeLayout root;
 
@@ -156,7 +150,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Topics");
         Utils.pushOpenScreenEvent(FilteredTopicsArticleListingActivity.this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-//        listView = (ListView) findViewById(R.id.scroll);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
@@ -252,11 +245,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-//            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-//            call.enqueue(downloadCategoriesJSONCallback);
             Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-
             caller.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -311,15 +300,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(sortType);
 
-//        articlesListingAdapter = new MainArticleListingAdapter(this);
-//        articlesListingAdapter.setNewListData(articleDataModelsNew);
-//        articlesListingAdapter.setListingType(listingType);
-//        listView.setAdapter(articlesListingAdapter);
-//        articlesListingAdapter.notifyDataSetChanged();
-
-//        feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-//        feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, selectedTopics + "~" + displayName, false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, this, false, selectedTopics + "~" + displayName, false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -391,7 +372,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             } else {
                 filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             }
-//            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
             Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(filteredTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
@@ -510,28 +490,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 break;
             case R.id.filterTextView:
                 openFilterDialog();
-//                try {
-//                    allTopicsList = BaseApplication.getTopicList();
-//                    allTopicsMap = BaseApplication.getTopicsMap();
-//
-//                    if (allTopicsList == null || allTopicsMap == null) {
-//                        FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-//                        String fileContent = convertStreamToString(fileInputStream);
-//                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-//                        createTopicsData(res);
-//                    }
-//
-//                    getTopicLevelAndPrepareFilterData();
-//                openFilterDialog();
-//                } catch (FileNotFoundException e) {
-//                    Crashlytics.logException(e);
-//                    Log.d("FileNotFoundException", Log.getStackTraceString(e));
-//                    Retrofit retro = BaseApplication.getInstance().getRetrofit();
-//                    final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-//
-//                    Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-//                    call.enqueue(downloadCategoriesJSONCallback);
-//                }
                 break;
         }
     }
@@ -562,11 +520,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // according to fragment change it
         getMenuInflater().inflate(R.menu.menu_filter_article_by_topics, menu);
         this.menu = menu;
-//        menu.getItem(0).setEnabled(false);
         if (!StringUtils.isNullOrEmpty(selectedTopics)) {
             checkFollowingTopicStatus();
         }
@@ -580,7 +535,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
             if (!checkCurrentCategoryExists(res)) {
                 if (AppConstants.TOPIC_LEVEL_SUB_CATEGORY.equals(topicLevel) || AppConstants.TOPIC_LEVEL_MAIN_CATEGORY.equals(topicLevel)) {
-//                    titleTextView.setVisibility(View.VISIBLE);
                 } else {
                     titleTextView.setVisibility(View.GONE);
                 }
@@ -636,13 +590,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             }
             try {
                 String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
                 Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -706,7 +656,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     } else {
                         topicLevel = AppConstants.TOPIC_LEVEL_SUB_CATEGORY;
                     }
-
                     return;
                 }
                 for (int k = 0; k < allTopicsList.get(i).getChild().get(j).getChild().size(); k++) {
@@ -792,13 +741,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 followingTopicStatus = responseData.getData().getStatus();
                 if ("0".equals(followingTopicStatus)) {
-//                    menu.getItem(0).setEnabled(true);
-//                    menu.getItem(0).setTitle("FOLLOW");
                     followUnfollowTextView.setText(getString(R.string.ad_follow_author));
                     isTopicFollowed = 0;
                 } else {
-//                    menu.getItem(0).setEnabled(true);
-//                    menu.getItem(0).setTitle("FOLLOWING");
                     followUnfollowTextView.setText(getString(R.string.ad_following_author));
                     isTopicFollowed = 1;
                 }
@@ -809,7 +754,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         @Override
         public void onFailure(Call<TopicsFollowingStatusResponse> call, Throwable t) {
-
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
 
@@ -846,16 +792,12 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (isTopicFollowed == 0) {
             Log.d("GTM FOLLOW", displayName + ":" + selectedTopics);
-//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
             Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List", displayName + "~" + selectedTopics);
-//            menu.getItem(0).setTitle("FOLLOWING");
             followUnfollowTextView.setText(getString(R.string.ad_following_author));
             isTopicFollowed = 1;
         } else {
             Log.d("GTM UNFOLLOW", displayName + ":" + selectedTopics);
-//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
             Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List", displayName + "~" + selectedTopics);
-//            menu.getItem(0).setTitle("FOLLOW");
             followUnfollowTextView.setText(getString(R.string.ad_follow_author));
             isTopicFollowed = 0;
         }
@@ -930,32 +872,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         return sb.toString();
     }
 
-    private void hideBottomMenu() {
-        bottomOptionMenu.animate()
-                .translationY(bottomOptionMenu.getHeight())
-                .setInterpolator(new LinearInterpolator())
-                .setDuration(180)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-//                        getSupportActionBar().hide();
-                    }
-                });
-    }
-
-    private void showBottomMenu() {
-        bottomOptionMenu.animate()
-                .translationY(0)
-                .setInterpolator(new LinearInterpolator())
-                .setDuration(180)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-//                        getSupportActionBar().show();
-                    }
-                });
-    }
-
     private void createTopicsData(TopicsResponse responseData) {
         try {
             progressBar.setVisibility(View.GONE);
@@ -1015,10 +931,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 }
                 responseData.getData().get(i).setChild(tempUpList);
 
-//                    if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
                 allTopicsList.add(responseData.getData().get(i));
                 allTopicsMap.put(responseData.getData().get(i), tempUpList);
-//                    }
             }
             BaseApplication.setTopicList(allTopicsList);
             BaseApplication.setTopicsMap(allTopicsMap);
@@ -1041,16 +955,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         }
         hitFilteredTopicsArticleListingApi(0);
     }
-
-//    @Override
-//    public void onFinishToLoadAds() {
-//
-//    }
-//
-//    @Override
-//    public void onErrorToLoadAd() {
-//
-//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {

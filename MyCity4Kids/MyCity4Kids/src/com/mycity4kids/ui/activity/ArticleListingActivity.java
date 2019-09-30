@@ -3,10 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
@@ -37,7 +38,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
-import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
 
@@ -58,8 +58,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
-    private int from = 1;
-    private int to = 15;
     private int limit = 15;
     private String chunks = "";
     private String fromScreen;
@@ -69,9 +67,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     private TextView noBlogsTextView;
     private Toolbar mToolbar;
     private TextView toolbarTitleTextView;
-    //    private ImageView menuImageView;
     private RecyclerView recyclerView;
-    private FeedNativeAd feedNativeAd;
     private LinearLayout addTopicsLayout;
     private FrameLayout headerArticleCardLayout;
     ShimmerFrameLayout ashimmerFrameLayout;
@@ -125,11 +121,9 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
 
-//        feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-//        feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false, sortType, false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, this, false, sortType, false);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
         recyclerView.setAdapter(recyclerAdapter);
@@ -372,8 +366,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         isLastPageReached = false;
         chunks = "";
         removeVolleyCache(sortType);
-        from = 1;
-        to = 15;
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
     }

@@ -15,6 +15,11 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -36,14 +41,9 @@ import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
-import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -51,11 +51,11 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class LeafTopicArticlesTabFragment extends BaseFragment implements View.OnClickListener,  MainArticleRecyclerViewAdapter.RecyclerViewClickListener
+public class LeafTopicArticlesTabFragment extends BaseFragment implements View.OnClickListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener
         , GroupIdCategoryMap.GroupCategoryInterface {
 
     private int groupId;
-    public String gpsubHeading, gpHeading, gpImageUrl;
+    private String gpsubHeading, gpHeading, gpImageUrl;
     private int nextPageNumber = 1;
     private int limit = 15;
     private boolean isReuqestRunning = false;
@@ -67,7 +67,7 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
-    SwipeRefreshLayout swipeRefresh;
+    private SwipeRefreshLayout swipeRefresh;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private FrameLayout frameLayout;
@@ -76,7 +76,6 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
     private FloatingActionButton recentSortFAB;
     private FloatingActionButton fabSort;
     private RecyclerView recyclerView;
-    private FeedNativeAd feedNativeAd;
     private RelativeLayout guideOverlay;
     private RelativeLayout writeArticleCell;
 
@@ -155,11 +154,9 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
         }
 
         mDatalist = new ArrayList<>();
-//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-//        feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), this, false, selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(mDatalist);
         recyclerView.setAdapter(recyclerAdapter);
@@ -317,7 +314,6 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
                 sortType = 0;
                 nextPageNumber = 1;
                 getGroupIdForCurrentCategory();
-//                hitFilteredTopicsArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
                 fabMenu.collapse();
@@ -326,20 +322,9 @@ public class LeafTopicArticlesTabFragment extends BaseFragment implements View.O
                 sortType = 1;
                 nextPageNumber = 1;
                 getGroupIdForCurrentCategory();
-//                hitFilteredTopicsArticleListingApi(1);
                 break;
         }
     }
-//
-//    @Override
-//    public void onFinishToLoadAds() {
-//
-//    }
-//
-//    @Override
-//    public void onErrorToLoadAd() {
-//
-//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {

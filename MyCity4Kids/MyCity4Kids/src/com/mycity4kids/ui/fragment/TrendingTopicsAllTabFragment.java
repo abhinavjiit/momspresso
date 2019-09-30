@@ -1,14 +1,7 @@
 package com.mycity4kids.ui.fragment;
 
-import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -32,10 +30,8 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
-import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeActivity;
@@ -45,7 +41,6 @@ import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.utils.MixPanelUtils;
-import com.mycity4kids.widget.FeedNativeAd;
 
 import org.json.JSONObject;
 
@@ -76,9 +71,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
     private TextView noBlogsTextView;
     private boolean isHeaderVisible = false;
     private RecyclerView recyclerView;
-    private FeedNativeAd feedNativeAd;
-    ShimmerFrameLayout mshimmerFrameLayout;
-    //    private SwipeRefreshLayout swipe_refresh_layout;
+    private ShimmerFrameLayout mshimmerFrameLayout;
     private MixpanelAPI mixpanel;
     private SwipeRefreshLayout pullToRefresh;
 
@@ -117,7 +110,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements GroupI
                 isHeaderVisible = false;
             }
         }
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, isHeaderVisible, "TrendingAll", true);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), this, isHeaderVisible, "TrendingAll", true);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);

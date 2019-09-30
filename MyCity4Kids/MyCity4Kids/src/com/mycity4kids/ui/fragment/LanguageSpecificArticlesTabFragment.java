@@ -2,10 +2,6 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,6 +10,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -32,7 +33,6 @@ import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
-import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
 
@@ -54,20 +54,17 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
     private int sortType = 0;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
-    //    private MainArticleListingAdapter articlesListingAdapter;
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
 
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
-    //    private SwipeRefreshLayout swipeRefreshLayout;
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private FloatingActionButton popularSortFAB;
     private FloatingActionButton recentSortFAB;
     private FloatingActionButton fabSort;
     private RecyclerView recyclerView;
-    private FeedNativeAd feedNativeAd;
 
     @Nullable
     @Override
@@ -75,12 +72,9 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
 
         View view = inflater.inflate(R.layout.new_article_layout, container, false);
 
-//        ListView listView = (ListView) view.findViewById(R.id.scroll);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
-//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
-
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
         fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
@@ -125,23 +119,14 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
         if (getArguments() != null) {
             trendingTopicData = getArguments().getParcelable("languageData");
         }
-        Log.d("searchName", "" + trendingTopicData.getDisplay_name());
-
-//        swipeRefreshLayout.setOnRefreshListener(this);
-
-//        articlesListingAdapter = new MainArticleListingAdapter(getActivity());
-//        listView.setAdapter(articlesListingAdapter);
-
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(sortType);
 
-//        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
-//        feedNativeAd.loadAds();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, trendingTopicData.getDisplay_name(), false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), this, false, trendingTopicData.getDisplay_name(), false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(articleDataModelsNew);
         recyclerView.setAdapter(recyclerAdapter);
@@ -165,44 +150,6 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
                 }
             }
         });
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//
-//                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-//                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-//                    mLodingView.setVisibility(View.VISIBLE);
-//                    hitFilteredTopicsArticleListingApi(sortType);
-//                    isReuqestRunning = true;
-//                }
-//            }
-//        });
-
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//
-//                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-//                if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
-//                    ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getAdapter().getItem(i);
-//                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-//                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-//                    intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
-//                    intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-//                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + trendingTopicData.getDisplay_name());
-//                    intent.putExtra(Constants.FROM_SCREEN, "LanguageScreen");
-//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-//                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-//                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
 
         return view;
     }
@@ -225,8 +172,6 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
-//            swipeRefreshLayout.setRefreshing(false);
-//            progressBar.setVisibility(View.INVISIBLE);
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
@@ -274,7 +219,6 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
                 noBlogsTextView.setVisibility(View.GONE);
                 if ("".equals(chunks)) {
                     articleDataModelsNew.clear();
-//                    articleDataModelsNew.addAll(dataList);
                     for (int j = 0; j < dataList.size(); j++) {
                         if (!StringUtils.isNullOrEmpty(dataList.get(j).getId())) {
                             articleDataModelsNew.add(dataList.get(j));
@@ -337,7 +281,6 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
     @Override
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-//            swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             return;
         }
@@ -345,16 +288,6 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(0);
     }
-
-//    @Override
-//    public void onFinishToLoadAds() {
-//
-//    }
-//
-//    @Override
-//    public void onErrorToLoadAd() {
-//
-//    }
 
     @Override
     public void onRecyclerItemClick(View view, int position) {

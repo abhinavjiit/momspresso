@@ -16,7 +16,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.analytics.HitBuilders;
@@ -47,16 +50,12 @@ import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
 import com.mycity4kids.utils.MixPanelUtils;
-import com.mycity4kids.widget.FeedNativeAd;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -64,33 +63,30 @@ import retrofit2.Retrofit;
 public class ArticleListingFragment extends BaseFragment implements GroupIdCategoryMap.GroupCategoryInterface, View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
+    private final static int LIMIT = 15;
+    private final static int FORYOU_LIMIT = 10;
+
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
-    private ArrayList<ArticleListingResult> articleDataModelsSubList;
     private String sortType;
     private int nextPageNumber;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
-    private int from = 1;
-    private int to = 15;
-    private int limit = 15;
     private String chunks = "";
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
     private boolean isHeaderVisible = false;
     private boolean mIsVisibleToUser;
-    private String[] feedOrderArray;
 
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private RecyclerView recyclerView;
-    private FeedNativeAd feedNativeAd;
     private LinearLayout addTopicsLayout;
     private FrameLayout headerArticleCardLayout;
-    ShimmerFrameLayout ashimmerFrameLayout;
+    private ShimmerFrameLayout ashimmerFrameLayout;
     private SwipeRefreshLayout pullToRefresh;
     private boolean fromPullToRefresh;
-    Context mContext;
+    private Context mContext;
     private int tabPosition;
     private MixpanelAPI mixpanel;
     private Tracker tracker;
@@ -122,7 +118,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         if (getArguments() != null) {
             sortType = getArguments().getString(Constants.SORT_TYPE);
             tabPosition = getArguments().getInt(Constants.TAB_POSITION);
-            feedOrderArray = getArguments().getStringArray("feedOrderArray");
         }
 
         articleDataModelsNew = new ArrayList<>();
@@ -144,7 +139,7 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             }
         }
 
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(mContext, feedNativeAd, this, isHeaderVisible, sortType, tabPosition == 0);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(mContext, this, isHeaderVisible, sortType, tabPosition == 0);
         final LinearLayoutManager llm = new LinearLayoutManager(mContext);
         llm.setOrientation(RecyclerView.VERTICAL);
 
@@ -280,34 +275,34 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
                 fromPullToRefresh = false;
                 chunks = "";
             }
-            Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), 10, chunks, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(), FORYOU_LIMIT, chunks, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             progressBar.setVisibility(View.VISIBLE);
             call.enqueue(recommendedArticlesResponseCallback);
         } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-            int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + limit - 1,
+            int from = (nextPageNumber - 1) * LIMIT + 1;
+            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + LIMIT - 1,
                     SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         } else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-            int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), from, from + limit - 1,
+            int from = (nextPageNumber - 1) * LIMIT + 1;
+            Call<ArticleListingResponse> filterCall = topicsAPI.getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), from, from + LIMIT - 1,
                     SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         } else if (Constants.KEY_TRENDING.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-            int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            int from = (nextPageNumber - 1) * LIMIT + 1;
+            Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(from, from + LIMIT - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-            int from = (nextPageNumber - 1) * limit + 1;
-            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
+            int from = (nextPageNumber - 1) * LIMIT + 1;
+            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + LIMIT - 1, SharedPrefUtils.getLanguageFilters(BaseApplication.getAppContext()));
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
@@ -403,7 +398,6 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             }
         } catch (Exception ex) {
             mLodingView.setVisibility(View.GONE);
-            removeVolleyCache(sortType);
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
@@ -489,30 +483,8 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
         }
         isLastPageReached = false;
         chunks = "";
-        removeVolleyCache(sortType);
-        from = 1;
-        to = 15;
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType);
-    }
-
-    private void removeVolleyCache(String sortType) {
-        if (AppConstants.SORT_TYPE_BOOKMARK.equals(sortType))
-            return;
-
-        int cacheFrom = 1;
-        int cacheTo = 15;
-
-        String baseCacheKey = Request.Method.GET + ":" + AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortType +
-                AppConstants.SEPARATOR_BACKSLASH;
-        String cachedPage = cacheFrom + AppConstants.SEPARATOR_BACKSLASH + cacheTo;
-        while (null != BaseApplication.getInstance().getRequestQueue().getCache().get(baseCacheKey + cachedPage)) {
-            BaseApplication.getInstance().getRequestQueue().getCache().remove(baseCacheKey + cachedPage);
-            cacheFrom = cacheFrom + 15;
-            cacheTo = cacheTo + 15;
-            cachedPage = cacheFrom + AppConstants.SEPARATOR_BACKSLASH + cacheTo;
-        }
-
     }
 
     @Override
@@ -561,11 +533,17 @@ public class ArticleListingFragment extends BaseFragment implements GroupIdCateg
             case R.id.fbAdArticleView:
             case R.id.storyHeaderView:
             default:
-                int page = (position / 15);
-                int posSubList = position % 15;
-                int startIndex = page * 15;
-                int endIndex = startIndex + 15;
-                articleDataModelsSubList = new ArrayList<>(articleDataModelsNew.subList(startIndex, endIndex));
+                int limit;
+                if (Constants.KEY_FOR_YOU.equals(sortType)) {
+                    limit = FORYOU_LIMIT;
+                } else {
+                    limit = LIMIT;
+                }
+                int page = (position / limit);
+                int posSubList = position % limit;
+                int startIndex = page * limit;
+                int endIndex = startIndex + limit;
+                ArrayList<ArticleListingResult> articleDataModelsSubList = new ArrayList<>(articleDataModelsNew.subList(startIndex, endIndex));
                 if ("1".equals(articleDataModelsNew.get(position).getContentType())) {
                     Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
                     if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {

@@ -20,6 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -52,16 +57,11 @@ import com.mycity4kids.ui.activity.TopicsListingActivity;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.GroupIdCategoryMap;
-import com.mycity4kids.widget.FeedNativeAd;
 
 import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.ArrayList;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -69,7 +69,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener,/* FeedNativeAd.AdLoadingListener,*/ MainArticleRecyclerViewAdapter.RecyclerViewClickListener, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
+public class TopicsArticlesTabFragment extends BaseFragment implements View.OnClickListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener, GroupIdCategoryMap.GroupCategoryInterface, GroupMembershipStatus.IMembershipStatus {
 
     private int groupId;
     public String gpsubHeading, gpHeading, gpImageUrl;
@@ -97,7 +97,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     private FloatingActionButton recentSortFAB;
     private FloatingActionButton fabSort;
     private RecyclerView recyclerView;
-    private FeedNativeAd feedNativeAd;
     private RelativeLayout guideOverlay;
     private RelativeLayout writeArticleCell;
     private boolean showGuide = false;
@@ -184,9 +183,9 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
 
         mDatalist = new ArrayList<>();
-        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false, selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), false);
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), this, false, selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), false);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setNewListData(mDatalist);
         recyclerView.setAdapter(recyclerAdapter);

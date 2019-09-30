@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
@@ -38,16 +37,13 @@ import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.GroupMembershipStatus;
-import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.GroupDetailsActivity;
 import com.mycity4kids.ui.activity.GroupsSummaryActivity;
-import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.ui.fragment.GroupsViewFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-import com.mycity4kids.widget.FeedNativeAd;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -79,13 +75,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private static int VIDEOS = 5;
     private final Context mContext;
     private final LayoutInflater mInflator;
-    private final FeedNativeAd feedNativeAd;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
-    private ArrayList<VlogsListingAndDetailResult> carouselVideoList;
     private RecyclerViewClickListener mListener;
-    private boolean isAdChoiceAdded = false;
     private boolean topicHeaderVisibilityFlag;
-    //    private List<NativeAd> adList = new ArrayList<>(10);
     private boolean isRequestRunning;
     private String heading, subHeading, gpImageUrl;
     private int groupId;
@@ -94,11 +86,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private boolean showVideoFlag;
 
 
-    public MainArticleRecyclerViewAdapter(Context pContext, FeedNativeAd feedNativeAd, RecyclerViewClickListener listener, boolean topicHeaderVisibilityFlag, String screenName, boolean showVideoFlag) {
+    public MainArticleRecyclerViewAdapter(Context pContext, RecyclerViewClickListener listener, boolean topicHeaderVisibilityFlag, String screenName, boolean showVideoFlag) {
         mContext = pContext;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-        this.feedNativeAd = feedNativeAd;
         mListener = listener;
         this.topicHeaderVisibilityFlag = topicHeaderVisibilityFlag;
         mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), AppConstants.MIX_PANEL_TOKEN);
@@ -112,10 +103,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     public void setNewListData(ArrayList<ArticleListingResult> mParentingLists_new) {
         articleDataModelsNew = mParentingLists_new;
-    }
-
-    public void setCarouselVideos(ArrayList<VlogsListingAndDetailResult> carouselVideoList) {
-        this.carouselVideoList = carouselVideoList;
     }
 
     public void setGroupInfo(int groupId, String heading, String subHeading, String gpImageUrl) {
@@ -190,13 +177,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView, viewHolder.videoIndicatorImageView
                     , viewHolder.bookmarkArticleImageView, viewHolder.watchLaterImageView, articleDataModelsNew.get(position), position, viewHolder);
         } else if (holder instanceof FeedViewHolder) {
-//            addArticleItem((FeedViewHolder) holder, position);
             FeedViewHolder viewHolder = (FeedViewHolder) holder;
             addArticleItem(viewHolder.txvArticleTitle, viewHolder.forYouInfoLL, viewHolder.viewCountTextView, viewHolder.commentCountTextView,
                     viewHolder.recommendCountTextView, viewHolder.txvAuthorName, viewHolder.articleImageView, viewHolder.videoIndicatorImageView
                     , viewHolder.bookmarkArticleImageView, viewHolder.watchLaterImageView, articleDataModelsNew.get(position), position, viewHolder);
-
-
         } else if (holder instanceof JoinGroupViewHolder) {
             if (StringUtils.isNullOrEmpty(heading) || StringUtils.isNullOrEmpty(subHeading)) {
                 ((JoinGroupViewHolder) holder).groupHeadingTextView.setText("");
@@ -207,7 +191,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 ((JoinGroupViewHolder) holder).groupSubHeadingTextView.setText(subHeading);
                 ((JoinGroupViewHolder) holder).joinGroupTextView.setVisibility(View.VISIBLE);
             }
-
             try {
                 Picasso.with(mContext).load(gpImageUrl).placeholder(R.drawable.groups_generic)
                         .error(R.drawable.groups_generic).into(((JoinGroupViewHolder) holder).groupHeaderImageView);
@@ -234,7 +217,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 Log.d("VideoCarouselViewHolder", "BEFORE API = " + position);
                 new LoadVideoCarouselAsyncTask((VideoCarouselViewHolder) holder, position).execute();
             } else if (articleDataModelsNew.get(position).isCarouselRequestRunning() && !articleDataModelsNew.get(position).isResponseReceived()) {
-
             } else {
                 Log.d("VideoCarouselViewHolder", "RECYCLED = " + position
                         + "request = " + articleDataModelsNew.get(position).isCarouselRequestRunning() + " response = " + articleDataModelsNew.get(position).isResponseReceived());
@@ -256,7 +238,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                         articleDataModelsNew.get(position));
             }
         } else {
-//            addShortStoryItem((ShortStoriesViewHolder) holder, position);
             ShortStoriesViewHolder viewHolder = (ShortStoriesViewHolder) holder;
             addShortStoryItem(viewHolder.mainView, viewHolder.storyTitleTextView, viewHolder.storyBodyTextView, viewHolder.authorNameTextView,
                     viewHolder.storyCommentCountTextView, viewHolder.storyRecommendationCountTextView, viewHolder.likeImageView,
@@ -269,36 +250,30 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 ImageView articleIV, ImageView videoIndicatorIV, ImageView bookmarkArticleIV, ImageView watchLaterIV,
                                 final ArticleListingResult data, final int position, final RecyclerView.ViewHolder holder) {
         articleTitleTV.setText(data.getTitle());
-
         forYouInfoLL.setVisibility(View.GONE);
-
         if (null == data.getArticleCount() || "0".equals(data.getArticleCount())) {
             viewCountTV.setVisibility(View.GONE);
         } else {
             viewCountTV.setVisibility(View.VISIBLE);
             viewCountTV.setText(data.getArticleCount());
         }
-
         if (null == data.getCommentsCount() || "0".equals(data.getCommentsCount())) {
             commentCountTV.setVisibility(View.GONE);
         } else {
             commentCountTV.setVisibility(View.VISIBLE);
             commentCountTV.setText(data.getCommentsCount());
         }
-
         if (null == data.getLikesCount() || "0".equals(data.getLikesCount())) {
             recommendCountTV.setVisibility(View.GONE);
         } else {
             recommendCountTV.setVisibility(View.VISIBLE);
             recommendCountTV.setText(data.getLikesCount());
         }
-
         if (StringUtils.isNullOrEmpty(data.getUserName()) || data.getUserName().trim().equalsIgnoreCase("")) {
             authorNameTV.setText("NA");
         } else {
             authorNameTV.setText(data.getUserName());
         }
-
         try {
             if (!StringUtils.isNullOrEmpty(data.getVideoUrl())
                     && (data.getImageUrl().getThumbMax() == null || data.getImageUrl().getThumbMax().contains("default.jp"))) {
@@ -314,19 +289,14 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         } catch (Exception e) {
             articleIV.setBackgroundResource(R.drawable.default_article);
         }
-
-
         if (!StringUtils.isNullOrEmpty(data.getVideoUrl())) {
             videoIndicatorIV.setVisibility(View.VISIBLE);
         } else {
             videoIndicatorIV.setVisibility(View.INVISIBLE);
         }
-
         if ("1".equals(data.getIsMomspresso())) {
             bookmarkArticleIV.setVisibility(View.VISIBLE);
             watchLaterIV.setVisibility(View.GONE);
-
-
             if ("0".equals(data.getIs_bookmark())) {
                 bookmarkArticleIV.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
@@ -335,14 +305,12 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         } else {
             bookmarkArticleIV.setVisibility(View.VISIBLE);
             watchLaterIV.setVisibility(View.GONE);
-
             if ("0".equals(data.getIs_bookmark())) {
                 bookmarkArticleIV.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {
                 bookmarkArticleIV.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
             }
         }
-
         watchLaterIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -351,7 +319,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                         data.getId(), data.getUserId() + "~" + data.getUserName());
             }
         });
-
         bookmarkArticleIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -364,26 +331,22 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         });
     }
 
-    private void addShortStoryItem(RelativeLayout mainViewRL, TextView storyTitleTV, TextView storyBodyTV,
-                                   TextView authorNameTV, TextView storyCommentCountTV, TextView storyRecommendationCountTV
-            , ImageView likeIV, ArticleListingResult data) {
+    private void addShortStoryItem(RelativeLayout mainViewRL, TextView storyTitleTV, TextView storyBodyTV, TextView authorNameTV,
+                                   TextView storyCommentCountTV, TextView storyRecommendationCountTV, ImageView likeIV, ArticleListingResult data) {
         mainViewRL.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
         storyTitleTV.setText(data.getTitle().trim());
         storyBodyTV.setText(data.getBody().trim());
         authorNameTV.setText(data.getUserName());
-
         if (null == data.getCommentsCount()) {
             storyCommentCountTV.setText("0");
         } else {
             storyCommentCountTV.setText(data.getCommentsCount());
         }
-
         if (null == data.getLikesCount()) {
             storyRecommendationCountTV.setText("0");
         } else {
             storyRecommendationCountTV.setText(data.getLikesCount());
         }
-
         if (data.isLiked()) {
             likeIV.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_recommended));
         } else {
@@ -416,7 +379,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
             }
         }
-
         if (body.getData().getResult() == null || body.getData().getResult().isEmpty()) {
             Intent intent = new Intent(mContext, GroupsSummaryActivity.class);
             intent.putExtra("groupId", groupId);
@@ -474,9 +436,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
-        ImageView sponsoredImage;
-        TextView sponsoredTextView;
-        RelativeLayout sponsoredViewContainer;
 
         FeedViewHolder(View view) {
             super(view);
@@ -491,8 +450,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
             bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
             watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
-
-
             view.setOnClickListener(this);
         }
 
@@ -515,7 +472,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         RelativeLayout mainView;
 
-
         public ShortStoriesViewHolder(View itemView) {
             super(itemView);
             mainView = (RelativeLayout) itemView.findViewById(R.id.mainView);
@@ -532,7 +488,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
             instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
             genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
-
 
             whatsappShareImageView.setTag(itemView);
 
@@ -555,7 +510,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
         FrameLayout headerView;
         FrameLayout headerArticleView;
         TextView txvArticleTitle;
@@ -610,7 +564,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
 
     public class VideoCarouselViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
         FrameLayout videoContainerFL1;
         TextView txvArticleTitle1;
         TextView txvAuthorName1;
@@ -704,9 +657,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
     }
 
-
     public class JoinGroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
         FrameLayout groupHeaderView;
         TextView groupHeadingTextView;
         TextView groupSubHeadingTextView;
@@ -865,9 +816,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private class AddRemoveBookmarkAsyncTask extends AsyncTask<String, String, String> {
-
-        // The variable is moved here, we only need it here while displaying the
-        // progress dialog.
         RecyclerView.ViewHolder viewHolder;
         String type;
         int pos;
@@ -880,7 +828,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         @Override
         protected String doInBackground(String... strings) {
-
             String JsonResponse;
             String JsonDATA = strings[0];
 
@@ -900,38 +847,29 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
-                // is output buffer writter
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.addRequestProperty("id", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
                 urlConnection.addRequestProperty("mc4kToken", SharedPrefUtils.getUserDetailModel(mContext).getMc4kToken());
 
-                //set headers and method
                 Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
                 writer.write(JsonDATA);
-                // json data
                 writer.close();
                 InputStream inputStream = urlConnection.getInputStream();
-                //input stream
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
-                    // Nothing to do.
                     return null;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
-
                 String inputLine;
                 while ((inputLine = reader.readLine()) != null)
                     buffer.append(inputLine + "\n");
                 if (buffer.length() == 0) {
-                    // Stream was empty. No point in parsing.
                     return null;
                 }
                 JsonResponse = buffer.toString();
-
                 Log.i("RESPONSE " + type, JsonResponse);
-                //send to post execute
                 return JsonResponse;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -959,8 +897,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             }
             try {
                 AddBookmarkResponse responseData = new Gson().fromJson(result, AddBookmarkResponse.class);
-//                if ((responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) ||
-//                        (responseData.getCode() == 200 && Constants.FAILURE.equals(responseData.getStatus()) && "already bookmarked".equals(responseData.getReason()))) {
                 if (responseData.getCode() == 200) {
                     for (int i = 0; i < articleDataModelsNew.size(); i++) {
                         if (articleDataModelsNew.get(i).getId().equals(responseData.getData().getResult().getArticleId())) {
@@ -981,7 +917,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (mContext instanceof FilteredTopicsArticleListingActivity) {
                                     ((FilteredTopicsArticleListingActivity) mContext).showBookmarkConfirmationTooltip();
                                 }
-
                             } else if ("unbookmarkArticle".equals(type)) {
                                 articleDataModelsNew.get(i).setIs_bookmark("0");
                                 articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
@@ -1004,7 +939,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
-//                                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                                 }
                             } else if ("unbookmarkVideo".equals(type)) {
                                 articleDataModelsNew.get(i).setListingWatchLaterStatus(0);
@@ -1016,7 +950,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 } else if (viewHolder instanceof JoinGroupViewHolder) {
                                     ((JoinGroupViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
-//                                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                                 }
                             }
                         }
@@ -1041,7 +974,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 } else if (viewHolder instanceof VideoCarouselViewHolder) {
                     ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
-//                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 }
             } else if ("unbookmarkArticle".equals(type)) {
                 if (viewHolder instanceof FeedViewHolder) {
@@ -1053,7 +985,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 } else if (viewHolder instanceof VideoCarouselViewHolder) {
                     ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
-//                    ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                 }
             } else if ("bookmarkVideo".equals(type)) {
                 if (viewHolder instanceof FeedViewHolder) {
@@ -1065,7 +996,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 } else if (viewHolder instanceof VideoCarouselViewHolder) {
                     ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
-//                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                 }
             } else if ("unbookmarkVideo".equals(type)) {
                 if (viewHolder instanceof FeedViewHolder) {
@@ -1077,7 +1007,6 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 } else if (viewHolder instanceof VideoCarouselViewHolder) {
                     ((VideoCarouselViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
-//                    ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                 }
             }
         }
@@ -1085,14 +1014,10 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
 
     private class LoadVideoCarouselAsyncTask extends AsyncTask<String, String, String> {
-
-        // The variable is moved here, we only need it here while displaying the
-        // progress dialog.
         VideoCarouselViewHolder viewHolder;
         int pos;
 
         public LoadVideoCarouselAsyncTask(VideoCarouselViewHolder viewHolder, int position) {
-
             this.viewHolder = viewHolder;
             pos = position;
         }
@@ -1116,13 +1041,11 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 urlConnection.setRequestProperty("Accept-Language", Locale.getDefault().getLanguage());
                 urlConnection.addRequestProperty("id", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
                 urlConnection.addRequestProperty("mc4kToken", SharedPrefUtils.getUserDetailModel(mContext).getMc4kToken());
-
                 InputStream inputStream = urlConnection.getInputStream();
                 InputStreamReader isReader = new InputStreamReader(inputStream);
                 reader = new BufferedReader(isReader);
                 String line = reader.readLine();
                 StringBuffer readTextBuf = new StringBuffer();
-
                 while (line != null) {
                     readTextBuf.append(line);
                     line = reader.readLine();
@@ -1207,14 +1130,12 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             viewCountTextView1.setVisibility(View.VISIBLE);
             viewCountTextView1.setText(data.getView_count());
         }
-
         if (null == data.getComment_count() || "0".equals(data.getComment_count())) {
             commentCountTextView1.setVisibility(View.GONE);
         } else {
             commentCountTextView1.setVisibility(View.VISIBLE);
             commentCountTextView1.setText(data.getComment_count());
         }
-
         if (null == data.getLike_count() || "0".equals(data.getLike_count())) {
             recommendCountTextView1.setVisibility(View.GONE);
         } else {
@@ -1238,5 +1159,4 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             imageView.setImageResource(R.drawable.default_article);
         }
     }
-
 }
