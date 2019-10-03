@@ -38,8 +38,6 @@ import retrofit2.Retrofit;
 
 import static android.view.View.GONE;
 
-//import com.facebook.widget.FacebookDialog;
-
 /**
  * Created by hemant on 2/8/17.
  */
@@ -87,8 +85,6 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
 
         if ("addStory".equals(source)) {
             if (shareUrl.equals("https://www.momspresso.com/parenting/topic/short-stories")) {
-
-
                 moderationContainer.setVisibility(View.VISIBLE);
                 publishContainer.setVisibility(GONE);
                 shareContainerLayout.setVisibility(GONE);
@@ -100,7 +96,6 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         } else {
             instagramImageView.setVisibility(GONE);
         }
-
 
         fImageView.setOnClickListener(this);
         gImageView.setOnClickListener(this);
@@ -166,7 +161,6 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                     Toast.makeText(this, getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
                 } else {
                     if ("addStory".equals(source)) {
-//                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", authorId + "", shareUrl, authorId + "~" + authorName, "Whatsapp");
                         AppUtils.shareStoryWithWhatsApp(ArticleModerationOrShareActivity.this, shareUrl, "PublishSuccessScreen", authorId,
                                 shareUrl, authorId, authorName);
                     } else {
@@ -185,7 +179,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 break;
             case R.id.instagramImageView:
                 try {
-                    AppUtils.drawMultilineTextToBitmap(title, body, authorName);
+                    AppUtils.drawMultilineTextToBitmap(title, body, authorName, false);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -239,7 +233,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
             removeProgressDialog();
-            if (response == null || response.body() == null) {
+            if (response.body() == null) {
                 return;
             }
 
@@ -261,14 +255,11 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
 
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-//            noDataFoundTextView.setVisibility(View.VISIBLE);
             removeProgressDialog();
-//            showToast(getString(R.string.server_went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
 
     private static String urlEncode(String s) {
         try {

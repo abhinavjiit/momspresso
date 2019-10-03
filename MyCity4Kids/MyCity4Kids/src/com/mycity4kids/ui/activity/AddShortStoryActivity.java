@@ -958,7 +958,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         Bitmap finalBitmap = null;
         try {
             finalBitmap = AppUtils.drawMultilineTextToBitmap(storyTitleEditText.getText().toString(), storyBodyEditText.getText().toString(),
-                    SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
+                    SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), true);
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -981,7 +981,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
         }
         imageType = RequestBody.create(MediaType.parse("text/plain"), "4");
-        if (imageType != null && requestBodyFile != null) {
+        if (requestBodyFile != null) {
             Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(imageType, requestBodyFile);
             call.enqueue(ssImageUploadCallback);
         }

@@ -30,6 +30,7 @@ import android.text.Layout;
 import android.text.Spanned;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -93,6 +94,12 @@ import okhttp3.ResponseBody;
  * Created by hemant on 22/11/16.
  */
 public class AppUtils {
+
+    private static final int SS_FB_CARD_WIDTH = 1200;
+    private static final int SS_FB_CARD_HEIGHT = 628;
+    private static final int SS_FB_CARD_HEIGHT_WITHOUT_AUTHOR = 537;
+    private static final int SS_WA_INSTA_CARD_WIDTH = 800;
+    private static final int SS_WA_INSTA_CARD_HEIGHT = 800;
 
     private static String SALT = "iasdas1oi23ubnaoligueiug12311028313liuege";
     private static float singleContentHeight = 800f;
@@ -654,34 +661,206 @@ public class AppUtils {
         return effectivePosition;
     }
 
-    public static Bitmap drawMultilineTextToBitmap(String title, String body, String authorName) {
+    public static Bitmap drawMultilineTextToBitmap(String title, String body, String authorName, boolean isRequiredForUpload) {
         Random rand = new Random();
         switch (rand.nextInt(6)) {
             case 0:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_1, title, body, authorName);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_1, title, body, authorName, isRequiredForUpload);
             case 1:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_2, title, body, authorName);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_2, title, body, authorName, isRequiredForUpload);
             case 2:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_3, title, body, authorName);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_3, title, body, authorName, isRequiredForUpload);
             case 3:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_4, title, body, authorName);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_4, title, body, authorName, isRequiredForUpload);
             case 4:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_5, title, body, authorName);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_5, title, body, authorName, isRequiredForUpload);
             case 5:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_6, title, body, authorName);
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_6, title, body, authorName, isRequiredForUpload);
             default:
-                return drawMultilineTextToBitmap(R.color.short_story_card_bg_6, title, body, authorName);
-
+                return drawMultilineTextToBitmap(R.color.short_story_card_bg_6, title, body, authorName, isRequiredForUpload);
         }
     }
 
-    public static Bitmap drawMultilineTextToBitmap(int bgColor, String title, String body, String authorName) {
+    private static Bitmap drawMultilineTextToBitmap(int bgColor, String title, String body, String authorName, boolean isRequiredForUpload) {
+        if (isRequiredForUpload) {
+            return drawMultilineTextToBitmapForUpload(bgColor, title, body, authorName);
+        } else {
+            return drawMultilineTextToBitmap(bgColor, title, body, authorName);
+        }
+    }
 
-        // prepare canvas
+    private static Bitmap drawMultilineTextToBitmapForUpload(int bgColor, String title, String body, String authorName) {
+        Bitmap bitmap;
+        String author = " - " + authorName;
+        Resources resources = BaseApplication.getAppContext().getResources();
+        float scale = resources.getDisplayMetrics().density;
+        // set text width to canvas width minus 50dp padding
+        int textWidth = SS_FB_CARD_WIDTH - (int) (50 * scale);
+
+        int titleSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                14, resources.getDisplayMetrics());
+
+        int bodyAndAuthorSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                12, resources.getDisplayMetrics());
+
+        Typeface georgiaTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia.ttf");
+        Typeface geoBoldTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia_bold.ttf");
+        TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        titlePaint.setTypeface(geoBoldTypeface);
+        titlePaint.setColor(Color.rgb(61, 61, 61));
+        titlePaint.setTextSize(titleSize);
+
+        TextPaint bodyPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        bodyPaint.setTypeface(georgiaTypeface);
+        bodyPaint.setColor(Color.rgb(61, 61, 61));
+        bodyPaint.setTextSize(bodyAndAuthorSize);
+        CharSequence txt = TextUtils.ellipsize(body, bodyPaint, textWidth, TextUtils.TruncateAt.END);
+
+        TextPaint authorPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        authorPaint.setTypeface(geoBoldTypeface);
+        authorPaint.setColor(Color.rgb(61, 61, 61));
+        authorPaint.setTextSize(bodyAndAuthorSize);
+
+        StaticLayout bodyLayout, titleLayout, authorLayout;
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            StaticLayout.Builder bodyStaticBuilder = StaticLayout.Builder.obtain(body, 0, body.length(), bodyPaint, textWidth)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setIncludePad(false);
+            StaticLayout.Builder titleStaticBuilder = StaticLayout.Builder.obtain(title, 0, title.length(), titlePaint, textWidth)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setIncludePad(false);
+            StaticLayout.Builder authorStaticBuilder = StaticLayout.Builder.obtain(author, 0, author.length(), authorPaint, textWidth)
+                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                    .setIncludePad(false);
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                bodyStaticBuilder.setJustificationMode(Layout.JUSTIFICATION_MODE_NONE);
+                titleStaticBuilder.setJustificationMode(Layout.JUSTIFICATION_MODE_NONE);
+                authorStaticBuilder.setJustificationMode(Layout.JUSTIFICATION_MODE_NONE);
+            }
+            bodyLayout = bodyStaticBuilder.build();
+            titleLayout = titleStaticBuilder.build();
+            authorLayout = authorStaticBuilder.build();
+        } else {
+            bodyLayout = new StaticLayout(
+                    body, bodyPaint, textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+            titleLayout = new StaticLayout(
+                    title, titlePaint, textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+            authorLayout = new StaticLayout(
+                    author, authorPaint, textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false);
+        }
+        // get height of multiline text
+        int bodyHeight = bodyLayout.getHeight();
+        int titleHeight = titleLayout.getHeight();
+
+        float currentContentHeight = bodyHeight + titleHeight + authorLayout.getHeight()
+                + (50 * scale) //50*scale for spacing between title, body, author and logo
+                + 30; //For Padding at Top
+
+        if (currentContentHeight >= SS_FB_CARD_HEIGHT) {
+            bitmap = Bitmap.createBitmap(SS_FB_CARD_WIDTH, SS_FB_CARD_HEIGHT_WITHOUT_AUTHOR, Bitmap.Config.ARGB_8888);
+        } else {
+            bitmap = Bitmap.createBitmap(SS_FB_CARD_WIDTH, SS_FB_CARD_HEIGHT, Bitmap.Config.ARGB_8888);
+        }
+
+        Bitmap logoBitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_notify);
+        Bitmap watermark = BitmapFactory.decodeResource(resources, R.drawable.share_bg);
+        android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
+        // set default bitmap config if none
+        if (bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        // resource bitmaps are immutable, so we need to convert it to mutable one
+        bitmap = bitmap.copy(bitmapConfig, true);
+
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(ContextCompat.getColor(BaseApplication.getAppContext(), bgColor));
+
+        float xPosWatermark = (bitmap.getWidth() - watermark.getWidth()) / 2.0f;
+        float yPosWatermark = (bitmap.getHeight() - watermark.getHeight()) / 2.0f;
+        canvas.drawBitmap(watermark, xPosWatermark, yPosWatermark, null);
+
+        // get X Coordinate of body's top left corner
+        float xBodyInitial = (bitmap.getWidth() - textWidth) / 2.0f;
+
+        Paint p = new Paint();
+        p.setColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.short_story_light_black_color));
+        p.setStrokeWidth(2);
+
+        if (currentContentHeight > SS_FB_CARD_HEIGHT) {
+            Log.d("drawMultilineText", "LONG CARD === " + currentContentHeight);
+            /*Text overflow .. starting drawing from Top instead of center
+            get Y Coordinate of body's top left corner*/
+            float yBodyInitial = titleHeight + 30 * scale;
+            float ySeparator = yBodyInitial - 10 * scale;
+
+            canvas.save();
+            canvas.translate(xBodyInitial, yBodyInitial);
+            bodyLayout.draw(canvas);
+            canvas.restore();
+            canvas.save();
+            canvas.drawLine(bitmap.getWidth() / 2.0f - 20, ySeparator, bitmap.getWidth() / 2.0f + 20, ySeparator, p);
+            canvas.translate(xBodyInitial, ySeparator - titleHeight - 10 * scale); //subtract 10*scale for spacing between title and body
+            titleLayout.draw(canvas);
+            canvas.restore();
+            bitmap = authorSectionBitmap(bitmap, xBodyInitial, authorLayout, bgColor);
+        } else {
+            Log.d("drawMultilineText", "SHORT CARD === " + currentContentHeight);
+
+            // get Y Coordinate of body's top left corner
+            float yBodyInitial = (bitmap.getHeight() - bodyHeight) / 2.0f;
+            float ySeparator = yBodyInitial - 10 * scale;
+            float yAuthor = bitmap.getHeight() - yBodyInitial;
+
+            // draw text to the Canvas center
+            canvas.save();
+            canvas.translate(xBodyInitial, yBodyInitial);
+            bodyLayout.draw(canvas);
+            canvas.restore();
+            canvas.save();
+            canvas.drawLine(bitmap.getWidth() / 2.0f - 20, ySeparator, bitmap.getWidth() / 2.0f + 20, ySeparator, p);
+            canvas.translate(xBodyInitial, ySeparator - titleHeight - 10 * scale); //subtract 10*scale for spacing between title and body
+            titleLayout.draw(canvas);
+            canvas.restore();
+            canvas.save();
+            canvas.translate(xBodyInitial, yAuthor + 10 * scale);//Add 10*scale for spacing between author and body
+            authorLayout.draw(canvas);
+            canvas.restore();
+            canvas.save();
+            canvas.drawBitmap(logoBitmap, bitmap.getWidth() - 30 * scale, bitmap.getHeight() - 30 * scale, null);
+        }
+        AppUtils.createDirIfNotExists("MyCity4Kids/videos");
+        try {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+        return bitmap;
+    }
+
+    private static Bitmap authorSectionBitmap(Bitmap bitmap, float xInitial, StaticLayout authorLayout, int bgColor) {
+        Resources resources = BaseApplication.getAppContext().getResources();
+        Bitmap logoBitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_notify);
+        float scale = resources.getDisplayMetrics().density;
+        int height = authorLayout.getHeight() + logoBitmap.getHeight();
+        Log.d("drawMultilineText", "Author Section = " + height + "  bitmap height = " + bitmap.getHeight());
+        Bitmap cs = Bitmap.createBitmap(bitmap.getWidth(), height + bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas comboImage = new Canvas(cs);
+        comboImage.drawColor(ContextCompat.getColor(BaseApplication.getAppContext(), bgColor));
+        comboImage.drawBitmap(bitmap, 0, 0, null);
+        comboImage.save();
+        comboImage.translate(xInitial, bitmap.getHeight() + 10 * scale);
+        authorLayout.draw(comboImage);
+        comboImage.restore();
+        comboImage.save();
+        comboImage.drawBitmap(logoBitmap, comboImage.getWidth() - 30 * scale, comboImage.getHeight() - 30 * scale, null);
+        return cs;
+    }
+
+    public static Bitmap drawMultilineTextToBitmap(int bgColor, String title, String body, String authorName) {
         Resources resources = BaseApplication.getAppContext().getResources();
         float scale = resources.getDisplayMetrics().density;
         Bitmap bitmap = Bitmap.createBitmap(800, 800, Bitmap.Config.ARGB_8888);
-//        Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.ss_share_web);
         Bitmap logoBitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_notify);
         Bitmap watermark = BitmapFactory.decodeResource(resources, R.drawable.share_bg);
         android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
@@ -789,7 +968,7 @@ public class AppUtils {
         titleLayout.draw(canvas);
         canvas.restore();
         canvas.save();
-        canvas.translate(xBodyInitial, yAuthor + 10 * scale);//Add 10*scale for spacing between title and body
+        canvas.translate(xBodyInitial, yAuthor + 10 * scale);//Add 10*scale for spacing between author and body
         authorLayout.draw(canvas);
         canvas.restore();
         canvas.save();
@@ -830,20 +1009,6 @@ public class AppUtils {
             Log.d("----WEDDINGCARD----", "combineImages=" + s);
             comboImage.drawBitmap(c, 0f, i * c.getHeight(), null);
         }
-//        comboImage.drawBitmap(c, 0f, 0f, null);
-//        comboImage.drawBitmap(c, 0f, c.getHeight(), null);
-
-        // this is an extra bit I added, just incase you want to save the new image somewhere and then return the location
-    /*String tmpImg = String.valueOf(System.currentTimeMillis()) + ".png";
-
-    OutputStream os = null;
-    try {
-      os = new FileOutputStream(loc + tmpImg);
-      cs.compress(CompressFormat.PNG, 100, os);
-    } catch(IOException e) {
-      Log.e("combineImages", "problem combining images", e);
-    }*/
-
         return cs;
     }
 
@@ -854,7 +1019,6 @@ public class AppUtils {
     }
 
     public static void shareStoryWithWhatsApp(Context mContext, String shareUrl, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
-
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
         } else {
@@ -875,13 +1039,10 @@ public class AppUtils {
     }
 
     public static void shareCampaignWithWhatsApp(Context mContext, String shareUrl, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
-
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
         } else {
-            //  Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
             Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-            //whatsappIntent.putExtra(Intent.EXTRA_STREAM, uri);
             whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
             whatsappIntent.setPackage("com.whatsapp");
             whatsappIntent.setType("text/plain");
@@ -925,14 +1086,12 @@ public class AppUtils {
     }
 
     public static void shareWithFBForCampaign(BaseFragment campaignCongratulationFragment, String shareUrl) {
-
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent content = new ShareLinkContent.Builder()
                     .setContentUrl(Uri.parse(shareUrl))
                     .build();
             new ShareDialog(campaignCongratulationFragment).show(content);
         }
-        // Utils.pushShareStoryEvent(topicsShortStoriesTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
     }
 
     public static void shareStoryWithFBC(BaseFragment topicsChallengeTabFragment, String userType, String blogSlug, String titleSlug,
