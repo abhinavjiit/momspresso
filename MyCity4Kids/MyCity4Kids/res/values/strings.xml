@@ -69,6 +69,7 @@
     <!-- article details -->
     <string name="submit">SUBMIT</string>
     <string name="add_reply">Type here</string>
+    <string name="article_play_notification_text">You are listening to this blog</string>
 
     <!-- Top Picks Detail Screen -->
     <string name="organised_by">Organized By</string>
@@ -1312,5 +1313,9 @@ Thank you! We will be reviewing your story. You can expect to hear from us withi
     <string name="speech_prompt">Say something&#8230;</string>
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
     <string name="submit_article">Submit Your Article</string>
+
+    <!--Unapply Campaign-->
+    <string name="unapply_campaign_dialog">Are you sure you want to cancel the application for this campaign ?</string>
+
 </resources>
 

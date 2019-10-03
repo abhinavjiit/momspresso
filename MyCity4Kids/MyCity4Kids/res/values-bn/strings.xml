@@ -68,6 +68,7 @@
     <!-- article details -->
     <string name="submit">জমা</string>
     <string name="add_reply">এখানে লিখুন</string>
+    <string name="article_play_notification_text">You are listening to this blog</string>
 
     <!-- Top Picks Detail Screen -->
     <string name="organised_by">-দ্বারা সংগঠিত</string>

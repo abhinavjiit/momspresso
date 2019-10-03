@@ -517,7 +517,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                         makeTextViewResizable(tv, 2, ".. See More", true, userBio);
                     }*/
                     tv.setLayoutParams(tv.getLayoutParams());
-                    tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
+                    tv.setText(userBio, TextView.BufferType.SPANNABLE);
                     tv.invalidate();
                 }
             }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);

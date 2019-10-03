@@ -67,6 +67,7 @@
     <!-- article details -->
     <string name="submit">సబ్మిట్</string>
     <string name="add_reply">ఇక్కడ టైప్ చేయండి</string>
+    <string name="article_play_notification_text">You are listening to this blog</string>
 
     <!-- Top Picks Detail Screen -->
     <string name="organised_by">నిర్వహించే వారు</string>

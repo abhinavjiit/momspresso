@@ -78,6 +78,7 @@
     <!-- article details -->
     <string name="submit">SUBMIT</string>
     <string name="add_reply">ഇവിടെ ടൈപ്പ് ചെയ്യൂ</string>
+    <string name="article_play_notification_text">You are listening to this blog</string>
 
     <!-- Top Picks Detail Screen -->
     <string name="organised_by">Organized By</string>
