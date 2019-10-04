@@ -537,13 +537,13 @@ public class ParallelFeedActivity extends BaseActivity implements View.OnClickLi
 
         if (isFollowing) {
             isFollowing = false;
-            dataList.get(updateFollowPos).setFollowed(false);
+            finalList.get(updateFollowPos).setFollowed(false);
             Utils.pushFollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
-            dataList.get(updateFollowPos).setFollowed(true);
+            finalList.get(updateFollowPos).setFollowed(true);
             Utils.pushUnfollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
