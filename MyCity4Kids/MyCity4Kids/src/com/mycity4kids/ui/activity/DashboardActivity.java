@@ -1283,33 +1283,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Log.i("Data", branchdata + ":");
             if (!StringUtils.isNullOrEmpty(branchdata)) {
                 if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH__CAMPAIGN_LISTING)) {
-
                     Intent intent1 = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
                     startActivity(intent1);
-
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_CAMPAIGN_DETAIL)) {
                     String campaignID = branchModel.getId();
                     Intent campaignIntent = new Intent(DashboardActivity.this, CampaignContainerActivity.class);
                     campaignIntent.putExtra("campaignID", Integer.parseInt(campaignID));
                     startActivity(campaignIntent);
-
-
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_MOMVLOGS)) {
                     String challengeId = branchModel.getId();
                     getChallenges(challengeId.trim());
-
                 } else if (!StringUtils.isNullOrEmpty(branchModel.getType()) && branchModel.getType().equals(AppConstants.BRANCH_PERSONALINFO)) {
-
                     Intent intent1 = new Intent(DashboardActivity.this, RewardsContainerActivity.class);
                     intent1.putExtra("pageNumber", 1);
                     startActivity(intent1);
-
-
                 } else {
-
                 }
             }
-
         } else {
             String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
             try {

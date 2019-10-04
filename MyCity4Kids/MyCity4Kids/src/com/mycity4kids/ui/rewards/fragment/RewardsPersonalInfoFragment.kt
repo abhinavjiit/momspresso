@@ -74,6 +74,7 @@ const val REQUEST_SELECT_PLACE = 2000
 
 class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialogFragment.OnClickDoneListener, CityListingDialogFragment.IChangeCity, PickerDialogFragment.OnClickDoneListener {
 
+    private var isNewRegistration: Boolean = false
     var address: String? = null
     private var lat: Double = 0.0
     private var lng: Double = 0.0
@@ -108,14 +109,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         newSelectedCityId = cityList.get(pos).getId()
     }
 
-//    fun setOtherCityName(pos: Int, cityName: String) {
-//        otherCityName = cityName
-//        cityList.get(pos).setCityName("Others($cityName)")
-//        editLocation.setText(cityList.get(pos).getCityName())
-//    }
-
     override fun onItemClick(language: String?) {
-        //editLanguage.setText(Constants.TypeOfLanguages.findById(language))
     }
 
     override fun updateUi(response: Response?) {
@@ -227,25 +221,17 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 ""
             }
         }
-
-        /*initialize XML components with clicks*/
         initializeXMLComponents()
-
-        /*fetch data from server*/
         fetchRewardsData()
-
-
-
         return containerView
     }
 
-    /*setting values to components*/
     private fun setValuesToComponents() {
+        isNewRegistration = apiGetResponse.is_rewards_added == 0
         if (apiGetResponse.is_rewards_added == 1) {
             referralMainLayout.visibility = View.GONE
         } else {
             referralMainLayout.visibility = View.VISIBLE
-
         }
         if (!apiGetResponse.referred_by.isNullOrEmpty()) {
             editReferralCode.setText(apiGetResponse.referred_by)
@@ -257,7 +243,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 apiGetResponse.referred_by = referralCode
             } else {
                 apiGetResponse.referred_by = null
-
             }
         }
         if (!apiGetResponse.firstName.isNullOrBlank()) editFirstName.setText(apiGetResponse.firstName)
@@ -375,7 +360,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
     }
 
-    /*initialize XML components with clicks*/
     private fun initializeXMLComponents() {
         editFirstName = containerView.findViewById(R.id.editFirstName)
         editLastName = containerView.findViewById(R.id.editLastName)
@@ -412,14 +396,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
         (containerView.findViewById<TextView>(R.id.textSaveAndContinue)).setOnClickListener {
             if (prepareDataForPosting()) {
-//                showProgressDialog(resources.getString(R.string.please_wait))
-//                var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-//                val retro = BaseApplication.getInstance().retrofit
-//                val campaignAPI = retro.create(RewardsAPI::class.java)
-//                val call = campaignAPI.sendRewardsapiDataTest(userId!!,apiGetResponse, pageValue = 4 )
-//                call.enqueue(postDataofRewardsToServer)
-
-
                 postDataofRewardsToServer()
             }
         }
@@ -464,13 +440,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
             }
         }
-
-
-
-
-
-
-
 
         (containerView.findViewById<CheckBox>(R.id.checkAreYouExpecting)).setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
@@ -561,12 +530,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
         containerView.findViewById<TextView>(R.id.textSaveAndContinue).setOnClickListener {
             if (prepareDataForPosting()) {
-//                showProgressDialog(resources.getString(R.string.please_wait))
-//                var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-//                val retro = BaseApplication.getInstance().retrofit
-//                val campaignAPI = retro.create(RewardsAPI::class.java)
-//                val call = campaignAPI.sendRewardsapiDataTest(userId!!,apiGetResponse, pageValue = 4 )
-//                call.enqueue(postDataofRewardsToServer)
                 postDataofRewardsToServer()
             }
         }
@@ -742,10 +705,9 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                     }
                 }
                 apiGetResponse.kidsInfo = kidsList
-                Log.e("dob text is ", RewardsPersonalInfoFragment.textKidsDOB.text.toString())
+                Log.d("dob text is ", RewardsPersonalInfoFragment.textKidsDOB.text.toString())
                 if (linearKidsEmptyView.visibility == View.VISIBLE) {
                     if (!RewardsPersonalInfoFragment.textKidsDOB.text.isNullOrEmpty()) {
-                        //if (apiGetResponse.kidsInfo.isNullOrEmpty()) {
                         var kidsInfoResponse = KidsInfoResponse()
                         kidsInfoResponse.gender = if (spinnerGender.selectedItemPosition == 0) {
                             0
@@ -755,7 +717,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                         kidsInfoResponse.dob = DateTimeUtils.convertStringToTimestamp(RewardsPersonalInfoFragment.textKidsDOB.text.toString())
                         kidsInfoResponse.name = editKidsName.text.toString()
                         apiGetResponse.kidsInfo!!.add(kidsInfoResponse)
-                        //}
                     } else {
                         Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_number_of_kids)), Toast.LENGTH_SHORT).show()
                         return false
@@ -782,10 +743,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         } else {
             apiGetResponse.kidsInfo = null
         }
-
-/*        apiGetResponse.latitude = 28.7041
-        apiGetResponse.longitude = 77.1025*/
-
         return true
     }
 
@@ -818,7 +775,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 VERIFY_NUMBER_ACCOUNTKIT_REQUEST_CODE -> {
                     if (data != null && resultCode == Activity.RESULT_OK) {
                         accountKitAuthCode = (data!!.getParcelableExtra(AccountKitLoginResult.RESULT_KEY) as AccountKitLoginResult).authorizationCode!!
-                        Log.e("account code ", accountKitAuthCode)
+                        Log.d("account code ", accountKitAuthCode)
                         apiGetResponse.contact = null
                         editPhone.visibility = View.VISIBLE
                         textVerify.visibility = View.VISIBLE
@@ -829,7 +786,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
     }
 
-
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is RewardsContainerActivity) {
@@ -837,67 +793,53 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
     }
 
-
     interface SaveAndContinueListener {
         fun profileOnSaveAndContinue()
     }
-
 
     fun isMailValid(): Boolean {
         return !editEmail.text.isNullOrBlank() && StringUtils.isValidEmail(editEmail.text.toString().trim())
     }
 
-    /*post data to server*/
     private fun postDataofRewardsToServer() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-//        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
+        val userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         if (!userId.isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
 
-            Log.e("sending json", Gson().toJson(apiGetResponse))
             BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).sendRewardsapiDataForAny(userId!!, apiGetResponse, pageValue = 4).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<RewardsPersonalResponse> {
                 override fun onComplete() {
                     removeProgressDialog()
                 }
 
                 override fun onSubscribe(d: Disposable) {
-
                 }
 
                 override fun onNext(response: RewardsPersonalResponse) {
-//                    Log.e("response is ", Gson().toJson(response.data))
-                    if (response != null && response.code == 200) {
+                    if (response.code == 200) {
                         if (Constants.SUCCESS == response.status) {
                             if (isComingFromCampaign) {
                                 SharedPrefUtils.setIsRewardsAdded(BaseApplication.getAppContext(), "1")
                             }
                             saveAndContinueListener.profileOnSaveAndContinue()
-                            facebookEventForRegistration()
+                            if (isNewRegistration) {
+                                facebookEventForRegistration()
+                            }
                         } else if (Constants.FAILURE == response.status) {
-                            Toast.makeText(context, response?.reason, Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, response.reason, Toast.LENGTH_LONG).show()
                         }
                     }
                 }
 
                 override fun onError(e: Throwable) {
                     removeProgressDialog()
-//                    var data = (e as IllegalStateException).response().errorBody()!!.byteStream()
-//
-//                    if (code == 400) {
-//                        var data = (e as HttpException).response().errorBody()!!.byteStream()
-//                        var jsonParser = JsonParser()
-//                        var jsonObject = jsonParser.parse(
-//                                InputStreamReader(data, "UTF-8")) as JsonObject
-//                        var reason = jsonObject.get("reason")
-//                        Toast.makeText(context, reason.asString, Toast.LENGTH_SHORT).show()
-//                    }
-                    Log.e("exception in error", e.message.toString())
+                    Log.d("exception in error", e.message.toString())
                 }
             })
         }
     }
 
     private fun facebookEventForRegistration() {
+        Log.d("FB EVENT", "MY money Register event")
         try {
             activity?.let {
                 val logger = AppEventsLogger.newLogger(it)
@@ -910,69 +852,29 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
     }
 
-//    private val postDataofRewardsToServer = object : Callback<RewardsPersonalResponse> {
-//
-//        override fun onResponse(call: Call<RewardsPersonalResponse>, response: retrofit2.Response<RewardsPersonalResponse>) {
-//            removeProgressDialog()
-//            if (response == null || null == response.body()) {
-//                val nee = NetworkErrorException(response.raw().toString())
-//                Crashlytics.logException(nee)
-//                return
-//            }
-//            try {
-//                val responseData = response.body()
-////                if (responseData!!.code == 200 && Constants.SUCCESS == responseData.status) {
-////                    if (responseData.data!!.result!!.size > 0) {
-////                        campaignList.addAll(responseData.data!!.result as ArrayList<CampaignDataListResult>)
-////                        adapter.notifyDataSetChanged()
-////                    }
-////                } else {
-////                }
-//            } catch (e: Exception) {
-//                Crashlytics.logException(e)
-//                Log.d("MC4kException", Log.getStackTraceString(e))
-//            }
-//        }
-//
-//        override fun onFailure(call: Call<RewardsPersonalResponse>, t: Throwable) {
-//            removeProgressDialog()
-//            Crashlytics.logException(t)
-//            Log.d("MC4kException", Log.getStackTraceString(t))
-//        }
-//    }
-
-    /*fetch data from server*/
     private fun fetchRewardsData() {
-        var userId = com.mycity4kids.preference.SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
-//        var userId = "218f7fd8fe914c3887f508486fc9cf8e"
+        val userId = SharedPrefUtils.getUserDetailModel(activity)?.dynamoId
         if (userId != null) {
             showProgressDialog(resources.getString(R.string.please_wait))
-            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId!!, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
+            BaseApplication.getInstance().retrofit.create(RewardsAPI::class.java).getRewardsapiData(userId, 1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<BaseResponseGeneric<RewardsDetailsResultResonse>> {
                 override fun onComplete() {
-
                 }
 
                 override fun onSubscribe(d: Disposable) {
-
                 }
 
                 override fun onNext(response: BaseResponseGeneric<RewardsDetailsResultResonse>) {
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                    if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
                         apiGetResponse = response.data!!.result
-
-                        /*getting city data from server*/
                         fetchCityData()
-
-                        /*setting values to components*/
                         setValuesToComponents()
                     } else {
-
                     }
                 }
 
                 override fun onError(e: Throwable) {
                     removeProgressDialog()
-                    Log.e("exception in error", e.message.toString())
+                    Log.d("exception in error", e.message.toString())
                 }
             })
         }
@@ -985,11 +887,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
             }
 
             override fun onSubscribe(d: Disposable) {
-
             }
 
             override fun onNext(response: BaseResponseGeneric<CityConfigResultResponse>) {
-                if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
+                if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null) {
                     if (response.data!!.result != null && response!!.data!!.result != null && response!!.data!!.result.cityData.isNotEmpty()) {
                         val currentCity = SharedPrefUtils.getCurrentCityModel(saveAndContinueListener as RewardsContainerActivity)
                         (response!!.data!!.result.cityData).forEach {
@@ -1029,9 +930,7 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         newFragment.show(activity!!.supportFragmentManager, "datePicker")
     }
 
-
     class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
-
         internal var cancel: Boolean = false
         internal val c = Calendar.getInstance()
         internal var curent_year = c.get(Calendar.YEAR)
@@ -1040,7 +939,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         var isShowTillCurrent: Boolean = false
         var isShowFutureOnly: Boolean = false
         var isForParent: Boolean = false
-
 
         @SuppressLint("NewApi")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -1067,48 +965,18 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 c.add(Calendar.YEAR, -16)
                 dlg.datePicker.maxDate = c.timeInMillis
             }
-
             return dlg
         }
 
         override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
             if (RewardsPersonalInfoFragment.textView != null) {
-                val sel_date = "" + day + "-" + (month + 1) + "-" + year
-//                if (chkTime(sel_date)) {
                 RewardsPersonalInfoFragment.textView.setText("" + day + "-" + (month + 1) + "-" + year)
-//                } else {
-//                    //RewardsPersonalInfoFragment.textView.setText("" + current_day + "-" + (current_month + 1) + "-" + curent_year)
-//                }
             }
-        }
-
-        fun chkTime(time: String): Boolean {
-            var result = true
-            val currentime = "" + System.currentTimeMillis() / 1000
-            if (Integer.parseInt(currentime) < Integer.parseInt(convertDate(time)))
-                result = false
-
-            return result
-        }
-
-        fun convertDate(convertdate: String): String {
-            var timestamp = ""
-            try {
-                val formatter = SimpleDateFormat("dd-MM-yyyy")
-                val dateobj = formatter.parse(convertdate)
-                timestamp = "" + dateobj.time / 1000
-                return timestamp
-            } catch (e: ParseException) {
-                // TODO Auto-generated catch block
-                e.printStackTrace()
-            }
-
-            return timestamp
         }
     }
 
     private fun validateChildData(): Boolean {
-        Log.e("text value", " " + RewardsPersonalInfoFragment.textKidsDOB.text + " " + linearKidsEmptyView.visibility)
+        Log.d("text value", " " + RewardsPersonalInfoFragment.textKidsDOB.text + " " + linearKidsEmptyView.visibility)
         if (linearKidsEmptyView.visibility == View.VISIBLE && RewardsPersonalInfoFragment.textKidsDOB.text.isBlank()) {
             Toast.makeText(activity, resources.getString(R.string.cannot_be_left_blank, resources.getString(R.string.rewards_dob)), Toast.LENGTH_SHORT).show()
             return false
@@ -1170,7 +1038,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         var spinnerGender = indexView.findViewById<Spinner>(R.id.spinnerGender)
         var textDOB = indexView.findViewById<TextView>(R.id.textKidsDOB)
 
-        //textHeader.setText(String.format(resources.getString(R.string.kids_number), linearKidsDetail.childCount+1))
         val genderList = java.util.ArrayList<String>()
         genderList.add("Male")
         genderList.add("Female")
@@ -1275,8 +1142,6 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
         }
     }
 
-
-    /*fetch data from server*/
     private fun validateReferralCode() {
         if (!editReferralCode.text.trim().isNullOrEmpty()) {
             showProgressDialog(resources.getString(R.string.please_wait))
@@ -1290,10 +1155,8 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
                 }
 
                 override fun onNext(response: BaseResponseGeneric<ReferralCodeResult>) {
-                    if (response != null && response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response!!.data!!.result != null) {
+                    if (response.code == 200 && Constants.SUCCESS == response.status && response.data != null && response!!.data!!.result != null) {
                         if (response!!.data!!.result.is_valid) {
-                            // editReferralCode.setText(response.data!!.result.referral_code)
-                            //  textReferCodeError.visibility = View.GONE
                             textReferCodeError.setTextColor(activity!!.resources.getColor(R.color.green_dark))
                             textReferCodeError.setText("Successfully Applied")
                             editReferralCode.isEnabled = true
@@ -1308,28 +1171,10 @@ class RewardsPersonalInfoFragment : BaseFragment(), ChangePreferredLanguageDialo
 
                 override fun onError(e: Throwable) {
                     removeProgressDialog()
-                    Log.e("exception in error", e.message.toString())
+                    Log.d("exception in error", e.message.toString())
                 }
             })
         }
     }
-
-/*    fun fetchLangLat(address: String) {
-        val coder = Geocoder(activity as RewardsContainerActivity)
-        var addresses: List<Address>
-        (activity as RewardsContainerActivity).runOnUiThread {
-            addresses = coder.getFromLocationName(address, 5)
-            if (addresses == null || addresses.isNotEmpty() || addresses.isNullOrEmpty()) {
-
-            } else {
-                val location: Address = addresses.get(0)
-                lat = location.getLatitude()
-                lng = location.getLongitude()
-                Log.i("lat", lat.toString())
-                Log.i("lat", lng.toString())
-            }
-        }
-    }*/
-
 }
 
